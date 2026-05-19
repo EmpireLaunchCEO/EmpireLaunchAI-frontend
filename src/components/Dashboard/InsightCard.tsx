@@ -1,0 +1,75 @@
+"use client";
+
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { 
+  TrendingUp, 
+  ExternalLink, 
+  Play, 
+  X,
+  Sparkles,
+  Loader2
+} from 'lucide-react';
+
+interface InsightCardProps {
+  platform: 'Etsy' | 'TikTok' | 'Instagram' | 'Youtube';
+  title: string;
+  description: string;
+  roi: string;
+  onExecute?: () => void;
+  isExecuting?: boolean;
+}
+
+export function InsightCard({ platform, title, description, roi, onExecute, isExecuting }: InsightCardProps) {
+  return (
+    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex items-center gap-2">
+          <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <span className="text-sm font-semibold text-slate-400 uppercase tracking-wider">{platform}</span>
+        </div>
+        <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">
+          {roi} ROI
+        </div>
+      </div>
+      
+      <h4 className="text-lg font-bold text-slate-900 mb-2">{title}</h4>
+      <p className="text-slate-600 text-sm mb-6 leading-relaxed">
+        {description}
+      </p>
+      
+      <div className="flex items-center gap-3">
+        <button 
+          onClick={onExecute}
+          disabled={isExecuting}
+          className={cn(
+            "flex-1 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all",
+            isExecuting 
+              ? "bg-blue-600 text-white cursor-wait" 
+              : "bg-slate-900 text-white hover:bg-slate-800"
+          )}
+        >
+          {isExecuting ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Creating...
+            </>
+          ) : (
+            <>
+              <Play className="w-4 h-4 fill-current" />
+              Execute
+            </>
+          )}
+        </button>
+        <button className="p-2.5 rounded-xl border border-slate-200 text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-all">
+          <ExternalLink className="w-5 h-5" />
+        </button>
+        <button className="p-2.5 rounded-xl border border-slate-200 text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  );
+}

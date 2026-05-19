@@ -1,0 +1,140 @@
+"use client";
+
+import React, { useState } from 'react';
+import { 
+  BarChart3, 
+  Zap, 
+  Settings2, 
+  Activity,
+  ChevronRight,
+  TrendingUp,
+  Mail,
+  ShieldCheck,
+  Sparkles,
+  Search
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { SocialPerformance } from '@/components/Dashboard/SocialPerformance';
+import { TrendRadar } from '@/components/Analytics/TrendRadar';
+import { AutomationCenter } from '@/components/Automation/AutomationCenter';
+import { EmpireLedger } from '@/components/Analytics/EmpireLedger';
+
+const tabs = [
+  { id: 'growth', name: 'Growth & Trends', icon: TrendingUp },
+  { id: 'automation', name: 'Automation Hub', icon: Mail },
+  { id: 'finance', name: 'Empire Analytics', icon: BarChart3 },
+];
+
+export default function AnalyticsPage() {
+  const [activeTab, setActiveTab] = useState('growth');
+
+  return (
+    <div className="p-8 pb-32 max-w-7xl mx-auto space-y-10">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Intelligence Command</h1>
+          <p className="text-slate-500 font-medium italic">High-intelligence performance tracking and automated growth.</p>
+        </div>
+        
+        <div className="flex bg-slate-100 p-1.5 rounded-[24px]">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "flex items-center gap-2 px-6 py-3 rounded-[20px] text-sm font-bold transition-all",
+                activeTab === tab.id 
+                  ? "bg-white text-slate-900 shadow-sm" 
+                  : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
+              )}
+            >
+              <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-blue-600" : "text-slate-400")} />
+              {tab.name}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      <main className="space-y-12">
+        {activeTab === 'growth' && (
+          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <SocialPerformance />
+            <div className="pt-6">
+              <TrendRadar />
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'automation' && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <AutomationCenter />
+          </div>
+        )}
+
+        {activeTab === 'finance' && (
+          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm space-y-4">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Empire Revenue</p>
+                <h3 className="text-4xl font-black text-slate-900">$12,450.00</h3>
+                <div className="flex items-center gap-2 text-green-500 font-bold text-sm">
+                  <TrendingUp className="w-4 h-4" />
+                  +18.4% this month
+                </div>
+              </div>
+              
+              <div className="md:col-span-2 bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm">
+                <div className="flex justify-between items-center mb-6">
+                   <h4 className="font-bold text-slate-900">Revenue Trends</h4>
+                   <div className="flex gap-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-600" />
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Empire 1</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-purple-600" />
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Empire 2</span>
+                      </div>
+                   </div>
+                </div>
+                <div className="h-24 flex items-end gap-1 px-2">
+                  {[30, 45, 35, 60, 55, 80, 70, 95, 85, 100, 90, 110].map((h, i) => (
+                    <div 
+                      key={i} 
+                      className="flex-1 bg-slate-100 rounded-t-sm relative group cursor-pointer hover:bg-blue-100 transition-colors" 
+                      style={{ height: `${h}%` }}
+                    >
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                        ${h * 10}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <EmpireLedger />
+          </div>
+        )}
+      </main>
+
+      {/* Persistent AI Intelligence Bar */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 z-50">
+        <div className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-[32px] p-4 shadow-2xl flex items-center gap-4">
+          <div className="bg-blue-600 p-3 rounded-2xl animate-pulse">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <div className="flex-1">
+            <p className="text-white text-xs font-bold">AI Intelligence Online</p>
+            <p className="text-white/50 text-[10px]">Analyzing trends and securing dues in real-time...</p>
+          </div>
+          <div className="flex gap-2">
+            <button className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-colors">
+              Strategy Report
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

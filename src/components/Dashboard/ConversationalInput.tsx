@@ -1,0 +1,91 @@
+"use client";
+
+import React, { useState } from 'react';
+import { Send, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+interface ConversationalInputProps {
+  onExecute?: (value: string) => Promise<void>;
+  tip?: string;
+}
+
+export function ConversationalInput({ onExecute, tip }: ConversationalInputProps) {
+  const [value, setValue] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!value.trim()) return;
+    
+    setIsProcessing(true);
+    if (onExecute) {
+      await onExecute(value);
+    } else {
+      // Fallback/Simulate AI processing if no onExecute provided
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+    setIsProcessing(false);
+    setValue('');
+  };
+
+  return (
+    <div className="fixed bottom-8 left-72 right-8 flex flex-col items-center gap-4">
+      {tip && !isProcessing && (
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 shadow-sm"
+        >
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+            Tip: <span className="text-blue-600 normal-case">{tip}</span>
+          </p>
+        </motion.div>
+      )}
+      <form 
+        onSubmit={handleSubmit}
+        className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 flex items-center gap-2 pointer-events-auto"
+      >
+        <div className="pl-4">
+          <AnimatePresence mode="wait">
+            {isProcessing ? (
+              <motion.div
+                key="processing"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+              >
+                <Sparkles className="w-5 h-5 text-blue-600 animate-pulse" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="idle"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+              >
+                <Sparkles className="w-5 h-5 text-slate-400" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Ask AI to research trends, create listings, or schedule posts..."
+          className="flex-1 py-3 px-2 outline-none text-slate-700 placeholder:text-slate-400 font-medium"
+          disabled={isProcessing}
+        />
+        
+        <button
+          type="submit"
+          disabled={!value.trim() || isProcessing}
+          className="bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        >
+          <Send className="w-5 h-5" />
+        </button>
+      </form>
+    </div>
+  );
+}
