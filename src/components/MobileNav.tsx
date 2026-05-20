@@ -6,12 +6,15 @@ import { usePathname } from 'next/navigation';
 import { 
   Home,
   Settings,
-  Sparkles
+  ClipboardCheck,
+  BarChart3
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { name: 'Dashboard', href: '/dashboard', icon: Home },
+  { name: 'Home', href: '/dashboard', icon: Home },
+  { name: 'Review', href: '/review', icon: ClipboardCheck },
+  { name: 'Results', href: '/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
