@@ -109,45 +109,8 @@ export default function SettingsPage() {
                     “Great choice! To link <span className="font-black text-white underline">{walkthroughApp}</span>, I'll need your API credentials. 
                     {walkthroughApp.toLowerCase().includes('etsy') ? (
                       <>
-                        {" For Etsy, you'll need to create a Developer account and generate a Keystring and Shared Secret. Use the specific URLs below for the 'Website' and 'Callback' fields."}
+                        {" To link Etsy, you'll need your API credentials. Click the 'Pop-out Assistant' below to get step-by-step guidance and copyable URLs that follow you to the Etsy portal."}
                         
-                        <div className="mt-6 bg-white/10 rounded-2xl p-4 border border-white/20">
-                          <div className="space-y-4">
-                            <div>
-                              <span className="text-[10px] font-black uppercase tracking-widest text-blue-200 block mb-2">1. Website URL</span>
-                              <div className="flex items-center gap-3">
-                                <code className="flex-1 bg-slate-900/50 px-4 py-2 rounded-xl text-sm font-mono text-blue-100 break-all">
-                                  https://empire-launch-ai.vercel.app
-                                </code>
-                                <button 
-                                  onClick={() => navigator.clipboard.writeText('https://empire-launch-ai.vercel.app')}
-                                  className="px-4 py-2 bg-white text-blue-600 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all shadow-lg active:scale-95"
-                                >
-                                  Copy
-                                </button>
-                              </div>
-                            </div>
-
-                            <div>
-                              <span className="text-[10px] font-black uppercase tracking-widest text-blue-200 block mb-2">2. Callback URL (Redirect URI)</span>
-                              <div className="flex items-center gap-3">
-                                <code className="flex-1 bg-slate-900/50 px-4 py-2 rounded-xl text-sm font-mono text-blue-100 break-all">
-                                  https://empire-launch-ai.vercel.app/auth/callback/etsy
-                                </code>
-                                <button 
-                                  onClick={() => navigator.clipboard.writeText('https://empire-launch-ai.vercel.app/auth/callback/etsy')}
-                                  className="px-4 py-2 bg-white text-blue-600 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all shadow-lg active:scale-95"
-                                >
-                                  Copy
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <p className="text-[10px] text-blue-200 mt-4 font-medium italic">
-                            *Etsy requires the Callback URL to be exact. Use the 'Copy' buttons to make it easy!
-                          </p>
-                        </div>
-
                         <div className="mt-4 flex flex-col sm:flex-row gap-3">
                           <a 
                             href="https://www.etsy.com/developers/register" 
