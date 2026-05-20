@@ -24,7 +24,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col w-64 bg-white text-slate-900 h-screen fixed left-[72px] top-0 border-r border-slate-100 shadow-sm">
+    <div className="hidden lg:flex flex-col w-64 bg-white text-slate-900 h-screen fixed left-[72px] top-0 border-r border-slate-100 shadow-sm">
       <div className="p-6 flex items-center gap-2">
         <div className="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-200">
           <Sparkles className="w-5 h-5 text-white" />

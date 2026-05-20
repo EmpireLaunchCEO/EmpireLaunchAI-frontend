@@ -56,7 +56,7 @@ export function EmpireSwitcher() {
   return (
     <div 
       className={cn(
-        "flex flex-col bg-slate-950 text-white h-screen fixed left-0 top-0 z-[60] transition-all duration-300 border-r border-slate-800 shadow-2xl",
+        "hidden lg:flex flex-col bg-slate-950 text-white h-screen fixed left-0 top-0 z-[60] transition-all duration-300 border-r border-slate-800 shadow-2xl",
         isExpanded ? "w-[240px]" : "w-[72px]"
       )}
       onMouseEnter={() => setIsExpanded(true)}
