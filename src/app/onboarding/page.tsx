@@ -32,6 +32,7 @@ const platforms = [
   { id: 'pinterest', name: 'Pinterest' },
 ];
 
+import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 
 export default function Onboarding() {

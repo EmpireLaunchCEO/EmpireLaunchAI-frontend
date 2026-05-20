@@ -8,7 +8,7 @@ import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
 import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
-import { Sparkles, ShieldCheck, Loader2, Zap, LayoutDashboard, TrendingUp, Users, Calendar, ArrowUpRight } from 'lucide-react';
+import { Sparkles, Loader2, LayoutDashboard, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';

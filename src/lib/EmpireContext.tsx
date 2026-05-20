@@ -26,12 +26,16 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
   const handleSetActiveEmpireId = (id: string) => {
     setActiveEmpireId(id);
-    localStorage.setItem('activeEmpireId', id);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('activeEmpireId', id);
+    }
   };
 
   const completeOnboarding = () => {
     setIsOnboarded(true);
-    localStorage.setItem('isOnboarded', 'true');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isOnboarded', 'true');
+    }
   };
 
   return (
