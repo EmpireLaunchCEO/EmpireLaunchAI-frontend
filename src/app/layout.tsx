@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { EmpireProvider } from "@/lib/EmpireContext";
-import { GlobalAIGuide } from "@/components/GlobalAIGuide";
 
 const inter = Inter({ subsets: ["latin"] });
 
