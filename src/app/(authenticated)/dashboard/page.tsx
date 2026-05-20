@@ -8,7 +8,7 @@ import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
 import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
-import { Sparkles, Loader2, Home, ArrowUpRight, RefreshCw } from 'lucide-react';
+import { Sparkles, Loader2, Home, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -27,7 +27,6 @@ export default function Dashboard() {
   const [empireData, setEmpireData] = useState<any>(null);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [partnerStatus, setPartnerStatus] = useState<'idle' | 'researching' | 'creating'>('idle');
   const [executingInsight, setExecutingInsight] = useState<string | null>(null);
 
@@ -47,18 +46,12 @@ export default function Dashboard() {
       console.error('Error fetching dashboard data:', error);
     } finally {
       setIsLoading(false);
-      setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
     fetchData();
   }, [activeEmpireId]);
-
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    fetchData();
-  };
 
   const handleExecute = async (goal: string) => {
     if (partnerStatus !== 'idle') return;
