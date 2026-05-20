@@ -21,7 +21,6 @@ export default function RootLayout({
       <body className={`${inter.className} bg-slate-50 text-slate-900`}>
         <EmpireProvider>
           {children}
-          <GlobalAIGuide />
         </EmpireProvider>
       </body>
     </html>

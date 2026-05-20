@@ -151,68 +151,71 @@ export function SetupAssistant() {
   };
 
   return (
-    <div className="fixed bottom-24 right-6 left-6 md:left-auto md:right-12 z-[300] pointer-events-none flex justify-center md:justify-end">
+    <div className="fixed bottom-[120px] right-6 left-6 md:left-auto md:right-12 z-[500] pointer-events-none flex justify-center md:justify-end">
       <motion.div 
-        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        initial={{ opacity: 0, y: 40, scale: 0.9 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        className="pointer-events-auto w-full max-w-[320px]"
+        className="pointer-events-auto w-full max-w-[340px]"
       >
-        <div className="bg-slate-900 rounded-[24px] shadow-2xl border-2 border-blue-500 overflow-hidden">
-          <div className="p-4 space-y-4">
+        <div className="bg-slate-900 rounded-[28px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-2 border-blue-500 overflow-hidden ring-4 ring-blue-500/20">
+          <div className="bg-blue-600 px-4 py-2 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-3 h-3 text-white fill-current" />
+              <span className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Empire Teacher Active</span>
+            </div>
+            <button onClick={finishSetup} className="text-white/60 hover:text-white transition-colors p-1">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="p-5 space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Bot className="w-4 h-4 text-blue-400" />
-                <span className="text-[10px] font-black text-white uppercase tracking-widest">
-                  Field {currentStep + 1} of {steps.length}
-                </span>
-              </div>
-              <button onClick={finishSetup} className="text-slate-500 hover:text-white transition-colors">
-                <X className="w-4 h-4" />
-              </button>
+              <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">
+                Setup Field {currentStep + 1} of {steps.length}
+              </span>
             </div>
 
             <div className="space-y-3">
               <div>
-                <h3 className="text-xs font-black text-blue-400 uppercase tracking-tighter">
+                <h3 className="text-sm font-black text-white uppercase tracking-tight">
                   {step.field}
                 </h3>
-                <p className="text-[11px] font-bold text-white leading-tight mt-1">
-                  {step.instruction}
+                <p className="text-[12px] font-bold text-slate-300 leading-tight mt-1 italic">
+                  "{step.instruction}"
                 </p>
               </div>
 
               {step.value && (
-                <div className="bg-white/10 rounded-xl p-3 flex items-center gap-3 border border-white/5 group">
-                  <code className="flex-1 text-[11px] font-mono text-blue-200 truncate">
+                <div className="bg-white/5 rounded-2xl p-4 flex items-center gap-3 border border-white/10 group shadow-inner">
+                  <code className="flex-1 text-[12px] font-mono text-blue-300 truncate font-bold">
                     {step.value}
                   </code>
                   <button 
                     onClick={() => handleCopy(step.value)}
                     className={cn(
-                      "p-2 rounded-lg transition-all",
-                      copied ? "bg-green-600 text-white" : "bg-blue-600 text-white hover:scale-105 active:scale-95"
+                      "p-3 rounded-xl transition-all shadow-lg",
+                      copied ? "bg-green-600 text-white scale-110" : "bg-blue-600 text-white hover:bg-blue-500 active:scale-95"
                     )}
                   >
-                    {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   </button>
                 </div>
               )}
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 pt-2">
               {currentStep > 0 && (
                 <button 
                   onClick={prev}
-                  className="flex-1 px-4 py-2 rounded-xl bg-white/5 text-white font-bold text-[10px] uppercase tracking-widest hover:bg-white/10"
+                  className="flex-1 px-4 py-3 rounded-xl bg-white/5 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:bg-white/10 hover:text-white transition-colors"
                 >
                   Back
                 </button>
               )}
               <button 
                 onClick={next}
-                className="flex-[2] bg-blue-600 text-white px-4 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-900/40"
+                className="flex-[2] bg-white text-slate-900 px-4 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-blue-50 transition-all shadow-xl active:scale-[0.98]"
               >
-                {currentStep === steps.length - 1 ? 'Finish Setup' : 'Next Field'}
+                {currentStep === steps.length - 1 ? 'Finish & Save' : 'Next Step'}
               </button>
             </div>
           </div>
