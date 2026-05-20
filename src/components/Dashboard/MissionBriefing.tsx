@@ -161,14 +161,17 @@ export function MissionBriefing() {
             
             <div className="space-y-4">
               <p className="text-xs font-medium text-slate-400 leading-relaxed italic">
-                "Owner, I'm currently waiting for a platform link to begin scraping market trends. I recommend connecting **TikTok** or **Etsy** first to establish a data feed."
+                {steps[2].status === 'current' 
+                  ? "\"Owner, I've analyzed your niche. Our next move is the Platform Bridge. Connecting your Etsy or TikTok will allow me to start automating your growth strategy immediately.\""
+                  : "\"I've successfully linked your store. I'm currently running AI Deep Research on your competitors. I'll have a list of winning product suggestions ready for your review in about 20 minutes.\""
+                }
               </p>
               
               <Link 
-                href="/settings"
+                href={steps[2].status === 'current' ? "/settings" : "/review"}
                 className="block w-full py-4 bg-white text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-50 transition-colors text-center active:scale-[0.98]"
               >
-                Connect First App
+                {steps[2].status === 'current' ? "Take Me to Bridge" : "Go to Review Queue"}
               </Link>
             </div>
           </div>

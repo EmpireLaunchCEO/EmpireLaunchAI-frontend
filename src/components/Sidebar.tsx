@@ -42,8 +42,8 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm",
                 isActive 
-                  ? "bg-blue-600 text-white shadow-xl shadow-blue-100" 
-                  : "text-slate-400 hover:text-slate-900 hover:bg-slate-50"
+                ? "bg-blue-600 text-white shadow-xl shadow-blue-100" 
+                : "text-slate-400 hover:text-slate-900 hover:bg-slate-50"
               )}
             >
               <item.icon className="w-5 h-5" />
@@ -51,6 +51,18 @@ export function Sidebar() {
             </Link>
           );
         })}
+
+        <div className="mt-8 px-4 pt-6 border-t border-slate-50">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">AI Brain Live</span>
+          </div>
+          <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100">
+             <p className="text-[11px] font-bold text-blue-700 leading-relaxed italic">
+               "Analyzing TikTok market trends for 'Boho Luxe'... I'll suggest new content soon."
+             </p>
+          </div>
+        </div>
       </nav>
       
       <div className="p-6 border-t border-slate-50">
