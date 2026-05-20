@@ -52,6 +52,65 @@ const etsySteps = [
   }
 ];
 
+const tiktokSteps = [
+  {
+    field: "App Name",
+    value: "EmpireLaunch Marketing",
+    instruction: "Enter this as the public name of your integration."
+  },
+  {
+    field: "Industry",
+    value: "Business Services",
+    instruction: "Select the industry that best fits your niche."
+  },
+  {
+    field: "Redirect URI",
+    value: "https://empire-launch-ai.vercel.app/auth/callback/tiktok",
+    instruction: "Copy this URL into the 'Redirect URI' box on TikTok."
+  }
+];
+
+const metaSteps = [
+  {
+    field: "App Type",
+    value: "Business",
+    instruction: "Select 'Business' to allow Instagram and Facebook management."
+  },
+  {
+    field: "Display Name",
+    value: "EmpireLaunch Social",
+    instruction: "This is how the app will appear in your Meta dashboard."
+  },
+  {
+    field: "Valid OAuth Redirect URIs",
+    value: "https://empire-launch-ai.vercel.app/auth/callback/meta",
+    instruction: "Copy this URL into the OAuth settings on Meta."
+  }
+];
+
+const gmailSteps = [
+  {
+    field: "Application Name",
+    value: "EmpireLaunch Support",
+    instruction: "Name your Google Cloud project this for easier tracking."
+  },
+  {
+    field: "Authorized Redirect URIs",
+    value: "https://empire-launch-ai.vercel.app/auth/callback/gmail",
+    instruction: "Paste this into your Google Cloud Console Credentials."
+  }
+];
+
+const platformMap: Record<string, any[]> = {
+  etsy: etsySteps,
+  tiktok: tiktokSteps,
+  meta: metaSteps,
+  instagram: metaSteps,
+  facebook: metaSteps,
+  gmail: gmailSteps,
+  google: gmailSteps
+};
+
 export function SetupAssistant() {
   const { activeSetupPlatform, finishSetup } = useEmpire();
   const [currentStep, setCurrentStep] = useState(0);
@@ -59,7 +118,13 @@ export function SetupAssistant() {
 
   if (!activeSetupPlatform) return null;
 
-  const steps = activeSetupPlatform.toLowerCase() === 'etsy' ? etsySteps : [];
+  const steps = platformMap[activeSetupPlatform.toLowerCase()] || [
+    {
+      field: "General Setup",
+      value: `https://empire-launch-ai.vercel.app/auth/callback/${activeSetupPlatform.toLowerCase()}`,
+      instruction: `I'm ready to link ${activeSetupPlatform}! Use this Redirect URL if the platform asks for one.`
+    }
+  ];
   const step = steps[currentStep];
 
   const handleCopy = (text: string) => {

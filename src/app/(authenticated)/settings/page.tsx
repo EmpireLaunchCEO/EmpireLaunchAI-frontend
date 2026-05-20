@@ -35,6 +35,8 @@ export default function SettingsPage() {
     setIsAiWalking(true);
   };
 
+  const { startSetup } = useEmpire();
+
   return (
     <div className="p-6 md:p-12 max-w-6xl mx-auto space-y-8 md:space-y-12 pb-32">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
@@ -86,7 +88,10 @@ export default function SettingsPage() {
                 />
                 {searchQuery && (
                   <button 
-                    onClick={() => startWalkthrough(searchQuery)}
+                    onClick={() => {
+                      startSetup(searchQuery);
+                      setSearchQuery('');
+                    }}
                     className="absolute right-3 top-2 bottom-2 px-6 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all flex items-center gap-2"
                   >
                     <Plus className="w-4 h-4" /> Link App
@@ -114,8 +119,8 @@ export default function SettingsPage() {
                     onClick={() => {
                       // Open Etsy in one tab
                       window.open('https://www.etsy.com/developers/register', '_blank');
-                      // Open the Teacher in a side-popout
-                      window.open('/setup-helper/etsy', 'EmpireAssistant', 'width=380,height=700,left=100,top=100');
+                      // Start the Teacher
+                      startSetup('etsy');
                     }}
                     className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 group"
                   >
@@ -123,15 +128,28 @@ export default function SettingsPage() {
                   </button>
                 </div>
 
-                <div className="p-8 rounded-[32px] border-2 border-slate-100 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">Automated Payouts</h3>
-                    <p className="text-sm text-slate-500 leading-relaxed">
-                      Sales from Etsy and social media are routed directly to your bank account via Stripe.
-                    </p>
+                <div className="p-8 rounded-[32px] bg-slate-50 border-2 border-slate-100 space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-bold italic flex items-center gap-2 text-slate-900">
+                      <Share2 className="w-5 h-5 text-blue-600" /> TikTok Marketing
+                    </h3>
+                    <span className="flex items-center gap-1.5 text-amber-600 font-bold text-xs uppercase tracking-widest">
+                      <AlertCircle className="w-4 h-4" /> Setup Required
+                    </span>
                   </div>
-                  <button className="flex items-center gap-2 text-blue-600 font-bold mt-6 hover:gap-3 transition-all">
-                    View Stripe Dashboard <ExternalLink className="w-4 h-4" />
+                  
+                  <p className="text-slate-500 text-sm leading-relaxed">
+                    Link TikTok for Business to automate your viral marketing campaigns and video scheduling.
+                  </p>
+
+                  <button 
+                    onClick={() => {
+                      window.open('https://business-api.tiktok.com/portal/app', '_blank');
+                      startSetup('tiktok');
+                    }}
+                    className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 group"
+                  >
+                    Launch Guided Setup <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>
