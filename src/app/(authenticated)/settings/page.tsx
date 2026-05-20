@@ -108,7 +108,7 @@ export default function SettingsPage() {
                     “Great choice! To link <span className="font-black text-white underline">{walkthroughApp}</span>, I'll need your API credentials. 
                     {walkthroughApp.toLowerCase().includes('etsy') ? (
                       <>
-                        {" For Etsy, you'll need to create a Developer account and generate a Keystring and Shared Secret. Use the URL below for both the 'Website' and 'Callback' fields."}
+                        {" For Etsy, you'll need to create a Developer account and generate a Keystring and Shared Secret. Use the specific URLs below for the 'Website' and 'Callback' fields."}
                         
                         <div className="mt-6 bg-white/10 rounded-2xl p-4 border border-white/20">
                           <div className="space-y-4">
