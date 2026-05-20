@@ -21,11 +21,13 @@ import { AIConsultantOverlay } from './AIConsultantOverlay';
 
 const platforms = [
   { id: 'tiktok', name: 'TikTok (Content/Shop)', icon: Video, color: 'text-pink-600', bg: 'bg-pink-50' },
-  { id: 'youtube', name: 'YouTube (Shorts/Main)', icon: Video, color: 'text-red-600', bg: 'bg-red-50' },
-  { id: 'etsy', name: 'Etsy Shop', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
-  { id: 'fiverr', name: 'Fiverr Gigs', icon: Zap, color: 'text-green-600', bg: 'bg-green-50' },
   { id: 'instagram', name: 'Instagram', icon: Camera, color: 'text-purple-600', bg: 'bg-purple-50' },
+  { id: 'youtube', name: 'YouTube (Shorts/Main)', icon: Video, color: 'text-red-600', bg: 'bg-red-50' },
   { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { id: 'pinterest', name: 'Pinterest', icon: Camera, color: 'text-rose-600', bg: 'bg-rose-50' },
+  { id: 'shopify', name: 'Shopify Store', icon: Globe, color: 'text-green-600', bg: 'bg-green-50' },
+  { id: 'etsy', name: 'Etsy Shop', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
+  { id: 'fiverr', name: 'Fiverr Gigs', icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
 ];
 
 interface PlatformMatrixProps {
