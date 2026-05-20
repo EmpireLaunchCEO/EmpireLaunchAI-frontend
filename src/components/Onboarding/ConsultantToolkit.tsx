@@ -78,7 +78,7 @@ export function ConsultantToolkit({ businessAngle }: ConsultantToolkitProps) {
     <div className="space-y-10 max-w-4xl mx-auto">
       <div className="text-center space-y-4">
         <h2 className="text-4xl font-black text-slate-900 tracking-tight">Consultant's Toolkit.</h2>
-        <p className="text-slate-500 text-lg">The essential apps to scale your {businessAngle || 'business'}.</p>
+        <p className="text-slate-500 text-lg">AI Engines Standing By: These tools will activate automatically in your command center.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
