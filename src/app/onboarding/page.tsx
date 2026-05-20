@@ -32,6 +32,8 @@ const platforms = [
   { id: 'pinterest', name: 'Pinterest' },
 ];
 
+import { API_URL } from '@/lib/config';
+
 export default function Onboarding() {
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState({
@@ -43,20 +45,51 @@ export default function Onboarding() {
   });
 
   const [isActivating, setIsActivating] = useState(false);
+  const { completeOnboarding, setActiveEmpireId } = useEmpire();
 
   const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
 
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, steps.length));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
-  const { completeOnboarding } = useEmpire();
-
-  const handleActivate = () => {
+  const handleActivate = async () => {
     setIsActivating(true);
-    completeOnboarding();
-    setTimeout(() => {
-      window.location.href = '/dashboard';
-    }, 4000);
+    
+    try {
+      // Initialize the empire in the database
+      const response = await fetch(`${API_URL}/api/agent/initialize`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer mock-mobile-token'
+        },
+        body: JSON.stringify({
+          userId: '00000000-0000-0000-0000-000000000000', // Root owner placeholder
+          name: data.name,
+          niche: data.niche,
+          angle: data.angle,
+          automationMode: data.automationMode
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.status === 'success') {
+        setActiveEmpireId(result.empire.id);
+        completeOnboarding();
+        
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Error during activation:', error);
+      // Fallback for demo
+      completeOnboarding();
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 3000);
+    }
   };
 
   if (isActivating) {

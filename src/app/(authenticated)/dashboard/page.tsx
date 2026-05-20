@@ -23,6 +23,7 @@ interface Goal {
 
 export default function Dashboard() {
   const { activeEmpireId } = useEmpire();
+  const [empireData, setEmpireData] = useState<any>(null);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [partnerStatus, setPartnerStatus] = useState<'idle' | 'researching' | 'creating'>('idle');
@@ -31,11 +32,18 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch specific empire data
+        const empireResponse = await fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`);
+        if (empireResponse.ok) {
+          const eData = await empireResponse.json();
+          setEmpireData(eData);
+        }
+
         const response = await fetch(`${API_URL}/api/agent/goals`);
         const data = await response.json();
         setGoals(data);
       } catch (error) {
-        console.error('Error fetching goals:', error);
+        console.error('Error fetching dashboard data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -54,8 +62,15 @@ export default function Dashboard() {
     try {
       const response = await fetch(`${API_URL}/api/agent/start`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ goal, userId: '00000000-0000-0000-0000-000000000000' }),
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer mock-mobile-token'
+        },
+        body: JSON.stringify({ 
+          goal, 
+          userId: '00000000-0000-0000-0000-000000000000',
+          empireId: activeEmpireId 
+        }),
       });
       const data = await response.json();
       if (data.status === 'success') {
@@ -84,8 +99,11 @@ export default function Dashboard() {
             Empire Command Center
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            Dashboard.
+            {empireData?.name || "Dashboard"}.
           </h1>
+          <p className="text-slate-500 font-medium">
+            Monitoring <span className="text-slate-900 font-bold">{empireData?.niche || "your"}</span> growth and autonomous operations.
+          </p>
         </div>
 
         <div className="flex items-center gap-4">
