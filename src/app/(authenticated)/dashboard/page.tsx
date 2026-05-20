@@ -116,12 +116,6 @@ export default function Dashboard() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button 
-            onClick={handleRefresh}
-            className="p-3 bg-white border-2 border-slate-100 rounded-2xl text-slate-400 hover:text-blue-600 hover:border-blue-100 transition-all active:scale-95 shadow-sm"
-          >
-            <RefreshCw className={cn("w-5 h-5", isRefreshing && "animate-spin")} />
-          </button>
           <div className="flex flex-col items-start md:items-end">
             <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-2xl border border-blue-100 font-bold text-sm shadow-sm">
               <Sparkles className="w-4 h-4" />

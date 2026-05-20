@@ -9,10 +9,10 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex bg-slate-50 min-h-screen">
+    <div className="flex bg-slate-50 min-h-screen relative overflow-hidden">
       <EmpireSwitcher />
       <Sidebar />
-      <main className="flex-1 lg:ml-[328px] min-h-screen bg-white lg:rounded-l-[48px] shadow-2xl shadow-slate-200 border-l border-slate-100 overflow-y-auto relative pb-20 lg:pb-0">
+      <main className="flex-1 lg:ml-[328px] min-h-screen bg-white lg:rounded-l-[48px] shadow-2xl shadow-slate-200 border-l border-slate-100 overflow-y-auto relative pb-32 lg:pb-0">
         {children}
       </main>
       <MobileNav />
