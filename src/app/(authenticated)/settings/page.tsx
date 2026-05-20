@@ -147,15 +147,23 @@ export default function SettingsPage() {
                           </p>
                         </div>
 
-                        <div className="mt-4">
+                        <div className="mt-4 flex flex-col sm:flex-row gap-3">
                           <a 
                             href="https://www.etsy.com/developers/register" 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all shadow-xl"
+                            className="inline-flex items-center justify-center gap-2 bg-white text-blue-600 px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all shadow-xl flex-1"
                           >
-                            Open Etsy Developer Portal <ExternalLink className="w-4 h-4" />
+                            1. Open Etsy Portal <ExternalLink className="w-4 h-4" />
                           </a>
+                          <button 
+                            onClick={() => {
+                              window.open('/setup-helper/etsy', 'EmpireAssistant', 'width=400,height=650,left=100,top=100');
+                            }}
+                            className="inline-flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl flex-1 border border-white/10"
+                          >
+                            2. Pop-out Assistant <Bot className="w-4 h-4" />
+                          </button>
                         </div>
                       </>
                     ) : (
