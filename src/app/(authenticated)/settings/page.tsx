@@ -25,42 +25,42 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('integrations');
 
   return (
-    <div className="p-12 max-w-6xl mx-auto space-y-12 pb-32">
-      <header className="flex justify-between items-end">
+    <div className="p-6 md:p-12 max-w-6xl mx-auto space-y-8 md:space-y-12 pb-32">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 flex items-center gap-3">
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 flex items-center gap-3">
             Settings
           </h1>
-          <p className="text-slate-500 mt-2 text-lg font-medium">
+          <p className="text-slate-500 mt-2 text-base md:text-lg font-medium">
             Manage your EmpireLaunchAI configuration and account security.
           </p>
         </div>
       </header>
 
-      <div className="flex gap-12">
-        {/* Navigation Sidebar */}
-        <aside className="w-64 shrink-0 space-y-2">
+      <div className="flex flex-col md:flex-row gap-8 md:gap-12">
+        {/* Navigation Sidebar / Horizontal Scroll on Mobile */}
+        <aside className="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full md:w-64 shrink-0 gap-2 pb-2 md:pb-0 border-b md:border-b-0 border-slate-100 md:border-none">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all",
+                "flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all whitespace-nowrap",
                 activeTab === tab.id 
                   ? "bg-slate-900 text-white shadow-xl shadow-slate-200" 
                   : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
               )}
             >
-              <tab.icon className="w-5 h-5" />
+              <tab.icon className="w-5 h-5 shrink-0" />
               {tab.name}
             </button>
           ))}
         </aside>
 
         {/* Content Area */}
-        <main className="flex-1">
+        <main className="flex-1 min-w-0">
           {activeTab === 'integrations' && (
-            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {/* Integrations Overview */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="p-8 rounded-[32px] bg-slate-900 text-white space-y-6">

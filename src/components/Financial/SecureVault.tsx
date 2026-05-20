@@ -170,14 +170,14 @@ export function SecureVault() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Secure Vault</h2>
-          <p className="text-slate-500">Manage your high-security API credentials and connection keys.</p>
+          <h2 className="text-xl md:text-2xl font-bold text-slate-900">Secure Vault</h2>
+          <p className="text-sm text-slate-500">Manage your high-security API credentials and connection keys.</p>
         </div>
-        <div className="bg-blue-50 border border-blue-100 rounded-2xl px-4 py-2 flex items-center gap-2">
+        <div className="bg-blue-50 border border-blue-100 rounded-2xl px-4 py-2 flex items-center gap-2 shrink-0">
           <ShieldCheck className="w-5 h-5 text-blue-600" />
-          <span className="text-sm font-bold text-blue-900 uppercase tracking-widest">Enterprise Encrypted</span>
+          <span className="text-[10px] md:text-sm font-bold text-blue-900 uppercase tracking-widest">Enterprise Encrypted</span>
         </div>
       </div>
 

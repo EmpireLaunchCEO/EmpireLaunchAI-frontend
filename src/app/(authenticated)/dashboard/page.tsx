@@ -91,28 +91,28 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-8 pb-40 max-w-7xl mx-auto space-y-12">
+    <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em]">
             <LayoutDashboard className="w-3 h-3" />
             Empire Command Center
           </div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
             {empireData?.name || "Dashboard"}.
           </h1>
-          <p className="text-slate-500 font-medium">
+          <p className="text-sm md:text-base text-slate-500 font-medium">
             Monitoring <span className="text-slate-900 font-bold">{empireData?.niche || "your"}</span> growth and autonomous operations.
           </p>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-start md:items-end">
             <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-2xl border border-blue-100 font-bold text-sm shadow-sm">
               <Sparkles className="w-4 h-4" />
               AI Co-Pilot: Active
             </div>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 ml-1 md:ml-0">
               Neural Sync: 98.4%
             </span>
           </div>

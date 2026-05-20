@@ -29,26 +29,26 @@ export default function AnalyticsPage() {
   const [activeTab, setActiveTab] = useState('growth');
 
   return (
-    <div className="p-8 pb-32 max-w-7xl mx-auto space-y-10">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div className="p-4 md:p-8 pb-32 max-w-7xl mx-auto space-y-8 md:space-y-10">
+      <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Intelligence Command</h1>
-          <p className="text-slate-500 font-medium italic">High-intelligence performance tracking and automated growth.</p>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Intelligence Command</h1>
+          <p className="text-slate-500 text-sm md:text-base font-medium italic">High-intelligence performance tracking and automated growth.</p>
         </div>
         
-        <div className="flex bg-slate-100 p-1.5 rounded-[24px]">
+        <div className="flex bg-slate-100 p-1 rounded-[20px] md:rounded-[24px] overflow-x-auto no-scrollbar max-w-full">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "flex items-center gap-2 px-6 py-3 rounded-[20px] text-sm font-bold transition-all",
+                "flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 rounded-[16px] md:rounded-[20px] text-xs md:text-sm font-bold transition-all whitespace-nowrap",
                 activeTab === tab.id 
                   ? "bg-white text-slate-900 shadow-sm" 
                   : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
               )}
             >
-              <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-blue-600" : "text-slate-400")} />
+              <tab.icon className={cn("w-3.5 h-3.5 md:w-4 h-4", activeTab === tab.id ? "text-blue-600" : "text-slate-400")} />
               {tab.name}
             </button>
           ))}

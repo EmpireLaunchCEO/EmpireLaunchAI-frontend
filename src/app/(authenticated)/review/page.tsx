@@ -127,25 +127,25 @@ export default function ReviewQueue() {
   };
 
   return (
-    <div className="p-8 pb-32">
-      <header className="mb-10 flex justify-between items-end">
+    <div className="p-4 md:p-8 pb-32 max-w-4xl mx-auto">
+      <header className="mb-8 md:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-3">
             Review Queue
           </h1>
-          <p className="text-slate-500 mt-2 font-medium">
+          <p className="text-slate-500 mt-2 font-medium text-sm md:text-base">
             {isLoading ? 'Loading items...' : `AI has prepared ${tasks.length} items for your review.`}
           </p>
         </div>
-        <div className="flex gap-3">
-          <button className="bg-white border border-slate-200 text-slate-600 px-4 py-2.5 rounded-xl flex items-center gap-2 font-bold hover:bg-slate-50 transition-colors">
+        <div className="flex gap-2 w-full md:w-auto">
+          <button className="flex-1 md:flex-none bg-white border border-slate-200 text-slate-600 px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 font-bold hover:bg-slate-50 transition-colors text-sm">
             <Filter className="w-4 h-4" />
             Filter
           </button>
           {!isLoading && tasks.length > 0 && (
-            <button className="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5" />
-              Approve All ({tasks.length})
+            <button className="flex-[2] md:flex-none bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center justify-center gap-2 text-sm">
+              <CheckCircle2 className="w-4 h-4" />
+              Approve All
             </button>
           )}
         </div>

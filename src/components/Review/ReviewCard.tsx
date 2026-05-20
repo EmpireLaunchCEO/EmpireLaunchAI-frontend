@@ -54,7 +54,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
   
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-      <div className="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+      <div className="p-4 md:p-6 border-b border-slate-50 flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-50/50 gap-4">
         <div className="flex items-center gap-3">
           <div className="bg-white p-2 rounded-xl shadow-sm">
             <Icon className={`w-5 h-5 ${config.color}`} />
@@ -67,11 +67,11 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
           <SecureIndicator variant="minimal" />
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-slate-400">Score:</span>
-            <div className="w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div className="w-16 md:w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
               <div className="w-[85%] h-full bg-green-500" />
             </div>
             <span className="text-xs font-bold text-green-600">85%</span>
@@ -79,7 +79,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
         </div>
       </div>
       
-      <div className="p-6">
+      <div className="p-4 md:p-6">
         <div className="aspect-video bg-slate-100 rounded-2xl mb-6 flex items-center justify-center relative group cursor-pointer overflow-hidden">
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <span className="text-white font-bold bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl border border-white/30">Edit Preview</span>
@@ -118,25 +118,25 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
           </div>
         </div>
         
-        <div className="mt-8 flex items-center justify-between gap-4">
-          <div className="flex gap-2">
+        <div className="mt-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="flex flex-wrap gap-2">
             <button 
               onClick={() => onRegenerate?.(id)}
-              className="flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-200 transition-colors"
+              className="flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-200 transition-colors shrink-0"
             >
               <RefreshCcw className="w-4 h-4" />
               Regenerate
             </button>
             {previousVersion && (
-              <div className="flex gap-2 animate-in fade-in slide-in-from-left-2 duration-300">
+              <div className="flex flex-wrap gap-2 animate-in fade-in slide-in-from-left-2 duration-300">
                 <button 
                   onClick={() => setIsComparing(true)}
-                  className="flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-100 transition-colors border border-blue-100"
+                  className="flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-100 transition-colors border border-blue-100 shrink-0"
                 >
                   <ArrowLeftRight className="w-4 h-4" />
-                  Compare Versions
+                  Compare
                 </button>
-                <div className="relative">
+                <div className="relative shrink-0">
                   <button className="flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-200 transition-colors">
                     Tone: {tone}
                     <ChevronDown className="w-4 h-4" />
@@ -147,15 +147,15 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
           </div>
           
           <div className="flex gap-2">
-            <button className="bg-slate-100 text-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-200 transition-colors">
+            <button className="flex-1 md:flex-none bg-slate-100 text-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-200 transition-colors">
               Save Draft
             </button>
             <button 
               onClick={() => onApprove?.(id)}
-              className="bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-blue-100"
+              className="flex-[2] md:flex-none bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-100"
             >
               <Send className="w-4 h-4" />
-              Approve & Schedule
+              Approve
             </button>
           </div>
         </div>

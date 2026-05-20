@@ -192,7 +192,7 @@ export default function Onboarding() {
         </span>
       </div>
 
-      <div className="w-full max-w-5xl px-8 py-12 lg:py-16 flex flex-col">
+      <div className="w-full max-w-5xl px-4 md:px-8 py-8 md:py-16 flex flex-col">
         <ProgressConstellation currentStep={currentStep} totalSteps={steps.length} />
 
         <div className="flex-1">
