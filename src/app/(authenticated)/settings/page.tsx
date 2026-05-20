@@ -107,7 +107,19 @@ export default function SettingsPage() {
                   <p className="text-lg font-medium leading-relaxed opacity-90">
                     “Great choice! To link <span className="font-black text-white underline">{walkthroughApp}</span>, I'll need your API credentials. 
                     {walkthroughApp.toLowerCase().includes('etsy') ? (
-                      " For Etsy, you'll need to create a Developer account at etsy.com/developers and generate a Keystring and Shared Secret. Use 'https://empire-launch-ai.vercel.app' as your application Website URL."
+                      <>
+                        {" For Etsy, you'll need to create a Developer account and generate a Keystring and Shared Secret. Use 'https://empire-launch-ai.vercel.app' as your application Website URL."}
+                        <div className="mt-4">
+                          <a 
+                            href="https://www.etsy.com/developers/register" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all shadow-xl"
+                          >
+                            Open Etsy Developer Portal <ExternalLink className="w-4 h-4" />
+                          </a>
+                        </div>
+                      </>
                     ) : (
                       " Usually, this involves creating a Developer account on their platform and generating a Client ID and Secret. I'll guide you through every click once you have those ready."
                     )}”
