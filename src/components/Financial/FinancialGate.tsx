@@ -88,7 +88,20 @@ export function FinancialGate({
           </div>
 
           {/* Security Note */}
-          <div className="mt-6">
+          <div className="mt-6 space-y-4">
+            {type === 'subscription' && (
+              <div className="p-4 bg-blue-50 border border-blue-100 rounded-2xl">
+                <div className="flex gap-3">
+                  <TrendingUp className="w-5 h-5 text-blue-600 shrink-0" />
+                  <div>
+                    <h4 className="text-xs font-black text-blue-900 uppercase tracking-widest">Billing Transparency</h4>
+                    <p className="text-[11px] text-blue-800 leading-relaxed mt-1">
+                      We secure your monthly dues automatically from your business earnings. If your empire hasn't generated profit yet, dues are charged to your primary card until you're in the green.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
             <SecureIndicator />
           </div>
 

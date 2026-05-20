@@ -48,8 +48,8 @@ const tourSteps: TourStep[] = [
   },
   {
     title: "Empire Expansion & Subscription",
-    description: "Your monthly subscription covers all AI processing and tool costs. Want to launch a second business? You can unlock new ventures from the Empire Switcher for a one-time expansion fee.",
-    highlight: "Expansion Alert",
+    description: "Your monthly subscription covers all AI processing and tool costs. We automatically secure these dues from your business earnings so you never have to worry about manual payments. If your empire hasn't generated profit yet, dues will be charged to your primary payment method until you're in the green.",
+    highlight: "Billing Policy",
     icon: Zap
   },
   {
