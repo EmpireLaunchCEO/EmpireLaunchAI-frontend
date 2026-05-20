@@ -11,7 +11,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Search,
-  Plus
+  Plus,
+  Bot
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SecureVault } from '@/components/Financial/SecureVault';
