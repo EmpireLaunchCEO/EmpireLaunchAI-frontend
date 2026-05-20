@@ -13,6 +13,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
+import { cn } from '@/lib/utils';
 
 const etsySteps = [
   {
