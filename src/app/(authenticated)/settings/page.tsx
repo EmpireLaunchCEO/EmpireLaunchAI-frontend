@@ -12,10 +12,12 @@ import {
   AlertCircle,
   Search,
   Plus,
-  Bot
+  Bot,
+  ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SecureVault } from '@/components/Financial/SecureVault';
+import { useEmpire } from '@/lib/EmpireContext';
 
 const tabs = [
   { id: 'integrations', name: 'Integrations', icon: Share2 },
@@ -27,14 +29,7 @@ const tabs = [
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('integrations');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isAiWalking, setIsAiWalking] = useState(false);
-  const [walkthroughApp, setWalkthroughApp] = useState('');
-
-  const startWalkthrough = (app: string) => {
-    setWalkthroughApp(app);
-    setIsAiWalking(true);
-  };
-
+  
   const { startSetup } = useEmpire();
 
   return (

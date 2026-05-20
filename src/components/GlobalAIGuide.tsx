@@ -14,7 +14,7 @@ const pageGuidance: Record<string, string[]> = {
   '/settings': [
     "This is the command center for your integrations.",
     "Use the search bar at the top if you want to link a specific app.",
-    "For Etsy setup, use 'https://empire-launch-ai.vercel.app' as your application website URL."
+    "Once you launch a setup, I'll provide the exact URLs you need to paste into the platform's developer portal."
   ],
   '/review': [
     "This is your Approval Queue. Nothing goes live without your 'OK'.",
