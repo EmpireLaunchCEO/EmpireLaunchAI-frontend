@@ -88,6 +88,20 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
             </motion.div>
           );
         })}
+
+        {/* "And Many More" Card */}
+        <motion.div
+          whileHover={{ y: -5 }}
+          className="p-6 rounded-[32px] border-2 border-dashed border-slate-200 bg-slate-50/50 flex flex-col justify-center items-center h-64 text-center space-y-4 group"
+        >
+          <div className="w-16 h-16 rounded-full bg-white border-2 border-slate-100 flex items-center justify-center shadow-sm group-hover:border-blue-400 transition-colors">
+            <Plus className="w-8 h-8 text-slate-300 group-hover:text-blue-500 transition-colors" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-slate-900">And Many More.</h3>
+            <p className="text-xs font-medium text-slate-400 mt-1">Your AI can adapt to any marketplace or social ecosystem you choose.</p>
+          </div>
+        </motion.div>
       </div>
 
       <AIConsultantOverlay 
