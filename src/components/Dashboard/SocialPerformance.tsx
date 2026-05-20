@@ -59,30 +59,30 @@ export function SocialPerformance() {
       </div>
 
       {winningPost && (
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[40px] p-8 text-white relative overflow-hidden shadow-xl shadow-blue-200">
+        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[32px] md:rounded-[40px] p-6 md:p-8 text-white relative overflow-hidden shadow-xl shadow-blue-200">
           <div className="absolute top-0 right-0 p-8 opacity-20 rotate-12">
-            <Sparkles className="w-48 h-48" />
+            <Sparkles className="w-24 md:w-48 h-24 md:h-48" />
           </div>
           
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/20">
-                <Sparkles className="w-4 h-4 text-blue-200" />
-                <span className="text-xs font-black uppercase tracking-widest">Winning Post Spotlight</span>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10 items-center">
+            <div className="space-y-4 md:space-y-6">
+              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 rounded-xl md:rounded-2xl border border-white/20">
+                <Sparkles className="w-3 md:w-4 h-3 md:h-4 text-blue-200" />
+                <span className="text-[10px] md:text-xs font-black uppercase tracking-widest">Winning Post Spotlight</span>
               </div>
               
               <div className="space-y-2">
-                <h3 className="text-4xl font-black leading-tight">"{winningPost.title}" is scaling fast.</h3>
-                <p className="text-blue-100 font-medium leading-relaxed">
+                <h3 className="text-2xl md:text-4xl font-black leading-tight">"{winningPost.title}" is scaling fast.</h3>
+                <p className="text-blue-100 text-sm md:text-base font-medium leading-relaxed">
                   This post has a 250% higher conversion rate than your average. Should I create a few variations for next week?
                 </p>
               </div>
 
-              <div className="flex gap-4">
-                <button className="bg-white text-blue-600 px-8 py-4 rounded-3xl font-black text-sm hover:scale-105 transition-transform">
+              <div className="flex flex-wrap gap-3 md:gap-4">
+                <button className="bg-white text-blue-600 px-6 md:px-8 py-3 md:py-4 rounded-2xl md:rounded-3xl font-black text-xs md:text-sm hover:scale-105 transition-transform">
                   Scale with AI
                 </button>
-                <button className="bg-white/10 text-white px-6 py-4 rounded-3xl font-black text-sm hover:bg-white/20 transition-all">
+                <button className="bg-white/10 text-white px-5 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-3xl font-black text-xs md:text-sm hover:bg-white/20 transition-all">
                   View Data
                 </button>
               </div>

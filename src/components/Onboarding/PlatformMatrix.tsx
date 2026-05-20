@@ -45,7 +45,7 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
         <p className="text-slate-500 text-lg">Your AI partner is equipped to manage growth across these channels. You'll securely link your accounts in the Dashboard.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {platforms.map((platform) => {
           const Icon = platform.icon;
 
@@ -54,28 +54,28 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
               key={platform.id}
               whileHover={{ y: -5 }}
               className={cn(
-                "p-6 rounded-[32px] border-2 transition-all flex flex-col justify-between h-64 relative overflow-hidden group border-slate-100 bg-white hover:border-blue-600 shadow-sm"
+                "p-5 md:p-6 rounded-[28px] md:rounded-[32px] border-2 transition-all flex flex-col justify-between h-56 md:h-64 relative overflow-hidden group border-slate-100 bg-white hover:border-blue-600 shadow-sm"
               )}
             >
               <div className="flex justify-between items-start">
-                <div className={cn("p-4 rounded-2xl", platform.bg)}>
-                  <Icon className={cn("w-6 h-6", platform.color)} />
+                <div className={cn("p-3 md:p-4 rounded-xl md:rounded-2xl", platform.bg)}>
+                  <Icon className={cn("w-5 h-5 md:w-6 h-6", platform.color)} />
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-400 rounded-full text-[10px] font-black uppercase tracking-widest">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-400 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest">
                   Ready to Sync
                 </div>
               </div>
 
               <div className="mt-auto">
-                <h3 className="text-xl font-bold text-slate-900">{platform.name}</h3>
-                <div className="mt-4 flex flex-col gap-2">
+                <h3 className="text-lg md:text-xl font-bold text-slate-900">{platform.name}</h3>
+                <div className="mt-3 md:mt-4 flex flex-col gap-2">
                   <button 
                     onClick={() => setConsultingPlatform(platform.id)}
-                    className="w-full py-3 px-4 bg-blue-600/10 text-blue-700 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2 group/btn"
+                    className="w-full py-2.5 md:py-3 px-4 bg-blue-600/10 text-blue-700 rounded-xl md:rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2 group/btn"
                   >
-                    <Zap className="w-3.5 h-3.5 fill-current" />
+                    <Zap className="w-3 md:w-3.5 h-3 md:h-3.5 fill-current" />
                     View Strategy
-                    <ChevronRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-3 md:w-3.5 h-3 md:h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>

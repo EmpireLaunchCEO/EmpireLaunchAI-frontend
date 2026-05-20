@@ -37,37 +37,37 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
         <p className="text-slate-500 text-lg">Define the soul of your business.</p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         <div className="space-y-2">
-          <label className="text-xs font-black uppercase tracking-widest text-slate-400">Empire Name</label>
+          <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400">Empire Name</label>
           <input
             type="text"
             placeholder="e.g. Boho Luxe Prints"
             value={data.name}
             onChange={(e) => updateData({ name: e.target.value })}
-            className="w-full p-5 rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white outline-none transition-all text-xl font-bold text-slate-900 shadow-sm"
+            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white outline-none transition-all text-lg md:text-xl font-bold text-slate-900 shadow-sm"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-xs font-black uppercase tracking-widest text-slate-400">Niche</label>
+          <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400">Niche</label>
           <input
             type="text"
             placeholder="e.g. Digital Planners"
             value={data.niche}
             onChange={(e) => updateData({ niche: e.target.value })}
-            className="w-full p-5 rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white outline-none transition-all text-xl font-bold text-slate-900 shadow-sm"
+            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white outline-none transition-all text-lg md:text-xl font-bold text-slate-900 shadow-sm"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-xs font-black uppercase tracking-widest text-slate-400">Business Angle</label>
+          <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400">Business Angle</label>
           <textarea
             placeholder="What makes your brand unique?"
             rows={3}
             value={data.angle}
             onChange={(e) => updateData({ angle: e.target.value })}
-            className="w-full p-5 rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white outline-none transition-all text-lg font-medium text-slate-900 shadow-sm resize-none"
+            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white outline-none transition-all text-base md:text-lg font-medium text-slate-900 shadow-sm resize-none"
           />
         </div>
       </div>
@@ -78,19 +78,19 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="p-6 rounded-[40px] bg-blue-600 text-white shadow-2xl shadow-blue-200 relative overflow-hidden group"
+            className="p-5 md:p-6 rounded-[32px] md:rounded-[40px] bg-blue-600 text-white shadow-2xl shadow-blue-200 relative overflow-hidden group"
           >
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
-              <Sparkles className="w-16 h-16" />
+              <Sparkles className="w-12 md:w-16 h-12 md:h-16" />
             </div>
-            <div className="flex items-start gap-4 relative z-10">
-              <div className="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center shrink-0">
-                <MessageSquareQuote className="w-6 h-6" />
+            <div className="flex items-start gap-3 md:gap-4 relative z-10">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-400 flex items-center justify-center shrink-0">
+                <MessageSquareQuote className="w-4 h-4 md:w-6 md:h-6" />
               </div>
-              <p className="text-lg font-bold leading-tight italic">“{aiInsight}”</p>
+              <p className="text-base md:text-lg font-bold leading-tight italic">“{aiInsight}”</p>
             </div>
             <div className="mt-4 flex items-center justify-end">
-              <span className="text-[10px] font-black uppercase tracking-widest opacity-60">AI Consultant Insight</span>
+              <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-60">AI Consultant Insight</span>
             </div>
           </motion.div>
         )}
