@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import { MissionBriefing } from '@/components/Dashboard/MissionBriefing';
 import { FinancialOverview } from '@/components/Dashboard/FinancialOverview';
 import { SocialPerformance } from '@/components/Dashboard/SocialPerformance';
 import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
@@ -75,7 +76,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-8 pb-40 max-w-7xl mx-auto space-y-10">
+    <div className="p-8 pb-40 max-w-7xl mx-auto space-y-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em]">
@@ -83,11 +84,8 @@ export default function Dashboard() {
             Empire Command Center
           </div>
           <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            Strategic Overview.
+            Dashboard.
           </h1>
-          <p className="text-slate-500 font-medium">
-            Monitoring <span className="text-slate-900 font-bold">Empire #{activeEmpireId}</span> growth and autonomous operations.
-          </p>
         </div>
 
         <div className="flex items-center gap-4">
@@ -100,11 +98,11 @@ export default function Dashboard() {
               Neural Sync: 98.4%
             </span>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-xl shadow-slate-200">
-            <Zap className="w-6 h-6 fill-current" />
-          </div>
         </div>
       </header>
+
+      {/* Primary Mission Briefing */}
+      <MissionBriefing />
 
       {/* Partner Thinking Status Overlay */}
       <AnimatePresence>
