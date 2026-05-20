@@ -1,7 +1,23 @@
+"use client";
+
 import Link from "next/link";
 import { Sparkles, ArrowRight, Shield, Rocket, Target } from "lucide-react";
+import { useEmpire } from "@/lib/EmpireContext";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { isOnboarded } = useEmpire();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isOnboarded) {
+      router.push('/dashboard');
+    }
+  }, [isOnboarded, router]);
+
+  if (isOnboarded) return null;
+
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-8 overflow-hidden relative">
       {/* Background decoration */}

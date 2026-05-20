@@ -49,8 +49,11 @@ export default function Onboarding() {
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, steps.length));
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
+  const { completeOnboarding } = useEmpire();
+
   const handleActivate = () => {
     setIsActivating(true);
+    completeOnboarding();
     setTimeout(() => {
       window.location.href = '/dashboard';
     }, 4000);
