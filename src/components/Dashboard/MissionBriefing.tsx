@@ -15,12 +15,15 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import Link from 'next/link';
+
 interface Step {
   id: number;
   title: string;
   description: string;
   status: 'complete' | 'current' | 'upcoming';
   icon: any;
+  href?: string;
 }
 
 const steps: Step[] = [
@@ -43,7 +46,8 @@ const steps: Step[] = [
     title: "Platform Bridge",
     description: "Connect your first social or store outlet.",
     status: 'current',
-    icon: Share2
+    icon: Share2,
+    href: '/settings'
   },
   {
     id: 4,
@@ -69,7 +73,7 @@ export function MissionBriefing() {
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-600 rounded-full blur-[100px] opacity-20 -ml-32 -mb-32" />
 
       <div className="relative z-10 flex flex-col lg:flex-row gap-12 items-start">
-        <div className="flex-1 space-y-8">
+        <div className="flex-1 space-y-8 w-full">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-blue-400 font-black text-[10px] uppercase tracking-[0.3em]">
               <Target className="w-3 h-3" />
@@ -85,41 +89,62 @@ export function MissionBriefing() {
           </div>
 
           <div className="grid grid-cols-1 gap-3">
-            {steps.map((step) => (
-              <motion.div 
-                key={step.id}
-                whileHover={{ x: 4 }}
-                className={cn(
-                  "flex items-center gap-4 p-4 rounded-3xl border transition-all",
-                  step.status === 'complete' ? "bg-blue-600/10 border-blue-600/20 text-blue-400" :
-                  step.status === 'current' ? "bg-white text-slate-900 border-white shadow-xl shadow-blue-900/20" :
-                  "bg-slate-800/50 border-slate-700/50 text-slate-500"
-                )}
-              >
-                <div className={cn(
-                  "w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-inner",
-                  step.status === 'complete' ? "bg-blue-600 text-white" :
-                  step.status === 'current' ? "bg-blue-600 text-white" :
-                  "bg-slate-700 text-slate-500"
-                )}>
-                  {step.status === 'complete' ? <CheckCircle2 className="w-5 h-5" /> : <step.icon className="w-5 h-5" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-sm truncate uppercase tracking-wide">{step.title}</h4>
-                  <p className={cn(
-                    "text-[10px] font-medium truncate",
-                    step.status === 'current' ? "text-slate-500" : "opacity-60"
+            {steps.map((step) => {
+              const content = (
+                <div className="flex items-center gap-4">
+                  <div className={cn(
+                    "w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-inner",
+                    step.status === 'complete' ? "bg-blue-600 text-white" :
+                    step.status === 'current' ? "bg-blue-600 text-white" :
+                    "bg-slate-700 text-slate-500"
                   )}>
-                    {step.description}
-                  </p>
+                    {step.status === 'complete' ? <CheckCircle2 className="w-5 h-5" /> : <step.icon className="w-5 h-5" />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-bold text-sm truncate uppercase tracking-wide">{step.title}</h4>
+                    <p className={cn(
+                      "text-[10px] font-medium truncate",
+                      step.status === 'current' ? "text-slate-500" : "opacity-60"
+                    )}>
+                      {step.description}
+                    </p>
+                  </div>
+                  {step.status === 'current' && (
+                    <div className="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-200">
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
+                  )}
                 </div>
-                {step.status === 'current' && (
-                  <button className="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-200">
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                )}
-              </motion.div>
-            ))}
+              );
+
+              if (step.href && step.status === 'current') {
+                return (
+                  <Link 
+                    href={step.href}
+                    key={step.id}
+                    className={cn(
+                      "block p-4 rounded-3xl border transition-all bg-white text-slate-900 border-white shadow-xl shadow-blue-900/20 active:scale-[0.98]"
+                    )}
+                  >
+                    {content}
+                  </Link>
+                );
+              }
+
+              return (
+                <motion.div 
+                  key={step.id}
+                  whileHover={{ x: 4 }}
+                  className={cn(
+                    "p-4 rounded-3xl border transition-all",
+                    step.status === 'complete' ? "bg-blue-600/10 border-blue-600/20 text-blue-400" :
+                    "bg-slate-800/50 border-slate-700/50 text-slate-500"
+                  )}
+                >
+                  {content}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
@@ -140,9 +165,12 @@ export function MissionBriefing() {
                 "Owner, I'm currently waiting for a platform link to begin scraping market trends. I recommend connecting **TikTok** or **Etsy** first to establish a data feed."
               </p>
               
-              <button className="w-full py-4 bg-white text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-50 transition-colors">
+              <Link 
+                href="/settings"
+                className="block w-full py-4 bg-white text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-50 transition-colors text-center active:scale-[0.98]"
+              >
                 Connect First App
-              </button>
+              </Link>
             </div>
           </div>
 
