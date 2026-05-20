@@ -4,18 +4,14 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-  LayoutDashboard, 
-  Inbox, 
-  TrendingUp, 
+  Home,
   Settings,
   Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Review', href: '/review', icon: Inbox },
-  { name: 'Analytics', href: '/analytics', icon: TrendingUp },
+  { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
