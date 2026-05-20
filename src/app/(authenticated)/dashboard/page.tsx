@@ -8,7 +8,7 @@ import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
 import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
-import { Sparkles, Loader2, LayoutDashboard, ArrowUpRight } from 'lucide-react';
+import { Sparkles, Loader2, Home, ArrowUpRight, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -27,31 +27,38 @@ export default function Dashboard() {
   const [empireData, setEmpireData] = useState<any>(null);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [partnerStatus, setPartnerStatus] = useState<'idle' | 'researching' | 'creating'>('idle');
   const [executingInsight, setExecutingInsight] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch specific empire data
-        const empireResponse = await fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`);
-        if (empireResponse.ok) {
-          const eData = await empireResponse.json();
-          setEmpireData(eData);
-        }
-
-        const response = await fetch(`${API_URL}/api/agent/goals`);
-        const data = await response.json();
-        setGoals(data);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      } finally {
-        setIsLoading(false);
+  const fetchData = async () => {
+    try {
+      // Fetch specific empire data
+      const empireResponse = await fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`);
+      if (empireResponse.ok) {
+        const eData = await empireResponse.json();
+        setEmpireData(eData);
       }
-    };
 
+      const response = await fetch(`${API_URL}/api/agent/goals`);
+      const data = await response.json();
+      setGoals(data);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [activeEmpireId]);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    fetchData();
+  };
 
   const handleExecute = async (goal: string) => {
     if (partnerStatus !== 'idle') return;
@@ -97,7 +104,7 @@ export default function Dashboard() {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em]">
-            <LayoutDashboard className="w-3 h-3" />
+            <Home className="w-3 h-3" />
             Empire Command Center
           </div>
           <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
@@ -109,6 +116,12 @@ export default function Dashboard() {
         </div>
 
         <div className="flex items-center gap-4">
+          <button 
+            onClick={handleRefresh}
+            className="p-3 bg-white border-2 border-slate-100 rounded-2xl text-slate-400 hover:text-blue-600 hover:border-blue-100 transition-all active:scale-95 shadow-sm"
+          >
+            <RefreshCw className={cn("w-5 h-5", isRefreshing && "animate-spin")} />
+          </button>
           <div className="flex flex-col items-start md:items-end">
             <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-2xl border border-blue-100 font-bold text-sm shadow-sm">
               <Sparkles className="w-4 h-4" />
