@@ -1,7 +1,6 @@
 import { Sidebar } from "@/components/Sidebar";
 import { EmpireSwitcher } from "@/components/EmpireSwitcher";
 import { MobileNav } from "@/components/MobileNav";
-import { SetupAssistant } from "@/components/SetupAssistant";
 
 export default function AuthenticatedLayout({
   children,
@@ -16,7 +15,6 @@ export default function AuthenticatedLayout({
         {children}
       </main>
       <MobileNav />
-      <SetupAssistant />
     </div>
   );
 }

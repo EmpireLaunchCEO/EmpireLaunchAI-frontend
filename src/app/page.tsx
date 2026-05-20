@@ -7,16 +7,25 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { isOnboarded } = useEmpire();
+  const { isOnboarded, isInitialized } = useEmpire();
   const router = useRouter();
 
   useEffect(() => {
-    if (isOnboarded) {
-      router.push('/dashboard');
+    if (isInitialized) {
+      if (isOnboarded) {
+        router.replace('/dashboard');
+      } else {
+        // If not onboarded, we stay on the landing page, 
+        // but we can also pre-check if they should go to onboarding
+      }
     }
-  }, [isOnboarded, router]);
+  }, [isInitialized, isOnboarded, router]);
 
+  // If already onboarded, don't even wait for useEffect, show nothing
   if (isOnboarded) return null;
+  
+  // While initializing, show nothing to avoid flash
+  if (!isInitialized) return null;
 
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-8 overflow-hidden relative">

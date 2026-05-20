@@ -6,6 +6,7 @@ interface EmpireContextType {
   activeEmpireId: string;
   setActiveEmpireId: (id: string) => void;
   isOnboarded: boolean;
+  isInitialized: boolean;
   completeOnboarding: () => void;
   activeSetupPlatform: string | null;
   startSetup: (platform: string) => void;
@@ -15,19 +16,29 @@ interface EmpireContextType {
 const EmpireContext = createContext<EmpireContextType | undefined>(undefined);
 
 export function EmpireProvider({ children }: { children: React.ReactNode }) {
-  const [activeEmpireId, setActiveEmpireId] = useState('1');
-  const [isOnboarded, setIsOnboarded] = useState(false);
-  const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);
+  const [activeEmpireId, setActiveEmpireId] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('activeEmpireId') || '1';
+    }
+    return '1';
+  });
+  const [isOnboarded, setIsOnboarded] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('isOnboarded') === 'true';
+    }
+    return false;
+  });
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('activeSetupPlatform');
+    }
+    return null;
+  });
 
-  // Load state from localStorage on mount
+  // Keep initialization for things that need to happen after mount
   useEffect(() => {
-    const savedEmpireId = localStorage.getItem('activeEmpireId');
-    const savedOnboarded = localStorage.getItem('isOnboarded');
-    const savedSetup = localStorage.getItem('activeSetupPlatform');
-
-    if (savedEmpireId) setActiveEmpireId(savedEmpireId);
-    if (savedOnboarded === 'true') setIsOnboarded(true);
-    if (savedSetup) setActiveSetupPlatform(savedSetup);
+    setIsInitialized(true);
   }, []);
 
   const handleSetActiveEmpireId = (id: string) => {
@@ -59,6 +70,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       activeEmpireId, 
       setActiveEmpireId: handleSetActiveEmpireId,
       isOnboarded,
+      isInitialized,
       completeOnboarding,
       activeSetupPlatform,
       startSetup,

@@ -14,6 +14,7 @@ import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { OnboardingTour } from '@/components/Dashboard/OnboardingTour';
+import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 
 interface Goal {
   id: string;
@@ -92,110 +93,112 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
-      <OnboardingTour />
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em]">
-            <Home className="w-3 h-3" />
-            Empire Command Center
-          </div>
-          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
-            {empireData?.name || "Dashboard"}.
-          </h1>
-          <p className="text-sm md:text-base text-slate-500 font-medium">
-            Monitoring <span className="text-slate-900 font-bold">{empireData?.niche || "your"}</span> growth and autonomous operations.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col items-start md:items-end">
-            <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-2xl border border-blue-100 font-bold text-sm shadow-sm">
-              <Sparkles className="w-4 h-4" />
-              AI Co-Pilot: Active
+    <PullToRefresh onRefresh={fetchData}>
+      <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
+        <OnboardingTour />
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em]">
+              <Home className="w-3 h-3" />
+              Empire Command Center
             </div>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 ml-1 md:ml-0">
-              Neural Sync: 98.4%
-            </span>
+            <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
+              {empireData?.name || "Dashboard"}.
+            </h1>
+            <p className="text-sm md:text-base text-slate-500 font-medium">
+              Monitoring <span className="text-slate-900 font-bold">{empireData?.niche || "your"}</span> growth and autonomous operations.
+            </p>
           </div>
-        </div>
-      </header>
 
-      {/* Primary Mission Briefing */}
-      <MissionBriefing />
-
-      {/* Partner Thinking Status Overlay */}
-      <AnimatePresence>
-        {partnerStatus !== 'idle' && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="p-6 bg-slate-900 rounded-[32px] text-white shadow-2xl flex items-center gap-6 relative overflow-hidden"
-          >
-            <div className="relative z-10 w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center shrink-0">
-              <Loader2 className="w-8 h-8 animate-spin" />
-            </div>
-            <div className="relative z-10 flex-1">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Autonomous Operation in Progress</span>
-                <span className="text-[10px] font-bold text-slate-400">Phase: Research & Analysis</span>
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col items-start md:items-end">
+              <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-2xl border border-blue-100 font-bold text-sm shadow-sm">
+                <Sparkles className="w-4 h-4" />
+                AI Co-Pilot: Active
               </div>
-              <p className="text-lg font-bold">
-                {partnerStatus === 'researching' 
-                  ? 'Analyzing global market velocity for your current niche...' 
-                  : `Executing Strategy: "${executingInsight?.substring(0, 60)}..."`}
-              </p>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 ml-1 md:ml-0">
+                Neural Sync: 98.4%
+              </span>
             </div>
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600 rounded-full blur-[100px] opacity-20 -mr-32 -mt-32 animate-pulse" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </header>
 
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-2 flex flex-col gap-10">
-           <div className="space-y-6">
-             <div className="flex items-center justify-between">
-               <h2 className="text-xl font-bold text-slate-900">Financial Growth</h2>
-               <button className="text-sm font-bold text-blue-600 flex items-center gap-1">
-                 Full Ledger <ArrowUpRight className="w-4 h-4" />
-               </button>
-             </div>
-             <FinancialOverview />
-           </div>
-           <SocialPerformance />
-        </div>
-        <div className="lg:col-span-1">
-           <EmpireConstellation />
-        </div>
-      </section>
+        {/* Primary Mission Briefing */}
+        <MissionBriefing />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-2">
-          <AIOptimizationHub />
-        </div>
-        <div className="lg:col-span-1 space-y-10">
-          <AutonomousCyclesStatus />
-          
-          <div className="p-8 rounded-[40px] bg-gradient-to-br from-blue-600 to-indigo-700 text-white relative overflow-hidden shadow-2xl shadow-blue-200">
-             <div className="relative z-10 space-y-4">
-                <h3 className="text-xl font-black leading-tight">Expansion Alert.</h3>
-                <p className="text-blue-100 text-sm leading-relaxed">
-                  I've detected a high-probability opportunity in the 'Eco-Friendly' segment. Should we pivot our next 3 posts?
+        {/* Partner Thinking Status Overlay */}
+        <AnimatePresence>
+          {partnerStatus !== 'idle' && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="p-6 bg-slate-900 rounded-[32px] text-white shadow-2xl flex items-center gap-6 relative overflow-hidden"
+            >
+              <div className="relative z-10 w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center shrink-0">
+                <Loader2 className="w-8 h-8 animate-spin" />
+              </div>
+              <div className="relative z-10 flex-1">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Autonomous Operation in Progress</span>
+                  <span className="text-[10px] font-bold text-slate-400">Phase: Research & Analysis</span>
+                </div>
+                <p className="text-lg font-bold">
+                  {partnerStatus === 'researching' 
+                    ? 'Analyzing global market velocity for your current niche...' 
+                    : `Executing Strategy: "${executingInsight?.substring(0, 60)}..."`}
                 </p>
-                <button className="w-full py-4 bg-white text-blue-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-50 transition-colors shadow-lg">
-                  Discuss Strategy
-                </button>
+              </div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600 rounded-full blur-[100px] opacity-20 -mr-32 -mt-32 animate-pulse" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="lg:col-span-2 flex flex-col gap-10">
+             <div className="space-y-6">
+               <div className="flex items-center justify-between">
+                 <h2 className="text-xl font-bold text-slate-900">Financial Growth</h2>
+                 <button className="text-sm font-bold text-blue-600 flex items-center gap-1">
+                   Full Ledger <ArrowUpRight className="w-4 h-4" />
+                 </button>
+               </div>
+               <FinancialOverview />
              </div>
-             <Sparkles className="absolute -right-4 -bottom-4 w-32 h-32 text-white opacity-10 rotate-12" />
+             <SocialPerformance />
+          </div>
+          <div className="lg:col-span-1">
+             <EmpireConstellation />
+          </div>
+        </section>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="lg:col-span-2">
+            <AIOptimizationHub />
+          </div>
+          <div className="lg:col-span-1 space-y-10">
+            <AutonomousCyclesStatus />
+            
+            <div className="p-8 rounded-[40px] bg-gradient-to-br from-blue-600 to-indigo-700 text-white relative overflow-hidden shadow-2xl shadow-blue-200">
+               <div className="relative z-10 space-y-4">
+                  <h3 className="text-xl font-black leading-tight">Expansion Alert.</h3>
+                  <p className="text-blue-100 text-sm leading-relaxed">
+                    I've detected a high-probability opportunity in the 'Eco-Friendly' segment. Should we pivot our next 3 posts?
+                  </p>
+                  <button className="w-full py-4 bg-white text-blue-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-50 transition-colors shadow-lg">
+                    Discuss Strategy
+                  </button>
+               </div>
+               <Sparkles className="absolute -right-4 -bottom-4 w-32 h-32 text-white opacity-10 rotate-12" />
+            </div>
           </div>
         </div>
-      </div>
 
-      <ConversationalInput 
-        onExecute={handleExecute} 
-        tip='Try "Research trending digital planners on Etsy"'
-      />
-    </div>
+        <ConversationalInput 
+          onExecute={handleExecute} 
+          tip='Try "Research trending digital planners on Etsy"'
+        />
+      </div>
+    </PullToRefresh>
   );
 }

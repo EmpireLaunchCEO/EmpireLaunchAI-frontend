@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { RefreshCcw, CheckCircle2, Clock, AlertCircle, Play, Pause } from 'lucide-react';
+import { Activity, CheckCircle2, Clock, AlertCircle, Play, Pause } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CycleProps {
@@ -41,7 +41,7 @@ const Cycle = ({ name, status, progress, nextAction }: CycleProps) => (
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         {status === 'active' ? (
-          <RefreshCcw className="w-6 h-6 text-blue-600 animate-spin-slow" />
+          <Activity className="w-6 h-6 text-blue-600 animate-pulse" />
         ) : status === 'pending-approval' ? (
           <AlertCircle className="w-6 h-6 text-amber-500" />
         ) : (
@@ -84,9 +84,6 @@ export function AutonomousCyclesStatus() {
     <div className="space-y-6 text-left">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-slate-900">Active Goals & Cycles</h2>
-        <button className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors">
-          <Play className="w-4 h-4 text-slate-600 fill-current" />
-        </button>
       </div>
 
       <div className="space-y-4">

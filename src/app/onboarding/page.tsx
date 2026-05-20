@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronRight, 
@@ -36,6 +37,8 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 
 export default function Onboarding() {
+  const { completeOnboarding, setActiveEmpireId, isOnboarded, isInitialized } = useEmpire();
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState({
     name: '',
@@ -46,7 +49,18 @@ export default function Onboarding() {
   });
 
   const [isActivating, setIsActivating] = useState(false);
-  const { completeOnboarding, setActiveEmpireId } = useEmpire();
+
+  useEffect(() => {
+    if (isInitialized && isOnboarded) {
+      router.replace('/dashboard');
+    }
+  }, [isInitialized, isOnboarded, router]);
+
+  // If already onboarded, don't even wait for useEffect, show nothing
+  if (isOnboarded) return null;
+  
+  // While initializing, show nothing to avoid flash
+  if (!isInitialized) return null;
 
   const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
 
