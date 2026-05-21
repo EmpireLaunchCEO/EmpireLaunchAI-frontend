@@ -41,6 +41,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
         <div className="space-y-2">
           <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400">Empire Name</label>
           <input
+            id="empire-name"
             type="text"
             placeholder="e.g. Boho Luxe Prints"
             value={data.name}
@@ -52,6 +53,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
         <div className="space-y-2">
           <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400">Niche</label>
           <input
+            id="empire-niche"
             type="text"
             placeholder="e.g. Digital Planners"
             value={data.niche}
@@ -63,6 +65,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
         <div className="space-y-2">
           <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400">Business Angle</label>
           <textarea
+            id="empire-angle"
             placeholder="What makes your brand unique?"
             rows={3}
             value={data.angle}
