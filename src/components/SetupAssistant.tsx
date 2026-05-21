@@ -87,7 +87,7 @@ export function SetupAssistant() {
   const steps = activeSetupPlatform ? (platformMap[activeSetupPlatform.toLowerCase()] || []) : 
                (pathname === '/onboarding' ? onboardingSteps : null);
 
-  const step = steps ? steps[currentStep] : null;
+  const step = (steps && currentStep >= 0 && currentStep < (steps as any[]).length) ? (steps as any[])[currentStep] : null;
 
   const { x, y, strategy, refs, middlewareData, placement } = useFloating({
     elements: {
@@ -104,11 +104,10 @@ export function SetupAssistant() {
   });
 
   useEffect(() => {
-    if (step?.selector) {
+    if (step && step.selector) {
       const el = document.querySelector(step.selector) as HTMLElement;
       if (el) {
         setTargetElement(el);
-        // Scroll into view if needed
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } else {
         setTargetElement(null);
@@ -125,7 +124,7 @@ export function SetupAssistant() {
   };
 
   const next = () => {
-    if (steps && currentStep < steps.length - 1) {
+    if (steps && currentStep < (steps as any[]).length - 1) {
       setCurrentStep(currentStep + 1);
       setCopied(false);
     } else if (activeSetupPlatform) {
@@ -140,7 +139,9 @@ export function SetupAssistant() {
     }
   };
 
-  if (!step || !targetElement) return null;
+  if (!step || !targetElement || !steps) return null;
+
+  const typedSteps = steps as any[];
 
   const staticSide = {
     top: 'bottom',
@@ -153,14 +154,15 @@ export function SetupAssistant() {
     <div className="fixed inset-0 pointer-events-none z-[9999]">
       <AnimatePresence>
         <motion.div
+          key={`${pathname}-${activeSetupPlatform}-${currentStep}`}
           ref={refs.setFloating}
-          initial={{ opacity: 0, scale: 0.9, x: x || 0, y: (y || 0) + 10 }}
-          animate={{ opacity: 1, scale: 1, x: x || 0, y: y || 0 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
           style={{
             position: strategy,
-            top: 0,
-            left: 0,
+            top: y ?? 0,
+            left: x ?? 0,
           }}
           className="pointer-events-auto"
         >
@@ -195,7 +197,7 @@ export function SetupAssistant() {
             <div className="p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">
-                  Step {currentStep + 1} of {steps.length}
+                  Step {currentStep + 1} of {typedSteps.length}
                 </span>
               </div>
 
@@ -238,7 +240,7 @@ export function SetupAssistant() {
                   onClick={next}
                   className="flex-[2] bg-white text-slate-900 px-4 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-50 transition-all"
                 >
-                  {currentStep === steps.length - 1 ? 'Finish & Save' : 'Next Step'}
+                  {currentStep === typedSteps.length - 1 ? 'Finish & Save' : 'Next Step'}
                 </button>
               </div>
             </div>
