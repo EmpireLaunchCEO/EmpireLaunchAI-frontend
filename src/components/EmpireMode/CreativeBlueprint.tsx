@@ -6,7 +6,7 @@ import {
   ExternalLink, 
   Copy, 
   Check, 
-  Sparkles, 
+  Stars, 
   ShieldCheck, 
   Scissors, 
   Palette, 
@@ -97,7 +97,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
               <div className="space-y-1">
                  <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-widest">
-                    <Sparkles className="w-3 h-3" />
+                    <Stars className="w-3 h-3" />
                     Creative Direction
                  </div>
                  <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">{task.title}.</h1>
@@ -137,7 +137,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                           </div>
                        </div>
                     </div>
-                    <Sparkles className="absolute -right-4 -bottom-4 w-48 h-48 text-white opacity-10 rotate-12" />
+                    <Stars className="absolute -right-4 -bottom-4 w-48 h-48 text-white opacity-10 rotate-12" />
                  </div>
 
                  {/* Visual DNA */}
@@ -239,7 +239,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                  {/* Tips Card */}
                  <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-4 shadow-sm">
                     <div className="flex items-center gap-2">
-                       <Sparkles className="w-4 h-4 text-amber-500" />
+                       <Stars className="w-4 h-4 text-amber-500" />
                        <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">AI Tip</h4>
                     </div>
                     <p className="text-xs text-slate-500 leading-relaxed font-medium italic">

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, TrendingUp, Search, Zap, ArrowRight, Lightbulb } from 'lucide-react';
+import { Stars, TrendingUp, Search, Zap, ArrowRight, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface InsightProps {
@@ -44,7 +44,7 @@ export function AIOptimizationHub() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
-            <Sparkles className="w-6 h-6 text-white" />
+            <Stars className="w-6 h-6 text-white" />
           </div>
           <h2 className="text-xl font-bold text-slate-900">AI Optimization Hub</h2>
         </div>

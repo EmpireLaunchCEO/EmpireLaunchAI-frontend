@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
-  Sparkles, 
+  Stars, 
   Mail, 
   ShoppingBag, 
   Video, 
@@ -15,8 +15,9 @@ import {
   CheckCircle2,
   Lock,
   ArrowRight,
-  X
-} from 'lucide-react';
+  X,
+  Palette
+  } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useRouter } from 'next/navigation';
@@ -33,8 +34,8 @@ const availablePlatforms = [
   { id: 'fiverr', name: 'Fiverr', icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
   { id: 'kittl', name: 'Kittl', icon: Palette, color: 'text-indigo-600', bg: 'bg-indigo-50' },
   { id: 'capcut', name: 'CapCut', icon: Video, color: 'text-blue-500', bg: 'bg-blue-50' },
-  { id: 'canva', name: 'Canva', icon: Sparkles, color: 'text-cyan-500', bg: 'bg-cyan-50' },
-  { id: 'bannerbear', name: 'Bannerbear', icon: Sparkles, color: 'text-blue-900', bg: 'bg-slate-100' },
+  { id: 'canva', name: 'Canva', icon: Stars, color: 'text-cyan-500', bg: 'bg-cyan-50' },
+  { id: 'bannerbear', name: 'Bannerbear', icon: Stars, color: 'text-blue-900', bg: 'bg-slate-100' },
 ];
 
 interface GuidedLinkingProps {
@@ -283,7 +284,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
             <div className="relative z-10 flex flex-col md:flex-row gap-8">
               <div className="shrink-0">
                 <div className="w-20 h-20 rounded-[28px] bg-blue-600 flex items-center justify-center shadow-2xl shadow-blue-500/40 relative">
-                  <Sparkles className="w-10 h-10 text-white" />
+                  <Stars className="w-10 h-10 text-white" />
                   {isTyping && (
                     <div className="absolute -top-2 -right-2 bg-blue-400 rounded-full p-1.5 animate-bounce shadow-lg">
                       <div className="flex gap-1">
@@ -347,7 +348,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                     </button>
                   ) : (
                     <div className="flex items-center gap-2 text-slate-400 italic text-sm font-medium">
-                      <Sparkles className="w-4 h-4" /> I'm waiting for your next platform choice...
+                      <Stars className="w-4 h-4" /> I'm waiting for your next platform choice...
                     </div>
                   )}
                 </div>

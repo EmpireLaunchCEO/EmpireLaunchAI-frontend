@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Upload, 
   ShieldCheck, 
-  Sparkles, 
+  Stars, 
   CheckCircle2, 
   AlertCircle,
   Loader2,
@@ -164,7 +164,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
               {status === 'success' && (
                 <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl space-y-2">
                    <div className="flex items-center gap-2 text-emerald-600">
-                      <Sparkles className="w-4 h-4" />
+                      <Stars className="w-4 h-4" />
                       <span className="text-[10px] font-black uppercase tracking-widest">Anti-Copycat Clear</span>
                    </div>
                    <p className="text-[10px] text-emerald-700 leading-relaxed font-medium">
@@ -181,7 +181,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                   className="w-full py-5 bg-blue-600 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-500 transition-all shadow-xl flex items-center justify-center gap-3 group"
                 >
                   Run Validation
-                  <Sparkles className="w-4 h-4" />
+                  <Stars className="w-4 h-4" />
                 </button>
               )}
               

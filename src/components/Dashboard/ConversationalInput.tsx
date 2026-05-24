@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Send, Sparkles, Mic, MicOff } from 'lucide-react';
+import { Send, Stars, Mic, MicOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
+import { cn } from '@/lib/utils';
 
 interface ConversationalInputProps {
   onExecute?: (value: string) => Promise<void>;
@@ -121,7 +122,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
               >
-                <Sparkles className="w-5 h-5 text-blue-600 animate-pulse" />
+                <Stars className="w-5 h-5 text-blue-600 animate-pulse" />
               </motion.div>
             ) : (
               <motion.div
@@ -130,7 +131,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
               >
-                <Sparkles className="w-5 h-5 text-slate-400" />
+                <Stars className="w-5 h-5 text-slate-400" />
               </motion.div>
             )}
           </AnimatePresence>

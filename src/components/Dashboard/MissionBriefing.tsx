@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   CheckCircle2, 
   Flag, 
-  Sparkles, 
+  Stars, 
   ArrowRight,
   Target,
   Share2,
@@ -53,7 +53,7 @@ const steps: Step[] = [
     title: "AI Deep Research",
     description: "Find high-velocity products in your niche.",
     status: 'upcoming',
-    icon: Sparkles
+    icon: Stars
   },
   {
     id: 5,
@@ -151,7 +151,7 @@ export function MissionBriefing() {
           <div className="p-8 rounded-[40px] bg-slate-800/50 border border-slate-700 flex flex-col gap-6">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <Sparkles className="w-6 h-6 text-white" />
+                <Stars className="w-6 h-6 text-white" />
               </div>
               <div className="flex flex-col">
                 <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">AI Consultant</span>

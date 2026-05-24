@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Sparkles, Zap, Eye, TrendingUp } from 'lucide-react';
+import { Stars, Zap, Eye, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const trendingKeywords = [
@@ -33,7 +33,7 @@ export function TrendRadar() {
     <div className="space-y-8">
       <div className="bg-slate-900 rounded-[40px] p-8 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 p-8 opacity-10">
-          <Sparkles className="w-32 h-32" />
+          <Stars className="w-32 h-32" />
         </div>
         
         <div className="relative z-10 space-y-6">

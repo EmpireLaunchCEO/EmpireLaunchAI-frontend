@@ -7,7 +7,7 @@ import { NeuralActivityFeed } from './NeuralActivityFeed';
 import { VideoPerformance } from './VideoPerformance';
 import { EmpireLedger } from './EmpireLedger';
 import { ActivityStream } from '../ActivityStream';
-import { Sparkles, Brain, Zap, Globe } from 'lucide-react';
+import { Stars, Brain, Zap, Globe } from 'lucide-react';
 
 interface SuccessHubOverviewProps {
   empireData: any;
@@ -109,7 +109,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
       <footer className="pt-20 border-t border-slate-100">
         <div className="flex flex-col items-center text-center space-y-4">
           <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.4em]">
-            <Sparkles className="w-3 h-3" />
+            <Stars className="w-3 h-3" />
             Empire Performance Sync
           </div>
           <p className="text-slate-400 text-sm font-medium max-w-lg">

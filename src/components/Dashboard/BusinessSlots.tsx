@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Lock, Sparkles, TrendingUp, ChevronRight, Briefcase } from 'lucide-react';
+import { Lock, Stars, TrendingUp, ChevronRight, Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface BusinessSlotProps {
@@ -74,7 +74,7 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
               
               <div className="relative bg-white/80 backdrop-blur-2xl w-16 h-16 rounded-[24px] flex items-center justify-center shadow-2xl border border-white/50">
                 <Lock className="w-7 h-7 text-blue-600" />
-                <Sparkles className="absolute -top-2 -right-2 w-5 h-5 text-amber-400 animate-pulse" />
+                <Stars className="absolute -top-2 -right-2 w-5 h-5 text-amber-400 animate-pulse" />
               </div>
               
               <motion.div 

@@ -13,7 +13,7 @@ import {
   Bot,
   Zap,
   ChevronRight,
-  Sparkles
+  Stars
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { creativeService, DesignTask } from '@/lib/api-service';
@@ -165,7 +165,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
             </div>
             <div className="relative aspect-video rounded-3xl overflow-hidden border-4 border-white/10 shadow-2xl hidden lg:block">
                <div className="absolute inset-0 bg-slate-900/40 flex items-center justify-center">
-                  <Sparkles className="w-24 h-24 text-white/20 animate-pulse" />
+                  <Stars className="w-24 h-24 text-white/20 animate-pulse" />
                </div>
             </div>
          </div>

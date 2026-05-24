@@ -7,7 +7,7 @@ import {
   RefreshCcw, 
   Send, 
   Clock,
-  Sparkles,
+  Stars,
   ChevronDown,
   Camera,
   Video,
@@ -84,7 +84,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <span className="text-white font-bold bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl border border-white/30">Edit Preview</span>
           </div>
-          <Sparkles className="w-12 h-12 text-slate-300" />
+          <Stars className="w-12 h-12 text-slate-300" />
         </div>
         
         <div className="space-y-4">

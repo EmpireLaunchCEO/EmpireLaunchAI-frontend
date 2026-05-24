@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { 
   Home, 
   Settings,
-  Sparkles,
+  Stars,
   ClipboardCheck,
   BarChart3
 } from 'lucide-react';
@@ -26,7 +26,7 @@ export function Sidebar() {
     <div className="hidden lg:flex flex-col w-64 bg-white text-slate-900 h-screen fixed left-[72px] top-0 border-r border-slate-100 shadow-sm">
       <div className="p-6 flex items-center gap-2">
         <div className="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-200">
-          <Sparkles className="w-5 h-5 text-white" />
+          <Stars className="w-5 h-5 text-white" />
         </div>
         <span className="text-lg font-black tracking-tight text-slate-900 uppercase italic">Empire.</span>
       </div>

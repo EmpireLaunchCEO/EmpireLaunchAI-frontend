@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { DesignCenterHub } from '@/components/EmpireMode/DesignCenterHub';
 import { CreativeBlueprint } from '@/components/EmpireMode/CreativeBlueprint';
 import { DesignTask } from '@/lib/api-service';
-import { Palette, ChevronLeft, Bot, Sparkles } from 'lucide-react';
+import { Palette, ChevronLeft, Bot, Stars } from 'lucide-react';
 
 export default function DesignCenterPage() {
   const [activeTask, setActiveTask] = useState<DesignTask | null>(null);

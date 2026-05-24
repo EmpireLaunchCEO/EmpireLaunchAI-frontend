@@ -8,7 +8,7 @@ import {
   Zap, 
   CheckCircle2, 
   AlertCircle,
-  Sparkles,
+  Stars,
   MousePointer2,
   Bot
 } from 'lucide-react';

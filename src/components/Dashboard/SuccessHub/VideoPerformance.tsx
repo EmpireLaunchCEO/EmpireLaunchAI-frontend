@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Play, Eye, Heart, Share2, MousePointer2, Sparkles, TrendingUp } from 'lucide-react';
+import { Play, Eye, Heart, Share2, MousePointer2, Stars, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const MOCK_VIDEOS = [
@@ -106,7 +106,7 @@ export const VideoPerformance = () => {
 
               <div className="bg-slate-50 rounded-2xl p-3 border border-slate-100">
                 <div className="flex items-center gap-2 mb-1">
-                  <Sparkles className="w-3.5 h-3.5 text-blue-500" />
+                  <Stars className="w-3.5 h-3.5 text-blue-500" />
                   <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">AI Intelligent Insight</span>
                 </div>
                 <p className="text-[11px] font-bold text-slate-700 leading-snug">

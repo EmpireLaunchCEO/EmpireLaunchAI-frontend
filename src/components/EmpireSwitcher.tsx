@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Sparkles, Plus } from 'lucide-react';
+import { Stars, Plus } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 
 type EmpireStatus = 'on-track' | 'action-needed' | 'planning';
@@ -72,7 +72,7 @@ export function EmpireSwitcher() {
               exit={{ opacity: 0, x: -10 }}
               className="flex items-center gap-3 w-full px-2"
             >
-              <Sparkles className="w-6 h-6 text-blue-400" />
+              <Stars className="w-6 h-6 text-blue-400" />
               <span className="font-bold text-lg tracking-tight whitespace-nowrap">Empires</span>
             </motion.div>
           ) : (
@@ -82,7 +82,7 @@ export function EmpireSwitcher() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <Sparkles className="w-6 h-6 text-blue-400" />
+              <Stars className="w-6 h-6 text-blue-400" />
             </motion.div>
           )}
         </AnimatePresence>

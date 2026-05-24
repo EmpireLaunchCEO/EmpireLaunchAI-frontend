@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, MessageSquareQuote } from 'lucide-react';
+import { Stars, MessageSquareQuote } from 'lucide-react';
 import wisdomData from '@/data/business_wisdom.json';
 
 interface EmpireIdentityProps {
@@ -84,7 +84,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
             className="p-5 md:p-6 rounded-[32px] md:rounded-[40px] bg-blue-600 text-white shadow-2xl shadow-blue-200 relative overflow-hidden group"
           >
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
-              <Sparkles className="w-12 md:w-16 h-12 md:h-16" />
+              <Stars className="w-12 md:w-16 h-12 md:h-16" />
             </div>
             <div className="flex items-start gap-3 md:gap-4 relative z-10">
               <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-400 flex items-center justify-center shrink-0">

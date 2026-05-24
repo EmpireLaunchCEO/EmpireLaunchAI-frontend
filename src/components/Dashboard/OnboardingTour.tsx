@@ -6,7 +6,7 @@ import {
   X, 
   ChevronRight, 
   ChevronLeft, 
-  Sparkles, 
+  Stars, 
   Rocket, 
   Target, 
   TrendingUp, 
@@ -105,7 +105,7 @@ export function OnboardingTour() {
       >
         <div className="bg-blue-600 p-8 text-white relative">
           <div className="absolute top-0 right-0 p-8 opacity-10">
-            <Sparkles className="w-24 h-24" />
+            <Stars className="w-24 h-24" />
           </div>
           <div className="relative z-10 flex items-center justify-between">
             <div className="w-16 h-16 rounded-3xl bg-white/20 flex items-center justify-center">

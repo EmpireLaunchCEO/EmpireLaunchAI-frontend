@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, CheckCircle2, XCircle, Share2, Quote, Sparkles } from 'lucide-react';
+import { Star, CheckCircle2, XCircle, Share2, Quote, Stars } from 'lucide-react';
 import { socialProofService, AppRating } from '@/lib/api-service';
 import { cn } from '@/lib/utils';
 
@@ -85,7 +85,7 @@ export function SocialProofApproval() {
 
               <div className="bg-purple-50/50 rounded-2xl p-4 border border-purple-100/50 space-y-3">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-3 h-3 text-purple-500" />
+                  <Stars className="w-3 h-3 text-purple-500" />
                   <p className="text-[10px] font-black uppercase tracking-widest text-purple-600">AI Marketing Hook</p>
                 </div>
                 <p className="text-xs text-slate-600 font-medium">

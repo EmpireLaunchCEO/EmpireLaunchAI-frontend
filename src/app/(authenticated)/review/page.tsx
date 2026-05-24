@@ -4,8 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { ReviewCard } from '@/components/Review/ReviewCard';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { FinancialGate } from '@/components/Financial/FinancialGate';
-import { Sparkles, Filter, CheckCircle2 } from 'lucide-react';
+import { Stars, Filter, CheckCircle2 } from 'lucide-react';
 import { API_URL } from '@/lib/config';
+import { cn } from '@/lib/utils';
 
 interface Task {
   id: string;
@@ -176,7 +177,7 @@ export default function ReviewQueue() {
         {tasks.length > 0 && (
           <div className="bg-blue-50 border border-blue-100 rounded-3xl p-6 flex items-start gap-4">
             <div className="bg-blue-600 p-2 rounded-xl text-white">
-              <Sparkles className="w-5 h-5" />
+              <Stars className="w-5 h-5" />
             </div>
             <div>
               <h4 className="font-bold text-blue-900">AI Strategy Note</h4>

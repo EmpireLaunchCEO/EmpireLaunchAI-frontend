@@ -15,7 +15,8 @@ import {
   ChevronRight,
   ShieldCheck,
   Zap,
-  Mail
+  Mail,
+  Stars
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -30,9 +31,9 @@ const platforms = [
   { id: 'etsy', name: 'Etsy Shop', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
   { id: 'amazon', name: 'Amazon Seller', icon: ShoppingBag, color: 'text-yellow-600', bg: 'bg-yellow-50' },
   { id: 'fiverr', name: 'Fiverr Gigs', icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  { id: 'canva', name: 'Canva (Design)', icon: Sparkles, color: 'text-blue-500', bg: 'bg-blue-50' },
-  { id: 'bannerbear', name: 'Bannerbear (AI Assets)', icon: Sparkles, color: 'text-blue-900', bg: 'bg-slate-100' },
-  { id: 'kittle', name: 'Kittle (Design)', icon: Sparkles, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+  { id: 'canva', name: 'Canva (Design)', icon: Stars, color: 'text-blue-500', bg: 'bg-blue-50' },
+  { id: 'bannerbear', name: 'Bannerbear (AI Assets)', icon: Stars, color: 'text-blue-900', bg: 'bg-slate-100' },
+  { id: 'kittle', name: 'Kittle (Design)', icon: Stars, color: 'text-indigo-600', bg: 'bg-indigo-50' },
   { id: 'capcut', name: 'Capcut (Video)', icon: Video, color: 'text-slate-900', bg: 'bg-slate-50' },
 ];
 

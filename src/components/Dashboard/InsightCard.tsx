@@ -7,7 +7,7 @@ import {
   ExternalLink, 
   Play, 
   X,
-  Sparkles,
+  Stars,
   Loader2
 } from 'lucide-react';
 
@@ -26,7 +26,7 @@ export function InsightCard({ platform, title, description, roi, onExecute, isEx
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-2">
           <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
-            <Sparkles className="w-5 h-5" />
+            <Stars className="w-5 h-5" />
           </div>
           <span className="text-sm font-semibold text-slate-400 uppercase tracking-wider">{platform}</span>
         </div>

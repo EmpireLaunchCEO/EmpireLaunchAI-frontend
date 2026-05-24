@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Sparkles, 
+  Stars, 
   ArrowRight, 
   Shield, 
   Rocket, 
@@ -112,7 +112,7 @@ export default function LandingPage() {
         >
           {/* Tagline */}
           <div className="inline-flex items-center gap-2 bg-blue-500/10 backdrop-blur-md px-5 py-2 rounded-full border border-blue-500/20 text-blue-400 font-bold text-xs uppercase tracking-[0.2em]">
-            <Sparkles className="w-4 h-4" />
+            <Stars className="w-4 h-4" />
             Autonomous Business Engineering
           </div>
 

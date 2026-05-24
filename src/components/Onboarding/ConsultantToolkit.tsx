@@ -13,7 +13,7 @@ import {
   Info,
   ExternalLink,
   Zap,
-  Sparkles,
+  Stars,
   Globe
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -35,7 +35,7 @@ const getToolRecommendations = (businessAngle: string) => {
     const icons: any = {
       'Canva': Layout,
       'CapCut': Smartphone,
-      'Bannerbear': Sparkles,
+      'Bannerbear': Stars,
       'Mailchimp': Mail,
       'Printful': Layers,
       'Printify': Layers,
@@ -135,7 +135,7 @@ export function ConsultantToolkit({ businessAngle }: ConsultantToolkitProps) {
           </div>
         </div>
         <div className="absolute top-0 right-0 p-8 opacity-20 rotate-12">
-          <Sparkles className="w-24 h-24 text-blue-400" />
+          <Stars className="w-24 h-24 text-blue-400" />
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ import {
   Palette,
   Scale,
   LifeBuoy,
-  Sparkles
+  Stars
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SecureVault } from '@/components/Financial/SecureVault';
@@ -139,7 +139,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
           
           <div className="flex items-center justify-between border-b border-slate-100 pb-6">
             <h3 className="text-2xl font-black text-slate-900 flex items-center gap-3 italic">
-              <Sparkles className="w-6 h-6 text-blue-900" /> Connecting Bannerbear AI
+              <Stars className="w-6 h-6 text-blue-900" /> Connecting Bannerbear AI
             </h3>
             <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
               <X className="w-6 h-6 text-slate-400" />
@@ -369,10 +369,10 @@ export default function SettingsPage() {
                 <div className="p-8 rounded-[32px] bg-white border-2 border-slate-100 space-y-6">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xl font-bold italic flex items-center gap-2 text-slate-900">
-                      <Sparkles className="w-5 h-5 text-blue-900" /> Bannerbear AI
+                      <Stars className="w-5 h-5 text-blue-900" /> Bannerbear AI
                     </h3>
                     <span className="flex items-center gap-1.5 text-blue-600 font-bold text-[10px] uppercase tracking-[0.2em]">
-                      <Sparkles className="w-3.5 h-3.5" /> API Ready
+                      <Stars className="w-3.5 h-3.5" /> API Ready
                     </span>
                   </div>
                   
@@ -569,7 +569,7 @@ export default function SettingsPage() {
 
                 <div className="p-6 bg-slate-900 rounded-3xl text-white">
                   <div className="flex items-center gap-3 mb-2">
-                    <Sparkles className="w-5 h-5 text-blue-400" />
+                    <Stars className="w-5 h-5 text-blue-400" />
                     <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Pro Tip</span>
                   </div>
                   <p className="text-sm font-medium text-slate-300">
@@ -608,7 +608,7 @@ export default function SettingsPage() {
                   {/* Redeem Key Section */}
                   <div className="p-8 rounded-[32px] bg-blue-50 border-2 border-blue-100 space-y-4">
                     <div className="flex items-center gap-3">
-                      <Sparkles className="w-5 h-5 text-blue-600" />
+                      <Stars className="w-5 h-5 text-blue-600" />
                       <h4 className="font-black text-slate-900">Redeem Access Key</h4>
                     </div>
                     <p className="text-xs font-bold text-slate-500 leading-relaxed">

@@ -9,7 +9,7 @@ import {
   Copy, 
   Check, 
   X,
-  Sparkles,
+  Stars,
   Zap,
   Target,
   ExternalLink,

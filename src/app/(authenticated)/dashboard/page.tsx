@@ -12,7 +12,7 @@ import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesS
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { SuccessHubOverview } from '@/components/Dashboard/SuccessHub/SuccessHubOverview';
-import { Sparkles, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard } from 'lucide-react';
+import { Stars, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -140,7 +140,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-4">
             <div className="flex flex-col items-start md:items-end">
               <div className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-2xl border border-primary/20 font-bold text-sm shadow-sm">
-                <Sparkles className="w-4 h-4" />
+                <Stars className="w-4 h-4" />
                 AI Co-Pilot: Active
               </div>
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 ml-1 md:ml-0">
@@ -249,7 +249,7 @@ export default function Dashboard() {
                   animate={{ scale: 1, rotate: 0 }}
                   className="w-32 h-32 bg-white rounded-[40px] mx-auto flex items-center justify-center shadow-2xl"
                 >
-                  <Sparkles className="w-16 h-16 text-blue-600" />
+                  <Stars className="w-16 h-16 text-blue-600" />
                 </motion.div>
                 <h2 className="text-5xl font-black text-white tracking-tighter">Neural Sync Established.</h2>
                 <p className="text-blue-100 text-xl font-medium">Welcome to your Empire Command Center.</p>

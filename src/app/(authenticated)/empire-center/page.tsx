@@ -13,7 +13,7 @@ import {
   ExternalLink,
   ThumbsUp,
   ThumbsDown,
-  Sparkles,
+  Stars,
   StickyNote,
   Trash2
 } from 'lucide-react';
@@ -59,7 +59,7 @@ export default function EmpireCenterPage() {
         {[
           { id: 'duties', label: 'Active Duties', icon: Zap },
           { id: 'history', label: 'Post History', icon: History },
-          { id: 'ai-config', label: 'AI Directives', icon: Sparkles },
+          { id: 'ai-config', label: 'AI Directives', icon: Stars },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -131,7 +131,7 @@ export default function EmpireCenterPage() {
                   <div className="space-y-4">
                     <div className="p-6 border-2 border-dashed border-slate-100 rounded-3xl space-y-4">
                       <div className="flex items-center gap-3">
-                        <Sparkles className="w-5 h-5 text-blue-600" />
+                        <Stars className="w-5 h-5 text-blue-600" />
                         <p className="font-bold text-slate-900 italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
                       </div>
                       <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
@@ -275,7 +275,7 @@ export default function EmpireCenterPage() {
               />
               
               <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-amber-600/50">
-                <Sparkles className="w-3 h-3" />
+                <Stars className="w-3 h-3" />
                 AI Sync: Real-time
               </div>
            </div>

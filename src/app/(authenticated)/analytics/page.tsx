@@ -10,7 +10,7 @@ import {
   TrendingUp,
   Mail,
   ShieldCheck,
-  Sparkles,
+  Stars,
   Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -126,7 +126,7 @@ export default function AnalyticsPage() {
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 z-50">
         <div className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-[32px] p-4 shadow-2xl flex items-center gap-4">
           <div className="bg-blue-600 p-3 rounded-2xl animate-pulse">
-            <Sparkles className="w-5 h-5 text-white" />
+            <Stars className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1">
             <p className="text-white text-xs font-bold">AI Intelligence Online</p>
