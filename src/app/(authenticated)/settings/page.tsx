@@ -116,7 +116,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                 id="tiktok-redirect-uri"
                 type="text"
                 readOnly
-                value="https://empire-launch-ai.vercel.app/api/auth/callback/tiktok"
+                value="https://empire-launch-ai-frontend.vercel.app/api/auth/callback/tiktok"
                 className="w-full p-5 rounded-3xl bg-slate-100 border-2 border-slate-100 outline-none transition-all font-bold text-lg text-slate-500 cursor-not-allowed"
               />
             </div>
