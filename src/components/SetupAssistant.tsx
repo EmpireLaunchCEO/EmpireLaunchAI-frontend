@@ -47,7 +47,7 @@ const tiktokSteps = [
   {
     field: "Redirect URI",
     selector: "#tiktok-redirect-uri",
-    value: "https://empire-launch-ai.vercel.app/api/auth/callback/tiktok",
+    value: "https://empire-launch-ai-frontend.vercel.app/api/auth/callback/tiktok",
     instruction: "Copy this into the 'Redirect URI' field in your TikTok Dev Portal."
   }
 ];
