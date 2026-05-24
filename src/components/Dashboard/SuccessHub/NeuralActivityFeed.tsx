@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Terminal, Cpu, Zap, CheckCircle2, Circle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { io } from 'socket.io-client';
+import { API_URL } from '@/lib/config';
 
 const MOCK_THOUGHTS = [
   "Analyzing Etsy trends for 'digital journals'...",
@@ -22,6 +24,39 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Connect to WebSocket
+    const socket = io(API_URL);
+    const userId = '00000000-0000-0000-0000-000000000000'; // Real apps would use auth
+    
+    socket.on('connect', () => {
+      console.log('Connected to Neural Pulse');
+      socket.emit('subscribe', userId);
+    });
+
+    socket.on('ai-log', (data: { message: string }) => {
+      setLogs(prev => {
+        const nextLogs = [...prev, { id: Date.now(), text: data.message, status: 'processing' }];
+        if (nextLogs.length > 1) {
+          nextLogs[nextLogs.length - 2].status = 'done';
+        }
+        return nextLogs.slice(-10); // Keep more logs if they are real
+      });
+    });
+
+    socket.on('job-started', (data: { goal: string }) => {
+      setLogs(prev => [
+        ...prev, 
+        { id: Date.now(), text: `[SYSTEM] Goal Received: ${data.goal}`, status: 'done' }
+      ].slice(-10));
+    });
+
+    socket.on('job-completed', (data: { resultSummary: string }) => {
+      setLogs(prev => [
+        ...prev, 
+        { id: Date.now(), text: `[SYSTEM] Success: ${data.resultSummary}`, status: 'done' }
+      ].slice(-10));
+    });
+
     if (initialLogs && initialLogs.length > 0) {
       setLogs(initialLogs.map((text, i) => ({
         id: i,
@@ -33,18 +68,27 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
       const addLog = () => {
         const newThought = MOCK_THOUGHTS[Math.floor(Math.random() * MOCK_THOUGHTS.length)];
         setLogs(prev => {
+          // If we have real logs coming in, maybe slow down mock logs or stop them
           const nextLogs = [...prev, { id: logId++, text: newThought, status: 'processing' }];
-          if (nextLogs.length > 5) {
+          if (nextLogs.length > 1) {
             nextLogs[nextLogs.length - 2].status = 'done';
           }
           return nextLogs.slice(-6);
         });
       };
 
-      const interval = setInterval(addLog, 4000);
+      const interval = setInterval(addLog, 8000); // Slower mocks if idling
       addLog();
-      return () => clearInterval(interval);
+      
+      return () => {
+        clearInterval(interval);
+        socket.disconnect();
+      };
     }
+
+    return () => {
+      socket.disconnect();
+    };
   }, [initialLogs]);
 
   return (

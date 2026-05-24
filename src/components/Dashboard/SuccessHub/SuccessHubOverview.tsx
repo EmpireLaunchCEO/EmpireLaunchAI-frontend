@@ -13,9 +13,10 @@ interface SuccessHubOverviewProps {
   empireData: any;
   pulseData: any;
   healthData: any;
+  transactions: any[];
 }
 
-export const SuccessHubOverview = ({ empireData, pulseData, healthData }: SuccessHubOverviewProps) => {
+export const SuccessHubOverview = ({ empireData, pulseData, healthData, transactions }: SuccessHubOverviewProps) => {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}

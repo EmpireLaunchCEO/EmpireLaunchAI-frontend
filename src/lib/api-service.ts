@@ -386,15 +386,20 @@ export const analyticsService = {
           'Authorization': 'Bearer mock-mobile-token'
         }
       });
-      // The pulse endpoint actually returns a transformed health-like object in the controller
-      // but let's see if we can get more detailed health
-      // Actually, looking at analyticsController, getEmpirePulse calls getEmpireHealth(userId)
-      // and transforms it. So we can use that data.
+      
       if (res.ok) {
          const data = await res.json();
-         // data.logs has revenue info in messages based on current backend implementation
-         // We might need a proper health endpoint if we want the structured data
-         // For now, let's try to fetch performance too
+         
+         if (data.health) {
+           return {
+             growthScore: data.progress,
+             revenue: data.health.revenue,
+             pendingDues: data.health.pendingDues,
+             platformBreakdown: data.health.platformBreakdown
+           };
+         }
+         
+         // Fallback if health property is missing but pulse is okay
          const perfRes = await fetch(`${API_URL}/api/analytics/performance`, {
            headers: { 
              'x-user-id': '00000000-0000-0000-0000-000000000000',
@@ -405,7 +410,7 @@ export const analyticsService = {
 
          return {
            growthScore: data.progress,
-           revenue: perf?.totalRevenue / 100 || 12450.00, // backend stores in cents
+           revenue: perf?.totalRevenue / 100 || 12450.00,
            pendingDues: 60.00,
            platformBreakdown: [
              { platform: 'Etsy', revenue: (perf?.totalRevenue / 100) || 8400.00 },
@@ -431,6 +436,28 @@ export const analyticsService = {
   },
 
   async getRevenueTransactions(): Promise<RevenueTransaction[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/analytics/transactions`, {
+        headers: { 
+          'x-user-id': '00000000-0000-0000-0000-000000000000',
+          'Authorization': 'Bearer mock-mobile-token'
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data.map((tx: any) => ({
+          id: tx.id,
+          amount: tx.amount / 100, // convert cents to dollars
+          platform: tx.platform,
+          date: tx.date,
+          status: 'completed', // simplified for now
+          customer: 'Customer' // backend doesn't store customer name yet
+        }));
+      }
+    } catch (e) {
+      console.error('Failed to fetch transactions', e);
+    }
+
     return [
       { id: '1', amount: 45.00, platform: 'Etsy', date: '2024-05-20T14:30:00Z', status: 'completed', customer: 'Sarah Jenkins' },
       { id: '2', amount: 120.00, platform: 'Stripe', date: '2024-05-20T12:15:00Z', status: 'completed', customer: 'Mike Peterson' },

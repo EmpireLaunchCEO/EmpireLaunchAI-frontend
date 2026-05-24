@@ -6,7 +6,6 @@ import { ApprovalQueue } from '@/components/EmpireMode/ApprovalQueue';
 import { DetailedRevenue } from '@/components/Dashboard/DetailedRevenue';
 import { ProfitBucket } from '@/components/Dashboard/ProfitBucket';
 import { BusinessSlots } from '@/components/Dashboard/BusinessSlots';
-import { SocialPerformance } from '@/components/Dashboard/SocialPerformance';
 import { SocialAnalytics } from '@/components/Dashboard/SocialAnalytics';
 import { ActivityStream } from '@/components/Dashboard/ActivityStream';
 import { EmpirePulse } from '@/components/Dashboard/EmpirePulse';
@@ -40,6 +39,7 @@ export default function Dashboard() {
   const [empireData, setEmpireData] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
+  const [transactions, setTransactions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [partnerStatus, setPartnerStatus] = useState<'idle' | 'researching' | 'creating'>('idle');
   const [executingInsight, setExecutingInsight] = useState<string | null>(null);
@@ -59,10 +59,11 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const [empireRes, pulseRes, healthRes] = await Promise.all([
+      const [empireRes, pulseRes, healthRes, txRes] = await Promise.all([
         fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`),
         analyticsService.getEmpirePulse(),
-        analyticsService.getEmpireHealth()
+        analyticsService.getEmpireHealth(),
+        analyticsService.getRevenueTransactions()
       ]);
 
       if (empireRes.ok) {
@@ -71,6 +72,7 @@ export default function Dashboard() {
       }
       setPulseData(pulseRes);
       setHealthData(healthRes);
+      setTransactions(txRes);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -195,6 +197,7 @@ export default function Dashboard() {
               empireData={empireData} 
               pulseData={pulseData}
               healthData={healthData}
+              transactions={transactions}
             />
 
             {/* Empire Control Gates */}
