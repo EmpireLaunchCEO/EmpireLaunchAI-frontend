@@ -5,6 +5,43 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #2563eb;
+  --secondary: #0f172a;
+  --accent: #3b82f6;
+  --muted: #f1f5f9;
+}
+
+body.theme-classic-blue {
+  --primary: #2563eb;
+  --secondary: #0f172a;
+  --accent: #3b82f6;
+}
+
+body.theme-midnight-obsidian {
+  --primary: #0f172a;
+  --secondary: #1e293b;
+  --accent: #334155;
+  --background: #020617;
+  --foreground: #f8fafc;
+  --muted: #1e293b;
+}
+
+body.theme-emerald-growth {
+  --primary: #059669;
+  --secondary: #0f172a;
+  --accent: #10b981;
+}
+
+body.theme-rose-gold {
+  --primary: #f43f5e;
+  --secondary: #0f172a;
+  --accent: #fb7185;
+}
+
+body.theme-cyber-purple {
+  --primary: #9333ea;
+  --secondary: #312e81;
+  --accent: #a855f7;
 }
 
 @media (prefers-color-scheme: dark) {

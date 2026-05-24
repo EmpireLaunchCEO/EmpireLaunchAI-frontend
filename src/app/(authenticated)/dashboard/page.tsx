@@ -2,19 +2,31 @@
 
 import React, { useEffect, useState } from 'react';
 import { MissionBriefing } from '@/components/Dashboard/MissionBriefing';
-import { FinancialOverview } from '@/components/Dashboard/FinancialOverview';
+import { ApprovalQueue } from '@/components/EmpireMode/ApprovalQueue';
+import { DetailedRevenue } from '@/components/Dashboard/DetailedRevenue';
+import { ProfitBucket } from '@/components/Dashboard/ProfitBucket';
+import { BusinessSlots } from '@/components/Dashboard/BusinessSlots';
 import { SocialPerformance } from '@/components/Dashboard/SocialPerformance';
+import { SocialAnalytics } from '@/components/Dashboard/SocialAnalytics';
+import { ActivityStream } from '@/components/Dashboard/ActivityStream';
+import { EmpirePulse } from '@/components/Dashboard/EmpirePulse';
+import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
+import { PaymentButtonList } from '@/components/Dashboard/PaymentButtonList';
 import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
 import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
-import { Sparkles, Loader2, Home, ArrowUpRight } from 'lucide-react';
+import { SuccessHubOverview } from '@/components/Dashboard/SuccessHub/SuccessHubOverview';
+import { Sparkles, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { OnboardingTour } from '@/components/Dashboard/OnboardingTour';
+import { analyticsService } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
+import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
+import { useSearchParams } from 'next/navigation';
 
 interface Goal {
   id: string;
@@ -24,25 +36,41 @@ interface Goal {
 }
 
 export default function Dashboard() {
-  const { activeEmpireId } = useEmpire();
+  const { activeEmpireId, isLinkingComplete } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
-  const [goals, setGoals] = useState<Goal[]>([]);
+  const [pulseData, setPulseData] = useState<any>(null);
+  const [healthData, setHealthData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [partnerStatus, setPartnerStatus] = useState<'idle' | 'researching' | 'creating'>('idle');
   const [executingInsight, setExecutingInsight] = useState<string | null>(null);
+  const [isCelebrating, setIsCelebrating] = useState(false);
+
+  useEffect(() => {
+    if (isLinkingComplete && !isLoading) {
+      const hasCelebrated = sessionStorage.getItem('hasCelebrated');
+      if (!hasCelebrated) {
+        setIsCelebrating(true);
+        sessionStorage.setItem('hasCelebrated', 'true');
+        const timer = setTimeout(() => setIsCelebrating(false), 3500);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [isLinkingComplete, isLoading]);
 
   const fetchData = async () => {
     try {
-      // Fetch specific empire data
-      const empireResponse = await fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`);
-      if (empireResponse.ok) {
-        const eData = await empireResponse.json();
+      const [empireRes, pulseRes, healthRes] = await Promise.all([
+        fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`),
+        analyticsService.getEmpirePulse(),
+        analyticsService.getEmpireHealth()
+      ]);
+
+      if (empireRes.ok) {
+        const eData = await empireRes.json();
         setEmpireData(eData);
       }
-
-      const response = await fetch(`${API_URL}/api/agent/goals`);
-      const data = await response.json();
-      setGoals(data);
+      setPulseData(pulseRes);
+      setHealthData(healthRes);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -55,6 +83,11 @@ export default function Dashboard() {
   }, [activeEmpireId]);
 
   const handleExecute = async (goal: string) => {
+    if (!isLinkingComplete && (window as any).interceptTeacher) {
+      (window as any).interceptTeacher(goal);
+      return;
+    }
+
     if (partnerStatus !== 'idle') return;
     
     setPartnerStatus('creating');
@@ -80,10 +113,6 @@ export default function Dashboard() {
           setPartnerStatus('idle');
           setExecutingInsight(null);
         }, 2000);
-
-        const goalsResponse = await fetch(`${API_URL}/api/agent/goals`);
-        const goalsData = await goalsResponse.json();
-        setGoals(goalsData);
       }
     } catch (error) {
       console.error('Error starting agent:', error);
@@ -98,105 +127,141 @@ export default function Dashboard() {
         <OnboardingTour />
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-[0.2em]">
+            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
               <Home className="w-3 h-3" />
-              Empire Command Center
+              Home
             </div>
             <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
               {empireData?.name || "Dashboard"}.
             </h1>
             <p className="text-sm md:text-base text-slate-500 font-medium">
-              Monitoring <span className="text-slate-900 font-bold">{empireData?.niche || "your"}</span> growth and autonomous operations.
+              Monitoring your {empireData?.niche || "business"} growth and autonomous operations.
             </p>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="flex flex-col items-start md:items-end">
-              <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-2xl border border-blue-100 font-bold text-sm shadow-sm">
+              <div className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-2xl border border-primary/20 font-bold text-sm shadow-sm">
                 <Sparkles className="w-4 h-4" />
                 AI Co-Pilot: Active
               </div>
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 ml-1 md:ml-0">
-                Neural Sync: 98.4%
+                Neural Sync: 100.0%
               </span>
             </div>
           </div>
         </header>
 
-        {/* Primary Mission Briefing */}
-        <MissionBriefing />
+        <BusinessSlots currentEmpire={empireData} />
 
-        {/* Partner Thinking Status Overlay */}
+        {!isLinkingComplete ? (
+          <div className="bg-white border-2 border-slate-50 rounded-[48px] p-8">
+             <GuidedLinking />
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-12 md:space-y-20"
+          >
+            {/* Thinking Status Overlay */}
+            <AnimatePresence>
+              {partnerStatus !== 'idle' && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="p-6 bg-slate-900 rounded-[32px] text-white shadow-2xl flex items-center gap-6 relative overflow-hidden z-50"
+                >
+                  <div className="relative z-10 w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center shrink-0">
+                    <Loader2 className="w-8 h-8 animate-spin" />
+                  </div>
+                  <div className="relative z-10 flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Autonomous Operation</span>
+                      <span className="text-[10px] font-bold text-slate-400">Phase: Research & Analysis</span>
+                    </div>
+                    <p className="text-lg font-bold">
+                      {partnerStatus === 'researching' 
+                        ? 'Analyzing global market velocity...' 
+                        : `Executing Strategy: "${executingInsight?.substring(0, 60)}..."`}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <SuccessHubOverview 
+              empireData={empireData} 
+              pulseData={pulseData}
+              healthData={healthData}
+            />
+
+            {/* Empire Control Gates */}
+            <section className="space-y-10 pt-20 border-t border-slate-100">
+               <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                   <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                     <LayoutDashboard className="w-5 h-5 text-slate-600" />
+                   </div>
+                   <div>
+                     <h2 className="text-2xl font-black text-slate-900 tracking-tight">Control Gates</h2>
+                     <p className="text-xs text-slate-500 font-medium">Human-in-the-loop validation for autonomous actions.</p>
+                   </div>
+                 </div>
+               </div>
+               
+               <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                 <div className="space-y-6">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 ml-2">Content Approval</h3>
+                    <ApprovalQueue />
+                 </div>
+                 <div className="space-y-6">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 ml-2">Social Proof Queue</h3>
+                    <SocialProofApproval />
+                 </div>
+               </div>
+            </section>
+
+            {/* Secondary Intelligence Hubs */}
+            <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+              <div className="lg:col-span-2">
+                <AIOptimizationHub />
+              </div>
+              <div className="lg:col-span-1 space-y-10">
+                <AutonomousCyclesStatus />
+                <EmpireConstellation />
+              </div>
+            </section>
+          </motion.div>
+        )}
+
         <AnimatePresence>
-          {partnerStatus !== 'idle' && (
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="p-6 bg-slate-900 rounded-[32px] text-white shadow-2xl flex items-center gap-6 relative overflow-hidden"
+          {isCelebrating && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-blue-600"
             >
-              <div className="relative z-10 w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center shrink-0">
-                <Loader2 className="w-8 h-8 animate-spin" />
+              <div className="text-center space-y-8">
+                <motion.div
+                  initial={{ scale: 0.5, rotate: -20 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  className="w-32 h-32 bg-white rounded-[40px] mx-auto flex items-center justify-center shadow-2xl"
+                >
+                  <Sparkles className="w-16 h-16 text-blue-600" />
+                </motion.div>
+                <h2 className="text-5xl font-black text-white tracking-tighter">Neural Sync Established.</h2>
+                <p className="text-blue-100 text-xl font-medium">Welcome to your Empire Command Center.</p>
               </div>
-              <div className="relative z-10 flex-1">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Autonomous Operation in Progress</span>
-                  <span className="text-[10px] font-bold text-slate-400">Phase: Research & Analysis</span>
-                </div>
-                <p className="text-lg font-bold">
-                  {partnerStatus === 'researching' 
-                    ? 'Analyzing global market velocity for your current niche...' 
-                    : `Executing Strategy: "${executingInsight?.substring(0, 60)}..."`}
-                </p>
-              </div>
-              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600 rounded-full blur-[100px] opacity-20 -mr-32 -mt-32 animate-pulse" />
             </motion.div>
           )}
         </AnimatePresence>
 
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          <div className="lg:col-span-2 flex flex-col gap-10">
-             <div className="space-y-6">
-               <div className="flex items-center justify-between">
-                 <h2 className="text-xl font-bold text-slate-900">Financial Growth</h2>
-                 <button className="text-sm font-bold text-blue-600 flex items-center gap-1">
-                   Full Ledger <ArrowUpRight className="w-4 h-4" />
-                 </button>
-               </div>
-               <FinancialOverview />
-             </div>
-             <SocialPerformance />
-          </div>
-          <div className="lg:col-span-1">
-             <EmpireConstellation />
-          </div>
-        </section>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          <div className="lg:col-span-2">
-            <AIOptimizationHub />
-          </div>
-          <div className="lg:col-span-1 space-y-10">
-            <AutonomousCyclesStatus />
-            
-            <div className="p-8 rounded-[40px] bg-gradient-to-br from-blue-600 to-indigo-700 text-white relative overflow-hidden shadow-2xl shadow-blue-200">
-               <div className="relative z-10 space-y-4">
-                  <h3 className="text-xl font-black leading-tight">Expansion Alert.</h3>
-                  <p className="text-blue-100 text-sm leading-relaxed">
-                    I've detected a high-probability opportunity in the 'Eco-Friendly' segment. Should we pivot our next 3 posts?
-                  </p>
-                  <button className="w-full py-4 bg-white text-blue-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-50 transition-colors shadow-lg">
-                    Discuss Strategy
-                  </button>
-               </div>
-               <Sparkles className="absolute -right-4 -bottom-4 w-32 h-32 text-white opacity-10 rotate-12" />
-            </div>
-          </div>
-        </div>
-
-        <ConversationalInput 
-          onExecute={handleExecute} 
-          tip='Try "Research trending digital planners on Etsy"'
+        <ConversationalInput
+          onExecute={handleExecute}
+          tip={isLinkingComplete ? 'Try "Research trending digital planners on Etsy"' : 'Ask me how to link your platforms!'}
         />
       </div>
     </PullToRefresh>

@@ -42,6 +42,7 @@
   "tool_recommendations": {
     "Digital Marketing": [
       { "name": "Canva", "purpose": "Graphic design and brand assets", "type": "Essential" },
+      { "name": "Bannerbear", "purpose": "Automated image & video generation", "type": "Essential" },
       { "name": "CapCut", "purpose": "Short-form video editing (TikTok/Reels)", "type": "Essential" },
       { "name": "Mailchimp", "purpose": "Email marketing and automation", "type": "Complementary" },
       { "name": "Buffer", "purpose": "Social media scheduling", "type": "Complementary" },
@@ -63,6 +64,11 @@
       "Free": "$0",
       "Pro": "$119.99/year (for 1 person)",
       "Teams": "$300.00/year (for first 5 people)"
+    },
+    "Bannerbear": {
+      "Free": "Free Trial",
+      "Basic": "$49/month",
+      "Pro": "$149/month"
     },
     "CapCut": {
       "Free": "$0",

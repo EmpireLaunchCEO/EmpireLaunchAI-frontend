@@ -35,6 +35,7 @@ const getToolRecommendations = (businessAngle: string) => {
     const icons: any = {
       'Canva': Layout,
       'CapCut': Smartphone,
+      'Bannerbear': Sparkles,
       'Mailchimp': Mail,
       'Printful': Layers,
       'Printify': Layers,
@@ -46,6 +47,7 @@ const getToolRecommendations = (businessAngle: string) => {
     const colors: any = {
       'Canva': { color: "text-blue-600", bg: "bg-blue-50" },
       'CapCut': { color: "text-pink-600", bg: "bg-pink-50" },
+      'Bannerbear': { color: "text-blue-900", bg: "bg-slate-100" },
       'Mailchimp': { color: "text-yellow-600", bg: "bg-yellow-50" },
       'Printful': { color: "text-orange-600", bg: "bg-orange-50" },
       'Printify': { color: "text-blue-600", bg: "bg-blue-50" },

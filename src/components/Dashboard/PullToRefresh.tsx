@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
+import { Globe } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface PullToRefreshProps {
   onRefresh: () => Promise<void>;
@@ -46,7 +47,9 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       try {
         await onRefresh();
       } finally {
+        // Go still for a moment
         setIsRefreshing(false);
+        await new Promise(resolve => setTimeout(resolve, 800));
         setPullProgress(0);
         await controls.start({ y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } });
       }
@@ -62,17 +65,32 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
         className="absolute top-12 left-0 right-0 flex justify-center z-[1000] pointer-events-none"
         style={{ 
           opacity: isRefreshing ? 1 : pullProgress,
-          scale: isRefreshing ? 1.5 : pullProgress,
           y: isRefreshing ? 40 : 0
         }}
       >
-        <div className="bg-blue-600 rounded-full p-5 shadow-[0_0_30px_rgba(37,99,235,0.4)] border-4 border-white flex items-center justify-center">
-          <Loader2 
-            className={`w-10 h-10 text-white ${isRefreshing ? 'animate-spin' : ''}`}
-            style={{ 
-              transform: isRefreshing ? undefined : `rotate(${pullProgress * 360}deg)` 
+        <div className="bg-white rounded-full p-4 shadow-2xl border-2 border-slate-100 flex items-center justify-center overflow-hidden">
+          <motion.div
+            animate={isRefreshing ? {
+              scale: [1, 1.3, 1],
+            } : {
+              scale: pullProgress,
+              rotate: pullProgress * 360
             }}
-          />
+            transition={isRefreshing ? {
+              duration: 1,
+              repeat: Infinity,
+              ease: "easeInOut"
+            } : {
+              duration: 0.1
+            }}
+          >
+            <Globe 
+              className={cn(
+                "w-10 h-10 transition-colors",
+                isRefreshing ? "text-blue-600" : "text-slate-300"
+              )}
+            />
+          </motion.div>
         </div>
       </motion.div>
 

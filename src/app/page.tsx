@@ -1,13 +1,15 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, Shield, Rocket, Target } from "lucide-react";
+import { Sparkles, ArrowRight, Shield, Rocket, Target, Globe, Coins } from "lucide-react";
 import { useEmpire } from "@/lib/EmpireContext";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { TermsModal } from "@/components/Legal/TermsModal";
 
 export default function Home() {
-  const { isOnboarded, isInitialized } = useEmpire();
+  const { isOnboarded, isInitialized, language, setLanguage, currency, setCurrency } = useEmpire();
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -53,21 +55,59 @@ export default function Home() {
           Focus on your vision, let EmpireLaunchAI handle the rest.
         </p>
 
-        <div className="flex flex-col md:flex-row gap-4 justify-center pt-8">
-          <Link 
-            href="/onboarding" 
-            className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-blue-700 transition-all shadow-2xl shadow-blue-500/20 flex items-center justify-center gap-2 group"
+        <div className="flex flex-col items-center gap-6 pt-8">
+          {/* Global Preferences Selector */}
+          <div className="flex flex-wrap items-center justify-center gap-4 bg-white/5 backdrop-blur-xl p-2 rounded-2xl border border-white/10 shadow-2xl">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl">
+              <Globe className="w-5 h-5 text-blue-400" />
+              <select 
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="bg-transparent text-sm font-semibold focus:outline-none cursor-pointer"
+              >
+                <option value="en-US" className="bg-slate-800">English (US)</option>
+                <option value="en-GB" className="bg-slate-800">English (UK)</option>
+                <option value="es-ES" className="bg-slate-800">Español</option>
+                <option value="fr-FR" className="bg-slate-800">Français</option>
+                <option value="de-DE" className="bg-slate-800">Deutsch</option>
+                <option value="it-IT" className="bg-slate-800">Italiano</option>
+                <option value="pt-BR" className="bg-slate-800">Português</option>
+              </select>
+            </div>
+            
+            <div className="w-px h-8 bg-white/10 hidden md:block" />
+
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl">
+              <Coins className="w-5 h-5 text-purple-400" />
+              <select 
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+                className="bg-transparent text-sm font-semibold focus:outline-none cursor-pointer"
+              >
+                <option value="USD" className="bg-slate-800">USD ($)</option>
+                <option value="EUR" className="bg-slate-800">EUR (€)</option>
+                <option value="GBP" className="bg-slate-800">GBP (£)</option>
+                <option value="AUD" className="bg-slate-800">AUD ($)</option>
+                <option value="CAD" className="bg-slate-800">CAD ($)</option>
+                <option value="JPY" className="bg-slate-800">JPY (¥)</option>
+              </select>
+            </div>
+          </div>
+
+          <button 
+            onClick={() => setIsTermsOpen(true)}
+            className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-blue-700 transition-all shadow-2xl shadow-blue-500/20 flex items-center justify-center gap-2 group w-full md:w-fit"
           >
             Get Started
             <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link 
-            href="/dashboard" 
-            className="bg-white/10 backdrop-blur-md text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-white/20 transition-all border border-white/10 flex items-center justify-center gap-2"
-          >
-            Demo Dashboard
-          </Link>
+          </button>
         </div>
+
+        <TermsModal 
+          isOpen={isTermsOpen} 
+          onClose={() => setIsTermsOpen(false)}
+          onAccept={() => router.push('/onboarding')}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-20">
           <div className="bg-white/5 p-8 rounded-3xl border border-white/5 text-left space-y-4">

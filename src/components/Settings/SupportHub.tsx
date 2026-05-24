@@ -1,0 +1,90 @@
+"use client";
+
+import React from 'react';
+import { HelpCircle, LifeBuoy, FileText, ChevronRight, MessageCircle } from 'lucide-react';
+import { RateApp } from './RateApp';
+
+const supportTickets = [
+  { id: 'TIC-1234', subject: 'Etsy API Sync Delay', status: 'AI Investigating', date: '2h ago' },
+  { id: 'TIC-1190', subject: 'Billing Question', status: 'Resolved', date: '2d ago' },
+];
+
+export function SupportHub() {
+  return (
+    <div className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* 1. Rate the App */}
+      <RateApp />
+
+      {/* 2. Contact & Issue Tracker */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="p-8 rounded-[40px] bg-slate-900 text-white space-y-8 shadow-xl">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-blue-400">
+              <LifeBuoy className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-black tracking-tight">Need Assistance?</h3>
+              <p className="text-sm font-medium text-slate-400">Our engineers are standing by.</p>
+            </div>
+          </div>
+
+          <button className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white px-8 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 group">
+            Contact Support Hub <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
+          </button>
+
+          <div className="pt-4 border-t border-white/10 space-y-4">
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Recent Tickets</p>
+            <div className="space-y-3">
+              {supportTickets.map((ticket) => (
+                <div key={ticket.id} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors">
+                  <div className="space-y-1">
+                    <p className="text-xs font-bold">{ticket.subject}</p>
+                    <p className="text-[10px] font-medium text-slate-500">{ticket.id} • {ticket.date}</p>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${
+                    ticket.status === 'Resolved' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+                  }`}>
+                    {ticket.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-600">
+              <HelpCircle className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-black text-slate-900 tracking-tight">FAQ & Documents</h3>
+              <p className="text-sm font-medium text-slate-500">Master the Empire Engine.</p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              "How to link Canva Enterprise",
+              "Understanding Success Fees",
+              "Maximizing TikTok Virality",
+              "Setting up Payouts"
+            ].map((item) => (
+              <button key={item} className="w-full flex items-center justify-between p-5 rounded-2xl bg-slate-50 border-2 border-slate-50 hover:border-blue-600/20 hover:bg-blue-50/30 transition-all group">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                  <span className="text-sm font-bold text-slate-700">{item}</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" />
+              </button>
+            ))}
+          </div>
+          
+          <button className="w-full text-center text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 hover:text-blue-700 transition-colors">
+            View Knowledge Base
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

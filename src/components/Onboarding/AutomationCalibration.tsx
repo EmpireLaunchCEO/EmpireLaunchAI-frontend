@@ -49,6 +49,7 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
         </button>
         
         <button
+          id="automation-empire-mode"
           onClick={() => onModeChange('empire')}
           className={cn(
             "flex-1 flex flex-col items-center justify-center gap-1 relative z-20 transition-colors duration-500 py-3 md:py-4",

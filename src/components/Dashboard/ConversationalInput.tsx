@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Send, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Send, Sparkles, Mic, MicOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEmpire } from '@/lib/EmpireContext';
 
 interface ConversationalInputProps {
   onExecute?: (value: string) => Promise<void>;
@@ -12,6 +13,72 @@ interface ConversationalInputProps {
 export function ConversationalInput({ onExecute, tip }: ConversationalInputProps) {
   const [value, setValue] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const { addNote } = useEmpire();
+
+  const handleVoiceCommand = useCallback((text: string) => {
+    const query = text.toLowerCase().trim();
+    
+    if (query.startsWith('note') || query.startsWith('notes')) {
+      // Extract the note content
+      const noteContent = text.replace(/^(note|notes)\s*/i, '');
+      if (noteContent) {
+        addNote(noteContent);
+        // Show a brief visual confirmation?
+        return true;
+      }
+    } else if (query.startsWith('ai')) {
+      const aiQuery = text.replace(/^ai\s*/i, '');
+      if (aiQuery) {
+        setValue(aiQuery);
+        // Automatically submit? 
+        return false; // Let user review before send
+      }
+    }
+    return false;
+  }, [addNote]);
+
+  const toggleListening = () => {
+    if (isListening) {
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      const handled = handleVoiceCommand(transcript);
+      if (!handled) {
+        setValue(prev => prev ? `${prev} ${transcript}` : transcript);
+      }
+      setIsListening(false);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error", event.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,11 +140,25 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Ask AI to research trends, create listings, or schedule posts..."
-          className="flex-1 py-3 px-2 outline-none text-slate-700 placeholder:text-slate-400 font-medium"
+          placeholder={isListening ? "Listening..." : "Ask AI to research trends, create listings, or schedule posts..."}
+          className={cn(
+            "flex-1 py-3 px-2 outline-none text-slate-700 placeholder:text-slate-400 font-medium transition-all",
+            isListening ? "placeholder:text-blue-500 animate-pulse" : ""
+          )}
           disabled={isProcessing}
         />
         
+        <button
+          type="button"
+          onClick={toggleListening}
+          className={cn(
+            "p-3 rounded-xl transition-all",
+            isListening ? "bg-red-500 text-white animate-pulse" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+          )}
+        >
+          {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+        </button>
+
         <button
           type="submit"
           disabled={!value.trim() || isProcessing}

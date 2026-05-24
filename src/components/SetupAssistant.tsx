@@ -67,6 +67,11 @@ const onboardingSteps = [
     field: "Business Angle",
     selector: "#empire-angle",
     instruction: "What's your unique spin? 'Better than ChatGPT' thinking starts here. Tell me your specific strategy."
+  },
+  {
+    field: "Automation Mode",
+    selector: "#automation-empire-mode",
+    instruction: "Set me to AutoPilot while we get all the apps you want linked."
   }
 ];
 

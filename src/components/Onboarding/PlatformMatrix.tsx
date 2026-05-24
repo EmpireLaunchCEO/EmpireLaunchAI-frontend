@@ -14,7 +14,8 @@ import {
   ExternalLink,
   ChevronRight,
   ShieldCheck,
-  Zap
+  Zap,
+  Mail
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AIConsultantOverlay } from './AIConsultantOverlay';
@@ -24,10 +25,16 @@ const platforms = [
   { id: 'instagram', name: 'Instagram', icon: Camera, color: 'text-purple-600', bg: 'bg-purple-50' },
   { id: 'youtube', name: 'YouTube (Shorts/Main)', icon: Video, color: 'text-red-600', bg: 'bg-red-50' },
   { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { id: 'gmail', name: 'Gmail (AI Assistant)', icon: Mail, color: 'text-red-500', bg: 'bg-red-50' },
   { id: 'pinterest', name: 'Pinterest', icon: Camera, color: 'text-rose-600', bg: 'bg-rose-50' },
   { id: 'shopify', name: 'Shopify Store', icon: Globe, color: 'text-green-600', bg: 'bg-green-50' },
   { id: 'etsy', name: 'Etsy Shop', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
+  { id: 'amazon', name: 'Amazon Seller', icon: ShoppingBag, color: 'text-yellow-600', bg: 'bg-yellow-50' },
   { id: 'fiverr', name: 'Fiverr Gigs', icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { id: 'canva', name: 'Canva (Design)', icon: Sparkles, color: 'text-blue-500', bg: 'bg-blue-50' },
+  { id: 'bannerbear', name: 'Bannerbear (AI Assets)', icon: Sparkles, color: 'text-blue-900', bg: 'bg-slate-100' },
+  { id: 'kittle', name: 'Kittle (Design)', icon: Sparkles, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+  { id: 'capcut', name: 'Capcut (Video)', icon: Video, color: 'text-slate-900', bg: 'bg-slate-50' },
 ];
 
 interface PlatformMatrixProps {
