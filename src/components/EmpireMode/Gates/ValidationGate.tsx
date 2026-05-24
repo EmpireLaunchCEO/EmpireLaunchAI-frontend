@@ -216,5 +216,3 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
     </div>
   );
 }
-
-import { AnimatePresence } from 'framer-motion';

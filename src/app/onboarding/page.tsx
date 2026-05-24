@@ -7,7 +7,7 @@ import {
   ChevronRight, 
   ChevronLeft,
   CheckCircle2,
-  Sparkles,
+  Stars,
   ArrowRight,
   Zap,
   Bot,
@@ -233,7 +233,7 @@ export default function Onboarding() {
     <div className="min-h-screen bg-white flex flex-col items-center">
       <div className="fixed left-0 top-0 bottom-0 w-1 bg-slate-100 hidden lg:block z-[70]" />
       <div className="fixed left-8 top-1/2 -translate-y-1/2 -rotate-90 origin-left hidden lg:flex items-center gap-4 z-[70]">
-        <Sparkles className="w-4 h-4 text-blue-600 rotate-90" />
+        <Stars className="w-4 h-4 text-blue-600 rotate-90" />
         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 whitespace-nowrap">
           Orchestrator: <span className="text-slate-900">{currentStep === 1 ? "Analyzing Identity" : currentStep === 2 ? "Mapping Matrix" : "Calibrating Growth"}</span>
         </span>

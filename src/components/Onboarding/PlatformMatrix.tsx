@@ -18,7 +18,6 @@ import {
   Mail
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AIConsultantOverlay } from './AIConsultantOverlay';
 
 const platforms = [
   { id: 'tiktok', name: 'TikTok (Content/Shop)', icon: Video, color: 'text-pink-600', bg: 'bg-pink-50' },
@@ -110,12 +109,6 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
           </div>
         </motion.div>
       </div>
-
-      <AIConsultantOverlay 
-        isOpen={!!consultingPlatform}
-        onClose={() => setConsultingPlatform(null)}
-        platformId={consultingPlatform}
-      />
     </div>
   );
 }
