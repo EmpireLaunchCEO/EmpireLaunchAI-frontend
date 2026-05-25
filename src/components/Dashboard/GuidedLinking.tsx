@@ -75,7 +75,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
     } else if (hasNoPlatforms) {
       msg = "This is where you search for any app you want to link. I will personally walk you through what needs to be done! Let's start with your email, that way I can get some codes that will be required and you won't have to go back and forth.";
     } else if (isGmailLinked && connectedPlatforms.length === 1) {
-      msg = "Now that your email is fully linked, pick another app your wanting to link.";
+      msg = "Now that your email is fully linked, pick another app you're wanting to link.";
     } else if (connectedPlatforms.length === 1) {
       msg = "One down! What's next on your roadmap? Maybe your primary store like Etsy or Shopify?";
     } else {
@@ -374,11 +374,11 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
             {/* ... card content ... */}
             <div className="flex flex-col md:flex-row gap-10 md:items-center justify-between relative z-10">
               <div className="flex items-center gap-8">
-                <div className={cn("p-8 rounded-[36px] shadow-inner", currentPlatform.bg)}>
-                  <currentPlatform.icon className={cn("w-12 h-12", currentPlatform.color)} />
+                <div className={cn("p-8 rounded-[36px] shadow-inner", currentPlatform?.bg ?? 'bg-slate-50')}>
+                  <currentPlatform.icon className={cn("w-12 h-12", currentPlatform?.color ?? 'text-slate-400')} />
                 </div>
                 <div>
-                  <h2 className="text-4xl font-black text-slate-900 tracking-tighter">{currentPlatform.name}</h2>
+                  <h2 className="text-4xl font-black text-slate-900 tracking-tighter">{currentPlatform?.name ?? 'Connecting...'}</h2>
                   <div className="flex items-center gap-3 mt-2">
                     <div className={cn("w-2.5 h-2.5 rounded-full", linkingStep === 'auth' ? "bg-amber-500 animate-pulse" : "bg-green-500")} />
                     <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">

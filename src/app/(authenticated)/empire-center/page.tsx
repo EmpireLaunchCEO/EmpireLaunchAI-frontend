@@ -181,7 +181,9 @@ export default function EmpireCenterPage() {
                         <tr key={post.id} className="group">
                           <td className="py-6">
                             <div className="flex items-center gap-2">
-                              <Globe className="w-4 h-4 text-blue-600" />
+                              <div className="w-4 h-4 rounded-full overflow-hidden">
+                                <img src="/branded-globe.png" alt="Platform" className="w-full h-full object-cover" />
+                              </div>
                               <span className="font-black text-xs text-slate-900 uppercase tracking-tighter">{post.site}</span>
                             </div>
                           </td>

@@ -4,18 +4,21 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-  Home, 
+  LayoutDashboard, 
   Settings,
   Stars,
   ClipboardCheck,
-  BarChart3
+  BarChart3,
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { name: 'Home', href: '/dashboard', icon: Home },
-  { name: 'Review Queue', href: '/review', icon: ClipboardCheck },
-  { name: 'Growth Results', href: '/analytics', icon: BarChart3 },
+  { name: 'Success Hub', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Operations Hub', href: '/empire-center', icon: ClipboardCheck },
+  { name: 'Neural Link', href: '/link-center', icon: Stars },
+  { name: 'Control Gates', href: '/review', icon: ShieldCheck },
+  { name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 

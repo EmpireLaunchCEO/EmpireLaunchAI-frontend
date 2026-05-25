@@ -162,7 +162,7 @@ export function MissionBriefing() {
             <div className="space-y-4">
               <p className="text-xs font-medium text-slate-400 leading-relaxed italic">
                 {steps[2].status === 'current' 
-                  ? "\"Owner, I've analyzed your niche. Our next move is the Platform Bridge. Connecting your Etsy or TikTok will allow me to start automating your growth strategy immediately.\""
+                  ? "\"Owner, I've analyzed your initial profile. Our next move is the Platform Bridge. Connecting your Etsy or TikTok will allow me to start automating your growth strategy immediately.\""
                   : "\"I've successfully linked your store. I'm currently running AI Deep Research on your competitors. I'll have a list of winning product suggestions ready for your review in about 20 minutes.\""
                 }
               </p>
@@ -182,7 +182,7 @@ export function MissionBriefing() {
                 <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Live Suggestion</span>
              </div>
              <p className="text-[10px] font-bold text-blue-300 leading-relaxed">
-               I see you're interested in 'Digital Planners'. I've detected a spike in 'Fitness Trackers' for June. Want me to pivot?
+               I'm currently identifying high-velocity trends for your business. I've detected a spike in 'Fitness Trackers' for June. Want me to pivot?
              </p>
           </div>
         </div>

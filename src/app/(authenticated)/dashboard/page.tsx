@@ -126,11 +126,11 @@ export default function Dashboard() {
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
-              <Home className="w-3 h-3" />
-              Home
+              <LayoutDashboard className="w-3 h-3" />
+              Success Hub
             </div>
             <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
-              {empireData?.name || "Dashboard"}.
+              {empireData?.name || "Success Hub"}.
             </h1>
             <p className="text-sm md:text-base text-slate-500 font-medium">
               Monitoring your {empireData?.niche || "business"} growth and autonomous operations.

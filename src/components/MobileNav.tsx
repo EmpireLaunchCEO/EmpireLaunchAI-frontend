@@ -32,7 +32,7 @@ export function MobileNav() {
         )}>
           <Home className="w-6 h-6" />
         </div>
-        <span className="text-[10px] font-black uppercase tracking-tighter">Home</span>
+        <span className="text-[10px] font-black uppercase tracking-tighter">Hub</span>
       </Link>
 
       {/* EC: Empire Center */}
@@ -49,7 +49,7 @@ export function MobileNav() {
         )}>
           <ClipboardList className="w-6 h-6" />
         </div>
-        <span className="text-[10px] font-black uppercase tracking-tighter">EC</span>
+        <span className="text-[10px] font-black uppercase tracking-tighter">Empire</span>
       </Link>
 
       {/* LC: Link Center */}
@@ -66,7 +66,7 @@ export function MobileNav() {
         )}>
           <PlusCircle className="w-6 h-6" />
         </div>
-        <span className="text-[10px] font-black uppercase tracking-tighter">LC</span>
+        <span className="text-[10px] font-black uppercase tracking-tighter">Connect</span>
       </Link>
 
       {/* COG: Settings */}
@@ -83,7 +83,7 @@ export function MobileNav() {
         )}>
           <Settings className="w-6 h-6" />
         </div>
-        <span className="text-[10px] font-black uppercase tracking-tighter">COG</span>
+        <span className="text-[10px] font-black uppercase tracking-tighter">Settings</span>
       </Link>
     </div>
   );

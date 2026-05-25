@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Star, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { socialProofService } from '@/lib/api-service';
 
 export function RateApp() {
   const [rating, setRating] = useState<number>(0);

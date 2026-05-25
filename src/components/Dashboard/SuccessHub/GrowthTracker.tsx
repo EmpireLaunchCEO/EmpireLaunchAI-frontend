@@ -3,6 +3,7 @@
 import React from 'react';
 import { Target, TrendingUp, ChevronRight, Award } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { GrowthBurst } from './GrowthBurst';
 
 interface GrowthTrackerProps {
   goalTitle?: string;
@@ -55,6 +56,7 @@ export const GrowthTracker = ({
               </linearGradient>
             </defs>
           </svg>
+          <GrowthBurst active={percentage >= 100} />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Status</span>
             <span className="text-4xl font-black text-slate-900 tracking-tighter">{percentage}%</span>

@@ -6,7 +6,6 @@ import {
   Activity, 
   Search, 
   Cpu, 
-  Globe, 
   Zap,
   TrendingUp,
   Brain,
@@ -15,6 +14,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { analyticsService, EmpirePulseState, approvalService } from '@/lib/api-service';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 export function EmpirePulse() {
   const [pulse, setPulse] = useState<EmpirePulseState | null>(null);
@@ -70,7 +70,7 @@ export function EmpirePulse() {
     switch (status) {
       case 'researching': return <Search className="w-6 h-6 text-blue-400" />;
       case 'producing': return <Cpu className="w-6 h-6 text-indigo-400" />;
-      case 'deploying': return <Globe className="w-6 h-6 text-emerald-400" />;
+      case 'deploying': return <BrandedGlobe size="md" animate={false} />;
       case 'optimizing': return <TrendingUp className="w-6 h-6 text-amber-400" />;
       default: return <Activity className="w-6 h-6 text-slate-400" />;
     }
@@ -135,8 +135,10 @@ export function EmpirePulse() {
                       initial={{ scale: 0.5, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0.5, opacity: 0 }}
+                      className="relative flex items-center justify-center"
                     >
-                      <Brain className="w-10 h-10 text-blue-500" />
+                      <BrandedGlobe size="lg" className="opacity-20 absolute inset-0 m-auto border-none bg-transparent shadow-none" />
+                      <Brain className="w-10 h-10 text-blue-500 relative z-10" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -180,26 +182,26 @@ export function EmpirePulse() {
                  <h2 className="text-2xl font-black text-white italic tracking-tight uppercase">
                     {hasPendingApprovals ? 'Approval Required' : (
                       <>
-                        {pulse.status === 'researching' && 'Market Discovery Active'}
-                        {pulse.status === 'producing' && 'Autonomous Production'}
-                        {pulse.status === 'deploying' && 'Empire Expansion'}
-                        {pulse.status === 'optimizing' && 'Strategic Optimization'}
-                        {pulse.status === 'idle' && 'Cognitive Rest'}
+                        {pulse?.status === 'researching' && 'Market Discovery Active'}
+                        {pulse?.status === 'producing' && 'Autonomous Production'}
+                        {pulse?.status === 'deploying' && 'Empire Expansion'}
+                        {pulse?.status === 'optimizing' && 'Strategic Optimization'}
+                        {pulse?.status === 'idle' && 'Cognitive Rest'}
                       </>
                     )}
                  </h2>
               </div>
               <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-2xl flex items-center gap-3">
-                 {hasPendingApprovals ? <Pause className="w-6 h-6 text-amber-500" /> : getStatusIcon(pulse.status)}
+                 {hasPendingApprovals ? <Pause className="w-6 h-6 text-amber-500" /> : getStatusIcon(pulse?.status ?? 'idle')}
                  <div className="text-right">
                     <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Active Neural Path</p>
-                    <p className="text-xs font-bold text-white capitalize">{hasPendingApprovals ? 'Awaiting CEO' : pulse.status}</p>
+                    <p className="text-xs font-bold text-white capitalize">{hasPendingApprovals ? 'Awaiting CEO' : (pulse?.status ?? 'idle')}</p>
                  </div>
               </div>
            </div>
 
            <p className="text-slate-400 text-sm font-medium italic">
-             {hasPendingApprovals ? '"I have reached a strategic junction. Your approval is required to proceed with the next phase of deployment."' : `"${pulse.description}"`}
+             {hasPendingApprovals ? '"I have reached a strategic junction. Your approval is required to proceed with the next phase of deployment."' : `"${pulse?.description ?? 'Analyzing global market velocity...'}"`}
            </p>
 
            <div className="space-y-4">

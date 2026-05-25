@@ -43,7 +43,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
         </div>
         <div>
           <h3 className="text-xl font-black text-slate-900 leading-tight">Visual Draft Review.</h3>
-          <p className="text-sm text-slate-500 font-medium italic">"I've generated the first set of assets for {payload.platform}. Do these meet your brand standards?"</p>
+          <p className="text-sm text-slate-500 font-medium italic">"I've generated the first set of assets for {payload?.platform ?? 'your chosen platform'}. Do these meet your brand standards?"</p>
         </div>
       </div>
 
@@ -52,7 +52,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
         <div className="lg:col-span-2 space-y-6">
            <div className="relative aspect-video bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl group">
               <img 
-                src={payload.assets[activeIndex].previewUrl} 
+                src={(payload?.assets ?? [])[activeIndex]?.previewUrl ?? 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop'} 
                 className="w-full h-full object-cover opacity-80"
                 alt="Draft Preview"
               />
@@ -63,8 +63,8 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
               </div>
               <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
                  <div className="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl border border-white/10">
-                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">{payload.platform} Post</p>
-                    <h4 className="text-white font-bold">{payload.title}</h4>
+                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">{payload?.platform ?? 'Platform'} Post</p>
+                    <h4 className="text-white font-bold">{payload?.title ?? 'Untitled Concept'}</h4>
                  </div>
                  <div className="flex gap-2">
                     <button className="p-3 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 text-white hover:bg-white/20 transition-colors">
@@ -75,7 +75,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
            </div>
 
            <div className="flex justify-center gap-2">
-              {payload.assets.map((_, i) => (
+              {(payload?.assets ?? []).map((_, i) => (
                 <button 
                   key={i}
                   onClick={() => setIndex(i)}
@@ -94,7 +94,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
               <div className="space-y-4">
                  <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">AI Marketing Hook</h4>
                  <p className="text-sm text-slate-500 font-mono bg-slate-50 p-4 rounded-2xl border border-slate-100 italic">
-                   "{payload.caption}"
+                   "{payload?.caption ?? 'Drafting the perfect hook for you...'}"
                  </p>
               </div>
 

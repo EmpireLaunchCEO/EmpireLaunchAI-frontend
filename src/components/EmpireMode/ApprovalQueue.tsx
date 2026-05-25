@@ -80,11 +80,11 @@ export function ApprovalQueue() {
             
             <h4 className="font-bold text-slate-900 mb-2">
               {req.type === 'blueprint' ? 'Approve 30-Day Strategy' : 
-               req.type === 'content' ? `Review ${req.payload.platform} Draft` : `Ready to Launch on ${req.payload.platform}`}
+               req.type === 'content' ? `Review ${req.payload?.platform ?? 'Draft'} Draft` : `Ready to Launch on ${req.payload?.platform ?? 'Platform'}`}
             </h4>
             <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-              {req.type === 'blueprint' ? `Expansion plan for ${req.payload.niche}` :
-               req.type === 'content' ? req.payload.title : `Final manifest for ${req.payload.title}`}
+              {req.type === 'blueprint' ? `Expansion plan for ${req.payload?.niche ?? 'your empire'}` :
+               req.type === 'content' ? (req.payload?.title ?? 'Untitled Content') : `Final manifest for ${req.payload?.title ?? 'Production Item'}`}
             </p>
             
             <div className="mt-6 flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-widest group-hover:gap-3 transition-all">

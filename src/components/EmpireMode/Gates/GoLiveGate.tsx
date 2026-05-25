@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Rocket,
   ShieldCheck,
-  Globe,
   DollarSign,
   AlertCircle,
   CheckCircle2,
@@ -14,6 +13,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface GoLiveGateProps {
   payload: {
@@ -38,7 +38,7 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
         </div>
         <div>
           <h3 className="text-xl font-black text-slate-900 leading-tight">Pre-Deployment Sync.</h3>
-          <p className="text-sm text-slate-500 font-medium italic">"Final confirmation required before I deploy your listing to {payload.platform}."</p>
+          <p className="text-sm text-slate-500 font-medium italic">"Final confirmation required before I deploy your listing to {payload?.platform ?? 'your chosen platform'}."</p>
         </div>
       </div>
 
@@ -46,7 +46,7 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
         {/* Listing Preview */}
         <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
            <div className="flex items-center gap-2">
-              <Globe className="w-5 h-5 text-emerald-600" />
+              <BrandedGlobe size="sm" animate={false} className="border-emerald-600/30" />
               <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">Listing Manifest</h4>
            </div>
 
@@ -54,22 +54,22 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
               <div className="space-y-2">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Platform Target</p>
                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 font-bold text-slate-900">
-                    {payload.platform} Storefront
+                    {payload?.platform ?? 'Platform'} Storefront
                  </div>
               </div>
 
               <div className="space-y-2">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Product Title & Price</p>
                  <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
-                    <span className="font-bold text-slate-900">{payload.title}</span>
-                    <span className="font-black text-emerald-600">${payload.price}</span>
+                    <span className="font-bold text-slate-900">{payload?.title ?? 'Untitled Product'}</span>
+                    <span className="font-black text-emerald-600">${payload?.price ?? '0.00'}</span>
                  </div>
               </div>
 
               <div className="space-y-2">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Search Tags (SEO)</p>
                  <div className="flex flex-wrap gap-2">
-                    {payload.tags.map((tag, i) => (
+                    {(payload?.tags ?? []).map((tag, i) => (
                       <span key={i} className="px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-bold border border-emerald-100">
                          #{tag}
                       </span>
@@ -89,25 +89,25 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
            <div className="space-y-6 relative z-10">
               <div className={cn(
                 "p-6 rounded-3xl border-2 transition-all",
-                payload.bankInfoVerified ? "bg-emerald-500/10 border-emerald-500/20" : "bg-amber-500/10 border-amber-500/20"
+                payload?.bankInfoVerified ? "bg-emerald-500/10 border-emerald-500/20" : "bg-amber-500/10 border-amber-500/20"
               )}>
                  <div className="flex items-start gap-4">
                     <div className={cn(
                       "p-3 rounded-xl",
-                      payload.bankInfoVerified ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"
+                      payload?.bankInfoVerified ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"
                     )}>
                        <CreditCard className="w-5 h-5" />
                     </div>
                     <div className="space-y-1">
                        <h5 className="font-bold text-white">Bank Info Verification</h5>
                        <p className="text-xs text-slate-400 leading-relaxed">
-                          {payload.bankInfoVerified 
+                          {payload?.bankInfoVerified 
                             ? "Your settlement account is linked and ready for direct deposits."
                             : "I've detected missing settlement info. Please verify your bank details before deployment."}
                        </p>
                     </div>
                  </div>
-                 {!payload.bankInfoVerified && (
+                 {payload && !payload.bankInfoVerified && (
                    <button className="mt-4 w-full py-3 bg-amber-500 text-slate-900 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-amber-400 transition-colors">
                       Update Bank Info
                    </button>

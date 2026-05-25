@@ -77,7 +77,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
       <div className="relative">
         <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
-        <Globe className="absolute inset-0 m-auto w-6 h-6 text-blue-400 animate-pulse" />
+        <div className="absolute inset-0 m-auto w-8 h-8 rounded-full overflow-hidden border border-white/10 shadow-[0_0_20px_rgba(59,130,246,0.5)]">
+          <img src="/branded-globe.png" alt="Empire" className="w-full h-full object-cover animate-pulse" />
+        </div>
       </div>
     </div>
   );

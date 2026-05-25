@@ -71,7 +71,7 @@ const onboardingSteps = [
   {
     field: "Automation Mode",
     selector: "#automation-empire-mode",
-    instruction: "Set me to AutoPilot while we get all the apps you want linked."
+    instruction: "Select Empire Mode to start. This allows me to scan and link the accounts on your phone (Gmail, Etsy, TikTok) to retrieve your API keys and secure tokens automatically."
   }
 ];
 

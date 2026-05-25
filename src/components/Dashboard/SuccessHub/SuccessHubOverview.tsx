@@ -6,6 +6,9 @@ import { GrowthTracker } from './GrowthTracker';
 import { NeuralActivityFeed } from './NeuralActivityFeed';
 import { VideoPerformance } from './VideoPerformance';
 import { EmpireLedger } from './EmpireLedger';
+import { EmpireGrowthBreakdown } from './EmpireGrowthBreakdown';
+import { InboxAssistant } from './InboxAssistant';
+import { SocialProofApproval } from '../SocialProofApproval';
 import { ActivityStream } from '../ActivityStream';
 import { Stars, Brain, Zap, Globe } from 'lucide-react';
 
@@ -38,6 +41,16 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
         </div>
       </section>
 
+      {/* Growth Breakdown Section */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <EmpireGrowthBreakdown growthScore={healthData?.growthScore || 84} healthData={healthData} />
+        <div className="space-y-8">
+           <VideoPerformance />
+        </div>
+      </section>
+
+      <SocialProofApproval />
+
       {/* Insight Banner */}
       <motion.div 
         whileHover={{ scale: 1.01 }}
@@ -62,12 +75,11 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
       {/* Mid Section: Social & Financial */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         <div className="lg:col-span-7 space-y-12">
-          <VideoPerformance />
           <div className="bg-slate-50 rounded-[40px] p-8 border border-slate-100">
              <div className="flex items-center justify-between mb-8">
                <div className="flex items-center gap-3">
-                 <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center">
-                   <Globe className="w-5 h-5 text-white" />
+                 <div className="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center overflow-hidden border border-white/10">
+                   <img src="/branded-globe.png" alt="Globe" className="w-6 h-6 object-cover" />
                  </div>
                  <h3 className="text-xl font-black text-slate-900">Unified Activity Feed</h3>
                </div>
@@ -77,8 +89,9 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
           </div>
         </div>
         
-        <div className="lg:col-span-5 sticky top-8">
+        <div className="lg:col-span-5 sticky top-8 space-y-10">
           <EmpireLedger health={healthData} />
+          <InboxAssistant />
           
           <div className="mt-10 bg-slate-900 rounded-[40px] p-8 text-white relative overflow-hidden">
              <div className="relative z-10 space-y-6">

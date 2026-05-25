@@ -43,7 +43,7 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
         </div>
         <div>
           <h3 className="text-xl font-black text-slate-900 leading-tight">Strategy Roadmap.</h3>
-          <p className="text-sm text-slate-500 font-medium italic">"I've found a high-growth niche in {payload.niche}. Proceed with this plan?"</p>
+          <p className="text-sm text-slate-500 font-medium italic">"I've found a high-growth niche in {payload?.niche ?? 'your business sector'}. Proceed with this plan?"</p>
         </div>
       </div>
 
@@ -64,7 +64,7 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
           </div>
 
           <div className="space-y-4">
-            {editedPayload.products.map((product, i) => (
+            {(editedPayload?.products ?? []).map((product, i) => (
               <div key={i} className="p-4 bg-slate-50 rounded-2xl flex items-center justify-between group">
                 <div className="space-y-1">
                    <p className="text-sm font-bold text-slate-900">{product.name}</p>
@@ -81,7 +81,7 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
                     />
                   </div>
                 ) : (
-                  <p className="text-sm font-black text-blue-600">${product.price.toFixed(2)}</p>
+                  <p className="text-sm font-black text-blue-600">${(product.price ?? 0).toFixed(2)}</p>
                 )}
               </div>
             ))}
@@ -100,7 +100,7 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
           </div>
 
           <div className="space-y-6 relative z-10 border-l-2 border-white/5 ml-2">
-             {editedPayload.roadmap.map((item, i) => (
+             {(editedPayload?.roadmap ?? []).map((item, i) => (
                <div key={i} className="relative pl-6">
                   <div className="absolute left-[-9px] top-1.5 w-4 h-4 rounded-full bg-slate-900 border-2 border-blue-500" />
                   <div className="space-y-1">

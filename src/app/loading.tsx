@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Globe } from 'lucide-react';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 export default function RootLoading() {
   return (
@@ -13,13 +13,7 @@ export default function RootLoading() {
           animate={{ rotate: 360 }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
         />
-        <motion.div
-          className="absolute inset-0 m-auto w-10 h-10 flex items-center justify-center text-blue-400"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Globe className="w-10 h-10" />
-        </motion.div>
+        <BrandedGlobe size="lg" className="absolute inset-0 m-auto shadow-[0_0_40px_rgba(59,130,246,0.5)]" />
       </div>
       
       <div className="flex flex-col items-center gap-2">
@@ -40,7 +34,7 @@ export default function RootLoading() {
 
       <div className="absolute bottom-10 flex items-center gap-2 opacity-20">
         <div className="w-1 h-1 bg-emerald-500 rounded-full animate-ping" />
-        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Empire Intelligence v3.1.0</span>
+        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Empire Intelligence v3.3.1</span>
       </div>
     </div>
   );
