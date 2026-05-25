@@ -28,6 +28,23 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
+                  // Cache-Busting: Clear legacy service workers and local storage if on old version
+                  var currentVersion = '3.3.1';
+                  var installedVersion = localStorage.getItem('app_version');
+                  if (installedVersion !== currentVersion) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    localStorage.setItem('app_version', currentVersion);
+                    if ('serviceWorker' in navigator) {
+                      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                        for(var registration of registrations) {
+                          registration.unregister();
+                        }
+                      });
+                    }
+                    window.location.reload(true);
+                  }
+
                   var onboarded = localStorage.getItem('isOnboarded');
                   var path = window.location.pathname;
                   if (onboarded === 'true' && (path === '/' || path === '/onboarding')) {
