@@ -24,10 +24,12 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
     setIsProcessing(true);
     setError('');
     
+    const cleanKey = accessKey.trim().toUpperCase();
+    
     // In a real app, this would call /api/auth/redeemKey
     // For this simulation, we check for the Master Owner key or any valid key format
     setTimeout(() => {
-      if (accessKey.startsWith('OWNER-') || accessKey.startsWith('BETA-')) {
+      if (cleanKey.startsWith('OWNER-') || cleanKey.startsWith('BETA-')) {
         setIsPaid(true);
         setIsProcessing(false);
       } else {
