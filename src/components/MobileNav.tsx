@@ -83,7 +83,7 @@ export function MobileNav() {
         )}>
           <Settings className="w-6 h-6" />
         </div>
-        <span className="text-[10px] font-black uppercase tracking-tighter">COG</span>
+        <span className="text-[10px] font-black uppercase tracking-tighter">Settings</span>
       </Link>
     </div>
   );
