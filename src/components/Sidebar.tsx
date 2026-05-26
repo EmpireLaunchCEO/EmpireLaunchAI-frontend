@@ -14,8 +14,8 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { name: 'Success Hub', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Operations Hub', href: '/empire-center', icon: ClipboardCheck },
+  { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Empire Center', href: '/empire-center', icon: ClipboardCheck },
   { name: 'Neural Link', href: '/link-center', icon: Stars },
   { name: 'Control Gates', href: '/review', icon: ShieldCheck },
   { name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },

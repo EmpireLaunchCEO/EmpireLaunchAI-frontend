@@ -32,7 +32,7 @@ export function MobileNav() {
         )}>
           <Home className="w-6 h-6" />
         </div>
-        <span className="text-[10px] font-black uppercase tracking-tighter">Hub</span>
+        <span className="text-[10px] font-black uppercase tracking-tighter">Home</span>
       </Link>
 
       {/* EC: Empire Center */}
