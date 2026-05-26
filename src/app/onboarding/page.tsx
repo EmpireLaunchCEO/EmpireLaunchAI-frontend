@@ -28,13 +28,15 @@ const steps = [
   { id: 2, title: 'Matrix' },
   { id: 3, title: 'Toolkit' },
   { id: 4, title: 'Calibration' },
+  { id: 5, title: 'Authorization' },
 ];
 
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
+import { CreditCard, Lock, Sparkles } from 'lucide-react';
 
 export default function Onboarding() {
-  const { completeOnboarding, setActiveEmpireId, isOnboarded, isInitialized } = useEmpire();
+  const { completeOnboarding, setActiveEmpireId, isOnboarded, isInitialized, setIsPaid } = useEmpire();
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState({
@@ -46,6 +48,7 @@ export default function Onboarding() {
   });
 
   const [isActivating, setIsActivating] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
   const [showApprovalGate, setShowApprovalGate] = useState(false);
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
   const [gatePlatform, setGatePlatform] = useState('Etsy');
@@ -293,13 +296,80 @@ export default function Onboarding() {
                 />
               </motion.div>
             )}
+
+            {currentStep === 5 && (
+              <motion.div
+                key="step5"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="max-w-xl mx-auto space-y-8"
+              >
+                <div className="text-center space-y-4">
+                  <div className="w-16 h-16 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-xl shadow-blue-200">
+                    <Lock className="w-8 h-8 text-white" />
+                  </div>
+                  <h2 className="text-3xl font-black text-slate-900 tracking-tight">Authorize Engine.</h2>
+                  <p className="text-slate-500 font-medium italic">
+                    "To begin autonomous operations, I need you to authorize the operational license. This secures your business slots and neural processing priority."
+                  </p>
+                </div>
+
+                <div className="bg-blue-50 border-4 border-blue-600 rounded-[32px] p-8 space-y-6 relative overflow-hidden">
+                   <div className="flex justify-between items-start">
+                     <div>
+                       <h3 className="text-xl font-black text-blue-900 uppercase italic tracking-tighter">Empire Master</h3>
+                       <p className="text-blue-700 text-[10px] font-black uppercase tracking-widest mt-1">Unlimited Autonomy License</p>
+                     </div>
+                     <div className="text-right">
+                       <span className="text-2xl font-black text-blue-900">$30</span>
+                       <span className="text-blue-600 font-black uppercase tracking-widest text-[8px] block">/Month</span>
+                     </div>
+                   </div>
+
+                   <div className="space-y-3">
+                     {[
+                       'Full Autonomous Execution',
+                       'Priority Neural Discovery',
+                       'Secure Bank Bridge Integration',
+                       '24/7 Market Intelligence Pulse'
+                     ].map(f => (
+                       <div key={f} className="flex items-center gap-2 text-[10px] font-black text-blue-900 uppercase tracking-tight">
+                         <div className="w-1.5 h-1.5 bg-blue-600 rounded-full" />
+                         {f}
+                       </div>
+                     ))}
+                   </div>
+
+                   <div className="pt-4 border-t border-blue-200">
+                     <div className="flex items-center gap-4 opacity-50 grayscale mb-6">
+                        <div className="flex items-center gap-1">
+                          <CreditCard className="w-3 h-3" />
+                          <span className="text-[8px] font-black uppercase tracking-widest">Secure Pay</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Lock className="w-3 h-3" />
+                          <span className="text-[8px] font-black uppercase tracking-widest">Encrypted</span>
+                        </div>
+                     </div>
+                   </div>
+                </div>
+
+                <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl flex items-start gap-3">
+                  <div className="w-2 h-2 bg-amber-500 rounded-full mt-1 animate-pulse" />
+                  <p className="text-[10px] text-amber-800 font-bold leading-relaxed italic">
+                    "Verification: This is a secure operational gateway. Your data remains protected via hardware-level encryption."
+                  </p>
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
 
         <div className="mt-20 flex justify-between items-center max-w-3xl mx-auto w-full">
           <button
             onClick={prevStep}
-            disabled={currentStep === 1}
+            disabled={currentStep === 1 || isActivating || isPaying}
             className={cn(
               "flex items-center gap-2 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors disabled:opacity-0",
             )}
@@ -318,11 +388,17 @@ export default function Onboarding() {
             </button>
           ) : (
             <button
-              onClick={handleActivate}
-              disabled={isActivating}
+              onClick={async () => {
+                setIsPaying(true);
+                await new Promise(r => setTimeout(r, 2000));
+                setIsPaid(true);
+                setIsPaying(false);
+                handleActivate();
+              }}
+              disabled={isActivating || isPaying}
               className="bg-blue-600 text-white px-10 py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-slate-900 transition-all shadow-2xl shadow-blue-200 group disabled:opacity-50"
             >
-              {isActivating ? "Syncing..." : "Activate Empire"}
+              {isPaying ? "Authorizing..." : isActivating ? "Syncing..." : "Authorize & Activate"}
               <CheckCircle2 className="w-4 h-4" />
             </button>
           )}

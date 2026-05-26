@@ -24,6 +24,8 @@ interface EmpireContextType {
   setLanguage: (lang: string) => void;
   currency: string;
   setCurrency: (curr: string) => void;
+  isPaid: boolean;
+  setIsPaid: (paid: boolean) => void;
 }
 
 const EmpireContext = createContext<EmpireContextType | undefined>(undefined);
@@ -35,12 +37,25 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
     return '1';
   });
+  const [isPaid, setIsPaidState] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('isPaid') === 'true';
+    }
+    return false;
+  });
   const [isOnboarded, setIsOnboarded] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('isOnboarded') === 'true';
     }
     return false;
   });
+
+  const setIsPaid = (paid: boolean) => {
+    setIsPaidState(paid);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isPaid', paid ? 'true' : 'false');
+    }
+  };
   const [isLinkingComplete, setIsLinkingComplete] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('isLinkingComplete') === 'true';
@@ -205,7 +220,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       language,
       setLanguage,
       currency,
-      setCurrency
+      setCurrency,
+      isPaid,
+      setIsPaid
     }}>
       {children}
     </EmpireContext.Provider>

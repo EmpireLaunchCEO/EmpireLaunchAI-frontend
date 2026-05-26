@@ -30,7 +30,7 @@ const TermsModal = ({ isOpen, onClose, onAccept }: { isOpen: boolean, onClose: (
                 <Shield className="w-4 h-4 text-blue-400" />
                 Data Sovereignty
               </h3>
-              <p>EmpireLaunchAI acts as your primary executive agent. All bank details and personal identifiers are encrypted at the edge. We do not store raw financial data on shared nodes.</p>
+              <p>EmpireLaunch AI acts as your primary executive agent. All bank details and personal identifiers are encrypted at the edge. We do not store raw financial data on shared nodes.</p>
             </section>
             <section>
               <h3 className="text-white font-bold mb-2 uppercase text-sm tracking-widest flex items-center gap-2">
@@ -98,7 +98,7 @@ export default function LandingPage() {
           <div className="bg-blue-600 p-2 rounded-xl">
             <Target className="w-6 h-6 text-white" />
           </div>
-          <span className="font-black text-2xl tracking-tighter uppercase italic">EmpireLaunch<span className="text-blue-500">AI</span></span>
+          <span className="font-black text-2xl tracking-tighter uppercase italic">EmpireLaunch <span className="text-blue-500">AI</span></span>
         </div>
         <div className="hidden md:flex items-center gap-2 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
           <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
