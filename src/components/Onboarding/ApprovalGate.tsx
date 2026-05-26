@@ -410,7 +410,7 @@ export function ApprovalGate({
                 <span className="text-[9px] font-black uppercase text-blue-400 tracking-widest">Secure Session</span>
               </div>
               <p className="text-[10px] text-slate-400 leading-relaxed font-medium italic">
-                BizRunner uses a sandboxed remote browser. We only receive the session cookies to resume setup after you sign in.
+                EmpireLaunch AI uses a sandboxed remote browser. We only receive the session cookies to resume setup after you sign in.
               </p>
             </div>
           </div>

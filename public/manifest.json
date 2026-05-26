@@ -1,6 +1,6 @@
 {
-  "name": "EmpireLaunchAI",
-  "short_name": "Empire v3.3",
+  "name": "EmpireLaunch AI",
+  "short_name": "EmpireLaunch AI",
   "description": "Automate your business with AI",
   "start_url": "/dashboard",
   "display": "standalone",

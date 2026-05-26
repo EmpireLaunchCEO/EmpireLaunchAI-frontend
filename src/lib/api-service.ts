@@ -106,7 +106,7 @@ export const socialProofService = {
       {
         id: 'rate_1',
         rating: 5,
-        review: 'BizRunner has completely automated my Etsy shop. I am making sales while I sleep!',
+        review: 'EmpireLaunch AI has completely automated my Etsy shop. I am making sales while I sleep!',
         userName: 'Sarah J.',
         status: 'pending',
         createdAt: new Date().toISOString()
