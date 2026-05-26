@@ -19,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.json?v=3.3.1" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=3.3.1" />
+        <link rel="icon" href="/branded-globe.png?v=3.3.1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#2563eb" />
