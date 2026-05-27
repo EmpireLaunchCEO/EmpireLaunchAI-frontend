@@ -20,9 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=3.3.1" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=3.3.1" />
-        <link rel="icon" href="/branded-globe.png?v=3.3.1" />
+        <link rel="manifest" href="/manifest.json?v=3.7.0" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=3.7.0" />
+        <link rel="icon" href="/branded-globe.png?v=3.7.0" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#2563eb" />
@@ -32,7 +32,7 @@ export default function RootLayout({
               (function() {
                 try {
                   // Cache-Busting: Clear legacy service workers and local storage if on old version
-                  var currentVersion = '3.3.3';
+                  var currentVersion = '3.7.0';
                   var installedVersion = localStorage.getItem('app_version');
                   if (installedVersion !== currentVersion) {
                     localStorage.clear();
