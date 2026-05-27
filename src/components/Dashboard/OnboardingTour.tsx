@@ -135,21 +135,24 @@ export function OnboardingTour() {
 
           if (el) {
             const rect = el.getBoundingClientRect();
-            setPointerX(rect.left + rect.width / 2);
             
-            // IMPROVED POSITIONING: Ensure pointer stays within viewport
+            // CLAMP X: Ensure it's not too close to edges (min 80px from sides for the bubble)
+            const bubbleWidth = 160; 
+            const centerX = rect.left + rect.width / 2;
+            const clampedX = Math.max(bubbleWidth / 2 + 10, Math.min(window.innerWidth - (bubbleWidth / 2 + 10), centerX));
+            setPointerX(clampedX);
+            
+            // IMPROVED POSITIONING: 
             if (step.target?.startsWith('nav-')) {
-              // Points to bottom nav, place bubble well above and arrow pointing down
-              setPointerY(Math.max(100, rect.top - 40)); 
-            } else if (step.target === 'notification-bell') {
-              // Points to notification bell (top right), place arrow pointing up
-              setPointerY(Math.min(window.innerHeight - 100, rect.bottom + 20));
+              // Points to bottom/side nav, place bubble 10px away and arrow pointing to it
+              // If pointing to bottom nav, pointerY should be above it
+              setPointerY(rect.top - 10); 
             } else {
-              // Points to settings tabs, place arrow pointing up
-              setPointerY(Math.min(window.innerHeight - 100, rect.bottom + 20));
+              // Points to top/center items, place bubble below
+              setPointerY(rect.bottom + 10);
             }
           }
-        }, 300); // Increased delay for stability
+        }, 300);
       } else {
         setPointerX(null);
         setPointerY(null);
@@ -264,7 +267,10 @@ export function OnboardingTour() {
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, left: pointerX, top: pointerY }}
-          className="fixed z-[10001] flex flex-col items-center gap-1 -translate-x-1/2 -translate-y-full pointer-events-none"
+          className={cn(
+            "fixed z-[10001] flex flex-col items-center gap-1 -translate-x-1/2 pointer-events-none",
+            step.target?.startsWith('nav-') ? "-translate-y-full" : "translate-y-0"
+          )}
           style={{ transition: 'left 0.3s ease, top 0.3s ease' }}
         >
           {step.target?.startsWith('nav-') ? (
@@ -280,7 +286,7 @@ export function OnboardingTour() {
               </motion.div>
             </>
           ) : (
-            <div className="flex flex-col-reverse items-center gap-1 translate-y-[100%]">
+            <div className="flex flex-col-reverse items-center gap-1">
               <div className="bg-blue-600 text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-white whitespace-nowrap">
                 Look Here
               </div>

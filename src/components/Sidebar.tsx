@@ -14,12 +14,12 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Empire Center', href: '/empire-center', icon: ClipboardCheck },
-  { name: 'Neural Link', href: '/link-center', icon: Stars },
-  { name: 'Control Gates', href: '/review', icon: ShieldCheck },
-  { name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { id: 'nav-home', name: 'Home', href: '/dashboard', icon: LayoutDashboard },
+  { id: 'nav-ec', name: 'Empire Center', href: '/empire-center', icon: ClipboardCheck },
+  { id: 'nav-lc', name: 'Neural Link', href: '/link-center', icon: Stars },
+  { id: 'nav-review', name: 'Control Gates', href: '/review', icon: ShieldCheck },
+  { id: 'nav-ledger', name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },
+  { id: 'nav-settings', name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export function Sidebar() {
@@ -40,6 +40,7 @@ export function Sidebar() {
           return (
             <Link
               key={item.name}
+              id={item.id}
               href={item.href}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm",
