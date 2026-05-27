@@ -90,7 +90,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
 
           <div className="flex items-center justify-between border-b border-slate-100 pb-6">
             <h3 className="text-2xl font-black text-slate-900 flex items-center gap-3 italic">
-              <Share2 className=\"w-6 h-6 text-blue-600\" /> Connecting TikTok Marketing
+              <Share2 className="w-6 h-6 text-blue-600" /> Connecting TikTok Marketing
             </h3>
             <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
               <X className="w-6 h-6 text-slate-400" />
