@@ -20,9 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=3.7.5" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=3.7.5" />
-        <link rel="icon" href="/branded-globe.png?v=3.7.5" />
+        <link rel="manifest" href="/manifest.json?v=4.1.0" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=4.1.0" />
+        <link rel="icon" href="/branded-globe.png?v=4.1.0" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -32,39 +32,19 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  // Cache-Busting: Clear legacy service workers and local storage if on old version
-                  var currentVersion = '3.7.5';
-                  var installedVersion = localStorage.getItem('app_version');
-                  if (installedVersion !== currentVersion) {
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    localStorage.setItem('app_version', currentVersion);
+                  var version = '4.1.0';
+                  var lastVersion = localStorage.getItem('app_version');
+                  if (lastVersion !== version) {
+                    localStorage.setItem('app_version', version);
+                    // Clear only specific tour flags to force the new simplified tour
+                    localStorage.removeItem('hasSeenEmpireTourV7');
+                    localStorage.removeItem('hasSeenEmpireTourV8');
+                    
                     if ('serviceWorker' in navigator) {
-                      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                        for(var registration of registrations) {
-                          registration.unregister();
-                        }
+                      navigator.serviceWorker.getRegistrations().then(function(regs) {
+                        for(var i=0; i<regs.length; i++) regs[i].unregister();
                       });
                     }
-                    window.location.reload(true);
-                  }
-
-                  // Register Service Worker
-                  if ('serviceWorker' in navigator) {
-                    window.addEventListener('load', function() {
-                      navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                      }, function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                      });
-                    });
-                  }
-
-                  var onboarded = localStorage.getItem('isOnboarded');
-                  var path = window.location.pathname;
-                  if (onboarded === 'true' && (path === '/' || path === '/onboarding')) {
-                    document.documentElement.style.display = 'none';
-                    window.location.replace('/dashboard');
                   }
                 } catch (e) {}
               })();

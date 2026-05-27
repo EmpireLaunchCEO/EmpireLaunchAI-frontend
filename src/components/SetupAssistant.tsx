@@ -9,48 +9,13 @@ import {
   Copy, 
   Check, 
   X,
-  Stars,
-  Zap,
-  Target,
-  ExternalLink,
-  ShieldCheck,
-  Lightbulb,
-  Rocket
+  Bot as BotIcon,
+  Zap
 } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useFloating, offset, flip, shift, arrow, autoUpdate } from '@floating-ui/react-dom';
-
-const etsySteps = [
-  {
-    field: "API Key",
-    selector: "#etsy-api-key",
-    value: "75x9v2k4m1n8",
-    instruction: "Enter your Etsy Keystring here to allow the AI to sync with your shop."
-  },
-  {
-    field: "Shared Secret",
-    selector: "#etsy-shared-secret",
-    value: "v92k4m1n8x75",
-    instruction: "The Shared Secret ensures a secure encrypted tunnel for your payment data."
-  }
-];
-
-const tiktokSteps = [
-  {
-    field: "Marketing API",
-    selector: "#tiktok-marketing-api",
-    value: "Marketing API",
-    instruction: "Select 'Marketing API' to allow autonomous video scheduling."
-  },
-  {
-    field: "Redirect URI",
-    selector: "#tiktok-redirect-uri",
-    value: "https://empire-launch-ai-frontend.vercel.app/api/auth/callback/tiktok",
-    instruction: "Copy this into the 'Redirect URI' field in your TikTok Dev Portal."
-  }
-];
 
 const onboardingSteps = [
   {
@@ -76,30 +41,34 @@ const onboardingSteps = [
 ];
 
 const platformMap: Record<string, any[]> = {
-  'etsy': etsySteps,
-  'tiktok': tiktokSteps,
   'onboarding': onboardingSteps
 };
 
 export function SetupAssistant() {
-  const { activeSetupPlatform, finishSetup } = useEmpire();
+  const { activeSetupPlatform, finishSetup, isInitialized } = useEmpire();
   const pathname = usePathname();
   const [currentStep, setCurrentStep] = useState(0);
   const [copied, setCopied] = useState(false);
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
 
+  // Determine if we should show based on state
+  const shouldShow = isInitialized && (activeSetupPlatform || pathname === '/onboarding');
+  
   const steps = activeSetupPlatform ? (platformMap[activeSetupPlatform.toLowerCase()] || []) : 
                (pathname === '/onboarding' ? onboardingSteps : null);
 
-  const step = (steps && currentStep >= 0 && currentStep < (steps as any[]).length) ? (steps as any[])[currentStep] : null;
+  const step = (steps && currentStep >= 0 && currentStep < steps.length) ? steps[currentStep] : null;
 
   const { x, y, strategy, refs, middlewareData, placement } = useFloating({
     elements: {
       reference: targetElement,
     },
     placement: 'right',
-    whileElementsMounted: autoUpdate,
+    whileElementsMounted: (reference, floating, update) => {
+      if (!reference || !floating) return;
+      return autoUpdate(reference, floating, update);
+    },
     middleware: [
       offset(20),
       flip(),
@@ -109,27 +78,36 @@ export function SetupAssistant() {
   });
 
   useEffect(() => {
-    if (step && step.selector) {
+    if (!shouldShow || !step?.selector) {
+      setTargetElement(null);
+      return;
+    }
+
+    const timer = setTimeout(() => {
       const el = document.querySelector(step.selector) as HTMLElement;
-      if (el) {
+      if (el && el.isConnected) {
         setTargetElement(el);
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        try {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (e) {}
       } else {
         setTargetElement(null);
       }
-    } else {
-      setTargetElement(null);
-    }
-  }, [step, pathname]);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [step, pathname, shouldShow]);
 
   const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {}
   };
 
   const next = () => {
-    if (steps && currentStep < (steps as any[]).length - 1) {
+    if (steps && currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
       setCopied(false);
     } else if (activeSetupPlatform) {
@@ -144,16 +122,14 @@ export function SetupAssistant() {
     }
   };
 
-  if (!step || !targetElement || !steps) return null;
-
-  const typedSteps = steps as any[];
+  if (!shouldShow || !step || !targetElement) return null;
 
   const staticSide = {
     top: 'bottom',
     right: 'left',
     bottom: 'top',
     left: 'right',
-  }[placement.split('-')[0]] as string;
+  }[placement.split('-')[0]] || 'left';
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999]">
@@ -186,7 +162,7 @@ export function SetupAssistant() {
           <div className="w-[320px] bg-slate-900 border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
             <div className="bg-blue-600 px-4 py-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Bot className="w-4 h-4 text-white" />
+                <BotIcon className="w-4 h-4 text-white" />
                 <span className="text-[10px] font-black text-white uppercase tracking-[0.2em]">
                   Empire Teacher
                 </span>
@@ -199,67 +175,49 @@ export function SetupAssistant() {
               </button>
             </div>
 
-            <div className="p-5 space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="p-6 space-y-4">
+              <div className="space-y-1">
                 <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">
-                  Step {currentStep + 1} of {typedSteps.length}
+                  Step {currentStep + 1} of {steps?.length}
                 </span>
+                <h4 className="text-white font-bold tracking-tight">{(step as any).field}</h4>
               </div>
 
-              <div className="space-y-3">
-                <h3 className="text-sm font-black text-white uppercase tracking-tight">
-                  {step.field}
-                </h3>
-                <p className="text-[12px] font-bold text-slate-300 leading-tight italic">
-                  "{step.instruction}"
-                </p>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                {(step as any).instruction}
+              </p>
 
-                {step.value && (
-                  <div className="bg-white/5 rounded-2xl p-3 flex items-center gap-3 border border-white/10">
-                    <code className="flex-1 text-[11px] font-mono text-blue-300 truncate">
-                      {step.value}
-                    </code>
-                    <button
-                      onClick={() => handleCopy(step.value)}
-                      className={cn(
-                        "p-2 rounded-lg transition-all",
-                        copied ? "bg-green-600 text-white" : "bg-blue-600 text-white hover:bg-blue-500"
-                      )}
-                    >
-                      {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                {currentStep > 0 && (
-                  <button
-                    onClick={prev}
-                    className="flex-1 px-4 py-3 rounded-xl bg-white/5 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:bg-white/10"
+              {(step as any).value && (
+                <div className="bg-white/5 rounded-xl p-3 flex items-center justify-between gap-3 border border-white/5">
+                  <code className="text-xs text-blue-300 font-mono truncate">{(step as any).value}</code>
+                  <button 
+                    onClick={() => handleCopy((step as any).value)}
+                    className="shrink-0 p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 hover:text-white"
                   >
-                    Back
+                    {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
-                )}
+                </div>
+              )}
+
+              <div className="flex items-center justify-between pt-2">
+                <button
+                  onClick={prev}
+                  disabled={currentStep === 0}
+                  className="flex items-center gap-1 text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors disabled:opacity-0"
+                >
+                  <ChevronLeft className="w-3 h-3" /> Back
+                </button>
                 <button
                   onClick={next}
-                  className="flex-[2] bg-white text-slate-900 px-4 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-50 transition-all"
+                  className="flex items-center gap-1 bg-blue-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-colors shadow-lg shadow-blue-900/20"
                 >
-                  {currentStep === typedSteps.length - 1 ? 'Finish & Save' : 'Next Step'}
+                  {currentStep === (steps?.length || 0) - 1 ? 'Got it' : 'Next'} <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
             </div>
           </div>
         </motion.div>
       </AnimatePresence>
-
-      {/* Spotlight effect */}
-      <div 
-        className="absolute inset-0 bg-black/40 transition-opacity"
-        style={{
-          clipPath: targetElement ? `polygon(0% 0%, 0% 100%, ${targetElement.offsetLeft}px 100%, ${targetElement.offsetLeft}px ${targetElement.offsetTop}px, ${targetElement.offsetLeft + targetElement.offsetWidth}px ${targetElement.offsetTop}px, ${targetElement.offsetLeft + targetElement.offsetWidth}px ${targetElement.offsetTop + targetElement.offsetHeight}px, ${targetElement.offsetLeft}px ${targetElement.offsetTop + targetElement.offsetHeight}px, ${targetElement.offsetLeft}px 100%, 100% 100%, 100% 0%)` : 'none'
-        }}
-      />
     </div>
   );
 }

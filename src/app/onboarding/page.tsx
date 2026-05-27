@@ -128,16 +128,12 @@ export default function Onboarding() {
       if (result.status === 'success') {
         setActiveEmpireId(result.empire.id);
         completeOnboarding();
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 2000);
+        router.push('/dashboard');
       }
     } catch (error) {
       console.error('Error during activation:', error);
       completeOnboarding();
-      setTimeout(() => {
-        window.location.href = '/dashboard';
-      }, 2000);
+      router.push('/dashboard');
     }
   };
 

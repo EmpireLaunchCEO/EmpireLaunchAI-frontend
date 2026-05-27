@@ -1,28 +1,13 @@
+nohup: ignoring input
 
-> EmpireLaunchAI-frontend@0.1.0 dev
-> next dev -p 3000
+> EmpireLaunchAI-frontend@3.8.1 dev
+> next dev
 
+ ⚠ Port 3000 is in use, trying 3001 instead.
+ ⚠ Port 3001 is in use, trying 3002 instead.
    ▲ Next.js 15.1.0
-   - Local:        http://localhost:3000
-   - Network:      http://169.254.0.21:3000
+   - Local:        http://localhost:3002
+   - Network:      http://169.254.0.21:3002
 
  ✓ Starting...
- ✓ Ready in 3s
- ○ Compiling / ...
- ✓ Compiled / in 10.2s (1485 modules)
- GET / 200 in 12117ms
- ✓ Compiled in 2.2s (725 modules)
- ○ Compiling /favicon.ico ...
- ✓ Compiled /favicon.ico in 2.9s (766 modules)
- GET /favicon.ico 200 in 4012ms
- GET / 200 in 15715ms
- GET / 200 in 15634ms
- GET /favicon.ico 200 in 127ms
- ✓ Compiled in 97s (725 modules)
- GET / 200 in 122ms
- ✓ Compiled in 9.3s (1476 modules)
- GET / 200 in 3463ms
- ✓ Compiled in 127.6s (1476 modules)
- GET / 200 in 466ms
- ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
- GET / 200 in 532ms
+ ✓ Ready in 470.3s
