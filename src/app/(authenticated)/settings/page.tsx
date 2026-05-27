@@ -24,7 +24,9 @@ import {
   Palette,
   Scale,
   LifeBuoy,
-  Stars
+  Stars,
+  Globe,
+  Loader2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SecureVault } from '@/components/Financial/SecureVault';
@@ -32,8 +34,8 @@ import { SupportHub } from '@/components/Settings/SupportHub';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
+import { TermsModal } from '@/components/Legal/TermsModal';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
   if (platform.toLowerCase() === 'etsy') {
@@ -194,8 +196,6 @@ const tabs = [
   { id: 'account-settings', name: 'Account Settings', icon: Lock },
   { id: 'subscription', name: 'Subscription', icon: Diamond },
 ];
-
-import { TermsModal } from '@/components/Legal/TermsModal';
 
 export default function SettingsPage() {
   const { startSetup, activeSetupPlatform, finishSetup, theme, setTheme, aiMode, setAiMode } = useEmpire();
