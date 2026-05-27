@@ -792,7 +792,7 @@ export default function SettingsPage() {
                   <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
                       <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Monthly Fee</p>
-                      <p className="text-2xl font-black tracking-tight">$97<span className="text-sm text-slate-500">/mo</span></p>
+                      <p className="text-2xl font-black tracking-tight">$30<span className="text-sm text-slate-500">/mo</span></p>
                     </div>
                     <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
                       <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Post Autonomy</p>
@@ -812,6 +812,30 @@ export default function SettingsPage() {
                       Cancel Subscription
                     </button>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-6">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-xl font-black text-slate-900">Unlock Business 2</h4>
+                        <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">$30 One-time</span>
+                      </div>
+                      <p className="text-sm text-slate-500 font-medium">Add a second independent business slot to your Empire dashboard.</p>
+                      <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-200">
+                        Purchase Slot
+                      </button>
+                   </div>
+
+                   <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-6">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-xl font-black text-slate-900">Unlock Business 3</h4>
+                        <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">$30 One-time</span>
+                      </div>
+                      <p className="text-sm text-slate-500 font-medium">Maximize your reach with a third automated business slot.</p>
+                      <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-200">
+                        Purchase Slot
+                      </button>
+                   </div>
                 </div>
               </div>
             )}
