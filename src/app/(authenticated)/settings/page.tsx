@@ -236,7 +236,7 @@ export default function SettingsPage() {
 
   const colorSchemes = [
     { id: 'classic-blue', name: 'Classic Blue', primary: 'bg-blue-600', secondary: 'bg-slate-900', description: 'The original high-velocity interface.' },
-    { id: 'midnight-obsidian', name: 'Midnight Obsidian', primary: 'bg-slate-900', secondary: 'bg-slate-800', description: 'Deep dark mode for late-night empire building.' },
+    { id: 'empire-gold', name: 'Empire Gold', primary: 'bg-amber-400', secondary: 'bg-slate-900', description: 'Luxurious gold and obsidian for a premium aesthetic.' },
     { id: 'emerald-growth', name: 'Emerald Growth', primary: 'bg-emerald-600', secondary: 'bg-slate-900', description: 'Focus on revenue and prosperity.' },
     { id: 'rose-gold', name: 'Rose Gold', primary: 'bg-rose-500', secondary: 'bg-slate-900', description: 'Premium, elegant aesthetic for luxury brands.' },
     { id: 'cyber-purple', name: 'Cyber Purple', primary: 'bg-purple-600', secondary: 'bg-indigo-900', description: 'High-intelligence futuristic look.' },
@@ -295,6 +295,7 @@ export default function SettingsPage() {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
+                id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all whitespace-nowrap",
