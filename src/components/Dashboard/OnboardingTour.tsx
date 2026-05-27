@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, 
   ChevronRight, 
   ChevronLeft, 
   Stars, 
-  Rocket, 
   Bot,
   ArrowDown,
   LayoutDashboard,
@@ -90,28 +89,24 @@ export function OnboardingTour() {
     }
   ];
 
-  // Update pointer position whenever step or pathname changes
   useEffect(() => {
     const updatePointer = () => {
       const step = tourSteps[currentStep];
       if (step?.target) {
-        // Delay slightly to allow for page transitions or layout shifts
         setTimeout(() => {
           const el = document.getElementById(step.target!);
           if (el) {
             const rect = el.getBoundingClientRect();
             setPointerX(rect.left + rect.width / 2);
             
+            // Adjust pointer Y coordinate to be clearly visible above the bottom nav
             if (step.target?.startsWith('nav-')) {
-              setPointerY(rect.top - 20); // Above bottom nav
+              setPointerY(rect.top - 80); // Move it further up so "Look Here" isn't blocked
             } else {
-              setPointerY(rect.bottom + 20); // Below side tabs
+              setPointerY(rect.bottom + 20); // Side tabs can keep original spacing
             }
-          } else {
-            setPointerX(null);
-            setPointerY(null);
           }
-        }, 100);
+        }, 150);
       } else {
         setPointerX(null);
         setPointerY(null);
@@ -124,7 +119,7 @@ export function OnboardingTour() {
   }, [currentStep, pathname]);
 
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem('hasSeenEmpireTourV4');
+    const hasSeenTour = localStorage.getItem('hasSeenEmpireTourV5');
     if (!hasSeenTour) {
       const timer = setTimeout(() => setIsVisible(true), 1500);
       return () => clearTimeout(timer);
@@ -132,7 +127,7 @@ export function OnboardingTour() {
   }, []);
 
   const handleComplete = () => {
-    localStorage.setItem('hasSeenEmpireTourV4', 'true');
+    localStorage.setItem('hasSeenEmpireTourV5', 'true');
     setIsVisible(false);
   };
 
@@ -221,24 +216,24 @@ export function OnboardingTour() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Dynamic Pointer */}
+      {/* Dynamic Pointer with Higher Z-Index and Better Offset */}
       {pointerX !== null && pointerY !== null && (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, left: pointerX, top: pointerY }}
-          className="fixed z-[1100] flex flex-col items-center gap-2 -translate-x-1/2"
+          className="fixed z-[2000] flex flex-col items-center gap-2 -translate-x-1/2 pointer-events-none"
           style={{ transition: 'left 0.3s ease, top 0.3s ease' }}
         >
           {step.target?.startsWith('nav-') ? (
             <>
-              <div className="bg-slate-900 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl whitespace-nowrap">
+              <div className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(37,99,235,0.4)] border-2 border-white whitespace-nowrap">
                 Look Here
               </div>
               <motion.div
                 animate={{ y: [0, 10, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
-                <ArrowDown className="w-8 h-8 text-slate-900" />
+                <ArrowDown className="w-10 h-10 text-blue-600 drop-shadow-lg" />
               </motion.div>
             </>
           ) : (
@@ -247,9 +242,9 @@ export function OnboardingTour() {
                 animate={{ y: [0, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
-                <ArrowDown className="w-8 h-8 text-slate-900 rotate-180" />
+                <ArrowDown className="w-10 h-10 text-blue-600 rotate-180 drop-shadow-lg" />
               </motion.div>
-              <div className="bg-slate-900 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl whitespace-nowrap">
+              <div className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(37,99,235,0.4)] border-2 border-white whitespace-nowrap">
                 Look Here
               </div>
             </>
