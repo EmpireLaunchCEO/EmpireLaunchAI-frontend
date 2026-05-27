@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, 
@@ -23,13 +23,14 @@ interface TourStep {
   description: string;
   target?: string;
   icon: any;
-  action?: () => void;
   page?: string;
 }
 
 export function OnboardingTour() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [pointerX, setPointerX] = useState<number | null>(null);
+  const [pointerY, setPointerY] = useState<number | null>(null);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -89,6 +90,39 @@ export function OnboardingTour() {
     }
   ];
 
+  // Update pointer position whenever step or pathname changes
+  useEffect(() => {
+    const updatePointer = () => {
+      const step = tourSteps[currentStep];
+      if (step?.target) {
+        // Delay slightly to allow for page transitions or layout shifts
+        setTimeout(() => {
+          const el = document.getElementById(step.target!);
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            setPointerX(rect.left + rect.width / 2);
+            
+            if (step.target?.startsWith('nav-')) {
+              setPointerY(rect.top - 20); // Above bottom nav
+            } else {
+              setPointerY(rect.bottom + 20); // Below side tabs
+            }
+          } else {
+            setPointerX(null);
+            setPointerY(null);
+          }
+        }, 100);
+      } else {
+        setPointerX(null);
+        setPointerY(null);
+      }
+    };
+
+    updatePointer();
+    window.addEventListener('resize', updatePointer);
+    return () => window.removeEventListener('resize', updatePointer);
+  }, [currentStep, pathname]);
+
   useEffect(() => {
     const hasSeenTour = localStorage.getItem('hasSeenEmpireTourV4');
     if (!hasSeenTour) {
@@ -127,14 +161,14 @@ export function OnboardingTour() {
   const Icon = step.icon;
 
   return (
-    <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm pointer-events-none">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: -20 }}
-          className="bg-white rounded-[40px] shadow-2xl max-w-md w-full overflow-hidden border-4 border-slate-900 relative"
+          className="bg-white rounded-[40px] shadow-2xl max-w-md w-full overflow-hidden border-4 border-slate-900 relative pointer-events-auto"
         >
           <div className="p-8 space-y-6">
             <div className="flex items-center justify-between">
@@ -187,22 +221,39 @@ export function OnboardingTour() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Highlighting Pointer for Bottom Nav (Mobile/Bottom) */}
-      {step.target?.startsWith('nav-') && (
+      {/* Dynamic Pointer */}
+      {pointerX !== null && pointerY !== null && (
         <motion.div 
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-24 flex flex-col items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, left: pointerX, top: pointerY }}
+          className="fixed z-[1100] flex flex-col items-center gap-2 -translate-x-1/2"
+          style={{ transition: 'left 0.3s ease, top 0.3s ease' }}
         >
-          <div className="bg-slate-900 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl">
-            Look Here
-          </div>
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-          >
-            <ArrowDown className="w-8 h-8 text-slate-900" />
-          </motion.div>
+          {step.target?.startsWith('nav-') ? (
+            <>
+              <div className="bg-slate-900 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl whitespace-nowrap">
+                Look Here
+              </div>
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+              >
+                <ArrowDown className="w-8 h-8 text-slate-900" />
+              </motion.div>
+            </>
+          ) : (
+            <>
+               <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+              >
+                <ArrowDown className="w-8 h-8 text-slate-900 rotate-180" />
+              </motion.div>
+              <div className="bg-slate-900 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl whitespace-nowrap">
+                Look Here
+              </div>
+            </>
+          )}
         </motion.div>
       )}
     </div>
