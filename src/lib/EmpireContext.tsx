@@ -2,6 +2,15 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: 'sale' | 'approval' | 'system';
+  timestamp: Date;
+  read: boolean;
+}
+
 interface EmpireContextType {
   activeEmpireId: string;
   setActiveEmpireId: (id: string) => void;
@@ -28,6 +37,17 @@ interface EmpireContextType {
   setIsPaid: (paid: boolean) => void;
   aiMode: 'co-pilot' | 'auto-pilot';
   setAiMode: (mode: 'co-pilot' | 'auto-pilot') => void;
+  
+  // Notifications
+  notifications: Notification[];
+  unreadCount: number;
+  markAsRead: (id: string) => void;
+  markAllAsRead: () => void;
+  notificationSettings: {
+    sales: boolean;
+    approvals: boolean;
+  };
+  updateNotificationSettings: (settings: { sales?: boolean; approvals?: boolean }) => void;
 }
 
 const EmpireContext = createContext<EmpireContextType | undefined>(undefined);
@@ -39,6 +59,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
     return '1';
   });
+  
   const [isPaid, setIsPaidState] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('isPaid') === 'true';
@@ -59,6 +80,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('empireAiMode', mode);
     }
   };
+
   const [isOnboarded, setIsOnboarded] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('isOnboarded') === 'true';
@@ -72,12 +94,14 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('isPaid', paid ? 'true' : 'false');
     }
   };
+
   const [isLinkingComplete, setIsLinkingComplete] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('isLinkingComplete') === 'true';
     }
     return false;
   });
+
   const [isInitialized, setIsInitialized] = useState(false);
   const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
@@ -85,6 +109,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
     return null;
   });
+
   const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -95,6 +120,59 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
     return [];
   });
+
+  // Notifications State
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notificationSettings, setNotificationSettings] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('empireNotificationSettings');
+      return saved ? JSON.parse(saved) : { sales: true, approvals: true };
+    }
+    return { sales: true, approvals: true };
+  });
+
+  const updateNotificationSettings = (settings: { sales?: boolean; approvals?: boolean }) => {
+    const newSettings = { ...notificationSettings, ...settings };
+    setNotificationSettings(newSettings);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('empireNotificationSettings', JSON.stringify(newSettings));
+    }
+  };
+
+  const markAsRead = (id: string) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  };
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  // Simulate incoming notifications for demo purposes
+  useEffect(() => {
+    if (isLinkingComplete && isInitialized) {
+      const demoNotifications: Notification[] = [
+        {
+          id: '1',
+          title: 'New Sale!',
+          message: 'Someone just purchased your "Digital Zen Planner" on Etsy. +$24.99',
+          type: 'sale',
+          timestamp: new Date(),
+          read: false
+        },
+        {
+          id: '2',
+          title: 'Content Ready',
+          message: '3 TikTok marketing videos are ready for your approval in the Review Queue.',
+          type: 'approval',
+          timestamp: new Date(Date.now() - 1000 * 60 * 30),
+          read: false
+        }
+      ];
+      setNotifications(demoNotifications);
+    }
+  }, [isLinkingComplete, isInitialized]);
 
   // Keep initialization for things that need to happen after mount
   useEffect(() => {
@@ -174,7 +252,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     setThemeState(newTheme);
     if (typeof window !== 'undefined') {
       localStorage.setItem('empireTheme', newTheme);
-      // Apply theme class to document body
       document.body.className = `theme-${newTheme}`;
     }
   };
@@ -240,7 +317,15 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       isPaid,
       setIsPaid,
       aiMode,
-      setAiMode
+      setAiMode,
+      
+      // Notifications
+      notifications,
+      unreadCount,
+      markAsRead,
+      markAllAsRead,
+      notificationSettings,
+      updateNotificationSettings
     }}>
       {children}
     </EmpireContext.Provider>

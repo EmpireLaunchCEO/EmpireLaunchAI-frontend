@@ -12,8 +12,9 @@ import {
   LayoutDashboard,
   ClipboardList,
   PlusCircle,
-  Settings as SettingsIcon,
-  Zap
+  Settings as SettingsIcon, 
+  Zap,
+  Bell
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -82,6 +83,20 @@ export function OnboardingTour() {
       page: "/settings"
     },
     {
+      title: "Notification Center",
+      description: "Configure your alerts here. We can notify you of new sales or when the AI has content ready for your final look.",
+      target: "tab-notifications",
+      icon: SettingsIcon,
+      page: "/settings"
+    },
+    {
+      title: "Real-Time Alerts",
+      description: "Keep an eye on this bell! It will pulse when you have new sales or when I need your approval on a new strategy.",
+      target: "notification-bell",
+      icon: Bell,
+      page: "/dashboard"
+    },
+    {
       title: "That's the Tour!",
       description: "When you're ready to link your apps so I can work and scale your business with your direction, go to the AI Intelligence Tab under Settings, and Put me on Auto-Pilot! You can put me back to Co-Pilot any time after we get you Linked!",
       icon: Stars,
@@ -103,6 +118,9 @@ export function OnboardingTour() {
             if (step.target?.startsWith('nav-')) {
               // Points to bottom nav, place bubble well above and arrow pointing down
               setPointerY(rect.top - 40); 
+            } else if (step.target === 'notification-bell') {
+              // Points to notification bell (top right), place arrow pointing up
+              setPointerY(rect.bottom + 20);
             } else {
               // Points to settings tabs, place arrow pointing up
               setPointerY(rect.bottom + 20);
@@ -121,7 +139,7 @@ export function OnboardingTour() {
   }, [currentStep, pathname]);
 
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem('hasSeenEmpireTourV6');
+    const hasSeenTour = localStorage.getItem('hasSeenEmpireTourV7');
     if (!hasSeenTour) {
       const timer = setTimeout(() => setIsVisible(true), 1500);
       return () => clearTimeout(timer);
@@ -129,7 +147,7 @@ export function OnboardingTour() {
   }, []);
 
   const handleComplete = () => {
-    localStorage.setItem('hasSeenEmpireTourV6', 'true');
+    localStorage.setItem('hasSeenEmpireTourV7', 'true');
     setIsVisible(false);
   };
 

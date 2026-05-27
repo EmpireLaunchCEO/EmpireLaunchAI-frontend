@@ -188,6 +188,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
 const tabs = [
   { id: 'link-center', name: 'Link Center', icon: Share2 },
   { id: 'ai-intelligence', name: 'AI Intelligence', icon: Zap },
+  { id: 'notifications', name: 'Notifications', icon: Bell },
   { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
   { id: 'user-info', name: 'User Info', icon: User },
   { id: 'bank-info', name: 'Bank Info', icon: Building2 },
@@ -198,7 +199,17 @@ const tabs = [
 ];
 
 export default function SettingsPage() {
-  const { startSetup, activeSetupPlatform, finishSetup, theme, setTheme, aiMode, setAiMode } = useEmpire();
+  const { 
+    startSetup, 
+    activeSetupPlatform, 
+    finishSetup, 
+    theme, 
+    setTheme, 
+    aiMode, 
+    setAiMode,
+    notificationSettings,
+    updateNotificationSettings
+  } = useEmpire();
   const [activeTab, setActiveTab] = useState('link-center');
   const [searchQuery, setSearchQuery] = useState('');
   const [isTermsOpen, setIsTermsOpen] = useState(false);
@@ -497,6 +508,82 @@ export default function SettingsPage() {
                     </div>
                     <p className="text-sm font-medium text-slate-300">
                       Auto-Pilot mode is recommended for maximum velocity once your initial strategy is calibrated.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'notifications' && (
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                      <Bell className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Notification Channels</h3>
+                      <p className="text-sm font-medium text-slate-500">Configure how and when your Empire alerts you.</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 shadow-sm">
+                          <CreditCard className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-black text-slate-900">Sales Notifications</h4>
+                          <p className="text-xs font-bold text-slate-500">Get alerted instantly when a customer makes a purchase.</p>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => updateNotificationSettings({ sales: !notificationSettings.sales })}
+                        className={cn(
+                          "w-14 h-8 rounded-full transition-all relative flex items-center px-1",
+                          notificationSettings.sales ? "bg-blue-600" : "bg-slate-200"
+                        )}
+                      >
+                        <motion.div 
+                          animate={{ x: notificationSettings.sales ? 24 : 0 }}
+                          className="w-6 h-6 bg-white rounded-full shadow-md"
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 shadow-sm">
+                          <Bot className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-black text-slate-900">Approval Requests</h4>
+                          <p className="text-xs font-bold text-slate-500">Notifications for when your AI needs you to review content or strategies.</p>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => updateNotificationSettings({ approvals: !notificationSettings.approvals })}
+                        className={cn(
+                          "w-14 h-8 rounded-full transition-all relative flex items-center px-1",
+                          notificationSettings.approvals ? "bg-blue-600" : "bg-slate-200"
+                        )}
+                      >
+                        <motion.div 
+                          animate={{ x: notificationSettings.approvals ? 24 : 0 }}
+                          className="w-6 h-6 bg-white rounded-full shadow-md"
+                        />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-blue-600 rounded-3xl text-white">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Zap className="w-5 h-5 text-blue-200" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-blue-200">Real-Time Sync</span>
+                    </div>
+                    <p className="text-sm font-medium text-blue-50/80 leading-relaxed">
+                      All notifications are delivered via our low-latency neural bridge directly to your command center and linked devices.
                     </p>
                   </div>
                 </div>
