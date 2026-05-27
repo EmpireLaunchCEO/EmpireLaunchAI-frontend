@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { EmpireProvider } from "@/lib/EmpireContext";
 import { SetupAssistant } from "@/components/SetupAssistant";
+import { ToastContainer } from "@/components/Dashboard/ToastContainer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,6 +48,17 @@ export default function RootLayout({
                     window.location.reload(true);
                   }
 
+                  // Register Service Worker
+                  if ('serviceWorker' in navigator) {
+                    window.addEventListener('load', function() {
+                      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                      }, function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                      });
+                    });
+                  }
+
                   var onboarded = localStorage.getItem('isOnboarded');
                   var path = window.location.pathname;
                   if (onboarded === 'true' && (path === '/' || path === '/onboarding')) {
@@ -63,6 +75,7 @@ export default function RootLayout({
         <EmpireProvider>
           {children}
           <SetupAssistant />
+          <ToastContainer />
         </EmpireProvider>
       </body>
     </html>

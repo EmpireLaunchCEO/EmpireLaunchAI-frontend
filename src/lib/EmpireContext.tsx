@@ -35,8 +35,8 @@ interface EmpireContextType {
   setCurrency: (curr: string) => void;
   isPaid: boolean;
   setIsPaid: (paid: boolean) => void;
-  aiMode: 'co-pilot' | 'auto-pilot';
-  setAiMode: (mode: 'co-pilot' | 'auto-pilot') => void;
+  aiMode: 'co-pilot' | 'empire';
+  setAiMode: (mode: 'co-pilot' | 'empire') => void;
   
   // Notifications
   notifications: Notification[];
@@ -48,6 +48,20 @@ interface EmpireContextType {
     approvals: boolean;
   };
   updateNotificationSettings: (settings: { sales?: boolean; approvals?: boolean }) => void;
+  isNotificationModalDismissed: boolean;
+  dismissNotificationModal: () => void;
+  
+  // Toast System
+  toasts: Toast[];
+  addToast: (toast: Omit<Toast, 'id'>) => void;
+  removeToast: (id: string) => void;
+}
+
+export interface Toast {
+  id: string;
+  title: string;
+  message: string;
+  type: 'sale' | 'approval' | 'system' | 'success' | 'error';
 }
 
 const EmpireContext = createContext<EmpireContextType | undefined>(undefined);
@@ -67,14 +81,14 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     return false;
   });
 
-  const [aiMode, setAiModeState] = useState<'co-pilot' | 'auto-pilot'>(() => {
+  const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('empireAiMode') as 'co-pilot' | 'auto-pilot') || 'co-pilot';
+      return (localStorage.getItem('empireAiMode') as 'co-pilot' | 'empire') || 'co-pilot';
     }
     return 'co-pilot';
   });
 
-  const setAiMode = (mode: 'co-pilot' | 'auto-pilot') => {
+  const setAiMode = (mode: 'co-pilot' | 'empire') => {
     setAiModeState(mode);
     if (typeof window !== 'undefined') {
       localStorage.setItem('empireAiMode', mode);
@@ -101,6 +115,34 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
     return false;
   });
+
+  const [isNotificationModalDismissed, setIsNotificationModalDismissed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('isNotificationModalDismissed') === 'true';
+    }
+    return false;
+  });
+
+  const [toasts, setToasts] = useState<Toast[]>([]);
+
+  const removeToast = (id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  };
+
+  const addToast = (toast: Omit<Toast, 'id'>) => {
+    const id = Math.random().toString(36).substring(2, 9);
+    setToasts(prev => [...prev, { ...toast, id }]);
+    setTimeout(() => {
+      removeToast(id);
+    }, 5000);
+  };
+
+  const dismissNotificationModal = () => {
+    setIsNotificationModalDismissed(true);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isNotificationModalDismissed', 'true');
+    }
+  };
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(() => {
@@ -215,6 +257,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   };
 
   const connectPlatform = (platform: string) => {
+    if (!platform) return;
     const newPlatforms = [...new Set([...connectedPlatforms, platform])];
     setConnectedPlatforms(newPlatforms);
     if (typeof window !== 'undefined') {
@@ -325,7 +368,13 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       markAsRead,
       markAllAsRead,
       notificationSettings,
-      updateNotificationSettings
+      updateNotificationSettings,
+      isNotificationModalDismissed,
+      dismissNotificationModal,
+      
+      toasts,
+      addToast,
+      removeToast
     }}>
       {children}
     </EmpireContext.Provider>

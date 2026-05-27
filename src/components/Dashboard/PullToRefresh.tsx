@@ -20,12 +20,18 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   const THRESHOLD = 80;
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsAtTop(window.scrollY === 0);
+    const handleScroll = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target && target.scrollTop !== undefined) {
+        setIsAtTop(target.scrollTop <= 0);
+      } else {
+        setIsAtTop(window.scrollY <= 0);
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Listen on capture phase to catch scrolls from any parent
+    window.addEventListener('scroll', handleScroll, true);
+    return () => window.removeEventListener('scroll', handleScroll, true);
   }, []);
 
   useEffect(() => {

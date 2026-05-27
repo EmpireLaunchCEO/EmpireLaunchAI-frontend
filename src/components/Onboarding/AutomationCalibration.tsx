@@ -60,7 +60,7 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
             Recommended
           </div>
           <Bot className="w-5 h-5 md:w-6 h-6" />
-          <span className="font-black uppercase tracking-[0.2em] text-[9px] md:text-[10px]">Empire Mode</span>
+          <span className="font-black uppercase tracking-[0.2em] text-[9px] md:text-[10px]">Auto-Pilot</span>
           <span className="text-[8px] font-bold opacity-60">Full Autonomy</span>
         </button>
       </div>
@@ -72,7 +72,7 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
           className="bg-blue-50 border border-blue-100 p-4 rounded-2xl max-w-xl mx-auto text-center"
         >
           <p className="text-blue-700 text-xs font-bold leading-tight">
-            "Select Empire Mode to start. This allows me to instantly scan and link the accounts on your phone (Gmail, Etsy, TikTok) to retrieve your API keys and secure tokens automatically."
+            "Select Empire Mode to start. THIS allows me to instantly scan and link the accounts on your phone (Gmail, Etsy, TikTok) to retrieve your API keys and secure tokens automatically."
           </p>
         </motion.div>
       )}

@@ -77,8 +77,22 @@ export function OnboardingTour() {
     },
     {
       title: "AI Intelligence",
-      description: "This is the brain of the operation. You can toggle between Co-Pilot (I ask for approval) and Auto-Pilot (I handle it all).",
+      description: "This is the brain of the operation. Here you decide how much control I have.",
       target: "tab-ai-intelligence",
+      icon: Zap,
+      page: "/settings"
+    },
+    {
+      title: "Co-Pilot Mode",
+      description: "In Co-Pilot, I'll do the heavy lifting but I'll always ask for your final approval before taking action.",
+      target: "mode-copilot",
+      icon: Bot,
+      page: "/settings"
+    },
+    {
+      title: "Auto-Pilot Mode",
+      description: "Switch to Auto-Pilot for maximum growth. I'll execute strategies and manage your empire autonomously 24/7.",
+      target: "mode-autopilot",
       icon: Zap,
       page: "/settings"
     },
@@ -176,7 +190,7 @@ export function OnboardingTour() {
   const Icon = step.icon;
 
   return (
-    <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm pointer-events-none">
+    <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-6 bg-slate-900/60 pointer-events-none">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}

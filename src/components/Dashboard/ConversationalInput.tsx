@@ -97,7 +97,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
   };
 
   return (
-    <div className="fixed bottom-8 left-72 right-8 flex flex-col items-center gap-4">
+    <div className="fixed bottom-24 lg:bottom-8 left-4 lg:left-80 right-4 lg:right-8 flex flex-col items-center gap-4 z-[40]">
       {tip && !isProcessing && (
         <motion.div 
           initial={{ opacity: 0, y: 10 }}

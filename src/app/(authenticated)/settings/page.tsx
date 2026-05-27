@@ -259,7 +259,7 @@ export default function SettingsPage() {
 
   const [isSwitching, setIsSwitching] = useState(false);
 
-  const handleAiModeToggle = async (mode: 'co-pilot' | 'auto-pilot') => {
+  const handleAiModeToggle = async (mode: 'co-pilot' | 'empire') => {
     if (mode === aiMode) return;
     setIsSwitching(true);
     // Simulate neural syncing delay
@@ -459,16 +459,17 @@ export default function SettingsPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button
+                      id="mode-copilot"
                       onClick={() => handleAiModeToggle('co-pilot')}
                       className={cn(
                         "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 relative overflow-hidden",
-                        aiMode === 'co-pilot' ? "border-blue-600 bg-blue-50/50" : "border-slate-100 bg-white hover:border-slate-200"
+                        aiMode === 'co-pilot' ? "border-amber-400 bg-amber-50/50" : "border-slate-100 bg-white hover:border-slate-200"
                       )}
                     >
                       <div className="flex items-center justify-between">
-                        <Bot className={cn("w-8 h-8", aiMode === 'co-pilot' ? "text-blue-600" : "text-slate-300")} />
+                        <Bot className={cn("w-8 h-8", aiMode === 'co-pilot' ? "text-amber-600" : "text-slate-300")} />
                         {aiMode === 'co-pilot' && (
-                          <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active</div>
+                          <div className="bg-amber-400 text-slate-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active</div>
                         )}
                       </div>
                       <div>
@@ -480,16 +481,17 @@ export default function SettingsPage() {
                     </button>
 
                     <button
-                      onClick={() => handleAiModeToggle('auto-pilot')}
+                      id="mode-autopilot"
+                      onClick={() => handleAiModeToggle('empire')}
                       className={cn(
                         "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 relative overflow-hidden",
-                        aiMode === 'auto-pilot' ? "border-blue-600 bg-blue-50/50" : "border-slate-100 bg-white hover:border-slate-200"
+                        aiMode === 'empire' ? "border-amber-400 bg-amber-50/50" : "border-slate-100 bg-white hover:border-slate-200"
                       )}
                     >
                       <div className="flex items-center justify-between">
-                        <Power className={cn("w-8 h-8", aiMode === 'auto-pilot' ? "text-blue-600" : "text-slate-300")} />
-                        {aiMode === 'auto-pilot' && (
-                          <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active</div>
+                        <Power className={cn("w-8 h-8", aiMode === 'empire' ? "text-amber-600" : "text-slate-300")} />
+                        {aiMode === 'empire' && (
+                          <div className="bg-amber-400 text-slate-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active</div>
                         )}
                       </div>
                       <div>

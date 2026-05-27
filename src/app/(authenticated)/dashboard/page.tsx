@@ -20,6 +20,7 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
+import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
 import { useSearchParams } from 'next/navigation';
 
 interface Goal {
@@ -260,6 +261,8 @@ export default function Dashboard() {
           onExecute={handleExecute}
           tip={isLinkingComplete ? 'Try "Research trending digital planners on Etsy"' : 'Ask me how to link your platforms!'}
         />
+
+        {isLinkingComplete && <NotificationOnboarding />}
       </div>
     </PullToRefresh>
   );
