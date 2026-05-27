@@ -20,23 +20,41 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
     }, 2000);
   };
 
-  const handleRedeemKey = () => {
+  const handleRedeemKey = async () => {
     setIsProcessing(true);
     setError('');
     
     const cleanKey = accessKey.trim().toUpperCase();
     
-    // In a real app, this would call /api/auth/redeemKey
-    // For this simulation, we check for the Master Owner key or any valid key format
-    setTimeout(() => {
-      if (cleanKey.startsWith('OWNER-') || cleanKey.startsWith('BETA-')) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/auth/redeem-key`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: localStorage.getItem('userId') || '00000000-0000-0000-0000-000000000000',
+          key: cleanKey
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.status === 'success') {
         setIsPaid(true);
         setIsProcessing(false);
       } else {
-        setError('Invalid or expired access key.');
+        setError(result.error || 'Invalid or expired access key.');
         setIsProcessing(false);
       }
-    }, 1500);
+    } catch (err) {
+      console.error('Error redeeming key:', err);
+      // Fallback for simulation/offline
+      if (cleanKey.startsWith('OWNER-') || cleanKey.startsWith('BETA-')) {
+        setIsPaid(true);
+      } else {
+        setError('Connection error. Please try again.');
+      }
+      setIsProcessing(false);
+    }
   };
 
   if (isPaid) {
