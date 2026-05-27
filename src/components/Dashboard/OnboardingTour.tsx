@@ -123,26 +123,36 @@ export function OnboardingTour() {
       const step = tourSteps[currentStep];
       if (step?.target) {
         setTimeout(() => {
-          let el = document.getElementById(step.target!);
+          let el: HTMLElement | null = null;
           
-          // SPECIAL HANDLING FOR NOTIFICATION BELL (Multi-ID support)
-          if (step.target === 'notification-bell') {
+          // SPECIAL HANDLING FOR NAV ITEMS & NOTIFICATION BELL
+          if (step.target?.startsWith('nav-')) {
+            const desktopNav = document.getElementById(`desktop-${step.target}`);
+            const mobileNav = document.getElementById(`mobile-${step.target}`);
+            if (desktopNav && desktopNav.offsetWidth > 0) el = desktopNav;
+            else if (mobileNav && mobileNav.offsetWidth > 0) el = mobileNav;
+          } else if (step.target === 'notification-bell') {
             const desktopBell = document.getElementById('notification-bell-desktop');
             const mobileBell = document.getElementById('notification-bell-mobile');
             if (desktopBell && desktopBell.offsetWidth > 0) el = desktopBell;
             else if (mobileBell && mobileBell.offsetWidth > 0) el = mobileBell;
+          } else {
+            el = document.getElementById(step.target!) as HTMLElement;
           }
 
-          if (el) {
+          if (el && el.offsetWidth > 0) {
             // SCROLL INTO VIEW: Ensure the user can actually see the element the AI is talking about
-            el.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'center', 
-              inline: 'center' 
-            });
+            if (!step.target?.startsWith('nav-')) {
+              el.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center', 
+                inline: 'center' 
+              });
+            }
 
             // Wait a tiny bit for the scroll to finish before calculating position
             setTimeout(() => {
+              if (!el) return;
               const rect = el.getBoundingClientRect();
               
               // CLAMP X: Ensure it's not too close to edges (min 80px from sides for the bubble)
@@ -157,7 +167,7 @@ export function OnboardingTour() {
               } else {
                 setPointerY(rect.bottom + 10);
               }
-            }, 100);
+            }, 150);
           }
         }, 300);
       } else {
@@ -187,11 +197,16 @@ export function OnboardingTour() {
   const nextStep = () => {
     const nextIdx = currentStep + 1;
     if (nextIdx < tourSteps.length) {
-      const nextStepData = tourSteps[nextIdx];
-      if (nextStepData.page && pathname !== nextStepData.page) {
-        router.push(nextStepData.page);
+      try {
+        const nextStepData = tourSteps[nextIdx];
+        if (nextStepData.page && pathname !== nextStepData.page) {
+          router.push(nextStepData.page);
+        }
+        setCurrentStep(nextIdx);
+      } catch (err) {
+        console.error("Navigation error in tour", err);
+        setCurrentStep(nextIdx); // Attempt to proceed anyway
       }
-      setCurrentStep(nextIdx);
     } else {
       handleComplete();
     }

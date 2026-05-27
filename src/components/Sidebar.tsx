@@ -14,12 +14,12 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { id: 'nav-home', name: 'Home', href: '/dashboard', icon: LayoutDashboard },
-  { id: 'nav-ec', name: 'Empire Center', href: '/empire-center', icon: ClipboardCheck },
-  { id: 'nav-lc', name: 'Neural Link', href: '/link-center', icon: Stars },
-  { id: 'nav-review', name: 'Control Gates', href: '/review', icon: ShieldCheck },
-  { id: 'nav-ledger', name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },
-  { id: 'nav-settings', name: 'Settings', href: '/settings', icon: Settings },
+  { id: 'desktop-nav-home', name: 'Home', href: '/dashboard', icon: LayoutDashboard },
+  { id: 'desktop-nav-ec', name: 'Empire Center', href: '/empire-center', icon: ClipboardCheck },
+  { id: 'desktop-nav-lc', name: 'Neural Link', href: '/link-center', icon: Stars },
+  { id: 'desktop-nav-review', name: 'Control Gates', href: '/review', icon: ShieldCheck },
+  { id: 'desktop-nav-ledger', name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },
+  { id: 'desktop-nav-settings', name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export function Sidebar() {

@@ -21,7 +21,7 @@ export function MobileNav() {
       {/* Home */}
       <Link
         href="/dashboard"
-        id="nav-home"
+        id="mobile-nav-home"
         className={cn(
           "flex flex-col items-center gap-1 transition-all",
           pathname === '/dashboard' ? "text-primary scale-110" : "text-slate-400"
@@ -39,7 +39,7 @@ export function MobileNav() {
       {/* EC: Empire Center */}
       <Link
         href="/empire-center"
-        id="nav-ec"
+        id="mobile-nav-ec"
         className={cn(
           "flex flex-col items-center gap-1 transition-all",
           pathname === '/empire-center' ? "text-primary scale-110" : "text-slate-400"
@@ -57,7 +57,7 @@ export function MobileNav() {
       {/* LC: Link Center */}
       <Link
         href="/link-center"
-        id="nav-lc"
+        id="mobile-nav-lc"
         className={cn(
           "flex flex-col items-center gap-1 transition-all",
           pathname === '/link-center' ? "text-primary scale-110" : "text-slate-400"
@@ -75,7 +75,7 @@ export function MobileNav() {
       {/* COG: Settings */}
       <Link
         href="/settings"
-        id="nav-settings"
+        id="mobile-nav-settings"
         className={cn(
           "flex flex-col items-center gap-1 transition-all",
           pathname === '/settings' ? "text-primary scale-110" : "text-slate-400"
