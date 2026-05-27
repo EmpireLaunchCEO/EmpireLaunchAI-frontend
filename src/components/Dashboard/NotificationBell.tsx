@@ -7,14 +7,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 
-export function NotificationBell() {
+export function NotificationBell({ id }: { id?: string }) {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useEmpire();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="relative">
       <button 
-        id="notification-bell"
+        id={id || "notification-bell"}
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-3 rounded-2xl bg-white border-2 border-slate-100 hover:border-blue-600 transition-all group shadow-sm"
       >

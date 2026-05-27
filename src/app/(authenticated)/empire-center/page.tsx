@@ -53,7 +53,7 @@ export default function EmpireCenterPage() {
             <ClipboardList className="w-3 h-3" />
             Empire Center
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
             Operations Hub.
           </h1>
           <p className="text-sm md:text-base text-slate-500 font-medium">

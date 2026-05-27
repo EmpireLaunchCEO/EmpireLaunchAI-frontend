@@ -291,7 +291,7 @@ export default function SettingsPage() {
         </AnimatePresence>
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-slate-900 flex items-center gap-3">
+            <h1 className="text-3xl md:text-4xl font-black text-foreground flex items-center gap-3">
               Settings
             </h1>
             <p className="text-slate-500 mt-2 text-base md:text-lg font-medium">

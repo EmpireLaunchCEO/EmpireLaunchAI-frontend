@@ -60,6 +60,15 @@ body {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
+/* Force headings to use theme foreground when a theme is active */
+body.theme-classic-blue h1, body.theme-classic-blue h2, body.theme-classic-blue h3,
+body.theme-empire-gold h1, body.theme-empire-gold h2, body.theme-empire-gold h3,
+body.theme-emerald-growth h1, body.theme-emerald-growth h2, body.theme-emerald-growth h3,
+body.theme-rose-gold h1, body.theme-rose-gold h2, body.theme-rose-gold h3,
+body.theme-cyber-purple h1, body.theme-cyber-purple h2, body.theme-cyber-purple h3 {
+  color: var(--foreground) !important;
+}
+
 @layer utilities {
   .animate-spin-slow {
     animation: spin 3s linear infinite;

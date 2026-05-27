@@ -123,21 +123,30 @@ export function OnboardingTour() {
       const step = tourSteps[currentStep];
       if (step?.target) {
         setTimeout(() => {
-          const el = document.getElementById(step.target!);
+          let el = document.getElementById(step.target!);
+          
+          // SPECIAL HANDLING FOR NOTIFICATION BELL (Multi-ID support)
+          if (step.target === 'notification-bell') {
+            const desktopBell = document.getElementById('notification-bell-desktop');
+            const mobileBell = document.getElementById('notification-bell-mobile');
+            if (desktopBell && desktopBell.offsetWidth > 0) el = desktopBell;
+            else if (mobileBell && mobileBell.offsetWidth > 0) el = mobileBell;
+          }
+
           if (el) {
             const rect = el.getBoundingClientRect();
             setPointerX(rect.left + rect.width / 2);
             
-            // SIGNIFICANT OFFSET: Keep the pointer high above the bottom bar
+            // IMPROVED POSITIONING: Ensure pointer stays within viewport
             if (step.target?.startsWith('nav-')) {
               // Points to bottom nav, place bubble well above and arrow pointing down
-              setPointerY(rect.top - 40); 
+              setPointerY(Math.max(100, rect.top - 40)); 
             } else if (step.target === 'notification-bell') {
               // Points to notification bell (top right), place arrow pointing up
-              setPointerY(rect.bottom + 20);
+              setPointerY(Math.min(window.innerHeight - 100, rect.bottom + 20));
             } else {
               // Points to settings tabs, place arrow pointing up
-              setPointerY(rect.bottom + 20);
+              setPointerY(Math.min(window.innerHeight - 100, rect.bottom + 20));
             }
           }
         }, 300); // Increased delay for stability

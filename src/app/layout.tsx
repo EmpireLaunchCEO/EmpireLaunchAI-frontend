@@ -20,9 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=3.7.0" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=3.7.0" />
-        <link rel="icon" href="/branded-globe.png?v=3.7.0" />
+        <link rel="manifest" href="/manifest.json?v=3.7.1" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=3.7.1" />
+        <link rel="icon" href="/branded-globe.png?v=3.7.1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#2563eb" />
@@ -32,7 +32,7 @@ export default function RootLayout({
               (function() {
                 try {
                   // Cache-Busting: Clear legacy service workers and local storage if on old version
-                  var currentVersion = '3.7.0';
+                  var currentVersion = '3.7.1';
                   var installedVersion = localStorage.getItem('app_version');
                   if (installedVersion !== currentVersion) {
                     localStorage.clear();
@@ -71,7 +71,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} bg-slate-50 text-slate-900`}>
+      <body className={`${inter.className} bg-[var(--background)] text-[var(--foreground)] transition-colors duration-500`}>
         <EmpireProvider>
           {children}
           <SetupAssistant />
