@@ -134,23 +134,30 @@ export function OnboardingTour() {
           }
 
           if (el) {
-            const rect = el.getBoundingClientRect();
-            
-            // CLAMP X: Ensure it's not too close to edges (min 80px from sides for the bubble)
-            const bubbleWidth = 160; 
-            const centerX = rect.left + rect.width / 2;
-            const clampedX = Math.max(bubbleWidth / 2 + 10, Math.min(window.innerWidth - (bubbleWidth / 2 + 10), centerX));
-            setPointerX(clampedX);
-            
-            // IMPROVED POSITIONING: 
-            if (step.target?.startsWith('nav-')) {
-              // Points to bottom/side nav, place bubble 10px away and arrow pointing to it
-              // If pointing to bottom nav, pointerY should be above it
-              setPointerY(rect.top - 10); 
-            } else {
-              // Points to top/center items, place bubble below
-              setPointerY(rect.bottom + 10);
-            }
+            // SCROLL INTO VIEW: Ensure the user can actually see the element the AI is talking about
+            el.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center', 
+              inline: 'center' 
+            });
+
+            // Wait a tiny bit for the scroll to finish before calculating position
+            setTimeout(() => {
+              const rect = el.getBoundingClientRect();
+              
+              // CLAMP X: Ensure it's not too close to edges (min 80px from sides for the bubble)
+              const bubbleWidth = 160; 
+              const centerX = rect.left + rect.width / 2;
+              const clampedX = Math.max(bubbleWidth / 2 + 10, Math.min(window.innerWidth - (bubbleWidth / 2 + 10), centerX));
+              setPointerX(clampedX);
+              
+              // IMPROVED POSITIONING: 
+              if (step.target?.startsWith('nav-')) {
+                setPointerY(rect.top - 10); 
+              } else {
+                setPointerY(rect.bottom + 10);
+              }
+            }, 100);
           }
         }, 300);
       } else {
