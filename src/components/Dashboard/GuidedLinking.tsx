@@ -93,12 +93,9 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
     
     let i = 0;
     const interval = setInterval(() => {
-      setDisplayedMessage(prev => {
-        const nextChar = teacherMessage[i];
-        if (nextChar === undefined) return prev;
-        return prev + nextChar;
-      });
       i++;
+      setDisplayedMessage(teacherMessage.slice(0, i));
+      
       if (i >= teacherMessage.length) {
         clearInterval(interval);
         setIsTyping(false);

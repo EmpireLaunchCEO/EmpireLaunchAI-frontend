@@ -33,6 +33,7 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
   if (platform.toLowerCase() === 'etsy') {
@@ -89,7 +90,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
 
           <div className="flex items-center justify-between border-b border-slate-100 pb-6">
             <h3 className="text-2xl font-black text-slate-900 flex items-center gap-3 italic">
-              <Share2 className="w-6 h-6 text-blue-600" /> Connecting TikTok Marketing
+              <Share2 className=\"w-6 h-6 text-blue-600\" /> Connecting TikTok Marketing
             </h3>
             <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
               <X className="w-6 h-6 text-slate-400" />
@@ -189,6 +190,7 @@ const tabs = [
   { id: 'user-info', name: 'User Info', icon: User },
   { id: 'bank-info', name: 'Bank Info', icon: Building2 },
   { id: 'theme-style', name: 'Theme & Style', icon: Palette },
+  { id: 'cloud-storage', name: 'Cloud & Storage', icon: Globe },
   { id: 'account-settings', name: 'Account Settings', icon: Lock },
   { id: 'subscription', name: 'Subscription', icon: Diamond },
 ];
@@ -196,9 +198,9 @@ const tabs = [
 import { TermsModal } from '@/components/Legal/TermsModal';
 
 export default function SettingsPage() {
+  const { startSetup, activeSetupPlatform, finishSetup, theme, setTheme, aiMode, setAiMode } = useEmpire();
   const [activeTab, setActiveTab] = useState('link-center');
   const [searchQuery, setSearchQuery] = useState('');
-  const [aiMode, setAiMode] = useState<'co-pilot' | 'auto-pilot'>('co-pilot');
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   
   const [redeemKeyValue, setRedeemKeyValue] = useState('');
@@ -231,8 +233,6 @@ export default function SettingsPage() {
       setIsRedeeming(false);
     }
   };
-  
-  const { startSetup, activeSetupPlatform, finishSetup, theme, setTheme } = useEmpire();
 
   const colorSchemes = [
     { id: 'classic-blue', name: 'Classic Blue', primary: 'bg-blue-600', secondary: 'bg-slate-900', description: 'The original high-velocity interface.' },
@@ -242,339 +242,426 @@ export default function SettingsPage() {
     { id: 'cyber-purple', name: 'Cyber Purple', primary: 'bg-purple-600', secondary: 'bg-indigo-900', description: 'High-intelligence futuristic look.' },
   ];
 
+  const handleRefresh = async () => {
+    await new Promise(resolve => setTimeout(resolve, 1500));
+  };
+
+  const [isSwitching, setIsSwitching] = useState(false);
+
+  const handleAiModeToggle = async (mode: 'co-pilot' | 'auto-pilot') => {
+    if (mode === aiMode) return;
+    setIsSwitching(true);
+    // Simulate neural syncing delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    setAiMode(mode);
+    setIsSwitching(false);
+  };
+
   return (
-    <div className="p-6 md:p-12 max-w-6xl mx-auto space-y-8 md:space-y-12 pb-32">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-black text-slate-900 flex items-center gap-3">
-            Settings
-          </h1>
-          <p className="text-slate-500 mt-2 text-base md:text-lg font-medium">
-            Manage your Empire configuration and account security.
-          </p>
-        </div>
-      </header>
-
-      <div className="flex flex-col md:flex-row gap-8 md:gap-12">
-        {/* Navigation Sidebar */}
-        <aside className="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full md:w-64 shrink-0 gap-2 pb-2 md:pb-0 border-b md:border-b-0 border-slate-100 md:border-none">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all whitespace-nowrap",
-                activeTab === tab.id 
-                  ? "bg-slate-900 text-white shadow-xl shadow-slate-200" 
-                  : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
-              )}
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="p-6 md:p-12 max-w-6xl mx-auto space-y-8 md:space-y-12 pb-32">
+        <AnimatePresence>
+          {isSwitching && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[200] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center"
             >
-              <tab.icon className="w-5 h-5 shrink-0" />
-              {tab.name}
-            </button>
-          ))}
-        </aside>
+              <div className="bg-white p-8 rounded-[40px] shadow-2xl flex flex-col items-center gap-4 text-center">
+                <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+                <div>
+                  <h4 className="font-black text-slate-900">Neural Syncing...</h4>
+                  <p className="text-xs font-medium text-slate-500">Recalibrating AI autonomy protocols.</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black text-slate-900 flex items-center gap-3">
+              Settings
+            </h1>
+            <p className="text-slate-500 mt-2 text-base md:text-lg font-medium">
+              Manage your Empire configuration and account security.
+            </p>
+          </div>
+        </header>
 
-        {/* Content Area */}
-        <main className="flex-1 min-w-0">
-          {activeTab === 'link-center' && (
-            <div className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              
-              {/* Integration Form Overlay */}
-              {activeSetupPlatform && (
-                <IntegrationForm 
-                  platform={activeSetupPlatform} 
-                  onClose={() => finishSetup()} 
-                />
-              )}
+        <div className="flex flex-col md:flex-row gap-8 md:gap-12">
+          {/* Navigation Sidebar */}
+          <aside className="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full md:w-64 shrink-0 gap-2 pb-2 md:pb-0 border-b md:border-b-0 border-slate-100 md:border-none">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all whitespace-nowrap",
+                  activeTab === tab.id 
+                    ? "bg-slate-900 text-white shadow-xl shadow-slate-200" 
+                    : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+                )}
+              >
+                <tab.icon className="w-5 h-5 shrink-0" />
+                {tab.name}
+              </button>
+            ))}
+          </aside>
 
-              {/* Search Bar for Apps */}
-              {!activeSetupPlatform && (
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-                    <Search className="w-5 h-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search for apps you want to link (e.g. Etsy, TikTok, Shopify, Pinterest...)"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-14 pr-6 py-5 rounded-[28px] bg-white border-2 border-slate-100 focus:border-blue-600 outline-none transition-all text-lg font-bold text-slate-900 shadow-sm"
+          {/* Content Area */}
+          <main className="flex-1 min-w-0">
+            {activeTab === 'link-center' && (
+              <div className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                
+                {/* Integration Form Overlay */}
+                {activeSetupPlatform && (
+                  <IntegrationForm 
+                    platform={activeSetupPlatform} 
+                    onClose={() => finishSetup()} 
                   />
-                  {searchQuery && (
+                )}
+
+                {/* Search Bar for Apps */}
+                {!activeSetupPlatform && (
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+                      <Search className="w-5 h-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search for apps you want to link (e.g. Etsy, TikTok, Shopify, Pinterest...)"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-14 pr-6 py-5 rounded-[28px] bg-white border-2 border-slate-100 focus:border-blue-600 outline-none transition-all text-lg font-bold text-slate-900 shadow-sm"
+                    />
+                    {searchQuery && (
+                      <button 
+                        onClick={() => {
+                          startSetup(searchQuery);
+                          setSearchQuery('');
+                        }}
+                        className="absolute right-3 top-2 bottom-2 px-6 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all flex items-center gap-2"
+                      >
+                        <Plus className="w-4 h-4" /> Link App
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* Integrations Overview */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-8 rounded-[32px] bg-slate-900 text-white space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-bold italic flex items-center gap-2">
+                        <Bot className="w-5 h-5 text-blue-400" /> Etsy Marketplace
+                      </h3>
+                      <span className="flex items-center gap-1.5 text-amber-400 font-bold text-xs uppercase tracking-widest">
+                        <AlertCircle className="w-4 h-4" /> Setup Required
+                      </span>
+                    </div>
+                    
+                    <p className="text-slate-400 text-sm leading-relaxed">
+                      Connect your Etsy account to allow the AI to research trends and manage your shop listings automatically.
+                    </p>
+
                     <button 
                       onClick={() => {
-                        startSetup(searchQuery);
-                        setSearchQuery('');
+                        window.open('https://www.etsy.com/developers/register', '_blank');
+                        startSetup('etsy');
                       }}
-                      className="absolute right-3 top-2 bottom-2 px-6 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all flex items-center gap-2"
+                      className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 group"
                     >
-                      <Plus className="w-4 h-4" /> Link App
+                      Launch Guided Setup <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
-                  )}
-                </div>
-              )}
-
-              {/* Integrations Overview */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-8 rounded-[32px] bg-slate-900 text-white space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold italic flex items-center gap-2">
-                      <Bot className="w-5 h-5 text-blue-400" /> Etsy Marketplace
-                    </h3>
-                    <span className="flex items-center gap-1.5 text-amber-400 font-bold text-xs uppercase tracking-widest">
-                      <AlertCircle className="w-4 h-4" /> Setup Required
-                    </span>
                   </div>
-                  
-                  <p className="text-slate-400 text-sm leading-relaxed">
-                    Connect your Etsy account to allow the AI to research trends and manage your shop listings automatically.
-                  </p>
 
-                  <button 
-                    onClick={() => {
-                      window.open('https://www.etsy.com/developers/register', '_blank');
-                      startSetup('etsy');
-                    }}
-                    className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 group"
-                  >
-                    Launch Guided Setup <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-
-                <div className="p-8 rounded-[32px] bg-slate-50 border-2 border-slate-100 space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold italic flex items-center gap-2 text-slate-900">
-                      <Share2 className="w-5 h-5 text-blue-600" /> TikTok Marketing
-                    </h3>
-                    <span className="flex items-center gap-1.5 text-amber-600 font-bold text-xs uppercase tracking-widest">
-                      <AlertCircle className="w-4 h-4" /> Setup Required
-                    </span>
-                  </div>
-                  
-                  <p className="text-slate-500 text-sm leading-relaxed">
-                    Link TikTok for Business to automate your viral marketing campaigns and video scheduling.
-                  </p>
-
-                  <button 
-                    onClick={() => {
-                      window.open('https://business-api.tiktok.com/portal/app', '_blank');
-                      startSetup('tiktok');
-                    }}
-                    className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 group"
-                  >
-                    Launch Guided Setup <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-
-                <div className="p-8 rounded-[32px] bg-white border-2 border-slate-100 space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold italic flex items-center gap-2 text-slate-900">
-                      <Stars className="w-5 h-5 text-blue-900" /> Bannerbear AI
-                    </h3>
-                    <span className="flex items-center gap-1.5 text-blue-600 font-bold text-[10px] uppercase tracking-[0.2em]">
-                      <Stars className="w-3.5 h-3.5" /> API Ready
-                    </span>
-                  </div>
-                  
-                  <p className="text-slate-500 text-sm leading-relaxed">
-                    Automate your creative production. Link Bannerbear to generate high-converting social assets and videos from templates.
-                  </p>
-
-                  <button 
-                    onClick={() => {
-                      window.open('https://www.bannerbear.com/dashboard', '_blank');
-                      startSetup('bannerbear');
-                    }}
-                    className="w-full flex items-center justify-center gap-2 bg-blue-900 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-800 transition-all shadow-xl shadow-blue-200 group"
-                  >
-                    Connect Project API <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Secure Vault Section */}
-              <SecureVault />
-            </div>
-          )}
-
-          {activeTab === 'ai-intelligence' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
-                    <Zap className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-slate-900 tracking-tight">AI Control Mode</h3>
-                    <p className="text-sm font-medium text-slate-500">Choose how much autonomy your AI partner has.</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <button 
-                    onClick={() => setAiMode('co-pilot')}
-                    className={cn(
-                      "p-6 rounded-[32px] border-4 text-left transition-all space-y-4",
-                      aiMode === 'co-pilot' ? "border-blue-600 bg-blue-50" : "border-slate-50 bg-slate-50/50 grayscale opacity-60"
-                    )}
-                  >
+                  <div className="p-8 rounded-[32px] bg-slate-50 border-2 border-slate-100 space-y-6">
                     <div className="flex items-center justify-between">
-                      <Bot className="w-8 h-8 text-blue-600" />
-                      {aiMode === 'co-pilot' && <CheckCircle2 className="w-6 h-6 text-blue-600" />}
+                      <h3 className="text-xl font-bold italic flex items-center gap-2 text-slate-900">
+                        <Share2 className="w-5 h-5 text-blue-600" /> TikTok Marketing
+                      </h3>
+                      <span className="flex items-center gap-1.5 text-amber-600 font-bold text-xs uppercase tracking-widest">
+                        <AlertCircle className="w-4 h-4" /> Setup Required
+                      </span>
                     </div>
-                    <div>
-                      <h4 className="text-lg font-black text-slate-900">Co-Pilot</h4>
-                      <p className="text-xs font-bold text-slate-500 leading-relaxed">
-                        AI makes suggestions and researches trends, but waits for your approval before posting or listing items.
-                      </p>
-                    </div>
-                  </button>
-
-                  <button 
-                    onClick={() => setAiMode('auto-pilot')}
-                    className={cn(
-                      "p-6 rounded-[32px] border-4 text-left transition-all space-y-4",
-                      aiMode === 'auto-pilot' ? "border-blue-600 bg-blue-50" : "border-slate-50 bg-slate-50/50 grayscale opacity-60"
-                    )}
-                  >
-                    <div className="flex items-center justify-between">
-                      <Power className="w-8 h-8 text-blue-600" />
-                      {aiMode === 'auto-pilot' && <CheckCircle2 className="w-6 h-6 text-blue-600" />}
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-black text-slate-900">Auto-Pilot</h4>
-                      <p className="text-xs font-bold text-slate-500 leading-relaxed">
-                        AI executes strategies, posts content, and manages listings autonomously to maximize growth 24/7.
-                      </p>
-                    </div>
-                  </button>
-                </div>
-
-                <div className="p-6 bg-slate-900 rounded-3xl text-white">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Bot className="w-5 h-5 text-blue-400" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Empire Wisdom</span>
-                  </div>
-                  <p className="text-sm font-medium text-slate-300">
-                    Auto-Pilot mode is recommended for maximum velocity once your initial strategy is calibrated.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'support-hub' && <SupportHub />}
-
-          {activeTab === 'user-info' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600">
-                    <User className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-slate-900 tracking-tight">Profile Information</h3>
-                    <p className="text-sm font-medium text-slate-500">How your empire recognizes you.</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Full Name</label>
-                    <input type="text" placeholder="Your Name" className="w-full p-4 rounded-2xl bg-slate-50 border-2 border-slate-100 font-bold" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Email Address</label>
-                    <input type="email" placeholder="email@example.com" className="w-full p-4 rounded-2xl bg-slate-50 border-2 border-slate-100 font-bold" />
-                  </div>
-                </div>
-
-                <button className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">
-                  Update Profile
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'bank-info' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                    <Building2 className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-slate-900 tracking-tight">Payout Destination</h3>
-                    <p className="text-sm font-medium text-slate-500">Securely link your bank for direct revenue transfers.</p>
-                  </div>
-                </div>
-
-                <div className="p-6 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 text-center space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto">
-                    <Shield className="w-8 h-8 text-slate-300" />
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="font-black text-slate-900 tracking-tight">Secured by Stripe</h4>
-                    <p className="text-xs font-bold text-slate-500 max-w-xs mx-auto">
-                      Your banking details are encrypted and never stored on our servers.
+                    
+                    <p className="text-slate-500 text-sm leading-relaxed">
+                      Link TikTok for Business to automate your viral marketing campaigns and video scheduling.
                     </p>
-                  </div>
-                  <button className="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 flex items-center gap-2 mx-auto">
-                    Connect via Stripe <ExternalLink className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
 
-          {activeTab === 'theme-style' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
-                    <Palette className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-slate-900 tracking-tight">Color Scheme</h3>
-                    <p className="text-sm font-medium text-slate-500">Personalize your Command Center's aesthetic.</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {colorSchemes.map((scheme) => (
                     <button 
-                      key={scheme.id}
-                      onClick={() => setTheme(scheme.id)}
+                      onClick={() => {
+                        window.open('https://business-api.tiktok.com/portal/app', '_blank');
+                        startSetup('tiktok');
+                      }}
+                      className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 group"
+                    >
+                      Launch Guided Setup <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+
+                  <div className="p-8 rounded-[32px] bg-white border-2 border-slate-100 space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-bold italic flex items-center gap-2 text-slate-900">
+                        <Stars className="w-5 h-5 text-blue-900" /> Bannerbear AI
+                      </h3>
+                      <span className="flex items-center gap-1.5 text-blue-600 font-bold text-[10px] uppercase tracking-[0.2em]">
+                        <Stars className="w-3.5 h-3.5" /> API Ready
+                      </span>
+                    </div>
+                    
+                    <p className="text-slate-500 text-sm leading-relaxed">
+                      Automate your creative production. Link Bannerbear to generate high-converting social assets and videos from templates.
+                    </p>
+
+                    <button 
+                      onClick={() => {
+                        window.open('https://www.bannerbear.com/dashboard', '_blank');
+                        startSetup('bannerbear');
+                      }}
+                      className="w-full flex items-center justify-center gap-2 bg-blue-900 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-800 transition-all shadow-xl shadow-blue-200 group"
+                    >
+                      Connect Project API <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Secure Vault Section */}
+                <SecureVault />
+              </div>
+            )}
+
+            {activeTab === 'ai-intelligence' && (
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                      <Zap className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-slate-900 tracking-tight">AI Control Mode</h3>
+                      <p className="text-sm font-medium text-slate-500">Choose how much autonomy your AI partner has.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button
+                      onClick={() => handleAiModeToggle('co-pilot')}
                       className={cn(
-                        "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 group",
-                        theme === scheme.id ? "border-blue-600 bg-blue-50" : "border-slate-50 bg-slate-50/50 hover:border-slate-200"
+                        "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 relative overflow-hidden",
+                        aiMode === 'co-pilot' ? "border-blue-600 bg-blue-50/50" : "border-slate-100 bg-white hover:border-slate-200"
                       )}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex gap-2">
-                          <div className={cn("w-6 h-6 rounded-full shadow-inner", scheme.primary)} />
-                          <div className={cn("w-6 h-6 rounded-full shadow-inner", scheme.secondary)} />
-                        </div>
-                        {theme === scheme.id && <CheckCircle2 className="w-6 h-6 text-blue-600" />}
+                        <Bot className={cn("w-8 h-8", aiMode === 'co-pilot' ? "text-blue-600" : "text-slate-300")} />
+                        {aiMode === 'co-pilot' && (
+                          <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active</div>
+                        )}
                       </div>
                       <div>
-                        <h4 className="text-lg font-black text-slate-900">{scheme.name}</h4>
+                        <h4 className="text-lg font-black text-slate-900">Co-Pilot</h4>
                         <p className="text-xs font-bold text-slate-500 leading-relaxed">
-                          {scheme.description}
+                          AI makes suggestions and researches trends, but waits for your approval before posting or listing items.
                         </p>
                       </div>
                     </button>
-                  ))}
+
+                    <button
+                      onClick={() => handleAiModeToggle('auto-pilot')}
+                      className={cn(
+                        "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 relative overflow-hidden",
+                        aiMode === 'auto-pilot' ? "border-blue-600 bg-blue-50/50" : "border-slate-100 bg-white hover:border-slate-200"
+                      )}
+                    >
+                      <div className="flex items-center justify-between">
+                        <Power className={cn("w-8 h-8", aiMode === 'auto-pilot' ? "text-blue-600" : "text-slate-300")} />
+                        {aiMode === 'auto-pilot' && (
+                          <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active</div>
+                        )}
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-black text-slate-900">Auto-Pilot</h4>
+                        <p className="text-xs font-bold text-slate-500 leading-relaxed">
+                          AI executes strategies, posts content, and manages listings autonomously to maximize growth 24/7.
+                        </p>
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className="p-6 bg-slate-900 rounded-3xl text-white">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Bot className="w-5 h-5 text-blue-400" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Empire Wisdom</span>
+                    </div>
+                    <p className="text-sm font-medium text-slate-300">
+                      Auto-Pilot mode is recommended for maximum velocity once your initial strategy is calibrated.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'support-hub' && <SupportHub />}
+
+            {activeTab === 'user-info' && (
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600">
+                      <User className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Profile Information</h3>
+                      <p className="text-sm font-medium text-slate-500">How your empire recognizes you.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Full Name</label>
+                      <input type="text" placeholder="Your Name" className="w-full p-4 rounded-2xl bg-slate-50 border-2 border-slate-100 font-bold" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Email Address</label>
+                      <input type="email" placeholder="email@example.com" className="w-full p-4 rounded-2xl bg-slate-50 border-2 border-slate-100 font-bold" />
+                    </div>
+                  </div>
+
+                  <button className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">
+                    Update Profile
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'bank-info' && (
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                      <Building2 className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Payout Destination</h3>
+                      <p className="text-sm font-medium text-slate-500">Securely link your bank for direct revenue transfers.</p>
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 text-center space-y-4">
+                    <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto">
+                      <Shield className="w-8 h-8 text-slate-300" />
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="font-black text-slate-900 tracking-tight">Secured by Stripe</h4>
+                      <p className="text-xs font-bold text-slate-500 max-w-xs mx-auto">
+                        Your banking details are encrypted and never stored on our servers.
+                      </p>
+                    </div>
+                    <button className="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 flex items-center gap-2 mx-auto">
+                      Connect via Stripe <ExternalLink className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'theme-style' && (
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                      <Palette className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Color Scheme</h3>
+                      <p className="text-sm font-medium text-slate-500">Personalize your Command Center's aesthetic.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {colorSchemes.map((scheme) => (
+                      <button 
+                        key={scheme.id}
+                        onClick={() => setTheme(scheme.id)}
+                        className={cn(
+                          "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 group",
+                          theme === scheme.id ? "border-blue-600 bg-blue-50" : "border-slate-50 bg-slate-50/50 hover:border-slate-200"
+                        )}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex gap-2">
+                            <div className={cn("w-6 h-6 rounded-full shadow-inner", scheme.primary)} />
+                            <div className={cn("w-6 h-6 rounded-full shadow-inner", scheme.secondary)} />
+                          </div>
+                          {theme === scheme.id && <CheckCircle2 className="w-6 h-6 text-blue-600" />}
+                        </div>
+                        <div>
+                          <h4 className="text-lg font-black text-slate-900">{scheme.name}</h4>
+                          <p className="text-xs font-bold text-slate-500 leading-relaxed">
+                            {scheme.description}
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="p-6 bg-slate-900 rounded-3xl text-white">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Stars className="w-5 h-5 text-blue-400" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Pro Tip</span>
+                    </div>
+                    <p className="text-sm font-medium text-slate-300">
+                      Your color scheme syncs across all your devices linked to this empire.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'cloud-storage' && (
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                    <Globe className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black text-slate-900 tracking-tight">Empire Cloud Hub</h3>
+                    <p className="text-sm font-medium text-slate-500">Manage your high-velocity storage and global data sync.</p>
+                  </div>
                 </div>
 
-                <div className="p-6 bg-slate-900 rounded-3xl text-white">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Stars className="w-5 h-5 text-blue-400" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Pro Tip</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-8 rounded-[32px] bg-slate-900 text-white space-y-6 relative overflow-hidden">
+                    <div className="relative z-10">
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 mb-2">Neural Storage Pool</p>
+                      <h4 className="text-3xl font-black">Unlimited.</h4>
+                      <p className="text-slate-400 text-xs font-medium mt-4 leading-relaxed">
+                        Your videos, graphics, and business assets are automatically hosted on our global high-speed CDNs.
+                      </p>
+                    </div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-[60px]" />
                   </div>
-                  <p className="text-sm font-medium text-slate-300">
-                    Your color scheme syncs across all your devices linked to this empire.
+
+                  <div className="p-8 rounded-[32px] bg-slate-50 border-2 border-slate-100 space-y-6">
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Data Integrity</p>
+                      <h4 className="text-xl font-black text-slate-900 italic">Protected.</h4>
+                      <p className="text-slate-500 text-xs font-medium mt-4 leading-relaxed">
+                        Redundant backups across 3 global regions. Your financial and personal data is never stored locally.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-blue-50 rounded-3xl border border-blue-100">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Shield className="w-5 h-5 text-blue-600" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">Enterprise Scale Active</span>
+                  </div>
+                  <p className="text-sm font-medium text-blue-900/70">
+                    EmpireLaunch AI utilizes a decentralized storage mesh. As you create more content, your cloud footprint automatically scales to match your velocity without additional fees.
                   </p>
                 </div>
               </div>
@@ -582,154 +669,155 @@ export default function SettingsPage() {
           )}
 
           {activeTab === 'account-settings' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600">
-                    <Lock className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-slate-900 tracking-tight">Account & Security</h3>
-                    <p className="text-sm font-medium text-slate-500">Manage your password and security protocols.</p>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <button className="w-full flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-slate-300 transition-all group">
-                    <div className="flex items-center gap-4">
-                      <Shield className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
-                      <div className="text-left">
-                        <h4 className="font-black text-slate-900">Two-Factor Authentication</h4>
-                        <p className="text-xs font-bold text-slate-500">Add an extra layer of security to your empire.</p>
-                      </div>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
-                  </button>
-
-                  {/* Redeem Key Section */}
-                  <div className="p-8 rounded-[32px] bg-blue-50 border-2 border-blue-100 space-y-4">
-                    <div className="flex items-center gap-3">
-                      <Stars className="w-5 h-5 text-blue-600" />
-                      <h4 className="font-black text-slate-900">Redeem Access Key</h4>
-                    </div>
-                    <p className="text-xs font-bold text-slate-500 leading-relaxed">
-                      If you have an Empire Launch key, enter it below to upgrade your account or extend your subscription.
-                    </p>
-                    <div className="flex gap-2">
-                      <input 
-                        type="text" 
-                        placeholder="ENTER-KEY-HERE"
-                        value={redeemKeyValue}
-                        onChange={(e) => setRedeemKeyValue(e.target.value.toUpperCase())}
-                        disabled={isRedeeming}
-                        className="flex-1 p-4 rounded-2xl bg-white border-2 border-blue-100 focus:border-blue-600 outline-none font-mono text-sm uppercase tracking-widest disabled:opacity-50"
-                      />
-                      <button 
-                        onClick={handleRedeem}
-                        disabled={isRedeeming || !redeemKeyValue}
-                        className="px-6 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 disabled:opacity-50 flex items-center gap-2"
-                      >
-                        {isRedeeming ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Redeem'}
-                      </button>
-                    </div>
-                    {redeemStatus && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className={cn(
-                          "p-4 rounded-2xl text-xs font-bold flex items-center gap-2",
-                          redeemStatus.type === 'success' ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
-                        )}
-                      >
-                        {redeemStatus.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
-                        {redeemStatus.message}
-                      </motion.div>
-                    )}
-                  </div>
-
-                  <button className="w-full flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-slate-300 transition-all group">
-                    <div className="flex items-center gap-4">
-                      <Lock className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
-                      <div className="text-left">
-                        <h4 className="font-black text-slate-900">Change Password</h4>
-                        <p className="text-xs font-bold text-slate-500">Update your access credentials.</p>
-                      </div>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
-                  </button>
-
-                  <button 
-                    onClick={() => setIsTermsOpen(true)}
-                    className="w-full flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-slate-300 transition-all group"
-                  >
-                    <div className="flex items-center gap-4">
-                      <Scale className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
-                      <div className="text-left">
-                        <h4 className="font-black text-slate-900">Neural Agreement</h4>
-                        <p className="text-xs font-bold text-slate-500">Review our Data Protection & AI Approval policies.</p>
-                      </div>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-              </div>
-
-              <TermsModal 
-                isOpen={isTermsOpen} 
-                onClose={() => setIsTermsOpen(false)} 
-                onAccept={() => setIsTermsOpen(false)} 
-              />
-            </div>
-          )}
-
-          {activeTab === 'subscription' && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="p-8 rounded-[40px] bg-gradient-to-br from-slate-900 to-slate-800 text-white space-y-8 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] -mr-48 -mt-48" />
-                
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center backdrop-blur-md">
-                      <Diamond className="w-8 h-8 text-blue-400" />
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600">
+                      <Lock className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-black tracking-tight">Empire Elite Plan</h3>
-                      <p className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.3em]">Status: Active</p>
+                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Account & Security</h3>
+                      <p className="text-sm font-medium text-slate-500">Manage your password and security protocols.</p>
                     </div>
                   </div>
-                  <div className="px-6 py-2 bg-blue-500/20 border border-blue-500/40 rounded-full text-blue-300 font-black text-[10px] uppercase tracking-widest">
-                    Next Payout: June 1st
+
+                  <div className="space-y-6">
+                    <button className="w-full flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-slate-300 transition-all group">
+                      <div className="flex items-center gap-4">
+                        <Shield className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                        <div className="text-left">
+                          <h4 className="font-black text-slate-900">Two-Factor Authentication</h4>
+                          <p className="text-xs font-bold text-slate-500">Add an extra layer of security to your empire.</p>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
+                    </button>
+
+                    {/* Redeem Key Section */}
+                    <div className="p-8 rounded-[32px] bg-blue-50 border-2 border-blue-100 space-y-4">
+                      <div className="flex items-center gap-3">
+                        <Stars className="w-5 h-5 text-blue-600" />
+                        <h4 className="font-black text-slate-900">Redeem Access Key</h4>
+                      </div>
+                      <p className="text-xs font-bold text-slate-500 leading-relaxed">
+                        If you have an Empire Launch key, enter it below to upgrade your account or extend your subscription.
+                      </p>
+                      <div className="flex gap-2">
+                        <input 
+                          type="text" 
+                          placeholder="ENTER-KEY-HERE"
+                          value={redeemKeyValue}
+                          onChange={(e) => setRedeemKeyValue(e.target.value.toUpperCase())}
+                          disabled={isRedeeming}
+                          className="flex-1 p-4 rounded-2xl bg-white border-2 border-blue-100 focus:border-blue-600 outline-none font-mono text-sm uppercase tracking-widest disabled:opacity-50"
+                        />
+                        <button 
+                          onClick={handleRedeem}
+                          disabled={isRedeeming || !redeemKeyValue}
+                          className="px-6 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 disabled:opacity-50 flex items-center gap-2"
+                        >
+                          {isRedeeming ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Redeem'}
+                        </button>
+                      </div>
+                      {redeemStatus && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className={cn(
+                            "p-4 rounded-2xl text-xs font-bold flex items-center gap-2",
+                            redeemStatus.type === 'success' ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"
+                          )}
+                        >
+                          {redeemStatus.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+                          {redeemStatus.message}
+                        </motion.div>
+                      )}
+                    </div>
+
+                    <button className="w-full flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-slate-300 transition-all group">
+                      <div className="flex items-center gap-4">
+                        <Lock className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                        <div className="text-left">
+                          <h4 className="font-black text-slate-900">Change Password</h4>
+                          <p className="text-xs font-bold text-slate-500">Update your access credentials.</p>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
+                    </button>
+
+                    <button 
+                      onClick={() => setIsTermsOpen(true)}
+                      className="w-full flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-slate-300 transition-all group"
+                    >
+                      <div className="flex items-center gap-4">
+                        <Scale className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                        <div className="text-left">
+                          <h4 className="font-black text-slate-900">Neural Agreement</h4>
+                          <p className="text-xs font-bold text-slate-500">Review our Data Protection & AI Approval policies.</p>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
+                    </button>
                   </div>
                 </div>
 
-                <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
-                    <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Monthly Fee</p>
-                    <p className="text-2xl font-black tracking-tight">$97<span className="text-sm text-slate-500">/mo</span></p>
-                  </div>
-                  <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
-                    <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Post Autonomy</p>
-                    <p className="text-2xl font-black tracking-tight">Unlimited</p>
-                  </div>
-                  <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
-                    <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Trend Velocity</p>
-                    <p className="text-2xl font-black tracking-tight">Real-Time</p>
-                  </div>
-                </div>
+                <TermsModal 
+                  isOpen={isTermsOpen} 
+                  onClose={() => setIsTermsOpen(false)} 
+                  onAccept={() => setIsTermsOpen(false)} 
+                />
+              </div>
+            )}
 
-                <div className="relative z-10 pt-4 flex flex-col md:flex-row items-center gap-8 border-t border-white/10">
-                  <p className="text-sm font-medium text-slate-400 flex-1">
-                    Auto-billing is active. Your subscription renewal is managed securely via Stripe.
-                  </p>
-                  <button className="w-full md:w-auto px-8 py-4 bg-white/5 hover:bg-red-500/10 text-slate-400 hover:text-red-400 rounded-2xl font-black text-xs uppercase tracking-widest transition-all border border-white/10 hover:border-red-500/20">
-                    Cancel Subscription
-                  </button>
+            {activeTab === 'subscription' && (
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="p-8 rounded-[40px] bg-gradient-to-br from-slate-900 to-slate-800 text-white space-y-8 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] -mr-48 -mt-48" />
+                  
+                  <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div className="flex items-center gap-6">
+                      <div className="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center backdrop-blur-md">
+                        <Diamond className="w-8 h-8 text-blue-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-black tracking-tight">Empire Elite Plan</h3>
+                        <p className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.3em]">Status: Active</p>
+                      </div>
+                    </div>
+                    <div className="px-6 py-2 bg-blue-500/20 border border-blue-500/40 rounded-full text-blue-300 font-black text-[10px] uppercase tracking-widest">
+                      Next Payout: June 1st
+                    </div>
+                  </div>
+
+                  <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
+                      <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Monthly Fee</p>
+                      <p className="text-2xl font-black tracking-tight">$97<span className="text-sm text-slate-500">/mo</span></p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
+                      <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Post Autonomy</p>
+                      <p className="text-2xl font-black tracking-tight">Unlimited</p>
+                    </div>
+                    <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
+                      <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Trend Velocity</p>
+                      <p className="text-2xl font-black tracking-tight">Real-Time</p>
+                    </div>
+                  </div>
+
+                  <div className="relative z-10 pt-4 flex flex-col md:flex-row items-center gap-8 border-t border-white/10">
+                    <p className="text-sm font-medium text-slate-400 flex-1">
+                      Auto-billing is active. Your subscription renewal is managed securely via Stripe.
+                    </p>
+                    <button className="w-full md:w-auto px-8 py-4 bg-white/5 hover:bg-red-500/10 text-slate-400 hover:text-red-400 rounded-2xl font-black text-xs uppercase tracking-widest transition-all border border-white/10 hover:border-red-500/20">
+                      Cancel Subscription
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </main>
+            )}
+          </main>
+        </div>
       </div>
-    </div>
+    </PullToRefresh>
   );
 }

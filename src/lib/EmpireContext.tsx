@@ -26,6 +26,8 @@ interface EmpireContextType {
   setCurrency: (curr: string) => void;
   isPaid: boolean;
   setIsPaid: (paid: boolean) => void;
+  aiMode: 'co-pilot' | 'auto-pilot';
+  setAiMode: (mode: 'co-pilot' | 'auto-pilot') => void;
 }
 
 const EmpireContext = createContext<EmpireContextType | undefined>(undefined);
@@ -43,6 +45,20 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
     return false;
   });
+
+  const [aiMode, setAiModeState] = useState<'co-pilot' | 'auto-pilot'>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('empireAiMode') as 'co-pilot' | 'auto-pilot') || 'co-pilot';
+    }
+    return 'co-pilot';
+  });
+
+  const setAiMode = (mode: 'co-pilot' | 'auto-pilot') => {
+    setAiModeState(mode);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('empireAiMode', mode);
+    }
+  };
   const [isOnboarded, setIsOnboarded] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('isOnboarded') === 'true';
@@ -222,7 +238,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       currency,
       setCurrency,
       isPaid,
-      setIsPaid
+      setIsPaid,
+      aiMode,
+      setAiMode
     }}>
       {children}
     </EmpireContext.Provider>
