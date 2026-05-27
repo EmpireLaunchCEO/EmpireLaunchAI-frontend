@@ -99,14 +99,16 @@ export function OnboardingTour() {
             const rect = el.getBoundingClientRect();
             setPointerX(rect.left + rect.width / 2);
             
-            // Adjust pointer Y coordinate to be clearly visible above the bottom nav
+            // SIGNIFICANT OFFSET: Keep the pointer high above the bottom bar
             if (step.target?.startsWith('nav-')) {
-              setPointerY(rect.top - 80); // Move it further up so "Look Here" isn't blocked
+              // Points to bottom nav, place bubble well above and arrow pointing down
+              setPointerY(rect.top - 40); 
             } else {
-              setPointerY(rect.bottom + 20); // Side tabs can keep original spacing
+              // Points to settings tabs, place arrow pointing up
+              setPointerY(rect.bottom + 20);
             }
           }
-        }, 150);
+        }, 300); // Increased delay for stability
       } else {
         setPointerX(null);
         setPointerY(null);
@@ -119,7 +121,7 @@ export function OnboardingTour() {
   }, [currentStep, pathname]);
 
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem('hasSeenEmpireTourV5');
+    const hasSeenTour = localStorage.getItem('hasSeenEmpireTourV6');
     if (!hasSeenTour) {
       const timer = setTimeout(() => setIsVisible(true), 1500);
       return () => clearTimeout(timer);
@@ -127,7 +129,7 @@ export function OnboardingTour() {
   }, []);
 
   const handleComplete = () => {
-    localStorage.setItem('hasSeenEmpireTourV5', 'true');
+    localStorage.setItem('hasSeenEmpireTourV6', 'true');
     setIsVisible(false);
   };
 
@@ -156,7 +158,7 @@ export function OnboardingTour() {
   const Icon = step.icon;
 
   return (
-    <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm pointer-events-none">
+    <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm pointer-events-none">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
@@ -216,38 +218,38 @@ export function OnboardingTour() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Dynamic Pointer with Higher Z-Index and Better Offset */}
+      {/* DYNAMIC POINTER WITH ABSOLUTE Z-INDEX ADVANTAGE */}
       {pointerX !== null && pointerY !== null && (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, left: pointerX, top: pointerY }}
-          className="fixed z-[2000] flex flex-col items-center gap-2 -translate-x-1/2 pointer-events-none"
+          className="fixed z-[10001] flex flex-col items-center gap-1 -translate-x-1/2 -translate-y-full pointer-events-none"
           style={{ transition: 'left 0.3s ease, top 0.3s ease' }}
         >
           {step.target?.startsWith('nav-') ? (
             <>
-              <div className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(37,99,235,0.4)] border-2 border-white whitespace-nowrap">
+              <div className="bg-blue-600 text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-white whitespace-nowrap">
                 Look Here
               </div>
               <motion.div
-                animate={{ y: [0, 10, 0] }}
+                animate={{ y: [0, 5, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
-                <ArrowDown className="w-10 h-10 text-blue-600 drop-shadow-lg" />
+                <ArrowDown className="w-10 h-10 text-blue-600 drop-shadow-xl fill-blue-600 stroke-white stroke-[1px]" />
               </motion.div>
             </>
           ) : (
-            <>
-               <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
-              >
-                <ArrowDown className="w-10 h-10 text-blue-600 rotate-180 drop-shadow-lg" />
-              </motion.div>
-              <div className="bg-blue-600 text-white px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(37,99,235,0.4)] border-2 border-white whitespace-nowrap">
+            <div className="flex flex-col-reverse items-center gap-1 translate-y-[100%]">
+              <div className="bg-blue-600 text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-white whitespace-nowrap">
                 Look Here
               </div>
-            </>
+              <motion.div
+                animate={{ y: [0, -5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+              >
+                <ArrowDown className="w-10 h-10 text-blue-600 drop-shadow-xl fill-blue-600 stroke-white stroke-[1px] rotate-180" />
+              </motion.div>
+            </div>
           )}
         </motion.div>
       )}
