@@ -35,7 +35,7 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
 
     socket.on('ai-log', (data: { message: string }) => {
       setLogs(prev => {
-        const nextLogs = [...prev, { id: Date.now(), text: data.message, status: 'processing' }];
+        const nextLogs: { id: number; text: string; status: 'processing' | 'done' }[] = [...prev, { id: Date.now(), text: data.message, status: 'processing' }];
         if (nextLogs.length > 1) {
           nextLogs[nextLogs.length - 2].status = 'done';
         }
@@ -46,14 +46,14 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
     socket.on('job-started', (data: { goal: string }) => {
       setLogs(prev => [
         ...prev, 
-        { id: Date.now(), text: `[SYSTEM] Goal Received: ${data.goal}`, status: 'done' }
+        { id: Date.now(), text: `[SYSTEM] Goal Received: ${data.goal}`, status: 'done' as const }
       ].slice(-10));
     });
 
     socket.on('job-completed', (data: { resultSummary: string }) => {
       setLogs(prev => [
         ...prev, 
-        { id: Date.now(), text: `[SYSTEM] Success: ${data.resultSummary}`, status: 'done' }
+        { id: Date.now(), text: `[SYSTEM] Success: ${data.resultSummary}`, status: 'done' as const }
       ].slice(-10));
     });
 
@@ -69,7 +69,7 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
         const newThought = MOCK_THOUGHTS[Math.floor(Math.random() * MOCK_THOUGHTS.length)];
         setLogs(prev => {
           // If we have real logs coming in, maybe slow down mock logs or stop them
-          const nextLogs = [...prev, { id: logId++, text: newThought, status: 'processing' }];
+          const nextLogs: { id: number; text: string; status: 'processing' | 'done' }[] = [...prev, { id: logId++, text: newThought, status: 'processing' }];
           if (nextLogs.length > 1) {
             nextLogs[nextLogs.length - 2].status = 'done';
           }

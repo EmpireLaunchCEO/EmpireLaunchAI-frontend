@@ -1,3 +1,5 @@
+import { API_URL } from './config';
+
 export interface RevenueTransaction {
   id: string;
   amount: number;
