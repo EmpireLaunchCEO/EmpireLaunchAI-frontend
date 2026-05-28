@@ -25,7 +25,7 @@ export function InsightCard({ platform, title, description, roi, onExecute, isEx
     <div className="bg-theme-surface p-6 rounded-2xl shadow-sm border border-theme hover:shadow-md transition-shadow group">
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-2">
-          <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
+          <div className="bg-primary/10 p-2 rounded-lg text-primary">
             <Stars className="w-5 h-5" />
           </div>
           <span className="text-sm font-semibold text-slate-400 uppercase tracking-wider">{platform}</span>
@@ -47,7 +47,7 @@ export function InsightCard({ platform, title, description, roi, onExecute, isEx
           className={cn(
             "flex-1 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all",
             isExecuting 
-              ? "bg-blue-600 text-white cursor-wait" 
+              ? "bg-primary text-white cursor-wait" 
               : "bg-slate-900 text-white hover:bg-slate-800"
           )}
         >

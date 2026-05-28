@@ -131,7 +131,7 @@ export default function Dashboard() {
             <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
               {empireData?.name || "Success Hub"}.
             </h1>
-            <p className="text-sm md:text-base text-slate-500 font-medium">
+            <p className="text-sm md:text-base text-theme-background0 font-medium">
               Monitoring your {empireData?.niche || "business"} growth and autonomous operations.
             </p>
           </div>
@@ -170,12 +170,12 @@ export default function Dashboard() {
                   exit={{ opacity: 0, y: -20 }}
                   className="p-6 bg-slate-900 rounded-[32px] text-white shadow-2xl flex items-center gap-6 relative overflow-hidden z-50"
                 >
-                  <div className="relative z-10 w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center shrink-0">
+                  <div className="relative z-10 w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shrink-0">
                     <Loader2 className="w-8 h-8 animate-spin" />
                   </div>
                   <div className="relative z-10 flex-1">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Autonomous Operation</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-primary">Autonomous Operation</span>
                       <span className="text-[10px] font-bold text-slate-400">Phase: Research & Analysis</span>
                     </div>
                     <p className="text-lg font-bold">
@@ -204,7 +204,7 @@ export default function Dashboard() {
                    </div>
                    <div>
                      <h2 className="text-2xl font-black text-foreground tracking-tight">Control Gates</h2>
-                     <p className="text-xs text-slate-500 font-medium">Human-in-the-loop validation for autonomous actions.</p>
+                     <p className="text-xs text-theme-background0 font-medium">Human-in-the-loop validation for autonomous actions.</p>
                    </div>
                  </div>
                </div>
@@ -240,7 +240,7 @@ export default function Dashboard() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] flex items-center justify-center bg-blue-600"
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-primary"
             >
               <div className="text-center space-y-8">
                 <motion.div
@@ -248,10 +248,10 @@ export default function Dashboard() {
                   animate={{ scale: 1, rotate: 0 }}
                   className="w-32 h-32 bg-theme-surface rounded-[40px] mx-auto flex items-center justify-center shadow-2xl"
                 >
-                  <Stars className="w-16 h-16 text-blue-600" />
+                  <Stars className="w-16 h-16 text-primary" />
                 </motion.div>
                 <h2 className="text-5xl font-black text-white tracking-tighter">Neural Sync Established.</h2>
-                <p className="text-blue-100 text-xl font-medium">Welcome to your Empire Command Center.</p>
+                <p className="text-primary/20 text-xl font-medium">Welcome to your Empire Command Center.</p>
               </div>
             </motion.div>
           )}

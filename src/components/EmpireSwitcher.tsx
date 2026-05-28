@@ -32,7 +32,7 @@ const mockEmpires: Empire[] = [
     id: '2',
     name: 'PixelPlanners',
     logoInitial: 'P',
-    primaryColor: 'bg-blue-500',
+    primaryColor: 'bg-primary',
     milestoneProgress: 45,
     status: 'planning',
     pendingApprovals: 3,
@@ -72,7 +72,7 @@ export function EmpireSwitcher() {
               exit={{ opacity: 0, x: -10 }}
               className="flex items-center gap-3 w-full px-2"
             >
-              <Stars className="w-6 h-6 text-blue-400" />
+              <Stars className="w-6 h-6 text-primary" />
               <span className="font-bold text-lg tracking-tight whitespace-nowrap">Empires</span>
             </motion.div>
           ) : (
@@ -82,7 +82,7 @@ export function EmpireSwitcher() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <Stars className="w-6 h-6 text-blue-400" />
+              <Stars className="w-6 h-6 text-primary" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -101,7 +101,7 @@ export function EmpireSwitcher() {
               {activeEmpireId === empire.id && (
                 <motion.div 
                   layoutId="active-indicator"
-                  className="absolute -left-3 w-1.5 h-10 bg-blue-500 rounded-r-full z-10"
+                  className="absolute -left-3 w-1.5 h-10 bg-primary rounded-r-full z-10"
                 />
               )}
 
@@ -166,7 +166,7 @@ export function EmpireSwitcher() {
                     >
                       <span className="font-bold text-slate-200 truncate w-full">{empire.name}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-slate-500 uppercase font-black tracking-wider">
+                        <span className="text-[10px] text-theme-background0 uppercase font-black tracking-wider">
                           {empire.milestoneProgress}% Target
                         </span>
                         {empire.pendingApprovals > 0 && (
@@ -203,14 +203,14 @@ export function EmpireSwitcher() {
             "flex items-center transition-all duration-200",
             isExpanded ? "gap-4 w-full" : "justify-center w-full"
           )}>
-            <div className="w-12 h-12 rounded-full border-2 border-dashed border-slate-700 flex items-center justify-center text-slate-500 hover:border-slate-500 hover:text-slate-300 transition-colors">
+            <div className="w-12 h-12 rounded-full border-2 border-dashed border-slate-700 flex items-center justify-center text-theme-background0 hover:border-theme-background0 hover:text-slate-300 transition-colors">
               <Plus className="w-6 h-6" />
             </div>
             {isExpanded && (
               <motion.span 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-sm font-bold text-slate-500 group-hover:text-slate-300"
+                className="text-sm font-bold text-theme-background0 group-hover:text-slate-300"
               >
                 New Empire
               </motion.span>
@@ -224,7 +224,7 @@ export function EmpireSwitcher() {
             "flex items-center transition-all duration-200",
             isExpanded ? "gap-3 w-full" : "justify-center"
           )}>
-            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-xs shadow-lg shadow-blue-500/20">
+            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs shadow-lg shadow-primary/20">
               JD
             </div>
             {isExpanded && (
@@ -234,7 +234,7 @@ export function EmpireSwitcher() {
                 className="flex flex-col overflow-hidden"
               >
                 <span className="text-sm font-bold truncate">John Doe</span>
-                <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest">Pro User</span>
+                <span className="text-[10px] text-theme-background0 uppercase font-black tracking-widest">Pro User</span>
               </motion.div>
             )}
          </div>

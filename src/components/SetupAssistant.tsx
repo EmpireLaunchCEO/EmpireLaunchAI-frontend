@@ -153,7 +153,7 @@ export const SetupAssistant = () => {
                  width: coords.width + 16, 
                  height: coords.height + 16 
                }}
-               className="absolute border-2 border-blue-500 rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.5)]"
+               className="absolute border-2 border-primary rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.5)]"
              />
           </motion.div>
         )}
@@ -171,7 +171,7 @@ export const SetupAssistant = () => {
             >
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="bg-blue-600 p-2 rounded-xl">
+                  <div className="bg-primary p-2 rounded-xl">
                     <Bot className="w-5 h-5 text-white" />
                   </div>
                   <span className="font-black text-xs uppercase tracking-widest text-foreground">Empire Assistant</span>
@@ -184,7 +184,7 @@ export const SetupAssistant = () => {
               {showTour ? (
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <h3 className="text-lg font-black italic text-blue-500 uppercase tracking-tighter">
+                    <h3 className="text-lg font-black italic text-primary uppercase tracking-tighter">
                       {TOUR_STEPS[currentStep].title}
                     </h3>
                     <p className="text-foreground/80 text-sm font-medium leading-relaxed">
@@ -197,7 +197,7 @@ export const SetupAssistant = () => {
                       {TOUR_STEPS.map((_, i) => (
                         <div 
                           key={i} 
-                          className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentStep ? 'bg-blue-600 w-4' : 'bg-slate-200'}`} 
+                          className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentStep ? 'bg-primary w-4' : 'bg-slate-200'}`} 
                         />
                       ))}
                     </div>
@@ -205,14 +205,14 @@ export const SetupAssistant = () => {
                       {currentStep > 0 && (
                         <button 
                           onClick={handlePrev}
-                          className="p-2 bg-theme-background border border-theme rounded-xl hover:bg-slate-50 transition-all"
+                          className="p-2 bg-theme-background border border-theme rounded-xl hover:bg-theme-background transition-all"
                         >
                           <ChevronLeft className="w-4 h-4" />
                         </button>
                       )}
                       <button 
                         onClick={handleNext}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-blue-500 transition-all shadow-lg shadow-blue-200"
+                        className="px-4 py-2 bg-primary text-white rounded-xl font-bold text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-primary transition-all shadow-lg shadow-blue-200"
                       >
                         {currentStep === TOUR_STEPS.length - 1 ? 'Finish' : 'Next'}
                         <ChevronRight className="w-4 h-4" />
@@ -231,7 +231,7 @@ export const SetupAssistant = () => {
                       setShowTour(true);
                       router.push('/dashboard');
                     }}
-                    className="w-full py-3 bg-theme-background border border-theme rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3 bg-theme-background border border-theme rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-theme-background transition-all flex items-center justify-center gap-2"
                   >
                     Start Platform Tour
                     <Info className="w-4 h-4" />
@@ -247,7 +247,7 @@ export const SetupAssistant = () => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(!isOpen)}
-          className={`p-4 rounded-full shadow-2xl transition-all ${isOpen ? 'bg-slate-900 text-white rotate-90' : 'bg-blue-600 text-white shadow-blue-200'}`}
+          className={`p-4 rounded-full shadow-2xl transition-all ${isOpen ? 'bg-slate-900 text-white rotate-90' : 'bg-primary text-white shadow-blue-200'}`}
         >
           {isOpen ? <X className="w-6 h-6" /> : <Bot className="w-8 h-8" />}
           {!isOpen && (

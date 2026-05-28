@@ -35,7 +35,7 @@ export function PaymentButtonList() {
 
   if (loading) {
     return <div className="h-40 flex items-center justify-center">
-      <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
     </div>;
   }
 
@@ -48,16 +48,16 @@ export function PaymentButtonList() {
           </div>
           <h3 className="text-xl font-black text-foreground">Payment Buttons</h3>
         </div>
-        <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-4 py-2 rounded-xl">
+        <button className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-4 py-2 rounded-xl">
           Create New
         </button>
       </div>
 
       <div className="space-y-4">
         {buttons.map((button) => (
-          <div key={button.id} className="p-5 border border-slate-50 rounded-[24px] hover:border-blue-100 transition-colors flex items-center justify-between group">
+          <div key={button.id} className="p-5 border border-theme-background rounded-[24px] hover:border-primary/20 transition-colors flex items-center justify-between group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-theme-background flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+              <div className="w-12 h-12 rounded-2xl bg-theme-background flex items-center justify-center text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                  <MousePointer2 className="w-6 h-6" />
               </div>
               <div className="space-y-1">
@@ -65,7 +65,7 @@ export function PaymentButtonList() {
                  <div className="flex items-center gap-2">
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{button.productName}</span>
                     <span className="w-1 h-1 rounded-full bg-slate-300" />
-                    <span className="text-[10px] font-bold text-blue-600">${button.price}</span>
+                    <span className="text-[10px] font-bold text-primary">${button.price}</span>
                  </div>
               </div>
             </div>

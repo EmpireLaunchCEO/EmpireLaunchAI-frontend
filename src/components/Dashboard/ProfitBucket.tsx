@@ -67,7 +67,7 @@ export function ProfitBucket({ withholdableEarnings = 125050, securedDues = 1800
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <Bucket className="w-8 h-8 text-primary mb-1 opacity-60" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Growth</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-theme-background0">Growth</span>
             <span className="text-2xl font-black">{growthScore}</span>
           </div>
         </div>

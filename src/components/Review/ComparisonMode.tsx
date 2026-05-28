@@ -39,12 +39,12 @@ export function ComparisonMode({
         {/* Header */}
         <div className="p-8 border-b border-theme flex justify-between items-center bg-theme-surface shrink-0">
           <div className="flex items-center gap-3">
-            <div className="bg-blue-50 p-2.5 rounded-2xl">
-              <ArrowLeftRight className="w-6 h-6 text-blue-600" />
+            <div className="bg-primary/10 p-2.5 rounded-2xl">
+              <ArrowLeftRight className="w-6 h-6 text-primary" />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-foreground">Compare Versions</h2>
-              <p className="text-slate-500 text-sm font-medium">Review the changes made by your AI Partner</p>
+              <p className="text-theme-background0 text-sm font-medium">Review the changes made by your AI Partner</p>
             </div>
           </div>
           <button 
@@ -112,7 +112,7 @@ export function ComparisonMode({
           </button>
           <button 
             onClick={onAccept}
-            className="px-10 py-4 rounded-2xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all flex items-center gap-2 shadow-xl shadow-blue-100"
+            className="px-10 py-4 rounded-2xl text-sm font-bold text-white bg-primary hover:bg-primary transition-all flex items-center gap-2 shadow-xl shadow-primary/20"
           >
             <Check className="w-4 h-4" />
             Accept AI Version

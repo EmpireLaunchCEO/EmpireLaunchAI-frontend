@@ -50,7 +50,7 @@ export default function LandingPage() {
   if (!isMounted) return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
       <div className="relative">
-        <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
+        <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
         <div className="absolute inset-0 m-auto w-8 h-8 rounded-full overflow-hidden border border-white/10 shadow-[0_0_20px_rgba(59,130,246,0.5)]">
           <img src="/branded-globe.png" alt="Empire" className="w-full h-full object-cover animate-pulse" />
         </div>
@@ -60,14 +60,14 @@ export default function LandingPage() {
 
   const PurchaseStep = () => (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="bg-blue-600 border border-blue-400 rounded-[32px] p-8 max-w-md mx-auto text-left relative overflow-hidden shadow-2xl shadow-blue-500/20">
+      <div className="bg-primary border border-primary rounded-[32px] p-8 max-w-md mx-auto text-left relative overflow-hidden shadow-2xl shadow-primary/20">
         <div className="absolute top-0 right-0 p-4 opacity-20">
           <Coins className="w-24 h-24 rotate-12 text-white" />
         </div>
         <div className="relative z-10 space-y-6">
           <div>
             <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">Empire Master</h2>
-            <p className="text-blue-100 text-xs font-black uppercase tracking-widest mt-1">Unlimited Autonomy License</p>
+            <p className="text-primary/20 text-xs font-black uppercase tracking-widest mt-1">Unlimited Autonomy License</p>
           </div>
           <div className="flex items-baseline gap-1 text-white">
             <span className="text-5xl font-black">$30</span>
@@ -83,7 +83,7 @@ export default function LandingPage() {
           </ul>
           <button 
             onClick={handlePurchase}
-            className="w-full bg-white text-blue-600 py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+            className="w-full bg-white text-primary py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-theme-background transition-all flex items-center justify-center gap-2"
           >
             Purchase License
             <Lock className="w-5 h-5" />
@@ -113,20 +113,20 @@ export default function LandingPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30 overflow-x-hidden">
+    <div className="min-h-screen bg-slate-950 text-white selection:bg-primary/30 overflow-x-hidden">
       {/* High-Intelligence Background */}
       <div className="fixed inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full animate-pulse delay-700" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
       </div>
 
       <nav className="relative z-10 p-6 flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-2">
-          <div className="bg-blue-600 p-2 rounded-xl">
+          <div className="bg-primary p-2 rounded-xl">
             <Target className="w-6 h-6 text-white" />
           </div>
-          <span className="font-black text-2xl tracking-tighter uppercase italic">EmpireLaunch <span className="text-blue-500">AI</span></span>
+          <span className="font-black text-2xl tracking-tighter uppercase italic">EmpireLaunch <span className="text-primary">AI</span></span>
         </div>
         <div className="hidden md:flex items-center gap-2 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
           <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
@@ -142,7 +142,7 @@ export default function LandingPage() {
             className="max-w-4xl space-y-12"
           >
             {/* Tagline */}
-            <div className="inline-flex items-center gap-2 bg-blue-500/10 backdrop-blur-md px-5 py-2 rounded-full border border-blue-500/20 text-blue-400 font-bold text-xs uppercase tracking-[0.2em]">
+            <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-md px-5 py-2 rounded-full border border-primary/20 text-primary font-bold text-xs uppercase tracking-[0.2em]">
               <Stars className="w-4 h-4" />
               Autonomous Business Engineering
             </div>
@@ -150,7 +150,7 @@ export default function LandingPage() {
             {/* Hero Heading */}
             <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase italic">
               Command Your <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-500">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-cyan-300 to-purple-500">
                 Digital Empire
               </span>
             </h1>
@@ -163,12 +163,12 @@ export default function LandingPage() {
               <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
                 <div className="group relative w-full md:w-64">
                   <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                    <Languages className="w-4 h-4 text-blue-400" />
+                    <Languages className="w-4 h-4 text-primary" />
                   </div>
                   <select
                     value={language}
                     onChange={(e) => handleLanguageChange(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold appearance-none hover:bg-white/10 transition-all cursor-pointer focus:ring-2 focus:ring-blue-500/40 outline-none text-white"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold appearance-none hover:bg-white/10 transition-all cursor-pointer focus:ring-2 focus:ring-primary/40 outline-none text-white"
                   >
                     <option value="en-US" className="bg-slate-900">English (US)</option>
                     <option value="en-GB" className="bg-slate-900">English (UK)</option>
@@ -176,7 +176,7 @@ export default function LandingPage() {
                     <option value="fr-FR" className="bg-slate-900">Français</option>
                     <option value="de-DE" className="bg-slate-900">Deutsch</option>
                   </select>
-                  <ChevronDown className="absolute inset-y-0 right-4 my-auto w-4 h-4 text-slate-500 pointer-events-none" />
+                  <ChevronDown className="absolute inset-y-0 right-4 my-auto w-4 h-4 text-theme-background0 pointer-events-none" />
                 </div>
 
                 <div className="group relative w-full md:w-48">
@@ -192,13 +192,13 @@ export default function LandingPage() {
                     <option value="EUR" className="bg-slate-900">EUR (€)</option>
                     <option value="GBP" className="bg-slate-900">GBP (£)</option>
                   </select>
-                  <ChevronDown className="absolute inset-y-0 right-4 my-auto w-4 h-4 text-slate-500 pointer-events-none" />
+                  <ChevronDown className="absolute inset-y-0 right-4 my-auto w-4 h-4 text-theme-background0 pointer-events-none" />
                 </div>
               </div>
 
               <button
                 onClick={() => setIsTermsOpen(true)}
-                className="group relative bg-blue-600 text-white px-12 py-6 rounded-3xl font-black text-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 w-full md:w-auto"
+                className="group relative bg-primary text-white px-12 py-6 rounded-3xl font-black text-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 w-full md:w-auto"
               >
                 Get Started
                 <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
@@ -215,8 +215,8 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-32 w-full max-w-7xl">
           <div className="bg-white/5 p-8 rounded-[40px] border border-white/5 text-left space-y-4 hover:bg-white/[0.07] transition-all">
-            <div className="bg-blue-500/20 p-4 rounded-2xl w-fit">
-              <Shield className="w-8 h-8 text-blue-400" />
+            <div className="bg-primary/20 p-4 rounded-2xl w-fit">
+              <Shield className="w-8 h-8 text-primary" />
             </div>
             <h3 className="text-2xl font-black uppercase italic tracking-tighter">Secure Protocol</h3>
             <p className="text-slate-400 font-medium leading-relaxed">Your financial data and personal credentials are protected via encrypted sandboxes and hardware security modules.</p>

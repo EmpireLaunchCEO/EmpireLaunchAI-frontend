@@ -65,7 +65,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
     <div className="fixed inset-0 z-[999] bg-slate-950 flex items-center justify-center p-6 overflow-hidden">
       {/* Background Intelligence Animation */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full animate-pulse delay-700" />
       </div>
 
@@ -75,25 +75,25 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
         className="relative z-10 max-w-2xl w-full bg-theme-surface rounded-[48px] p-8 md:p-12 shadow-2xl text-center space-y-8"
       >
         <div className="space-y-4">
-          <div className="w-16 h-16 bg-blue-600 rounded-[24px] mx-auto flex items-center justify-center shadow-2xl shadow-blue-500/40">
+          <div className="w-16 h-16 bg-primary rounded-[24px] mx-auto flex items-center justify-center shadow-2xl shadow-primary/40">
             <Lock className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl font-black text-foreground tracking-tighter uppercase italic">
             Command Center Locked.
           </h2>
-          <p className="text-slate-500 text-sm font-medium italic">
+          <p className="text-theme-background0 text-sm font-medium italic">
             "Your Empire Engine is primed for execution, but an active operational license is required to initialize the neural link."
           </p>
         </div>
 
         {!showKeyInput ? (
           <div className="grid grid-cols-1 gap-4">
-            <div className="p-8 bg-blue-50 border-4 border-blue-600 rounded-[40px] text-left relative overflow-hidden">
-              <div className="absolute top-6 right-8 bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest animate-pulse">
+            <div className="p-8 bg-primary/10 border-4 border-primary rounded-[40px] text-left relative overflow-hidden">
+              <div className="absolute top-6 right-8 bg-primary text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest animate-pulse">
                 Active Plan
               </div>
-              <h3 className="text-2xl font-black text-blue-900 uppercase italic tracking-tighter mb-2">Empire Master</h3>
-              <p className="text-blue-700 text-xs font-bold mb-6">Full Autonomous Control • Unlimited Slots</p>
+              <h3 className="text-2xl font-black text-foreground uppercase italic tracking-tighter mb-2">Empire Master</h3>
+              <p className="text-primary text-xs font-bold mb-6">Full Autonomous Control • Unlimited Slots</p>
               
               <div className="space-y-3 mb-8">
                 {[
@@ -102,23 +102,23 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
                   'Hyper-Scale Trend Discovery',
                   'Direct Bank Bridge (Secure)'
                 ].map(f => (
-                  <div key={f} className="flex items-center gap-3 text-[10px] font-black text-blue-900 uppercase tracking-tight">
-                    <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                  <div key={f} className="flex items-center gap-3 text-[10px] font-black text-foreground uppercase tracking-tight">
+                    <CheckCircle2 className="w-4 h-4 text-primary" />
                     {f}
                   </div>
                 ))}
               </div>
 
               <div className="flex items-baseline gap-2 mb-8">
-                <span className="text-4xl font-black text-blue-900">$30</span>
-                <span className="text-blue-600 font-bold uppercase tracking-widest text-xs">/ Month</span>
+                <span className="text-4xl font-black text-foreground">$30</span>
+                <span className="text-primary font-bold uppercase tracking-widest text-xs">/ Month</span>
               </div>
 
               <div className="space-y-4">
                 <button
                   onClick={handleSimulatePayment}
                   disabled={isProcessing}
-                  className="w-full py-5 bg-blue-600 text-white rounded-[24px] font-black text-base uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-slate-900 transition-all shadow-xl shadow-blue-200 group"
+                  className="w-full py-5 bg-primary text-white rounded-[24px] font-black text-base uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-slate-900 transition-all shadow-xl shadow-blue-200 group"
                 >
                   {isProcessing ? (
                     <>
@@ -135,7 +135,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
 
                 <button
                   onClick={() => setShowKeyInput(true)}
-                  className="w-full py-4 text-blue-600 font-black text-[10px] uppercase tracking-widest hover:text-blue-800 transition-colors"
+                  className="w-full py-4 text-primary font-black text-[10px] uppercase tracking-widest hover:text-blue-800 transition-colors"
                 >
                   Have an access key? Redeem here
                 </button>
@@ -150,7 +150,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
           >
             <div>
               <h3 className="text-xl font-black text-foreground uppercase italic tracking-tighter">Redeem Key.</h3>
-              <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">Enter your master or beta access code</p>
+              <p className="text-theme-background0 text-xs font-bold uppercase tracking-widest mt-1">Enter your master or beta access code</p>
             </div>
 
             <div className="space-y-4">
@@ -160,9 +160,9 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
                   value={accessKey}
                   onChange={(e) => setAccessKey(e.target.value)}
                   placeholder="XXXX-XXXX-XXXX-XXXX"
-                  className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-5 text-sm font-black tracking-widest uppercase focus:border-blue-600 outline-none transition-all"
+                  className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-5 text-sm font-black tracking-widest uppercase focus:border-primary outline-none transition-all"
                 />
-                <Sparkles className="absolute right-5 top-5 w-5 h-5 text-blue-400" />
+                <Sparkles className="absolute right-5 top-5 w-5 h-5 text-primary" />
               </div>
               
               {error && (
@@ -172,7 +172,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
               <button
                 onClick={handleRedeemKey}
                 disabled={isProcessing || !accessKey}
-                className="w-full py-5 bg-slate-900 text-white rounded-[24px] font-black text-base uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-blue-600 transition-all shadow-xl disabled:opacity-50"
+                className="w-full py-5 bg-slate-900 text-white rounded-[24px] font-black text-base uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-primary transition-all shadow-xl disabled:opacity-50"
               >
                 {isProcessing ? "Validating..." : "Unlock Access"}
                 <CheckCircle2 className="w-5 h-5" />

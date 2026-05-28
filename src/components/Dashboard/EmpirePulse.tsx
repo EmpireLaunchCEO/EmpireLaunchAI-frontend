@@ -61,14 +61,14 @@ export function EmpirePulse() {
   if (loading || !pulse) {
     return (
       <div className="h-40 flex items-center justify-center bg-slate-900 rounded-[40px]">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   const getStatusIcon = (status: EmpirePulseState['status']) => {
     switch (status) {
-      case 'researching': return <Search className="w-6 h-6 text-blue-400" />;
+      case 'researching': return <Search className="w-6 h-6 text-primary" />;
       case 'producing': return <Cpu className="w-6 h-6 text-indigo-400" />;
       case 'deploying': return <BrandedGlobe size="md" animate={false} />;
       case 'optimizing': return <TrendingUp className="w-6 h-6 text-amber-400" />;
@@ -116,7 +116,7 @@ export function EmpirePulse() {
                 transition={{ duration: 2, repeat: Infinity }}
                 className={cn(
                   "absolute inset-2 rounded-2xl flex items-center justify-center transition-colors duration-500",
-                  hasPendingApprovals ? "bg-amber-500/10" : "bg-blue-600/10"
+                  hasPendingApprovals ? "bg-amber-500/10" : "bg-primary/10"
                 )}
               >
                 <AnimatePresence mode="wait">
@@ -138,7 +138,7 @@ export function EmpirePulse() {
                       className="relative flex items-center justify-center"
                     >
                       <BrandedGlobe size="lg" className="opacity-20 absolute inset-0 m-auto border-none bg-transparent shadow-none" />
-                      <Brain className="w-10 h-10 text-blue-500 relative z-10" />
+                      <Brain className="w-10 h-10 text-primary relative z-10" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -152,7 +152,7 @@ export function EmpirePulse() {
                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                className="absolute -inset-4"
              >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]" />
              </motion.div>
            )}
@@ -165,16 +165,16 @@ export function EmpirePulse() {
                     <span className="relative flex h-2 w-2">
                        <span className={cn(
                          "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75",
-                         hasPendingApprovals ? "bg-amber-400" : "bg-blue-400"
+                         hasPendingApprovals ? "bg-amber-400" : "bg-primary"
                        )}></span>
                        <span className={cn(
                          "relative inline-flex rounded-full h-2 w-2",
-                         hasPendingApprovals ? "bg-amber-500" : "bg-blue-500"
+                         hasPendingApprovals ? "bg-amber-500" : "bg-primary"
                        )}></span>
                     </span>
                     <span className={cn(
                       "text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-500",
-                      hasPendingApprovals ? "text-amber-400" : "text-blue-400"
+                      hasPendingApprovals ? "text-amber-400" : "text-primary"
                     )}>
                       {hasPendingApprovals ? 'Orchestrator Paused' : 'Empire Intelligence Pulse'}
                     </span>
@@ -194,7 +194,7 @@ export function EmpirePulse() {
               <div className="bg-theme-surface/5 border border-white/10 px-4 py-2 rounded-2xl flex items-center gap-3">
                  {hasPendingApprovals ? <Pause className="w-6 h-6 text-amber-500" /> : getStatusIcon(pulse?.status ?? 'idle')}
                  <div className="text-right">
-                    <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Active Neural Path</p>
+                    <p className="text-[8px] font-black text-theme-background0 uppercase tracking-widest">Active Neural Path</p>
                     <p className="text-xs font-bold text-white capitalize">{hasPendingApprovals ? 'Awaiting CEO' : (pulse?.status ?? 'idle')}</p>
                  </div>
               </div>
@@ -207,10 +207,10 @@ export function EmpirePulse() {
            <div className="space-y-4">
               <div className="space-y-2">
                  <div className="flex justify-between items-end">
-                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Phase Progression</span>
+                    <span className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Phase Progression</span>
                     <span className={cn(
                       "text-xs font-black transition-colors duration-500",
-                      hasPendingApprovals ? "text-amber-400" : "text-blue-400"
+                      hasPendingApprovals ? "text-amber-400" : "text-primary"
                     )}>{pulse.progress}%</span>
                  </div>
                  <div className="h-1.5 w-full bg-theme-surface/5 rounded-full overflow-hidden">
@@ -237,16 +237,16 @@ export function EmpirePulse() {
                        initial={{ y: 10, opacity: 0 }}
                        animate={{ y: 0, opacity: 1 }}
                        exit={{ y: -10, opacity: 0 }}
-                       className="text-blue-400/80"
+                       className="text-primary/80"
                      >
-                       <span className="text-blue-500 font-bold mr-2">{'>'}</span>
+                       <span className="text-primary font-bold mr-2">{'>'}</span>
                        {pulse.logs[activeLogIndex]}
                      </motion.div>
                    </AnimatePresence>
                    <div className="absolute top-2 right-3 flex gap-1">
-                      <div className="w-1 h-1 rounded-full bg-blue-500 animate-pulse" />
-                      <div className="w-1 h-1 rounded-full bg-blue-500/50 animate-pulse delay-75" />
-                      <div className="w-1 h-1 rounded-full bg-blue-500/20 animate-pulse delay-150" />
+                      <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
+                      <div className="w-1 h-1 rounded-full bg-primary/50 animate-pulse delay-75" />
+                      <div className="w-1 h-1 rounded-full bg-primary/20 animate-pulse delay-150" />
                    </div>
                 </div>
               )}
@@ -257,16 +257,16 @@ export function EmpirePulse() {
 
         <div className="grid grid-cols-2 md:grid-cols-1 gap-4 shrink-0">
            <div className="text-center md:text-left">
-              <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-0.5">CPU Load</p>
+              <p className="text-[8px] font-black text-theme-background0 uppercase tracking-widest mb-0.5">CPU Load</p>
               <div className="flex items-center gap-2">
-                 <Zap className={cn("w-3 h-3 transition-colors duration-500", hasPendingApprovals ? "text-slate-500" : "text-amber-500")} />
+                 <Zap className={cn("w-3 h-3 transition-colors duration-500", hasPendingApprovals ? "text-theme-background0" : "text-amber-500")} />
                  <span className="text-sm font-black text-white">{hasPendingApprovals ? '2%' : '42%'}</span>
               </div>
            </div>
            <div className="text-center md:text-left">
-              <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-0.5">Sync Velocity</p>
+              <p className="text-[8px] font-black text-theme-background0 uppercase tracking-widest mb-0.5">Sync Velocity</p>
               <div className="flex items-center gap-2">
-                 <TrendingUp className={cn("w-3 h-3 transition-colors duration-500", hasPendingApprovals ? "text-slate-500" : "text-emerald-500")} />
+                 <TrendingUp className={cn("w-3 h-3 transition-colors duration-500", hasPendingApprovals ? "text-theme-background0" : "text-emerald-500")} />
                  <span className="text-sm font-black text-white">{hasPendingApprovals ? '0.1 GB/s' : '1.2 GB/s'}</span>
               </div>
            </div>

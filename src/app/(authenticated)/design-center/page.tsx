@@ -21,7 +21,7 @@ export default function DesignCenterPage() {
           <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
             Creative Engine.
           </h1>
-          <p className="text-sm md:text-base text-slate-500 font-medium">
+          <p className="text-sm md:text-base text-theme-background0 font-medium">
             Execute manual creative tasks with AI-generated strategic blueprints.
           </p>
         </div>

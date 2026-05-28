@@ -218,7 +218,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                       
                       <button
                         onClick={handleClose}
-                        className="text-slate-500 font-bold text-xs uppercase tracking-[0.2em] hover:text-slate-300 transition-colors"
+                        className="text-theme-background0 font-bold text-xs uppercase tracking-[0.2em] hover:text-slate-300 transition-colors"
                       >
                         I'll Check Manually
                       </button>
@@ -269,7 +269,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
             
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/5 rounded-full blur-[100px] -mr-32 -mt-32" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-600/5 rounded-full blur-[80px] -ml-24 -mb-24" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary/5 rounded-full blur-[80px] -ml-24 -mb-24" />
           </motion.div>
         </div>
       )}

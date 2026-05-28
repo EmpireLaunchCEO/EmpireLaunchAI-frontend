@@ -24,15 +24,15 @@ const platforms = [
   { id: 'tiktok', name: 'TikTok (Content/Shop)', icon: Video, color: 'text-pink-600', bg: 'bg-pink-50' },
   { id: 'instagram', name: 'Instagram', icon: Camera, color: 'text-purple-600', bg: 'bg-purple-50' },
   { id: 'youtube', name: 'YouTube (Shorts/Main)', icon: Video, color: 'text-red-600', bg: 'bg-red-50' },
-  { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-primary', bg: 'bg-primary/10' },
   { id: 'gmail', name: 'Gmail (AI Assistant)', icon: Mail, color: 'text-red-500', bg: 'bg-red-50' },
   { id: 'pinterest', name: 'Pinterest', icon: Camera, color: 'text-rose-600', bg: 'bg-rose-50' },
   { id: 'shopify', name: 'Shopify Store', icon: Globe, color: 'text-green-600', bg: 'bg-green-50' },
   { id: 'etsy', name: 'Etsy Shop', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
   { id: 'amazon', name: 'Amazon Seller', icon: ShoppingBag, color: 'text-yellow-600', bg: 'bg-yellow-50' },
   { id: 'fiverr', name: 'Fiverr Gigs', icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  { id: 'canva', name: 'Canva (Design)', icon: Stars, color: 'text-blue-500', bg: 'bg-blue-50' },
-  { id: 'bannerbear', name: 'Bannerbear (AI Assets)', icon: Stars, color: 'text-blue-900', bg: 'bg-slate-100' },
+  { id: 'canva', name: 'Canva (Design)', icon: Stars, color: 'text-primary', bg: 'bg-primary/10' },
+  { id: 'bannerbear', name: 'Bannerbear (AI Assets)', icon: Stars, color: 'text-foreground', bg: 'bg-slate-100' },
   { id: 'kittle', name: 'Kittle (Design)', icon: Stars, color: 'text-indigo-600', bg: 'bg-indigo-50' },
   { id: 'capcut', name: 'Capcut (Video)', icon: Video, color: 'text-foreground', bg: 'bg-theme-background' },
 ];
@@ -49,7 +49,7 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
     <div className="space-y-10 max-w-4xl mx-auto pb-20">
       <div className="text-center space-y-4">
         <h2 className="text-4xl font-black text-foreground tracking-tight">Platforms You Can Use.</h2>
-        <p className="text-slate-500 text-lg">Your AI partner is equipped to manage growth across these channels. You'll securely link your accounts in the Dashboard.</p>
+        <p className="text-theme-background0 text-lg">Your AI partner is equipped to manage growth across these channels. You'll securely link your accounts in the Dashboard.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -61,7 +61,7 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
               key={platform.id}
               whileHover={{ y: -5 }}
               className={cn(
-                "p-5 md:p-6 rounded-[28px] md:rounded-[32px] border-2 transition-all flex flex-col justify-between h-56 md:h-64 relative overflow-hidden group border-theme bg-theme-surface hover:border-blue-600 shadow-sm"
+                "p-5 md:p-6 rounded-[28px] md:rounded-[32px] border-2 transition-all flex flex-col justify-between h-56 md:h-64 relative overflow-hidden group border-theme bg-theme-surface hover:border-primary shadow-sm"
               )}
             >
               <div className="flex justify-between items-start">
@@ -78,7 +78,7 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
                 <div className="mt-3 md:mt-4 flex flex-col gap-2">
                   <button 
                     onClick={() => setConsultingPlatform(platform.id)}
-                    className="w-full py-2.5 md:py-3 px-4 bg-blue-600/10 text-blue-700 rounded-xl md:rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-2 group/btn"
+                    className="w-full py-2.5 md:py-3 px-4 bg-primary/10 text-primary rounded-xl md:rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 group/btn"
                   >
                     <Zap className="w-3 md:w-3.5 h-3 md:h-3.5 fill-current" />
                     View Strategy
@@ -101,8 +101,8 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
           whileHover={{ y: -5 }}
           className="p-6 rounded-[32px] border-2 border-dashed border-theme bg-theme-background/50 flex flex-col justify-center items-center h-64 text-center space-y-4 group"
         >
-          <div className="w-16 h-16 rounded-full bg-theme-surface border-2 border-theme flex items-center justify-center shadow-sm group-hover:border-blue-400 transition-colors">
-            <Plus className="w-8 h-8 text-slate-300 group-hover:text-blue-500 transition-colors" />
+          <div className="w-16 h-16 rounded-full bg-theme-surface border-2 border-theme flex items-center justify-center shadow-sm group-hover:border-primary transition-colors">
+            <Plus className="w-8 h-8 text-slate-300 group-hover:text-primary transition-colors" />
           </div>
           <div>
             <h3 className="text-xl font-bold text-foreground">And Many More.</h3>

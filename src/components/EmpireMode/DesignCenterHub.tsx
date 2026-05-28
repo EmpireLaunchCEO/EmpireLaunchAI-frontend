@@ -37,7 +37,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
 
   const getStatusColor = (status: DesignTask['status']) => {
     switch (status) {
-      case 'blueprint_ready': return 'bg-blue-50 text-blue-600 border-blue-100';
+      case 'blueprint_ready': return 'bg-primary/10 text-primary border-primary/20';
       case 'editing': return 'bg-amber-50 text-amber-600 border-amber-100';
       case 'review_required': return 'bg-emerald-50 text-emerald-600 border-emerald-100';
     }
@@ -59,14 +59,14 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
         {[
           { name: 'Kittl', icon: Palette, color: 'text-indigo-600', bg: 'bg-indigo-50', link: 'https://www.kittl.com' },
           { name: 'CapCut', icon: Scissors, color: 'text-foreground', bg: 'bg-slate-100', link: 'https://www.capcut.com' },
-          { name: 'Canva', icon: Layout, color: 'text-blue-500', bg: 'bg-blue-50', link: 'https://www.canva.com' },
+          { name: 'Canva', icon: Layout, color: 'text-primary', bg: 'bg-primary/10', link: 'https://www.canva.com' },
         ].map((p) => (
           <a 
             key={p.name}
             href={p.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-8 bg-theme-surface border-2 border-slate-50 rounded-[40px] hover:border-blue-600 transition-all group shadow-sm flex flex-col items-center text-center space-y-4"
+            className="p-8 bg-theme-surface border-2 border-theme-background rounded-[40px] hover:border-primary transition-all group shadow-sm flex flex-col items-center text-center space-y-4"
           >
             <div className={cn("p-4 rounded-2xl group-hover:scale-110 transition-transform", p.bg)}>
               <p.icon className={cn("w-8 h-8", p.color)} />
@@ -89,7 +89,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
               </div>
               <h2 className="text-xl font-black text-foreground tracking-tight uppercase italic">Creative Queue.</h2>
            </div>
-           <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-4 py-2 rounded-xl border border-blue-100">
+           <button className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
              Sync External Tools
            </button>
         </div>
@@ -97,20 +97,20 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
         <div className="grid grid-cols-1 gap-4">
            {loading ? (
              <div className="p-12 flex justify-center">
-               <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+               <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
              </div>
            ) : tasks.map((task) => (
              <motion.button
                key={task.id}
                onClick={() => onSelectTask(task)}
                whileHover={{ x: 8 }}
-               className="p-6 bg-theme-surface border-2 border-slate-50 rounded-[32px] shadow-sm flex items-center justify-between group text-left"
+               className="p-6 bg-theme-surface border-2 border-theme-background rounded-[32px] shadow-sm flex items-center justify-between group text-left"
              >
                <div className="flex items-center gap-6">
                   <div className={cn(
                     "w-16 h-16 rounded-2xl flex items-center justify-center shadow-inner",
                     task.platform === 'Kittl' ? 'bg-indigo-50 text-indigo-600' :
-                    task.platform === 'CapCut' ? 'bg-theme-background text-foreground' : 'bg-blue-50 text-blue-500'
+                    task.platform === 'CapCut' ? 'bg-theme-background text-foreground' : 'bg-primary/10 text-primary'
                   )}>
                      {getPlatformIcon(task.platform)}
                   </div>
@@ -136,7 +136,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
                         {task.dueDate}
                      </div>
                   </div>
-                  <div className="p-4 bg-theme-background rounded-2xl group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
+                  <div className="p-4 bg-theme-background rounded-2xl group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                      <ChevronRight className="w-5 h-5" />
                   </div>
                </div>
@@ -146,7 +146,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
       </div>
 
       {/* AI Strategy Note */}
-      <div className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[40px] p-10 text-white relative overflow-hidden shadow-2xl shadow-indigo-200">
+      <div className="bg-gradient-to-br from-indigo-600 to-primary rounded-[40px] p-10 text-white relative overflow-hidden shadow-2xl shadow-indigo-200">
          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="space-y-6">
                <div className="inline-flex items-center gap-2 bg-theme-surface/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/20">

@@ -93,7 +93,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
             <Globe 
               className={cn(
                 "w-10 h-10 transition-colors",
-                isRefreshing ? "text-blue-600" : "text-slate-300"
+                isRefreshing ? "text-primary" : "text-slate-300"
               )}
             />
           </motion.div>

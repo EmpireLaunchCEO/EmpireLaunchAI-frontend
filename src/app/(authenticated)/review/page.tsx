@@ -134,7 +134,7 @@ export default function ReviewQueue() {
           <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-3">
             Review Queue
           </h1>
-          <p className="text-slate-500 mt-2 font-medium text-sm md:text-base">
+          <p className="text-theme-background0 mt-2 font-medium text-sm md:text-base">
             {isLoading ? 'Loading items...' : `AI has prepared ${tasks.length} items for your review.`}
           </p>
         </div>
@@ -144,7 +144,7 @@ export default function ReviewQueue() {
             Filter
           </button>
           {!isLoading && tasks.length > 0 && (
-            <button className="flex-[2] md:flex-none bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center justify-center gap-2 text-sm">
+            <button className="flex-[2] md:flex-none bg-primary text-white px-6 py-2.5 rounded-xl font-bold hover:bg-primary transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 text-sm">
               <CheckCircle2 className="w-4 h-4" />
               Approve All
             </button>
@@ -169,19 +169,19 @@ export default function ReviewQueue() {
           ))
         ) : !isLoading && (
           <div className="bg-theme-surface rounded-3xl border border-theme p-12 text-center">
-            <p className="text-slate-500 italic text-lg">Your review queue is currently empty.</p>
+            <p className="text-theme-background0 italic text-lg">Your review queue is currently empty.</p>
             <p className="text-slate-400 text-sm mt-2">The AI is working on new suggestions based on your goals.</p>
           </div>
         )}
         
         {tasks.length > 0 && (
-          <div className="bg-blue-50 border border-blue-100 rounded-3xl p-6 flex items-start gap-4">
-            <div className="bg-blue-600 p-2 rounded-xl text-white">
+          <div className="bg-primary/10 border border-primary/20 rounded-3xl p-6 flex items-start gap-4">
+            <div className="bg-primary p-2 rounded-xl text-white">
               <Stars className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-blue-900">AI Strategy Note</h4>
-              <p className="text-blue-700 text-sm mt-1 leading-relaxed">
+              <h4 className="font-bold text-foreground">AI Strategy Note</h4>
+              <p className="text-primary text-sm mt-1 leading-relaxed">
                 I've prioritized these items based on current market trends and your active goals. 
                 Approving these will help maintain your growth momentum.
               </p>

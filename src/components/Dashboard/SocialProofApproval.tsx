@@ -77,7 +77,7 @@ export function SocialProofApproval() {
               </div>
 
               <div className="relative">
-                <Quote className="absolute -top-2 -left-2 w-8 h-8 text-slate-50 -z-0" />
+                <Quote className="absolute -top-2 -left-2 w-8 h-8 text-theme-background -z-0" />
                 <p className="relative z-10 text-sm font-bold text-slate-700 leading-relaxed italic">
                   "{rating.review}"
                 </p>

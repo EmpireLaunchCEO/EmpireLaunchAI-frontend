@@ -29,13 +29,13 @@ const availablePlatforms = [
   { id: 'tiktok', name: 'TikTok', icon: Video, color: 'text-pink-600', bg: 'bg-pink-50' },
   { id: 'shopify', name: 'Shopify', icon: Globe, color: 'text-green-600', bg: 'bg-green-50' },
   { id: 'instagram', name: 'Instagram', icon: Camera, color: 'text-purple-600', bg: 'bg-purple-50' },
-  { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-primary', bg: 'bg-primary/10' },
   { id: 'youtube', name: 'YouTube', icon: Video, color: 'text-red-600', bg: 'bg-red-50' },
   { id: 'fiverr', name: 'Fiverr', icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
   { id: 'kittl', name: 'Kittl', icon: Palette, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-  { id: 'capcut', name: 'CapCut', icon: Video, color: 'text-blue-500', bg: 'bg-blue-50' },
+  { id: 'capcut', name: 'CapCut', icon: Video, color: 'text-primary', bg: 'bg-primary/10' },
   { id: 'canva', name: 'Canva', icon: Stars, color: 'text-cyan-500', bg: 'bg-cyan-50' },
-  { id: 'bannerbear', name: 'Bannerbear', icon: Stars, color: 'text-blue-900', bg: 'bg-slate-100' },
+  { id: 'bannerbear', name: 'Bannerbear', icon: Stars, color: 'text-foreground', bg: 'bg-slate-100' },
 ];
 
 interface GuidedLinkingProps {
@@ -192,18 +192,18 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
       {/* Search Bar */}
       <div className="relative group">
         <div className="absolute inset-y-0 left-8 flex items-center pointer-events-none">
-          <Search className="h-6 w-6 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+          <Search className="h-6 w-6 text-slate-400 group-focus-within:text-primary transition-colors" />
         </div>
         <input
           type="text"
           placeholder="Search for an app to link (e.g. Gmail, Etsy...)"
-          className="w-full bg-theme-surface border-4 border-theme rounded-[32px] py-8 pl-20 pr-8 text-2xl font-bold focus:border-blue-600 focus:ring-0 transition-all shadow-2xl shadow-slate-200/50 placeholder:text-slate-300"
+          className="w-full bg-theme-surface border-4 border-theme rounded-[32px] py-8 pl-20 pr-8 text-2xl font-bold focus:border-primary focus:ring-0 transition-all shadow-2xl shadow-slate-200/50 placeholder:text-slate-300"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         
         {/* Animated Ring on focus */}
-        <div className="absolute inset-0 -z-10 bg-blue-600/5 blur-2xl rounded-[32px] opacity-0 group-focus-within:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 -z-10 bg-primary/5 blur-2xl rounded-[32px] opacity-0 group-focus-within:opacity-100 transition-opacity" />
         
         {/* Search Results Dropdown */}
         <AnimatePresence>
@@ -230,7 +230,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                   ))}
                 </div>
               ) : (
-                <div className="p-8 text-center text-slate-500 font-medium">
+                <div className="p-8 text-center text-theme-background0 font-medium">
                   No platforms found matching "{searchQuery}"
                 </div>
               )}
@@ -248,7 +248,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
         >
           <div className="flex items-center justify-between px-2">
             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Established Links</h4>
-            <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{connectedPlatforms.length} Neural Syncs</span>
+            <span className="text-[10px] font-black text-primary bg-primary/10 px-2 py-1 rounded-full">{connectedPlatforms.length} Neural Syncs</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {connectedPlatforms.map(id => {
@@ -284,10 +284,10 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
           >
             <div className="relative z-10 flex flex-col md:flex-row gap-8">
               <div className="shrink-0">
-                <div className="w-20 h-20 rounded-[28px] bg-blue-600 flex items-center justify-center shadow-2xl shadow-blue-500/40 relative">
+                <div className="w-20 h-20 rounded-[28px] bg-primary flex items-center justify-center shadow-2xl shadow-primary/40 relative">
                   <Stars className="w-10 h-10 text-white" />
                   {isTyping && (
-                    <div className="absolute -top-2 -right-2 bg-blue-400 rounded-full p-1.5 animate-bounce shadow-lg">
+                    <div className="absolute -top-2 -right-2 bg-primary rounded-full p-1.5 animate-bounce shadow-lg">
                       <div className="flex gap-1">
                         <div className="w-1 h-1 bg-theme-surface rounded-full" />
                         <div className="w-1 h-1 bg-theme-surface rounded-full animate-pulse" />
@@ -301,12 +301,12 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               <div className="space-y-6 flex-1">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <h3 className="text-sm font-black uppercase tracking-[0.3em] text-blue-400">Empire Teacher</h3>
-                    <div className="px-2 py-1 bg-blue-500/10 rounded-full border border-blue-500/20">
+                    <h3 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Empire Teacher</h3>
+                    <div className="px-2 py-1 bg-primary/10 rounded-full border border-primary/20">
                       <span className="text-[10px] font-black text-blue-300 uppercase tracking-widest">Active</span>
                     </div>
                   </div>
-                  <button onClick={() => setShowTeacher(false)} className="text-slate-500 hover:text-white transition-colors">
+                  <button onClick={() => setShowTeacher(false)} className="text-theme-background0 hover:text-white transition-colors">
                     <X className="w-6 h-6" />
                   </button>
                 </div>
@@ -314,7 +314,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 <div className="relative min-h-[80px]">
                   <p className="text-2xl font-bold leading-snug tracking-tight text-slate-100">
                     {displayedMessage}
-                    {isTyping && <span className="inline-block w-2 h-6 bg-blue-500 ml-1 animate-pulse" />}
+                    {isTyping && <span className="inline-block w-2 h-6 bg-primary ml-1 animate-pulse" />}
                   </p>
                 </div>
 
@@ -323,7 +323,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                     <>
                       <button 
                         onClick={() => handleSelectPlatform('gmail')}
-                        className="px-8 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 shadow-lg shadow-blue-600/20 group"
+                        className="px-8 py-4 bg-primary hover:bg-primary rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 shadow-lg shadow-primary/20 group"
                       >
                         Start with Gmail <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </button>
@@ -343,7 +343,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                   ) : connectedPlatforms.length >= 2 ? (
                     <button 
                       onClick={handleComplete}
-                      className="px-10 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all flex items-center gap-3 shadow-2xl shadow-blue-600/40 group animate-pulse"
+                      className="px-10 py-5 bg-gradient-to-r from-primary to-indigo-600 hover:from-primary hover:to-indigo-500 rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all flex items-center gap-3 shadow-2xl shadow-primary/40 group animate-pulse"
                     >
                       Neural Sync Complete: Ready to move on <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
@@ -357,7 +357,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
             </div>
             
             {/* Background elements for premium feel */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600 rounded-full blur-[120px] opacity-10 -mr-48 -mt-48" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-10 -mr-48 -mt-48" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-600 rounded-full blur-[100px] opacity-10 -ml-32 -mb-32" />
           </motion.div>
         )}
@@ -403,10 +403,10 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               {/* Step 1: Auth / Email Auth */}
               <div className={cn(
                 "p-10 rounded-[40px] border-2 transition-all relative",
-                linkingStep === 'auth' ? "border-blue-600 bg-blue-50/30 ring-4 ring-blue-50" : "border-theme bg-theme-background/50 opacity-60"
+                linkingStep === 'auth' ? "border-primary bg-primary/10/30 ring-4 ring-primary/10" : "border-theme bg-theme-background/50 opacity-60"
               )}>
                 <div className="flex items-center justify-between mb-8">
-                  <div className="w-12 h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center text-blue-600">
+                  <div className="w-12 h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center text-primary">
                     <Lock className="w-6 h-6" />
                   </div>
                   {linkingStep === 'keys' && <CheckCircle2 className="w-8 h-8 text-green-500" />}
@@ -414,7 +414,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 <h3 className="text-2xl font-bold text-foreground mb-3">
                   {currentPlatform.id === 'imap' ? 'Email Credentials' : 'Secure Authorization'}
                 </h3>
-                <p className="text-base font-medium text-slate-500 leading-relaxed mb-8">
+                <p className="text-base font-medium text-theme-background0 leading-relaxed mb-8">
                   {currentPlatform.id === 'imap' 
                     ? "Enter your email and App Password to allow IMAP access."
                     : `Connect your ${currentPlatform.name} account via our encrypted OAuth gateway.`
@@ -426,12 +426,12 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                        <input 
                          type="email" 
                          placeholder="Email Address"
-                         className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-blue-600 transition-colors"
+                         className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors"
                        />
                     )}
                     <button 
                       onClick={handleAuth}
-                      className="w-full py-5 bg-blue-600 text-white rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-blue-200"
+                      className="w-full py-5 bg-primary text-white rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-blue-200"
                     >
                       {currentPlatform.id === 'imap' ? 'Authenticate IMAP' : `Authorize ${currentPlatform.name}`}
                     </button>
@@ -442,15 +442,15 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               {/* Step 2: Keys */}
               <div className={cn(
                 "p-10 rounded-[40px] border-2 transition-all",
-                linkingStep === 'keys' ? "border-blue-600 bg-blue-50/30 ring-4 ring-blue-50" : "border-theme bg-theme-background/50 opacity-40"
+                linkingStep === 'keys' ? "border-primary bg-primary/10/30 ring-4 ring-primary/10" : "border-theme bg-theme-background/50 opacity-40"
               )}>
                 <div className="flex items-center justify-between mb-8">
-                  <div className="w-12 h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center text-blue-600">
+                  <div className="w-12 h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center text-primary">
                     <Zap className="w-6 h-6" />
                   </div>
                 </div>
                 <h3 className="text-2xl font-bold text-foreground mb-3">Neural Handshake</h3>
-                <p className="text-base font-medium text-slate-500 leading-relaxed mb-8">
+                <p className="text-base font-medium text-theme-background0 leading-relaxed mb-8">
                   Verifying API endpoints and establishing autonomous bridge protocols.
                 </p>
                 
@@ -466,7 +466,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                     </div>
                     <button 
                       onClick={handleLink}
-                      className="w-full py-5 bg-slate-900 text-white rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-all shadow-2xl"
+                      className="w-full py-5 bg-slate-900 text-white rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-primary transition-all shadow-2xl"
                     >
                       Finalize Neural Link
                     </button>

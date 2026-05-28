@@ -23,7 +23,7 @@ export const GrowthTracker = ({
   const percentage = progress !== undefined ? progress : Math.min(Math.round((currentValue / targetValue) * 100), 100);
   
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-slate-50 shadow-sm relative overflow-hidden group">
+    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme-background shadow-sm relative overflow-hidden group">
       <div className="flex flex-col md:flex-row gap-8 items-center">
         {/* Holographic Progress Ring */}
         <div className="relative w-48 h-48 shrink-0">
@@ -60,14 +60,14 @@ export const GrowthTracker = ({
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Status</span>
             <span className="text-4xl font-black text-foreground tracking-tighter">{percentage}%</span>
-            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full mt-2 tracking-wide">
+            <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full mt-2 tracking-wide">
               Level 04
             </span>
           </div>
           
           {/* Glowing particles effect */}
           <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
-             <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-500 rounded-full animate-ping" />
+             <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary rounded-full animate-ping" />
              <div className="absolute bottom-1/3 right-1/4 w-1.5 h-1.5 bg-purple-500 rounded-full animate-ping delay-700" />
           </div>
         </div>
@@ -94,7 +94,7 @@ export const GrowthTracker = ({
             </div>
           </div>
 
-          <button className="w-full bg-slate-900 text-white rounded-2xl py-4 font-bold flex items-center justify-center gap-2 hover:bg-blue-600 transition-all group/btn shadow-lg shadow-slate-200">
+          <button className="w-full bg-slate-900 text-white rounded-2xl py-4 font-bold flex items-center justify-center gap-2 hover:bg-primary transition-all group/btn shadow-lg shadow-slate-200">
             Strategic Expansion
             <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </button>
@@ -108,7 +108,7 @@ export const GrowthTracker = ({
           </div>
           <div>
             <p className="text-xs font-bold text-foreground">+12.4% WoW Growth</p>
-            <p className="text-[10px] text-slate-500">AI projection: Target hit in 9 days</p>
+            <p className="text-[10px] text-theme-background0">AI projection: Target hit in 9 days</p>
           </div>
         </div>
         <div className="flex -space-x-2">

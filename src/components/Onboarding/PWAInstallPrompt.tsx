@@ -66,7 +66,7 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onDismiss })
               </div>
 
               <div className="space-y-6">
-                <p className="text-sm font-bold text-slate-500 italic leading-relaxed">
+                <p className="text-sm font-bold text-theme-background0 italic leading-relaxed">
                   "To access full autonomous capabilities and real-time push notifications, install EmpireLaunch to your home screen."
                 </p>
 

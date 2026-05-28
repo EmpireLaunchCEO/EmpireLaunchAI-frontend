@@ -54,7 +54,7 @@ export function ActivityStream() {
   const getIconColor = (type: ActivityEvent['type']) => {
     switch (type) {
       case 'sale': return 'bg-emerald-500 text-white';
-      case 'post': return 'bg-blue-500 text-white';
+      case 'post': return 'bg-primary text-white';
       case 'comment': return 'bg-purple-500 text-white';
       case 'milestone': return 'bg-slate-900 text-white';
       case 'research': return 'bg-amber-500 text-white';
@@ -65,7 +65,7 @@ export function ActivityStream() {
 
   if (loading) {
     return <div className="h-40 flex items-center justify-center">
-      <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
     </div>;
   }
 
@@ -106,8 +106,8 @@ export function ActivityStream() {
                     </h4>
                     
                     {activity.meta?.reasoning && (
-                      <p className="text-[10px] text-slate-500 italic leading-relaxed bg-theme-background p-2 rounded-lg border border-theme">
-                        <span className="text-blue-500 font-bold not-italic mr-1">AI Logic:</span>
+                      <p className="text-[10px] text-theme-background0 italic leading-relaxed bg-theme-background p-2 rounded-lg border border-theme">
+                        <span className="text-primary font-bold not-italic mr-1">AI Logic:</span>
                         {activity.meta.reasoning}
                       </p>
                     )}
@@ -125,7 +125,7 @@ export function ActivityStream() {
                       href={activity.meta.link} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="shrink-0 p-2 bg-theme-background text-slate-400 hover:bg-blue-600 hover:text-white rounded-xl transition-all"
+                      className="shrink-0 p-2 bg-theme-background text-slate-400 hover:bg-primary hover:text-white rounded-xl transition-all"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
@@ -146,7 +146,7 @@ export function ActivityStream() {
         ))}
       </div>
       
-      <button className="w-full py-4 bg-theme-background text-slate-500 font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-100 transition-colors">
+      <button className="w-full py-4 bg-theme-background text-theme-background0 font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-100 transition-colors">
         Full History
       </button>
     </div>

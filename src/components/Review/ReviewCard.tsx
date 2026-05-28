@@ -54,7 +54,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
   
   return (
     <div className="bg-theme-surface rounded-3xl shadow-sm border border-theme overflow-hidden">
-      <div className="p-4 md:p-6 border-b border-slate-50 flex flex-col md:flex-row justify-between items-start md:items-center bg-theme-background/50 gap-4">
+      <div className="p-4 md:p-6 border-b border-theme-background flex flex-col md:flex-row justify-between items-start md:items-center bg-theme-background/50 gap-4">
         <div className="flex items-center gap-3">
           <div className="bg-theme-surface p-2 rounded-xl shadow-sm">
             <Icon className={`w-5 h-5 ${config.color}`} />
@@ -96,7 +96,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
                 type="text" 
                 value={currentTitle}
                 onChange={(e) => setCurrentTitle(e.target.value)}
-                className="w-full bg-theme-background/50 border border-theme rounded-xl px-4 py-3 font-semibold text-foreground outline-none focus:border-blue-600 transition-colors absolute inset-0 bg-transparent"
+                className="w-full bg-theme-background/50 border border-theme rounded-xl px-4 py-3 font-semibold text-foreground outline-none focus:border-primary transition-colors absolute inset-0 bg-transparent"
               />
               {/* Spacer to maintain height since input is absolute */}
               <div className="px-4 py-3 font-semibold opacity-0 pointer-events-none">{currentTitle || ' '}</div>
@@ -110,7 +110,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
                 value={currentDescription}
                 onChange={(e) => setCurrentDescription(e.target.value)}
                 rows={4}
-                className="w-full bg-theme-background/50 border border-theme rounded-xl px-4 py-3 text-slate-600 text-sm leading-relaxed outline-none focus:border-blue-600 transition-colors resize-none absolute inset-0 bg-transparent"
+                className="w-full bg-theme-background/50 border border-theme rounded-xl px-4 py-3 text-slate-600 text-sm leading-relaxed outline-none focus:border-primary transition-colors resize-none absolute inset-0 bg-transparent"
               />
               {/* Spacer */}
               <div className="px-4 py-3 text-sm leading-relaxed opacity-0 pointer-events-none whitespace-pre-wrap min-h-[112px]">{currentDescription || ' '}</div>
@@ -131,7 +131,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
               <div className="flex flex-wrap gap-2 animate-in fade-in slide-in-from-left-2 duration-300">
                 <button 
                   onClick={() => setIsComparing(true)}
-                  className="flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-100 transition-colors border border-blue-100 shrink-0"
+                  className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-primary/20 transition-colors border border-primary/20 shrink-0"
                 >
                   <ArrowLeftRight className="w-4 h-4" />
                   Compare
@@ -152,7 +152,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
             </button>
             <button 
               onClick={() => onApprove?.(id)}
-              className="flex-[2] md:flex-none bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-100"
+              className="flex-[2] md:flex-none bg-primary text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-primary transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
             >
               <Send className="w-4 h-4" />
               Approve

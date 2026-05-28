@@ -41,7 +41,7 @@ const Cycle = ({ name, status, progress, nextAction }: CycleProps) => (
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         {status === 'active' ? (
-          <Activity className="w-6 h-6 text-blue-600 animate-pulse" />
+          <Activity className="w-6 h-6 text-primary animate-pulse" />
         ) : status === 'pending-approval' ? (
           <AlertCircle className="w-6 h-6 text-amber-500" />
         ) : (
@@ -55,13 +55,13 @@ const Cycle = ({ name, status, progress, nextAction }: CycleProps) => (
         <h4 className="font-bold text-foreground truncate">{name}</h4>
         <span className={cn(
           "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded",
-          status === 'active' ? "bg-blue-50 text-blue-600" : 
-          status === 'pending-approval' ? "bg-amber-50 text-amber-600" : "bg-theme-background text-slate-500"
+          status === 'active' ? "bg-primary/10 text-primary" : 
+          status === 'pending-approval' ? "bg-amber-50 text-amber-600" : "bg-theme-background text-theme-background0"
         )}>
           {status}
         </span>
       </div>
-      <p className="text-xs text-slate-500 truncate">Next: {nextAction}</p>
+      <p className="text-xs text-theme-background0 truncate">Next: {nextAction}</p>
     </div>
 
     <div className="flex items-center gap-2">

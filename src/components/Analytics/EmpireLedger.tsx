@@ -28,9 +28,9 @@ export function EmpireLedger() {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Ledger */}
       <div className="lg:col-span-2 bg-theme-surface rounded-[40px] border border-theme shadow-sm overflow-hidden">
-        <div className="p-8 border-b border-slate-50 flex justify-between items-center">
+        <div className="p-8 border-b border-theme-background flex justify-between items-center">
           <h3 className="text-xl font-bold text-foreground">Live Empire Ledger</h3>
-          <button className="text-sm font-bold text-blue-600 flex items-center gap-1">
+          <button className="text-sm font-bold text-primary flex items-center gap-1">
             Export CSV <ChevronRight className="w-4 h-4" />
           </button>
         </div>
@@ -44,7 +44,7 @@ export function EmpireLedger() {
                 <th className="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Amount</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-theme-background">
               {transactions.map((tx) => (
                 <tr key={tx.id} className="hover:bg-theme-background/50 transition-colors">
                   <td className="px-8 py-6">
@@ -87,7 +87,7 @@ export function EmpireLedger() {
       <div className="bg-slate-900 rounded-[40px] p-8 text-white flex flex-col">
         <div className="flex justify-between items-start mb-8">
           <div className="bg-theme-surface/10 p-3 rounded-2xl">
-            <ShieldCheck className="w-6 h-6 text-blue-400" />
+            <ShieldCheck className="w-6 h-6 text-primary" />
           </div>
           <button className="text-white/40 hover:text-white transition-colors">
             <Info className="w-5 h-5" />
@@ -115,14 +115,14 @@ export function EmpireLedger() {
 
           <div className="h-4 bg-theme-surface/10 rounded-full overflow-hidden relative">
             <div 
-              className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full transition-all duration-1000"
+              className="h-full bg-gradient-to-r from-primary to-primary rounded-full transition-all duration-1000"
               style={{ width: `${progress}%` }}
             />
           </div>
 
           <div className="bg-theme-surface/5 border border-white/10 rounded-3xl p-5 flex items-start gap-4">
-            <div className="bg-blue-500/20 p-2 rounded-lg">
-              <TrendingUp className="w-4 h-4 text-blue-400" />
+            <div className="bg-primary/20 p-2 rounded-lg">
+              <TrendingUp className="w-4 h-4 text-primary" />
             </div>
             <div className="space-y-1">
               <p className="text-xs font-bold">On Track</p>

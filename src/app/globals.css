@@ -14,13 +14,14 @@
 }
 
 body.theme-classic-blue {
-  --primary: #2563eb;
+  --primary: #3b82f6; /* Blue 500 */
   --secondary: #0f172a;
-  --accent: #3b82f6;
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --surface: #ffffff;
-  --surface-border: #e2e8f0;
+  --accent: #60a5fa;
+  --background: #020617; /* Obsidian */
+  --foreground: #3b82f6; /* Blue lettering */
+  --muted: #0f172a;
+  --surface: #0f172a;
+  --surface-border: #1e293b;
 }
 
 body.theme-empire-gold {
@@ -28,62 +29,70 @@ body.theme-empire-gold {
   --secondary: #0f172a;
   --accent: #f59e0b; /* Amber 500 */
   --background: #020617; /* Obsidian Background */
-  --foreground: #f8fafc; /* Light text */
+  --foreground: #fbbf24; /* Gold lettering */
   --muted: #0f172a; 
   --surface: #0f172a; /* Deep Slate Surface */
-  --surface-border: #1e293b; /* Slate 800 */
+  --surface-border: #fbbf2444; /* Faint Gold Border */
 }
 
 
 body.theme-emerald-growth {
-  --primary: #059669;
+  --primary: #10b981; /* Emerald 500 */
   --secondary: #0f172a;
-  --accent: #10b981;
-  --background: #f0fdf4; /* Light Emerald */
-  --foreground: #064e3b;
-  --surface: #ffffff;
-  --surface-border: #a7f3d0;
+  --accent: #34d399;
+  --background: #020617; /* Obsidian */
+  --foreground: #10b981; /* Green lettering */
+  --muted: #0f172a;
+  --surface: #0f172a;
+  --surface-border: #10b98144;
 }
 
 body.theme-rose-gold {
-  --primary: #f43f5e;
+  --primary: #f43f5e; /* Rose 500 */
   --secondary: #0f172a;
   --accent: #fb7185;
-  --background: #fff1f2; /* Light Rose */
-  --foreground: #881337;
-  --surface: #ffffff;
-  --surface-border: #fecdd3;
+  --background: #020617; /* Obsidian */
+  --foreground: #f43f5e; /* Rose lettering */
+  --muted: #0f172a;
+  --surface: #0f172a;
+  --surface-border: #f43f5e44;
 }
 
 body.theme-cyber-purple {
-  --primary: #9333ea;
-  --secondary: #312e81;
-  --accent: #a855f7;
-  --background: #faf5ff; /* Light Purple */
-  --foreground: #581c87;
-  --surface: #ffffff;
-  --surface-border: #e9d5ff;
+  --primary: #a855f7; /* Purple 500 */
+  --secondary: #0f172a;
+  --accent: #c084fc;
+  --background: #020617; /* Obsidian */
+  --foreground: #a855f7; /* Purple lettering */
+  --muted: #0f172a;
+  --surface: #0f172a;
+  --surface-border: #a855f744;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #020617;
     --foreground: #ededed;
-    --surface: #171717;
-    --surface-border: #262626;
+    --surface: #0f172a;
+    --surface-border: #1e293b;
   }
 }
 
 /* Force everything that should be background to use theme variables */
-[class*="bg-white"], [class*="bg-slate-50"], [class*="bg-slate-100"] {
-  background-color: var(--background) !important;
+[class*="bg-white"], [class*="bg-theme-background"], [class*="bg-slate-100"], [class*="bg-gray-50"], [class*="bg-gray-100"] {
+  background-color: var(--surface) !important;
 }
 
-[class*="text-slate-900"], [class*="text-black"] {
+[class*="text-slate-900"], [class*="text-black"], [class*="text-gray-900"] {
   color: var(--foreground) !important;
 }
 
-[class*="border-slate-100"], [class*="border-slate-200"], [class*="border-slate-50"] {
+[class*="text-theme-background0"], [class*="text-slate-600"], [class*="text-gray-500"] {
+  color: var(--foreground) !important;
+  opacity: 0.8;
+}
+
+[class*="border-slate-100"], [class*="border-slate-200"], [class*="border-theme-background"], [class*="border-gray-100"], [class*="border-gray-200"] {
   border-color: var(--surface-border) !important;
 }
 
@@ -92,6 +101,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.5s ease, color 0.5s ease;
+  overflow-x: hidden;
 }
 
 /* Force headings to use theme foreground when a theme is active */

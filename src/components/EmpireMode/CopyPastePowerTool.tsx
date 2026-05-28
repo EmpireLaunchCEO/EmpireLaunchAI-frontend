@@ -79,7 +79,7 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
     >
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-10 h-24 bg-slate-900 text-white rounded-l-3xl flex flex-col items-center justify-center shadow-2xl border-y border-l border-white/10 hover:bg-blue-600 transition-all group"
+        className="w-10 h-24 bg-slate-900 text-white rounded-l-3xl flex flex-col items-center justify-center shadow-2xl border-y border-l border-white/10 hover:bg-primary transition-all group"
       >
         <div className="mb-2">
            {platform.toLowerCase().includes('kittl') ? <Palette className="w-4 h-4" /> : 
@@ -88,14 +88,14 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
         {isExpanded ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
       </button>
 
-      <div className="w-[320px] bg-theme-surface border-l-4 border-blue-600 shadow-[-20px_0_60px_rgba(0,0,0,0.15)] h-[85vh] flex flex-col overflow-hidden">
+      <div className="w-[320px] bg-theme-surface border-l-4 border-primary shadow-[-20px_0_60px_rgba(0,0,0,0.15)] h-[85vh] flex flex-col overflow-hidden">
         <div className="p-6 bg-slate-950 text-white border-b border-white/5 flex items-center justify-between">
            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-900/40">
+              <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-foreground/40">
                  <Bot className="w-4 h-4 text-white" />
               </div>
               <div className="space-y-0.5">
-                 <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Manual Co-Pilot</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-primary">Manual Co-Pilot</span>
                  <p className="text-xs font-bold truncate max-w-[160px]">{platform} Helper</p>
               </div>
            </div>
@@ -110,15 +110,15 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
                 href={getDeepLink(platform)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full p-4 bg-blue-50 border-2 border-blue-100 rounded-2xl flex items-center justify-between group hover:bg-blue-600 hover:border-blue-600 transition-all shadow-sm"
+                className="w-full p-4 bg-primary/10 border-2 border-primary/20 rounded-2xl flex items-center justify-between group hover:bg-primary hover:border-primary transition-all shadow-sm"
               >
                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-theme-surface rounded-lg text-blue-600 group-hover:scale-110 transition-transform">
+                    <div className="p-2 bg-theme-surface rounded-lg text-primary group-hover:scale-110 transition-transform">
                        <Smartphone className="w-4 h-4" />
                     </div>
-                    <span className="text-sm font-black text-blue-900 group-hover:text-white transition-colors tracking-tight">Launch {platform}</span>
+                    <span className="text-sm font-black text-foreground group-hover:text-white transition-colors tracking-tight">Launch {platform}</span>
                  </div>
-                 <ExternalLink className="w-4 h-4 text-blue-400 group-hover:text-white transition-colors" />
+                 <ExternalLink className="w-4 h-4 text-primary group-hover:text-white transition-colors" />
               </a>
            </div>
 
@@ -126,7 +126,7 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
            <div className="space-y-4">
               <div className="flex justify-between items-center">
                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Milestones</h4>
-                 <span className="text-[9px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100 uppercase tracking-widest">
+                 <span className="text-[9px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20 uppercase tracking-widest">
                    {checklist.filter(i => i.completed).length}/{checklist.length}
                  </span>
               </div>
@@ -137,12 +137,12 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
                      onClick={() => toggleCheck(item.id)}
                      className={cn(
                        "w-full p-3.5 rounded-xl border-2 text-left transition-all flex items-center gap-3 group",
-                       item.completed ? "bg-theme-background border-theme" : "bg-theme-surface border-slate-50 hover:border-blue-200"
+                       item.completed ? "bg-theme-background border-theme" : "bg-theme-surface border-theme-background hover:border-blue-200"
                      )}
                    >
                      <div className={cn(
                        "w-5 h-5 rounded-full flex items-center justify-center border-2 transition-all",
-                       item.completed ? "bg-blue-600 border-blue-600" : "border-theme"
+                       item.completed ? "bg-primary border-primary" : "border-theme"
                      )}>
                         {item.completed && <Check className="w-3 h-3 text-white stroke-[4px]" />}
                      </div>
@@ -167,17 +167,17 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
                      onClick={() => handleCopy(item)}
                      className={cn(
                        "w-full p-4 rounded-2xl border-2 text-left transition-all group relative overflow-hidden",
-                       copiedLabel === item.label ? "border-green-500 bg-green-50" : "border-slate-50 bg-theme-background/30 hover:border-blue-600 hover:bg-theme-surface"
+                       copiedLabel === item.label ? "border-green-500 bg-green-50" : "border-theme-background bg-theme-background/30 hover:border-primary hover:bg-theme-surface"
                      )}
                    >
                      <div className="flex justify-between items-start mb-2">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-blue-600 transition-colors">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-primary transition-colors">
                           {item.label}
                         </span>
                         {copiedLabel === item.label ? (
                           <Check className="w-3.5 h-3.5 text-green-600" />
                         ) : (
-                          <Copy className="w-3.5 h-3.5 text-slate-300 group-hover:text-blue-600 transition-colors" />
+                          <Copy className="w-3.5 h-3.5 text-slate-300 group-hover:text-primary transition-colors" />
                         )}
                      </div>
                      <p className="text-sm font-bold text-slate-800 line-clamp-2 pr-4 italic leading-snug">"{item.text}"</p>
@@ -204,15 +204,15 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
              className={cn(
                "w-full py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all shadow-xl",
                allCompleted 
-                 ? "bg-blue-600 text-white hover:bg-blue-500 shadow-blue-900/40" 
-                 : "bg-slate-800 text-slate-500 cursor-not-allowed"
+                 ? "bg-primary text-white hover:bg-primary shadow-foreground/40" 
+                 : "bg-slate-800 text-theme-background0 cursor-not-allowed"
              )}
            >
              <CheckCircle2 className="w-4 h-4" />
              Validate & Upload
            </button>
            {!allCompleted && (
-             <p className="text-[9px] text-slate-500 text-center font-medium italic">
+             <p className="text-[9px] text-theme-background0 text-center font-medium italic">
                 Complete the checklist to unlock validation.
              </p>
            )}

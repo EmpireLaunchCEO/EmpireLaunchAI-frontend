@@ -33,14 +33,14 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
           >
             {/* Header */}
             <div className="p-8 border-b border-theme shrink-0 relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 rounded-full blur-3xl -mr-16 -mt-16" />
+               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16" />
                <div className="flex items-center gap-4 relative z-10">
-                 <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl shadow-blue-200">
+                 <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-white shadow-xl shadow-blue-200">
                    <Scale className="w-6 h-6" />
                  </div>
                  <div>
                    <h2 className="text-2xl font-black text-foreground tracking-tight">Neural Agreement.</h2>
-                   <p className="text-xs font-black uppercase tracking-widest text-blue-600">Terms & Conditions v1.1</p>
+                   <p className="text-xs font-black uppercase tracking-widest text-primary">Terms & Conditions v1.1</p>
                  </div>
                </div>
             </div>
@@ -49,7 +49,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
             <div className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-thin scrollbar-thumb-slate-200">
               <section className="space-y-4">
                 <div className="flex items-center gap-2 text-foreground font-bold">
-                  <Shield className="w-5 h-5 text-blue-600" />
+                  <Shield className="w-5 h-5 text-primary" />
                   <h3>1. Military-Grade Protection</h3>
                 </div>
                 <p className="text-sm text-slate-600 leading-relaxed">
@@ -61,7 +61,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
 
               <section className="space-y-4">
                 <div className="flex items-center gap-2 text-foreground font-bold">
-                  <AlertCircle className="w-5 h-5 text-blue-600" />
+                  <AlertCircle className="w-5 h-5 text-primary" />
                   <h3>2. Scam Detection & Account Suspension</h3>
                 </div>
                 <p className="text-sm text-slate-600 leading-relaxed">
@@ -73,7 +73,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
 
               <section className="space-y-4">
                 <div className="flex items-center gap-2 text-foreground font-bold">
-                  <Scale className="w-5 h-5 text-blue-600" />
+                  <Scale className="w-5 h-5 text-primary" />
                   <h3>3. Legal Waiver & Jury Trial</h3>
                 </div>
                 <p className="text-sm text-slate-600 leading-relaxed italic">
@@ -84,14 +84,14 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
 
               <section className="space-y-4">
                 <div className="flex items-center gap-2 text-foreground font-bold">
-                  <Coins className="w-5 h-5 text-blue-600" />
+                  <Coins className="w-5 h-5 text-primary" />
                   <h3>4. Subscription & Success Fees</h3>
                 </div>
                 <div className="text-sm text-slate-600 leading-relaxed space-y-2">
                   <p>
                     By activating your Empire, you agree to a monthly operational subscription of <strong>$30/month</strong> for neural processing and platform maintenance.
                   </p>
-                  <p className="p-3 bg-blue-50 rounded-xl border border-blue-100 font-bold text-blue-900">
+                  <p className="p-3 bg-primary/10 rounded-xl border border-primary/20 font-bold text-foreground">
                     Additionally, you agree to a Success Fee of $30 for every $1,000 in revenue generated through the platform. This fee is automatically calculated and withheld upon reaching each revenue milestone.
                   </p>
                 </div>
@@ -99,7 +99,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
 
               <section className="space-y-4">
                 <div className="flex items-center gap-2 text-foreground font-bold">
-                  <Bot className="w-5 h-5 text-blue-600" />
+                  <Bot className="w-5 h-5 text-primary" />
                   <h3>5. AI Autonomy & Approval</h3>
                 </div>
                 <p className="text-sm text-slate-600 leading-relaxed">
@@ -119,7 +119,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                     />
                     <div className={cn(
                       "w-6 h-6 rounded-lg border-2 transition-all flex items-center justify-center",
-                      agreed ? "bg-blue-600 border-blue-600" : "bg-theme-surface border-theme group-hover:border-blue-400"
+                      agreed ? "bg-primary border-primary" : "bg-theme-surface border-theme group-hover:border-primary"
                     )}>
                       {agreed && <CheckCircle2 className="w-4 h-4 text-white" />}
                     </div>
@@ -136,7 +136,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
               <div className="flex gap-4 w-full">
                 <button 
                   onClick={onClose}
-                  className="flex-1 md:flex-none px-8 py-4 rounded-2xl border-2 border-theme font-black text-xs uppercase tracking-widest text-slate-500 hover:bg-theme-surface transition-all"
+                  className="flex-1 md:flex-none px-8 py-4 rounded-2xl border-2 border-theme font-black text-xs uppercase tracking-widest text-theme-background0 hover:bg-theme-surface transition-all"
                 >
                   Decline
                 </button>
@@ -146,7 +146,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                   className={cn(
                     "flex-1 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl",
                     agreed 
-                      ? "bg-blue-600 text-white hover:bg-blue-700 shadow-blue-200" 
+                      ? "bg-primary text-white hover:bg-primary shadow-blue-200" 
                       : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
                   )}
                 >

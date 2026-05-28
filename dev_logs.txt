@@ -12,3 +12,106 @@ nohup: ignoring input
 ⚠     Unrecognized key(s) in object: 'eslint'
 ⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
 
+Persisting failed: Unable to write SST file 00000038.sst
+
+Caused by:
+    No such file or directory (os error 2)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+
+thread 'tokio-runtime-worker' (1117960) panicked at turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:225:17:
+Failed to restore task data (corrupted database or bug): Data for batch of 24 tasks
+
+Caused by:
+    0: Looking up typed data for 24 tasks from database failed
+    1: Unable to open static sorted file referenced from 00000030.meta
+    2: Unable to open static sorted file 00000027.sst
+    3: Failed to open SST file /home/team/shared/EmpireLaunchAI-frontend/.next/dev/cache/turbopack/ee6e79b1/00000027.sst
+    4: No such file or directory (os error 2)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'tokio-runtime-worker' (1117960) panicked at turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:225:17:
+Failed to restore task data (corrupted database or bug): Data for batch of 24 tasks
+
+Caused by:
+    0: Looking up typed data for 24 tasks from database failed
+    1: Unable to open static sorted file referenced from 00000030.meta
+    2: Unable to open static sorted file 00000027.sst
+    3: Failed to open SST file /home/team/shared/EmpireLaunchAI-frontend/.next/dev/cache/turbopack/ee6e79b1/00000027.sst
+    4: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (1117961) panicked at turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:225:17:
+Failed to restore task data (corrupted database or bug): Data for batch of 2 tasks
+
+Caused by:
+    0: Looking up typed data for 2 tasks from database failed
+    1: Unable to open static sorted file referenced from 00000018.meta
+    2: Unable to open static sorted file 00000012.sst
+    3: Failed to open SST file /home/team/shared/EmpireLaunchAI-frontend/.next/dev/cache/turbopack/ee6e79b1/00000012.sst
+    4: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (1117961) panicked at turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:197:17:
+Failed to restore task data (corrupted database or bug): Data for TaskId 10288)
+
+Caused by:
+    0: Looking up task storage for TaskId 10288 from database failed
+    1: Unable to open static sorted file referenced from 00000018.meta
+    2: Unable to open static sorted file 00000012.sst
+    3: Failed to open SST file /home/team/shared/EmpireLaunchAI-frontend/.next/dev/cache/turbopack/ee6e79b1/00000012.sst
+    4: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (1117961) panicked at turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:225:17:
+Failed to restore task data (corrupted database or bug): Data for batch of 3 tasks
+
+Caused by:
+    0: Looking up typed data for 3 tasks from database failed
+    1: Unable to open static sorted file referenced from 00000018.meta
+    2: Unable to open static sorted file 00000013.sst
+    3: Failed to open SST file /home/team/shared/EmpireLaunchAI-frontend/.next/dev/cache/turbopack/ee6e79b1/00000013.sst
+    4: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (1117961) panicked at turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:197:17:
+Failed to restore task data (corrupted database or bug): Data for TaskId 7213)
+
+Caused by:
+    0: Looking up task storage for TaskId 7213 from database failed
+    1: Unable to open static sorted file referenced from 00000018.meta
+    2: Unable to open static sorted file 00000012.sst
+    3: Failed to open SST file /home/team/shared/EmpireLaunchAI-frontend/.next/dev/cache/turbopack/ee6e79b1/00000012.sst
+    4: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (1117960) panicked at turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:225:17:
+Failed to restore task data (corrupted database or bug): Data for batch of 2 tasks
+
+Caused by:
+    0: Looking up typed data for 2 tasks from database failed
+    1: Unable to open static sorted file referenced from 00000018.meta
+    2: Unable to open static sorted file 00000013.sst
+    3: Failed to open SST file /home/team/shared/EmpireLaunchAI-frontend/.next/dev/cache/turbopack/ee6e79b1/00000013.sst
+    4: No such file or directory (os error 2)
+
+thread 'tokio-runtime-worker' (1117960) panicked at turbopack/crates/turbo-tasks-backend/src/backend/operation/mod.rs:225:17:
+Failed to restore task data (corrupted database or bug): Data for batch of 2 tasks
+
+Caused by:
+    0: Looking up typed data for 2 tasks from database failed
+    1: Unable to open static sorted file referenced from 00000018.meta
+    2: Unable to open static sorted file 00000013.sst
+    3: Failed to open SST file /home/team/shared/EmpireLaunchAI-frontend/.next/dev/cache/turbopack/ee6e79b1/00000013.sst
+    4: No such file or directory (os error 2)
+Persisting failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)
+Compaction failed: Another write batch or compaction is already active (Only a single write operations is allowed at a time)

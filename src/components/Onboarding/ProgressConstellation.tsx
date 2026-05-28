@@ -60,7 +60,7 @@ export function ProgressConstellation({ currentStep, totalSteps }: ProgressConst
           >
             <div className={cn(
               "relative w-12 h-12 rounded-full flex items-center justify-center transition-all duration-700 shadow-2xl",
-              isActive ? "bg-blue-600 text-white ring-8 ring-blue-50" : "bg-theme-surface text-slate-300 border-2 border-theme"
+              isActive ? "bg-primary text-white ring-8 ring-primary/10" : "bg-theme-surface text-slate-300 border-2 border-theme"
             )}>
               {isCompleted ? (
                 <CheckCircle2 className="w-6 h-6" />
@@ -70,7 +70,7 @@ export function ProgressConstellation({ currentStep, totalSteps }: ProgressConst
               
               {isActive && !isCompleted && (
                 <motion.div
-                  className="absolute inset-0 rounded-full bg-blue-400 -z-10"
+                  className="absolute inset-0 rounded-full bg-primary -z-10"
                   animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
                   transition={{ repeat: Infinity, duration: 2 }}
                 />

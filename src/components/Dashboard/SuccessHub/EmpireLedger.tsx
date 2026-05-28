@@ -12,11 +12,11 @@ const MOCK_INVOICES = [
 
 export const EmpireLedger = ({ health }: { health: any }) => {
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-slate-50 shadow-sm space-y-8">
+    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme-background shadow-sm space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <CreditCard className="w-5 h-5 text-blue-600" />
+            <CreditCard className="w-5 h-5 text-primary" />
             <h3 className="text-sm font-black uppercase tracking-widest text-slate-400">Empire Ledger</h3>
           </div>
           <h2 className="text-2xl font-black text-foreground tracking-tight">Financial Intelligence</h2>
@@ -48,15 +48,15 @@ export const EmpireLedger = ({ health }: { health: any }) => {
               <div>
                 <p className="text-sm font-bold text-foreground">{inv.customer}</p>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[10px] text-slate-500 font-medium">{inv.id}</span>
+                  <span className="text-[10px] text-theme-background0 font-medium">{inv.id}</span>
                   <span className="text-[10px] text-slate-300">•</span>
-                  <span className="text-[10px] text-slate-500 font-medium">{inv.date}</span>
+                  <span className="text-[10px] text-theme-background0 font-medium">{inv.date}</span>
                 </div>
               </div>
             </div>
             <div className="text-right flex items-center gap-6">
               <div>
-                <p className={`text-sm font-black ${inv.type === 'Credit' ? 'text-foreground' : 'text-slate-500'}`}>
+                <p className={`text-sm font-black ${inv.type === 'Credit' ? 'text-foreground' : 'text-theme-background0'}`}>
                   {inv.type === 'Credit' ? '+' : '-'}${inv.amount.toFixed(2)}
                 </p>
                 <span className={`text-[9px] font-black uppercase tracking-widest ${
@@ -74,15 +74,15 @@ export const EmpireLedger = ({ health }: { health: any }) => {
       </div>
 
       <div className="grid grid-cols-2 gap-4 pt-4">
-        <div className="bg-blue-50/50 rounded-3xl p-5 border border-blue-100/50">
-           <span className="text-[10px] font-black uppercase tracking-widest text-blue-600/60 block mb-1 text-center">Stripe Connect</span>
+        <div className="bg-primary/10/50 rounded-3xl p-5 border border-primary/20/50">
+           <span className="text-[10px] font-black uppercase tracking-widest text-primary/60 block mb-1 text-center">Stripe Connect</span>
            <div className="flex items-center justify-center gap-2">
              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-             <span className="text-sm font-bold text-blue-900">Synchronized</span>
+             <span className="text-sm font-bold text-foreground">Synchronized</span>
            </div>
         </div>
         <div className="bg-slate-900 rounded-3xl p-5 border border-slate-800 flex flex-col items-center justify-center">
-           <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 block mb-1">Success Fee</span>
+           <span className="text-[10px] font-black uppercase tracking-widest text-theme-background0 block mb-1">Success Fee</span>
            <span className="text-sm font-bold text-white">$30.00 / $1,000</span>
         </div>
       </div>

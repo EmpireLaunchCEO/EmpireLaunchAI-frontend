@@ -37,13 +37,13 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4 bg-blue-600/5 p-6 rounded-[32px] border border-blue-600/10">
-        <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+      <div className="flex items-center gap-4 bg-primary/5 p-6 rounded-[32px] border border-primary/10">
+        <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
           <Scissors className="w-6 h-6" />
         </div>
         <div>
           <h3 className="text-xl font-black text-foreground leading-tight">Visual Draft Review.</h3>
-          <p className="text-sm text-slate-500 font-medium italic">"I've generated the first set of assets for {payload?.platform ?? 'your chosen platform'}. Do these meet your brand standards?"</p>
+          <p className="text-sm text-theme-background0 font-medium italic">"I've generated the first set of assets for {payload?.platform ?? 'your chosen platform'}. Do these meet your brand standards?"</p>
         </div>
       </div>
 
@@ -63,7 +63,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
               </div>
               <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
                  <div className="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl border border-white/10">
-                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">{payload?.platform ?? 'Platform'} Post</p>
+                    <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">{payload?.platform ?? 'Platform'} Post</p>
                     <h4 className="text-white font-bold">{payload?.title ?? 'Untitled Concept'}</h4>
                  </div>
                  <div className="flex gap-2">
@@ -81,7 +81,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
                   onClick={() => setIndex(i)}
                   className={cn(
                     "w-3 h-3 rounded-full transition-all",
-                    activeIndex === i ? "bg-blue-600 w-8" : "bg-slate-200"
+                    activeIndex === i ? "bg-primary w-8" : "bg-slate-200"
                   )}
                 />
               ))}
@@ -90,15 +90,15 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
 
         {/* Feedback & Actions */}
         <div className="space-y-8">
-           <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-8 shadow-sm">
+           <div className="bg-theme-surface border-2 border-theme-background rounded-[40px] p-8 space-y-8 shadow-sm">
               <div className="space-y-4">
                  <h4 className="font-black text-foreground uppercase tracking-widest text-xs">AI Marketing Hook</h4>
-                 <p className="text-sm text-slate-500 font-mono bg-theme-background p-4 rounded-2xl border border-theme italic">
+                 <p className="text-sm text-theme-background0 font-mono bg-theme-background p-4 rounded-2xl border border-theme italic">
                    "{payload?.caption ?? 'Drafting the perfect hook for you...'}"
                  </p>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-slate-50">
+              <div className="space-y-4 pt-4 border-t border-theme-background">
                  <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Quality Rating</h4>
                  <div className="flex gap-2">
                     {[1,2,3,4,5].map((s) => (
@@ -132,7 +132,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
            <div className="flex flex-col gap-3">
               <button 
                 onClick={() => onApprove()}
-                className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl flex items-center justify-center gap-3 group"
+                className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary transition-all shadow-xl flex items-center justify-center gap-3 group"
               >
                 Approve & Star
                 <Star className="w-4 h-4 group-hover:fill-current transition-all" />

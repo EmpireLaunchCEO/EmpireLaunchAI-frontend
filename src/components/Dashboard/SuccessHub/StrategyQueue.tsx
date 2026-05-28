@@ -75,7 +75,7 @@ export function StrategyQueue() {
                 <div className={cn(
                   "px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest",
                   strat.type === 'TREND_PIVOT' ? "bg-purple-500/20 text-purple-400" :
-                  strat.type === 'SEO_OPTIMIZATION' ? "bg-blue-500/20 text-blue-400" :
+                  strat.type === 'SEO_OPTIMIZATION' ? "bg-primary/20 text-primary" :
                   "bg-emerald-500/20 text-emerald-400"
                 )}>
                   {strat.type.replace('_', ' ')}
@@ -92,7 +92,7 @@ export function StrategyQueue() {
                   {strat.suggestion}
                 </p>
                 <div className="pt-4 border-t border-white/5">
-                   <p className="text-[10px] text-slate-500 font-bold leading-relaxed italic">
+                   <p className="text-[10px] text-theme-background0 font-bold leading-relaxed italic">
                      <Brain className="w-3 h-3 inline mr-1 text-amber-400/50" />
                      "{strat.reasoning}"
                    </p>
@@ -127,7 +127,7 @@ export function StrategyQueue() {
               <CheckCircle2 className="w-10 h-10 text-emerald-500/50" />
            </div>
            <h3 className="text-xl font-black text-white">Queue Clear</h3>
-           <p className="text-slate-500 text-sm font-medium mt-2">All strategic interventions have been processed.</p>
+           <p className="text-theme-background0 text-sm font-medium mt-2">All strategic interventions have been processed.</p>
         </div>
       )}
     </div>

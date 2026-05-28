@@ -24,7 +24,7 @@ export function MobileNav() {
         id="mobile-nav-home"
         className={cn(
           "flex flex-col items-center gap-1 transition-all",
-          pathname === '/dashboard' ? "text-primary scale-110" : "text-slate-400"
+          pathname === '/dashboard' ? "text-primary scale-110" : "text-theme-background0"
         )}
       >
         <div className={cn(

@@ -60,7 +60,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center p-12 space-y-4">
-        <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+        <Loader2 className="w-12 h-12 text-primary animate-spin" />
         <p className="text-sm font-black text-slate-400 uppercase tracking-widest">Neural Discovery in Progress...</p>
       </div>
     );
@@ -68,13 +68,13 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4 bg-blue-600/5 p-6 rounded-[32px] border border-blue-600/10">
-        <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg">
+      <div className="flex items-center gap-4 bg-primary/5 p-6 rounded-[32px] border border-primary/10">
+        <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg">
           <Bot className="w-6 h-6" />
         </div>
         <div>
           <h3 className="text-xl font-black text-foreground leading-tight">Neural Scan Findings.</h3>
-          <p className="text-sm text-slate-500 font-medium">I've identified potential assets in your Gmail. Please approve which ones I should integrate into your empire.</p>
+          <p className="text-sm text-theme-background0 font-medium">I've identified potential assets in your Gmail. Please approve which ones I should integrate into your empire.</p>
         </div>
       </div>
 
@@ -87,7 +87,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-theme-surface border-2 border-slate-50 rounded-[32px] p-6 shadow-sm hover:border-blue-100 transition-colors"
+              className="bg-theme-surface border-2 border-theme-background rounded-[32px] p-6 shadow-sm hover:border-primary/20 transition-colors"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex items-start gap-4 flex-1">
@@ -103,7 +103,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
                        </span>
                     </div>
                     <h4 className="font-bold text-foreground">{result.maskedKey}</h4>
-                    <p className="text-sm text-slate-500 bg-theme-background p-3 rounded-xl border border-theme font-mono">
+                    <p className="text-sm text-theme-background0 bg-theme-background p-3 rounded-xl border border-theme font-mono">
                       "{result.maskedSnippet}"
                     </p>
                   </div>
@@ -121,7 +121,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
                   <button 
                     disabled={processingId === result.id}
                     onClick={() => handleApprove(result.id)}
-                    className="flex-1 md:flex-none px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg flex items-center justify-center gap-2"
+                    className="flex-1 md:flex-none px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary transition-all shadow-lg flex items-center justify-center gap-2"
                   >
                     {processingId === result.id ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -146,10 +146,10 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
                <Zap className="w-8 h-8" />
             </div>
             <h4 className="text-xl font-black text-foreground">Neural Scan Complete.</h4>
-            <p className="text-sm text-slate-500 max-w-xs mx-auto">All assets have been processed and integrated into your dashboard.</p>
+            <p className="text-sm text-theme-background0 max-w-xs mx-auto">All assets have been processed and integrated into your dashboard.</p>
             <button 
               onClick={onComplete}
-              className="mt-4 px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-200"
+              className="mt-4 px-8 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-200"
             >
               Continue
             </button>

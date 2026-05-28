@@ -104,8 +104,8 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
           animate={{ opacity: 1, y: 0 }}
           className="bg-theme-surface/80 backdrop-blur-md px-4 py-2 rounded-full border border-theme shadow-sm"
         >
-          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-            Tip: <span className="text-blue-600 normal-case">{tip}</span>
+          <p className="text-[10px] font-bold text-theme-background0 uppercase tracking-wider">
+            Tip: <span className="text-primary normal-case">{tip}</span>
           </p>
         </motion.div>
       )}
@@ -122,7 +122,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
               >
-                <Stars className="w-5 h-5 text-blue-600 animate-pulse" />
+                <Stars className="w-5 h-5 text-primary animate-pulse" />
               </motion.div>
             ) : (
               <motion.div
@@ -144,7 +144,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
           placeholder={isListening ? "Listening..." : "Ask AI to research trends, create listings, or schedule posts..."}
           className={cn(
             "flex-1 py-3 px-2 outline-none text-slate-700 placeholder:text-slate-400 font-medium transition-all",
-            isListening ? "placeholder:text-blue-500 animate-pulse" : ""
+            isListening ? "placeholder:text-primary animate-pulse" : ""
           )}
           disabled={isProcessing}
         />
@@ -154,7 +154,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
           onClick={toggleListening}
           className={cn(
             "p-3 rounded-xl transition-all",
-            isListening ? "bg-red-500 text-white animate-pulse" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+            isListening ? "bg-red-500 text-white animate-pulse" : "bg-slate-100 text-theme-background0 hover:bg-slate-200"
           )}
         >
           {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
@@ -163,7 +163,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
         <button
           type="submit"
           disabled={!value.trim() || isProcessing}
-          className="bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="bg-primary text-white p-3 rounded-xl hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           <Send className="w-5 h-5" />
         </button>

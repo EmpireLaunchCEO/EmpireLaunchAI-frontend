@@ -42,8 +42,8 @@ export function FinancialGate({
       <div className="bg-theme-surface w-full max-w-md rounded-[32px] shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
         {/* Header */}
         <div className="p-8 pb-4 flex justify-between items-start">
-          <div className="bg-blue-50 p-3 rounded-2xl">
-            <CreditCard className="w-6 h-6 text-blue-600" />
+          <div className="bg-primary/10 p-3 rounded-2xl">
+            <CreditCard className="w-6 h-6 text-primary" />
           </div>
           <button 
             onClick={onClose}
@@ -55,7 +55,7 @@ export function FinancialGate({
 
         <div className="px-8 pb-8">
           <h2 className="text-2xl font-bold text-foreground mt-2">Financial Approval Required</h2>
-          <p className="text-slate-500 mt-2 text-sm leading-relaxed">
+          <p className="text-theme-background0 mt-2 text-sm leading-relaxed">
             Your AI Partner is requesting approval for a {type}. No funds will be moved without your explicit consent.
           </p>
 
@@ -75,7 +75,7 @@ export function FinancialGate({
             
             <div className="space-y-3">
               <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5" />
+                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5" />
                 <p className="text-sm font-medium text-slate-700">{description}</p>
               </div>
               {reason && (
@@ -90,11 +90,11 @@ export function FinancialGate({
           {/* Security Note */}
           <div className="mt-6 space-y-4">
             {type === 'subscription' && (
-              <div className="p-4 bg-blue-50 border border-blue-100 rounded-2xl">
+              <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl">
                 <div className="flex gap-3">
-                  <TrendingUp className="w-5 h-5 text-blue-600 shrink-0" />
+                  <TrendingUp className="w-5 h-5 text-primary shrink-0" />
                   <div>
-                    <h4 className="text-xs font-black text-blue-900 uppercase tracking-widest">Billing Transparency</h4>
+                    <h4 className="text-xs font-black text-foreground uppercase tracking-widest">Billing Transparency</h4>
                     <p className="text-[11px] text-blue-800 leading-relaxed mt-1">
                       We secure your monthly dues automatically from your business earnings. If your empire hasn't generated profit yet, dues are charged to your primary card until you're in the green.
                     </p>
@@ -123,7 +123,7 @@ export function FinancialGate({
             </button>
             <button 
               onClick={onApprove}
-              className="px-6 py-3.5 rounded-2xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-100"
+              className="px-6 py-3.5 rounded-2xl text-sm font-bold text-white bg-primary hover:bg-primary transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
             >
               Approve <ArrowRight className="w-4 h-4" />
             </button>

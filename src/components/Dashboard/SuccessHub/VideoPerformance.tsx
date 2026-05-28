@@ -42,7 +42,7 @@ export const VideoPerformance = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-black text-foreground tracking-tight">Video Performance</h3>
-        <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:text-blue-700 transition-colors">
+        <button className="text-[10px] font-black text-primary uppercase tracking-widest hover:text-primary transition-colors">
           View All Content
         </button>
       </div>
@@ -54,7 +54,7 @@ export const VideoPerformance = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="bg-theme-surface rounded-[32px] overflow-hidden border-2 border-slate-50 shadow-sm hover:shadow-md transition-all group"
+            className="bg-theme-surface rounded-[32px] overflow-hidden border-2 border-theme-background shadow-sm hover:shadow-md transition-all group"
           >
             <div className="relative aspect-square">
               <img 
@@ -68,7 +68,7 @@ export const VideoPerformance = () => {
                 <div className="bg-theme-surface/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
                   <div className={`w-1.5 h-1.5 rounded-full ${
                     video.status === 'Trending' ? 'bg-emerald-500 animate-pulse' : 
-                    video.status === 'Stable' ? 'bg-blue-500' : 'bg-amber-500'
+                    video.status === 'Stable' ? 'bg-primary' : 'bg-amber-500'
                   }`} />
                   <span className="text-[10px] font-black uppercase tracking-widest text-foreground">{video.status}</span>
                 </div>
@@ -81,7 +81,7 @@ export const VideoPerformance = () => {
                    </div>
                    <span className="text-white text-xs font-bold">{video.platform}</span>
                 </div>
-                <div className="bg-blue-600 text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1">
+                <div className="bg-primary text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1">
                    <MousePointer2 className="w-2.5 h-2.5" />
                    {video.clicks} Clicks
                 </div>
@@ -89,7 +89,7 @@ export const VideoPerformance = () => {
             </div>
 
             <div className="p-5 space-y-4">
-              <div className="flex items-center justify-between text-slate-500">
+              <div className="flex items-center justify-between text-theme-background0">
                 <div className="flex flex-col items-center flex-1 border-r border-theme">
                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1">
                     <Eye className="w-2.5 h-2.5" /> Views
@@ -106,8 +106,8 @@ export const VideoPerformance = () => {
 
               <div className="bg-theme-background rounded-2xl p-3 border border-theme">
                 <div className="flex items-center gap-2 mb-1">
-                  <Stars className="w-3.5 h-3.5 text-blue-500" />
-                  <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">AI Intelligent Insight</span>
+                  <Stars className="w-3.5 h-3.5 text-primary" />
+                  <span className="text-[8px] font-black uppercase tracking-widest text-theme-background0">AI Intelligent Insight</span>
                 </div>
                 <p className="text-[11px] font-bold text-slate-700 leading-snug">
                   {video.insight}

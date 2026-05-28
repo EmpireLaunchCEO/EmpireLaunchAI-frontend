@@ -55,7 +55,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4 bg-slate-900 p-6 rounded-[32px] text-white">
-        <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-900/40">
+        <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-foreground/40">
           <ShieldCheck className="w-6 h-6" />
         </div>
         <div>
@@ -67,10 +67,10 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2">
            {!preview ? (
-             <label className="group relative aspect-video bg-theme-background border-4 border-dashed border-theme rounded-[40px] flex flex-col items-center justify-center cursor-pointer hover:bg-blue-50 hover:border-blue-200 transition-all">
+             <label className="group relative aspect-video bg-theme-background border-4 border-dashed border-theme rounded-[40px] flex flex-col items-center justify-center cursor-pointer hover:bg-primary/10 hover:border-blue-200 transition-all">
                 <input type="file" className="hidden" onChange={handleFileChange} accept="image/*,video/*" />
                 <div className="p-6 bg-theme-surface rounded-3xl shadow-xl group-hover:scale-110 transition-transform mb-4">
-                   <Upload className="w-8 h-8 text-blue-600" />
+                   <Upload className="w-8 h-8 text-primary" />
                 </div>
                 <p className="text-foreground font-black uppercase tracking-widest text-xs">Drop Export Here</p>
                 <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-2">Kittl / CapCut / Canva PNG or MP4</p>
@@ -88,7 +88,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                     <motion.div 
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="absolute inset-0 bg-blue-600/20 backdrop-blur-sm flex items-center justify-center"
+                      className="absolute inset-0 bg-primary/20 backdrop-blur-sm flex items-center justify-center"
                     >
                        <div className="text-center space-y-4">
                           <div className="relative">
@@ -130,18 +130,18 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
         </div>
 
         <div className="space-y-6">
-           <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-8 shadow-sm">
+           <div className="bg-theme-surface border-2 border-theme-background rounded-[40px] p-8 space-y-8 shadow-sm">
               <div className="space-y-2">
                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Asset Context</h4>
                  <p className="text-lg font-black text-foreground leading-tight italic">{taskTitle}</p>
-                 <div className="flex items-center gap-2 text-blue-600">
+                 <div className="flex items-center gap-2 text-primary">
                     <span className="text-[10px] font-black uppercase tracking-widest">{platform} Platform</span>
                  </div>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-slate-50">
+              <div className="space-y-4 pt-4 border-t border-theme-background">
                  <div className="flex items-center gap-2">
-                    <Bot className="w-4 h-4 text-blue-600" />
+                    <Bot className="w-4 h-4 text-primary" />
                     <h4 className="text-[10px] font-black text-foreground uppercase tracking-widest">AI Validation Logic</h4>
                  </div>
                  <ul className="space-y-3">
@@ -150,10 +150,10 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                       'Style Modifiers Compliance',
                       'Typography & Color DNA Match'
                     ].map((step, i) => (
-                      <li key={i} className="flex items-center gap-3 text-xs font-medium text-slate-500">
+                      <li key={i} className="flex items-center gap-3 text-xs font-medium text-theme-background0">
                          <div className={cn(
                            "w-1.5 h-1.5 rounded-full",
-                           status === 'success' ? "bg-emerald-500" : "bg-blue-600 animate-pulse"
+                           status === 'success' ? "bg-emerald-500" : "bg-primary animate-pulse"
                          )} />
                          {step}
                       </li>
@@ -178,7 +178,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
               {status === 'idle' && preview && (
                 <button 
                   onClick={startValidation}
-                  className="w-full py-5 bg-blue-600 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-500 transition-all shadow-xl flex items-center justify-center gap-3 group"
+                  className="w-full py-5 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary transition-all shadow-xl flex items-center justify-center gap-3 group"
                 >
                   Run Validation
                   <Stars className="w-4 h-4" />
@@ -188,7 +188,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
               {status === 'success' && (
                 <button 
                   onClick={() => onValidated(preview!)}
-                  className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl flex items-center justify-center gap-3"
+                  className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary transition-all shadow-xl flex items-center justify-center gap-3"
                 >
                   Confirm & Finalize
                   <CheckCircle2 className="w-4 h-4" />

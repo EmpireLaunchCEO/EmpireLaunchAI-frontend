@@ -51,20 +51,20 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
               <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">+12% WoW</span>
            </div>
            <div className="space-y-1">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Unified P&L (Net)</p>
+              <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Unified P&L (Net)</p>
               <h4 className="text-3xl font-black text-white">${((health?.revenue || 0) * 0.82).toLocaleString()}</h4>
            </div>
         </div>
 
         <div className="bg-slate-900 border border-white/5 p-8 rounded-[40px] space-y-4">
            <div className="flex items-center justify-between">
-              <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
                  <Users className="w-5 h-5 text-white" />
               </div>
-              <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Omnichannel</span>
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest">Omnichannel</span>
            </div>
            <div className="space-y-1">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total Reach</p>
+              <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Total Reach</p>
               <h4 className="text-3xl font-black text-white">{(totalViews / 1000).toFixed(1)}K</h4>
            </div>
         </div>
@@ -77,7 +77,7 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
               <span className="text-[10px] font-black text-purple-400 uppercase tracking-widest">Sentiment: Positive</span>
            </div>
            <div className="space-y-1">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Brand Affinity</p>
+              <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Brand Affinity</p>
               <h4 className="text-3xl font-black text-white">94.2%</h4>
            </div>
         </div>
@@ -90,7 +90,7 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
               <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Optimal</span>
            </div>
            <div className="space-y-1">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Conv. Rate</p>
+              <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Conv. Rate</p>
               <h4 className="text-3xl font-black text-white">{avgConversion.toFixed(1)}%</h4>
            </div>
         </div>
@@ -102,11 +102,11 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
            <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
-                    <Globe className="w-6 h-6 text-blue-400" />
+                    <Globe className="w-6 h-6 text-primary" />
                  </div>
                  <div>
                     <h3 className="text-xl font-black text-white tracking-tight">Omnichannel Reach</h3>
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Cross-Platform Distribution</p>
+                    <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Cross-Platform Distribution</p>
                  </div>
               </div>
            </div>
@@ -117,7 +117,7 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                          <span className="text-sm font-bold text-white">{metric.platform}</span>
-                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{(metric.views / totalViews * 100).toFixed(0)}%</span>
+                         <span className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">{(metric.views / totalViews * 100).toFixed(0)}%</span>
                       </div>
                       <div className="flex items-center gap-4">
                          <div className="flex items-center gap-1.5 text-slate-400">
@@ -167,11 +167,11 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
                  </div>
                  <div>
                     <h3 className="text-xl font-black text-white tracking-tight">Revenue Breakdown</h3>
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Platform Contribution</p>
+                    <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Platform Contribution</p>
                  </div>
               </div>
               <div className="text-right">
-                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total GTV</p>
+                 <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Total GTV</p>
                  <h4 className="text-2xl font-black text-white">${(health?.revenue || 0).toLocaleString()}</h4>
               </div>
            </div>
@@ -185,7 +185,7 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
                       </div>
                       <div>
                          <p className="text-sm font-bold text-white">{platform.platform}</p>
-                         <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Connected</p>
+                         <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Connected</p>
                       </div>
                    </div>
                    <div className="text-right">
@@ -197,11 +197,11 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
            </div>
 
            <div className="pt-6 border-t border-white/5">
-              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
+              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-theme-background0">
                  <span>Platform Fees (6%)</span>
                  <span className="text-red-400">-${((health?.revenue || 0) * 0.06).toLocaleString()}</span>
               </div>
-              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-500 mt-2">
+              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-theme-background0 mt-2">
                  <span>Success Fees (10%)</span>
                  <span className="text-red-400">-${((health?.revenue || 0) * 0.1).toLocaleString()}</span>
               </div>

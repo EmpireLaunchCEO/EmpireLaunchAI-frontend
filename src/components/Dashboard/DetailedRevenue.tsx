@@ -38,7 +38,7 @@ export function DetailedRevenue() {
 
   if (loading) {
     return <div className="h-40 flex items-center justify-center">
-      <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
     </div>;
   }
 
@@ -46,10 +46,10 @@ export function DetailedRevenue() {
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Milestone Progress */}
-        <div className="bg-slate-900 rounded-[40px] p-8 text-white space-y-6 relative overflow-hidden shadow-2xl shadow-blue-900/20">
+        <div className="bg-slate-900 rounded-[40px] p-8 text-white space-y-6 relative overflow-hidden shadow-2xl shadow-foreground/20">
           <div className="relative z-10 flex justify-between items-start">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-blue-400 font-black text-[10px] uppercase tracking-widest">
+              <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
                 <Target className="w-3 h-3" />
                 Active Milestone
               </div>
@@ -68,7 +68,7 @@ export function DetailedRevenue() {
                  <span className="text-4xl font-black text-white">${activeMilestone?.current.toLocaleString()}</span>
                  <span className="text-white/40 font-bold mb-1">/ ${activeMilestone?.target.toLocaleString()}</span>
                </div>
-               <span className="text-xs font-bold text-blue-400">+${(activeMilestone?.target - activeMilestone?.current).toLocaleString()} remaining</span>
+               <span className="text-xs font-bold text-primary">+${(activeMilestone?.target - activeMilestone?.current).toLocaleString()} remaining</span>
              </div>
              
              <div className="h-3 w-full bg-theme-surface/5 rounded-full overflow-hidden border border-white/5">
@@ -76,7 +76,7 @@ export function DetailedRevenue() {
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 1.5, ease: "easeOut" }}
-                  className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                  className="h-full bg-gradient-to-r from-primary to-indigo-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
                 />
              </div>
           </div>
@@ -89,7 +89,7 @@ export function DetailedRevenue() {
         {/* Quick Stats Summary */}
         <div className="grid grid-cols-2 gap-4">
            <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                  <TrendingUp className="w-5 h-5" />
               </div>
               <div className="space-y-1">
@@ -123,17 +123,17 @@ export function DetailedRevenue() {
 
       {/* Recent Transactions List */}
       <div className="bg-theme-surface border border-theme rounded-[40px] overflow-hidden shadow-sm">
-        <div className="p-8 border-b border-slate-50 flex justify-between items-center">
+        <div className="p-8 border-b border-theme-background flex justify-between items-center">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white">
+             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
                 <Clock className="w-5 h-5" />
              </div>
              <h3 className="text-xl font-black text-foreground">Recent Transactions</h3>
           </div>
-          <button className="text-xs font-bold text-blue-600 uppercase tracking-widest">Download CSV</button>
+          <button className="text-xs font-bold text-primary uppercase tracking-widest">Download CSV</button>
         </div>
         
-        <div className="divide-y divide-slate-50">
+        <div className="divide-y divide-theme-background">
           {transactions.map((t) => (
             <div key={t.id} className="p-6 hover:bg-theme-background transition-colors flex items-center justify-between group">
               <div className="flex items-center gap-6">
@@ -171,7 +171,7 @@ export function DetailedRevenue() {
           ))}
         </div>
         
-        <button className="w-full py-6 bg-theme-background text-slate-500 font-bold text-sm hover:bg-slate-100 transition-colors">
+        <button className="w-full py-6 bg-theme-background text-theme-background0 font-bold text-sm hover:bg-slate-100 transition-colors">
           View All Transactions
         </button>
       </div>

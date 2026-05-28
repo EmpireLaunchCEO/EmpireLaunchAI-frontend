@@ -48,12 +48,12 @@ export function ApprovalQueue() {
     <div className="space-y-6">
       <div className="flex items-center justify-between px-2">
          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
+            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
                <Bot className="w-4 h-4" />
             </div>
             <h2 className="text-lg font-black text-foreground tracking-tight uppercase italic">Strategic Approvals Pending.</h2>
          </div>
-         <span className="bg-blue-50 text-blue-600 text-[10px] font-black px-2 py-1 rounded-full border border-blue-100 uppercase tracking-widest">
+         <span className="bg-primary/10 text-primary text-[10px] font-black px-2 py-1 rounded-full border border-primary/20 uppercase tracking-widest">
            {requests.length} Action{requests.length > 1 ? 's' : ''} Required
          </span>
       </div>
@@ -63,13 +63,13 @@ export function ApprovalQueue() {
           <motion.button 
             key={req.id}
             onClick={() => setActiveRequest(req)}
-            className="p-6 bg-theme-surface border-2 border-slate-50 rounded-[32px] hover:border-blue-600 transition-all text-left group shadow-sm"
+            className="p-6 bg-theme-surface border-2 border-theme-background rounded-[32px] hover:border-primary transition-all text-left group shadow-sm"
             whileHover={{ y: -4 }}
           >
             <div className="flex justify-between items-start mb-6">
                <div className={cn(
                  "p-3 rounded-2xl",
-                 req.type === 'blueprint' ? "bg-blue-50 text-blue-600" :
+                 req.type === 'blueprint' ? "bg-primary/10 text-primary" :
                  req.type === 'content' ? "bg-indigo-50 text-indigo-600" : "bg-emerald-50 text-emerald-600"
                )}>
                   {req.type === 'blueprint' ? <Zap className="w-5 h-5" /> : 
@@ -82,12 +82,12 @@ export function ApprovalQueue() {
               {req.type === 'blueprint' ? 'Approve 30-Day Strategy' : 
                req.type === 'content' ? `Review ${req.payload?.platform ?? 'Draft'} Draft` : `Ready to Launch on ${req.payload?.platform ?? 'Platform'}`}
             </h4>
-            <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+            <p className="text-xs text-theme-background0 line-clamp-2 leading-relaxed">
               {req.type === 'blueprint' ? `Expansion plan for ${req.payload?.niche ?? 'your empire'}` :
                req.type === 'content' ? (req.payload?.title ?? 'Untitled Content') : `Final manifest for ${req.payload?.title ?? 'Production Item'}`}
             </p>
             
-            <div className="mt-6 flex items-center gap-2 text-blue-600 font-black text-[10px] uppercase tracking-widest group-hover:gap-3 transition-all">
+            <div className="mt-6 flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest group-hover:gap-3 transition-all">
                Review Request <Zap className="w-3 h-3 fill-current" />
             </div>
           </motion.button>

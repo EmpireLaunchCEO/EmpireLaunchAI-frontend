@@ -31,8 +31,8 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
       value: engagementScore, 
       weight: '30%', 
       icon: BarChart3, 
-      color: 'text-blue-500', 
-      bgColor: 'bg-blue-50' 
+      color: 'text-primary', 
+      bgColor: 'bg-primary/10' 
     },
     { 
       label: 'Operation Consistency', 
@@ -45,7 +45,7 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
   ];
 
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-slate-50 shadow-sm space-y-8">
+    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme-background shadow-sm space-y-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center">
@@ -88,7 +88,7 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
       </div>
 
       <div className="p-4 rounded-2xl bg-theme-background border border-theme">
-        <p className="text-[10px] font-bold text-slate-500 leading-relaxed italic">
+        <p className="text-[10px] font-bold text-theme-background0 leading-relaxed italic">
           "The Empire Engine is prioritizing <span className="text-emerald-600 font-black">Revenue Velocity</span> this cycle. Growth score has increased by 4.2 points since last synchronization."
         </p>
       </div>

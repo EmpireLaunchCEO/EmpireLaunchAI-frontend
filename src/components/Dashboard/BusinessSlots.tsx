@@ -22,7 +22,7 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
         "relative overflow-hidden rounded-[32px] p-6 h-48 transition-all duration-500",
         isLocked 
           ? "bg-theme-background border-2 border-theme opacity-80" 
-          : "bg-theme-surface border-2 border-blue-50 shadow-xl shadow-blue-900/5 hover:shadow-2xl hover:shadow-blue-900/10"
+          : "bg-theme-surface border-2 border-primary/10 shadow-xl shadow-foreground/5 hover:shadow-2xl hover:shadow-foreground/10"
       )}>
         {/* Active Content */}
         {!isLocked && (
@@ -33,17 +33,17 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Primary Empire</span>
               </div>
               <h3 className="text-xl font-black text-foreground leading-tight">{name}</h3>
-              <p className="text-sm font-medium text-slate-500">{niche}</p>
+              <p className="text-sm font-medium text-theme-background0">{niche}</p>
             </div>
             
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="bg-blue-50 px-2 py-1 rounded-lg">
-                  <span className="text-[10px] font-black text-blue-600 uppercase tracking-tighter">Score: {growthScore}</span>
+                <div className="bg-primary/10 px-2 py-1 rounded-lg">
+                  <span className="text-[10px] font-black text-primary uppercase tracking-tighter">Score: {growthScore}</span>
                 </div>
-                <TrendingUp className="w-3 h-3 text-blue-600" />
+                <TrendingUp className="w-3 h-3 text-primary" />
               </div>
-              <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-blue-600 transition-colors" />
+              <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-primary transition-colors" />
             </div>
           </div>
         )}
@@ -73,7 +73,7 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
               <div className="absolute inset-0 bg-theme-surface/30 rounded-full blur-xl group-hover/lock:scale-150 transition-transform duration-700" />
               
               <div className="relative bg-theme-surface/80 backdrop-blur-2xl w-16 h-16 rounded-[24px] flex items-center justify-center shadow-2xl border border-white/50">
-                <Lock className="w-7 h-7 text-blue-600" />
+                <Lock className="w-7 h-7 text-primary" />
                 <Stars className="absolute -top-2 -right-2 w-5 h-5 text-amber-400 animate-pulse" />
               </div>
               
@@ -93,7 +93,7 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
       
       {/* Decorative gradient for active slot */}
       {!isLocked && (
-        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-[36px] -z-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-indigo-600/20 rounded-[36px] -z-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
       )}
     </div>
   );

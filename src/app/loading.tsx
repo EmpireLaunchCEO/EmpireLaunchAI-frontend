@@ -9,7 +9,7 @@ export default function RootLoading() {
     <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6">
       <div className="relative">
         <motion.div 
-          className="w-24 h-24 border-4 border-blue-500/20 border-t-blue-500 rounded-full"
+          className="w-24 h-24 border-4 border-primary/20 border-t-primary rounded-full"
           animate={{ rotate: 360 }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
         />
@@ -24,7 +24,7 @@ export default function RootLoading() {
           {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
-              className="w-1.5 h-1.5 bg-blue-500 rounded-full"
+              className="w-1.5 h-1.5 bg-primary rounded-full"
               animate={{ opacity: [0, 1, 0] }}
               transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
             />

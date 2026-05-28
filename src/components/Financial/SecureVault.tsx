@@ -51,7 +51,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
   return (
     <div className={cn(
       "border-2 rounded-3xl transition-all overflow-hidden",
-      isExpanded ? "border-blue-600 ring-4 ring-blue-50" : "border-theme hover:border-theme"
+      isExpanded ? "border-primary ring-4 ring-primary/10" : "border-theme hover:border-theme"
     )}>
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
@@ -73,7 +73,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
                 </span>
               )}
             </div>
-            <p className="text-xs md:text-sm text-slate-500">{description}</p>
+            <p className="text-xs md:text-sm text-theme-background0">{description}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3">
@@ -84,11 +84,11 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
 
       {isExpanded && (
         <div className="p-5 md:p-8 bg-theme-background border-t-2 border-theme space-y-5 md:space-y-6">
-          <div className="flex items-start gap-3 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
-            <Info className="w-4 h-4 md:w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
+          <div className="flex items-start gap-3 p-4 bg-primary/10/50 rounded-2xl border border-primary/20">
+            <Info className="w-4 h-4 md:w-5 h-5 text-primary mt-0.5 shrink-0" />
             <div className="space-y-1">
-              <p className="text-xs md:text-sm font-semibold text-blue-900">Security Notice</p>
-              <p className="text-[10px] md:text-xs text-blue-700 leading-relaxed">
+              <p className="text-xs md:text-sm font-semibold text-foreground">Security Notice</p>
+              <p className="text-[10px] md:text-xs text-primary leading-relaxed">
                 Your keys are encrypted using AES-256-GCM. We never store raw keys and they are only accessed by your AI partner during authorized tasks.
               </p>
             </div>
@@ -97,7 +97,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
           <div className="space-y-4">
             {fields.map((field) => (
               <div key={field.id} className="space-y-1.5">
-                <label className="text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest px-1">
+                <label className="text-[10px] md:text-xs font-bold text-theme-background0 uppercase tracking-widest px-1">
                   {field.label}
                 </label>
                 <div className="relative">
@@ -106,7 +106,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
                     placeholder={field.placeholder}
                     value={formData[field.id] || ''}
                     onChange={(e) => handleInputChange(field.id, e.target.value)}
-                    className="w-full bg-theme-surface border border-theme rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-sm md:text-base text-foreground outline-none focus:border-blue-600 transition-colors pr-12"
+                    className="w-full bg-theme-surface border border-theme rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-sm md:text-base text-foreground outline-none focus:border-primary transition-colors pr-12"
                   />
                   {field.type === 'password' && (
                     <button 
@@ -127,7 +127,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
                 href={helpUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-[10px] md:text-xs font-bold text-slate-400 hover:text-blue-600 flex items-center gap-1.5 transition-colors"
+                className="text-[10px] md:text-xs font-bold text-slate-400 hover:text-primary flex items-center gap-1.5 transition-colors"
               >
                 Where do I find these keys?
                 <ExternalLink className="w-3 h-3" />
@@ -174,11 +174,11 @@ export function SecureVault() {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl md:text-2xl font-bold text-foreground">Secure Vault</h2>
-          <p className="text-sm text-slate-500">Manage your high-security API credentials and connection keys.</p>
+          <p className="text-sm text-theme-background0">Manage your high-security API credentials and connection keys.</p>
         </div>
-        <div className="bg-blue-50 border border-blue-100 rounded-2xl px-4 py-2 flex items-center gap-2 shrink-0">
-          <ShieldCheck className="w-5 h-5 text-blue-600" />
-          <span className="text-[10px] md:text-sm font-bold text-blue-900 uppercase tracking-widest">Enterprise Encrypted</span>
+        <div className="bg-primary/10 border border-primary/20 rounded-2xl px-4 py-2 flex items-center gap-2 shrink-0">
+          <ShieldCheck className="w-5 h-5 text-primary" />
+          <span className="text-[10px] md:text-sm font-bold text-foreground uppercase tracking-widest">Enterprise Encrypted</span>
         </div>
       </div>
 

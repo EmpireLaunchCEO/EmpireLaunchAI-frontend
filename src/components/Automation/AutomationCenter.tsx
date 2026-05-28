@@ -49,7 +49,7 @@ export function AutomationCenter() {
       <div className="flex justify-between items-center bg-theme-surface p-8 rounded-[40px] border border-theme shadow-sm">
         <div className="space-y-1">
           <h3 className="text-xl font-bold text-foreground">Automation Control</h3>
-          <p className="text-sm text-slate-500">Manage how AI communicates with your customers.</p>
+          <p className="text-sm text-theme-background0">Manage how AI communicates with your customers.</p>
         </div>
         <div className="flex items-center gap-4 bg-theme-background px-6 py-4 rounded-3xl">
           <span className="text-sm font-bold text-slate-700">Manual Review (HITL)</span>
@@ -57,7 +57,7 @@ export function AutomationCenter() {
             onClick={() => setHitlMode(!hitlMode)}
             className={cn(
               "w-12 h-6 rounded-full transition-all relative",
-              hitlMode ? "bg-blue-600" : "bg-slate-300"
+              hitlMode ? "bg-primary" : "bg-slate-300"
             )}
           >
             <div className={cn(
@@ -81,7 +81,7 @@ export function AutomationCenter() {
                   </div>
                   <div>
                     <h5 className="font-bold text-foreground">{flow.name}</h5>
-                    <p className="text-xs text-slate-500 mt-1">{flow.description}</p>
+                    <p className="text-xs text-theme-background0 mt-1">{flow.description}</p>
                   </div>
                 </div>
                 <span className="bg-green-50 text-green-600 text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest">
@@ -98,7 +98,7 @@ export function AutomationCenter() {
                     max="100" 
                     value={tone}
                     onChange={(e) => setTone(parseInt(e.target.value))}
-                    className="w-32 accent-blue-600"
+                    className="w-32 accent-primary"
                   />
                 </div>
                 <div className="flex gap-2">
@@ -119,10 +119,10 @@ export function AutomationCenter() {
           <div className="bg-slate-900 rounded-[40px] p-8 text-white space-y-6">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <Activity className="w-5 h-5 text-blue-400" />
+                <Activity className="w-5 h-5 text-primary" />
                 <h4 className="font-bold">Customer Sentiment Pulse</h4>
               </div>
-              <span className="text-xs font-black text-blue-400 uppercase tracking-widest">High Trust</span>
+              <span className="text-xs font-black text-primary uppercase tracking-widest">High Trust</span>
             </div>
             <div className="flex items-end gap-2">
               <span className="text-4xl font-black text-white">88</span>
@@ -134,19 +134,19 @@ export function AutomationCenter() {
           </div>
 
           <div className="bg-theme-surface rounded-[40px] border border-theme shadow-sm overflow-hidden flex flex-col">
-            <div className="p-8 border-b border-slate-50">
+            <div className="p-8 border-b border-theme-background">
               <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest">Recent Sent Log</h4>
             </div>
-            <div className="divide-y divide-slate-50">
+            <div className="divide-y divide-theme-background">
               {sentLog.map((log) => (
                 <div key={log.id} className="p-6 hover:bg-theme-background transition-colors flex justify-between items-center">
                   <div className="flex gap-4">
-                    <div className="bg-blue-50 p-2 rounded-xl">
-                      <Mail className="w-4 h-4 text-blue-600" />
+                    <div className="bg-primary/10 p-2 rounded-xl">
+                      <Mail className="w-4 h-4 text-primary" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-foreground">{log.recipient}</p>
-                      <p className="text-[10px] text-slate-500 truncate max-w-[200px]">{log.subject}</p>
+                      <p className="text-[10px] text-theme-background0 truncate max-w-[200px]">{log.subject}</p>
                     </div>
                   </div>
                   <div className="text-right">

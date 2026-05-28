@@ -34,12 +34,12 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
             </div>
             <div>
               <h2 className="text-3xl font-black text-foreground tracking-tighter uppercase italic">Intelligence Dashboard</h2>
-              <p className="text-xs text-slate-500 font-bold uppercase tracking-[0.2em]">Omnichannel Performance & Strategy Synthesis</p>
+              <p className="text-xs text-theme-background0 font-bold uppercase tracking-[0.2em]">Omnichannel Performance & Strategy Synthesis</p>
             </div>
           </div>
           <div className="hidden lg:flex items-center gap-6">
              <div className="text-right">
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Neural Sync Status</p>
+                <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Neural Sync Status</p>
                 <p className="text-sm font-black text-emerald-500 uppercase tracking-widest">Optimal</p>
              </div>
              <div className="w-12 h-12 rounded-full border-4 border-emerald-500/20 border-t-emerald-500 animate-spin" />
@@ -76,7 +76,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
                  </div>
                  <div>
                     <h3 className="text-2xl font-black text-white italic">Unified Activity Feed</h3>
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Real-time Cross-Platform Stream</p>
+                    <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Real-time Cross-Platform Stream</p>
                  </div>
                </div>
                <div className="px-4 py-2 bg-white/5 rounded-full border border-white/5">
@@ -122,7 +122,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
             <Stars className="w-3 h-3" />
             Empire Performance Sync
           </div>
-          <p className="text-slate-500 text-sm font-bold max-w-lg italic">
+          <p className="text-theme-background0 text-sm font-bold max-w-lg italic">
             Your empire is currently operating at <span className="text-foreground font-black">98.4% efficiency</span>. 
             All linked systems are synchronized and data-flows are secured under Neural Encryption v4.
           </p>

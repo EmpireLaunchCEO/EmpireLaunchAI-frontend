@@ -53,7 +53,7 @@ export const InboxAssistant = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+          <div className="w-8 h-8 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
             <MessageSquare className="w-4 h-4" />
           </div>
           <h3 className="text-xl font-black text-foreground tracking-tight italic uppercase">Inbox Assistant</h3>
@@ -69,7 +69,7 @@ export const InboxAssistant = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-theme-surface rounded-[32px] p-6 border-2 border-slate-50 shadow-sm space-y-6 group"
+              className="bg-theme-surface rounded-[32px] p-6 border-2 border-theme-background shadow-sm space-y-6 group"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -85,7 +85,7 @@ export const InboxAssistant = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400">
-                   <Bot className="w-3.5 h-3.5 text-blue-500" />
+                   <Bot className="w-3.5 h-3.5 text-primary" />
                    AI Drafted
                 </div>
               </div>
@@ -98,15 +98,15 @@ export const InboxAssistant = () => {
                   </p>
                   <button 
                     onClick={() => handleCopy(draft.body, draft.id)}
-                    className="absolute top-3 right-3 p-2 bg-theme-surface rounded-xl border border-theme shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-blue-50 hover:border-blue-200"
+                    className="absolute top-3 right-3 p-2 bg-theme-surface rounded-xl border border-theme shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-primary/10 hover:border-blue-200"
                   >
                     {copiedId === draft.id ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-slate-400" />}
                   </button>
                 </div>
               </div>
 
-              <div className="bg-blue-50/50 rounded-2xl p-4 border border-blue-100/50">
-                <p className="text-[10px] font-bold text-blue-600 italic">
+              <div className="bg-primary/10/50 rounded-2xl p-4 border border-primary/20/50">
+                <p className="text-[10px] font-bold text-primary italic">
                   "Reasoning: {draft.reasoning}"
                 </p>
               </div>
@@ -114,7 +114,7 @@ export const InboxAssistant = () => {
               <div className="flex items-center gap-3">
                 <button 
                   onClick={() => window.open(draft.platform === 'Fiverr' ? 'https://fiverr.com' : 'https://etsy.com', '_blank')}
-                  className="flex-1 flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg shadow-slate-200"
+                  className="flex-1 flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-all shadow-lg shadow-slate-200"
                 >
                   Open {draft.platform} <ExternalLink className="w-3 h-3" />
                 </button>

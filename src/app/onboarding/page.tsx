@@ -173,16 +173,16 @@ export default function Onboarding() {
                     rotate: [0, 360],
                   }}
                   transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                  className="w-32 h-32 rounded-[40px] border-4 border-blue-500/30 flex items-center justify-center"
+                  className="w-32 h-32 rounded-[40px] border-4 border-primary/30 flex items-center justify-center"
                 >
-                  <div className="w-24 h-24 rounded-[32px] border-4 border-blue-500/50 flex items-center justify-center">
-                    <Zap className="w-12 h-12 text-blue-500 fill-current" />
+                  <div className="w-24 h-24 rounded-[32px] border-4 border-primary/50 flex items-center justify-center">
+                    <Zap className="w-12 h-12 text-primary fill-current" />
                   </div>
                 </motion.div>
                 <motion.div
                   animate={{ opacity: [0.2, 0.5, 0.2] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute inset-0 bg-blue-500 blur-[60px] -z-10"
+                  className="absolute inset-0 bg-primary blur-[60px] -z-10"
                 />
               </div>
 
@@ -199,8 +199,8 @@ export default function Onboarding() {
                       exit={{ opacity: 0, y: -10 }}
                       className="flex items-center gap-2"
                     >
-                      <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
-                      <p className="text-blue-400 font-black tracking-widest text-xs uppercase">
+                      <Loader2 className="w-4 h-4 text-primary animate-spin" />
+                      <p className="text-primary font-black tracking-widest text-xs uppercase">
                         {discoveryLogs[discoveryLogIndex]}
                       </p>
                     </motion.div>
@@ -214,7 +214,7 @@ export default function Onboarding() {
                     initial={{ width: 0 }}
                     animate={{ width: "100%" }}
                     transition={{ duration: 4, ease: "easeInOut" }}
-                    className="h-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                    className="h-full bg-primary shadow-[0_0_15px_rgba(59,130,246,0.5)]"
                   />
                 </div>
                 
@@ -223,7 +223,7 @@ export default function Onboarding() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     onClick={() => setShowDiscoveryReview(true)}
-                    className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-blue-400 transition-colors mx-auto block pt-4"
+                    className="text-[10px] font-black uppercase tracking-widest text-theme-background0 hover:text-primary transition-colors mx-auto block pt-4"
                   >
                     Taking too long? Skip to findings →
                   </motion.button>
@@ -255,7 +255,7 @@ export default function Onboarding() {
       <PWAInstallPrompt />
       <div className="fixed left-0 top-0 bottom-0 w-1 bg-slate-100 hidden lg:block z-[70]" />
       <div className="fixed left-8 top-1/2 -translate-y-1/2 -rotate-90 origin-left hidden lg:flex items-center gap-4 z-[70]">
-        <Stars className="w-4 h-4 text-blue-600 rotate-90" />
+        <Stars className="w-4 h-4 text-primary rotate-90" />
         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 whitespace-nowrap">
           Orchestrator: <span className="text-foreground">{currentStep === 1 ? "Analyzing Identity" : currentStep === 2 ? "Mapping Matrix" : "Calibrating Growth"}</span>
         </span>
@@ -275,28 +275,28 @@ export default function Onboarding() {
                 className="max-w-2xl mx-auto text-center space-y-12 py-12"
               >
                 <div className="relative inline-block">
-                  <div className="w-24 h-24 bg-blue-600 rounded-[32px] flex items-center justify-center shadow-2xl shadow-blue-500/20 mx-auto">
+                  <div className="w-24 h-24 bg-primary rounded-[32px] flex items-center justify-center shadow-2xl shadow-primary/20 mx-auto">
                     <Power className="w-12 h-12 text-white" />
                   </div>
                   <motion.div
                     animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
                     transition={{ duration: 4, repeat: Infinity }}
-                    className="absolute inset-0 bg-blue-500 blur-2xl -z-10"
+                    className="absolute inset-0 bg-primary blur-2xl -z-10"
                   />
                 </div>
 
                 <div className="space-y-6">
                   <h1 className="text-5xl font-black text-foreground tracking-tighter uppercase italic">
-                    Initialize <span className="text-blue-600">Empire.</span>
+                    Initialize <span className="text-primary">Empire.</span>
                   </h1>
-                  <p className="text-slate-500 font-medium text-lg leading-relaxed max-w-lg mx-auto italic">
+                  <p className="text-theme-background0 font-medium text-lg leading-relaxed max-w-lg mx-auto italic">
                     "Payment verified. Neural channels are stabilizing. Before we begin building your digital empire, I require your signature on the operational terms."
                   </p>
                 </div>
 
                 <button
                   onClick={() => setShowTerms(true)}
-                  className="group bg-blue-600 text-white px-12 py-6 rounded-3xl font-black text-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 mx-auto"
+                  className="group bg-primary text-white px-12 py-6 rounded-3xl font-black text-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 mx-auto"
                 >
                   Get Started
                   <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
@@ -369,24 +369,24 @@ export default function Onboarding() {
                 className="max-w-xl mx-auto space-y-8"
               >
                 <div className="text-center space-y-4">
-                  <div className="w-16 h-16 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-xl shadow-blue-200">
+                  <div className="w-16 h-16 bg-primary rounded-2xl mx-auto flex items-center justify-center shadow-xl shadow-blue-200">
                     <Lock className="w-8 h-8 text-white" />
                   </div>
                   <h2 className="text-3xl font-black text-foreground tracking-tight">Authorize Engine.</h2>
-                  <p className="text-slate-500 font-medium italic">
+                  <p className="text-theme-background0 font-medium italic">
                     "To begin autonomous operations, I need you to authorize the operational license. This secures your business slots and neural processing priority."
                   </p>
                 </div>
 
-                <div className="bg-blue-50 border-4 border-blue-600 rounded-[32px] p-8 space-y-6 relative overflow-hidden">
+                <div className="bg-primary/10 border-4 border-primary rounded-[32px] p-8 space-y-6 relative overflow-hidden">
                    <div className="flex justify-between items-start">
                      <div>
-                       <h3 className="text-xl font-black text-blue-900 uppercase italic tracking-tighter">Empire Master</h3>
-                       <p className="text-blue-700 text-[10px] font-black uppercase tracking-widest mt-1">Unlimited Autonomy License</p>
+                       <h3 className="text-xl font-black text-foreground uppercase italic tracking-tighter">Empire Master</h3>
+                       <p className="text-primary text-[10px] font-black uppercase tracking-widest mt-1">Unlimited Autonomy License</p>
                      </div>
                      <div className="text-right">
-                       <span className="text-2xl font-black text-blue-900">$30</span>
-                       <span className="text-blue-600 font-black uppercase tracking-widest text-[8px] block">/Month</span>
+                       <span className="text-2xl font-black text-foreground">$30</span>
+                       <span className="text-primary font-black uppercase tracking-widest text-[8px] block">/Month</span>
                      </div>
                    </div>
 
@@ -397,8 +397,8 @@ export default function Onboarding() {
                        'Secure Bank Bridge Integration',
                        '24/7 Market Intelligence Pulse'
                      ].map(f => (
-                       <div key={f} className="flex items-center gap-2 text-[10px] font-black text-blue-900 uppercase tracking-tight">
-                         <div className="w-1.5 h-1.5 bg-blue-600 rounded-full" />
+                       <div key={f} className="flex items-center gap-2 text-[10px] font-black text-foreground uppercase tracking-tight">
+                         <div className="w-1.5 h-1.5 bg-primary rounded-full" />
                          {f}
                        </div>
                      ))}
@@ -444,7 +444,7 @@ export default function Onboarding() {
           {currentStep < steps.length ? (
             <button
               onClick={nextStep}
-              className="bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-blue-600 transition-all shadow-2xl shadow-slate-200 group"
+              className="bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary transition-all shadow-2xl shadow-slate-200 group"
             >
               Next Phase
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -459,7 +459,7 @@ export default function Onboarding() {
                 handleActivate();
               }}
               disabled={isActivating || isPaying}
-              className="bg-blue-600 text-white px-10 py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-slate-900 transition-all shadow-2xl shadow-blue-200 group disabled:opacity-50"
+              className="bg-primary text-white px-10 py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-slate-900 transition-all shadow-2xl shadow-blue-200 group disabled:opacity-50"
             >
               {isPaying ? "Authorizing..." : isActivating ? "Syncing..." : "Authorize & Activate"}
               <CheckCircle2 className="w-4 h-4" />
