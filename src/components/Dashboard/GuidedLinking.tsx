@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
@@ -17,7 +17,7 @@ import {
   ArrowRight,
   X,
   Palette
-  } from 'lucide-react';
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useRouter } from 'next/navigation';
@@ -44,45 +44,51 @@ interface GuidedLinkingProps {
 }
 
 export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
-  const { connectedPlatforms, connectPlatform, activeSetupPlatform, startSetup, finishSetup, completeLinkingPhase } = useEmpire();
+  const { 
+    connectedPlatforms = [], 
+    connectPlatform, 
+    activeSetupPlatform, 
+    startSetup, 
+    finishSetup, 
+    completeLinkingPhase 
+  } = useEmpire();
+  
   const router = useRouter();
   
-  const handleComplete = () => {
-    if (onClose) {
-      onClose();
-    } else {
-      completeLinkingPhase();
-      router.push('/dashboard');
-    }
-  };
   const [searchQuery, setSearchQuery] = useState('');
   const [showTeacher, setShowTeacher] = useState(true);
   const [linkingStep, setLinkingStep] = useState<'auth' | 'keys'>('auth');
-  
-  const [teacherMessage, setTeacherMessage] = useState('');
   const [displayedMessage, setDisplayedMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [conversationTrigger, setConversationTrigger] = useState(0);
 
-  const isGmailLinked = connectedPlatforms.includes('gmail') || connectedPlatforms.includes('imap');
-  const hasNoPlatforms = connectedPlatforms.length === 0;
+  const safeConnected = useMemo(() => connectedPlatforms || [], [connectedPlatforms]);
+  const isGmailLinked = safeConnected.includes('gmail') || safeConnected.includes('imap');
+  const hasNoPlatforms = safeConnected.length === 0;
+  const hasLinkedEnough = safeConnected.length >= 2;
 
   // Multi-stage message logic
-  useEffect(() => {
-    let msg = "";
-    if (isReturning) {
-      msg = "Back for more? Let's expand your footprint. What are we linking today?";
-    } else if (hasNoPlatforms) {
-      msg = "This is where you search for any app you want to link. I will personally walk you through what needs to be done! Let's start with your email, that way I can get some codes that will be required and you won't have to go back and forth.";
-    } else if (isGmailLinked && connectedPlatforms.length === 1) {
-      msg = "Now that your email is fully linked, pick another app you're wanting to link.";
-    } else if (connectedPlatforms.length === 1) {
-      msg = "One down! What's next on your roadmap? Maybe your primary store like Etsy or Shopify?";
-    } else {
-      msg = "We're building momentum. I'm already scanning your linked accounts for trends. Do you want to link more, or are you ready to see your initial strategy?";
+  const teacherMessage = useMemo(() => {
+    if (searchQuery.toLowerCase() === 'etsy') {
+      return "Etsy is a powerhouse for digital products. I can help you find best-sellers there once we're linked.";
     }
-    setTeacherMessage(msg);
-  }, [connectedPlatforms.length, hasNoPlatforms, isGmailLinked, isReturning]);
+    if (searchQuery.toLowerCase() === 'tiktok') {
+      return "Great choice! TikTok is essential for brand velocity. We can automate your posting schedule once it's linked.";
+    }
+    if (isReturning) {
+      return "Back for more? Let's expand your footprint. What are we linking today?";
+    }
+    if (hasNoPlatforms) {
+      return "This is where you search for any app you want to link. I will personally walk you through what needs to be done! Let's start with your email, that way I can get some codes that will be required and you won't have to go back and forth.";
+    }
+    if (isGmailLinked && safeConnected.length === 1) {
+      return "Now that your email is fully linked, pick another app you're wanting to link.";
+    }
+    if (safeConnected.length === 1) {
+      return "One down! What's next on your roadmap? Maybe your primary store like Etsy or Shopify?";
+    }
+    return "Neural handshake successful. Your empire is now multi-channel. Ready to initialize the Command Center?";
+  }, [safeConnected.length, hasNoPlatforms, isGmailLinked, isReturning, searchQuery]);
 
   // Typing effect
   useEffect(() => {
@@ -100,42 +106,37 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
         clearInterval(interval);
         setIsTyping(false);
       }
-    }, 20);
+    }, 15);
 
     return () => clearInterval(interval);
   }, [teacherMessage, conversationTrigger]);
 
-  // Contextual reactions to search
-  useEffect(() => {
-    if (searchQuery.toLowerCase() === 'etsy') {
-      setTeacherMessage("Etsy is a powerhouse for digital products. I can help you find best-sellers there once we're linked.");
-      setConversationTrigger(prev => prev + 1);
-    } else if (searchQuery.toLowerCase() === 'tiktok') {
-      setTeacherMessage("Great choice! TikTok is essential for brand velocity. We can automate your posting schedule once it's linked.");
-    }
-  }, [searchQuery]);
-
-  const filteredPlatforms = availablePlatforms.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
-    !connectedPlatforms.includes(p.id)
-  );
+  const filteredPlatforms = useMemo(() => {
+    return availablePlatforms.filter(p => 
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+      !safeConnected.includes(p.id)
+    );
+  }, [searchQuery, safeConnected]);
 
   const handleSelectPlatform = (platformId: string) => {
     startSetup(platformId);
     setLinkingStep('auth');
     setSearchQuery('');
-    
-    if (platformId === 'gmail') {
-      setTeacherMessage("Excellent! Your neural link to Gmail is established. This will allow me to monitor verification codes and customer inquiries autonomously.");
-    } else if (platformId === 'imap') {
-      setTeacherMessage("Neural link established via IMAP. I'm now monitoring your primary communication channel for empire-critical data.");
-    }
     setConversationTrigger(prev => prev + 1);
   };
 
-  const handleAuth = () => {
-    // Simulate auth success
-    setLinkingStep('keys');
+  const handleComplete = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      completeLinkingPhase();
+      router.push('/dashboard');
+    }
+  };
+
+  const handleEmergencySkip = () => {
+    completeLinkingPhase();
+    router.push('/dashboard');
   };
 
   const handleLink = () => {
@@ -143,49 +144,14 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
       connectPlatform(activeSetupPlatform);
       finishSetup();
       setLinkingStep('auth');
-      
-      if (activeSetupPlatform === 'gmail' || activeSetupPlatform === 'imap') {
-        setTeacherMessage("Excellent! Your neural link to email is established. This will allow me to monitor verification codes and customer inquiries autonomously.");
-        setConversationTrigger(prev => prev + 1);
-      }
+      setConversationTrigger(prev => prev + 1);
     }
   };
 
-  const currentPlatform = availablePlatforms.find(p => p.id === activeSetupPlatform);
-
-  const handleManualPreFill = () => {
-    setTeacherMessage("I understand. We'll go the manual route. I'll walk you through finding the API keys for each platform one by one. Where should we start? Search for an app above.");
-    setConversationTrigger(prev => prev + 1);
-  };
-
-  const handleImapStart = () => {
-    setTeacherMessage("Universal IMAP is a great alternative. Enter your email and App Password below, and I'll establish the link.");
-    startSetup('imap');
-    setLinkingStep('auth');
-    setConversationTrigger(prev => prev + 1);
-  };
-
-  const handleInterception = (input: string) => {
-    const query = input.toLowerCase();
-    if (query.includes('how') && query.includes('link')) {
-      setTeacherMessage("Linking is easy! Just type the name of the app in the search bar above, and I'll guide you through the secure OAuth or API key setup.");
-    } else if (query.includes('what') && query.includes('next')) {
-      if (hasNoPlatforms) {
-        setTeacherMessage("I recommend starting with your email (Gmail or Universal IMAP). It acts as the backbone for your empire's communications.");
-      } else {
-        setTeacherMessage("You've got your email linked. Next, let's connect a sales channel like Etsy or Shopify to start tracking your revenue.");
-      }
-    } else {
-      setTeacherMessage("I'm processing your request... During this linking phase, I'm focused on getting your core apps connected. Ask me how to link a specific platform!");
-    }
-    setConversationTrigger(prev => prev + 1);
-  };
-
-  // Expose interception to window for simplicity in this prototype or use a ref in real app
-  useEffect(() => {
-    (window as any).interceptTeacher = handleInterception;
-    return () => { delete (window as any).interceptTeacher; };
-  }, [connectedPlatforms]);
+  const currentPlatform = useMemo(() => 
+    availablePlatforms.find(p => p.id === activeSetupPlatform),
+    [activeSetupPlatform]
+  );
 
   return (
     <div className="space-y-12 max-w-4xl mx-auto pt-10 pb-20">
@@ -202,10 +168,6 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         
-        {/* Animated Ring on focus */}
-        <div className="absolute inset-0 -z-10 bg-primary/5 blur-2xl rounded-[32px] opacity-0 group-focus-within:opacity-100 transition-opacity" />
-        
-        {/* Search Results Dropdown */}
         <AnimatePresence>
           {searchQuery && (
             <motion.div
@@ -216,18 +178,21 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
             >
               {filteredPlatforms.length > 0 ? (
                 <div className="p-2">
-                  {filteredPlatforms.map(platform => (
-                    <button
-                      key={platform.id}
-                      onClick={() => handleSelectPlatform(platform.id)}
-                      className="w-full flex items-center gap-4 p-4 hover:bg-theme-background rounded-xl transition-colors text-left"
-                    >
-                      <div className={cn("p-2 rounded-lg", platform.bg)}>
-                        <platform.icon className={cn("w-5 h-5", platform.color)} />
-                      </div>
-                      <span className="font-bold text-foreground">{platform.name}</span>
-                    </button>
-                  ))}
+                  {filteredPlatforms.map(platform => {
+                    const Icon = platform.icon;
+                    return (
+                      <button
+                        key={platform.id}
+                        onClick={() => handleSelectPlatform(platform.id)}
+                        className="w-full flex items-center gap-4 p-4 hover:bg-theme-background rounded-xl transition-colors text-left"
+                      >
+                        <div className={cn("p-2 rounded-lg", platform.bg)}>
+                          <Icon className={cn("w-5 h-5", platform.color)} />
+                        </div>
+                        <span className="font-bold text-foreground">{platform.name}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="p-8 text-center text-theme-background0 font-medium">
@@ -239,8 +204,8 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
         </AnimatePresence>
       </div>
 
-      {/* Connected Platforms Quick View (Always visible below search) */}
-      {connectedPlatforms.length > 0 && (
+      {/* Connected Platforms Quick View */}
+      {safeConnected.length > 0 && (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -248,53 +213,44 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
         >
           <div className="flex items-center justify-between px-2">
             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Established Links</h4>
-            <span className="text-[10px] font-black text-primary bg-primary/10 px-2 py-1 rounded-full">{connectedPlatforms.length} Neural Syncs</span>
+            <span className="text-[10px] font-black text-primary bg-primary/10 px-2 py-1 rounded-full">{safeConnected.length} Neural Syncs</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {connectedPlatforms.map(id => {
+            {safeConnected.map(id => {
               const platform = availablePlatforms.find(p => p.id === id);
               if (!platform) return null;
+              const Icon = platform.icon;
               return (
-                <motion.div 
+                <div 
                   key={id} 
-                  layoutId={id}
-                  className="p-6 bg-theme-surface border-2 border-theme rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
+                  className="p-6 bg-theme-surface border-2 border-theme rounded-[28px] flex items-center gap-4 shadow-sm"
                 >
                   <div className={cn("p-3 rounded-xl", platform.bg)}>
-                    <platform.icon className={cn("w-5 h-5", platform.color)} />
+                    <Icon className={cn("w-5 h-5", platform.color)} />
                   </div>
                   <span className="font-bold text-foreground">{platform.name}</span>
                   <CheckCircle2 className="w-4 h-4 text-green-500 ml-auto" />
-                </motion.div>
+                </div>
               );
             })}
           </div>
         </motion.div>
       )}
 
-      {/* Empire Teacher Popup (Conversational Overhaul) */}
+      {/* Empire Teacher Popup */}
       <AnimatePresence mode="wait">
         {showTeacher && !activeSetupPlatform && (
           <motion.div
-            key={connectedPlatforms.length}
+            key={safeConnected.length}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="bg-slate-900 rounded-[40px] p-10 text-white relative overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)]"
+            className="bg-slate-900 rounded-[40px] p-10 text-white relative overflow-hidden shadow-2xl"
           >
             <div className="relative z-10 flex flex-col md:flex-row gap-8">
               <div className="shrink-0">
                 <div className="w-20 h-20 rounded-[28px] bg-primary flex items-center justify-center shadow-2xl shadow-primary/40 relative">
                   <Stars className="w-10 h-10 text-white" />
-                  {isTyping && (
-                    <div className="absolute -top-2 -right-2 bg-primary rounded-full p-1.5 animate-bounce shadow-lg">
-                      <div className="flex gap-1">
-                        <div className="w-1 h-1 bg-theme-surface rounded-full" />
-                        <div className="w-1 h-1 bg-theme-surface rounded-full animate-pulse" />
-                        <div className="w-1 h-1 bg-theme-surface rounded-full" />
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
               
@@ -328,58 +284,61 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                         Start with Gmail <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </button>
                       <button 
-                        onClick={handleImapStart}
-                        className="px-8 py-4 bg-slate-800 hover:bg-slate-700 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3"
+                        onClick={handleEmergencySkip}
+                        className="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all"
                       >
-                        Other Email (IMAP)
-                      </button>
-                      <button 
-                        onClick={handleManualPreFill}
-                        className="px-8 py-4 bg-transparent border-2 border-slate-700 hover:bg-slate-800 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 text-slate-400 hover:text-white"
-                      >
-                        Manual Pre-fill
+                        Skip Linking & Enter Hub
                       </button>
                     </>
-                  ) : connectedPlatforms.length >= 2 ? (
+                  ) : !hasLinkedEnough ? (
+                    <>
+                      <button 
+                        onClick={() => setSearchQuery('etsy')}
+                        className="px-8 py-4 bg-primary/20 text-primary hover:bg-primary/30 rounded-2xl font-black text-xs uppercase tracking-widest transition-all"
+                      >
+                        Link Another Platform
+                      </button>
+                      <button 
+                        onClick={handleEmergencySkip}
+                        className="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all"
+                      >
+                        Skip & Enter Hub
+                      </button>
+                    </>
+                  ) : (
                     <button 
                       onClick={handleComplete}
                       className="px-10 py-5 bg-gradient-to-r from-primary to-indigo-600 hover:from-primary hover:to-indigo-500 rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all flex items-center gap-3 shadow-2xl shadow-primary/40 group animate-pulse"
                     >
                       Neural Sync Complete: Ready to move on <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
-                  ) : (
-                    <div className="flex items-center gap-2 text-slate-400 italic text-sm font-medium">
-                      <Stars className="w-4 h-4" /> I'm waiting for your next platform choice...
-                    </div>
                   )}
                 </div>
               </div>
             </div>
-            
-            {/* Background elements for premium feel */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-10 -mr-48 -mt-48" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-600 rounded-full blur-[100px] opacity-10 -ml-32 -mb-32" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Active Setup Card (Updated with IMAP support) */}
+      {/* Active Setup Card */}
       <AnimatePresence>
         {currentPlatform && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
-            className="bg-theme-surface border-2 border-theme rounded-[48px] p-10 md:p-16 shadow-[0_48px_96px_-24px_rgba(0,0,0,0.1)] relative overflow-hidden"
+            className="bg-theme-surface border-2 border-theme rounded-[48px] p-10 md:p-16 shadow-2xl relative overflow-hidden"
           >
-            {/* ... card content ... */}
             <div className="flex flex-col md:flex-row gap-10 md:items-center justify-between relative z-10">
               <div className="flex items-center gap-8">
-                <div className={cn("p-8 rounded-[36px] shadow-inner", currentPlatform?.bg ?? 'bg-theme-background')}>
-                  <currentPlatform.icon className={cn("w-12 h-12", currentPlatform?.color ?? 'text-slate-400')} />
+                <div className={cn("p-8 rounded-[36px] shadow-inner", currentPlatform.bg)}>
+                  {(() => {
+                    const Icon = currentPlatform.icon;
+                    return <Icon className={cn("w-12 h-12", currentPlatform.color)} />;
+                  })()}
                 </div>
                 <div>
-                  <h2 className="text-4xl font-black text-foreground tracking-tighter">{currentPlatform?.name ?? 'Connecting...'}</h2>
+                  <h2 className="text-4xl font-black text-foreground tracking-tighter">{currentPlatform.name}</h2>
                   <div className="flex items-center gap-3 mt-2">
                     <div className={cn("w-2.5 h-2.5 rounded-full", linkingStep === 'auth' ? "bg-amber-500 animate-pulse" : "bg-green-500")} />
                     <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
@@ -389,21 +348,19 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 </div>
               </div>
 
-              <div className="flex gap-4">
-                <button 
-                  onClick={finishSetup}
-                  className="px-8 py-4 rounded-2xl border-2 border-theme text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-theme-background transition-all"
-                >
-                  Abort
-                </button>
-              </div>
+              <button 
+                onClick={finishSetup}
+                className="px-8 py-4 rounded-2xl border-2 border-theme text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-theme-background transition-all"
+              >
+                Abort
+              </button>
             </div>
 
             <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-10">
-              {/* Step 1: Auth / Email Auth */}
+              {/* Step 1: Auth */}
               <div className={cn(
                 "p-10 rounded-[40px] border-2 transition-all relative",
-                linkingStep === 'auth' ? "border-primary bg-primary/10/30 ring-4 ring-primary/10" : "border-theme bg-theme-background/50 opacity-60"
+                linkingStep === 'auth' ? "border-primary bg-primary/10 ring-4 ring-primary/10" : "border-theme bg-theme-background/50 opacity-60"
               )}>
                 <div className="flex items-center justify-between mb-8">
                   <div className="w-12 h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center text-primary">
@@ -421,28 +378,19 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                   }
                 </p>
                 {linkingStep === 'auth' && (
-                  <div className="space-y-4">
-                    {currentPlatform.id === 'imap' && (
-                       <input 
-                         type="email" 
-                         placeholder="Email Address"
-                         className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors"
-                       />
-                    )}
-                    <button 
-                      onClick={handleAuth}
-                      className="w-full py-5 bg-primary text-white rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-blue-200"
-                    >
-                      {currentPlatform.id === 'imap' ? 'Authenticate IMAP' : `Authorize ${currentPlatform.name}`}
-                    </button>
-                  </div>
+                  <button 
+                    onClick={() => setLinkingStep('keys')}
+                    className="w-full py-5 bg-primary text-white rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl"
+                  >
+                    {currentPlatform.id === 'imap' ? 'Authenticate IMAP' : `Authorize ${currentPlatform.name}`}
+                  </button>
                 )}
               </div>
 
               {/* Step 2: Keys */}
               <div className={cn(
                 "p-10 rounded-[40px] border-2 transition-all",
-                linkingStep === 'keys' ? "border-primary bg-primary/10/30 ring-4 ring-primary/10" : "border-theme bg-theme-background/50 opacity-40"
+                linkingStep === 'keys' ? "border-primary bg-primary/10 ring-4 ring-primary/10" : "border-theme bg-theme-background/50 opacity-40"
               )}>
                 <div className="flex items-center justify-between mb-8">
                   <div className="w-12 h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center text-primary">
@@ -456,14 +404,6 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 
                 {linkingStep === 'keys' ? (
                   <div className="space-y-5">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Protocol Identifier</label>
-                      <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-4 text-sm font-bold" />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Secure Token</label>
-                      <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-4 text-sm font-bold" />
-                    </div>
                     <button 
                       onClick={handleLink}
                       className="w-full py-5 bg-slate-900 text-white rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-primary transition-all shadow-2xl"
@@ -478,12 +418,9 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 )}
               </div>
             </div>
-            
-            <div className="absolute -right-32 -bottom-32 w-96 h-96 bg-theme-background rounded-full -z-10" />
           </motion.div>
         )}
       </AnimatePresence>
-
     </div>
   );
 }

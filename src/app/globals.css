@@ -18,7 +18,7 @@ body.theme-classic-blue {
   --secondary: #0f172a;
   --accent: #60a5fa;
   --background: #020617; /* Obsidian */
-  --foreground: #3b82f6; /* Blue lettering */
+  --foreground: #f8fafc; /* White/Slate-50 */
   --muted: #0f172a;
   --surface: #0f172a;
   --surface-border: #1e293b;
@@ -29,7 +29,7 @@ body.theme-empire-gold {
   --secondary: #0f172a;
   --accent: #f59e0b; /* Amber 500 */
   --background: #020617; /* Obsidian Background */
-  --foreground: #fbbf24; /* Gold lettering */
+  --foreground: #f8fafc; /* White/Slate-50 */
   --muted: #0f172a; 
   --surface: #0f172a; /* Deep Slate Surface */
   --surface-border: #fbbf2444; /* Faint Gold Border */
@@ -41,7 +41,7 @@ body.theme-emerald-growth {
   --secondary: #0f172a;
   --accent: #34d399;
   --background: #020617; /* Obsidian */
-  --foreground: #10b981; /* Green lettering */
+  --foreground: #f8fafc; /* White/Slate-50 */
   --muted: #0f172a;
   --surface: #0f172a;
   --surface-border: #10b98144;
@@ -52,7 +52,7 @@ body.theme-rose-gold {
   --secondary: #0f172a;
   --accent: #fb7185;
   --background: #020617; /* Obsidian */
-  --foreground: #f43f5e; /* Rose lettering */
+  --foreground: #f8fafc; /* White/Slate-50 */
   --muted: #0f172a;
   --surface: #0f172a;
   --surface-border: #f43f5e44;
@@ -63,7 +63,7 @@ body.theme-cyber-purple {
   --secondary: #0f172a;
   --accent: #c084fc;
   --background: #020617; /* Obsidian */
-  --foreground: #a855f7; /* Purple lettering */
+  --foreground: #f8fafc; /* White/Slate-50 */
   --muted: #0f172a;
   --surface: #0f172a;
   --surface-border: #a855f744;
@@ -79,47 +79,42 @@ body.theme-cyber-purple {
 }
 
 /* Force everything that should be background to use theme variables */
-[class*="bg-white"], [class*="bg-theme-background"], [class*="bg-slate-100"], [class*="bg-gray-50"], [class*="bg-gray-100"] {
+[class*="bg-theme-background"] {
+  background-color: var(--background) !important;
+}
+
+[class*="bg-theme-surface"] {
   background-color: var(--surface) !important;
 }
 
-[class*="text-slate-900"], [class*="text-black"], [class*="text-gray-900"] {
+[class*="text-theme-background0"] {
   color: var(--foreground) !important;
+  opacity: 0.7;
 }
 
-[class*="text-theme-background0"], [class*="text-slate-600"], [class*="text-gray-500"] {
-  color: var(--foreground) !important;
-  opacity: 0.8;
-}
-
-[class*="border-slate-100"], [class*="border-slate-200"], [class*="border-theme-background"], [class*="border-gray-100"], [class*="border-gray-200"] {
+[class*="border-theme"] {
   border-color: var(--surface-border) !important;
 }
 
 html {
-  height: -webkit-fill-available;
   scroll-behavior: smooth;
+  height: -webkit-fill-available;
 }
 
 body {
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.5s ease, color 0.5s ease;
-  overflow-x: hidden;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
   overflow-y: auto;
+  overscroll-behavior-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-
 /* Force headings to use theme foreground when a theme is active */
-body.theme-classic-blue h1, body.theme-classic-blue h2, body.theme-classic-blue h3,
-body.theme-empire-gold h1, body.theme-empire-gold h2, body.theme-empire-gold h3,
-body.theme-emerald-growth h1, body.theme-emerald-growth h2, body.theme-emerald-growth h3,
-body.theme-rose-gold h1, body.theme-rose-gold h2, body.theme-rose-gold h3,
-body.theme-cyber-purple h1, body.theme-cyber-purple h2, body.theme-cyber-purple h3 {
+body[class*="theme-"] h1, body[class*="theme-"] h2, body[class*="theme-"] h3, body[class*="theme-"] h4 {
   color: var(--foreground) !important;
 }
 

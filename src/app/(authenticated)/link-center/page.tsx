@@ -1,19 +1,33 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { useEmpire } from '@/lib/EmpireContext';
 import { motion } from 'framer-motion';
 import { Share2, LayoutDashboard, Zap } from 'lucide-react';
 import Link from 'next/link';
-
+import { cn } from '@/lib/utils';
 
 export default function LinkCenterPage() {
-  const { isLinkingComplete } = useEmpire();
+  const { isLinkingComplete, addToast } = useEmpire();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRefresh = async () => {
-    // Simulate refresh logic
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsLoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      if (addToast) {
+        addToast({ 
+          title: 'Neural Sync', 
+          message: 'Platform data re-synchronized.', 
+          type: 'success' 
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -22,7 +36,7 @@ export default function LinkCenterPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
             <Share2 className="w-3 h-3" />
-            Link Center
+            Link Center <span className="ml-2 opacity-50">v4.2.6</span>
           </div>
           <div className="flex items-center gap-4">
             <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
@@ -31,8 +45,9 @@ export default function LinkCenterPage() {
             <button 
               onClick={handleRefresh}
               className="p-2 hover:bg-primary/10 rounded-full transition-colors"
+              title="Refresh Sync"
             >
-              <Zap className="w-5 h-5 text-primary" />
+              <Zap className={cn("w-5 h-5 text-primary", isLoading && "animate-pulse")} />
             </button>
           </div>
           <p className="text-sm md:text-base text-theme-background0 font-medium">
@@ -59,6 +74,5 @@ export default function LinkCenterPage() {
         <GuidedLinking isReturning={isLinkingComplete} />
       </motion.div>
     </div>
-    
   );
 }

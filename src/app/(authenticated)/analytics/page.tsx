@@ -19,6 +19,7 @@ import { VideoPerformance } from '@/components/Dashboard/SuccessHub/VideoPerform
 import { TrendRadar } from '@/components/Analytics/TrendRadar';
 import { AutomationCenter } from '@/components/Automation/AutomationCenter';
 import { EmpireLedger } from '@/components/Analytics/EmpireLedger';
+import { useEmpire } from '@/lib/EmpireContext';
 
 const tabs = [
   { id: 'growth', name: 'Growth & Trends', icon: TrendingUp },
@@ -28,23 +29,32 @@ const tabs = [
 
 export default function AnalyticsPage() {
   const [activeTab, setActiveTab] = useState('growth');
+  const { addToast } = useEmpire();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRefresh = async () => {
+    setIsLoading(true);
     // Simulate refresh logic
     await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsLoading(false);
+    addToast({ title: 'Intelligence Updated', message: 'Trend data and autonomous metrics are now in sync.', type: 'success' });
   };
 
   return (
     <div className="p-4 md:p-8 pb-32 max-w-7xl mx-auto space-y-8 md:space-y-10">
       <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="space-y-1">
+          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
+            <Activity className="w-3 h-3" />
+            Analytics Hub <span className="ml-2 opacity-50">v4.2.3</span>
+          </div>
           <div className="flex items-center gap-4">
             <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Intelligence Command</h1>
             <button 
               onClick={handleRefresh}
               className="p-2 hover:bg-primary/10 rounded-full transition-colors"
             >
-              <Zap className="w-5 h-5 text-primary" />
+              <Zap className={cn("w-5 h-5 text-primary", isLoading && "animate-pulse")} />
             </button>
           </div>
           <p className="text-theme-background0 text-sm md:text-base font-medium italic">High-intelligence performance tracking and automated growth.</p>

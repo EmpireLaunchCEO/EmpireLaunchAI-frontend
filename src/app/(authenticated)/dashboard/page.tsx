@@ -18,7 +18,6 @@ import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService } from '@/lib/api-service';
-import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
 import { useSearchParams } from 'next/navigation';
 
@@ -30,7 +29,7 @@ interface Goal {
 }
 
 export default function Dashboard() {
-  const { activeEmpireId, isLinkingComplete } = useEmpire();
+  const { activeEmpireId, isLinkingComplete, addToast } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
@@ -80,11 +79,6 @@ export default function Dashboard() {
   }, [activeEmpireId]);
 
   const handleExecute = async (goal: string) => {
-    if (!isLinkingComplete && (window as any).interceptTeacher) {
-      (window as any).interceptTeacher(goal);
-      return;
-    }
-
     if (partnerStatus !== 'idle') return;
     
     setPartnerStatus('creating');
@@ -118,23 +112,26 @@ export default function Dashboard() {
     }
   };
 
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    await fetchData();
+    addToast({ title: 'Data Refreshed', message: 'Neural bridge synchronized with latest empire metrics.', type: 'success' });
+  };
+
   return (
     <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
               <LayoutDashboard className="w-3 h-3" />
-              Success Hub <span className="ml-2 text-[8px] bg-primary/20 px-2 py-0.5 rounded-full">v4.2.1 (PROD)</span>
+              Success Hub <span className="ml-2 text-[8px] bg-primary/20 px-2 py-0.5 rounded-full">v4.2.5 (STABLE)</span>
             </div>
             <div className="flex items-center gap-4">
               <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
                 {empireData?.name || "Success Hub"}.
               </h1>
               <button 
-                onClick={() => {
-                  setIsLoading(true);
-                  fetchData();
-                }}
+                onClick={handleRefresh}
                 className="p-2 hover:bg-primary/10 rounded-full transition-colors group"
                 title="Refresh Data"
               >
@@ -161,16 +158,11 @@ export default function Dashboard() {
 
         <BusinessSlots currentEmpire={empireData} />
 
-        {!isLinkingComplete ? (
-          <div className="bg-theme-surface border-2 border-theme rounded-[48px] p-8">
-             <GuidedLinking />
-          </div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="space-y-12 md:space-y-20"
-          >
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="space-y-12 md:space-y-20"
+        >
             {/* Thinking Status Overlay */}
             <AnimatePresence>
               {partnerStatus !== 'idle' && (
@@ -241,8 +233,7 @@ export default function Dashboard() {
                 <EmpireConstellation />
               </div>
             </section>
-          </motion.div>
-        )}
+        </motion.div>
 
         <AnimatePresence>
           {isCelebrating && (
@@ -273,7 +264,6 @@ export default function Dashboard() {
         />
 
         {isLinkingComplete && <NotificationOnboarding />}
-      </div>
-    
+    </div>
   );
 }

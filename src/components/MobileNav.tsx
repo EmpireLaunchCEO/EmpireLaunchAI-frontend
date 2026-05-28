@@ -17,7 +17,7 @@ export function MobileNav() {
   const { isLinkingComplete } = useEmpire();
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-theme-surface/80 backdrop-blur-lg border-t border-theme px-10 py-3 z-[100] flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-white/10 px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] z-[100] flex justify-between items-center shadow-[0_-20px_50px_rgba(0,0,0,0.3)] min-h-[5rem]">
       {/* Home */}
       <Link
         href="/dashboard"

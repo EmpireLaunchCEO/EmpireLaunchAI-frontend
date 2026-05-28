@@ -20,10 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=4.1.5" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=4.1.5" />
-        <link rel="icon" href="/branded-globe.png?v=4.1.5" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, shrink-to-fit=no" />
+        <link rel="manifest" href="/manifest.json?v=4.2.6" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=4.2.6" />
+        <link rel="icon" href="/branded-globe.png?v=4.2.6" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, shrink-to-fit=no, maximum-scale=1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#2563eb" />
@@ -32,22 +32,16 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var version = '4.1.9';
+                  var version = '4.2.6';
                   var lastVersion = localStorage.getItem('app_version');
                   if (lastVersion !== version) {
                     localStorage.setItem('app_version', version);
                     
-                    // NUCLEAR RESET OF ALL STUCK FLAGS
+                    // NUCLEAR RESET OF STUCK SETUP STATE (BUT PRESERVE ONBOARDING)
                     localStorage.removeItem('activeSetupPlatform');
-                    localStorage.removeItem('isOnboarded');
-                    localStorage.removeItem('isNotificationModalDismissed');
                     
-                    // Reset tour keys to force welcome tour
+                    // Reset tour keys to force welcome tour if they want it
                     localStorage.removeItem('empire_tour_v418');
-                    localStorage.removeItem('hasSeenEmpireTourV7');
-                    localStorage.removeItem('hasSeenEmpireTourV8');
-                    localStorage.removeItem('hasSeenEmpireTourV9');
-                    localStorage.removeItem('hasSeenEmpireTourV10');
                     
                     if ('serviceWorker' in navigator) {
                       navigator.serviceWorker.getRegistrations().then(function(regs) {
@@ -61,7 +55,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} bg-[var(--background)] text-[var(--foreground)] transition-colors duration-500`}>
+      <body className={`${inter.className} transition-colors duration-500`}>
         <EmpireProvider>
           {children}
           <SetupAssistant />

@@ -12,7 +12,8 @@ import {
   Zap,
   Bot,
   ShieldCheck,
-  Loader2
+  Loader2,
+  LayoutDashboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ProgressConstellation } from '@/components/Onboarding/ProgressConstellation';
@@ -24,6 +25,9 @@ import { ApprovalGate } from '@/components/Onboarding/ApprovalGate';
 import { DiscoveryReview } from '@/components/Onboarding/DiscoveryReview';
 import { PWAInstallPrompt } from '@/components/Onboarding/PWAInstallPrompt';
 import { TermsModal } from '@/components/Legal/TermsModal';
+import { useEmpire } from '@/lib/EmpireContext';
+import { API_URL } from '@/lib/config';
+import { CreditCard, Lock, Sparkles, Power } from 'lucide-react';
 
 const steps = [
   { id: 0, title: 'Welcome' },
@@ -34,12 +38,8 @@ const steps = [
   { id: 5, title: 'Authorization' },
 ];
 
-import { useEmpire } from '@/lib/EmpireContext';
-import { API_URL } from '@/lib/config';
-import { CreditCard, Lock, Sparkles, Power } from 'lucide-react';
-
 export default function Onboarding() {
-  const { completeOnboarding, setActiveEmpireId, isOnboarded, isInitialized, setIsPaid } = useEmpire();
+  const { completeOnboarding, setActiveEmpireId, isOnboarded, isInitialized, setIsPaid, completeLinkingPhase } = useEmpire();
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [showTerms, setShowTerms] = useState(false);
@@ -109,8 +109,6 @@ export default function Onboarding() {
 
   const handleActivate = async () => {
     setIsActivating(true);
-    
-    // In co-pilot mode, we just finish. In empire mode, we do the discovery review.
     if (data.automationMode === 'co-pilot') {
        await finalizeActivation();
     }
@@ -126,9 +124,9 @@ export default function Onboarding() {
         },
         body: JSON.stringify({
           userId: '00000000-0000-0000-0000-000000000000',
-          name: data.name,
-          niche: data.niche,
-          angle: data.angle,
+          name: data.name || 'My Empire',
+          niche: data.niche || 'Digital Marketing',
+          angle: data.angle || 'Efficiency',
           automationMode: data.automationMode
         }),
       });
@@ -145,6 +143,13 @@ export default function Onboarding() {
       completeOnboarding();
       router.push('/dashboard');
     }
+  };
+
+  const forceComplete = () => {
+    setIsPaid(true);
+    completeOnboarding();
+    completeLinkingPhase();
+    router.push('/dashboard');
   };
 
   if (isActivating) {
@@ -218,16 +223,14 @@ export default function Onboarding() {
                   />
                 </div>
                 
-                {showSkip && (
-                  <motion.button
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    onClick={() => setShowDiscoveryReview(true)}
-                    className="text-[10px] font-black uppercase tracking-widest text-theme-background0 hover:text-primary transition-colors mx-auto block pt-4"
-                  >
-                    Taking too long? Skip to findings →
-                  </motion.button>
-                )}
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  onClick={forceComplete}
+                  className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-primary transition-colors mx-auto block pt-8"
+                >
+                  Emergency Bypass: Enter Success Hub →
+                </motion.button>
               </div>
             </div>
           ) : (
@@ -251,8 +254,20 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="bg-theme-surface flex flex-col items-center">
+    <div className="bg-theme-surface min-h-screen flex flex-col items-center">
       <PWAInstallPrompt />
+      
+      {/* Top Bypass Bar */}
+      <div className="w-full bg-primary/5 border-b border-primary/10 p-2 flex justify-center">
+        <button 
+          onClick={forceComplete}
+          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/70 transition-colors"
+        >
+          <LayoutDashboard className="w-3 h-3" />
+          Already have an empire? Skip to Hub
+        </button>
+      </div>
+
       <div className="fixed left-0 top-0 bottom-0 w-1 bg-slate-100 hidden lg:block z-[70]" />
       <div className="fixed left-8 top-1/2 -translate-y-1/2 -rotate-90 origin-left hidden lg:flex items-center gap-4 z-[70]">
         <Stars className="w-4 h-4 text-primary rotate-90" />

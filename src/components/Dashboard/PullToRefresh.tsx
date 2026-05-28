@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
-import { Globe } from 'lucide-react';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 
 interface PullToRefreshProps {
@@ -90,10 +90,11 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
               duration: 0.1
             }}
           >
-            <Globe 
+            <BrandedGlobe 
+              size="lg"
               className={cn(
-                "w-10 h-10 transition-colors",
-                isRefreshing ? "text-primary" : "text-slate-300"
+                "transition-opacity",
+                isRefreshing ? "opacity-100" : "opacity-50"
               )}
             />
           </motion.div>

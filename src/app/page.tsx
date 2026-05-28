@@ -20,7 +20,7 @@ import { useEmpire } from '@/lib/EmpireContext';
 
 export default function LandingPage() {
   const router = useRouter();
-  const { setLanguage: setGlobalLanguage, setCurrency: setGlobalCurrency, setIsPaid } = useEmpire();
+  const { setLanguage: setGlobalLanguage, setCurrency: setGlobalCurrency, setIsPaid, isOnboarded, isPaid } = useEmpire();
   
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [language, setLanguage] = useState('en-US');
@@ -31,6 +31,12 @@ export default function LandingPage() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (isMounted && isOnboarded) {
+      router.replace('/dashboard');
+    }
+  }, [isMounted, isOnboarded, router]);
 
   const handleLanguageChange = (lang: string) => {
     setLanguage(lang);

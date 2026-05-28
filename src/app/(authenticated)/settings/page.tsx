@@ -257,8 +257,13 @@ export default function SettingsPage() {
     { id: 'cyber-purple', name: 'Cyber Purple', primary: 'bg-purple-600', secondary: 'bg-indigo-900', description: 'High-intelligence futuristic look.' },
   ];
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleRefresh = async () => {
+    setIsLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsLoading(false);
+    addToast({ title: 'System Synchronized', message: 'Core engine settings have been updated.', type: 'success' });
   };
 
   const [isSwitching, setIsSwitching] = useState(false);
@@ -302,11 +307,11 @@ export default function SettingsPage() {
                 onClick={handleRefresh}
                 className="p-2 hover:bg-primary/10 rounded-full transition-colors"
               >
-                <Zap className="w-5 h-5 text-primary" />
+                <Zap className={cn("w-5 h-5 text-primary", isLoading && "animate-pulse")} />
               </button>
             </div>
             <p className="text-theme-background0 mt-2 text-base md:text-lg font-medium">
-              Manage your Empire configuration and account security.
+              Manage your Empire configuration and account security. <span className="opacity-50">v4.2.3</span>
             </p>
           </div>
         </header>

@@ -40,9 +40,16 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
           <div className="hidden lg:flex items-center gap-6">
              <div className="text-right">
                 <p className="text-[10px] font-black text-theme-background0 uppercase tracking-widest">Neural Sync Status</p>
-                <p className="text-sm font-black text-emerald-500 uppercase tracking-widest">Optimal</p>
+                <p className="text-sm font-black text-emerald-500 uppercase tracking-widest">Active</p>
              </div>
-             <div className="w-12 h-12 rounded-full border-4 border-emerald-500/20 border-t-emerald-500 animate-spin" />
+             <div className="relative w-12 h-12 flex items-center justify-center">
+                <motion.div 
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="absolute inset-0 bg-emerald-500/20 rounded-full"
+                />
+                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+             </div>
           </div>
         </div>
         
