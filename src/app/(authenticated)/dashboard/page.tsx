@@ -125,11 +125,23 @@ export default function Dashboard() {
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
               <LayoutDashboard className="w-3 h-3" />
-              Success Hub <span className="ml-2 text-[8px] bg-primary/20 px-2 py-0.5 rounded-full">v4.1.7 (PROD)</span>
+              Success Hub <span className="ml-2 text-[8px] bg-primary/20 px-2 py-0.5 rounded-full">v4.2.1 (PROD)</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
-              {empireData?.name || "Success Hub"}.
-            </h1>
+            <div className="flex items-center gap-4">
+              <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
+                {empireData?.name || "Success Hub"}.
+              </h1>
+              <button 
+                onClick={() => {
+                  setIsLoading(true);
+                  fetchData();
+                }}
+                className="p-2 hover:bg-primary/10 rounded-full transition-colors group"
+                title="Refresh Data"
+              >
+                <Loader2 className={cn("w-5 h-5 text-primary", isLoading && "animate-spin")} />
+              </button>
+            </div>
             <p className="text-sm md:text-base text-theme-background0 font-medium">
               Monitoring your {empireData?.niche || "business"} growth and autonomous operations.
             </p>

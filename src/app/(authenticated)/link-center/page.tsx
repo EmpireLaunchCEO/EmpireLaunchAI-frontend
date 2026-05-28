@@ -25,9 +25,17 @@ export default function LinkCenterPage() {
             <Share2 className="w-3 h-3" />
             Link Center
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
-            Neural Sync.
-          </h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
+              Neural Sync.
+            </h1>
+            <button 
+              onClick={handleRefresh}
+              className="p-2 hover:bg-primary/10 rounded-full transition-colors"
+            >
+              <Zap className="w-5 h-5 text-primary" />
+            </button>
+          </div>
           <p className="text-sm md:text-base text-theme-background0 font-medium">
             Connect and manage your empire's high-velocity channels.
           </p>

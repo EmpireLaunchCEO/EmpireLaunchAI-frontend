@@ -306,7 +306,7 @@ export default function SettingsPage() {
 
         <div className="flex flex-col md:flex-row gap-8 md:gap-12">
           {/* Navigation Sidebar */}
-          <aside className="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full md:w-64 shrink-0 gap-2 pb-2 md:pb-0 border-b md:border-b-0 border-theme md:border-none">
+          <aside className="flex md:flex-col overflow-x-auto md:overflow-visible w-full md:w-64 shrink-0 gap-2 pb-2 md:pb-0 border-b md:border-b-0 border-theme md:border-none">
             {tabs.map((tab) => (
               <button
                 key={tab.id}

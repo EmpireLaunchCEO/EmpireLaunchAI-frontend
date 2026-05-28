@@ -251,7 +251,7 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="h-screen bg-theme-surface flex flex-col items-center overflow-y-auto no-scrollbar">
+    <div className="bg-theme-surface flex flex-col items-center">
       <PWAInstallPrompt />
       <div className="fixed left-0 top-0 bottom-0 w-1 bg-slate-100 hidden lg:block z-[70]" />
       <div className="fixed left-8 top-1/2 -translate-y-1/2 -rotate-90 origin-left hidden lg:flex items-center gap-4 z-[70]">
