@@ -32,7 +32,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var version = '4.1.7';
+                  var version = '4.1.9';
                   var lastVersion = localStorage.getItem('app_version');
                   if (lastVersion !== version) {
                     localStorage.setItem('app_version', version);
@@ -42,11 +42,12 @@ export default function RootLayout({
                     localStorage.removeItem('isOnboarded');
                     localStorage.removeItem('isNotificationModalDismissed');
                     
-                    // Force tour seen flags so nothing triggers
-                    localStorage.setItem('hasSeenEmpireTourV7', 'true');
-                    localStorage.setItem('hasSeenEmpireTourV8', 'true');
-                    localStorage.setItem('hasSeenEmpireTourV9', 'true');
-                    localStorage.setItem('hasSeenEmpireTourV10', 'true');
+                    // Reset tour keys to force welcome tour
+                    localStorage.removeItem('empire_tour_v418');
+                    localStorage.removeItem('hasSeenEmpireTourV7');
+                    localStorage.removeItem('hasSeenEmpireTourV8');
+                    localStorage.removeItem('hasSeenEmpireTourV9');
+                    localStorage.removeItem('hasSeenEmpireTourV10');
                     
                     if ('serviceWorker' in navigator) {
                       navigator.serviceWorker.getRegistrations().then(function(regs) {
