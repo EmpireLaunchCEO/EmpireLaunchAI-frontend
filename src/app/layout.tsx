@@ -23,7 +23,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json?v=4.1.5" />
         <link rel="apple-touch-icon" href="/branded-globe.png?v=4.1.5" />
         <link rel="icon" href="/branded-globe.png?v=4.1.5" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, shrink-to-fit=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#2563eb" />

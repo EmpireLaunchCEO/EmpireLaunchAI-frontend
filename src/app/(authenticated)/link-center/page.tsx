@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import { Share2, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 
-import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 
 export default function LinkCenterPage() {
   const { isLinkingComplete } = useEmpire();
@@ -60,6 +59,6 @@ export default function LinkCenterPage() {
         <GuidedLinking isReturning={isLinkingComplete} />
       </motion.div>
     </div>
-    </PullToRefresh>
+    
   );
 }

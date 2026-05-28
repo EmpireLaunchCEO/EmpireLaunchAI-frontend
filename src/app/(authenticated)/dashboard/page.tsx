@@ -18,7 +18,6 @@ import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService } from '@/lib/api-service';
-import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
 import { useSearchParams } from 'next/navigation';
@@ -275,6 +274,6 @@ export default function Dashboard() {
 
         {isLinkingComplete && <NotificationOnboarding />}
       </div>
-    </PullToRefresh>
+    
   );
 }

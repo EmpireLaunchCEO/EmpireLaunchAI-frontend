@@ -33,7 +33,6 @@ const postHistory = [
   { id: 3, site: 'Instagram', title: 'New Product Teaser', date: '1 day ago', status: 'live' },
 ];
 
-import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'duties' | 'history' | 'ai-config'>('duties');
@@ -330,6 +329,6 @@ export default function EmpireCenterPage() {
         </div>
       </div>
     </div>
-    </PullToRefresh>
+    
   );
 }

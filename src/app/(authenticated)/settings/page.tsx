@@ -34,7 +34,6 @@ import { SupportHub } from '@/components/Settings/SupportHub';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { TermsModal } from '@/components/Legal/TermsModal';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
@@ -1030,6 +1029,6 @@ export default function SettingsPage() {
           </main>
         </div>
       </div>
-    </PullToRefresh>
+    
   );
 }

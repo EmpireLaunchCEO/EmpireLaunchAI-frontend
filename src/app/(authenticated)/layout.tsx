@@ -11,7 +11,7 @@ export default function AuthenticatedLayout({
 }>) {
   return (
     <SubscriptionGuard>
-      <div className="min-h-screen bg-theme-background transition-colors duration-500">
+      <div className="bg-theme-background transition-colors duration-500">
         <EmpireSwitcher />
         <Sidebar />
         <main className="lg:ml-[328px] bg-theme-background lg:rounded-l-[48px] shadow-2xl shadow-black/20 border-l border-theme relative transition-colors duration-500 pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom)+8rem)]">
