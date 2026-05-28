@@ -23,13 +23,13 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
   return (
     <div className="space-y-8 md:space-y-12 max-w-3xl mx-auto">
       <div className="text-center space-y-4">
-        <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Automation Calibration.</h2>
+        <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">Automation Calibration.</h2>
         <p className="text-slate-500 text-base md:text-lg">Define how much control you want to hand over to the AI.</p>
       </div>
 
       <div className="flex p-2 md:p-3 bg-slate-100 rounded-[32px] md:rounded-[40px] relative h-24 md:h-28 items-center max-w-2xl mx-auto border-4 border-slate-50 shadow-inner">
         <motion.div
-          className="absolute inset-1.5 md:inset-2 bg-white rounded-[24px] md:rounded-[32px] shadow-2xl z-10 border border-slate-100"
+          className="absolute inset-1.5 md:inset-2 bg-theme-surface rounded-[24px] md:rounded-[32px] shadow-2xl z-10 border border-theme"
           initial={false}
           animate={{ x: mode === 'co-pilot' ? 0 : '100%' }}
           style={{ width: 'calc(50% - 6px)' }}
@@ -80,12 +80,12 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-8 md:mt-12">
         <div className={cn(
           "p-6 md:p-8 rounded-[32px] md:rounded-[40px] border-2 transition-all",
-          mode === 'co-pilot' ? "border-blue-600 bg-blue-50/30" : "border-slate-100 bg-white opacity-40"
+          mode === 'co-pilot' ? "border-blue-600 bg-blue-50/30" : "border-theme bg-theme-surface opacity-40"
         )}>
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 md:mb-6 text-blue-600">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center mb-4 md:mb-6 text-blue-600">
             <User className="w-5 h-5 md:w-6 h-6" />
           </div>
-          <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-2">High Control</h3>
+          <h3 className="text-lg md:text-xl font-bold text-foreground mb-2">High Control</h3>
           <p className="text-sm font-medium text-slate-500 leading-relaxed">
             I'll draft everything—posts, descriptions, price adjustments—but nothing goes live until you click 'Approve'.
           </p>
@@ -101,12 +101,12 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
 
         <div className={cn(
           "p-6 md:p-8 rounded-[32px] md:rounded-[40px] border-2 transition-all",
-          mode === 'empire' ? "border-blue-600 bg-blue-50/30" : "border-slate-100 bg-white opacity-40"
+          mode === 'empire' ? "border-blue-600 bg-blue-50/30" : "border-theme bg-theme-surface opacity-40"
         )}>
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 md:mb-6 text-blue-600">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center mb-4 md:mb-6 text-blue-600">
             <Zap className="w-5 h-5 md:w-6 h-6 fill-current" />
           </div>
-          <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-2">High Autonomy</h3>
+          <h3 className="text-lg md:text-xl font-bold text-foreground mb-2">High Autonomy</h3>
           <p className="text-sm font-medium text-slate-500 leading-relaxed">
             I'll autonomously manage daily operations. You only intervene for major financial decisions or brand pivots.
           </p>

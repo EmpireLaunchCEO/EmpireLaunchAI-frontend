@@ -191,7 +191,7 @@ export function EmpirePulse() {
                     )}
                  </h2>
               </div>
-              <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-2xl flex items-center gap-3">
+              <div className="bg-theme-surface/5 border border-white/10 px-4 py-2 rounded-2xl flex items-center gap-3">
                  {hasPendingApprovals ? <Pause className="w-6 h-6 text-amber-500" /> : getStatusIcon(pulse?.status ?? 'idle')}
                  <div className="text-right">
                     <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Active Neural Path</p>
@@ -213,7 +213,7 @@ export function EmpirePulse() {
                       hasPendingApprovals ? "text-amber-400" : "text-blue-400"
                     )}>{pulse.progress}%</span>
                  </div>
-                 <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                 <div className="h-1.5 w-full bg-theme-surface/5 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ 
@@ -253,7 +253,7 @@ export function EmpirePulse() {
            </div>
         </div>
 
-        <div className="hidden lg:block w-[1px] h-20 bg-white/10" />
+        <div className="hidden lg:block w-[1px] h-20 bg-theme-surface/10" />
 
         <div className="grid grid-cols-2 md:grid-cols-1 gap-4 shrink-0">
            <div className="text-center md:text-left">

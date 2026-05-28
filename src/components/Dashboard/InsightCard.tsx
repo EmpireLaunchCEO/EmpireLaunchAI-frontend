@@ -22,7 +22,7 @@ interface InsightCardProps {
 
 export function InsightCard({ platform, title, description, roi, onExecute, isExecuting }: InsightCardProps) {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
+    <div className="bg-theme-surface p-6 rounded-2xl shadow-sm border border-theme hover:shadow-md transition-shadow group">
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-2">
           <div className="bg-blue-50 p-2 rounded-lg text-blue-600">
@@ -35,7 +35,7 @@ export function InsightCard({ platform, title, description, roi, onExecute, isEx
         </div>
       </div>
       
-      <h4 className="text-lg font-bold text-slate-900 mb-2">{title}</h4>
+      <h4 className="text-lg font-bold text-foreground mb-2">{title}</h4>
       <p className="text-slate-600 text-sm mb-6 leading-relaxed">
         {description}
       </p>
@@ -63,10 +63,10 @@ export function InsightCard({ platform, title, description, roi, onExecute, isEx
             </>
           )}
         </button>
-        <button className="p-2.5 rounded-xl border border-slate-200 text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-all">
+        <button className="p-2.5 rounded-xl border border-theme text-slate-400 hover:text-slate-600 hover:bg-theme-background transition-all">
           <ExternalLink className="w-5 h-5" />
         </button>
-        <button className="p-2.5 rounded-xl border border-slate-200 text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
+        <button className="p-2.5 rounded-xl border border-theme text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
           <X className="w-5 h-5" />
         </button>
       </div>

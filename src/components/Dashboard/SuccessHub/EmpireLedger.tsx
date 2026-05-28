@@ -12,14 +12,14 @@ const MOCK_INVOICES = [
 
 export const EmpireLedger = ({ health }: { health: any }) => {
   return (
-    <div className="bg-white rounded-[40px] p-8 border-2 border-slate-50 shadow-sm space-y-8">
+    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-slate-50 shadow-sm space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <CreditCard className="w-5 h-5 text-blue-600" />
             <h3 className="text-sm font-black uppercase tracking-widest text-slate-400">Empire Ledger</h3>
           </div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Financial Intelligence</h2>
+          <h2 className="text-2xl font-black text-foreground tracking-tight">Financial Intelligence</h2>
         </div>
         <div className="text-right">
           <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Projected ROI</p>
@@ -37,7 +37,7 @@ export const EmpireLedger = ({ health }: { health: any }) => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="flex items-center justify-between p-4 rounded-3xl bg-slate-50 border border-slate-100 group hover:bg-white hover:shadow-md transition-all cursor-pointer"
+            className="flex items-center justify-between p-4 rounded-3xl bg-theme-background border border-theme group hover:bg-theme-surface hover:shadow-md transition-all cursor-pointer"
           >
             <div className="flex items-center gap-4">
               <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${
@@ -46,7 +46,7 @@ export const EmpireLedger = ({ health }: { health: any }) => {
                 {inv.type === 'Credit' ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownLeft className="w-5 h-5" />}
               </div>
               <div>
-                <p className="text-sm font-bold text-slate-900">{inv.customer}</p>
+                <p className="text-sm font-bold text-foreground">{inv.customer}</p>
                 <div className="flex items-center gap-2 mt-0.5">
                   <span className="text-[10px] text-slate-500 font-medium">{inv.id}</span>
                   <span className="text-[10px] text-slate-300">•</span>
@@ -56,7 +56,7 @@ export const EmpireLedger = ({ health }: { health: any }) => {
             </div>
             <div className="text-right flex items-center gap-6">
               <div>
-                <p className={`text-sm font-black ${inv.type === 'Credit' ? 'text-slate-900' : 'text-slate-500'}`}>
+                <p className={`text-sm font-black ${inv.type === 'Credit' ? 'text-foreground' : 'text-slate-500'}`}>
                   {inv.type === 'Credit' ? '+' : '-'}${inv.amount.toFixed(2)}
                 </p>
                 <span className={`text-[9px] font-black uppercase tracking-widest ${
@@ -65,7 +65,7 @@ export const EmpireLedger = ({ health }: { health: any }) => {
                   {inv.status}
                 </span>
               </div>
-              <button className="w-8 h-8 rounded-xl bg-white border border-slate-200 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <button className="w-8 h-8 rounded-xl bg-theme-surface border border-theme flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <Download className="w-4 h-4 text-slate-400" />
               </button>
             </div>

@@ -46,12 +46,12 @@ export function AutomationCenter() {
 
   return (
     <div className="space-y-10">
-      <div className="flex justify-between items-center bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm">
+      <div className="flex justify-between items-center bg-theme-surface p-8 rounded-[40px] border border-theme shadow-sm">
         <div className="space-y-1">
-          <h3 className="text-xl font-bold text-slate-900">Automation Control</h3>
+          <h3 className="text-xl font-bold text-foreground">Automation Control</h3>
           <p className="text-sm text-slate-500">Manage how AI communicates with your customers.</p>
         </div>
-        <div className="flex items-center gap-4 bg-slate-50 px-6 py-4 rounded-3xl">
+        <div className="flex items-center gap-4 bg-theme-background px-6 py-4 rounded-3xl">
           <span className="text-sm font-bold text-slate-700">Manual Review (HITL)</span>
           <button 
             onClick={() => setHitlMode(!hitlMode)}
@@ -61,7 +61,7 @@ export function AutomationCenter() {
             )}
           >
             <div className={cn(
-              "absolute top-1 w-4 h-4 bg-white rounded-full transition-all",
+              "absolute top-1 w-4 h-4 bg-theme-surface rounded-full transition-all",
               hitlMode ? "left-7" : "left-1"
             )} />
           </button>
@@ -73,14 +73,14 @@ export function AutomationCenter() {
         <div className="space-y-6">
           <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest pl-4">Automated Sequences</h4>
           {flows.map((flow) => (
-            <div key={flow.id} className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm space-y-6">
+            <div key={flow.id} className="bg-theme-surface p-8 rounded-[40px] border border-theme shadow-sm space-y-6">
               <div className="flex justify-between items-start">
                 <div className="flex gap-4">
-                  <div className="bg-slate-50 p-3 rounded-2xl">
+                  <div className="bg-theme-background p-3 rounded-2xl">
                     <flow.icon className={cn("w-6 h-6", flow.color)} />
                   </div>
                   <div>
-                    <h5 className="font-bold text-slate-900">{flow.name}</h5>
+                    <h5 className="font-bold text-foreground">{flow.name}</h5>
                     <p className="text-xs text-slate-500 mt-1">{flow.description}</p>
                   </div>
                 </div>
@@ -102,10 +102,10 @@ export function AutomationCenter() {
                   />
                 </div>
                 <div className="flex gap-2">
-                  <button className="flex-1 bg-slate-50 text-slate-900 py-3 rounded-2xl text-xs font-bold hover:bg-slate-100 transition-all flex items-center justify-center gap-2">
+                  <button className="flex-1 bg-theme-background text-foreground py-3 rounded-2xl text-xs font-bold hover:bg-slate-100 transition-all flex items-center justify-center gap-2">
                     <Eye className="w-4 h-4" /> Preview Draft
                   </button>
-                  <button className="bg-slate-50 text-slate-900 p-3 rounded-2xl hover:bg-slate-100 transition-all">
+                  <button className="bg-theme-background text-foreground p-3 rounded-2xl hover:bg-slate-100 transition-all">
                     <Settings2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -133,19 +133,19 @@ export function AutomationCenter() {
             </p>
           </div>
 
-          <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+          <div className="bg-theme-surface rounded-[40px] border border-theme shadow-sm overflow-hidden flex flex-col">
             <div className="p-8 border-b border-slate-50">
               <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest">Recent Sent Log</h4>
             </div>
             <div className="divide-y divide-slate-50">
               {sentLog.map((log) => (
-                <div key={log.id} className="p-6 hover:bg-slate-50 transition-colors flex justify-between items-center">
+                <div key={log.id} className="p-6 hover:bg-theme-background transition-colors flex justify-between items-center">
                   <div className="flex gap-4">
                     <div className="bg-blue-50 p-2 rounded-xl">
                       <Mail className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900">{log.recipient}</p>
+                      <p className="text-sm font-bold text-foreground">{log.recipient}</p>
                       <p className="text-[10px] text-slate-500 truncate max-w-[200px]">{log.subject}</p>
                     </div>
                   </div>

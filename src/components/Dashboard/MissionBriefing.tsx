@@ -122,7 +122,7 @@ export function MissionBriefing() {
                     href={step.href}
                     key={step.id}
                     className={cn(
-                      "block p-4 rounded-3xl border transition-all bg-white text-slate-900 border-white shadow-xl shadow-blue-900/20 active:scale-[0.98]"
+                      "block p-4 rounded-3xl border transition-all bg-theme-surface text-foreground border-white shadow-xl shadow-blue-900/20 active:scale-[0.98]"
                     )}
                   >
                     {content}
@@ -169,7 +169,7 @@ export function MissionBriefing() {
               
               <Link 
                 href={steps[2].status === 'current' ? "/settings" : "/review"}
-                className="block w-full py-4 bg-white text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-50 transition-colors text-center active:scale-[0.98]"
+                className="block w-full py-4 bg-theme-surface text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-50 transition-colors text-center active:scale-[0.98]"
               >
                 {steps[2].status === 'current' ? "Take Me to Bridge" : "Go to Review Queue"}
               </Link>

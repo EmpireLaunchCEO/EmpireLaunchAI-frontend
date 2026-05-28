@@ -72,13 +72,13 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative z-10 max-w-2xl w-full bg-white rounded-[48px] p-8 md:p-12 shadow-2xl text-center space-y-8"
+        className="relative z-10 max-w-2xl w-full bg-theme-surface rounded-[48px] p-8 md:p-12 shadow-2xl text-center space-y-8"
       >
         <div className="space-y-4">
           <div className="w-16 h-16 bg-blue-600 rounded-[24px] mx-auto flex items-center justify-center shadow-2xl shadow-blue-500/40">
             <Lock className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tighter uppercase italic">
+          <h2 className="text-3xl font-black text-foreground tracking-tighter uppercase italic">
             Command Center Locked.
           </h2>
           <p className="text-slate-500 text-sm font-medium italic">
@@ -146,10 +146,10 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="p-8 bg-slate-50 border-2 border-slate-100 rounded-[40px] text-left space-y-6"
+            className="p-8 bg-theme-background border-2 border-theme rounded-[40px] text-left space-y-6"
           >
             <div>
-              <h3 className="text-xl font-black text-slate-900 uppercase italic tracking-tighter">Redeem Key.</h3>
+              <h3 className="text-xl font-black text-foreground uppercase italic tracking-tighter">Redeem Key.</h3>
               <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">Enter your master or beta access code</p>
             </div>
 
@@ -160,7 +160,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
                   value={accessKey}
                   onChange={(e) => setAccessKey(e.target.value)}
                   placeholder="XXXX-XXXX-XXXX-XXXX"
-                  className="w-full bg-white border-2 border-slate-200 rounded-2xl p-5 text-sm font-black tracking-widest uppercase focus:border-blue-600 outline-none transition-all"
+                  className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-5 text-sm font-black tracking-widest uppercase focus:border-blue-600 outline-none transition-all"
                 />
                 <Sparkles className="absolute right-5 top-5 w-5 h-5 text-blue-400" />
               </div>
@@ -180,7 +180,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
 
               <button
                 onClick={() => setShowKeyInput(false)}
-                className="w-full py-4 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-slate-900 transition-colors"
+                className="w-full py-4 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-foreground transition-colors"
               >
                 Back to Plans
               </button>

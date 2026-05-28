@@ -72,12 +72,12 @@ export default function AuthCallback() {
   }, [code, platform, state, router]);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-8">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-10 text-center">
+    <div className="min-h-screen bg-theme-background flex items-center justify-center p-8">
+      <div className="max-w-md w-full bg-theme-surface rounded-3xl shadow-xl p-10 text-center">
         {status === 'loading' && (
           <div className="flex flex-col items-center gap-6">
             <Loader2 className="w-16 h-16 text-blue-600 animate-spin" />
-            <h2 className="text-2xl font-bold text-slate-900">Connecting...</h2>
+            <h2 className="text-2xl font-bold text-foreground">Connecting...</h2>
             <p className="text-slate-500 font-medium">{message}</p>
           </div>
         )}
@@ -87,7 +87,7 @@ export default function AuthCallback() {
             <div className="bg-green-100 p-4 rounded-full">
               <CheckCircle2 className="w-16 h-16 text-green-600" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900">Success!</h2>
+            <h2 className="text-2xl font-bold text-foreground">Success!</h2>
             <p className="text-slate-500 font-medium">{message}</p>
             <p className="text-sm text-slate-400">Redirecting to dashboard...</p>
           </div>
@@ -98,7 +98,7 @@ export default function AuthCallback() {
             <div className="bg-red-100 p-4 rounded-full">
               <XCircle className="w-16 h-16 text-red-600" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900">Connection Failed</h2>
+            <h2 className="text-2xl font-bold text-foreground">Connection Failed</h2>
             <p className="text-slate-500 font-medium">{message}</p>
             <button 
               onClick={() => router.push('/onboarding')}

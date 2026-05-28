@@ -21,8 +21,8 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
       <div className={cn(
         "relative overflow-hidden rounded-[32px] p-6 h-48 transition-all duration-500",
         isLocked 
-          ? "bg-slate-50 border-2 border-slate-100 opacity-80" 
-          : "bg-white border-2 border-blue-50 shadow-xl shadow-blue-900/5 hover:shadow-2xl hover:shadow-blue-900/10"
+          ? "bg-theme-background border-2 border-theme opacity-80" 
+          : "bg-theme-surface border-2 border-blue-50 shadow-xl shadow-blue-900/5 hover:shadow-2xl hover:shadow-blue-900/10"
       )}>
         {/* Active Content */}
         {!isLocked && (
@@ -32,7 +32,7 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Primary Empire</span>
               </div>
-              <h3 className="text-xl font-black text-slate-900 leading-tight">{name}</h3>
+              <h3 className="text-xl font-black text-foreground leading-tight">{name}</h3>
               <p className="text-sm font-medium text-slate-500">{niche}</p>
             </div>
             
@@ -51,7 +51,7 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
         {/* Locked Content */}
         {isLocked && (
           <div className="flex flex-col h-full items-center justify-center text-center space-y-3 relative z-10">
-            <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-slate-300">
+            <div className="w-12 h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center text-slate-300">
               <Briefcase className="w-6 h-6" />
             </div>
             <div className="space-y-1">
@@ -66,13 +66,13 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
           <motion.div 
             initial={{ opacity: 0 }}
             whileHover={{ opacity: 1 }}
-            className="absolute inset-0 z-20 backdrop-blur-md bg-white/10 flex items-center justify-center p-6 border border-white/20"
+            className="absolute inset-0 z-20 backdrop-blur-md bg-theme-surface/10 flex items-center justify-center p-6 border border-white/20"
           >
             <div className="relative group/lock">
               {/* Glass background */}
-              <div className="absolute inset-0 bg-white/30 rounded-full blur-xl group-hover/lock:scale-150 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-theme-surface/30 rounded-full blur-xl group-hover/lock:scale-150 transition-transform duration-700" />
               
-              <div className="relative bg-white/80 backdrop-blur-2xl w-16 h-16 rounded-[24px] flex items-center justify-center shadow-2xl border border-white/50">
+              <div className="relative bg-theme-surface/80 backdrop-blur-2xl w-16 h-16 rounded-[24px] flex items-center justify-center shadow-2xl border border-white/50">
                 <Lock className="w-7 h-7 text-blue-600" />
                 <Stars className="absolute -top-2 -right-2 w-5 h-5 text-amber-400 animate-pulse" />
               </div>
@@ -103,7 +103,7 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between px-2">
-        <h2 className="text-xl font-black text-slate-900 tracking-tight">Active Empires</h2>
+        <h2 className="text-xl font-black text-foreground tracking-tight">Active Empires</h2>
         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Slots 1/3</span>
       </div>
       

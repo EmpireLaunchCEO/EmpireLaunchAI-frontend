@@ -42,7 +42,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
           <Scissors className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-xl font-black text-slate-900 leading-tight">Visual Draft Review.</h3>
+          <h3 className="text-xl font-black text-foreground leading-tight">Visual Draft Review.</h3>
           <p className="text-sm text-slate-500 font-medium italic">"I've generated the first set of assets for {payload?.platform ?? 'your chosen platform'}. Do these meet your brand standards?"</p>
         </div>
       </div>
@@ -57,7 +57,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
                 alt="Draft Preview"
               />
               <div className="absolute inset-0 flex items-center justify-center">
-                 <div className="w-20 h-20 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/30 cursor-pointer hover:scale-110 transition-transform">
+                 <div className="w-20 h-20 bg-theme-surface/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/30 cursor-pointer hover:scale-110 transition-transform">
                     <Play className="w-8 h-8 fill-white text-white ml-1" />
                  </div>
               </div>
@@ -67,7 +67,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
                     <h4 className="text-white font-bold">{payload?.title ?? 'Untitled Concept'}</h4>
                  </div>
                  <div className="flex gap-2">
-                    <button className="p-3 bg-white/10 backdrop-blur-md rounded-xl border border-white/10 text-white hover:bg-white/20 transition-colors">
+                    <button className="p-3 bg-theme-surface/10 backdrop-blur-md rounded-xl border border-white/10 text-white hover:bg-theme-surface/20 transition-colors">
                        <Download className="w-5 h-5" />
                     </button>
                  </div>
@@ -90,16 +90,16 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
 
         {/* Feedback & Actions */}
         <div className="space-y-8">
-           <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-8 shadow-sm">
+           <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-8 shadow-sm">
               <div className="space-y-4">
-                 <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">AI Marketing Hook</h4>
-                 <p className="text-sm text-slate-500 font-mono bg-slate-50 p-4 rounded-2xl border border-slate-100 italic">
+                 <h4 className="font-black text-foreground uppercase tracking-widest text-xs">AI Marketing Hook</h4>
+                 <p className="text-sm text-slate-500 font-mono bg-theme-background p-4 rounded-2xl border border-theme italic">
                    "{payload?.caption ?? 'Drafting the perfect hook for you...'}"
                  </p>
               </div>
 
               <div className="space-y-4 pt-4 border-t border-slate-50">
-                 <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">Quality Rating</h4>
+                 <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Quality Rating</h4>
                  <div className="flex gap-2">
                     {[1,2,3,4,5].map((s) => (
                       <button 
@@ -107,7 +107,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
                         onClick={() => setRating(s)}
                         className={cn(
                           "p-2 rounded-xl transition-all",
-                          rating >= s ? "text-amber-500 bg-amber-50" : "text-slate-200 bg-slate-50 hover:text-slate-300"
+                          rating >= s ? "text-amber-500 bg-amber-50" : "text-slate-200 bg-theme-background hover:text-slate-300"
                         )}
                       >
                         <Star className={cn("w-6 h-6", rating >= s && "fill-current")} />
@@ -149,7 +149,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
               )}
               <button 
                 onClick={onReject}
-                className="w-full py-4 border-2 border-slate-100 rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
+                className="w-full py-4 border-2 border-theme rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
               >
                 <X className="w-4 h-4" />
                 Redo Drafting

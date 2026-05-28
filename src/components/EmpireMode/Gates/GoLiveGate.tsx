@@ -37,31 +37,31 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
           <Rocket className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-xl font-black text-slate-900 leading-tight">Pre-Deployment Sync.</h3>
+          <h3 className="text-xl font-black text-foreground leading-tight">Pre-Deployment Sync.</h3>
           <p className="text-sm text-slate-500 font-medium italic">"Final confirmation required before I deploy your listing to {payload?.platform ?? 'your chosen platform'}."</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Listing Preview */}
-        <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
+        <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
            <div className="flex items-center gap-2">
               <BrandedGlobe size="sm" animate={false} className="border-emerald-600/30" />
-              <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">Listing Manifest</h4>
+              <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Listing Manifest</h4>
            </div>
 
            <div className="space-y-6">
               <div className="space-y-2">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Platform Target</p>
-                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 font-bold text-slate-900">
+                 <div className="p-4 bg-theme-background rounded-2xl border border-theme font-bold text-foreground">
                     {payload?.platform ?? 'Platform'} Storefront
                  </div>
               </div>
 
               <div className="space-y-2">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Product Title & Price</p>
-                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
-                    <span className="font-bold text-slate-900">{payload?.title ?? 'Untitled Product'}</span>
+                 <div className="p-4 bg-theme-background rounded-2xl border border-theme flex justify-between items-center">
+                    <span className="font-bold text-foreground">{payload?.title ?? 'Untitled Product'}</span>
                     <span className="font-black text-emerald-600">${payload?.price ?? '0.00'}</span>
                  </div>
               </div>
@@ -108,13 +108,13 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
                     </div>
                  </div>
                  {payload && !payload.bankInfoVerified && (
-                   <button className="mt-4 w-full py-3 bg-amber-500 text-slate-900 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-amber-400 transition-colors">
+                   <button className="mt-4 w-full py-3 bg-amber-500 text-foreground rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-amber-400 transition-colors">
                       Update Bank Info
                    </button>
                  )}
               </div>
 
-              <div className="flex items-center gap-3 p-4 bg-white/5 rounded-2xl border border-white/10">
+              <div className="flex items-center gap-3 p-4 bg-theme-surface/5 rounded-2xl border border-white/10">
                  <AlertCircle className="w-5 h-5 text-slate-500" />
                  <p className="text-[10px] text-slate-400 font-medium italic">
                    "Deploying will trigger automated posting. Ensure your account is not in vacation mode."
@@ -131,7 +131,7 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
       <div className="flex gap-4">
         <button 
           onClick={onReject}
-          className="flex-1 py-5 border-2 border-slate-100 rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
+          className="flex-1 py-5 border-2 border-theme rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
         >
           <X className="w-4 h-4" />
           Hold Deployment

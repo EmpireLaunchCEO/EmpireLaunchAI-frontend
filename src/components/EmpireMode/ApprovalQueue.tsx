@@ -51,7 +51,7 @@ export function ApprovalQueue() {
             <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
                <Bot className="w-4 h-4" />
             </div>
-            <h2 className="text-lg font-black text-slate-900 tracking-tight uppercase italic">Strategic Approvals Pending.</h2>
+            <h2 className="text-lg font-black text-foreground tracking-tight uppercase italic">Strategic Approvals Pending.</h2>
          </div>
          <span className="bg-blue-50 text-blue-600 text-[10px] font-black px-2 py-1 rounded-full border border-blue-100 uppercase tracking-widest">
            {requests.length} Action{requests.length > 1 ? 's' : ''} Required
@@ -63,7 +63,7 @@ export function ApprovalQueue() {
           <motion.button 
             key={req.id}
             onClick={() => setActiveRequest(req)}
-            className="p-6 bg-white border-2 border-slate-50 rounded-[32px] hover:border-blue-600 transition-all text-left group shadow-sm"
+            className="p-6 bg-theme-surface border-2 border-slate-50 rounded-[32px] hover:border-blue-600 transition-all text-left group shadow-sm"
             whileHover={{ y: -4 }}
           >
             <div className="flex justify-between items-start mb-6">
@@ -78,7 +78,7 @@ export function ApprovalQueue() {
                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{req.type}</span>
             </div>
             
-            <h4 className="font-bold text-slate-900 mb-2">
+            <h4 className="font-bold text-foreground mb-2">
               {req.type === 'blueprint' ? 'Approve 30-Day Strategy' : 
                req.type === 'content' ? `Review ${req.payload?.platform ?? 'Draft'} Draft` : `Ready to Launch on ${req.payload?.platform ?? 'Platform'}`}
             </h4>
@@ -110,7 +110,7 @@ export function ApprovalQueue() {
                initial={{ scale: 0.9, opacity: 0, y: 20 }}
                animate={{ scale: 1, opacity: 1, y: 0 }}
                exit={{ scale: 0.9, opacity: 0, y: 20 }}
-               className="relative w-full max-w-5xl bg-white rounded-[48px] shadow-2xl overflow-hidden"
+               className="relative w-full max-w-5xl bg-theme-surface rounded-[48px] shadow-2xl overflow-hidden"
              >
                 <div className="p-8 md:p-12 max-h-[90vh] overflow-y-auto">
                    <div className="flex justify-between items-center mb-10">
@@ -141,7 +141,7 @@ export function ApprovalQueue() {
                        <div className="space-y-6">
                          <button 
                            onClick={() => setShowBlueprint(false)}
-                           className="flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors font-bold text-sm uppercase tracking-widest mb-4"
+                           className="flex items-center gap-2 text-slate-400 hover:text-foreground transition-colors font-bold text-sm uppercase tracking-widest mb-4"
                          >
                            <ChevronLeft className="w-4 h-4" />
                            Back to Draft

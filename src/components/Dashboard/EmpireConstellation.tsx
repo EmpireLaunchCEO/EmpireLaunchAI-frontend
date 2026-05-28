@@ -27,9 +27,9 @@ export function EmpireConstellation() {
   ];
 
   return (
-    <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm space-y-6 relative overflow-hidden">
+    <div className="bg-theme-surface p-8 rounded-[40px] border border-theme shadow-sm space-y-6 relative overflow-hidden">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold text-slate-900">Empire Constellation</h3>
+        <h3 className="text-xl font-bold text-foreground">Empire Constellation</h3>
         <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-1 rounded-md uppercase tracking-widest">
           Neural Map v2.1
         </span>
@@ -69,7 +69,7 @@ export function EmpireConstellation() {
           >
             <div className="relative flex flex-col items-center">
               <div className={cn(
-                "w-12 h-12 rounded-2xl bg-white border-2 border-slate-100 flex items-center justify-center shadow-lg transition-all group-hover:scale-110 group-hover:border-blue-200 group-hover:shadow-blue-100",
+                "w-12 h-12 rounded-2xl bg-theme-surface border-2 border-theme flex items-center justify-center shadow-lg transition-all group-hover:scale-110 group-hover:border-blue-200 group-hover:shadow-blue-100",
                 node.id === 'activity' ? "w-16 h-16 bg-slate-900 border-slate-800" : ""
               )}>
                 <node.icon className={cn("w-6 h-6", node.color, node.id === 'activity' ? "text-white" : "")} />

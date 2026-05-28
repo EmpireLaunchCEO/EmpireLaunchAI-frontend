@@ -55,7 +55,7 @@ export function DetailedRevenue() {
               </div>
               <h3 className="text-2xl font-black">{activeMilestone?.label}</h3>
             </div>
-            <div className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+            <div className="bg-theme-surface/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
                <span className="text-[10px] font-black text-white uppercase tracking-widest">
                  {progressPercent.toFixed(1)}% Complete
                </span>
@@ -71,7 +71,7 @@ export function DetailedRevenue() {
                <span className="text-xs font-bold text-blue-400">+${(activeMilestone?.target - activeMilestone?.current).toLocaleString()} remaining</span>
              </div>
              
-             <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+             <div className="h-3 w-full bg-theme-surface/5 rounded-full overflow-hidden border border-white/5">
                 <motion.div 
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
@@ -88,32 +88,32 @@ export function DetailedRevenue() {
 
         {/* Quick Stats Summary */}
         <div className="grid grid-cols-2 gap-4">
-           <div className="bg-white border border-slate-100 rounded-[32px] p-6 space-y-4 shadow-sm">
+           <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm">
               <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
                  <TrendingUp className="w-5 h-5" />
               </div>
               <div className="space-y-1">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Growth Velocity</p>
-                 <h4 className="text-xl font-black text-slate-900">+18.4%</h4>
+                 <h4 className="text-xl font-black text-foreground">+18.4%</h4>
               </div>
            </div>
-           <div className="bg-white border border-slate-100 rounded-[32px] p-6 space-y-4 shadow-sm">
+           <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
                  <CheckCircle2 className="w-5 h-5" />
               </div>
               <div className="space-y-1">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Fulfillment Rate</p>
-                 <h4 className="text-xl font-black text-slate-900">99.2%</h4>
+                 <h4 className="text-xl font-black text-foreground">99.2%</h4>
               </div>
            </div>
-           <div className="bg-white border border-slate-100 rounded-[32px] p-6 space-y-4 shadow-sm col-span-2 flex items-center justify-between">
+           <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm col-span-2 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-lg">
                    <DollarSign className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Revenue (All Time)</p>
-                   <h4 className="text-2xl font-black text-slate-900">${totalRevenue.toLocaleString()}</h4>
+                   <h4 className="text-2xl font-black text-foreground">${totalRevenue.toLocaleString()}</h4>
                 </div>
               </div>
               <ArrowRight className="w-5 h-5 text-slate-300" />
@@ -122,31 +122,31 @@ export function DetailedRevenue() {
       </div>
 
       {/* Recent Transactions List */}
-      <div className="bg-white border border-slate-100 rounded-[40px] overflow-hidden shadow-sm">
+      <div className="bg-theme-surface border border-theme rounded-[40px] overflow-hidden shadow-sm">
         <div className="p-8 border-b border-slate-50 flex justify-between items-center">
           <div className="flex items-center gap-3">
              <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white">
                 <Clock className="w-5 h-5" />
              </div>
-             <h3 className="text-xl font-black text-slate-900">Recent Transactions</h3>
+             <h3 className="text-xl font-black text-foreground">Recent Transactions</h3>
           </div>
           <button className="text-xs font-bold text-blue-600 uppercase tracking-widest">Download CSV</button>
         </div>
         
         <div className="divide-y divide-slate-50">
           {transactions.map((t) => (
-            <div key={t.id} className="p-6 hover:bg-slate-50 transition-colors flex items-center justify-between group">
+            <div key={t.id} className="p-6 hover:bg-theme-background transition-colors flex items-center justify-between group">
               <div className="flex items-center gap-6">
                 <div className="flex flex-col items-center">
                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">
                      {new Date(t.date).toLocaleDateString('en-US', { month: 'short' })}
                    </span>
-                   <span className="text-lg font-black text-slate-900">
+                   <span className="text-lg font-black text-foreground">
                      {new Date(t.date).getDate()}
                    </span>
                 </div>
                 <div className="space-y-1">
-                   <h4 className="font-bold text-slate-900">{t.customer}</h4>
+                   <h4 className="font-bold text-foreground">{t.customer}</h4>
                    <div className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.platform}</span>
                       <span className="w-1 h-1 rounded-full bg-slate-300" />
@@ -160,10 +160,10 @@ export function DetailedRevenue() {
               
               <div className="flex items-center gap-6">
                  <div className="text-right">
-                    <p className="text-lg font-black text-slate-900">+${t.amount.toFixed(2)}</p>
+                    <p className="text-lg font-black text-foreground">+${t.amount.toFixed(2)}</p>
                     <p className="text-[10px] font-bold text-slate-400">Net: ${(t.amount * 0.94).toFixed(2)}</p>
                  </div>
-                 <button className="p-3 bg-white border border-slate-100 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+                 <button className="p-3 bg-theme-surface border border-theme rounded-xl opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
                     <ArrowUpRight className="w-4 h-4 text-slate-400" />
                  </button>
               </div>
@@ -171,7 +171,7 @@ export function DetailedRevenue() {
           ))}
         </div>
         
-        <button className="w-full py-6 bg-slate-50 text-slate-500 font-bold text-sm hover:bg-slate-100 transition-colors">
+        <button className="w-full py-6 bg-theme-background text-slate-500 font-bold text-sm hover:bg-slate-100 transition-colors">
           View All Transactions
         </button>
       </div>

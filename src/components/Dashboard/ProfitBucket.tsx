@@ -80,7 +80,7 @@ export function ProfitBucket({ withholdableEarnings = 125050, securedDues = 1800
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="p-4 bg-white/5 rounded-3xl border border-white/10">
+            <div className="p-4 bg-theme-surface/5 rounded-3xl border border-white/10">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-2 h-2 rounded-full bg-primary" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Withholdable</span>
@@ -93,7 +93,7 @@ export function ProfitBucket({ withholdableEarnings = 125050, securedDues = 1800
               </div>
             </div>
 
-            <div className="p-4 bg-white/5 rounded-3xl border border-white/10">
+            <div className="p-4 bg-theme-surface/5 rounded-3xl border border-white/10">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-2 h-2 rounded-full bg-amber-400" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Secured Dues</span>

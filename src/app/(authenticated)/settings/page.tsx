@@ -41,12 +41,12 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
   if (platform.toLowerCase() === 'etsy') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-8 rounded-[40px] bg-white border-4 border-blue-600 shadow-2xl space-y-8 relative overflow-hidden">
+        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-blue-600 shadow-2xl space-y-8 relative overflow-hidden">
           {/* AI Brain Pulse in background */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[80px] -z-10" />
           
-          <div className="flex items-center justify-between border-b border-slate-100 pb-6">
-            <h3 className="text-2xl font-black text-slate-900 flex items-center gap-3 italic">
+          <div className="flex items-center justify-between border-b border-theme pb-6">
+            <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
               <Bot className="w-6 h-6 text-blue-600" /> Connecting Etsy Marketplace
             </h3>
             <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
@@ -61,7 +61,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                 id="etsy-api-key"
                 type="text"
                 placeholder="Paste keystring here..."
-                className="w-full p-5 rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 outline-none transition-all font-bold text-lg"
+                className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg"
               />
             </div>
             <div className="space-y-3">
@@ -70,7 +70,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                 id="etsy-shared-secret"
                 type="text"
                 placeholder="Paste secret here..."
-                className="w-full p-5 rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 outline-none transition-all font-bold text-lg"
+                className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg"
               />
             </div>
           </div>
@@ -87,11 +87,11 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
   if (platform.toLowerCase() === 'tiktok') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-8 rounded-[40px] bg-white border-4 border-slate-900 shadow-2xl space-y-8 relative overflow-hidden">
+        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-slate-900 shadow-2xl space-y-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-slate-900/5 blur-[80px] -z-10" />
 
-          <div className="flex items-center justify-between border-b border-slate-100 pb-6">
-            <h3 className="text-2xl font-black text-slate-900 flex items-center gap-3 italic">
+          <div className="flex items-center justify-between border-b border-theme pb-6">
+            <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
               <Share2 className="w-6 h-6 text-blue-600" /> Connecting TikTok Marketing
             </h3>
             <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
@@ -105,7 +105,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
               <div className="relative">
                 <select
                   id="tiktok-marketing-api"
-                  className="w-full p-5 rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 outline-none transition-all font-bold appearance-none text-lg"
+                  className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold appearance-none text-lg"
                 >
                   <option>Select...</option>
                   <option>Marketing API</option>
@@ -121,7 +121,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                 type="text"
                 readOnly
                 value="https://empire-launch-ai-frontend.vercel.app/api/auth/callback/tiktok"
-                className="w-full p-5 rounded-3xl bg-slate-100 border-2 border-slate-100 outline-none transition-all font-bold text-lg text-slate-500 cursor-not-allowed"
+                className="w-full p-5 rounded-3xl bg-slate-100 border-2 border-theme outline-none transition-all font-bold text-lg text-slate-500 cursor-not-allowed"
               />
             </div>
           </div>
@@ -138,11 +138,11 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
   if (platform.toLowerCase() === 'bannerbear') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-8 rounded-[40px] bg-white border-4 border-slate-200 shadow-2xl space-y-8 relative overflow-hidden">
+        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-theme shadow-2xl space-y-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-slate-100 blur-[80px] -z-10" />
           
-          <div className="flex items-center justify-between border-b border-slate-100 pb-6">
-            <h3 className="text-2xl font-black text-slate-900 flex items-center gap-3 italic">
+          <div className="flex items-center justify-between border-b border-theme pb-6">
+            <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
               <Stars className="w-6 h-6 text-blue-900" /> Connecting Bannerbear AI
             </h3>
             <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
@@ -157,7 +157,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                 id="bannerbear-api-key"
                 type="password"
                 placeholder="Paste your Bannerbear API key..."
-                className="w-full p-5 rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 outline-none transition-all font-bold text-lg"
+                className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg"
               />
             </div>
             
@@ -207,8 +207,13 @@ export default function SettingsPage() {
     setTheme, 
     aiMode, 
     setAiMode,
+    bankConnected,
+    setBankConnected,
+    directToBank,
+    setDirectToBank,
     notificationSettings,
-    updateNotificationSettings
+    updateNotificationSettings,
+    addToast
   } = useEmpire();
   const [activeTab, setActiveTab] = useState('link-center');
   const [searchQuery, setSearchQuery] = useState('');
@@ -279,10 +284,10 @@ export default function SettingsPage() {
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[200] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center"
             >
-              <div className="bg-white p-8 rounded-[40px] shadow-2xl flex flex-col items-center gap-4 text-center">
+              <div className="bg-theme-surface p-8 rounded-[40px] shadow-2xl flex flex-col items-center gap-4 text-center">
                 <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
                 <div>
-                  <h4 className="font-black text-slate-900">Neural Syncing...</h4>
+                  <h4 className="font-black text-foreground">Neural Syncing...</h4>
                   <p className="text-xs font-medium text-slate-500">Recalibrating AI autonomy protocols.</p>
                 </div>
               </div>
@@ -302,7 +307,7 @@ export default function SettingsPage() {
 
         <div className="flex flex-col md:flex-row gap-8 md:gap-12">
           {/* Navigation Sidebar */}
-          <aside className="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full md:w-64 shrink-0 gap-2 pb-2 md:pb-0 border-b md:border-b-0 border-slate-100 md:border-none">
+          <aside className="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full md:w-64 shrink-0 gap-2 pb-2 md:pb-0 border-b md:border-b-0 border-theme md:border-none">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -312,7 +317,7 @@ export default function SettingsPage() {
                   "flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all whitespace-nowrap",
                   activeTab === tab.id 
                     ? "bg-slate-900 text-white shadow-xl shadow-slate-200" 
-                    : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+                    : "text-slate-400 hover:text-slate-600 hover:bg-theme-background"
                 )}
               >
                 <tab.icon className="w-5 h-5 shrink-0" />
@@ -345,7 +350,7 @@ export default function SettingsPage() {
                       placeholder="Search for apps you want to link (e.g. Etsy, TikTok, Shopify, Pinterest...)"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-14 pr-6 py-5 rounded-[28px] bg-white border-2 border-slate-100 focus:border-blue-600 outline-none transition-all text-lg font-bold text-slate-900 shadow-sm"
+                      className="w-full pl-14 pr-6 py-5 rounded-[28px] bg-theme-surface border-2 border-theme focus:border-blue-600 outline-none transition-all text-lg font-bold text-foreground shadow-sm"
                     />
                     {searchQuery && (
                       <button 
@@ -388,9 +393,9 @@ export default function SettingsPage() {
                     </button>
                   </div>
 
-                  <div className="p-8 rounded-[32px] bg-slate-50 border-2 border-slate-100 space-y-6">
+                  <div className="p-8 rounded-[32px] bg-theme-background border-2 border-theme space-y-6">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-bold italic flex items-center gap-2 text-slate-900">
+                      <h3 className="text-xl font-bold italic flex items-center gap-2 text-foreground">
                         <Share2 className="w-5 h-5 text-blue-600" /> TikTok Marketing
                       </h3>
                       <span className="flex items-center gap-1.5 text-amber-600 font-bold text-xs uppercase tracking-widest">
@@ -413,9 +418,9 @@ export default function SettingsPage() {
                     </button>
                   </div>
 
-                  <div className="p-8 rounded-[32px] bg-white border-2 border-slate-100 space-y-6">
+                  <div className="p-8 rounded-[32px] bg-theme-surface border-2 border-theme space-y-6">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-bold italic flex items-center gap-2 text-slate-900">
+                      <h3 className="text-xl font-bold italic flex items-center gap-2 text-foreground">
                         <Stars className="w-5 h-5 text-blue-900" /> Bannerbear AI
                       </h3>
                       <span className="flex items-center gap-1.5 text-blue-600 font-bold text-[10px] uppercase tracking-[0.2em]">
@@ -446,13 +451,13 @@ export default function SettingsPage() {
 
             {activeTab === 'ai-intelligence' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                       <Zap className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-slate-900 tracking-tight">AI Control Mode</h3>
+                      <h3 className="text-xl font-black text-foreground tracking-tight">AI Control Mode</h3>
                       <p className="text-sm font-medium text-slate-500">Choose how much autonomy your AI partner has.</p>
                     </div>
                   </div>
@@ -463,17 +468,17 @@ export default function SettingsPage() {
                       onClick={() => handleAiModeToggle('co-pilot')}
                       className={cn(
                         "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 relative overflow-hidden",
-                        aiMode === 'co-pilot' ? "border-amber-400 bg-amber-50/50" : "border-slate-100 bg-white hover:border-slate-200"
+                        aiMode === 'co-pilot' ? "border-amber-400 bg-amber-50/50" : "border-theme bg-theme-surface hover:border-theme"
                       )}
                     >
                       <div className="flex items-center justify-between">
                         <Bot className={cn("w-8 h-8", aiMode === 'co-pilot' ? "text-amber-600" : "text-slate-300")} />
                         {aiMode === 'co-pilot' && (
-                          <div className="bg-amber-400 text-slate-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active</div>
+                          <div className="bg-amber-400 text-foreground px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active</div>
                         )}
                       </div>
                       <div>
-                        <h4 className="text-lg font-black text-slate-900">Co-Pilot</h4>
+                        <h4 className="text-lg font-black text-foreground">Co-Pilot</h4>
                         <p className="text-xs font-bold text-slate-500 leading-relaxed">
                           AI makes suggestions and researches trends, but waits for your approval before posting or listing items.
                         </p>
@@ -485,22 +490,54 @@ export default function SettingsPage() {
                       onClick={() => handleAiModeToggle('empire')}
                       className={cn(
                         "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 relative overflow-hidden",
-                        aiMode === 'empire' ? "border-amber-400 bg-amber-50/50" : "border-slate-100 bg-white hover:border-slate-200"
+                        aiMode === 'empire' ? "border-amber-400 bg-amber-50/50" : "border-theme bg-theme-surface hover:border-theme"
                       )}
                     >
                       <div className="flex items-center justify-between">
                         <Power className={cn("w-8 h-8", aiMode === 'empire' ? "text-amber-600" : "text-slate-300")} />
                         {aiMode === 'empire' && (
-                          <div className="bg-amber-400 text-slate-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active</div>
+                          <div className="bg-amber-400 text-foreground px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Active</div>
                         )}
                       </div>
                       <div>
-                        <h4 className="text-lg font-black text-slate-900">Auto-Pilot</h4>
+                        <h4 className="text-lg font-black text-foreground">Empire Mode</h4>
                         <p className="text-xs font-bold text-slate-500 leading-relaxed">
                           AI executes strategies, posts content, and manages listings autonomously to maximize growth 24/7.
                         </p>
                       </div>
                     </button>
+                  </div>
+
+                  {/* Direct to Bank Toggle */}
+                  <div className="p-8 rounded-[32px] bg-theme-surface border-2 border-theme space-y-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                          <Building2 className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h4 className="font-black text-foreground">Direct-to-Bank Revenue</h4>
+                          <p className="text-xs font-bold text-slate-500">Ensure all generated revenue bypasses intermediaries.</p>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => setDirectToBank(!directToBank)}
+                        className={cn(
+                          "w-14 h-8 rounded-full transition-all relative flex items-center px-1",
+                          directToBank ? "bg-emerald-600" : "bg-slate-200"
+                        )}
+                      >
+                        <motion.div 
+                          animate={{ x: directToBank ? 24 : 0 }}
+                          className="w-6 h-6 bg-white rounded-full shadow-md"
+                        />
+                      </button>
+                    </div>
+                    {directToBank && (
+                      <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-[10px] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4" /> Revenue Flow: Verified Path
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-6 bg-slate-900 rounded-3xl text-white">
@@ -509,7 +546,7 @@ export default function SettingsPage() {
                       <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Empire Wisdom</span>
                     </div>
                     <p className="text-sm font-medium text-slate-300">
-                      Auto-Pilot mode is recommended for maximum velocity once your initial strategy is calibrated.
+                      Empire Mode is recommended for maximum velocity once your initial strategy is calibrated.
                     </p>
                   </div>
                 </div>
@@ -518,25 +555,25 @@ export default function SettingsPage() {
 
             {activeTab === 'notifications' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                       <Bell className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Notification Channels</h3>
+                      <h3 className="text-xl font-black text-foreground tracking-tight">Notification Channels</h3>
                       <p className="text-sm font-medium text-slate-500">Configure how and when your Empire alerts you.</p>
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100">
+                    <div className="flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 shadow-sm">
+                        <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center text-blue-600 shadow-sm">
                           <CreditCard className="w-5 h-5" />
                         </div>
                         <div>
-                          <h4 className="font-black text-slate-900">Sales Notifications</h4>
+                          <h4 className="font-black text-foreground">Sales Notifications</h4>
                           <p className="text-xs font-bold text-slate-500">Get alerted instantly when a customer makes a purchase.</p>
                         </div>
                       </div>
@@ -549,18 +586,18 @@ export default function SettingsPage() {
                       >
                         <motion.div 
                           animate={{ x: notificationSettings.sales ? 24 : 0 }}
-                          className="w-6 h-6 bg-white rounded-full shadow-md"
+                          className="w-6 h-6 bg-theme-surface rounded-full shadow-md"
                         />
                       </button>
                     </div>
 
-                    <div className="flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100">
+                    <div className="flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 shadow-sm">
+                        <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center text-blue-600 shadow-sm">
                           <Bot className="w-5 h-5" />
                         </div>
                         <div>
-                          <h4 className="font-black text-slate-900">Approval Requests</h4>
+                          <h4 className="font-black text-foreground">Approval Requests</h4>
                           <p className="text-xs font-bold text-slate-500">Notifications for when your AI needs you to review content or strategies.</p>
                         </div>
                       </div>
@@ -573,7 +610,7 @@ export default function SettingsPage() {
                       >
                         <motion.div 
                           animate={{ x: notificationSettings.approvals ? 24 : 0 }}
-                          className="w-6 h-6 bg-white rounded-full shadow-md"
+                          className="w-6 h-6 bg-theme-surface rounded-full shadow-md"
                         />
                       </button>
                     </div>
@@ -596,13 +633,13 @@ export default function SettingsPage() {
 
             {activeTab === 'user-info' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600">
                       <User className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Profile Information</h3>
+                      <h3 className="text-xl font-black text-foreground tracking-tight">Profile Information</h3>
                       <p className="text-sm font-medium text-slate-500">How your empire recognizes you.</p>
                     </div>
                   </div>
@@ -610,11 +647,11 @@ export default function SettingsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Full Name</label>
-                      <input type="text" placeholder="Your Name" className="w-full p-4 rounded-2xl bg-slate-50 border-2 border-slate-100 font-bold" />
+                      <input type="text" placeholder="Your Name" className="w-full p-4 rounded-2xl bg-theme-background border-2 border-theme font-bold" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Email Address</label>
-                      <input type="email" placeholder="email@example.com" className="w-full p-4 rounded-2xl bg-slate-50 border-2 border-slate-100 font-bold" />
+                      <input type="email" placeholder="email@example.com" className="w-full p-4 rounded-2xl bg-theme-background border-2 border-theme font-bold" />
                     </div>
                   </div>
 
@@ -627,30 +664,92 @@ export default function SettingsPage() {
 
             {activeTab === 'bank-info' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
                       <Building2 className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Payout Destination</h3>
+                      <h3 className="text-xl font-black text-foreground tracking-tight">Payout Destination</h3>
                       <p className="text-sm font-medium text-slate-500">Securely link your bank for direct revenue transfers.</p>
                     </div>
                   </div>
 
-                  <div className="p-6 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 text-center space-y-4">
-                    <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mx-auto">
-                      <Shield className="w-8 h-8 text-slate-300" />
+                  {!bankConnected ? (
+                    <div className="p-8 bg-theme-background rounded-[32px] border-2 border-dashed border-theme text-center space-y-6 relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-emerald-50/0 group-hover:bg-emerald-50/30 transition-colors" />
+                      <div className="relative z-10 w-20 h-20 rounded-full bg-theme-surface shadow-lg flex items-center justify-center mx-auto border-2 border-slate-50">
+                        <Shield className="w-10 h-10 text-slate-300" />
+                      </div>
+                      <div className="relative z-10 space-y-2">
+                        <h4 className="text-lg font-black text-foreground tracking-tight">Secured by Stripe Connect</h4>
+                        <p className="text-xs font-bold text-slate-500 max-w-sm mx-auto leading-relaxed">
+                          Link your bank account to receive payments directly. Your data is encrypted and handled by industry-standard protocols.
+                        </p>
+                      </div>
+                      <button 
+                        onClick={async () => {
+                          window.open('https://connect.stripe.com/oauth/authorize', '_blank');
+                          // Simulate onboarding
+                          await new Promise(r => setTimeout(r, 2000));
+                          setBankConnected(true);
+                          addToast({
+                            title: 'Bank Linked',
+                            message: 'Your payout destination has been successfully verified.',
+                            type: 'success'
+                          });
+                        }}
+                        className="relative z-10 px-10 py-5 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 flex items-center gap-3 mx-auto"
+                      >
+                        Start Secure Onboarding <ExternalLink className="w-4 h-4" />
+                      </button>
                     </div>
-                    <div className="space-y-2">
-                      <h4 className="font-black text-slate-900 tracking-tight">Secured by Stripe</h4>
-                      <p className="text-xs font-bold text-slate-500 max-w-xs mx-auto">
-                        Your banking details are encrypted and never stored on our servers.
-                      </p>
+                  ) : (
+                    <div className="space-y-6">
+                      <div className="p-8 rounded-[32px] bg-emerald-50 border-4 border-emerald-100 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-6">
+                          <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">Primary Payout Method</p>
+                          <h4 className="text-2xl font-black text-slate-900 flex items-center gap-3">
+                            JP Morgan Chase <span className="text-sm font-bold text-emerald-600 bg-white px-3 py-1 rounded-full border border-emerald-100">VERIFIED</span>
+                          </h4>
+                        </div>
+                        <div className="mt-8 flex items-center gap-12">
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Account Number</p>
+                            <p className="font-mono font-bold text-slate-600">•••• •••• 4242</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Routing Number</p>
+                            <p className="font-mono font-bold text-slate-600">•••• •••• 1234</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-4">
+                        <button 
+                          onClick={() => setBankConnected(false)}
+                          className="px-6 py-4 bg-white border-2 border-slate-200 text-slate-500 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all"
+                        >
+                          Disconnect Account
+                        </button>
+                        <button className="flex-1 px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all flex items-center justify-center gap-2">
+                          View Payout Schedule <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                    <button className="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 flex items-center gap-2 mx-auto">
-                      Connect via Stripe <ExternalLink className="w-4 h-4" />
-                    </button>
+                  )}
+
+                  <div className="p-6 bg-slate-900 rounded-3xl text-white">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Shield className="w-5 h-5 text-emerald-400" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Security Protocol</span>
+                    </div>
+                    <p className="text-sm font-medium text-slate-300">
+                      Revenue is deposited directly to your bank account within 2-3 business days of a sale. No middleman, no delays.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -658,13 +757,13 @@ export default function SettingsPage() {
 
             {activeTab === 'theme-style' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                       <Palette className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Color Scheme</h3>
+                      <h3 className="text-xl font-black text-foreground tracking-tight">Color Scheme</h3>
                       <p className="text-sm font-medium text-slate-500">Personalize your Command Center's aesthetic.</p>
                     </div>
                   </div>
@@ -676,7 +775,7 @@ export default function SettingsPage() {
                         onClick={() => setTheme(scheme.id)}
                         className={cn(
                           "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 group",
-                          theme === scheme.id ? "border-blue-600 bg-blue-50" : "border-slate-50 bg-slate-50/50 hover:border-slate-200"
+                          theme === scheme.id ? "border-blue-600 bg-blue-50" : "border-slate-50 bg-theme-background/50 hover:border-theme"
                         )}
                       >
                         <div className="flex items-center justify-between">
@@ -687,7 +786,7 @@ export default function SettingsPage() {
                           {theme === scheme.id && <CheckCircle2 className="w-6 h-6 text-blue-600" />}
                         </div>
                         <div>
-                          <h4 className="text-lg font-black text-slate-900">{scheme.name}</h4>
+                          <h4 className="text-lg font-black text-foreground">{scheme.name}</h4>
                           <p className="text-xs font-bold text-slate-500 leading-relaxed">
                             {scheme.description}
                           </p>
@@ -711,13 +810,13 @@ export default function SettingsPage() {
 
             {activeTab === 'cloud-storage' && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+              <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                     <Globe className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-black text-slate-900 tracking-tight">Empire Cloud Hub</h3>
+                    <h3 className="text-xl font-black text-foreground tracking-tight">Empire Cloud Hub</h3>
                     <p className="text-sm font-medium text-slate-500">Manage your high-velocity storage and global data sync.</p>
                   </div>
                 </div>
@@ -734,10 +833,10 @@ export default function SettingsPage() {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-[60px]" />
                   </div>
 
-                  <div className="p-8 rounded-[32px] bg-slate-50 border-2 border-slate-100 space-y-6">
+                  <div className="p-8 rounded-[32px] bg-theme-background border-2 border-theme space-y-6">
                     <div>
                       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Data Integrity</p>
-                      <h4 className="text-xl font-black text-slate-900 italic">Protected.</h4>
+                      <h4 className="text-xl font-black text-foreground italic">Protected.</h4>
                       <p className="text-slate-500 text-xs font-medium mt-4 leading-relaxed">
                         Redundant backups across 3 global regions. Your financial and personal data is never stored locally.
                       </p>
@@ -760,23 +859,23 @@ export default function SettingsPage() {
 
           {activeTab === 'account-settings' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8">
+                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600">
                       <Lock className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Account & Security</h3>
+                      <h3 className="text-xl font-black text-foreground tracking-tight">Account & Security</h3>
                       <p className="text-sm font-medium text-slate-500">Manage your password and security protocols.</p>
                     </div>
                   </div>
 
                   <div className="space-y-6">
-                    <button className="w-full flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-slate-300 transition-all group">
+                    <button className="w-full flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme hover:border-slate-300 transition-all group">
                       <div className="flex items-center gap-4">
                         <Shield className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
                         <div className="text-left">
-                          <h4 className="font-black text-slate-900">Two-Factor Authentication</h4>
+                          <h4 className="font-black text-foreground">Two-Factor Authentication</h4>
                           <p className="text-xs font-bold text-slate-500">Add an extra layer of security to your empire.</p>
                         </div>
                       </div>
@@ -787,7 +886,7 @@ export default function SettingsPage() {
                     <div className="p-8 rounded-[32px] bg-blue-50 border-2 border-blue-100 space-y-4">
                       <div className="flex items-center gap-3">
                         <Stars className="w-5 h-5 text-blue-600" />
-                        <h4 className="font-black text-slate-900">Redeem Access Key</h4>
+                        <h4 className="font-black text-foreground">Redeem Access Key</h4>
                       </div>
                       <p className="text-xs font-bold text-slate-500 leading-relaxed">
                         If you have an Empire Launch key, enter it below to upgrade your account or extend your subscription.
@@ -799,7 +898,7 @@ export default function SettingsPage() {
                           value={redeemKeyValue}
                           onChange={(e) => setRedeemKeyValue(e.target.value.toUpperCase())}
                           disabled={isRedeeming}
-                          className="flex-1 p-4 rounded-2xl bg-white border-2 border-blue-100 focus:border-blue-600 outline-none font-mono text-sm uppercase tracking-widest disabled:opacity-50"
+                          className="flex-1 p-4 rounded-2xl bg-theme-surface border-2 border-blue-100 focus:border-blue-600 outline-none font-mono text-sm uppercase tracking-widest disabled:opacity-50"
                         />
                         <button 
                           onClick={handleRedeem}
@@ -824,11 +923,11 @@ export default function SettingsPage() {
                       )}
                     </div>
 
-                    <button className="w-full flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-slate-300 transition-all group">
+                    <button className="w-full flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme hover:border-slate-300 transition-all group">
                       <div className="flex items-center gap-4">
                         <Lock className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
                         <div className="text-left">
-                          <h4 className="font-black text-slate-900">Change Password</h4>
+                          <h4 className="font-black text-foreground">Change Password</h4>
                           <p className="text-xs font-bold text-slate-500">Update your access credentials.</p>
                         </div>
                       </div>
@@ -837,12 +936,12 @@ export default function SettingsPage() {
 
                     <button 
                       onClick={() => setIsTermsOpen(true)}
-                      className="w-full flex items-center justify-between p-6 rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-slate-300 transition-all group"
+                      className="w-full flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme hover:border-slate-300 transition-all group"
                     >
                       <div className="flex items-center gap-4">
                         <Scale className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
                         <div className="text-left">
-                          <h4 className="font-black text-slate-900">Neural Agreement</h4>
+                          <h4 className="font-black text-foreground">Neural Agreement</h4>
                           <p className="text-xs font-bold text-slate-500">Review our Data Protection & AI Approval policies.</p>
                         </div>
                       </div>
@@ -866,7 +965,7 @@ export default function SettingsPage() {
                   
                   <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div className="flex items-center gap-6">
-                      <div className="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center backdrop-blur-md">
+                      <div className="w-16 h-16 rounded-3xl bg-theme-surface/10 flex items-center justify-center backdrop-blur-md">
                         <Diamond className="w-8 h-8 text-blue-400" />
                       </div>
                       <div>
@@ -880,15 +979,15 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
+                    <div className="p-6 rounded-3xl bg-theme-surface/5 border border-white/10">
                       <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Monthly Fee</p>
                       <p className="text-2xl font-black tracking-tight">$30<span className="text-sm text-slate-500">/mo</span></p>
                     </div>
-                    <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
+                    <div className="p-6 rounded-3xl bg-theme-surface/5 border border-white/10">
                       <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Post Autonomy</p>
                       <p className="text-2xl font-black tracking-tight">Unlimited</p>
                     </div>
-                    <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
+                    <div className="p-6 rounded-3xl bg-theme-surface/5 border border-white/10">
                       <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Trend Velocity</p>
                       <p className="text-2xl font-black tracking-tight">Real-Time</p>
                     </div>
@@ -898,16 +997,16 @@ export default function SettingsPage() {
                     <p className="text-sm font-medium text-slate-400 flex-1">
                       Auto-billing is active. Your subscription renewal is managed securely via Stripe.
                     </p>
-                    <button className="w-full md:w-auto px-8 py-4 bg-white/5 hover:bg-red-500/10 text-slate-400 hover:text-red-400 rounded-2xl font-black text-xs uppercase tracking-widest transition-all border border-white/10 hover:border-red-500/20">
+                    <button className="w-full md:w-auto px-8 py-4 bg-theme-surface/5 hover:bg-red-500/10 text-slate-400 hover:text-red-400 rounded-2xl font-black text-xs uppercase tracking-widest transition-all border border-white/10 hover:border-red-500/20">
                       Cancel Subscription
                     </button>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                   <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-6">
+                   <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-6">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xl font-black text-slate-900">Unlock Business 2</h4>
+                        <h4 className="text-xl font-black text-foreground">Unlock Business 2</h4>
                         <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">$30 One-time</span>
                       </div>
                       <p className="text-sm text-slate-500 font-medium">Add a second independent business slot to your Empire dashboard.</p>
@@ -916,9 +1015,9 @@ export default function SettingsPage() {
                       </button>
                    </div>
 
-                   <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-6">
+                   <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-6">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xl font-black text-slate-900">Unlock Business 3</h4>
+                        <h4 className="text-xl font-black text-foreground">Unlock Business 3</h4>
                         <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">$30 One-time</span>
                       </div>
                       <p className="text-sm text-slate-500 font-medium">Maximize your reach with a third automated business slot.</p>

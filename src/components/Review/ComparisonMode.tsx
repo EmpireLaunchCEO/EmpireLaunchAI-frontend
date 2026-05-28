@@ -34,16 +34,16 @@ export function ComparisonMode({
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white w-full max-w-6xl h-[80vh] rounded-[40px] shadow-2xl relative overflow-hidden flex flex-col"
+        className="bg-theme-surface w-full max-w-6xl h-[80vh] rounded-[40px] shadow-2xl relative overflow-hidden flex flex-col"
       >
         {/* Header */}
-        <div className="p-8 border-b border-slate-100 flex justify-between items-center bg-white shrink-0">
+        <div className="p-8 border-b border-theme flex justify-between items-center bg-theme-surface shrink-0">
           <div className="flex items-center gap-3">
             <div className="bg-blue-50 p-2.5 rounded-2xl">
               <ArrowLeftRight className="w-6 h-6 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">Compare Versions</h2>
+              <h2 className="text-2xl font-bold text-foreground">Compare Versions</h2>
               <p className="text-slate-500 text-sm font-medium">Review the changes made by your AI Partner</p>
             </div>
           </div>
@@ -58,20 +58,20 @@ export function ComparisonMode({
         {/* Content Area */}
         <div className="flex-1 flex overflow-hidden">
           {/* Original */}
-          <div className="flex-1 flex flex-col border-r border-slate-100 overflow-hidden">
-            <div className="px-8 py-4 bg-slate-50/50 border-b border-slate-100 shrink-0">
+          <div className="flex-1 flex flex-col border-r border-theme overflow-hidden">
+            <div className="px-8 py-4 bg-theme-background/50 border-b border-theme shrink-0">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Original Version</span>
             </div>
             <div className="flex-1 overflow-y-auto p-8 space-y-6">
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Title</label>
-                <div className="p-4 bg-slate-50 rounded-2xl text-slate-400 font-semibold line-through decoration-slate-300">
+                <div className="p-4 bg-theme-background rounded-2xl text-slate-400 font-semibold line-through decoration-slate-300">
                   {originalTitle}
                 </div>
               </div>
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Description</label>
-                <div className="p-4 bg-slate-50 rounded-2xl text-slate-400 text-sm leading-relaxed line-through decoration-slate-300 whitespace-pre-wrap">
+                <div className="p-4 bg-theme-background rounded-2xl text-slate-400 text-sm leading-relaxed line-through decoration-slate-300 whitespace-pre-wrap">
                   {originalDescription}
                 </div>
               </div>
@@ -80,14 +80,14 @@ export function ComparisonMode({
 
           {/* AI Proposed */}
           <div className="flex-1 flex flex-col overflow-hidden bg-green-50/10">
-            <div className="px-8 py-4 bg-green-50/30 border-b border-slate-100 shrink-0 flex justify-between items-center">
+            <div className="px-8 py-4 bg-green-50/30 border-b border-theme shrink-0 flex justify-between items-center">
               <span className="text-[10px] font-bold text-green-700 uppercase tracking-widest">AI Proposed Changes</span>
               <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Optimized</span>
             </div>
             <div className="flex-1 overflow-y-auto p-8 space-y-6">
               <div>
                 <label className="text-[10px] font-bold text-green-700 uppercase tracking-widest mb-2 block">New Title</label>
-                <div className="p-4 bg-green-50 border border-green-100 rounded-2xl text-slate-900 font-bold">
+                <div className="p-4 bg-green-50 border border-green-100 rounded-2xl text-foreground font-bold">
                   {proposedTitle}
                 </div>
               </div>
@@ -102,10 +102,10 @@ export function ComparisonMode({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-8 border-t border-slate-100 bg-slate-50/30 flex justify-end gap-4 shrink-0">
+        <div className="p-8 border-t border-theme bg-theme-background/30 flex justify-end gap-4 shrink-0">
           <button 
             onClick={onReject}
-            className="px-8 py-4 rounded-2xl text-sm font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors flex items-center gap-2"
+            className="px-8 py-4 rounded-2xl text-sm font-bold text-slate-600 bg-theme-surface border border-theme hover:bg-theme-background transition-colors flex items-center gap-2"
           >
             <RotateCcw className="w-4 h-4" />
             Keep Original

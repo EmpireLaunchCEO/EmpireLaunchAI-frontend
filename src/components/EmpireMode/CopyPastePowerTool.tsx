@@ -88,7 +88,7 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
         {isExpanded ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
       </button>
 
-      <div className="w-[320px] bg-white border-l-4 border-blue-600 shadow-[-20px_0_60px_rgba(0,0,0,0.15)] h-[85vh] flex flex-col overflow-hidden">
+      <div className="w-[320px] bg-theme-surface border-l-4 border-blue-600 shadow-[-20px_0_60px_rgba(0,0,0,0.15)] h-[85vh] flex flex-col overflow-hidden">
         <div className="p-6 bg-slate-950 text-white border-b border-white/5 flex items-center justify-between">
            <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-900/40">
@@ -113,7 +113,7 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
                 className="w-full p-4 bg-blue-50 border-2 border-blue-100 rounded-2xl flex items-center justify-between group hover:bg-blue-600 hover:border-blue-600 transition-all shadow-sm"
               >
                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white rounded-lg text-blue-600 group-hover:scale-110 transition-transform">
+                    <div className="p-2 bg-theme-surface rounded-lg text-blue-600 group-hover:scale-110 transition-transform">
                        <Smartphone className="w-4 h-4" />
                     </div>
                     <span className="text-sm font-black text-blue-900 group-hover:text-white transition-colors tracking-tight">Launch {platform}</span>
@@ -137,12 +137,12 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
                      onClick={() => toggleCheck(item.id)}
                      className={cn(
                        "w-full p-3.5 rounded-xl border-2 text-left transition-all flex items-center gap-3 group",
-                       item.completed ? "bg-slate-50 border-slate-100" : "bg-white border-slate-50 hover:border-blue-200"
+                       item.completed ? "bg-theme-background border-theme" : "bg-theme-surface border-slate-50 hover:border-blue-200"
                      )}
                    >
                      <div className={cn(
                        "w-5 h-5 rounded-full flex items-center justify-center border-2 transition-all",
-                       item.completed ? "bg-blue-600 border-blue-600" : "border-slate-200"
+                       item.completed ? "bg-blue-600 border-blue-600" : "border-theme"
                      )}>
                         {item.completed && <Check className="w-3 h-3 text-white stroke-[4px]" />}
                      </div>
@@ -167,7 +167,7 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
                      onClick={() => handleCopy(item)}
                      className={cn(
                        "w-full p-4 rounded-2xl border-2 text-left transition-all group relative overflow-hidden",
-                       copiedLabel === item.label ? "border-green-500 bg-green-50" : "border-slate-50 bg-slate-50/30 hover:border-blue-600 hover:bg-white"
+                       copiedLabel === item.label ? "border-green-500 bg-green-50" : "border-slate-50 bg-theme-background/30 hover:border-blue-600 hover:bg-theme-surface"
                      )}
                    >
                      <div className="flex justify-between items-start mb-2">

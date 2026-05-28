@@ -73,7 +73,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
           <Bot className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-xl font-black text-slate-900 leading-tight">Neural Scan Findings.</h3>
+          <h3 className="text-xl font-black text-foreground leading-tight">Neural Scan Findings.</h3>
           <p className="text-sm text-slate-500 font-medium">I've identified potential assets in your Gmail. Please approve which ones I should integrate into your empire.</p>
         </div>
       </div>
@@ -87,11 +87,11 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white border-2 border-slate-50 rounded-[32px] p-6 shadow-sm hover:border-blue-100 transition-colors"
+              className="bg-theme-surface border-2 border-slate-50 rounded-[32px] p-6 shadow-sm hover:border-blue-100 transition-colors"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex items-start gap-4 flex-1">
-                  <div className="p-3 bg-slate-50 rounded-xl text-slate-400">
+                  <div className="p-3 bg-theme-background rounded-xl text-slate-400">
                     {result.type === 'credential' ? <Lock className="w-5 h-5" /> : 
                      result.type === 'invoice' ? <Mail className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </div>
@@ -102,8 +102,8 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
                          {Math.round(result.confidence * 100)}% Match
                        </span>
                     </div>
-                    <h4 className="font-bold text-slate-900">{result.maskedKey}</h4>
-                    <p className="text-sm text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100 font-mono">
+                    <h4 className="font-bold text-foreground">{result.maskedKey}</h4>
+                    <p className="text-sm text-slate-500 bg-theme-background p-3 rounded-xl border border-theme font-mono">
                       "{result.maskedSnippet}"
                     </p>
                   </div>
@@ -113,7 +113,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
                   <button 
                     disabled={processingId === result.id}
                     onClick={() => handleReject(result.id)}
-                    className="flex-1 md:flex-none px-6 py-3 border-2 border-slate-100 text-slate-400 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
+                    className="flex-1 md:flex-none px-6 py-3 border-2 border-theme text-slate-400 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
                   >
                     <XCircle className="w-4 h-4" />
                     Ignore
@@ -145,7 +145,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
             <div className="w-16 h-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto">
                <Zap className="w-8 h-8" />
             </div>
-            <h4 className="text-xl font-black text-slate-900">Neural Scan Complete.</h4>
+            <h4 className="text-xl font-black text-foreground">Neural Scan Complete.</h4>
             <p className="text-sm text-slate-500 max-w-xs mx-auto">All assets have been processed and integrated into your dashboard.</p>
             <button 
               onClick={onComplete}

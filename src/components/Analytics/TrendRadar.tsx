@@ -62,7 +62,7 @@ export function TrendRadar() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {opportunityCards.map((card) => (
-          <div key={card.id} className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-6 flex flex-col">
+          <div key={card.id} className="bg-theme-surface rounded-3xl p-6 border border-theme shadow-sm space-y-6 flex flex-col">
             <div className="flex justify-between items-start">
               <div className={cn(
                 "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest",
@@ -77,7 +77,7 @@ export function TrendRadar() {
             </div>
 
             <div className="space-y-2">
-              <h4 className="text-lg font-bold text-slate-900">{card.title}</h4>
+              <h4 className="text-lg font-bold text-foreground">{card.title}</h4>
               <p className="text-sm text-slate-500 leading-relaxed">{card.description}</p>
             </div>
 
@@ -85,7 +85,7 @@ export function TrendRadar() {
               <button className="flex-1 bg-slate-900 text-white py-3 rounded-2xl text-sm font-bold hover:bg-slate-800 transition-all">
                 Generate Draft
               </button>
-              <button className="px-6 py-3 rounded-2xl text-sm font-bold border border-slate-200 hover:bg-slate-50 transition-all">
+              <button className="px-6 py-3 rounded-2xl text-sm font-bold border border-theme hover:bg-theme-background transition-all">
                 Dismiss
               </button>
             </div>

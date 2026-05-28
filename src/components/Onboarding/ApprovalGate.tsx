@@ -214,7 +214,7 @@ export function ApprovalGate({
 
               <button 
                 onClick={onClose}
-                className="p-2 hover:bg-white/5 rounded-full transition-colors text-slate-500 hover:text-white"
+                className="p-2 hover:bg-theme-surface/5 rounded-full transition-colors text-slate-500 hover:text-white"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -232,31 +232,31 @@ export function ApprovalGate({
             {/* The Window Container */}
             <motion.div 
               className={cn(
-                "relative z-10 w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-700",
+                "relative z-10 w-full max-w-2xl bg-theme-surface rounded-2xl shadow-2xl overflow-hidden transition-all duration-700",
                 gateState === 'barrier' ? "h-full opacity-100" : "h-[100px] opacity-40 blur-sm pointer-events-none"
               )}
             >
-              <div className="bg-slate-100 px-4 py-2 flex items-center justify-between border-b border-slate-200">
+              <div className="bg-slate-100 px-4 py-2 flex items-center justify-between border-b border-theme">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-slate-300" />
                   <div className="w-3 h-3 rounded-full bg-slate-300" />
                   <div className="w-3 h-3 rounded-full bg-slate-300" />
                 </div>
-                <div className="flex items-center gap-2 bg-white px-3 py-1 rounded-md border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-2 bg-theme-surface px-3 py-1 rounded-md border border-theme shadow-sm">
                   <ShieldCheck className="w-3 h-3 text-green-600" />
                   <span className="text-[10px] font-bold text-slate-500 truncate max-w-[200px]">{initialUrl}</span>
                 </div>
                 <div className="w-12" />
               </div>
               
-              <div className="w-full h-full bg-white flex flex-col items-center justify-center p-12">
+              <div className="w-full h-full bg-theme-surface flex flex-col items-center justify-center p-12">
                 {gateState === 'barrier' ? (
                   <div className="w-full max-w-sm space-y-6">
                     <div className="text-center space-y-2">
                       <div className="w-16 h-16 bg-orange-600 rounded-2xl flex items-center justify-center text-white text-3xl font-black mx-auto mb-4">
                         {platformName[0]}
                       </div>
-                      <h4 className="text-2xl font-black text-slate-900">Sign in to {platformName}</h4>
+                      <h4 className="text-2xl font-black text-foreground">Sign in to {platformName}</h4>
                       <p className="text-sm font-medium text-slate-500 italic">"Detected MFA requirement. Please sign in to continue."</p>
                     </div>
                     
@@ -273,10 +273,10 @@ export function ApprovalGate({
                       
                       <div className="relative">
                         <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                          <div className="w-full border-t border-slate-200"></div>
+                          <div className="w-full border-t border-theme"></div>
                         </div>
                         <div className="relative flex justify-center text-xs uppercase font-black tracking-widest">
-                          <span className="bg-white px-2 text-slate-400">or manual web login</span>
+                          <span className="bg-theme-surface px-2 text-slate-400">or manual web login</span>
                         </div>
                       </div>
 
@@ -285,7 +285,7 @@ export function ApprovalGate({
                         <input 
                           type="text" 
                           defaultValue="ceo@my-empire.com"
-                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:border-blue-600"
+                          className="w-full px-4 py-3 bg-theme-background border border-theme rounded-xl text-sm font-bold focus:outline-none focus:border-blue-600"
                         />
                       </div>
                       <div className="space-y-2">
@@ -293,7 +293,7 @@ export function ApprovalGate({
                         <input 
                           type="password" 
                           defaultValue="••••••••••••"
-                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:border-blue-600"
+                          className="w-full px-4 py-3 bg-theme-background border border-theme rounded-xl text-sm font-bold focus:outline-none focus:border-blue-600"
                         />
                       </div>
                       <button 
@@ -347,7 +347,7 @@ export function ApprovalGate({
                   <motion.div
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ repeat: Infinity, duration: 2 }}
-                    className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-8 shadow-2xl"
+                    className="w-24 h-24 bg-theme-surface rounded-full flex items-center justify-center mb-8 shadow-2xl"
                   >
                     <CheckCircle2 className="w-12 h-12 text-blue-600" />
                   </motion.div>
@@ -356,7 +356,7 @@ export function ApprovalGate({
                   
                   <button 
                     onClick={onClose}
-                    className="mt-12 px-10 py-4 bg-white text-blue-600 rounded-full font-black text-xs uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all shadow-2xl shadow-blue-800/40"
+                    className="mt-12 px-10 py-4 bg-theme-surface text-blue-600 rounded-full font-black text-xs uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all shadow-2xl shadow-blue-800/40"
                   >
                     Return to Mission Hub
                   </button>
@@ -395,7 +395,7 @@ export function ApprovalGate({
               
               <button 
                 onClick={onClose}
-                className="px-6 py-5 rounded-[24px] border border-white/10 text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-white/5 transition-all"
+                className="px-6 py-5 rounded-[24px] border border-white/10 text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-theme-surface/5 transition-all"
               >
                 Cancel
               </button>

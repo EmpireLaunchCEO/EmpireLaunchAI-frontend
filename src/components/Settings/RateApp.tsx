@@ -55,7 +55,7 @@ export function RateApp() {
             <CheckCircle2 className="w-10 h-10 text-white" />
           </motion.div>
           <div className="space-y-2">
-            <h3 className="text-2xl font-black text-slate-900 italic">Neural Sync Complete!</h3>
+            <h3 className="text-2xl font-black text-foreground italic">Neural Sync Complete!</h3>
             <p className="text-sm font-bold text-slate-600 max-w-sm mx-auto leading-relaxed">
               {rating >= 4 
                 ? "Your 5-star insight has been transmitted. The engineers are celebrating this milestone! 🚀"
@@ -68,13 +68,13 @@ export function RateApp() {
   }
 
   return (
-    <div className="p-8 rounded-[40px] bg-white border-2 border-slate-100 space-y-8 shadow-sm">
+    <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8 shadow-sm">
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
           <Star className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-xl font-black text-slate-900 tracking-tight">Rate EmpireLaunch AI</h3>
+          <h3 className="text-xl font-black text-foreground tracking-tight">Rate EmpireLaunch AI</h3>
           <p className="text-sm font-medium text-slate-500">Share your thoughts with the engineers.</p>
         </div>
       </div>
@@ -118,7 +118,7 @@ export function RateApp() {
                   value={review}
                   onChange={(e) => setReview(e.target.value)}
                   placeholder={rating >= 4 ? "Tell us about your success..." : "What's missing from your workflow?"}
-                  className="w-full p-5 rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 outline-none transition-all font-bold text-base min-h-[120px] resize-none"
+                  className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-base min-h-[120px] resize-none"
                 />
                 <MessageSquare className="absolute right-5 bottom-5 w-5 h-5 text-slate-300" />
               </div>

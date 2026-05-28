@@ -58,7 +58,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           { name: 'Kittl', icon: Palette, color: 'text-indigo-600', bg: 'bg-indigo-50', link: 'https://www.kittl.com' },
-          { name: 'CapCut', icon: Scissors, color: 'text-slate-900', bg: 'bg-slate-100', link: 'https://www.capcut.com' },
+          { name: 'CapCut', icon: Scissors, color: 'text-foreground', bg: 'bg-slate-100', link: 'https://www.capcut.com' },
           { name: 'Canva', icon: Layout, color: 'text-blue-500', bg: 'bg-blue-50', link: 'https://www.canva.com' },
         ].map((p) => (
           <a 
@@ -66,13 +66,13 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
             href={p.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-8 bg-white border-2 border-slate-50 rounded-[40px] hover:border-blue-600 transition-all group shadow-sm flex flex-col items-center text-center space-y-4"
+            className="p-8 bg-theme-surface border-2 border-slate-50 rounded-[40px] hover:border-blue-600 transition-all group shadow-sm flex flex-col items-center text-center space-y-4"
           >
             <div className={cn("p-4 rounded-2xl group-hover:scale-110 transition-transform", p.bg)}>
               <p.icon className={cn("w-8 h-8", p.color)} />
             </div>
             <div>
-              <h3 className="font-black text-slate-900">{p.name} Launchpad</h3>
+              <h3 className="font-black text-foreground">{p.name} Launchpad</h3>
               <p className="text-xs text-slate-400 font-medium">Open manual creative tool</p>
             </div>
             <ExternalLink className="w-4 h-4 text-slate-300" />
@@ -87,7 +87,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
               <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-lg">
                  <Layout className="w-5 h-5" />
               </div>
-              <h2 className="text-xl font-black text-slate-900 tracking-tight uppercase italic">Creative Queue.</h2>
+              <h2 className="text-xl font-black text-foreground tracking-tight uppercase italic">Creative Queue.</h2>
            </div>
            <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest bg-blue-50 px-4 py-2 rounded-xl border border-blue-100">
              Sync External Tools
@@ -104,13 +104,13 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
                key={task.id}
                onClick={() => onSelectTask(task)}
                whileHover={{ x: 8 }}
-               className="p-6 bg-white border-2 border-slate-50 rounded-[32px] shadow-sm flex items-center justify-between group text-left"
+               className="p-6 bg-theme-surface border-2 border-slate-50 rounded-[32px] shadow-sm flex items-center justify-between group text-left"
              >
                <div className="flex items-center gap-6">
                   <div className={cn(
                     "w-16 h-16 rounded-2xl flex items-center justify-center shadow-inner",
                     task.platform === 'Kittl' ? 'bg-indigo-50 text-indigo-600' :
-                    task.platform === 'CapCut' ? 'bg-slate-50 text-slate-900' : 'bg-blue-50 text-blue-500'
+                    task.platform === 'CapCut' ? 'bg-theme-background text-foreground' : 'bg-blue-50 text-blue-500'
                   )}>
                      {getPlatformIcon(task.platform)}
                   </div>
@@ -124,19 +124,19 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
                           {task.status.replace('_', ' ')}
                         </span>
                      </div>
-                     <h4 className="text-lg font-bold text-slate-900">{task.title}</h4>
+                     <h4 className="text-lg font-bold text-foreground">{task.title}</h4>
                   </div>
                </div>
 
                <div className="flex items-center gap-8">
                   <div className="text-right hidden md:block">
                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Timeline</p>
-                     <div className="flex items-center gap-1.5 text-slate-900 font-bold text-sm">
+                     <div className="flex items-center gap-1.5 text-foreground font-bold text-sm">
                         <Clock className="w-3.5 h-3.5" />
                         {task.dueDate}
                      </div>
                   </div>
-                  <div className="p-4 bg-slate-50 rounded-2xl group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
+                  <div className="p-4 bg-theme-background rounded-2xl group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">
                      <ChevronRight className="w-5 h-5" />
                   </div>
                </div>
@@ -149,7 +149,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
       <div className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[40px] p-10 text-white relative overflow-hidden shadow-2xl shadow-indigo-200">
          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="space-y-6">
-               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/20">
+               <div className="inline-flex items-center gap-2 bg-theme-surface/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/20">
                   <Bot className="w-4 h-4 text-blue-200" />
                   <span className="text-xs font-black uppercase tracking-widest">Manual Assistance Engine</span>
                </div>
@@ -158,7 +158,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
                   I can't directly "click" for you in Kittl or CapCut yet, but I've prepared full strategic blueprints for every task. Open a task to see my color recommendations, font pairings, and high-conversion scripts.
                </p>
                <div className="flex gap-4">
-                  <button className="px-8 py-4 bg-white text-indigo-600 rounded-[20px] font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform shadow-lg">
+                  <button className="px-8 py-4 bg-theme-surface text-indigo-600 rounded-[20px] font-black text-xs uppercase tracking-widest hover:scale-105 transition-transform shadow-lg">
                      How it works
                   </button>
                </div>
@@ -169,7 +169,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
                </div>
             </div>
          </div>
-         <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
+         <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-theme-surface/5 rounded-full blur-3xl" />
       </div>
     </div>
   );

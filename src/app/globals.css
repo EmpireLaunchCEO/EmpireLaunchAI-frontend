@@ -9,54 +9,82 @@
   --secondary: #0f172a;
   --accent: #3b82f6;
   --muted: #f1f5f9;
+  --surface: #ffffff;
+  --surface-border: #f1f5f9;
 }
 
 body.theme-classic-blue {
   --primary: #2563eb;
   --secondary: #0f172a;
   --accent: #3b82f6;
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --surface: #ffffff;
+  --surface-border: #e2e8f0;
 }
 
 body.theme-empire-gold {
   --primary: #fbbf24; /* Amber 400 - Gold */
   --secondary: #0f172a;
   --accent: #f59e0b; /* Amber 500 */
-  --background: #fffbeb; /* Light Amber Background so boxes stand out */
-  --foreground: #0f172a; /* Obsidian text */
-  --muted: #fef3c7; /* Amber 50 */
+  --background: #020617; /* Obsidian Background */
+  --foreground: #f8fafc; /* Light text */
+  --muted: #0f172a; 
+  --surface: #0f172a; /* Deep Slate Surface */
+  --surface-border: #1e293b; /* Slate 800 */
 }
+
 
 body.theme-emerald-growth {
   --primary: #059669;
   --secondary: #0f172a;
   --accent: #10b981;
-  --background: #f0fdf4;
+  --background: #f0fdf4; /* Light Emerald */
   --foreground: #064e3b;
+  --surface: #ffffff;
+  --surface-border: #a7f3d0;
 }
 
 body.theme-rose-gold {
   --primary: #f43f5e;
   --secondary: #0f172a;
   --accent: #fb7185;
-  --background: #fff1f2;
+  --background: #fff1f2; /* Light Rose */
   --foreground: #881337;
+  --surface: #ffffff;
+  --surface-border: #fecdd3;
 }
 
 body.theme-cyber-purple {
   --primary: #9333ea;
   --secondary: #312e81;
   --accent: #a855f7;
-  --background: #faf5ff;
+  --background: #faf5ff; /* Light Purple */
   --foreground: #581c87;
+  --surface: #ffffff;
+  --surface-border: #e9d5ff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --surface: #171717;
+    --surface-border: #262626;
   }
+}
+
+/* Force everything that should be background to use theme variables */
+[class*="bg-white"], [class*="bg-slate-50"], [class*="bg-slate-100"] {
+  background-color: var(--background) !important;
+}
+
+[class*="text-slate-900"], [class*="text-black"] {
+  color: var(--foreground) !important;
+}
+
+[class*="border-slate-100"], [class*="border-slate-200"], [class*="border-slate-50"] {
+  border-color: var(--surface-border) !important;
 }
 
 body {
@@ -78,5 +106,17 @@ body.theme-cyber-purple h1, body.theme-cyber-purple h2, body.theme-cyber-purple 
 @layer utilities {
   .animate-spin-slow {
     animation: spin 3s linear infinite;
+  }
+  
+  .bg-theme-background {
+    background-color: var(--background);
+  }
+  
+  .bg-theme-surface {
+    background-color: var(--surface);
+  }
+  
+  .border-theme {
+    border-color: var(--surface-border);
   }
 }

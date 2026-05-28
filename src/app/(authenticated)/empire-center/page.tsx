@@ -75,7 +75,7 @@ export default function EmpireCenterPage() {
             className={cn(
               "flex items-center gap-2 px-6 py-3 rounded-[20px] font-bold text-sm transition-all",
               activeTab === tab.id 
-                ? "bg-white text-slate-900 shadow-sm" 
+                ? "bg-theme-surface text-foreground shadow-sm" 
                 : "text-slate-500 hover:text-slate-700"
             )}
           >
@@ -98,26 +98,26 @@ export default function EmpireCenterPage() {
                 className="space-y-6"
               >
                 {/* Approvals Section */}
-                <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-6">
+                <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-black text-slate-900">Pending Approvals</h3>
+                    <h3 className="text-xl font-black text-foreground">Pending Approvals</h3>
                     <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px] font-black uppercase">2 Action Required</span>
                   </div>
                   
                   <div className="space-y-4">
                     {duties.filter(d => d.type === 'approval').map(duty => (
-                      <div key={duty.id} className="p-6 bg-slate-50 rounded-3xl flex items-center justify-between gap-4 border border-transparent hover:border-blue-200 transition-all">
+                      <div key={duty.id} className="p-6 bg-theme-background rounded-3xl flex items-center justify-between gap-4 border border-transparent hover:border-blue-200 transition-all">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                          <div className="w-12 h-12 bg-theme-surface rounded-2xl flex items-center justify-center shadow-sm">
                             <Clock className="w-6 h-6 text-amber-500" />
                           </div>
                           <div>
-                            <p className="font-bold text-slate-900">{duty.title}</p>
+                            <p className="font-bold text-foreground">{duty.title}</p>
                             <p className="text-xs text-slate-500 uppercase font-black tracking-widest">{duty.platform}</p>
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <button className="p-3 bg-white hover:bg-red-50 text-red-500 rounded-xl transition-colors shadow-sm">
+                          <button className="p-3 bg-theme-surface hover:bg-red-50 text-red-500 rounded-xl transition-colors shadow-sm">
                             <ThumbsDown className="w-4 h-4" />
                           </button>
                           <button className="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors shadow-lg shadow-blue-200">
@@ -130,17 +130,17 @@ export default function EmpireCenterPage() {
                 </div>
 
                 {/* AI Work/Research Feed */}
-                <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-6">
+                <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-6">
                    <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-black text-slate-900">AI Active Research</h3>
+                    <h3 className="text-xl font-black text-foreground">AI Active Research</h3>
                     <button className="text-xs font-black text-blue-600 uppercase tracking-widest">New Request +</button>
                   </div>
                   
                   <div className="space-y-4">
-                    <div className="p-6 border-2 border-dashed border-slate-100 rounded-3xl space-y-4">
+                    <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4">
                       <div className="flex items-center gap-3">
                         <Stars className="w-5 h-5 text-blue-600" />
-                        <p className="font-bold text-slate-900 italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
+                        <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
                       </div>
                       <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                         <motion.div 
@@ -165,10 +165,10 @@ export default function EmpireCenterPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-8"
+                className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-8"
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-black text-slate-900">Posting Tracker</h3>
+                  <h3 className="text-xl font-black text-foreground">Posting Tracker</h3>
                   <div className="flex gap-2">
                      <button className="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">All Platforms</button>
                   </div>
@@ -192,7 +192,7 @@ export default function EmpireCenterPage() {
                               <div className="w-4 h-4 rounded-full overflow-hidden">
                                 <img src="/branded-globe.png" alt="Platform" className="w-full h-full object-cover" />
                               </div>
-                              <span className="font-black text-xs text-slate-900 uppercase tracking-tighter">{post.site}</span>
+                              <span className="font-black text-xs text-foreground uppercase tracking-tighter">{post.site}</span>
                             </div>
                           </td>
                           <td className="py-6">
@@ -232,17 +232,17 @@ export default function EmpireCenterPage() {
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">Current Objective</label>
                     <textarea 
                       placeholder="e.g. Focus on maximizing Etsy visibility for the new Summer Journal collection."
-                      className="w-full bg-white/5 border-2 border-white/10 rounded-3xl p-6 text-sm font-medium outline-none focus:border-blue-600 transition-all min-h-[120px]"
+                      className="w-full bg-theme-surface/5 border-2 border-white/10 rounded-3xl p-6 text-sm font-medium outline-none focus:border-blue-600 transition-all min-h-[120px]"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    <button className="p-6 bg-white/5 border border-white/10 rounded-[32px] text-left hover:bg-white/10 transition-all">
+                    <button className="p-6 bg-theme-surface/5 border border-white/10 rounded-[32px] text-left hover:bg-theme-surface/10 transition-all">
                       <Search className="w-6 h-6 text-blue-500 mb-4" />
                       <p className="font-bold text-sm">Market Research</p>
                       <p className="text-[10px] text-slate-500 uppercase font-black mt-1">Status: Active</p>
                     </button>
-                    <button className="p-6 bg-white/5 border border-white/10 rounded-[32px] text-left hover:bg-white/10 transition-all">
+                    <button className="p-6 bg-theme-surface/5 border border-white/10 rounded-[32px] text-left hover:bg-theme-surface/10 transition-all">
                       <ExternalLink className="w-6 h-6 text-purple-500 mb-4" />
                       <p className="font-bold text-sm">Auto-Posting</p>
                       <p className="text-[10px] text-slate-500 uppercase font-black mt-1">Status: Paused</p>
@@ -261,13 +261,13 @@ export default function EmpireCenterPage() {
         {/* Sidebar Context */}
         <div className="space-y-8">
            {/* Empire Notes Section */}
-           <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
+           <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
                     <StickyNote className="w-5 h-5" />
                   </div>
-                  <h4 className="font-black text-slate-900 text-sm">Empire Notes</h4>
+                  <h4 className="font-black text-foreground text-sm">Empire Notes</h4>
                 </div>
                 <button 
                   onClick={() => setEmpireNotes('')}
@@ -290,12 +290,12 @@ export default function EmpireCenterPage() {
               </div>
            </div>
 
-           <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-6">
+           <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
                   <MessageSquare className="w-5 h-5" />
                 </div>
-                <h4 className="font-black text-slate-900 text-sm">Feedback Channel</h4>
+                <h4 className="font-black text-foreground text-sm">Feedback Channel</h4>
               </div>
               <p className="text-xs text-slate-500 font-medium leading-relaxed">
                 Send feedback to the AI regarding past posts or research quality.
@@ -303,7 +303,7 @@ export default function EmpireCenterPage() {
               <input 
                 type="text" 
                 placeholder="Type your feedback..."
-                className="w-full bg-slate-50 border-2 border-transparent rounded-2xl p-4 text-xs font-bold focus:border-blue-600 transition-all outline-none"
+                className="w-full bg-theme-background border-2 border-transparent rounded-2xl p-4 text-xs font-bold focus:border-blue-600 transition-all outline-none"
               />
            </div>
 

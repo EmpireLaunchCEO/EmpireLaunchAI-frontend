@@ -16,62 +16,36 @@ import {
   CheckCircle2,
   Lock
 } from "lucide-react";
-
-const TermsModal = ({ isOpen, onClose, onAccept }: { isOpen: boolean, onClose: () => void, onAccept: () => void }) => {
-  if (!isOpen) return null;
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="bg-slate-900 border border-white/10 rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl">
-        <div className="p-8 overflow-y-auto custom-scrollbar">
-          <h2 className="text-3xl font-black mb-6 text-white uppercase tracking-tight">Terms of Operation</h2>
-          <div className="space-y-6 text-slate-400 font-medium leading-relaxed">
-            <section>
-              <h3 className="text-white font-bold mb-2 uppercase text-sm tracking-widest flex items-center gap-2">
-                <Shield className="w-4 h-4 text-blue-400" />
-                Data Sovereignty
-              </h3>
-              <p>EmpireLaunch AI acts as your primary executive agent. All bank details and personal identifiers are encrypted at the edge. We do not store raw financial data on shared nodes.</p>
-            </section>
-            <section>
-              <h3 className="text-white font-bold mb-2 uppercase text-sm tracking-widest flex items-center gap-2">
-                <Rocket className="w-4 h-4 text-purple-400" />
-                Autonomous Execution
-              </h3>
-              <p>By proceeding, you grant the AI permission to research trends and draft listings. Financial transactions and high-impact social posts will ALWAYS require your final verification via the validation gates.</p>
-            </section>
-            <section>
-              <h3 className="text-white font-bold mb-2 uppercase text-sm tracking-widest flex items-center gap-2">
-                <Lock className="w-4 h-4 text-emerald-400" />
-                Safeguards
-              </h3>
-              <p>The system will never execute paid subscriptions or purchases without explicit owner signatures. Your business angle and social outlets remain your intellectual property.</p>
-            </section>
-          </div>
-        </div>
-        <div className="p-6 bg-white/5 border-t border-white/10 flex gap-4">
-          <button onClick={onClose} className="flex-1 px-6 py-4 rounded-xl font-bold text-slate-400 hover:bg-white/5 transition-all uppercase tracking-widest text-xs">
-            Decline
-          </button>
-          <button onClick={onAccept} className="flex-[2] px-6 py-4 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-500 transition-all uppercase tracking-widest text-xs flex items-center justify-center gap-2">
-            Accept & Initialize
-            <CheckCircle2 className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { useEmpire } from '@/lib/EmpireContext';
 
 export default function LandingPage() {
   const router = useRouter();
+  const { setLanguage: setGlobalLanguage, setCurrency: setGlobalCurrency, setIsPaid } = useEmpire();
+  
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [language, setLanguage] = useState('en-US');
   const [currency, setCurrency] = useState('USD');
-  const [isMounted, setIsOnboarded] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [flowStep, setFlowStep] = useState<'terms' | 'purchase' | 'ready'>('terms');
 
   useEffect(() => {
-    setIsOnboarded(true);
+    setIsMounted(true);
   }, []);
+
+  const handleLanguageChange = (lang: string) => {
+    setLanguage(lang);
+    setGlobalLanguage(lang);
+  };
+
+  const handleCurrencyChange = (curr: string) => {
+    setCurrency(curr);
+    setGlobalCurrency(curr);
+  };
+
+  const handlePurchase = () => {
+    setIsPaid(true);
+    setFlowStep('ready');
+  };
 
   if (!isMounted) return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
@@ -81,6 +55,83 @@ export default function LandingPage() {
           <img src="/branded-globe.png" alt="Empire" className="w-full h-full object-cover animate-pulse" />
         </div>
       </div>
+    </div>
+  );
+
+  const TermsStep = () => (
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="bg-theme-surface border border-theme rounded-[32px] p-8 max-w-2xl mx-auto text-left space-y-6">
+        <h2 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2 text-foreground">
+          <Shield className="w-6 h-6 text-blue-400" />
+          Terms of Operation
+        </h2>
+        <div className="space-y-4 text-foreground/60 text-sm font-medium leading-relaxed">
+          <p>• <strong className="text-foreground">Data Sovereignty:</strong> All identifiers are encrypted at the edge. We do not store raw financial data on shared nodes.</p>
+          <p>• <strong className="text-foreground">Autonomous Execution:</strong> You grant permission for AI research and drafting. High-impact actions require your final verification.</p>
+          <p>• <strong className="text-foreground">Safeguards:</strong> The system will never execute paid subscriptions without explicit owner signatures.</p>
+        </div>
+        <button 
+          onClick={() => setFlowStep('purchase')}
+          className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-blue-500 transition-all flex items-center justify-center gap-2"
+        >
+          Accept Terms & Continue
+          <CheckCircle2 className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  );
+
+  const PurchaseStep = () => (
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="bg-blue-600 border border-blue-400 rounded-[32px] p-8 max-w-md mx-auto text-left relative overflow-hidden shadow-2xl shadow-blue-500/20">
+        <div className="absolute top-0 right-0 p-4 opacity-20">
+          <Coins className="w-24 h-24 rotate-12 text-white" />
+        </div>
+        <div className="relative z-10 space-y-6">
+          <div>
+            <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">Empire Master</h2>
+            <p className="text-blue-100 text-xs font-black uppercase tracking-widest mt-1">Unlimited Autonomy License</p>
+          </div>
+          <div className="flex items-baseline gap-1 text-white">
+            <span className="text-5xl font-black">$30</span>
+            <span className="text-blue-200 font-bold uppercase text-xs">/month</span>
+          </div>
+          <ul className="space-y-3">
+            {['Full Autonomous Execution', 'Priority Neural Discovery', 'Secure Bank Bridge'].map(f => (
+              <li key={f} className="flex items-center gap-2 text-[10px] font-black uppercase text-white">
+                <CheckCircle2 className="w-4 h-4" />
+                {f}
+              </li>
+            ))}
+          </ul>
+          <button 
+            onClick={handlePurchase}
+            className="w-full bg-white text-blue-600 py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+          >
+            Purchase License
+            <Lock className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ReadyStep = () => (
+    <div className="space-y-8 animate-in fade-in zoom-in duration-700">
+      <div className="w-24 h-24 bg-emerald-500 rounded-[32px] mx-auto flex items-center justify-center shadow-2xl shadow-emerald-500/20">
+        <Rocket className="w-12 h-12 text-white" />
+      </div>
+      <div className="space-y-2">
+        <h2 className="text-3xl font-black uppercase italic tracking-tight text-emerald-400">License Secured.</h2>
+        <p className="text-foreground/60 font-medium italic">"Neural channels are open. Your empire is ready for initialization."</p>
+      </div>
+      <button 
+        onClick={() => router.push('/dashboard')}
+        className="bg-white text-slate-950 px-12 py-6 rounded-3xl font-black text-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 mx-auto"
+      >
+        Get Started
+        <ArrowRight className="w-7 h-7" />
+      </button>
     </div>
   );
 
@@ -102,89 +153,89 @@ export default function LandingPage() {
         </div>
         <div className="hidden md:flex items-center gap-2 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
           <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">System Live: v4.1.0 (Autonomous Final)</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">System Live: v4.1.7 (Stable Alpha)</span>
         </div>
       </nav>
 
       <main className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-120px)] px-6 py-20 text-center">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-4xl space-y-12"
-        >
-          {/* Tagline */}
-          <div className="inline-flex items-center gap-2 bg-blue-500/10 backdrop-blur-md px-5 py-2 rounded-full border border-blue-500/20 text-blue-400 font-bold text-xs uppercase tracking-[0.2em]">
-            <Stars className="w-4 h-4" />
-            Autonomous Business Engineering
-          </div>
-
-          {/* Hero Heading */}
-          <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase italic">
-            Command Your <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-500">
-              Digital Empire
-            </span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-medium">
-            The high-intelligence AI partner that builds, markets, and scales your business outlets while you sleep. Research, design, and profit—automated.
-          </p>
-
-          <div className="flex flex-col items-center gap-8 pt-10">
-            {/* NEW: Explicit Language & Currency Selectors ABOVE Get Started */}
-            <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-              <div className="group relative w-full md:w-64">
-                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                  <Languages className="w-4 h-4 text-blue-400" />
-                </div>
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold appearance-none hover:bg-white/10 transition-all cursor-pointer focus:ring-2 focus:ring-blue-500/40 outline-none"
-                >
-                  <option value="en-US" className="bg-slate-900">English (US)</option>
-                  <option value="en-GB" className="bg-slate-900">English (UK)</option>
-                  <option value="es-ES" className="bg-slate-900">Español</option>
-                  <option value="fr-FR" className="bg-slate-900">Français</option>
-                  <option value="de-DE" className="bg-slate-900">Deutsch</option>
-                </select>
-                <ChevronDown className="absolute inset-y-0 right-4 my-auto w-4 h-4 text-slate-500 pointer-events-none" />
-              </div>
-
-              <div className="group relative w-full md:w-48">
-                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                  <Coins className="w-4 h-4 text-purple-400" />
-                </div>
-                <select
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold appearance-none hover:bg-white/10 transition-all cursor-pointer focus:ring-2 focus:ring-purple-500/40 outline-none"
-                >
-                  <option value="USD" className="bg-slate-900">USD ($)</option>
-                  <option value="EUR" className="bg-slate-900">EUR (€)</option>
-                  <option value="GBP" className="bg-slate-900">GBP (£)</option>
-                </select>
-                <ChevronDown className="absolute inset-y-0 right-4 my-auto w-4 h-4 text-slate-500 pointer-events-none" />
-              </div>
+        {!isTermsOpen ? (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-4xl space-y-12"
+          >
+            {/* Tagline */}
+            <div className="inline-flex items-center gap-2 bg-blue-500/10 backdrop-blur-md px-5 py-2 rounded-full border border-blue-500/20 text-blue-400 font-bold text-xs uppercase tracking-[0.2em]">
+              <Stars className="w-4 h-4" />
+              Autonomous Business Engineering
             </div>
 
-            {/* Main Action */}
-            <button
-              onClick={() => setIsTermsOpen(true)}
-              className="group relative bg-blue-600 text-white px-12 py-6 rounded-3xl font-black text-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 w-full md:w-auto"
-            >
-              Get Started
-              <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            </button>
-          </div>
-        </motion.div>
+            {/* Hero Heading */}
+            <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase italic">
+              Command Your <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-500">
+                Digital Empire
+              </span>
+            </h1>
 
-        <TermsModal
-          isOpen={isTermsOpen}
-          onClose={() => setIsTermsOpen(false)}
-          onAccept={() => router.push('/onboarding')}
-        />
+            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-medium">
+              The high-intelligence AI partner that builds, markets, and scales your business outlets while you sleep. Research, design, and profit—automated.
+            </p>
+
+            <div className="flex flex-col items-center gap-8 pt-10">
+              <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+                <div className="group relative w-full md:w-64">
+                  <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                    <Languages className="w-4 h-4 text-blue-400" />
+                  </div>
+                  <select
+                    value={language}
+                    onChange={(e) => handleLanguageChange(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold appearance-none hover:bg-white/10 transition-all cursor-pointer focus:ring-2 focus:ring-blue-500/40 outline-none text-white"
+                  >
+                    <option value="en-US" className="bg-slate-900">English (US)</option>
+                    <option value="en-GB" className="bg-slate-900">English (UK)</option>
+                    <option value="es-ES" className="bg-slate-900">Español</option>
+                    <option value="fr-FR" className="bg-slate-900">Français</option>
+                    <option value="de-DE" className="bg-slate-900">Deutsch</option>
+                  </select>
+                  <ChevronDown className="absolute inset-y-0 right-4 my-auto w-4 h-4 text-slate-500 pointer-events-none" />
+                </div>
+
+                <div className="group relative w-full md:w-48">
+                  <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                    <Coins className="w-4 h-4 text-purple-400" />
+                  </div>
+                  <select
+                    value={currency}
+                    onChange={(e) => handleCurrencyChange(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold appearance-none hover:bg-white/10 transition-all cursor-pointer focus:ring-2 focus:ring-purple-500/40 outline-none text-white"
+                  >
+                    <option value="USD" className="bg-slate-900">USD ($)</option>
+                    <option value="EUR" className="bg-slate-900">EUR (€)</option>
+                    <option value="GBP" className="bg-slate-900">GBP (£)</option>
+                  </select>
+                  <ChevronDown className="absolute inset-y-0 right-4 my-auto w-4 h-4 text-slate-500 pointer-events-none" />
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsTermsOpen(true)}
+                className="group relative bg-blue-600 text-white px-12 py-6 rounded-3xl font-black text-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 w-full md:w-auto"
+              >
+                Get Started
+                <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+              </button>
+            </div>
+          </motion.div>
+        ) : (
+          <div className="max-w-4xl w-full">
+            {flowStep === 'terms' && <TermsStep />}
+            {flowStep === 'purchase' && <PurchaseStep />}
+            {flowStep === 'ready' && <ReadyStep />}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-32 w-full max-w-7xl">
           <div className="bg-white/5 p-8 rounded-[40px] border border-white/5 text-left space-y-4 hover:bg-white/[0.07] transition-all">
@@ -213,4 +264,3 @@ export default function LandingPage() {
     </div>
   );
 }
-// Build Trigger: Sun May 24 23:55:54 UTC 2026

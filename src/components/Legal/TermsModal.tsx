@@ -29,17 +29,17 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-2xl bg-white rounded-[40px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            className="relative w-full max-w-2xl bg-theme-surface rounded-[40px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
           >
             {/* Header */}
-            <div className="p-8 border-b border-slate-100 shrink-0 relative overflow-hidden">
+            <div className="p-8 border-b border-theme shrink-0 relative overflow-hidden">
                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 rounded-full blur-3xl -mr-16 -mt-16" />
                <div className="flex items-center gap-4 relative z-10">
                  <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl shadow-blue-200">
                    <Scale className="w-6 h-6" />
                  </div>
                  <div>
-                   <h2 className="text-2xl font-black text-slate-900 tracking-tight">Neural Agreement.</h2>
+                   <h2 className="text-2xl font-black text-foreground tracking-tight">Neural Agreement.</h2>
                    <p className="text-xs font-black uppercase tracking-widest text-blue-600">Terms & Conditions v1.1</p>
                  </div>
                </div>
@@ -48,7 +48,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-thin scrollbar-thumb-slate-200">
               <section className="space-y-4">
-                <div className="flex items-center gap-2 text-slate-900 font-bold">
+                <div className="flex items-center gap-2 text-foreground font-bold">
                   <Shield className="w-5 h-5 text-blue-600" />
                   <h3>1. Military-Grade Protection</h3>
                 </div>
@@ -60,7 +60,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
               </section>
 
               <section className="space-y-4">
-                <div className="flex items-center gap-2 text-slate-900 font-bold">
+                <div className="flex items-center gap-2 text-foreground font-bold">
                   <AlertCircle className="w-5 h-5 text-blue-600" />
                   <h3>2. Scam Detection & Account Suspension</h3>
                 </div>
@@ -72,7 +72,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
               </section>
 
               <section className="space-y-4">
-                <div className="flex items-center gap-2 text-slate-900 font-bold">
+                <div className="flex items-center gap-2 text-foreground font-bold">
                   <Scale className="w-5 h-5 text-blue-600" />
                   <h3>3. Legal Waiver & Jury Trial</h3>
                 </div>
@@ -83,7 +83,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
               </section>
 
               <section className="space-y-4">
-                <div className="flex items-center gap-2 text-slate-900 font-bold">
+                <div className="flex items-center gap-2 text-foreground font-bold">
                   <Bot className="w-5 h-5 text-blue-600" />
                   <h3>4. AI Autonomy & Approval</h3>
                 </div>
@@ -93,7 +93,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                 </p>
               </section>
 
-              <div className="p-6 bg-slate-50 rounded-3xl space-y-4 border border-slate-100">
+              <div className="p-6 bg-theme-background rounded-3xl space-y-4 border border-theme">
                 <label className="flex items-start gap-4 cursor-pointer group">
                   <div className="mt-1">
                     <input 
@@ -104,7 +104,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                     />
                     <div className={cn(
                       "w-6 h-6 rounded-lg border-2 transition-all flex items-center justify-center",
-                      agreed ? "bg-blue-600 border-blue-600" : "bg-white border-slate-200 group-hover:border-blue-400"
+                      agreed ? "bg-blue-600 border-blue-600" : "bg-theme-surface border-theme group-hover:border-blue-400"
                     )}>
                       {agreed && <CheckCircle2 className="w-4 h-4 text-white" />}
                     </div>
@@ -117,11 +117,11 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
             </div>
 
             {/* Footer */}
-            <div className="p-8 border-t border-slate-100 shrink-0 bg-slate-50/50 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="p-8 border-t border-theme shrink-0 bg-theme-background/50 flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="flex gap-4 w-full">
                 <button 
                   onClick={onClose}
-                  className="flex-1 md:flex-none px-8 py-4 rounded-2xl border-2 border-slate-200 font-black text-xs uppercase tracking-widest text-slate-500 hover:bg-white transition-all"
+                  className="flex-1 md:flex-none px-8 py-4 rounded-2xl border-2 border-theme font-black text-xs uppercase tracking-widest text-slate-500 hover:bg-theme-surface transition-all"
                 >
                   Decline
                 </button>

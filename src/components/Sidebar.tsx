@@ -15,10 +15,8 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { id: 'desktop-nav-home', name: 'Home', href: '/dashboard', icon: LayoutDashboard },
-  { id: 'desktop-nav-ec', name: 'Empire Center', href: '/empire-center', icon: ClipboardCheck },
-  { id: 'desktop-nav-lc', name: 'Neural Link', href: '/link-center', icon: Stars },
-  { id: 'desktop-nav-review', name: 'Control Gates', href: '/review', icon: ShieldCheck },
-  { id: 'desktop-nav-ledger', name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },
+  { id: 'desktop-nav-ec', name: 'EC', href: '/empire-center', icon: ClipboardCheck },
+  { id: 'desktop-nav-lc', name: 'LC', href: '/link-center', icon: Stars },
   { id: 'desktop-nav-settings', name: 'Settings', href: '/settings', icon: Settings },
 ];
 
@@ -26,12 +24,12 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="hidden lg:flex flex-col w-64 bg-white text-slate-900 h-screen fixed left-[72px] top-0 border-r border-slate-100 shadow-sm">
+    <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-[72px] top-0 border-r border-theme shadow-sm">
       <div className="p-6 flex items-center gap-2">
         <div className="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-200">
           <Stars className="w-5 h-5 text-white" />
         </div>
-        <span className="text-lg font-black tracking-tight text-slate-900 uppercase italic">Empire.</span>
+        <span className="text-lg font-black tracking-tight text-foreground uppercase italic">Empire.</span>
       </div>
       
       <nav className="flex-1 px-4 py-4 space-y-1">
@@ -46,7 +44,7 @@ export function Sidebar() {
                 "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm",
                 isActive 
                 ? "bg-blue-600 text-white shadow-xl shadow-blue-100" 
-                : "text-slate-400 hover:text-slate-900 hover:bg-slate-50"
+                : "text-slate-400 hover:text-foreground hover:bg-theme-background"
               )}
             >
               <item.icon className="w-5 h-5" />
@@ -74,7 +72,7 @@ export function Sidebar() {
             <span className="text-xs font-black text-white">JD</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-black text-slate-900">John Doe</span>
+            <span className="text-sm font-black text-foreground">John Doe</span>
             <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Founder</span>
           </div>
         </div>

@@ -100,13 +100,13 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                     <Stars className="w-3 h-3" />
                     Creative Direction
                  </div>
-                 <h1 className="text-4xl font-black text-slate-900 tracking-tight italic">{task.title}.</h1>
+                 <h1 className="text-4xl font-black text-foreground tracking-tight italic">{task.title}.</h1>
                  <p className="text-slate-500 font-medium italic">Strategic blueprint for {task.platform} execution.</p>
               </div>
               <div className="flex items-center gap-3">
                  <div className="text-right">
                     <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">AI Identity Sync</span>
-                    <span className="text-xs font-bold text-slate-900">Secure Protocol v4.2</span>
+                    <span className="text-xs font-bold text-foreground">Secure Protocol v4.2</span>
                  </div>
                  <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-lg">
                     <Bot className="w-6 h-6" />
@@ -142,10 +142,10 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
 
                  {/* Visual DNA */}
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
+                    <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
                        <div className="flex items-center gap-2">
                           <Palette className="w-5 h-5 text-blue-600" />
-                          <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">Color DNA</h4>
+                          <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Color DNA</h4>
                        </div>
                        <div className="flex items-center gap-3">
                           {blueprint.palette.map((color) => (
@@ -155,7 +155,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                               className="group relative"
                             >
                                <div 
-                                 className="w-12 h-12 rounded-2xl border-2 border-slate-100 shadow-sm transition-transform group-hover:scale-110" 
+                                 className="w-12 h-12 rounded-2xl border-2 border-theme shadow-sm transition-transform group-hover:scale-110" 
                                  style={{ backgroundColor: color }} 
                                />
                                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -166,16 +166,16 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                        </div>
                     </div>
 
-                    <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
+                    <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
                        <div className="flex items-center gap-2">
                           <Layout className="w-5 h-5 text-blue-600" />
-                          <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">Font Pairings</h4>
+                          <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Font Pairings</h4>
                        </div>
                        <div className="space-y-3">
                           {blueprint.fonts.map((f) => (
-                            <div key={f.platform} className="flex justify-between items-center p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div key={f.platform} className="flex justify-between items-center p-3 bg-theme-background rounded-2xl border border-theme">
                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{f.platform}</span>
-                               <span className="text-xs font-bold text-slate-900">{f.pairing}</span>
+                               <span className="text-xs font-bold text-foreground">{f.pairing}</span>
                             </div>
                           ))}
                        </div>
@@ -183,12 +183,12 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                  </div>
 
                  {/* Composition Guide */}
-                 <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
+                 <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
                     <div className="flex items-center gap-2">
                        <Scissors className="w-5 h-5 text-blue-600" />
-                       <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">Composition Guide</h4>
+                       <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Composition Guide</h4>
                     </div>
-                    <div className="relative aspect-[21/9] bg-slate-100 rounded-3xl overflow-hidden border border-slate-200">
+                    <div className="relative aspect-[21/9] bg-slate-100 rounded-3xl overflow-hidden border border-theme">
                        <img 
                          src={blueprint.compositionUrl} 
                          className="w-full h-full object-cover opacity-50 grayscale" 
@@ -222,7 +222,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
 
                     <button 
                       onClick={() => setStep('power_tool')}
-                      className="w-full py-5 bg-white text-slate-900 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 hover:text-white transition-all shadow-xl flex items-center justify-center gap-3 group"
+                      className="w-full py-5 bg-theme-surface text-foreground rounded-[24px] font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 hover:text-white transition-all shadow-xl flex items-center justify-center gap-3 group"
                     >
                        Start Designing
                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -237,10 +237,10 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                  </div>
 
                  {/* Tips Card */}
-                 <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-4 shadow-sm">
+                 <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-4 shadow-sm">
                     <div className="flex items-center gap-2">
                        <Stars className="w-4 h-4 text-amber-500" />
-                       <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">AI Tip</h4>
+                       <h4 className="font-black text-foreground uppercase tracking-widest text-xs">AI Tip</h4>
                     </div>
                     <p className="text-xs text-slate-500 leading-relaxed font-medium italic">
                        "In {task.platform}, try using the 'Fine Detail' brush for the botanical lines. It mirrors the top-performing listing's aesthetic."

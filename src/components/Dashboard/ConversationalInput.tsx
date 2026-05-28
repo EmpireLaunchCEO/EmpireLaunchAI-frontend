@@ -102,7 +102,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 shadow-sm"
+          className="bg-theme-surface/80 backdrop-blur-md px-4 py-2 rounded-full border border-theme shadow-sm"
         >
           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
             Tip: <span className="text-blue-600 normal-case">{tip}</span>
@@ -111,7 +111,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
       )}
       <form 
         onSubmit={handleSubmit}
-        className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 flex items-center gap-2 pointer-events-auto"
+        className="w-full max-w-3xl bg-theme-surface rounded-2xl shadow-2xl border border-theme p-2 flex items-center gap-2 pointer-events-auto"
       >
         <div className="pl-4">
           <AnimatePresence mode="wait">

@@ -24,7 +24,7 @@ import { useRouter } from 'next/navigation';
 
 const availablePlatforms = [
   { id: 'gmail', name: 'Gmail', icon: Mail, color: 'text-red-500', bg: 'bg-red-50' },
-  { id: 'imap', name: 'Universal Email', icon: Mail, color: 'text-slate-600', bg: 'bg-slate-50' },
+  { id: 'imap', name: 'Universal Email', icon: Mail, color: 'text-slate-600', bg: 'bg-theme-background' },
   { id: 'etsy', name: 'Etsy', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
   { id: 'tiktok', name: 'TikTok', icon: Video, color: 'text-pink-600', bg: 'bg-pink-50' },
   { id: 'shopify', name: 'Shopify', icon: Globe, color: 'text-green-600', bg: 'bg-green-50' },
@@ -197,7 +197,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
         <input
           type="text"
           placeholder="Search for an app to link (e.g. Gmail, Etsy...)"
-          className="w-full bg-white border-4 border-slate-100 rounded-[32px] py-8 pl-20 pr-8 text-2xl font-bold focus:border-blue-600 focus:ring-0 transition-all shadow-2xl shadow-slate-200/50 placeholder:text-slate-300"
+          className="w-full bg-theme-surface border-4 border-theme rounded-[32px] py-8 pl-20 pr-8 text-2xl font-bold focus:border-blue-600 focus:ring-0 transition-all shadow-2xl shadow-slate-200/50 placeholder:text-slate-300"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -212,7 +212,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
-              className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-slate-100 rounded-[24px] shadow-2xl z-50 overflow-hidden"
+              className="absolute top-full left-0 right-0 mt-2 bg-theme-surface border-2 border-theme rounded-[24px] shadow-2xl z-50 overflow-hidden"
             >
               {filteredPlatforms.length > 0 ? (
                 <div className="p-2">
@@ -220,12 +220,12 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                     <button
                       key={platform.id}
                       onClick={() => handleSelectPlatform(platform.id)}
-                      className="w-full flex items-center gap-4 p-4 hover:bg-slate-50 rounded-xl transition-colors text-left"
+                      className="w-full flex items-center gap-4 p-4 hover:bg-theme-background rounded-xl transition-colors text-left"
                     >
                       <div className={cn("p-2 rounded-lg", platform.bg)}>
                         <platform.icon className={cn("w-5 h-5", platform.color)} />
                       </div>
-                      <span className="font-bold text-slate-900">{platform.name}</span>
+                      <span className="font-bold text-foreground">{platform.name}</span>
                     </button>
                   ))}
                 </div>
@@ -258,12 +258,12 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 <motion.div 
                   key={id} 
                   layoutId={id}
-                  className="p-6 bg-white border-2 border-slate-100 rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
+                  className="p-6 bg-theme-surface border-2 border-theme rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className={cn("p-3 rounded-xl", platform.bg)}>
                     <platform.icon className={cn("w-5 h-5", platform.color)} />
                   </div>
-                  <span className="font-bold text-slate-900">{platform.name}</span>
+                  <span className="font-bold text-foreground">{platform.name}</span>
                   <CheckCircle2 className="w-4 h-4 text-green-500 ml-auto" />
                 </motion.div>
               );
@@ -289,9 +289,9 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                   {isTyping && (
                     <div className="absolute -top-2 -right-2 bg-blue-400 rounded-full p-1.5 animate-bounce shadow-lg">
                       <div className="flex gap-1">
-                        <div className="w-1 h-1 bg-white rounded-full" />
-                        <div className="w-1 h-1 bg-white rounded-full animate-pulse" />
-                        <div className="w-1 h-1 bg-white rounded-full" />
+                        <div className="w-1 h-1 bg-theme-surface rounded-full" />
+                        <div className="w-1 h-1 bg-theme-surface rounded-full animate-pulse" />
+                        <div className="w-1 h-1 bg-theme-surface rounded-full" />
                       </div>
                     </div>
                   )}
@@ -370,16 +370,16 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
-            className="bg-white border-2 border-slate-100 rounded-[48px] p-10 md:p-16 shadow-[0_48px_96px_-24px_rgba(0,0,0,0.1)] relative overflow-hidden"
+            className="bg-theme-surface border-2 border-theme rounded-[48px] p-10 md:p-16 shadow-[0_48px_96px_-24px_rgba(0,0,0,0.1)] relative overflow-hidden"
           >
             {/* ... card content ... */}
             <div className="flex flex-col md:flex-row gap-10 md:items-center justify-between relative z-10">
               <div className="flex items-center gap-8">
-                <div className={cn("p-8 rounded-[36px] shadow-inner", currentPlatform?.bg ?? 'bg-slate-50')}>
+                <div className={cn("p-8 rounded-[36px] shadow-inner", currentPlatform?.bg ?? 'bg-theme-background')}>
                   <currentPlatform.icon className={cn("w-12 h-12", currentPlatform?.color ?? 'text-slate-400')} />
                 </div>
                 <div>
-                  <h2 className="text-4xl font-black text-slate-900 tracking-tighter">{currentPlatform?.name ?? 'Connecting...'}</h2>
+                  <h2 className="text-4xl font-black text-foreground tracking-tighter">{currentPlatform?.name ?? 'Connecting...'}</h2>
                   <div className="flex items-center gap-3 mt-2">
                     <div className={cn("w-2.5 h-2.5 rounded-full", linkingStep === 'auth' ? "bg-amber-500 animate-pulse" : "bg-green-500")} />
                     <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-400">
@@ -392,7 +392,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               <div className="flex gap-4">
                 <button 
                   onClick={finishSetup}
-                  className="px-8 py-4 rounded-2xl border-2 border-slate-100 text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all"
+                  className="px-8 py-4 rounded-2xl border-2 border-theme text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-theme-background transition-all"
                 >
                   Abort
                 </button>
@@ -403,15 +403,15 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               {/* Step 1: Auth / Email Auth */}
               <div className={cn(
                 "p-10 rounded-[40px] border-2 transition-all relative",
-                linkingStep === 'auth' ? "border-blue-600 bg-blue-50/30 ring-4 ring-blue-50" : "border-slate-100 bg-slate-50/50 opacity-60"
+                linkingStep === 'auth' ? "border-blue-600 bg-blue-50/30 ring-4 ring-blue-50" : "border-theme bg-theme-background/50 opacity-60"
               )}>
                 <div className="flex items-center justify-between mb-8">
-                  <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-blue-600">
+                  <div className="w-12 h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center text-blue-600">
                     <Lock className="w-6 h-6" />
                   </div>
                   {linkingStep === 'keys' && <CheckCircle2 className="w-8 h-8 text-green-500" />}
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-3">
+                <h3 className="text-2xl font-bold text-foreground mb-3">
                   {currentPlatform.id === 'imap' ? 'Email Credentials' : 'Secure Authorization'}
                 </h3>
                 <p className="text-base font-medium text-slate-500 leading-relaxed mb-8">
@@ -426,7 +426,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                        <input 
                          type="email" 
                          placeholder="Email Address"
-                         className="w-full bg-white border-2 border-slate-100 rounded-2xl p-4 text-sm font-bold outline-none focus:border-blue-600 transition-colors"
+                         className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-blue-600 transition-colors"
                        />
                     )}
                     <button 
@@ -442,14 +442,14 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               {/* Step 2: Keys */}
               <div className={cn(
                 "p-10 rounded-[40px] border-2 transition-all",
-                linkingStep === 'keys' ? "border-blue-600 bg-blue-50/30 ring-4 ring-blue-50" : "border-slate-100 bg-slate-50/50 opacity-40"
+                linkingStep === 'keys' ? "border-blue-600 bg-blue-50/30 ring-4 ring-blue-50" : "border-theme bg-theme-background/50 opacity-40"
               )}>
                 <div className="flex items-center justify-between mb-8">
-                  <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-blue-600">
+                  <div className="w-12 h-12 rounded-2xl bg-theme-surface shadow-sm flex items-center justify-center text-blue-600">
                     <Zap className="w-6 h-6" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-3">Neural Handshake</h3>
+                <h3 className="text-2xl font-bold text-foreground mb-3">Neural Handshake</h3>
                 <p className="text-base font-medium text-slate-500 leading-relaxed mb-8">
                   Verifying API endpoints and establishing autonomous bridge protocols.
                 </p>
@@ -458,11 +458,11 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                   <div className="space-y-5">
                     <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Protocol Identifier</label>
-                      <input type="password" value="••••••••••••••••" readOnly className="w-full bg-white border-2 border-slate-100 rounded-2xl p-4 text-sm font-bold" />
+                      <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-4 text-sm font-bold" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Secure Token</label>
-                      <input type="password" value="••••••••••••••••" readOnly className="w-full bg-white border-2 border-slate-100 rounded-2xl p-4 text-sm font-bold" />
+                      <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-surface border-2 border-theme rounded-2xl p-4 text-sm font-bold" />
                     </div>
                     <button 
                       onClick={handleLink}
@@ -479,7 +479,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               </div>
             </div>
             
-            <div className="absolute -right-32 -bottom-32 w-96 h-96 bg-slate-50 rounded-full -z-10" />
+            <div className="absolute -right-32 -bottom-32 w-96 h-96 bg-theme-background rounded-full -z-10" />
           </motion.div>
         )}
       </AnimatePresence>

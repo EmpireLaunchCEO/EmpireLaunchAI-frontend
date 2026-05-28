@@ -13,7 +13,7 @@ interface CycleProps {
 }
 
 const Cycle = ({ name, status, progress, nextAction }: CycleProps) => (
-  <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm flex items-center gap-6 group">
+  <div className="bg-theme-surface p-6 rounded-[32px] border border-theme shadow-sm flex items-center gap-6 group">
     <div className="relative shrink-0">
       <svg className="w-16 h-16 -rotate-90">
         <circle
@@ -52,11 +52,11 @@ const Cycle = ({ name, status, progress, nextAction }: CycleProps) => (
 
     <div className="flex-1 min-w-0">
       <div className="flex items-center gap-2 mb-1">
-        <h4 className="font-bold text-slate-900 truncate">{name}</h4>
+        <h4 className="font-bold text-foreground truncate">{name}</h4>
         <span className={cn(
           "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded",
           status === 'active' ? "bg-blue-50 text-blue-600" : 
-          status === 'pending-approval' ? "bg-amber-50 text-amber-600" : "bg-slate-50 text-slate-500"
+          status === 'pending-approval' ? "bg-amber-50 text-amber-600" : "bg-theme-background text-slate-500"
         )}>
           {status}
         </span>
@@ -71,7 +71,7 @@ const Cycle = ({ name, status, progress, nextAction }: CycleProps) => (
         </button>
       ) : (
         <div className="text-right">
-          <span className="block text-sm font-black text-slate-900">{progress}%</span>
+          <span className="block text-sm font-black text-foreground">{progress}%</span>
           <span className="block text-[8px] font-bold text-slate-400 uppercase">Complete</span>
         </div>
       )}
@@ -83,7 +83,7 @@ export function AutonomousCyclesStatus() {
   return (
     <div className="space-y-6 text-left">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-slate-900">Active Goals & Cycles</h2>
+        <h2 className="text-xl font-bold text-foreground">Active Goals & Cycles</h2>
       </div>
 
       <div className="space-y-4">

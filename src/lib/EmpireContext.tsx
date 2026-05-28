@@ -42,6 +42,10 @@ interface EmpireContextType {
   setCurrency: (curr: string) => void;
   isPaid: boolean;
   setIsPaid: (paid: boolean) => void;
+  bankConnected: boolean;
+  setBankConnected: (connected: boolean) => void;
+  directToBank: boolean;
+  setDirectToBank: (active: boolean) => void;
   aiMode: 'co-pilot' | 'empire';
   setAiMode: (mode: 'co-pilot' | 'empire') => void;
   
@@ -68,6 +72,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [activeEmpireId, setActiveEmpireIdState] = useState('1');
   const [isPaid, setIsPaidState] = useState(false);
+  const [bankConnected, setBankConnectedState] = useState(false);
+  const [directToBank, setDirectToBankState] = useState(false);
   const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>('co-pilot');
   const [isOnboarded, setIsOnboardedState] = useState(false);
   const [isLinkingComplete, setIsLinkingCompleteState] = useState(false);
@@ -97,6 +103,12 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
       const savedIsPaid = safeGet('isPaid');
       if (savedIsPaid === 'true') setIsPaidState(true);
+
+      const savedBankConnected = safeGet('bankConnected');
+      if (savedBankConnected === 'true') setBankConnectedState(true);
+
+      const savedDirectToBank = safeGet('directToBank');
+      if (savedDirectToBank === 'true') setDirectToBankState(true);
 
       const savedAiMode = safeGet('empireAiMode');
       if (savedAiMode === 'co-pilot' || savedAiMode === 'empire') {
@@ -167,6 +179,16 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const setIsPaid = (paid: boolean) => {
     setIsPaidState(paid);
     if (typeof window !== 'undefined') localStorage.setItem('isPaid', paid ? 'true' : 'false');
+  };
+
+  const setBankConnected = (connected: boolean) => {
+    setBankConnectedState(connected);
+    if (typeof window !== 'undefined') localStorage.setItem('bankConnected', connected ? 'true' : 'false');
+  };
+
+  const setDirectToBank = (active: boolean) => {
+    setDirectToBankState(active);
+    if (typeof window !== 'undefined') localStorage.setItem('directToBank', active ? 'true' : 'false');
   };
 
   const setAiMode = (mode: 'co-pilot' | 'empire') => {
@@ -292,6 +314,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       language, setLanguage,
       currency, setCurrency,
       isPaid, setIsPaid,
+      bankConnected, setBankConnected,
+      directToBank, setDirectToBank,
       aiMode, setAiMode,
       notifications, unreadCount, markAsRead, markAllAsRead,
       notificationSettings, updateNotificationSettings,

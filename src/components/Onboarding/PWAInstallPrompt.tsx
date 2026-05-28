@@ -44,16 +44,16 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onDismiss })
             initial={{ opacity: 0, y: 100, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.9 }}
-            className="w-full max-w-md bg-white rounded-[40px] overflow-hidden shadow-2xl border-4 border-amber-400"
+            className="w-full max-w-md bg-theme-surface rounded-[40px] overflow-hidden shadow-2xl border-4 border-amber-400"
           >
             <div className="p-8 space-y-8">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 bg-amber-400 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-200">
-                    <Smartphone className="w-8 h-8 text-slate-900" />
+                    <Smartphone className="w-8 h-8 text-foreground" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black text-slate-900 uppercase italic leading-none">Install App</h3>
+                    <h3 className="text-2xl font-black text-foreground uppercase italic leading-none">Install App</h3>
                     <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-1">Native Operational Sync</p>
                   </div>
                 </div>
@@ -77,8 +77,8 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onDismiss })
                     { text: "Click the more button", icon: <Plus className="w-4 h-4" /> },
                     { text: "Click add to home screen", icon: <PlusSquare className="w-4 h-4" /> },
                   ].map((step, i) => (
-                    <div key={i} className="flex items-center gap-4 p-4 bg-slate-50 rounded-[24px] border-2 border-slate-100 group hover:border-amber-200 transition-colors">
-                      <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
+                    <div key={i} className="flex items-center gap-4 p-4 bg-theme-background rounded-[24px] border-2 border-theme group hover:border-amber-200 transition-colors">
+                      <div className="w-10 h-10 bg-theme-surface rounded-xl shadow-sm border border-theme flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
                         {step.icon}
                       </div>
                       <span className="text-xs font-black text-slate-700 uppercase tracking-tight">
@@ -91,7 +91,7 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onDismiss })
 
               <button
                 onClick={handleDismiss}
-                className="w-full bg-slate-900 text-white py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:bg-amber-500 hover:text-slate-900 transition-all shadow-xl shadow-slate-200"
+                className="w-full bg-slate-900 text-white py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:bg-amber-500 hover:text-foreground transition-all shadow-xl shadow-slate-200"
               >
                 I Understand
                 <CheckCircle2 className="w-4 h-4" />

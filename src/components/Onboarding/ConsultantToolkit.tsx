@@ -56,7 +56,7 @@ const getToolRecommendations = (businessAngle: string) => {
       'Buffer': { color: "text-blue-500", bg: "bg-blue-50" }
     };
 
-    const style = colors[tool.name] || { color: "text-slate-600", bg: "bg-slate-50" };
+    const style = colors[tool.name] || { color: "text-slate-600", bg: "bg-theme-background" };
 
     return {
       ...tool,
@@ -79,7 +79,7 @@ export function ConsultantToolkit({ businessAngle }: ConsultantToolkitProps) {
   return (
     <div className="space-y-10 max-w-4xl mx-auto">
       <div className="text-center space-y-4">
-        <h2 className="text-4xl font-black text-slate-900 tracking-tight">Consultant's Toolkit.</h2>
+        <h2 className="text-4xl font-black text-foreground tracking-tight">Consultant's Toolkit.</h2>
         <p className="text-slate-500 text-lg">AI Engines Standing By: These tools will activate automatically in your command center.</p>
       </div>
 
@@ -90,7 +90,7 @@ export function ConsultantToolkit({ businessAngle }: ConsultantToolkitProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] border-2 border-slate-100 bg-white hover:border-blue-600 transition-all group"
+            className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] border-2 border-theme bg-theme-surface hover:border-blue-600 transition-all group"
           >
             <div className="flex justify-between items-start mb-4 md:mb-6">
               <div className={cn("p-3 md:p-4 rounded-xl md:rounded-2xl", tool.bg)}>
@@ -105,16 +105,16 @@ export function ConsultantToolkit({ businessAngle }: ConsultantToolkitProps) {
             </div>
 
             <div className="space-y-1 md:space-y-2">
-              <h3 className="text-xl md:text-2xl font-bold text-slate-900">{tool.name}</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-foreground">{tool.name}</h3>
               <p className="text-sm md:text-base text-slate-500 font-medium leading-tight">{tool.purpose}</p>
             </div>
 
             <div className="mt-6 md:mt-8 pt-6 md:pt-8 border-t border-slate-50 flex items-center justify-between">
               <div className="flex flex-col">
                 <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400">Est. Investment</span>
-                <span className="text-xs md:text-sm font-bold text-slate-900">{tool.cost}</span>
+                <span className="text-xs md:text-sm font-bold text-foreground">{tool.cost}</span>
               </div>
-              <button className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-slate-50 hover:bg-blue-600 hover:text-white transition-all">
+              <button className="p-2.5 md:p-3 rounded-xl md:rounded-2xl bg-theme-background hover:bg-blue-600 hover:text-white transition-all">
                 <ExternalLink className="w-4 h-4 md:w-5 h-5" />
               </button>
             </div>

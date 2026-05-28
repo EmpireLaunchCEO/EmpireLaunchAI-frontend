@@ -34,7 +34,7 @@ const platforms = [
   { id: 'canva', name: 'Canva (Design)', icon: Stars, color: 'text-blue-500', bg: 'bg-blue-50' },
   { id: 'bannerbear', name: 'Bannerbear (AI Assets)', icon: Stars, color: 'text-blue-900', bg: 'bg-slate-100' },
   { id: 'kittle', name: 'Kittle (Design)', icon: Stars, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-  { id: 'capcut', name: 'Capcut (Video)', icon: Video, color: 'text-slate-900', bg: 'bg-slate-50' },
+  { id: 'capcut', name: 'Capcut (Video)', icon: Video, color: 'text-foreground', bg: 'bg-theme-background' },
 ];
 
 interface PlatformMatrixProps {
@@ -48,7 +48,7 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
   return (
     <div className="space-y-10 max-w-4xl mx-auto pb-20">
       <div className="text-center space-y-4">
-        <h2 className="text-4xl font-black text-slate-900 tracking-tight">Platforms You Can Use.</h2>
+        <h2 className="text-4xl font-black text-foreground tracking-tight">Platforms You Can Use.</h2>
         <p className="text-slate-500 text-lg">Your AI partner is equipped to manage growth across these channels. You'll securely link your accounts in the Dashboard.</p>
       </div>
 
@@ -61,20 +61,20 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
               key={platform.id}
               whileHover={{ y: -5 }}
               className={cn(
-                "p-5 md:p-6 rounded-[28px] md:rounded-[32px] border-2 transition-all flex flex-col justify-between h-56 md:h-64 relative overflow-hidden group border-slate-100 bg-white hover:border-blue-600 shadow-sm"
+                "p-5 md:p-6 rounded-[28px] md:rounded-[32px] border-2 transition-all flex flex-col justify-between h-56 md:h-64 relative overflow-hidden group border-theme bg-theme-surface hover:border-blue-600 shadow-sm"
               )}
             >
               <div className="flex justify-between items-start">
                 <div className={cn("p-3 md:p-4 rounded-xl md:rounded-2xl", platform.bg)}>
                   <Icon className={cn("w-5 h-5 md:w-6 h-6", platform.color)} />
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-400 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-theme-background text-slate-400 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest">
                   Ready to Sync
                 </div>
               </div>
 
               <div className="mt-auto">
-                <h3 className="text-lg md:text-xl font-bold text-slate-900">{platform.name}</h3>
+                <h3 className="text-lg md:text-xl font-bold text-foreground">{platform.name}</h3>
                 <div className="mt-3 md:mt-4 flex flex-col gap-2">
                   <button 
                     onClick={() => setConsultingPlatform(platform.id)}
@@ -99,13 +99,13 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
         {/* "And Many More" Card */}
         <motion.div
           whileHover={{ y: -5 }}
-          className="p-6 rounded-[32px] border-2 border-dashed border-slate-200 bg-slate-50/50 flex flex-col justify-center items-center h-64 text-center space-y-4 group"
+          className="p-6 rounded-[32px] border-2 border-dashed border-theme bg-theme-background/50 flex flex-col justify-center items-center h-64 text-center space-y-4 group"
         >
-          <div className="w-16 h-16 rounded-full bg-white border-2 border-slate-100 flex items-center justify-center shadow-sm group-hover:border-blue-400 transition-colors">
+          <div className="w-16 h-16 rounded-full bg-theme-surface border-2 border-theme flex items-center justify-center shadow-sm group-hover:border-blue-400 transition-colors">
             <Plus className="w-8 h-8 text-slate-300 group-hover:text-blue-500 transition-colors" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-slate-900">And Many More.</h3>
+            <h3 className="text-xl font-bold text-foreground">And Many More.</h3>
             <p className="text-xs font-medium text-slate-400 mt-1">Your AI can adapt to any marketplace or social ecosystem you choose.</p>
           </div>
         </motion.div>

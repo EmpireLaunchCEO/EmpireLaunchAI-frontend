@@ -158,7 +158,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                           status === 'error' ? "bg-red-500" : "bg-amber-400"
                         )}
                       >
-                        <Bell className="w-10 h-10 text-slate-900 fill-slate-900/10" />
+                        <Bell className="w-10 h-10 text-foreground fill-slate-900/10" />
                       </motion.div>
                     </div>
                   </div>
@@ -180,7 +180,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="bg-white/5 border border-white/5 p-5 rounded-3xl flex items-start gap-4"
+                        className="bg-theme-surface/5 border border-white/5 p-5 rounded-3xl flex items-start gap-4"
                       >
                         <div className="bg-amber-400/10 p-2 rounded-xl shrink-0 mt-1">
                           <Zap className="w-5 h-5 text-amber-400 fill-amber-400/20" />
@@ -195,7 +195,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="bg-white/5 border border-white/5 p-5 rounded-3xl flex items-start gap-4"
+                        className="bg-theme-surface/5 border border-white/5 p-5 rounded-3xl flex items-start gap-4"
                       >
                         <div className="bg-amber-400/10 p-2 rounded-xl shrink-0 mt-1">
                           <ShieldCheck className="w-5 h-5 text-amber-400 fill-amber-400/20" />
@@ -211,7 +211,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                       <button
                         onClick={handleActivate}
                         disabled={status !== 'idle'}
-                        className="w-full py-5 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-slate-900 rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all shadow-xl shadow-amber-400/10 active:scale-[0.98]"
+                        className="w-full py-5 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-foreground rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all shadow-xl shadow-amber-400/10 active:scale-[0.98]"
                       >
                         Activate Real-Time Pulse
                       </button>
@@ -257,7 +257,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                     transition={{ duration: 1, repeat: 1 }}
                     className="w-24 h-24 bg-amber-400 rounded-full flex items-center justify-center"
                    >
-                      <ShieldCheck className="w-12 h-12 text-slate-900" />
+                      <ShieldCheck className="w-12 h-12 text-foreground" />
                    </motion.div>
                    <div className="space-y-2">
                      <h2 className="text-2xl font-black text-white tracking-tight uppercase">Neural Link Established.</h2>

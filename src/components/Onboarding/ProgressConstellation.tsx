@@ -60,7 +60,7 @@ export function ProgressConstellation({ currentStep, totalSteps }: ProgressConst
           >
             <div className={cn(
               "relative w-12 h-12 rounded-full flex items-center justify-center transition-all duration-700 shadow-2xl",
-              isActive ? "bg-blue-600 text-white ring-8 ring-blue-50" : "bg-white text-slate-300 border-2 border-slate-100"
+              isActive ? "bg-blue-600 text-white ring-8 ring-blue-50" : "bg-theme-surface text-slate-300 border-2 border-theme"
             )}>
               {isCompleted ? (
                 <CheckCircle2 className="w-6 h-6" />

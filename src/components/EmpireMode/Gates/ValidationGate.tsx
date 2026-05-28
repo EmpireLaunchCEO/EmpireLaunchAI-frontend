@@ -67,12 +67,12 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2">
            {!preview ? (
-             <label className="group relative aspect-video bg-slate-50 border-4 border-dashed border-slate-200 rounded-[40px] flex flex-col items-center justify-center cursor-pointer hover:bg-blue-50 hover:border-blue-200 transition-all">
+             <label className="group relative aspect-video bg-theme-background border-4 border-dashed border-theme rounded-[40px] flex flex-col items-center justify-center cursor-pointer hover:bg-blue-50 hover:border-blue-200 transition-all">
                 <input type="file" className="hidden" onChange={handleFileChange} accept="image/*,video/*" />
-                <div className="p-6 bg-white rounded-3xl shadow-xl group-hover:scale-110 transition-transform mb-4">
+                <div className="p-6 bg-theme-surface rounded-3xl shadow-xl group-hover:scale-110 transition-transform mb-4">
                    <Upload className="w-8 h-8 text-blue-600" />
                 </div>
-                <p className="text-slate-900 font-black uppercase tracking-widest text-xs">Drop Export Here</p>
+                <p className="text-foreground font-black uppercase tracking-widest text-xs">Drop Export Here</p>
                 <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-2">Kittl / CapCut / Canva PNG or MP4</p>
              </label>
            ) : (
@@ -107,7 +107,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                       className="absolute inset-0 bg-emerald-500/90 backdrop-blur-md flex items-center justify-center text-white"
                     >
                        <div className="text-center space-y-6">
-                          <div className="w-24 h-24 bg-white rounded-full mx-auto flex items-center justify-center shadow-2xl">
+                          <div className="w-24 h-24 bg-theme-surface rounded-full mx-auto flex items-center justify-center shadow-2xl">
                              <Check className="w-12 h-12 text-emerald-500 stroke-[4px]" />
                           </div>
                           <div className="space-y-1">
@@ -130,10 +130,10 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
         </div>
 
         <div className="space-y-6">
-           <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-8 shadow-sm">
+           <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-8 shadow-sm">
               <div className="space-y-2">
                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Asset Context</h4>
-                 <p className="text-lg font-black text-slate-900 leading-tight italic">{taskTitle}</p>
+                 <p className="text-lg font-black text-foreground leading-tight italic">{taskTitle}</p>
                  <div className="flex items-center gap-2 text-blue-600">
                     <span className="text-[10px] font-black uppercase tracking-widest">{platform} Platform</span>
                  </div>
@@ -142,7 +142,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
               <div className="space-y-4 pt-4 border-t border-slate-50">
                  <div className="flex items-center gap-2">
                     <Bot className="w-4 h-4 text-blue-600" />
-                    <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-widest">AI Validation Logic</h4>
+                    <h4 className="text-[10px] font-black text-foreground uppercase tracking-widest">AI Validation Logic</h4>
                  </div>
                  <ul className="space-y-3">
                     {[
@@ -206,7 +206,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
 
               <button 
                 onClick={onCancel}
-                className="w-full py-4 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-slate-900 transition-colors"
+                className="w-full py-4 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-foreground transition-colors"
               >
                 Cancel Validation
               </button>

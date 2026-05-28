@@ -152,7 +152,7 @@ export default function Dashboard() {
         <BusinessSlots currentEmpire={empireData} />
 
         {!isLinkingComplete ? (
-          <div className="bg-white border-2 border-slate-50 rounded-[48px] p-8">
+          <div className="bg-theme-surface border-2 border-theme rounded-[48px] p-8">
              <GuidedLinking />
           </div>
         ) : (
@@ -196,14 +196,14 @@ export default function Dashboard() {
             />
 
             {/* Empire Control Gates */}
-            <section className="space-y-10 pt-20 border-t border-slate-100">
+            <section className="space-y-10 pt-20 border-t border-theme">
                <div className="flex items-center justify-between">
                  <div className="flex items-center gap-3">
                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
                      <LayoutDashboard className="w-5 h-5 text-slate-600" />
                    </div>
                    <div>
-                     <h2 className="text-2xl font-black text-slate-900 tracking-tight">Control Gates</h2>
+                     <h2 className="text-2xl font-black text-foreground tracking-tight">Control Gates</h2>
                      <p className="text-xs text-slate-500 font-medium">Human-in-the-loop validation for autonomous actions.</p>
                    </div>
                  </div>
@@ -246,7 +246,7 @@ export default function Dashboard() {
                 <motion.div
                   initial={{ scale: 0.5, rotate: -20 }}
                   animate={{ scale: 1, rotate: 0 }}
-                  className="w-32 h-32 bg-white rounded-[40px] mx-auto flex items-center justify-center shadow-2xl"
+                  className="w-32 h-32 bg-theme-surface rounded-[40px] mx-auto flex items-center justify-center shadow-2xl"
                 >
                   <Stars className="w-16 h-16 text-blue-600" />
                 </motion.div>

@@ -52,11 +52,11 @@ function ToastItem({ toast, onRemove }: { toast: Toast, onRemove: () => void }) 
   return (
     <div className={cn(
       "p-4 rounded-2xl border-2 shadow-xl backdrop-blur-md flex items-start gap-4 relative overflow-hidden",
-      isPremium ? "bg-slate-900 border-white/10 text-white" : cn(colors[toast.type], "text-slate-900")
+      isPremium ? "bg-slate-900 border-white/10 text-white" : cn(colors[toast.type], "text-foreground")
     )}>
       <div className={cn(
         "p-2 rounded-xl shrink-0",
-        isPremium ? "bg-white/5" : "bg-white"
+        isPremium ? "bg-theme-surface/5" : "bg-theme-surface"
       )}>
         {icons[toast.type]}
       </div>
@@ -80,7 +80,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast, onRemove: () => void }) 
         onClick={onRemove}
         className={cn(
           "p-1 rounded-lg transition-colors",
-          isPremium ? "hover:bg-white/10 text-white/40" : "hover:bg-black/5 text-slate-400"
+          isPremium ? "hover:bg-theme-surface/10 text-white/40" : "hover:bg-black/5 text-slate-400"
         )}
       >
         <X className="w-4 h-4" />

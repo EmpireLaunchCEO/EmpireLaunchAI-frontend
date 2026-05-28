@@ -39,7 +39,7 @@ export function FinancialGate({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="bg-white w-full max-w-md rounded-[32px] shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="bg-theme-surface w-full max-w-md rounded-[32px] shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
         {/* Header */}
         <div className="p-8 pb-4 flex justify-between items-start">
           <div className="bg-blue-50 p-3 rounded-2xl">
@@ -54,20 +54,20 @@ export function FinancialGate({
         </div>
 
         <div className="px-8 pb-8">
-          <h2 className="text-2xl font-bold text-slate-900 mt-2">Financial Approval Required</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-2">Financial Approval Required</h2>
           <p className="text-slate-500 mt-2 text-sm leading-relaxed">
             Your AI Partner is requesting approval for a {type}. No funds will be moved without your explicit consent.
           </p>
 
           {/* Transaction Card */}
-          <div className="bg-slate-50 rounded-2xl p-6 mt-6 border border-slate-100">
+          <div className="bg-theme-background rounded-2xl p-6 mt-6 border border-theme">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Total Amount</span>
-                <span className="text-3xl font-black text-slate-900">{amount}</span>
+                <span className="text-3xl font-black text-foreground">{amount}</span>
               </div>
               {platform && (
-                <div className="bg-white px-3 py-1 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-600 uppercase">
+                <div className="bg-theme-surface px-3 py-1 rounded-lg border border-theme text-[10px] font-bold text-slate-600 uppercase">
                   {platform}
                 </div>
               )}

@@ -53,10 +53,10 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
   const Icon = config.icon;
   
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-      <div className="p-4 md:p-6 border-b border-slate-50 flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-50/50 gap-4">
+    <div className="bg-theme-surface rounded-3xl shadow-sm border border-theme overflow-hidden">
+      <div className="p-4 md:p-6 border-b border-slate-50 flex flex-col md:flex-row justify-between items-start md:items-center bg-theme-background/50 gap-4">
         <div className="flex items-center gap-3">
-          <div className="bg-white p-2 rounded-xl shadow-sm">
+          <div className="bg-theme-surface p-2 rounded-xl shadow-sm">
             <Icon className={`w-5 h-5 ${config.color}`} />
           </div>
           <div>
@@ -82,7 +82,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
       <div className="p-4 md:p-6">
         <div className="aspect-video bg-slate-100 rounded-2xl mb-6 flex items-center justify-center relative group cursor-pointer overflow-hidden">
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <span className="text-white font-bold bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl border border-white/30">Edit Preview</span>
+            <span className="text-white font-bold bg-theme-surface/20 backdrop-blur-md px-4 py-2 rounded-xl border border-white/30">Edit Preview</span>
           </div>
           <Stars className="w-12 h-12 text-slate-300" />
         </div>
@@ -96,7 +96,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
                 type="text" 
                 value={currentTitle}
                 onChange={(e) => setCurrentTitle(e.target.value)}
-                className="w-full bg-slate-50/50 border border-slate-100 rounded-xl px-4 py-3 font-semibold text-slate-900 outline-none focus:border-blue-600 transition-colors absolute inset-0 bg-transparent"
+                className="w-full bg-theme-background/50 border border-theme rounded-xl px-4 py-3 font-semibold text-foreground outline-none focus:border-blue-600 transition-colors absolute inset-0 bg-transparent"
               />
               {/* Spacer to maintain height since input is absolute */}
               <div className="px-4 py-3 font-semibold opacity-0 pointer-events-none">{currentTitle || ' '}</div>
@@ -110,7 +110,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
                 value={currentDescription}
                 onChange={(e) => setCurrentDescription(e.target.value)}
                 rows={4}
-                className="w-full bg-slate-50/50 border border-slate-100 rounded-xl px-4 py-3 text-slate-600 text-sm leading-relaxed outline-none focus:border-blue-600 transition-colors resize-none absolute inset-0 bg-transparent"
+                className="w-full bg-theme-background/50 border border-theme rounded-xl px-4 py-3 text-slate-600 text-sm leading-relaxed outline-none focus:border-blue-600 transition-colors resize-none absolute inset-0 bg-transparent"
               />
               {/* Spacer */}
               <div className="px-4 py-3 text-sm leading-relaxed opacity-0 pointer-events-none whitespace-pre-wrap min-h-[112px]">{currentDescription || ' '}</div>

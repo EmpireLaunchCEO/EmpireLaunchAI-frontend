@@ -131,7 +131,7 @@ export default function ReviewQueue() {
     <div className="p-4 md:p-8 pb-32 max-w-4xl mx-auto">
       <header className="mb-8 md:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-3">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-3">
             Review Queue
           </h1>
           <p className="text-slate-500 mt-2 font-medium text-sm md:text-base">
@@ -139,7 +139,7 @@ export default function ReviewQueue() {
           </p>
         </div>
         <div className="flex gap-2 w-full md:w-auto">
-          <button className="flex-1 md:flex-none bg-white border border-slate-200 text-slate-600 px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 font-bold hover:bg-slate-50 transition-colors text-sm">
+          <button className="flex-1 md:flex-none bg-theme-surface border border-theme text-slate-600 px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 font-bold hover:bg-theme-background transition-colors text-sm">
             <Filter className="w-4 h-4" />
             Filter
           </button>
@@ -168,7 +168,7 @@ export default function ReviewQueue() {
             />
           ))
         ) : !isLoading && (
-          <div className="bg-white rounded-3xl border border-slate-100 p-12 text-center">
+          <div className="bg-theme-surface rounded-3xl border border-theme p-12 text-center">
             <p className="text-slate-500 italic text-lg">Your review queue is currently empty.</p>
             <p className="text-slate-400 text-sm mt-2">The AI is working on new suggestions based on your goals.</p>
           </div>

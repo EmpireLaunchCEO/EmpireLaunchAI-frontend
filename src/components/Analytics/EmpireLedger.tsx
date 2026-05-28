@@ -27,9 +27,9 @@ export function EmpireLedger() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Ledger */}
-      <div className="lg:col-span-2 bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden">
+      <div className="lg:col-span-2 bg-theme-surface rounded-[40px] border border-theme shadow-sm overflow-hidden">
         <div className="p-8 border-b border-slate-50 flex justify-between items-center">
-          <h3 className="text-xl font-bold text-slate-900">Live Empire Ledger</h3>
+          <h3 className="text-xl font-bold text-foreground">Live Empire Ledger</h3>
           <button className="text-sm font-bold text-blue-600 flex items-center gap-1">
             Export CSV <ChevronRight className="w-4 h-4" />
           </button>
@@ -37,7 +37,7 @@ export function EmpireLedger() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50">
+              <tr className="bg-theme-background">
                 <th className="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Transaction</th>
                 <th className="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Platform</th>
                 <th className="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
@@ -46,17 +46,17 @@ export function EmpireLedger() {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {transactions.map((tx) => (
-                <tr key={tx.id} className="hover:bg-slate-50/50 transition-colors">
+                <tr key={tx.id} className="hover:bg-theme-background/50 transition-colors">
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-3">
                       <div className={cn(
                         "p-2 rounded-xl",
-                        tx.type === 'sale' ? "bg-green-50 text-green-600" : "bg-slate-50 text-slate-600"
+                        tx.type === 'sale' ? "bg-green-50 text-green-600" : "bg-theme-background text-slate-600"
                       )}>
                         {tx.type === 'sale' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
                       </div>
                       <div>
-                        <p className="font-bold text-slate-900">{tx.name || 'Digital Product Sale'}</p>
+                        <p className="font-bold text-foreground">{tx.name || 'Digital Product Sale'}</p>
                         <p className="text-xs text-slate-400">{tx.date}</p>
                       </div>
                     </div>
@@ -72,7 +72,7 @@ export function EmpireLedger() {
                   </td>
                   <td className={cn(
                     "px-8 py-6 text-right font-black",
-                    tx.amount > 0 ? "text-slate-900" : "text-red-600"
+                    tx.amount > 0 ? "text-foreground" : "text-red-600"
                   )}>
                     {tx.amount > 0 ? `+$${tx.amount.toFixed(2)}` : `-$${Math.abs(tx.amount).toFixed(2)}`}
                   </td>
@@ -86,7 +86,7 @@ export function EmpireLedger() {
       {/* Secured Dues Meter */}
       <div className="bg-slate-900 rounded-[40px] p-8 text-white flex flex-col">
         <div className="flex justify-between items-start mb-8">
-          <div className="bg-white/10 p-3 rounded-2xl">
+          <div className="bg-theme-surface/10 p-3 rounded-2xl">
             <ShieldCheck className="w-6 h-6 text-blue-400" />
           </div>
           <button className="text-white/40 hover:text-white transition-colors">
@@ -113,14 +113,14 @@ export function EmpireLedger() {
             </div>
           </div>
 
-          <div className="h-4 bg-white/10 rounded-full overflow-hidden relative">
+          <div className="h-4 bg-theme-surface/10 rounded-full overflow-hidden relative">
             <div 
               className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full transition-all duration-1000"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-5 flex items-start gap-4">
+          <div className="bg-theme-surface/5 border border-white/10 rounded-3xl p-5 flex items-start gap-4">
             <div className="bg-blue-500/20 p-2 rounded-lg">
               <TrendingUp className="w-4 h-4 text-blue-400" />
             </div>
@@ -133,7 +133,7 @@ export function EmpireLedger() {
           </div>
         </div>
 
-        <button className="mt-auto w-full bg-white text-slate-900 py-4 rounded-2xl text-sm font-bold hover:bg-slate-100 transition-all">
+        <button className="mt-auto w-full bg-theme-surface text-foreground py-4 rounded-2xl text-sm font-bold hover:bg-slate-100 transition-all">
           Manage Billing
         </button>
       </div>

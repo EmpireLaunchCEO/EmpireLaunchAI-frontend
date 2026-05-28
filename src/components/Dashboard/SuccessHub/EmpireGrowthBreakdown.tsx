@@ -45,19 +45,19 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
   ];
 
   return (
-    <div className="bg-white rounded-[40px] p-8 border-2 border-slate-50 shadow-sm space-y-8">
+    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-slate-50 shadow-sm space-y-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center">
             <Target className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="text-xl font-black text-slate-900 tracking-tight">Growth Breakdown</h3>
+            <h3 className="text-xl font-black text-foreground tracking-tight">Growth Breakdown</h3>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Neural Multi-Factor Scoring</p>
           </div>
         </div>
         <div className="text-right">
-          <span className="text-4xl font-black text-slate-900 tracking-tighter">{growthScore}</span>
+          <span className="text-4xl font-black text-foreground tracking-tighter">{growthScore}</span>
           <span className="text-xs font-bold text-slate-400 ml-1">/100</span>
         </div>
       </div>
@@ -73,9 +73,9 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
                 <span className="text-xs font-bold text-slate-700">{metric.label}</span>
                 <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Weight: {metric.weight}</span>
               </div>
-              <span className="text-xs font-black text-slate-900">{metric.value}%</span>
+              <span className="text-xs font-black text-foreground">{metric.value}%</span>
             </div>
-            <div className="h-2 bg-slate-50 rounded-full overflow-hidden">
+            <div className="h-2 bg-theme-background rounded-full overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${metric.value}%` }}
@@ -87,7 +87,7 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
         ))}
       </div>
 
-      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+      <div className="p-4 rounded-2xl bg-theme-background border border-theme">
         <p className="text-[10px] font-bold text-slate-500 leading-relaxed italic">
           "The Empire Engine is prioritizing <span className="text-emerald-600 font-black">Revenue Velocity</span> this cycle. Growth score has increased by 4.2 points since last synchronization."
         </p>

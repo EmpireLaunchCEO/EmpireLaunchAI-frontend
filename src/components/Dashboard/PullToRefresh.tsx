@@ -65,7 +65,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   };
 
   return (
-    <div className="relative min-h-screen bg-slate-50">
+    <div className="relative min-h-screen bg-theme-background">
       {/* Pull indicator */}
       <motion.div
         className="absolute top-12 left-0 right-0 flex justify-center z-[1000] pointer-events-none"
@@ -74,7 +74,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
           y: isRefreshing ? 40 : 0
         }}
       >
-        <div className="bg-white rounded-full p-4 shadow-2xl border-2 border-slate-100 flex items-center justify-center overflow-hidden">
+        <div className="bg-theme-surface rounded-full p-4 shadow-2xl border-2 border-theme flex items-center justify-center overflow-hidden">
           <motion.div
             animate={isRefreshing ? {
               scale: [1, 1.3, 1],

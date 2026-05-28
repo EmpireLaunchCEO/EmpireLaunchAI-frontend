@@ -18,7 +18,7 @@ export default function DesignCenterPage() {
             <Palette className="w-3 h-3" />
             Design Center
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
             Creative Engine.
           </h1>
           <p className="text-sm md:text-base text-slate-500 font-medium">
@@ -56,7 +56,7 @@ export default function DesignCenterPage() {
             <div className="mb-8">
                <button 
                  onClick={() => setActiveTask(null)}
-                 className="flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors font-bold text-sm uppercase tracking-widest"
+                 className="flex items-center gap-2 text-slate-400 hover:text-foreground transition-colors font-bold text-sm uppercase tracking-widest"
                >
                  <ChevronLeft className="w-4 h-4" />
                  Back to Hub

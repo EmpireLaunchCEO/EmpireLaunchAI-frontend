@@ -56,7 +56,7 @@ export const InboxAssistant = () => {
           <div className="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
             <MessageSquare className="w-4 h-4" />
           </div>
-          <h3 className="text-xl font-black text-slate-900 tracking-tight italic uppercase">Inbox Assistant</h3>
+          <h3 className="text-xl font-black text-foreground tracking-tight italic uppercase">Inbox Assistant</h3>
         </div>
         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Manual-Assisted Mode</span>
       </div>
@@ -69,7 +69,7 @@ export const InboxAssistant = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-[32px] p-6 border-2 border-slate-50 shadow-sm space-y-6 group"
+              className="bg-theme-surface rounded-[32px] p-6 border-2 border-slate-50 shadow-sm space-y-6 group"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -91,14 +91,14 @@ export const InboxAssistant = () => {
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-sm font-black text-slate-900">{draft.subject}</h4>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-100 relative group/body">
+                <h4 className="text-sm font-black text-foreground">{draft.subject}</h4>
+                <div className="p-5 rounded-2xl bg-theme-background border border-theme relative group/body">
                   <p className="text-sm text-slate-600 font-medium leading-relaxed">
                     {draft.body}
                   </p>
                   <button 
                     onClick={() => handleCopy(draft.body, draft.id)}
-                    className="absolute top-3 right-3 p-2 bg-white rounded-xl border border-slate-200 shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-blue-50 hover:border-blue-200"
+                    className="absolute top-3 right-3 p-2 bg-theme-surface rounded-xl border border-theme shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-blue-50 hover:border-blue-200"
                   >
                     {copiedId === draft.id ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-slate-400" />}
                   </button>
@@ -120,7 +120,7 @@ export const InboxAssistant = () => {
                 </button>
                 <button 
                   onClick={() => handleDone(draft.id)}
-                  className="px-6 py-3 rounded-2xl bg-slate-50 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:bg-emerald-50 hover:text-emerald-600 transition-all border border-slate-100"
+                  className="px-6 py-3 rounded-2xl bg-theme-background text-slate-400 font-black text-[10px] uppercase tracking-widest hover:bg-emerald-50 hover:text-emerald-600 transition-all border border-theme"
                 >
                   Mark as Sent
                 </button>

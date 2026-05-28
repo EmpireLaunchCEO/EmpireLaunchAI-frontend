@@ -51,11 +51,11 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
   return (
     <div className={cn(
       "border-2 rounded-3xl transition-all overflow-hidden",
-      isExpanded ? "border-blue-600 ring-4 ring-blue-50" : "border-slate-100 hover:border-slate-200"
+      isExpanded ? "border-blue-600 ring-4 ring-blue-50" : "border-theme hover:border-theme"
     )}>
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-4 md:p-6 flex items-center justify-between bg-white"
+        className="w-full p-4 md:p-6 flex items-center justify-between bg-theme-surface"
       >
         <div className="flex items-center gap-3 md:gap-4 text-left">
           <div className={cn(
@@ -66,7 +66,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-slate-900 text-sm md:text-base">{name}</h3>
+              <h3 className="font-bold text-foreground text-sm md:text-base">{name}</h3>
               {!isLocked && (
                 <span className="bg-green-500/10 text-green-700 text-[8px] md:text-[10px] font-black uppercase px-2 py-0.5 rounded-full border border-green-100">
                   Live
@@ -83,7 +83,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
       </button>
 
       {isExpanded && (
-        <div className="p-5 md:p-8 bg-slate-50 border-t-2 border-slate-100 space-y-5 md:space-y-6">
+        <div className="p-5 md:p-8 bg-theme-background border-t-2 border-theme space-y-5 md:space-y-6">
           <div className="flex items-start gap-3 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
             <Info className="w-4 h-4 md:w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
             <div className="space-y-1">
@@ -106,7 +106,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
                     placeholder={field.placeholder}
                     value={formData[field.id] || ''}
                     onChange={(e) => handleInputChange(field.id, e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-sm md:text-base text-slate-900 outline-none focus:border-blue-600 transition-colors pr-12"
+                    className="w-full bg-theme-surface border border-theme rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-sm md:text-base text-foreground outline-none focus:border-blue-600 transition-colors pr-12"
                   />
                   {field.type === 'password' && (
                     <button 
@@ -173,7 +173,7 @@ export function SecureVault() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl md:text-2xl font-bold text-slate-900">Secure Vault</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-foreground">Secure Vault</h2>
           <p className="text-sm text-slate-500">Manage your high-security API credentials and connection keys.</p>
         </div>
         <div className="bg-blue-50 border border-blue-100 rounded-2xl px-4 py-2 flex items-center gap-2 shrink-0">

@@ -16,7 +16,7 @@ export function NotificationBell({ id }: { id?: string }) {
       <button 
         id={id || "notification-bell"}
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-3 rounded-2xl bg-white border-2 border-slate-100 hover:border-blue-600 transition-all group shadow-sm"
+        className="relative p-3 rounded-2xl bg-theme-surface border-2 border-theme hover:border-blue-600 transition-all group shadow-sm"
       >
         <Bell className={cn("w-6 h-6 transition-colors", unreadCount > 0 ? "text-blue-600" : "text-slate-400 group-hover:text-blue-600")} />
         {unreadCount > 0 && (
@@ -34,11 +34,11 @@ export function NotificationBell({ id }: { id?: string }) {
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="absolute right-0 mt-4 w-80 md:w-96 bg-white rounded-[32px] shadow-2xl border-2 border-slate-100 z-50 overflow-hidden"
+              className="absolute right-0 mt-4 w-80 md:w-96 bg-theme-surface rounded-[32px] shadow-2xl border-2 border-theme z-50 overflow-hidden"
             >
-              <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+              <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-theme-background/50">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-black text-slate-900 tracking-tight">Notifications</h3>
+                  <h3 className="font-black text-foreground tracking-tight">Notifications</h3>
                   {unreadCount > 0 && (
                     <span className="bg-blue-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black">
                       {unreadCount} NEW
@@ -56,7 +56,7 @@ export function NotificationBell({ id }: { id?: string }) {
               <div className="max-h-[400px] overflow-y-auto no-scrollbar">
                 {notifications.length === 0 ? (
                   <div className="p-12 text-center space-y-4">
-                    <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto">
+                    <div className="w-16 h-16 bg-theme-background rounded-full flex items-center justify-center mx-auto">
                       <Bell className="w-8 h-8 text-slate-200" />
                     </div>
                     <p className="text-sm font-bold text-slate-400">Your empire is quiet. No new alerts.</p>
@@ -67,7 +67,7 @@ export function NotificationBell({ id }: { id?: string }) {
                       <div 
                         key={n.id} 
                         className={cn(
-                          "p-5 hover:bg-slate-50 transition-colors relative group",
+                          "p-5 hover:bg-theme-background transition-colors relative group",
                           !n.read && "bg-blue-50/30"
                         )}
                         onClick={() => markAsRead(n.id)}
@@ -84,7 +84,7 @@ export function NotificationBell({ id }: { id?: string }) {
                              <Info className="w-5 h-5" />}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-black text-slate-900 text-sm truncate">{n.title}</h4>
+                            <h4 className="font-black text-foreground text-sm truncate">{n.title}</h4>
                             <p className="text-xs font-medium text-slate-500 line-clamp-2 mt-0.5">
                               {n.message}
                             </p>
@@ -103,7 +103,7 @@ export function NotificationBell({ id }: { id?: string }) {
               </div>
 
               {notifications.length > 0 && (
-                <div className="p-4 bg-slate-50/50 border-t border-slate-50 text-center">
+                <div className="p-4 bg-theme-background/50 border-t border-slate-50 text-center">
                   <button className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors">
                     View All History
                   </button>

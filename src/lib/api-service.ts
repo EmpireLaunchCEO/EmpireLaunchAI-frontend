@@ -523,5 +523,37 @@ export const analyticsService = {
         type: "optimization"
       }
     ];
+  },
+
+  async getStrategySuggestions() {
+    return [
+      {
+        id: 'strat_1',
+        type: 'TREND_PIVOT',
+        title: 'Pivot to Minimalist Boho',
+        suggestion: 'The market is shifting from "Vintage" to "Boho Minimalist". I suggest updating your active Etsy listings to reflect this trend.',
+        reasoning: 'The Revenue Oracle detected a 22% increase in "Boho" search volume across TikTok and Pinterest in the last 48 hours.',
+        roiImpact: 45000, // $450.00
+        status: 'pending'
+      },
+      {
+        id: 'strat_2',
+        type: 'SEO_OPTIMIZATION',
+        title: 'Keyword Refresh: "ADHD Planner"',
+        suggestion: 'Competition for "Digital Planner" rose by 15%. I recommend switching focus to "ADHD Organization Guide" to maintain top placement.',
+        reasoning: 'Neural Discovery found a high-converting keyword gap in the neurodiversity niche.',
+        roiImpact: 12500, // $125.00
+        status: 'pending'
+      },
+      {
+        id: 'strat_3',
+        type: 'AD_BOOST',
+        title: 'Boost TikTok "Morning Routine"',
+        suggestion: 'Your recent video is outperforming baseline engagement by 3.4x. A $20 ad boost could yield an estimated 5:1 ROI.',
+        reasoning: 'Viral Watch triggered an alert for high engagement velocity on platform TikTok.',
+        roiImpact: 85000, // $850.00
+        status: 'pending'
+      }
+    ];
   }
 };

@@ -37,7 +37,7 @@ export function SocialProofApproval() {
           <div className="w-8 h-8 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
             <Share2 className="w-4 h-4" />
           </div>
-          <h3 className="text-xl font-black text-slate-900 tracking-tight italic uppercase">Social Proof Hub</h3>
+          <h3 className="text-xl font-black text-foreground tracking-tight italic uppercase">Social Proof Hub</h3>
         </div>
         <span className="px-3 py-1 bg-purple-50 text-purple-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-purple-100 animate-pulse">
           AI Suggestion Active
@@ -52,7 +52,7 @@ export function SocialProofApproval() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="group relative p-6 rounded-[32px] bg-white border-2 border-slate-100 shadow-sm hover:shadow-md transition-all space-y-4 overflow-hidden"
+              className="group relative p-6 rounded-[32px] bg-theme-surface border-2 border-theme shadow-sm hover:shadow-md transition-all space-y-4 overflow-hidden"
             >
               {/* Draft Preview Overlay */}
               <div className="absolute top-0 right-0 p-4">
@@ -102,7 +102,7 @@ export function SocialProofApproval() {
                 </button>
                 <button
                   onClick={() => handleAction(rating.id, 'reject')}
-                  className="p-3 rounded-2xl bg-slate-50 text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all border border-slate-100"
+                  className="p-3 rounded-2xl bg-theme-background text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all border border-theme"
                 >
                   <XCircle className="w-5 h-5" />
                 </button>

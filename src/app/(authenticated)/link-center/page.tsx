@@ -37,7 +37,7 @@ export default function LinkCenterPage() {
         {isLinkingComplete && (
           <Link 
             href="/dashboard"
-            className="flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-2xl border-2 border-slate-100 font-bold text-sm shadow-sm hover:bg-slate-50 transition-all group"
+            className="flex items-center gap-2 bg-theme-surface text-foreground px-6 py-3 rounded-2xl border-2 border-theme font-bold text-sm shadow-sm hover:bg-theme-background transition-all group"
           >
             <LayoutDashboard className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
             Return to Dashboard

@@ -213,7 +213,7 @@ export default function Onboarding() {
             <motion.div 
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-[48px] p-8 md:p-12 shadow-2xl max-h-[85vh] overflow-y-auto"
+              className="bg-theme-surface rounded-[48px] p-8 md:p-12 shadow-2xl max-h-[85vh] overflow-y-auto"
             >
               <DiscoveryReview onComplete={finalizeActivation} />
             </motion.div>
@@ -230,13 +230,13 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="h-screen bg-white flex flex-col items-center overflow-y-auto no-scrollbar">
+    <div className="h-screen bg-theme-surface flex flex-col items-center overflow-y-auto no-scrollbar">
       <PWAInstallPrompt />
       <div className="fixed left-0 top-0 bottom-0 w-1 bg-slate-100 hidden lg:block z-[70]" />
       <div className="fixed left-8 top-1/2 -translate-y-1/2 -rotate-90 origin-left hidden lg:flex items-center gap-4 z-[70]">
         <Stars className="w-4 h-4 text-blue-600 rotate-90" />
         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 whitespace-nowrap">
-          Orchestrator: <span className="text-slate-900">{currentStep === 1 ? "Analyzing Identity" : currentStep === 2 ? "Mapping Matrix" : "Calibrating Growth"}</span>
+          Orchestrator: <span className="text-foreground">{currentStep === 1 ? "Analyzing Identity" : currentStep === 2 ? "Mapping Matrix" : "Calibrating Growth"}</span>
         </span>
       </div>
 
@@ -307,7 +307,7 @@ export default function Onboarding() {
                   <div className="w-16 h-16 bg-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-xl shadow-blue-200">
                     <Lock className="w-8 h-8 text-white" />
                   </div>
-                  <h2 className="text-3xl font-black text-slate-900 tracking-tight">Authorize Engine.</h2>
+                  <h2 className="text-3xl font-black text-foreground tracking-tight">Authorize Engine.</h2>
                   <p className="text-slate-500 font-medium italic">
                     "To begin autonomous operations, I need you to authorize the operational license. This secures your business slots and neural processing priority."
                   </p>
@@ -369,7 +369,7 @@ export default function Onboarding() {
             onClick={prevStep}
             disabled={currentStep === 1 || isActivating || isPaying}
             className={cn(
-              "flex items-center gap-2 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors disabled:opacity-0",
+              "flex items-center gap-2 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-foreground transition-colors disabled:opacity-0",
             )}
           >
             <ChevronLeft className="w-4 h-4" />

@@ -42,22 +42,22 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
           <Target className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-xl font-black text-slate-900 leading-tight">Strategy Roadmap.</h3>
+          <h3 className="text-xl font-black text-foreground leading-tight">Strategy Roadmap.</h3>
           <p className="text-sm text-slate-500 font-medium italic">"I've found a high-growth niche in {payload?.niche ?? 'your business sector'}. Proceed with this plan?"</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Product Strategy */}
-        <div className="bg-white border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
+        <div className="bg-theme-surface border-2 border-slate-50 rounded-[40px] p-8 space-y-6 shadow-sm">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
                <ShoppingBag className="w-5 h-5 text-blue-600" />
-               <h4 className="font-black text-slate-900 uppercase tracking-widest text-xs">Product Lineup</h4>
+               <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Product Lineup</h4>
             </div>
             <button 
               onClick={() => setIsEditing(!isEditing)}
-              className="p-2 hover:bg-slate-50 rounded-xl transition-colors text-slate-400"
+              className="p-2 hover:bg-theme-background rounded-xl transition-colors text-slate-400"
             >
               <Edit3 className="w-4 h-4" />
             </button>
@@ -65,9 +65,9 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
 
           <div className="space-y-4">
             {(editedPayload?.products ?? []).map((product, i) => (
-              <div key={i} className="p-4 bg-slate-50 rounded-2xl flex items-center justify-between group">
+              <div key={i} className="p-4 bg-theme-background rounded-2xl flex items-center justify-between group">
                 <div className="space-y-1">
-                   <p className="text-sm font-bold text-slate-900">{product.name}</p>
+                   <p className="text-sm font-bold text-foreground">{product.name}</p>
                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{product.type}</span>
                 </div>
                 {isEditing ? (
@@ -77,7 +77,7 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
                       type="number"
                       value={product.price}
                       onChange={(e) => handlePriceChange(i, e.target.value)}
-                      className="w-20 bg-white border border-slate-200 rounded-lg px-2 py-1 text-sm font-bold focus:outline-none focus:border-blue-600"
+                      className="w-20 bg-theme-surface border border-theme rounded-lg px-2 py-1 text-sm font-bold focus:outline-none focus:border-blue-600"
                     />
                   </div>
                 ) : (
@@ -85,7 +85,7 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
                 )}
               </div>
             ))}
-            <button className="w-full py-3 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center gap-2 text-slate-400 hover:border-blue-200 hover:text-blue-400 transition-all">
+            <button className="w-full py-3 border-2 border-dashed border-theme rounded-2xl flex items-center justify-center gap-2 text-slate-400 hover:border-blue-200 hover:text-blue-400 transition-all">
                <Plus className="w-4 h-4" />
                <span className="text-[10px] font-black uppercase tracking-widest">Add Product</span>
             </button>
@@ -120,7 +120,7 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
       <div className="flex gap-4">
         <button 
           onClick={onReject}
-          className="flex-1 py-5 border-2 border-slate-100 rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
+          className="flex-1 py-5 border-2 border-theme rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
         >
           <X className="w-4 h-4" />
           Request New Pivot

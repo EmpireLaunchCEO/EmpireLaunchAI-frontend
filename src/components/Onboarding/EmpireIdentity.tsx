@@ -33,7 +33,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
   return (
     <div className="space-y-10 max-w-2xl mx-auto">
       <div className="text-center space-y-4">
-        <h2 className="text-4xl font-black text-slate-900 tracking-tight">Name your Empire.</h2>
+        <h2 className="text-4xl font-black text-foreground tracking-tight">Name your Empire.</h2>
         <p className="text-slate-500 text-lg">Define the soul of your business.</p>
       </div>
 
@@ -46,7 +46,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
             placeholder="e.g. Boho Luxe Prints"
             value={data.name}
             onChange={(e) => updateData({ name: e.target.value })}
-            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white outline-none transition-all text-lg md:text-xl font-bold text-slate-900 shadow-sm"
+            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 focus:bg-theme-surface outline-none transition-all text-lg md:text-xl font-bold text-foreground shadow-sm"
           />
         </div>
 
@@ -58,7 +58,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
             placeholder="e.g. Digital Planners"
             value={data.niche}
             onChange={(e) => updateData({ niche: e.target.value })}
-            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white outline-none transition-all text-lg md:text-xl font-bold text-slate-900 shadow-sm"
+            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 focus:bg-theme-surface outline-none transition-all text-lg md:text-xl font-bold text-foreground shadow-sm"
           />
         </div>
 
@@ -70,7 +70,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
             rows={3}
             value={data.angle}
             onChange={(e) => updateData({ angle: e.target.value })}
-            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-50 border-2 border-slate-100 focus:border-blue-600 focus:bg-white outline-none transition-all text-base md:text-lg font-medium text-slate-900 shadow-sm resize-none"
+            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 focus:bg-theme-surface outline-none transition-all text-base md:text-lg font-medium text-foreground shadow-sm resize-none"
           />
         </div>
       </div>

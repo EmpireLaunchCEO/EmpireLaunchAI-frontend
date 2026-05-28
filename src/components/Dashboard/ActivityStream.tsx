@@ -59,7 +59,7 @@ export function ActivityStream() {
       case 'milestone': return 'bg-slate-900 text-white';
       case 'research': return 'bg-amber-500 text-white';
       case 'production': return 'bg-indigo-500 text-white';
-      default: return 'bg-slate-500 text-white';
+      default: return 'bg-theme-background0 text-white';
     }
   };
 
@@ -70,15 +70,15 @@ export function ActivityStream() {
   }
 
   return (
-    <div className="bg-white border border-slate-100 rounded-[40px] p-8 shadow-sm space-y-8">
+    <div className="bg-theme-surface border border-theme rounded-[40px] p-8 shadow-sm space-y-8">
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-black text-slate-900">Activity Stream</h3>
-        <button className="p-2 hover:bg-slate-50 rounded-xl transition-colors">
+        <h3 className="text-xl font-black text-foreground">Activity Stream</h3>
+        <button className="p-2 hover:bg-theme-background rounded-xl transition-colors">
           <ArrowRight className="w-5 h-5 text-slate-400" />
         </button>
       </div>
 
-      <div className="relative space-y-8 before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-50">
+      <div className="relative space-y-8 before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-[2px] before:bg-theme-background">
         {activities.map((activity, index) => (
           <motion.div 
             key={activity.id}
@@ -101,12 +101,12 @@ export function ActivityStream() {
                </div>
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-2 flex-1">
-                    <h4 className="text-sm font-bold text-slate-900 leading-tight">
+                    <h4 className="text-sm font-bold text-foreground leading-tight">
                       {activity.title}
                     </h4>
                     
                     {activity.meta?.reasoning && (
-                      <p className="text-[10px] text-slate-500 italic leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                      <p className="text-[10px] text-slate-500 italic leading-relaxed bg-theme-background p-2 rounded-lg border border-theme">
                         <span className="text-blue-500 font-bold not-italic mr-1">AI Logic:</span>
                         {activity.meta.reasoning}
                       </p>
@@ -125,7 +125,7 @@ export function ActivityStream() {
                       href={activity.meta.link} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="shrink-0 p-2 bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white rounded-xl transition-all"
+                      className="shrink-0 p-2 bg-theme-background text-slate-400 hover:bg-blue-600 hover:text-white rounded-xl transition-all"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
@@ -146,7 +146,7 @@ export function ActivityStream() {
         ))}
       </div>
       
-      <button className="w-full py-4 bg-slate-50 text-slate-500 font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-100 transition-colors">
+      <button className="w-full py-4 bg-theme-background text-slate-500 font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-100 transition-colors">
         Full History
       </button>
     </div>
