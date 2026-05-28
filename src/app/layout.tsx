@@ -32,7 +32,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var version = '4.1.5';
+                  var version = '4.1.7';
                   var lastVersion = localStorage.getItem('app_version');
                   if (lastVersion !== version) {
                     localStorage.setItem('app_version', version);
