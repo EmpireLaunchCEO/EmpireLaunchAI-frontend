@@ -14,7 +14,7 @@ export default function AuthenticatedLayout({
       <div className="flex bg-theme-background h-[100dvh] relative overflow-hidden transition-colors duration-500">
         <EmpireSwitcher />
         <Sidebar />
-        <main className="flex-1 lg:ml-[328px] h-full bg-theme-background lg:rounded-l-[48px] shadow-2xl shadow-black/20 border-l border-theme overflow-y-auto overscroll-contain relative lg:pb-0 transition-colors duration-500 pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom)+5rem)]">
+        <main className="flex-1 min-h-0 lg:ml-[328px] bg-theme-background lg:rounded-l-[48px] shadow-2xl shadow-black/20 border-l border-theme overflow-y-auto overscroll-contain relative lg:pb-0 transition-colors duration-500 pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom)+5rem)]">
           <div className="absolute top-8 right-8 z-[60] hidden lg:block">
             <NotificationBell id="notification-bell-desktop" />
           </div>

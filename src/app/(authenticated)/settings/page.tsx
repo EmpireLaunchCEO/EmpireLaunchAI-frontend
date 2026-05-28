@@ -274,9 +274,8 @@ export default function SettingsPage() {
   };
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
-      <div className="p-6 md:p-12 max-w-6xl mx-auto space-y-8 md:space-y-12 pb-32">
-        <AnimatePresence>
+    <div className="p-6 md:p-12 max-w-6xl mx-auto space-y-8 md:space-y-12 pb-32">
+      <AnimatePresence>
           {isSwitching && (
             <motion.div 
               initial={{ opacity: 0 }}

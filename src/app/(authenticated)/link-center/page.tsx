@@ -18,8 +18,7 @@ export default function LinkCenterPage() {
   };
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
-      <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
+    <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">

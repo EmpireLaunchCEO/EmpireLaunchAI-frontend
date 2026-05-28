@@ -106,7 +106,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
         dragElastic={0.4}
         onDragEnd={handleDragEnd}
         animate={controls}
-        style={{ y }}
+        style={{ y, touchAction: isAtTop ? 'pan-x' : 'auto' }}
         className="relative z-10"
       >
         {children}
