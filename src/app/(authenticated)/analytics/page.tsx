@@ -29,11 +29,24 @@ const tabs = [
 export default function AnalyticsPage() {
   const [activeTab, setActiveTab] = useState('growth');
 
+  const handleRefresh = async () => {
+    // Simulate refresh logic
+    await new Promise(resolve => setTimeout(resolve, 1500));
+  };
+
   return (
     <div className="p-4 md:p-8 pb-32 max-w-7xl mx-auto space-y-8 md:space-y-10">
       <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Intelligence Command</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Intelligence Command</h1>
+            <button 
+              onClick={handleRefresh}
+              className="p-2 hover:bg-primary/10 rounded-full transition-colors"
+            >
+              <Zap className="w-5 h-5 text-primary" />
+            </button>
+          </div>
           <p className="text-theme-background0 text-sm md:text-base font-medium italic">High-intelligence performance tracking and automated growth.</p>
         </div>
         

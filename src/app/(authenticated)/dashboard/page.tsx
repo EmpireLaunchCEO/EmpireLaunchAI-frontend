@@ -12,7 +12,7 @@ import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesS
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { SuccessHubOverview } from '@/components/Dashboard/SuccessHub/SuccessHubOverview';
-import { Stars, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard } from 'lucide-react';
+import { Stars, Zap, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -138,7 +138,7 @@ export default function Dashboard() {
                 className="p-2 hover:bg-primary/10 rounded-full transition-colors group"
                 title="Refresh Data"
               >
-                <Loader2 className={cn("w-5 h-5 text-primary", isLoading && "animate-spin")} />
+                <Zap className={cn("w-5 h-5 text-primary", isLoading && "animate-pulse")} />
               </button>
             </div>
             <p className="text-sm md:text-base text-theme-background0 font-medium">

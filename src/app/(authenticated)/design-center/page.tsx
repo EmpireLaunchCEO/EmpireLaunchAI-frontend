@@ -5,10 +5,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { DesignCenterHub } from '@/components/EmpireMode/DesignCenterHub';
 import { CreativeBlueprint } from '@/components/EmpireMode/CreativeBlueprint';
 import { DesignTask } from '@/lib/api-service';
-import { Palette, ChevronLeft, Bot, Stars } from 'lucide-react';
+import { Palette, ChevronLeft, Bot, Stars, Zap } from 'lucide-react';
 
 export default function DesignCenterPage() {
   const [activeTask, setActiveTask] = useState<DesignTask | null>(null);
+
+  const handleRefresh = async () => {
+    // Simulate refresh logic
+    await new Promise(resolve => setTimeout(resolve, 1500));
+  };
 
   return (
     <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
@@ -18,9 +23,17 @@ export default function DesignCenterPage() {
             <Palette className="w-3 h-3" />
             Design Center
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
-            Creative Engine.
-          </h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
+              Creative Engine.
+            </h1>
+            <button 
+              onClick={handleRefresh}
+              className="p-2 hover:bg-primary/10 rounded-full transition-colors"
+            >
+              <Zap className="w-5 h-5 text-primary" />
+            </button>
+          </div>
           <p className="text-sm md:text-base text-theme-background0 font-medium">
             Execute manual creative tasks with AI-generated strategic blueprints.
           </p>

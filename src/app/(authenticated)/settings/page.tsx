@@ -294,9 +294,17 @@ export default function SettingsPage() {
         </AnimatePresence>
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-foreground flex items-center gap-3">
-              Settings
-            </h1>
+            <div className="flex items-center gap-4">
+              <h1 className="text-3xl md:text-4xl font-black text-foreground flex items-center gap-3">
+                Settings
+              </h1>
+              <button 
+                onClick={handleRefresh}
+                className="p-2 hover:bg-primary/10 rounded-full transition-colors"
+              >
+                <Zap className="w-5 h-5 text-primary" />
+              </button>
+            </div>
             <p className="text-theme-background0 mt-2 text-base md:text-lg font-medium">
               Manage your Empire configuration and account security.
             </p>
