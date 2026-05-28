@@ -126,7 +126,7 @@ export default function Dashboard() {
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
               <LayoutDashboard className="w-3 h-3" />
-              Success Hub
+              Success Hub <span className="ml-2 text-[8px] bg-primary/20 px-2 py-0.5 rounded-full">v4.1.5 (PROD)</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
               {empireData?.name || "Success Hub"}.
