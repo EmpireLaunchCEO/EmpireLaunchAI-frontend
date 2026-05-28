@@ -15,8 +15,8 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { id: 'desktop-nav-home', name: 'Home', href: '/dashboard', icon: LayoutDashboard },
-  { id: 'desktop-nav-ec', name: 'EC', href: '/empire-center', icon: ClipboardCheck },
-  { id: 'desktop-nav-lc', name: 'LC', href: '/link-center', icon: Stars },
+  { id: 'desktop-nav-ec', name: 'EC (empire center)', href: '/empire-center', icon: ClipboardCheck },
+  { id: 'desktop-nav-lc', name: 'LC (link center)', href: '/link-center', icon: Stars },
   { id: 'desktop-nav-settings', name: 'Settings', href: '/settings', icon: Settings },
 ];
 

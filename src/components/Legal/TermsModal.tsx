@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Lock, CheckCircle2, X, AlertCircle, Scale, Bot, ShoppingBag, Fingerprint } from 'lucide-react';
+import { Shield, Lock, CheckCircle2, X, AlertCircle, Scale, Bot, ShoppingBag, Fingerprint, Coins } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TermsModalProps {
@@ -84,8 +84,23 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
 
               <section className="space-y-4">
                 <div className="flex items-center gap-2 text-foreground font-bold">
+                  <Coins className="w-5 h-5 text-blue-600" />
+                  <h3>4. Subscription & Success Fees</h3>
+                </div>
+                <div className="text-sm text-slate-600 leading-relaxed space-y-2">
+                  <p>
+                    By activating your Empire, you agree to a monthly operational subscription of <strong>$30/month</strong> for neural processing and platform maintenance.
+                  </p>
+                  <p className="p-3 bg-blue-50 rounded-xl border border-blue-100 font-bold text-blue-900">
+                    Additionally, you agree to a Success Fee of $30 for every $1,000 in revenue generated through the platform. This fee is automatically calculated and withheld upon reaching each revenue milestone.
+                  </p>
+                </div>
+              </section>
+
+              <section className="space-y-4">
+                <div className="flex items-center gap-2 text-foreground font-bold">
                   <Bot className="w-5 h-5 text-blue-600" />
-                  <h3>4. AI Autonomy & Approval</h3>
+                  <h3>5. AI Autonomy & Approval</h3>
                 </div>
                 <p className="text-sm text-slate-600 leading-relaxed">
                   The AI will NEVER initiate a purchase, subscription, or financial commitment without your explicit, one-time approval. 

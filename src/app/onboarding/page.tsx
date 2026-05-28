@@ -23,8 +23,10 @@ import { AutomationCalibration } from '@/components/Onboarding/AutomationCalibra
 import { ApprovalGate } from '@/components/Onboarding/ApprovalGate';
 import { DiscoveryReview } from '@/components/Onboarding/DiscoveryReview';
 import { PWAInstallPrompt } from '@/components/Onboarding/PWAInstallPrompt';
+import { TermsModal } from '@/components/Legal/TermsModal';
 
 const steps = [
+  { id: 0, title: 'Welcome' },
   { id: 1, title: 'Identity' },
   { id: 2, title: 'Matrix' },
   { id: 3, title: 'Toolkit' },
@@ -34,12 +36,14 @@ const steps = [
 
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
-import { CreditCard, Lock, Sparkles } from 'lucide-react';
+import { CreditCard, Lock, Sparkles, Power } from 'lucide-react';
 
 export default function Onboarding() {
   const { completeOnboarding, setActiveEmpireId, isOnboarded, isInitialized, setIsPaid } = useEmpire();
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [showTerms, setShowTerms] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [data, setData] = useState({
     name: '',
     niche: '',
@@ -54,6 +58,7 @@ export default function Onboarding() {
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
   const [gatePlatform, setGatePlatform] = useState('Etsy');
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
+  const [showSkip, setShowSkip] = useState(false);
 
   const discoveryLogs = [
     "Scanning linked email accounts...",
@@ -64,7 +69,9 @@ export default function Onboarding() {
   ];
 
   useEffect(() => {
+    let skipTimer: NodeJS.Timeout;
     if (isActivating && data.automationMode === 'empire' && !showDiscoveryReview) {
+      skipTimer = setTimeout(() => setShowSkip(true), 12000);
       const interval = setInterval(() => {
         setDiscoveryLogIndex((prev) => {
           const next = Math.min(prev + 1, discoveryLogs.length - 1);
@@ -79,7 +86,10 @@ export default function Onboarding() {
           return next;
         });
       }, 800);
-      return () => clearInterval(interval);
+      return () => {
+        clearInterval(interval);
+        clearTimeout(skipTimer);
+      };
     }
   }, [isActivating, data.automationMode, showDiscoveryReview]);
 
@@ -207,6 +217,17 @@ export default function Onboarding() {
                     className="h-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
                   />
                 </div>
+                
+                {showSkip && (
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    onClick={() => setShowDiscoveryReview(true)}
+                    className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-blue-400 transition-colors mx-auto block pt-4"
+                  >
+                    Taking too long? Skip to findings →
+                  </motion.button>
+                )}
               </div>
             </div>
           ) : (
@@ -245,6 +266,50 @@ export default function Onboarding() {
 
         <div className="flex-1">
           <AnimatePresence mode="wait">
+            {currentStep === 0 && (
+              <motion.div
+                key="step0"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                className="max-w-2xl mx-auto text-center space-y-12 py-12"
+              >
+                <div className="relative inline-block">
+                  <div className="w-24 h-24 bg-blue-600 rounded-[32px] flex items-center justify-center shadow-2xl shadow-blue-500/20 mx-auto">
+                    <Power className="w-12 h-12 text-white" />
+                  </div>
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                    className="absolute inset-0 bg-blue-500 blur-2xl -z-10"
+                  />
+                </div>
+
+                <div className="space-y-6">
+                  <h1 className="text-5xl font-black text-foreground tracking-tighter uppercase italic">
+                    Initialize <span className="text-blue-600">Empire.</span>
+                  </h1>
+                  <p className="text-slate-500 font-medium text-lg leading-relaxed max-w-lg mx-auto italic">
+                    "Payment verified. Neural channels are stabilizing. Before we begin building your digital empire, I require your signature on the operational terms."
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setShowTerms(true)}
+                  className="group bg-blue-600 text-white px-12 py-6 rounded-3xl font-black text-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 mx-auto"
+                >
+                  Get Started
+                  <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
+                </button>
+
+                <div className="flex items-center justify-center gap-6 opacity-30 grayscale pt-8">
+                   <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" className="h-6" />
+                   <div className="w-px h-4 bg-slate-300" />
+                   <span className="text-[10px] font-black uppercase tracking-widest">Neural Link Encryption</span>
+                </div>
+              </motion.div>
+            )}
+
             {currentStep === 1 && (
               <motion.div
                 key="step1"
@@ -412,6 +477,15 @@ export default function Onboarding() {
             setShowApprovalGate(false);
           }, 2000);
         }}
+      />
+      <TermsModal 
+        isOpen={showTerms} 
+        onAccept={() => {
+          setTermsAccepted(true);
+          setShowTerms(false);
+          setCurrentStep(1);
+        }}
+        onClose={() => setShowTerms(false)}
       />
     </div>
   );

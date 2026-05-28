@@ -26,7 +26,7 @@ export default function LandingPage() {
   const [language, setLanguage] = useState('en-US');
   const [currency, setCurrency] = useState('USD');
   const [isMounted, setIsMounted] = useState(false);
-  const [flowStep, setFlowStep] = useState<'terms' | 'purchase' | 'ready'>('terms');
+  const [flowStep, setFlowStep] = useState<'purchase' | 'ready'>('purchase');
 
   useEffect(() => {
     setIsMounted(true);
@@ -44,7 +44,7 @@ export default function LandingPage() {
 
   const handlePurchase = () => {
     setIsPaid(true);
-    setFlowStep('ready');
+    router.push('/onboarding');
   };
 
   if (!isMounted) return (
@@ -54,29 +54,6 @@ export default function LandingPage() {
         <div className="absolute inset-0 m-auto w-8 h-8 rounded-full overflow-hidden border border-white/10 shadow-[0_0_20px_rgba(59,130,246,0.5)]">
           <img src="/branded-globe.png" alt="Empire" className="w-full h-full object-cover animate-pulse" />
         </div>
-      </div>
-    </div>
-  );
-
-  const TermsStep = () => (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="bg-theme-surface border border-theme rounded-[32px] p-8 max-w-2xl mx-auto text-left space-y-6">
-        <h2 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2 text-foreground">
-          <Shield className="w-6 h-6 text-blue-400" />
-          Terms of Operation
-        </h2>
-        <div className="space-y-4 text-foreground/60 text-sm font-medium leading-relaxed">
-          <p>• <strong className="text-foreground">Data Sovereignty:</strong> All identifiers are encrypted at the edge. We do not store raw financial data on shared nodes.</p>
-          <p>• <strong className="text-foreground">Autonomous Execution:</strong> You grant permission for AI research and drafting. High-impact actions require your final verification.</p>
-          <p>• <strong className="text-foreground">Safeguards:</strong> The system will never execute paid subscriptions without explicit owner signatures.</p>
-        </div>
-        <button 
-          onClick={() => setFlowStep('purchase')}
-          className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-blue-500 transition-all flex items-center justify-center gap-2"
-        >
-          Accept Terms & Continue
-          <CheckCircle2 className="w-5 h-5" />
-        </button>
       </div>
     </div>
   );
@@ -126,7 +103,7 @@ export default function LandingPage() {
         <p className="text-foreground/60 font-medium italic">"Neural channels are open. Your empire is ready for initialization."</p>
       </div>
       <button 
-        onClick={() => router.push('/dashboard')}
+        onClick={() => router.push('/onboarding')}
         className="bg-white text-slate-950 px-12 py-6 rounded-3xl font-black text-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 mx-auto"
       >
         Get Started
@@ -231,7 +208,6 @@ export default function LandingPage() {
           </motion.div>
         ) : (
           <div className="max-w-4xl w-full">
-            {flowStep === 'terms' && <TermsStep />}
             {flowStep === 'purchase' && <PurchaseStep />}
             {flowStep === 'ready' && <ReadyStep />}
           </div>
