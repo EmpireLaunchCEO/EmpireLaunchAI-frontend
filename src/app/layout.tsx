@@ -20,9 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=4.1.0" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=4.1.0" />
-        <link rel="icon" href="/branded-globe.png?v=4.1.0" />
+        <link rel="manifest" href="/manifest.json?v=4.1.3" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=4.1.3" />
+        <link rel="icon" href="/branded-globe.png?v=4.1.3" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -32,13 +32,14 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var version = '4.1.0';
+                  var version = '4.1.3';
                   var lastVersion = localStorage.getItem('app_version');
                   if (lastVersion !== version) {
                     localStorage.setItem('app_version', version);
-                    // Clear only specific tour flags to force the new simplified tour
-                    localStorage.removeItem('hasSeenEmpireTourV7');
-                    localStorage.removeItem('hasSeenEmpireTourV8');
+                    // Force tour seen so it NEVER pops up
+                    localStorage.setItem('hasSeenEmpireTourV7', 'true');
+                    localStorage.setItem('hasSeenEmpireTourV8', 'true');
+                    localStorage.setItem('hasSeenEmpireTourV9', 'true');
                     
                     if ('serviceWorker' in navigator) {
                       navigator.serviceWorker.getRegistrations().then(function(regs) {
