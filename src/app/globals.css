@@ -3,11 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --background-rgb: 2, 6, 23; /* Obsidian Background Default */
-  --foreground-rgb: 248, 250, 252; /* Light text Default */
-  --primary-rgb: 251, 191, 36; /* Amber 400 - Gold Default */
-  --surface-rgb: 15, 23, 42; /* Deep Slate Surface Default */
-  --surface-border-rgb: 30, 41, 59; /* Slate 800 Default */
+  /* ELECTRIC EMPIRE DEFAULT - Neon Cyan/Deep Violet Vibe */
+  --primary-rgb: 34, 211, 238; /* Neon Cyan */
+  --background-rgb: 10, 5, 25; /* Near Black Violet */
+  --foreground-rgb: 255, 255, 255; /* Pure White */
+  --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
+  --surface-border-rgb: 139, 92, 246; /* Violet 500 */
   
   --background: rgb(var(--background-rgb));
   --foreground: rgb(var(--foreground-rgb));
@@ -16,81 +17,43 @@
   --surface-border: rgb(var(--surface-border-rgb));
 }
 
-body.theme-crystal-clean {
-  --primary-rgb: 14, 165, 233; /* Azure Blue */
-  --background-rgb: 255, 255, 255; /* Pure White */
-  --foreground-rgb: 15, 23, 42; /* Slate 900 */
-  --surface-rgb: 248, 250, 252; /* Sky Gray */
-  --surface-border-rgb: 226, 232, 240; /* Slate 200 */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  overflow-x: hidden;
 }
 
-body.theme-electric-empire {
-  --primary-rgb: 34, 211, 238; /* Neon Cyan */
-  --background-rgb: 46, 16, 101; /* Deep Violet */
-  --foreground-rgb: 255, 255, 255; /* Pure White */
-  --surface-rgb: 30, 10, 80; /* Darker Violet */
-  --surface-border-rgb: 139, 92, 246; /* Violet 500 */
+/* Glassmorphism Layers */
+.glass-panel {
+  background: rgba(var(--surface-rgb), 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(var(--surface-border-rgb), 0.3);
 }
 
-body.theme-classic-blue {
-  --primary-rgb: 37, 99, 235;
-  --background-rgb: 248, 250, 252;
-  --foreground-rgb: 15, 23, 42;
-  --surface-rgb: 255, 255, 255;
-  --surface-border-rgb: 226, 232, 240;
+/* Mobile Hardening */
+.mobile-container {
+  max-width: 450px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-body.theme-empire-gold {
-  --primary-rgb: 251, 191, 36; /* Amber 400 - Gold */
-  --background-rgb: 2, 6, 23; /* Obsidian Background */
-  --foreground-rgb: 248, 250, 252; /* Light text */
-  --surface-rgb: 15, 23, 42; /* Deep Slate Surface */
-  --surface-border-rgb: 30, 41, 59; /* Slate 800 */
+h1, h2, h3 {
+  color: var(--foreground) !important;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  font-style: italic;
+  font-weight: 900;
 }
 
-body.theme-emerald-growth {
-  --primary-rgb: 5, 150, 105;
-  --background-rgb: 240, 253, 244;
-  --foreground-rgb: 6, 78, 59;
-  --surface-rgb: 255, 255, 255;
-  --surface-border-rgb: 167, 243, 208;
+button {
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
-body.theme-rose-gold {
-  --primary-rgb: 244, 63, 94;
-  --background-rgb: 255, 241, 242;
-  --foreground-rgb: 136, 19, 55;
-  --surface-rgb: 255, 255, 255;
-  --surface-border-rgb: 254, 205, 211;
-}
-
-body.theme-cyber-purple {
-  --primary-rgb: 147, 51, 234;
-  --background-rgb: 250, 245, 255;
-  --foreground-rgb: 88, 28, 135;
-  --surface-rgb: 255, 255, 255;
-  --surface-border-rgb: 233, 213, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-rgb: 10, 10, 10;
-    --foreground-rgb: 237, 237, 237;
-    --surface-rgb: 23, 23, 23;
-    --surface-border-rgb: 38, 38, 38;
-  }
-}
-
-/* Fallback for components that use the direct variables */
-:root {
-  --background: rgb(var(--background-rgb));
-  --foreground: rgb(var(--foreground-rgb));
-  --primary: rgb(var(--primary-rgb));
-  --surface: rgb(var(--surface-rgb));
-  --surface-border: rgb(var(--surface-border-rgb));
-}
-
-/* Force everything that should be background to use theme variables */
+/* Force override for legacy components */
 [class*="bg-white"], [class*="bg-slate-50"], [class*="bg-slate-100"] {
   background-color: var(--surface) !important;
 }
@@ -101,40 +64,4 @@ body.theme-cyber-purple {
 
 [class*="border-slate-100"], [class*="border-slate-200"], [class*="border-slate-50"] {
   border-color: var(--surface-border) !important;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 0.5s ease, color 0.5s ease;
-}
-
-/* Force headings to use theme foreground when a theme is active */
-body.theme-classic-blue h1, body.theme-classic-blue h2, body.theme-classic-blue h3,
-body.theme-empire-gold h1, body.theme-empire-gold h2, body.theme-empire-gold h3,
-body.theme-crystal-clean h1, body.theme-crystal-clean h2, body.theme-crystal-clean h3,
-body.theme-electric-empire h1, body.theme-electric-empire h2, body.theme-electric-empire h3,
-body.theme-emerald-growth h1, body.theme-emerald-growth h2, body.theme-emerald-growth h3,
-body.theme-rose-gold h1, body.theme-rose-gold h2, body.theme-rose-gold h3,
-body.theme-cyber-purple h1, body.theme-cyber-purple h2, body.theme-cyber-purple h3 {
-  color: var(--foreground) !important;
-}
-
-@layer utilities {
-  .animate-spin-slow {
-    animation: spin 3s linear infinite;
-  }
-  
-  .bg-theme-background {
-    background-color: var(--background);
-  }
-  
-  .bg-theme-surface {
-    background-color: var(--surface);
-  }
-  
-  .border-theme {
-    border-color: var(--surface-border);
-  }
 }

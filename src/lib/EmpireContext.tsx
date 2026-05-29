@@ -311,9 +311,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
   const [theme, setThemeState] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('empireTheme') || 'empire-gold';
+      return localStorage.getItem('empireTheme') || 'empire-cyan';
     }
-    return 'empire-gold';
+    return 'empire-cyan';
   });
 
   const setTheme = (newTheme: string) => {
