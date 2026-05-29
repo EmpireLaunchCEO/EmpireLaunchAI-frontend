@@ -16,7 +16,7 @@ import {
   Lock,
   ArrowRight,
   X,
-  Palette
+  Palette as PaletteIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
@@ -32,7 +32,7 @@ const availablePlatforms = [
   { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-primary', bg: 'bg-primary/10' },
   { id: 'youtube', name: 'YouTube', icon: Video, color: 'text-red-600', bg: 'bg-red-50' },
   { id: 'fiverr', name: 'Fiverr', icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  { id: 'kittl', name: 'Kittl', icon: Palette, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+  { id: 'kittl', name: 'Kittl', icon: PaletteIcon, color: 'text-indigo-600', bg: 'bg-indigo-50' },
   { id: 'capcut', name: 'CapCut', icon: Video, color: 'text-primary', bg: 'bg-primary/10' },
   { id: 'canva', name: 'Canva', icon: Stars, color: 'text-cyan-500', bg: 'bg-cyan-50' },
   { id: 'bannerbear', name: 'Bannerbear', icon: Stars, color: 'text-foreground', bg: 'bg-slate-100' },

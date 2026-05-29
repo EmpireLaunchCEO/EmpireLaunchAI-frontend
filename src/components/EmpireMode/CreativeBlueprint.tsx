@@ -9,8 +9,8 @@ import {
   Stars, 
   ShieldCheck, 
   Scissors, 
-  Palette, 
-  AlertTriangle, 
+  Palette as PaletteIcon,
+
   RefreshCw,
   ArrowRight,
   Bot,
@@ -144,7 +144,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="bg-theme-surface border-2 border-theme-background rounded-[40px] p-8 space-y-6 shadow-sm">
                        <div className="flex items-center gap-2">
-                          <Palette className="w-5 h-5 text-primary" />
+                          <PaletteIcon className="w-5 h-5 text-primary" />
                           <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Color DNA</h4>
                        </div>
                        <div className="flex items-center gap-3">
@@ -208,7 +208,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                  <div className="bg-slate-900 rounded-[40px] p-8 text-white space-y-8 shadow-2xl">
                     <div className="flex items-center gap-4">
                        <div className="w-16 h-16 rounded-[24px] bg-primary flex items-center justify-center shadow-xl shadow-blue-200">
-                          {task.platform === 'Kittl' ? <Palette className="w-8 h-8" /> : <Scissors className="w-8 h-8" />}
+                          {task.platform === 'Kittl' ? <PaletteIcon className="w-8 h-8" /> : <Scissors className="w-8 h-8" />}
                        </div>
                        <div>
                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Execution Link</p>

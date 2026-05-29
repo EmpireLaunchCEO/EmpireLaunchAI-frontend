@@ -13,7 +13,7 @@ import {
   ExternalLink,
   Bot,
   Smartphone,
-  Palette,
+  Palette as PaletteIcon,
   Scissors,
   Layout
 } from 'lucide-react';
@@ -82,10 +82,10 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
         className="w-10 h-24 bg-slate-900 text-white rounded-l-3xl flex flex-col items-center justify-center shadow-2xl border-y border-l border-white/10 hover:bg-primary transition-all group"
       >
         <div className="mb-2">
-           {platform.toLowerCase().includes('kittl') ? <Palette className="w-4 h-4" /> : 
+           {platform.toLowerCase().includes('kittl') ? <PaletteIcon className="w-4 h-4" /> :
             platform.toLowerCase().includes('capcut') ? <Scissors className="w-4 h-4" /> : <Layout className="w-4 h-4" />}
-        </div>
-        {isExpanded ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+            </div>
+
       </button>
 
       <div className="w-[320px] bg-theme-surface border-l-4 border-primary shadow-[-20px_0_60px_rgba(0,0,0,0.15)] h-[85vh] flex flex-col overflow-hidden">

@@ -21,7 +21,7 @@ import {
   Lock,
   Diamond,
   Power,
-  Palette,
+  Palette as PaletteIcon,
   Scale,
   LifeBuoy,
   Stars,
@@ -191,7 +191,7 @@ const tabs = [
   { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
   { id: 'user-info', name: 'User Info', icon: User },
   { id: 'bank-info', name: 'Bank Info', icon: Building2 },
-  { id: 'theme-style', name: 'Theme & Style', icon: Palette },
+  { id: 'theme-style', name: 'Theme & Style', icon: PaletteIcon },
   { id: 'cloud-storage', name: 'Cloud & Storage', icon: Globe },
   { id: 'account-settings', name: 'Account Settings', icon: Lock },
   { id: 'subscription', name: 'Subscription', icon: Diamond },
@@ -771,7 +771,7 @@ export default function SettingsPage() {
                 <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                      <Palette className="w-6 h-6" />
+                      <PaletteIcon className="w-6 h-6" />
                     </div>
                     <div>
                       <h3 className="text-xl font-black text-foreground tracking-tight">Color Scheme</h3>

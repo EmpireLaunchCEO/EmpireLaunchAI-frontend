@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Palette, 
-  Scissors, 
+  Palette as PaletteIcon,
+
   Layout, 
   ExternalLink, 
   Clock, 
@@ -45,7 +45,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
 
   const getPlatformIcon = (platform: DesignTask['platform']) => {
     switch (platform) {
-      case 'Kittl': return <Palette className="w-5 h-5" />;
+      case 'Kittl': return <PaletteIcon className="w-5 h-5" />;
       case 'CapCut': return <Scissors className="w-5 h-5" />;
       case 'Canva': return <Layout className="w-5 h-5" />;
       case 'Fiverr': return <Zap className="w-5 h-5" />;
@@ -57,7 +57,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
       {/* Platform Launchpad */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { name: 'Kittl', icon: Palette, color: 'text-indigo-600', bg: 'bg-indigo-50', link: 'https://www.kittl.com' },
+          { name: 'Kittl', icon: PaletteIcon, color: 'text-indigo-600', bg: 'bg-indigo-50', link: 'https://www.kittl.com' },
           { name: 'CapCut', icon: Scissors, color: 'text-foreground', bg: 'bg-slate-100', link: 'https://www.capcut.com' },
           { name: 'Canva', icon: Layout, color: 'text-primary', bg: 'bg-primary/10', link: 'https://www.canva.com' },
         ].map((p) => (

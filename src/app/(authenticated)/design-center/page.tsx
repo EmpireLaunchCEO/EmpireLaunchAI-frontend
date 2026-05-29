@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { DesignCenterHub } from '@/components/EmpireMode/DesignCenterHub';
 import { CreativeBlueprint } from '@/components/EmpireMode/CreativeBlueprint';
 import { DesignTask } from '@/lib/api-service';
-import { Palette, ChevronLeft, Bot, Stars, Zap } from 'lucide-react';
+import { Palette as PaletteIcon, ChevronLeft, Bot, Stars, Zap } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { cn } from '@/lib/utils';
 
@@ -27,7 +27,7 @@ export default function DesignCenterPage() {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
-            <Palette className="w-3 h-3" />
+            <PaletteIcon className="w-3 h-3" />
             Design Center <span className="ml-2 opacity-50">v4.2.3</span>
           </div>
           <div className="flex items-center gap-4">
