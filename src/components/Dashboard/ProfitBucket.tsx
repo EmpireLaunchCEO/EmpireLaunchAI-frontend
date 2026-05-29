@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp } from 'lucide-react';
+import { ShoppingBucket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ProfitBucketProps {
@@ -13,14 +13,14 @@ interface ProfitBucketProps {
 
 export function ProfitBucket({ withholdableEarnings = 125050, securedDues = 18000, growthScore = 92 }: Partial<ProfitBucketProps>) {
   const formatCurrency = (cents: number) => {
-    return `$${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    return `${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
   };
 
   const total = withholdableEarnings + securedDues;
   const duesPercentage = (securedDues / total) * 100;
 
   return (
-    <div className="bg-secondary rounded-[40px] p-8 text-white relative overflow-hidden shadow-2xl">
+    <div className="bg-theme-surface rounded-[40px] p-8 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
       <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
         {/* The Visual "Bucket" */}
         <div className="relative w-48 h-48 shrink-0">
@@ -31,7 +31,8 @@ export function ProfitBucket({ withholdableEarnings = 125050, securedDues = 1800
               cy="50"
               r="40"
               fill="transparent"
-              stroke="rgba(255,255,255,0.05)"
+              stroke="currentColor"
+              className="text-slate-100/10"
               strokeWidth="12"
             />
             {/* Progress Circle (Earnings) */}
@@ -67,7 +68,7 @@ export function ProfitBucket({ withholdableEarnings = 125050, securedDues = 1800
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <Bucket className="w-8 h-8 text-primary mb-1 opacity-60" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-theme-background0">Growth</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Growth</span>
             <span className="text-2xl font-black">{growthScore}</span>
           </div>
         </div>
@@ -80,7 +81,7 @@ export function ProfitBucket({ withholdableEarnings = 125050, securedDues = 1800
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="p-4 bg-theme-surface/5 rounded-3xl border border-white/10">
+            <div className="p-4 bg-theme-background rounded-3xl border border-theme">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-2 h-2 rounded-full bg-primary" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Withholdable</span>
@@ -93,7 +94,7 @@ export function ProfitBucket({ withholdableEarnings = 125050, securedDues = 1800
               </div>
             </div>
 
-            <div className="p-4 bg-theme-surface/5 rounded-3xl border border-white/10">
+            <div className="p-4 bg-theme-background rounded-3xl border border-theme">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-2 h-2 rounded-full bg-amber-400" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Secured Dues</span>

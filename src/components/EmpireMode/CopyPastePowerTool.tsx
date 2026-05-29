@@ -13,7 +13,7 @@ import {
   ExternalLink,
   Bot,
   Smartphone,
-  Palette as PaletteIcon,
+  Palette,
   Scissors,
   Layout
 } from 'lucide-react';
@@ -31,14 +31,15 @@ interface ChecklistItem {
 }
 
 interface CopyPastePowerToolProps {
-  items: CopyItem[];
+  blueprint: any; // Using any for now to simplify, but it should be CreativeBlueprintData
   platform: string;
   onComplete: () => void;
   checklist?: ChecklistItem[];
   platformLink?: string;
 }
 
-export function CopyPastePowerTool({ items, platform, onComplete, checklist: initialChecklist, platformLink }: CopyPastePowerToolProps) {
+export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist: initialChecklist, platformLink }: CopyPastePowerToolProps) {
+  const items = blueprint.script || [];
   const [isExpanded, setIsExpanded] = useState(true);
   const [copiedLabel, setCopiedLabel] = useState<string | null>(null);
   const [checklist, setChecklist] = useState<ChecklistItem[]>(initialChecklist || [
@@ -82,17 +83,17 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
         className="w-10 h-24 bg-slate-900 text-white rounded-l-3xl flex flex-col items-center justify-center shadow-2xl border-y border-l border-white/10 hover:bg-primary transition-all group"
       >
         <div className="mb-2">
-           {platform.toLowerCase().includes('kittl') ? <PaletteIcon className="w-4 h-4" /> : 
-            platform.toLowerCase().includes('capcut') ? <Scissors className="w-4 h-4" /> : <Layout className="w-4 h-4" />}
+           {platform.toLowerCase().includes('kittl') ? <Palette className="w-4 h-4 text-primary" /> : 
+            platform.toLowerCase().includes('capcut') ? <Scissors className="w-4 h-4 text-primary" /> : <Layout className="w-4 h-4 text-primary" />}
         </div>
-        {isExpanded ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+        {isExpanded ? <ChevronRight className="w-5 h-5 text-primary" /> : <ChevronLeft className="w-5 h-5 text-primary" />}
       </button>
 
       <div className="w-[320px] bg-theme-surface border-l-4 border-primary shadow-[-20px_0_60px_rgba(0,0,0,0.15)] h-[85vh] flex flex-col overflow-hidden">
         <div className="p-6 bg-slate-950 text-white border-b border-white/5 flex items-center justify-between">
            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-foreground/40">
-                 <Bot className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-amber-900/40">
+                 <Bot className="w-4 h-4 text-slate-900" />
               </div>
               <div className="space-y-0.5">
                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">Manual Co-Pilot</span>
@@ -110,15 +111,15 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
                 href={getDeepLink(platform)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full p-4 bg-primary/10 border-2 border-primary/20 rounded-2xl flex items-center justify-between group hover:bg-primary hover:border-primary transition-all shadow-sm"
+                className="w-full p-4 bg-primary/5 border-2 border-primary/20 rounded-2xl flex items-center justify-between group hover:bg-primary hover:border-primary transition-all shadow-sm"
               >
                  <div className="flex items-center gap-3">
                     <div className="p-2 bg-theme-surface rounded-lg text-primary group-hover:scale-110 transition-transform">
                        <Smartphone className="w-4 h-4" />
                     </div>
-                    <span className="text-sm font-black text-foreground group-hover:text-white transition-colors tracking-tight">Launch {platform}</span>
+                    <span className="text-sm font-black text-foreground group-hover:text-slate-900 transition-colors tracking-tight">Launch {platform}</span>
                  </div>
-                 <ExternalLink className="w-4 h-4 text-primary group-hover:text-white transition-colors" />
+                 <ExternalLink className="w-4 h-4 text-primary group-hover:text-slate-900 transition-colors" />
               </a>
            </div>
 
@@ -137,18 +138,18 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
                      onClick={() => toggleCheck(item.id)}
                      className={cn(
                        "w-full p-3.5 rounded-xl border-2 text-left transition-all flex items-center gap-3 group",
-                       item.completed ? "bg-theme-background border-theme" : "bg-theme-surface border-theme-background hover:border-blue-200"
+                       item.completed ? "bg-theme-background border-theme" : "bg-theme-surface border-theme hover:border-primary/50"
                      )}
                    >
                      <div className={cn(
                        "w-5 h-5 rounded-full flex items-center justify-center border-2 transition-all",
-                       item.completed ? "bg-primary border-primary" : "border-theme"
+                       item.completed ? "bg-primary border-primary" : "border-slate-200"
                      )}>
-                        {item.completed && <Check className="w-3 h-3 text-white stroke-[4px]" />}
+                        {item.completed && <Check className="w-3 h-3 text-slate-900 stroke-[4px]" />}
                      </div>
                      <span className={cn(
                        "text-xs font-bold transition-all",
-                       item.completed ? "text-slate-400 line-through" : "text-slate-700"
+                       item.completed ? "text-slate-500 line-through" : "text-foreground"
                      )}>
                        {item.label}
                      </span>
@@ -157,17 +158,68 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
               </div>
            </div>
 
+           {/* Visual DNA Section */}
+           <div className="space-y-4">
+              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Visual DNA</h4>
+              
+              {/* Colors */}
+              <div className="flex flex-wrap gap-2">
+                 {blueprint.palette?.map((color: string) => (
+                   <button
+                     key={color}
+                     onClick={() => {
+                        navigator.clipboard.writeText(color);
+                        setCopiedLabel(color);
+                        setTimeout(() => setCopiedLabel(null), 2000);
+                     }}
+                     className="w-10 h-10 rounded-lg border border-theme shadow-sm relative group"
+                     style={{ backgroundColor: color }}
+                   >
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/20 rounded-lg transition-opacity">
+                         <Copy className="w-4 h-4 text-white" />
+                      </div>
+                      {copiedLabel === color && (
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[8px] font-black py-1 px-2 rounded whitespace-nowrap shadow-xl">
+                           COPIED
+                        </div>
+                      )}
+                   </button>
+                 ))}
+              </div>
+
+              {/* Fonts */}
+              <div className="space-y-2">
+                 {blueprint.fonts?.map((f: any, i: number) => (
+                   <button
+                     key={i}
+                     onClick={() => {
+                        navigator.clipboard.writeText(f.pairing);
+                        setCopiedLabel(`font-${i}`);
+                        setTimeout(() => setCopiedLabel(null), 2000);
+                     }}
+                     className="w-full p-3 bg-theme-background border border-theme rounded-xl flex items-center justify-between group hover:border-primary transition-all"
+                   >
+                      <div className="text-left">
+                         <span className="text-[8px] font-black text-slate-500 uppercase">{f.platform}</span>
+                         <p className="text-[10px] font-bold text-foreground">{f.pairing}</p>
+                      </div>
+                      {copiedLabel === `font-${i}` ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3 text-slate-400 group-hover:text-primary" />}
+                   </button>
+                 ))}
+              </div>
+           </div>
+
            {/* AI Copyable Elements */}
            <div className="space-y-4">
-              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Blueprint DNA</h4>
+              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Strategic Script</h4>
               <div className="space-y-3">
-                 {items.map((item) => (
+                 {items.map((item: any) => (
                    <button
                      key={item.label}
                      onClick={() => handleCopy(item)}
                      className={cn(
                        "w-full p-4 rounded-2xl border-2 text-left transition-all group relative overflow-hidden",
-                       copiedLabel === item.label ? "border-green-500 bg-green-50" : "border-theme-background bg-theme-background/30 hover:border-primary hover:bg-theme-surface"
+                       copiedLabel === item.label ? "border-green-500 bg-green-500/10" : "border-theme bg-theme-background/30 hover:border-primary hover:bg-theme-surface"
                      )}
                    >
                      <div className="flex justify-between items-start mb-2">
@@ -180,7 +232,7 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
                           <Copy className="w-3.5 h-3.5 text-slate-300 group-hover:text-primary transition-colors" />
                         )}
                      </div>
-                     <p className="text-sm font-bold text-slate-800 line-clamp-2 pr-4 italic leading-snug">"{item.text}"</p>
+                     <p className="text-sm font-bold text-foreground line-clamp-2 pr-4 italic leading-snug">"{item.text}"</p>
                      
                      {copiedLabel === item.label && (
                        <motion.div 
@@ -188,7 +240,7 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
                          animate={{ scale: 1, opacity: 1 }}
                          className="absolute inset-0 bg-green-500/10 flex items-center justify-center pointer-events-none"
                        >
-                          <span className="bg-green-600 text-white text-[8px] font-black uppercase px-2 py-1 rounded-md shadow-lg">Copied to clipboard</span>
+                          <span className="bg-green-600 text-white text-[8px] font-black uppercase px-2 py-1 rounded-md shadow-lg">Copied</span>
                        </motion.div>
                      )}
                    </button>
@@ -204,15 +256,15 @@ export function CopyPastePowerTool({ items, platform, onComplete, checklist: ini
              className={cn(
                "w-full py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all shadow-xl",
                allCompleted 
-                 ? "bg-primary text-white hover:bg-primary shadow-foreground/40" 
-                 : "bg-slate-800 text-theme-background0 cursor-not-allowed"
+                 ? "bg-primary text-slate-900 hover:bg-amber-400 shadow-amber-900/40" 
+                 : "bg-slate-800 text-muted-foreground cursor-not-allowed"
              )}
            >
              <CheckCircle2 className="w-4 h-4" />
              Validate & Upload
            </button>
            {!allCompleted && (
-             <p className="text-[9px] text-theme-background0 text-center font-medium italic">
+             <p className="text-[9px] text-muted-foreground text-center font-medium italic">
                 Complete the checklist to unlock validation.
              </p>
            )}

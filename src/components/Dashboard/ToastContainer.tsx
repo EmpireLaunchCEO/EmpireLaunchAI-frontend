@@ -33,7 +33,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast, onRemove: () => void }) 
   const icons = {
     sale: <CreditCard className="w-5 h-5 text-emerald-500" />,
     approval: <Zap className="w-5 h-5 text-amber-500 fill-amber-500/20" />,
-    system: <Info className="w-5 h-5 text-primary" />,
+    system: <Info className="w-5 h-5 text-blue-500" />,
     success: <ShieldCheck className="w-5 h-5 text-emerald-500" />,
     error: <AlertCircle className="w-5 h-5 text-red-500" />,
   };
@@ -41,7 +41,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast, onRemove: () => void }) 
   const colors = {
     sale: "border-emerald-500/20 bg-emerald-50/90",
     approval: "border-amber-500/20 bg-amber-50/90",
-    system: "border-primary/20 bg-primary/10/90",
+    system: "border-blue-500/20 bg-blue-50/90",
     success: "border-emerald-500/20 bg-emerald-50/90",
     error: "border-red-500/20 bg-red-50/90",
   };

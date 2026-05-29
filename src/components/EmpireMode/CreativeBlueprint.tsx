@@ -9,8 +9,8 @@ import {
   Stars, 
   ShieldCheck, 
   Scissors, 
-  Palette as PaletteIcon,
-
+  Palette, 
+  AlertTriangle, 
   RefreshCw,
   ArrowRight,
   Bot,
@@ -42,7 +42,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
       setLoading(false);
       
       // If task is already in 'editing' or 'drafting', skip variation selection
-      if (task.status === 'editing') {
+      if (task.status === 'editing' || task.status === 'drafting') {
         setStep('blueprint');
       }
     }
@@ -85,7 +85,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
           </motion.div>
         )}
 
-        {step === 'blueprint' && (
+        {(step === 'blueprint' || step === 'power_tool') && (
           <motion.div
             key="blueprint"
             initial={{ opacity: 0, y: 20 }}
@@ -101,7 +101,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                     Creative Direction
                  </div>
                  <h1 className="text-4xl font-black text-foreground tracking-tight italic">{task.title}.</h1>
-                 <p className="text-theme-background0 font-medium italic">Strategic blueprint for {task.platform} execution.</p>
+                 <p className="text-muted-foreground font-medium italic">Strategic blueprint for {task.platform} execution.</p>
               </div>
               <div className="flex items-center gap-3">
                  <div className="text-right">
@@ -117,34 +117,34 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
               <div className="lg:col-span-2 space-y-10">
                  {/* Design Intelligence */}
-                 <div className="bg-primary rounded-[40px] p-8 text-white relative overflow-hidden shadow-2xl shadow-blue-200">
+                 <div className="bg-primary rounded-[40px] p-8 text-slate-900 relative overflow-hidden shadow-2xl shadow-amber-900/20">
                     <div className="relative z-10 space-y-4">
                        <div className="flex items-center gap-2">
-                          <Bot className="w-5 h-5 text-blue-200" />
+                          <Bot className="w-5 h-5 text-slate-900/60" />
                           <h4 className="font-black uppercase tracking-widest text-[10px]">Strategic Rationale</h4>
                        </div>
                        <p className="text-lg font-bold leading-tight italic">
                          "{blueprint.intelligence}"
                        </p>
-                       <div className="pt-4 flex items-center gap-6 border-t border-white/10">
+                       <div className="pt-4 flex items-center gap-6 border-t border-slate-900/10">
                           <div>
-                             <span className="text-[9px] font-black uppercase tracking-widest text-blue-200 block mb-1">Probability</span>
+                             <span className="text-[9px] font-black uppercase tracking-widest text-slate-900/60 block mb-1">Probability</span>
                              <span className="text-xl font-black italic">84.2%</span>
                           </div>
                           <div>
-                             <span className="text-[9px] font-black uppercase tracking-widest text-blue-200 block mb-1">Niche Lift</span>
+                             <span className="text-[9px] font-black uppercase tracking-widest text-slate-900/60 block mb-1">Niche Lift</span>
                              <span className="text-xl font-black italic">+14%</span>
                           </div>
                        </div>
                     </div>
-                    <Stars className="absolute -right-4 -bottom-4 w-48 h-48 text-white opacity-10 rotate-12" />
+                    <Stars className="absolute -right-4 -bottom-4 w-48 h-48 text-slate-900 opacity-5 rotate-12" />
                  </div>
 
                  {/* Visual DNA */}
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="bg-theme-surface border-2 border-theme-background rounded-[40px] p-8 space-y-6 shadow-sm">
+                    <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6 shadow-sm">
                        <div className="flex items-center gap-2">
-                          <PaletteIcon className="w-5 h-5 text-primary" />
+                          <Palette className="w-5 h-5 text-primary" />
                           <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Color DNA</h4>
                        </div>
                        <div className="flex items-center gap-3">
@@ -166,7 +166,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                        </div>
                     </div>
 
-                    <div className="bg-theme-surface border-2 border-theme-background rounded-[40px] p-8 space-y-6 shadow-sm">
+                    <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6 shadow-sm">
                        <div className="flex items-center gap-2">
                           <Layout className="w-5 h-5 text-primary" />
                           <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Font Pairings</h4>
@@ -174,7 +174,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                        <div className="space-y-3">
                           {blueprint.fonts.map((f) => (
                             <div key={f.platform} className="flex justify-between items-center p-3 bg-theme-background rounded-2xl border border-theme">
-                               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{f.platform}</span>
+                               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{f.platform}</span>
                                <span className="text-xs font-bold text-foreground">{f.pairing}</span>
                             </div>
                           ))}
@@ -183,15 +183,15 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                  </div>
 
                  {/* Composition Guide */}
-                 <div className="bg-theme-surface border-2 border-theme-background rounded-[40px] p-8 space-y-6 shadow-sm">
+                 <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6 shadow-sm">
                     <div className="flex items-center gap-2">
                        <Scissors className="w-5 h-5 text-primary" />
                        <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Composition Guide</h4>
                     </div>
-                    <div className="relative aspect-[21/9] bg-slate-100 rounded-3xl overflow-hidden border border-theme">
+                    <div className="relative aspect-[21/9] bg-slate-900 rounded-3xl overflow-hidden border border-white/5">
                        <img 
                          src={blueprint.compositionUrl} 
-                         className="w-full h-full object-cover opacity-50 grayscale" 
+                         className="w-full h-full object-cover opacity-30 grayscale" 
                          alt="Composition Wireframe" 
                        />
                        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
@@ -205,10 +205,10 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
 
               <div className="space-y-8">
                  {/* Launch Platform */}
-                 <div className="bg-slate-900 rounded-[40px] p-8 text-white space-y-8 shadow-2xl">
+                 <div className="bg-slate-900 rounded-[40px] p-8 text-white space-y-8 shadow-2xl border border-white/5">
                     <div className="flex items-center gap-4">
-                       <div className="w-16 h-16 rounded-[24px] bg-primary flex items-center justify-center shadow-xl shadow-blue-200">
-                          {task.platform === 'Kittl' ? <PaletteIcon className="w-8 h-8" /> : <Scissors className="w-8 h-8" />}
+                       <div className="w-16 h-16 rounded-[24px] bg-primary flex items-center justify-center shadow-xl shadow-amber-900/20">
+                          {task.platform === 'Kittl' ? <Palette className="w-8 h-8 text-slate-900" /> : <Scissors className="w-8 h-8 text-slate-900" />}
                        </div>
                        <div>
                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Execution Link</p>
@@ -222,7 +222,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
 
                     <button 
                       onClick={() => setStep('power_tool')}
-                      className="w-full py-5 bg-theme-surface text-foreground rounded-[24px] font-black text-xs uppercase tracking-[0.2em] hover:bg-primary hover:text-white transition-all shadow-xl flex items-center justify-center gap-3 group"
+                      className="w-full py-5 bg-primary text-slate-900 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] hover:bg-amber-400 transition-all shadow-xl flex items-center justify-center gap-3 group"
                     >
                        Start Designing
                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -237,12 +237,12 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                  </div>
 
                  {/* Tips Card */}
-                 <div className="bg-theme-surface border-2 border-theme-background rounded-[40px] p-8 space-y-4 shadow-sm">
+                 <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-4 shadow-sm">
                     <div className="flex items-center gap-2">
                        <Stars className="w-4 h-4 text-amber-500" />
                        <h4 className="font-black text-foreground uppercase tracking-widest text-xs">AI Tip</h4>
                     </div>
-                    <p className="text-xs text-theme-background0 leading-relaxed font-medium italic">
+                    <p className="text-xs text-muted-foreground leading-relaxed font-medium italic">
                        "In {task.platform}, try using the 'Fine Detail' brush for the botanical lines. It mirrors the top-performing listing's aesthetic."
                     </p>
                  </div>
@@ -254,7 +254,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
 
       {step === 'power_tool' && (
         <CopyPastePowerTool 
-          items={blueprint.script}
+          blueprint={blueprint}
           platform={task.platform}
           platformLink={blueprint.platformLink}
           onComplete={() => setStep('validation')}
@@ -269,7 +269,10 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
           <ValidationGate 
             taskTitle={task.title}
             platform={task.platform}
-            onValidated={() => onClose()}
+            onValidated={(url) => {
+              console.log('Validated asset:', url);
+              onClose();
+            }}
             onCancel={() => setStep('blueprint')}
           />
         </motion.div>

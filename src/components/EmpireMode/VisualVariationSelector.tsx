@@ -34,7 +34,7 @@ export function VisualVariationSelector({ variations, selectedId, onSelect, onCo
           <span className="text-[10px] font-black uppercase tracking-widest">Anti-Copycat Protocol</span>
         </div>
         <h2 className="text-4xl font-black text-foreground tracking-tight italic">Similar but Distinct.</h2>
-        <p className="text-theme-background0 font-medium text-lg italic">
+        <p className="text-muted-foreground font-medium text-lg italic">
           "To ensure your brand stands out, I've generated 3 stylistic 'Twists' on the current market trend. Which one fits your vision?"
         </p>
       </div>
@@ -47,22 +47,22 @@ export function VisualVariationSelector({ variations, selectedId, onSelect, onCo
             whileHover={{ y: -8 }}
             className={cn(
               "relative bg-theme-surface border-2 rounded-[40px] overflow-hidden transition-all text-left shadow-sm group",
-              selectedId === v.id ? "border-primary shadow-primary/20 shadow-2xl" : "border-theme-background hover:border-theme"
+              selectedId === v.id ? "border-primary shadow-amber-900/20 shadow-2xl" : "border-theme hover:border-primary/50"
             )}
           >
-            <div className="aspect-[4/5] bg-slate-100 relative overflow-hidden">
+            <div className="aspect-[4/5] bg-slate-900 relative overflow-hidden">
                <img 
                  src={v.previewUrl} 
                  className={cn(
-                   "w-full h-full object-cover transition-transform duration-700",
-                   selectedId === v.id ? "scale-110" : "group-hover:scale-105"
+                   "w-full h-full object-cover transition-transform duration-700 opacity-80",
+                   selectedId === v.id ? "scale-110 opacity-100" : "group-hover:scale-105"
                  )}
                  alt={v.name} 
                />
-               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60" />
+               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80" />
                
                {selectedId === v.id && (
-                 <div className="absolute top-6 right-6 bg-primary text-white p-2 rounded-full shadow-lg">
+                 <div className="absolute top-6 right-6 bg-primary text-slate-900 p-2 rounded-full shadow-lg">
                     <CheckCircle2 className="w-5 h-5" />
                  </div>
                )}
@@ -76,11 +76,11 @@ export function VisualVariationSelector({ variations, selectedId, onSelect, onCo
             <div className="p-6">
                <div className="flex items-center gap-2 mb-4">
                   <ShieldCheck className="w-3 h-3 text-emerald-500" />
-                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Uniqueness Verified</span>
+                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Uniqueness Verified</span>
                </div>
                <div className={cn(
                  "w-full py-3 rounded-2xl border font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 transition-all",
-                 selectedId === v.id ? "bg-primary border-primary text-white" : "bg-theme-surface border-theme text-slate-400"
+                 selectedId === v.id ? "bg-primary border-primary text-slate-900" : "bg-theme-surface border-theme text-slate-500"
                )}>
                  {selectedId === v.id ? 'Selected Pattern' : 'Select Style'}
                </div>
@@ -96,8 +96,8 @@ export function VisualVariationSelector({ variations, selectedId, onSelect, onCo
            className={cn(
              "px-12 py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 transition-all shadow-2xl",
              selectedId 
-               ? "bg-slate-900 text-white hover:bg-primary shadow-slate-200" 
-               : "bg-slate-100 text-slate-300 cursor-not-allowed"
+               ? "bg-primary text-slate-900 hover:bg-amber-400 shadow-amber-900/20" 
+               : "bg-slate-800 text-slate-500 cursor-not-allowed border border-white/5"
            )}
          >
            Generate Full Blueprint

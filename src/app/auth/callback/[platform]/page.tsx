@@ -76,9 +76,9 @@ export default function AuthCallback() {
       <div className="max-w-md w-full bg-theme-surface rounded-3xl shadow-xl p-10 text-center">
         {status === 'loading' && (
           <div className="flex flex-col items-center gap-6">
-            <Loader2 className="w-16 h-16 text-primary animate-spin" />
+            <Loader2 className="w-16 h-16 text-blue-600 animate-spin" />
             <h2 className="text-2xl font-bold text-foreground">Connecting...</h2>
-            <p className="text-theme-background0 font-medium">{message}</p>
+            <p className="text-muted-foreground font-medium">{message}</p>
           </div>
         )}
 
@@ -88,7 +88,7 @@ export default function AuthCallback() {
               <CheckCircle2 className="w-16 h-16 text-green-600" />
             </div>
             <h2 className="text-2xl font-bold text-foreground">Success!</h2>
-            <p className="text-theme-background0 font-medium">{message}</p>
+            <p className="text-muted-foreground font-medium">{message}</p>
             <p className="text-sm text-slate-400">Redirecting to dashboard...</p>
           </div>
         )}
@@ -99,7 +99,7 @@ export default function AuthCallback() {
               <XCircle className="w-16 h-16 text-red-600" />
             </div>
             <h2 className="text-2xl font-bold text-foreground">Connection Failed</h2>
-            <p className="text-theme-background0 font-medium">{message}</p>
+            <p className="text-muted-foreground font-medium">{message}</p>
             <button 
               onClick={() => router.push('/onboarding')}
               className="mt-4 bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition-all"

@@ -3,258 +3,263 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Stars, 
-  X, 
-  ArrowRight, 
-  MessageSquare,
-  Bot,
-  Info,
-  ChevronRight,
-  ChevronLeft
+  Bot, 
+  ChevronRight, 
+  ChevronLeft, 
+  Copy, 
+  Check, 
+  X,
+  Stars,
+  Zap,
+  Target,
+  ExternalLink,
+  ShieldCheck,
+  Lightbulb,
+  Rocket
 } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useEmpire } from '@/lib/EmpireContext';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { useFloating, offset, flip, shift, arrow, autoUpdate } from '@floating-ui/react-dom';
 
-interface TourStep {
-  title: string;
-  content: string;
-  targetId?: string;
-  path?: string;
-}
-
-const TOUR_STEPS: TourStep[] = [
+const etsySteps = [
   {
-    title: "Home",
-    content: "Your central command. Monitor your business slots, active goals, and the latest high-intelligence suggestions from your AI partner.",
-    targetId: "desktop-nav-home",
-    path: "/dashboard"
+    field: "API Key",
+    selector: "#etsy-api-key",
+    value: "75x9v2k4m1n8",
+    instruction: "Enter your Etsy Keystring here to allow the AI to sync with your shop."
   },
   {
-    title: "EC (Empire Center)",
-    content: "Operational headquarters. This is where we research trends, design content blueprints, and organize the execution path for your business.",
-    targetId: "desktop-nav-ec",
-    path: "/empire-center"
-  },
-  {
-    title: "LC (Link Center)",
-    content: "Neural connectivity. Bridge your Etsy, TikTok, Instagram, and YouTube accounts here to allow the AI full autonomous execution.",
-    targetId: "desktop-nav-lc",
-    path: "/link-center"
-  },
-  {
-    title: "Settings",
-    content: "Configure your preferences, safety thresholds, and system theme. You stay in control of how much access the AI has.",
-    targetId: "desktop-nav-settings",
-    path: "/settings"
+    field: "Shared Secret",
+    selector: "#etsy-shared-secret",
+    value: "v92k4m1n8x75",
+    instruction: "The Shared Secret ensures a secure encrypted tunnel for your payment data."
   }
 ];
 
-export const SetupAssistant = () => {
+const tiktokSteps = [
+  {
+    field: "Marketing API",
+    selector: "#tiktok-marketing-api",
+    value: "Marketing API",
+    instruction: "Select 'Marketing API' to allow autonomous video scheduling."
+  },
+  {
+    field: "Redirect URI",
+    selector: "#tiktok-redirect-uri",
+    value: "https://empire-launch-ai-frontend.vercel.app/api/auth/callback/tiktok",
+    instruction: "Copy this into the 'Redirect URI' field in your TikTok Dev Portal."
+  }
+];
+
+const onboardingSteps = [
+  {
+    field: "Empire Name",
+    selector: "#empire-name",
+    instruction: "Give your empire a strong, memorable name. This will appear on all your invoices and social profiles."
+  },
+  {
+    field: "Niche",
+    selector: "#empire-niche",
+    instruction: "What's the high-level category? (e.g., 'Digital Art', 'Skincare'). This helps me calibrate trend research."
+  },
+  {
+    field: "Business Angle",
+    selector: "#empire-angle",
+    instruction: "What's your unique spin? 'Better than ChatGPT' thinking starts here. Tell me your specific strategy."
+  },
+  {
+    field: "Automation Mode",
+    selector: "#automation-empire-mode",
+    instruction: "Select Auto-Pilot to start. THIS allows me to scan and link the accounts on your phone (Gmail, Etsy, TikTok) to retrieve your API keys and secure tokens automatically."
+  }
+];
+
+const platformMap: Record<string, any[]> = {
+  'etsy': etsySteps,
+  'tiktok': tiktokSteps,
+  'onboarding': onboardingSteps
+};
+
+export function SetupAssistant() {
+  const { activeSetupPlatform, finishSetup } = useEmpire();
   const pathname = usePathname();
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, height: 0 });
-  const [showTour, setShowTour] = useState(false);
-  
-  // Ref for the bot bubble
-  const botRef = useRef<HTMLDivElement>(null);
+  const [copied, setCopied] = useState(false);
+  const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
+  const arrowRef = useRef<HTMLDivElement>(null);
 
-  // Check if we should show the tour automatically
+  const steps = activeSetupPlatform ? (platformMap[activeSetupPlatform.toLowerCase()] || []) : 
+               (pathname === '/onboarding' ? onboardingSteps : null);
+
+  const step = (steps && currentStep >= 0 && currentStep < (steps as any[]).length) ? (steps as any[])[currentStep] : null;
+
+  const { x, y, strategy, refs, middlewareData, placement } = useFloating({
+    elements: {
+      reference: targetElement,
+    },
+    placement: 'right',
+    whileElementsMounted: autoUpdate,
+    middleware: [
+      offset(20),
+      flip(),
+      shift({ padding: 10 }),
+      arrow({ element: arrowRef }),
+    ],
+  });
+
   useEffect(() => {
-    const tourKey = 'empire_tour_v418';
-    const hasSeenTour = localStorage.getItem(tourKey);
-    if (!hasSeenTour && pathname === '/dashboard') {
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-        setShowTour(true);
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [pathname]);
-
-  // Update coordinates of the target element
-  useEffect(() => {
-    if (!showTour || !isOpen) return;
-
-    const updateCoords = () => {
-      const step = TOUR_STEPS[currentStep];
-      if (step?.targetId) {
-        const element = document.getElementById(step.targetId);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          setCoords({
-            top: rect.top,
-            left: rect.left,
-            width: rect.width,
-            height: rect.height
-          });
-          
-          // If the step requires a path change, we don't force it here, 
-          // we just update coords for the current page's elements.
-        }
+    if (step && step.selector) {
+      const el = document.querySelector(step.selector) as HTMLElement;
+      if (el) {
+        setTargetElement(el);
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        setTargetElement(null);
       }
-    };
-
-    updateCoords();
-    const interval = setInterval(updateCoords, 1000); // Poll for layout shifts
-    window.addEventListener('resize', updateCoords);
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('resize', updateCoords);
-    };
-  }, [currentStep, showTour, isOpen, pathname]);
-
-  const handleNext = () => {
-    if (currentStep < TOUR_STEPS.length - 1) {
-      const nextStep = TOUR_STEPS[currentStep + 1];
-      if (nextStep.path && pathname !== nextStep.path) {
-        router.push(nextStep.path);
-      }
-      setCurrentStep(prev => prev + 1);
     } else {
-      handleComplete();
+      setTargetElement(null);
+    }
+  }, [step, pathname]);
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const next = () => {
+    if (steps && currentStep < (steps as any[]).length - 1) {
+      setCurrentStep(currentStep + 1);
+      setCopied(false);
+    } else if (activeSetupPlatform) {
+      finishSetup();
     }
   };
 
-  const handlePrev = () => {
+  const prev = () => {
     if (currentStep > 0) {
-      const prevStep = TOUR_STEPS[currentStep - 1];
-       if (prevStep.path && pathname !== prevStep.path) {
-        router.push(prevStep.path);
-      }
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep(currentStep - 1);
+      setCopied(false);
     }
   };
 
-  const handleComplete = () => {
-    setShowTour(false);
-    setIsOpen(false);
-    localStorage.setItem('empire_tour_v418', 'true');
-  };
+  if (!step || !targetElement || !steps) return null;
+
+  const typedSteps = steps as any[];
+
+  const staticSide = {
+    top: 'bottom',
+    right: 'left',
+    bottom: 'top',
+    left: 'right',
+  }[placement.split('-')[0]] as string;
 
   return (
-    <>
-      {/* Target Highlighter Overlay */}
+    <div className="fixed inset-0 pointer-events-none z-[9999]">
       <AnimatePresence>
-        {showTour && isOpen && coords.width > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] pointer-events-none"
+        <motion.div
+          key={`${pathname}-${activeSetupPlatform}-${currentStep}`}
+          ref={refs.setFloating}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          style={{
+            position: strategy,
+            top: y ?? 0,
+            left: x ?? 0,
+          }}
+          className="pointer-events-auto"
+        >
+          {/* Arrow */}
+          <div
+            ref={arrowRef}
             style={{
-              background: 'radial-gradient(circle at ' + (coords.left + coords.width/2) + 'px ' + (coords.top + coords.height/2) + 'px, transparent ' + (coords.width) + 'px, rgba(0,0,0,0.5) ' + (coords.width + 20) + 'px)'
+              position: 'absolute',
+              left: middlewareData.arrow?.x != null ? `${middlewareData.arrow.x}px` : '',
+              top: middlewareData.arrow?.y != null ? `${middlewareData.arrow.y}px` : '',
+              [staticSide]: '-8px',
             }}
-          >
-             <motion.div 
-               animate={{ 
-                 top: coords.top - 8, 
-                 left: coords.left - 8, 
-                 width: coords.width + 16, 
-                 height: coords.height + 16 
-               }}
-               className="absolute border-2 border-primary rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.5)]"
-             />
-          </motion.div>
-        )}
-      </AnimatePresence>
+            className="w-4 h-4 rotate-45 bg-primary"
+            />
 
-      {/* The Bot UI */}
-      <div className="fixed bottom-24 right-8 z-[110] flex flex-col items-end gap-4">
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-theme-surface border border-theme rounded-[32px] shadow-2xl p-6 w-80 md:w-96 backdrop-blur-xl"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="bg-primary p-2 rounded-xl">
-                    <Bot className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="font-black text-xs uppercase tracking-widest text-foreground">Empire Assistant</span>
-                </div>
-                <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-theme-background rounded-full transition-all">
-                  <X className="w-4 h-4 text-slate-400" />
-                </button>
+            <div className="w-[320px] bg-slate-900 border border-primary/20 rounded-3xl shadow-2xl overflow-hidden">
+            <div className="bg-primary px-4 py-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Bot className="w-4 h-4 text-slate-950" />
+                <span className="text-[10px] font-black text-slate-950 uppercase tracking-[0.2em]">
+                  Empire Teacher
+                </span>
+              </div>
+              <button
+                onClick={() => activeSetupPlatform ? finishSetup() : setCurrentStep(-1)}
+                className="text-slate-950/60 hover:text-slate-950 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                  Step {currentStep + 1} of {typedSteps.length}
+                </span>
               </div>
 
-              {showTour ? (
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-black italic text-primary uppercase tracking-tighter">
-                      {TOUR_STEPS[currentStep].title}
-                    </h3>
-                    <p className="text-foreground/80 text-sm font-medium leading-relaxed">
-                      {TOUR_STEPS[currentStep].content}
-                    </p>
-                  </div>
-                  
-                  <div className="flex justify-between items-center pt-4 border-t border-theme">
-                    <div className="flex gap-1">
-                      {TOUR_STEPS.map((_, i) => (
-                        <div 
-                          key={i} 
-                          className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentStep ? 'bg-primary w-4' : 'bg-slate-200'}`} 
-                        />
-                      ))}
-                    </div>
-                    <div className="flex gap-2">
-                      {currentStep > 0 && (
-                        <button 
-                          onClick={handlePrev}
-                          className="p-2 bg-theme-background border border-theme rounded-xl hover:bg-theme-background transition-all"
-                        >
-                          <ChevronLeft className="w-4 h-4" />
-                        </button>
-                      )}
-                      <button 
-                        onClick={handleNext}
-                        className="px-4 py-2 bg-primary text-white rounded-xl font-bold text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-primary transition-all shadow-lg shadow-blue-200"
-                      >
-                        {currentStep === TOUR_STEPS.length - 1 ? 'Finish' : 'Next'}
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <p className="text-foreground/80 text-sm font-medium">
-                    Hello! I'm your Empire Assistant. I'm currently monitoring 24 global trends. How can I help you scale today?
-                  </p>
-                  <button 
-                    onClick={() => {
-                      setCurrentStep(0);
-                      setShowTour(true);
-                      router.push('/dashboard');
-                    }}
-                    className="w-full py-3 bg-theme-background border border-theme rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-theme-background transition-all flex items-center justify-center gap-2"
-                  >
-                    Start Platform Tour
-                    <Info className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <div className="space-y-3">
+                <h3 className="text-sm font-black text-white uppercase tracking-tight">
+                  {step.field}
+                </h3>
+                <p className="text-[12px] font-bold text-slate-300 leading-tight italic">
+                  "{step.instruction}"
+                </p>
 
-        {/* Floating Bubble */}
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setIsOpen(!isOpen)}
-          className={`p-4 rounded-full shadow-2xl transition-all ${isOpen ? 'bg-slate-900 text-white rotate-90' : 'bg-primary text-white shadow-blue-200'}`}
-        >
-          {isOpen ? <X className="w-6 h-6" /> : <Bot className="w-8 h-8" />}
-          {!isOpen && (
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-pulse" />
-          )}
-        </motion.button>
-      </div>
-    </>
+                {step.value && (
+                  <div className="bg-theme-surface/5 rounded-2xl p-3 flex items-center gap-3 border border-white/10">
+                    <code className="flex-1 text-[11px] font-mono text-primary truncate">
+                      {step.value}
+                    </code>
+                    <button
+                      onClick={() => handleCopy(step.value)}
+                      className={cn(
+                        "p-2 rounded-lg transition-all",
+                        copied ? "bg-green-600 text-white" : "bg-primary text-slate-950 hover:bg-amber-400"
+                      )}
+                    >
+                      {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                {currentStep > 0 && (
+                  <button
+                    onClick={prev}
+                    className="flex-1 px-4 py-3 rounded-xl bg-theme-surface/5 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:bg-theme-surface/10"
+                  >
+                    Back
+                  </button>
+                )}
+                <button
+                  onClick={next}
+                  className="flex-[2] bg-primary text-slate-950 px-4 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white transition-all"
+                >
+                  {currentStep === typedSteps.length - 1 ? 'Finish & Save' : 'Next Step'}
+                </button>
+              </div>
+            </div>
+            </div>
+
+      </AnimatePresence>
+
+      {/* Spotlight effect */}
+      <div 
+        className="absolute inset-0 bg-black/40 transition-opacity"
+        style={{
+          clipPath: targetElement ? `polygon(0% 0%, 0% 100%, ${targetElement.offsetLeft}px 100%, ${targetElement.offsetLeft}px ${targetElement.offsetTop}px, ${targetElement.offsetLeft + targetElement.offsetWidth}px ${targetElement.offsetTop}px, ${targetElement.offsetLeft + targetElement.offsetWidth}px ${targetElement.offsetTop + targetElement.offsetHeight}px, ${targetElement.offsetLeft}px ${targetElement.offsetTop + targetElement.offsetHeight}px, ${targetElement.offsetLeft}px 100%, 100% 100%, 100% 0%)` : 'none'
+        }}
+      />
+    </div>
   );
-};
+}

@@ -39,12 +39,12 @@ export function ComparisonMode({
         {/* Header */}
         <div className="p-8 border-b border-theme flex justify-between items-center bg-theme-surface shrink-0">
           <div className="flex items-center gap-3">
-            <div className="bg-primary/10 p-2.5 rounded-2xl">
-              <ArrowLeftRight className="w-6 h-6 text-primary" />
+            <div className="bg-blue-50 p-2.5 rounded-2xl">
+              <ArrowLeftRight className="w-6 h-6 text-blue-600" />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-foreground">Compare Versions</h2>
-              <p className="text-theme-background0 text-sm font-medium">Review the changes made by your AI Partner</p>
+              <p className="text-muted-foreground text-sm font-medium">Review the changes made by your AI Partner</p>
             </div>
           </div>
           <button 
@@ -105,14 +105,14 @@ export function ComparisonMode({
         <div className="p-8 border-t border-theme bg-theme-background/30 flex justify-end gap-4 shrink-0">
           <button 
             onClick={onReject}
-            className="px-8 py-4 rounded-2xl text-sm font-bold text-slate-600 bg-theme-surface border border-theme hover:bg-theme-background transition-colors flex items-center gap-2"
+            className="px-8 py-4 rounded-2xl text-sm font-bold text-slate-600 bg-theme-surface border border-slate-200 hover:bg-theme-background transition-colors flex items-center gap-2"
           >
             <RotateCcw className="w-4 h-4" />
             Keep Original
           </button>
           <button 
             onClick={onAccept}
-            className="px-10 py-4 rounded-2xl text-sm font-bold text-white bg-primary hover:bg-primary transition-all flex items-center gap-2 shadow-xl shadow-primary/20"
+            className="px-10 py-4 rounded-2xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all flex items-center gap-2 shadow-xl shadow-blue-100"
           >
             <Check className="w-4 h-4" />
             Accept AI Version

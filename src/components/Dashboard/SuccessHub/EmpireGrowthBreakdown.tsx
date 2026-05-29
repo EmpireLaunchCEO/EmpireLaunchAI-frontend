@@ -31,8 +31,8 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
       value: engagementScore, 
       weight: '30%', 
       icon: BarChart3, 
-      color: 'text-primary', 
-      bgColor: 'bg-primary/10' 
+      color: 'text-blue-500', 
+      bgColor: 'bg-blue-50' 
     },
     { 
       label: 'Operation Consistency', 
@@ -45,20 +45,20 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
   ];
 
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme-background shadow-sm space-y-8">
+    <div className="bg-theme-surface rounded-[40px] p-8 border border-theme shadow-sm space-y-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center">
-            <Target className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-xl bg-theme-background flex items-center justify-center">
+            <Target className="w-5 h-5 text-primary" />
           </div>
           <div>
             <h3 className="text-xl font-black text-foreground tracking-tight">Growth Breakdown</h3>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Neural Multi-Factor Scoring</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Neural Multi-Factor Scoring</p>
           </div>
         </div>
         <div className="text-right">
           <span className="text-4xl font-black text-foreground tracking-tighter">{growthScore}</span>
-          <span className="text-xs font-bold text-slate-400 ml-1">/100</span>
+          <span className="text-xs font-bold text-muted-foreground ml-1">/100</span>
         </div>
       </div>
 
@@ -70,8 +70,8 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
                 <div className={cn("w-6 h-6 rounded-lg flex items-center justify-center", metric.bgColor)}>
                   <metric.icon className={cn("w-3.5 h-3.5", metric.color)} />
                 </div>
-                <span className="text-xs font-bold text-slate-700">{metric.label}</span>
-                <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Weight: {metric.weight}</span>
+                <span className="text-xs font-bold text-foreground">{metric.label}</span>
+                <span className="text-[9px] font-black text-muted-foreground/50 uppercase tracking-widest">Weight: {metric.weight}</span>
               </div>
               <span className="text-xs font-black text-foreground">{metric.value}%</span>
             </div>
@@ -87,9 +87,9 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
         ))}
       </div>
 
-      <div className="p-4 rounded-2xl bg-theme-background border border-theme">
-        <p className="text-[10px] font-bold text-theme-background0 leading-relaxed italic">
-          "The Empire Engine is prioritizing <span className="text-emerald-600 font-black">Revenue Velocity</span> this cycle. Growth score has increased by 4.2 points since last synchronization."
+      <div className="p-4 rounded-2xl bg-theme-background/50 border border-theme">
+        <p className="text-[10px] font-bold text-muted-foreground leading-relaxed italic">
+          "The Empire Engine is prioritizing <span className="text-primary font-black">Revenue Velocity</span> this cycle. Growth score has increased by 4.2 points since last synchronization."
         </p>
       </div>
     </div>

@@ -17,7 +17,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   const controls = useAnimation();
   const y = useMotionValue(0);
   
-  const THRESHOLD = 80;
+  const THRESHOLD = 60;
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
@@ -31,6 +31,9 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
 
     // Listen on capture phase to catch scrolls from any parent
     window.addEventListener('scroll', handleScroll, true);
+    // Also check on mount
+    handleScroll({ target: document.querySelector('main') } as any);
+    
     return () => window.removeEventListener('scroll', handleScroll, true);
   }, []);
 
@@ -74,27 +77,29 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
           y: isRefreshing ? 40 : 0
         }}
       >
-        <div className="bg-theme-surface rounded-full p-4 shadow-2xl border-2 border-theme flex items-center justify-center overflow-hidden">
+        <div className="bg-theme-surface rounded-full p-6 shadow-[0_0_50px_rgba(0,0,0,0.5)] border-2 border-theme flex items-center justify-center overflow-hidden">
           <motion.div
             animate={isRefreshing ? {
-              scale: [1, 1.3, 1],
+              scale: [1, 1.2, 1],
+              rotate: 360
             } : {
               scale: pullProgress,
               rotate: pullProgress * 360
             }}
             transition={isRefreshing ? {
-              duration: 1,
+              duration: 2,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "linear"
             } : {
               duration: 0.1
             }}
           >
             <BrandedGlobe 
-              size="lg"
+              size="xl"
+              animate={isRefreshing}
               className={cn(
-                "transition-opacity",
-                isRefreshing ? "opacity-100" : "opacity-50"
+                "transition-colors",
+                isRefreshing ? "opacity-100 ring-4 ring-primary/20" : "opacity-80"
               )}
             />
           </motion.div>
@@ -107,7 +112,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
         dragElastic={0.4}
         onDragEnd={handleDragEnd}
         animate={controls}
-        style={{ y, touchAction: isAtTop ? 'pan-x' : 'auto' }}
+        style={{ y }}
         className="relative z-10"
       >
         {children}

@@ -12,6 +12,14 @@ export const metadata: Metadata = {
   description: "Automate your business with AI",
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#fbbf24',
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -20,34 +28,49 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=4.2.6" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=4.2.6" />
-        <link rel="icon" href="/branded-globe.png?v=4.2.6" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, shrink-to-fit=no, maximum-scale=1" />
+        <link rel="manifest" href="/manifest.json?v=3.3.1" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=3.3.1" />
+        <link rel="icon" href="/branded-globe.png?v=3.3.1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="theme-color" content="#2563eb" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var version = '4.2.6';
-                  var lastVersion = localStorage.getItem('app_version');
-                  if (lastVersion !== version) {
-                    localStorage.setItem('app_version', version);
-                    
-                    // NUCLEAR RESET OF STUCK SETUP STATE (BUT PRESERVE ONBOARDING)
-                    localStorage.removeItem('activeSetupPlatform');
-                    
-                    // Reset tour keys to force welcome tour if they want it
-                    localStorage.removeItem('empire_tour_v418');
-                    
+                  // Cache-Busting: Clear legacy service workers and local storage if on old version
+                  var currentVersion = '4.1.9';
+                  var installedVersion = localStorage.getItem('app_version');
+                  if (installedVersion !== currentVersion) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    localStorage.setItem('app_version', currentVersion);
                     if ('serviceWorker' in navigator) {
-                      navigator.serviceWorker.getRegistrations().then(function(regs) {
-                        for(var i=0; i<regs.length; i++) regs[i].unregister();
+                      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                        for(var registration of registrations) {
+                          registration.unregister();
+                        }
                       });
                     }
+                    window.location.reload(true);
+                  }
+
+                  // Register Service Worker
+                  if ('serviceWorker' in navigator) {
+                    window.addEventListener('load', function() {
+                      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                      }, function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                      });
+                    });
+                  }
+
+                  var onboarded = localStorage.getItem('isOnboarded');
+                  var path = window.location.pathname;
+                  if (onboarded === 'true' && (path === '/' || path === '/onboarding')) {
+                    document.documentElement.style.display = 'none';
+                    window.location.replace('/dashboard');
                   }
                 } catch (e) {}
               })();
@@ -55,7 +78,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} transition-colors duration-500`}>
+      <body className={`${inter.className} bg-theme-background text-foreground`}>
         <EmpireProvider>
           {children}
           <SetupAssistant />

@@ -1,41 +1,27 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Copy, Check, ExternalLink, Bot, User } from 'lucide-react';
+import { MessageSquare, Copy, Check, ExternalLink, Bot, User, Zap, Trash2, Info, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { retentionService, InboxDraft } from '@/lib/api-service';
 
-interface Draft {
-  id: string;
-  platform: 'Fiverr' | 'Etsy';
-  customer: string;
-  subject: string;
-  body: string;
-  reasoning: string;
-}
-
-const MOCK_DRAFTS: Draft[] = [
-  {
-    id: 'd1',
-    platform: 'Fiverr',
-    customer: 'Alex Miller',
-    subject: 'Order Acknowledgment',
-    body: "Hi Alex! Thank you so much for your order. I've received your requirements and I'm starting on your Vintage Botanical Cover right away. I'll reach out if I have any questions. Looking forward to delivering something amazing!",
-    reasoning: "New order detected. Prompt acknowledgment builds trust and improves seller rating."
-  },
-  {
-    id: 'd2',
-    platform: 'Etsy',
-    customer: 'Sarah J.',
-    subject: 'Personalized Thank You',
-    body: "Hi Sarah, thank you for purchasing the Digital Zen Journal! I hope it helps you stay organized and calm. As a thank you, here's a 10% discount code for your next purchase: EMPIRE10. Enjoy!",
-    reasoning: "Repeat customer potential identified. Offering a discount increases LTV (Life Time Value)."
-  }
-];
+import { useEmpire } from '@/lib/EmpireContext';
 
 export const InboxAssistant = () => {
-  const [drafts, setDrafts] = useState<Draft[]>(MOCK_DRAFTS);
+  const [drafts, setDrafts] = useState<InboxDraft[]>([]);
+  const [loading, setLoading] = useState(true);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const { autoSendRetention, setAutoSendRetention } = useEmpire();
+
+  useEffect(() => {
+    const loadDrafts = async () => {
+      const data = await retentionService.getInboxDrafts();
+      setDrafts(data);
+      setLoading(false);
+    };
+    loadDrafts();
+  }, []);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -43,87 +29,128 @@ export const InboxAssistant = () => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleDone = (id: string) => {
+  const handleDecision = async (id: string, status: 'approved' | 'rejected') => {
+    await retentionService.respondToDraft(id, status);
     setDrafts(prev => prev.filter(d => d.id !== id));
   };
 
-  if (drafts.length === 0) return null;
+  if (loading) {
+    return <div className="h-64 flex items-center justify-center bg-theme-surface rounded-[40px] border border-theme animate-pulse" />;
+  }
+
+  if (drafts.length === 0 && !loading) return null;
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
             <MessageSquare className="w-4 h-4" />
           </div>
           <h3 className="text-xl font-black text-foreground tracking-tight italic uppercase">Inbox Assistant</h3>
         </div>
-        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Manual-Assisted Mode</span>
+        
+        <div className="flex items-center gap-3 bg-theme-surface border border-theme p-1.5 rounded-2xl shadow-sm">
+           <div className="flex items-center gap-2 px-2">
+              <Zap className={cn("w-3.5 h-3.5", autoSendRetention ? "text-amber-500 fill-amber-500" : "text-muted-foreground")} />
+              <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Auto-Send</span>
+           </div>
+           <button 
+             onClick={() => setAutoSendRetention(!autoSendRetention)}
+             className={cn(
+               "w-10 h-6 rounded-full relative transition-colors duration-300",
+               autoSendRetention ? "bg-amber-500" : "bg-theme-background border border-theme"
+             )}
+           >
+             <motion.div 
+               animate={{ x: autoSendRetention ? 18 : 2 }}
+               className="w-4 h-4 bg-white rounded-full absolute top-1 shadow-sm"
+             />
+           </button>
+        </div>
       </div>
 
       <div className="space-y-4">
-        <AnimatePresence>
+        <AnimatePresence mode="popLayout">
           {drafts.map((draft) => (
             <motion.div
               key={draft.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-theme-surface rounded-[32px] p-6 border-2 border-theme-background shadow-sm space-y-6 group"
+              className="bg-theme-surface rounded-[40px] p-8 border border-theme shadow-sm space-y-6 group relative overflow-hidden"
             >
-              <div className="flex items-center justify-between">
+              {/* Type Badge */}
+              <div className="absolute top-0 right-0">
+                 <div className={cn(
+                   "px-6 py-2 rounded-bl-[20px] text-[9px] font-black uppercase tracking-[0.2em] text-white",
+                   draft.type === 'THANK_YOU' ? "bg-emerald-500" : "bg-blue-600"
+                 )}>
+                   {draft.type.replace('_', ' ')}
+                 </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
                 <div className="flex items-center gap-3">
-                  <div className={cn(
-                    "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                    draft.platform === 'Fiverr' ? "bg-emerald-100 text-emerald-600" : "bg-orange-100 text-orange-600"
-                  )}>
-                    {draft.platform}
+                  <div className="w-10 h-10 rounded-2xl bg-theme-background flex items-center justify-center border border-theme">
+                     <User className="w-5 h-5 text-muted-foreground" />
                   </div>
-                  <div className="flex items-center gap-1.5 text-slate-400">
-                    <User className="w-3.5 h-3.5" />
-                    <span className="text-xs font-bold">{draft.customer}</span>
+                  <div>
+                    <h4 className="text-sm font-black text-foreground leading-tight">{draft.customer}</h4>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{draft.platform} Order</p>
                   </div>
-                </div>
-                <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400">
-                   <Bot className="w-3.5 h-3.5 text-primary" />
-                   AI Drafted
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <h4 className="text-sm font-black text-foreground">{draft.subject}</h4>
-                <div className="p-5 rounded-2xl bg-theme-background border border-theme relative group/body">
-                  <p className="text-sm text-slate-600 font-medium leading-relaxed">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                   <h5 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Draft Message</h5>
+                   <div className="flex items-center gap-1.5 text-[9px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                      <Bot className="w-3 h-3" />
+                      AI Calibrated
+                   </div>
+                </div>
+                
+                <div className="p-6 rounded-3xl bg-theme-background border border-theme relative group/body hover:border-primary/30 transition-colors">
+                  <p className="text-sm text-foreground font-medium leading-relaxed">
+                    <span className="text-muted-foreground font-bold">Subject:</span> {draft.subject}
+                    <br /><br />
                     {draft.body}
                   </p>
                   <button 
-                    onClick={() => handleCopy(draft.body, draft.id)}
-                    className="absolute top-3 right-3 p-2 bg-theme-surface rounded-xl border border-theme shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-primary/10 hover:border-blue-200"
+                    onClick={() => handleCopy(`${draft.subject}\n\n${draft.body}`, draft.id)}
+                    className="absolute top-4 right-4 p-2.5 bg-theme-surface rounded-xl border border-theme shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-primary/10 hover:border-primary/20"
                   >
-                    {copiedId === draft.id ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-slate-400" />}
+                    {copiedId === draft.id ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-muted-foreground" />}
                   </button>
                 </div>
               </div>
 
-              <div className="bg-primary/10/50 rounded-2xl p-4 border border-primary/20/50">
-                <p className="text-[10px] font-bold text-primary italic">
-                  "Reasoning: {draft.reasoning}"
+              {/* AI Reasoning */}
+              <div className="flex items-start gap-3 p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                <p className="text-[10px] font-bold text-muted-foreground leading-relaxed italic">
+                  <span className="text-primary font-black uppercase mr-1">AI Reasoning:</span>
+                  {draft.reasoning}
                 </p>
               </div>
 
               <div className="flex items-center gap-3">
-                <button 
-                  onClick={() => window.open(draft.platform === 'Fiverr' ? 'https://fiverr.com' : 'https://etsy.com', '_blank')}
-                  className="flex-1 flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-primary transition-all shadow-lg shadow-slate-200"
+                <motion.button 
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleDecision(draft.id, 'approved')}
+                  className="flex-1 flex items-center justify-center gap-2 bg-primary text-foreground py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:shadow-lg hover:shadow-primary/20 transition-all"
                 >
-                  Open {draft.platform} <ExternalLink className="w-3 h-3" />
-                </button>
-                <button 
-                  onClick={() => handleDone(draft.id)}
-                  className="px-6 py-3 rounded-2xl bg-theme-background text-slate-400 font-black text-[10px] uppercase tracking-widest hover:bg-emerald-50 hover:text-emerald-600 transition-all border border-theme"
+                  Approve & Send <ChevronRight className="w-4 h-4" />
+                </motion.button>
+                
+                <motion.button 
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleDecision(draft.id, 'rejected')}
+                  className="p-4 rounded-2xl bg-theme-background text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 border border-theme transition-all"
                 >
-                  Mark as Sent
-                </button>
+                  <Trash2 className="w-5 h-5" />
+                </motion.button>
               </div>
             </motion.div>
           ))}

@@ -22,7 +22,7 @@ export default function ReviewQueue() {
   const [isLoading, setIsLoading] = useState(true);
   const [financialGate, setFinancialGate] = useState<{
     isOpen: boolean;
-    type: 'subscription' | 'transfer' | 'purchase';
+    type: 'subscription' | 'transfer' | 'authorization';
     amount: string;
     description: string;
     platform?: string;
@@ -62,7 +62,7 @@ export default function ReviewQueue() {
     ) {
       setFinancialGate({
         isOpen: true,
-        type: task.title.toLowerCase().includes('subscription') ? 'subscription' : 'purchase',
+        type: task.title.toLowerCase().includes('subscription') ? 'subscription' : 'authorization',
         amount: task.title.toLowerCase().includes('subscription') ? '$12.99' : '$0.20',
         description: `Approval for: ${task.title}`,
         platform: task.title.includes('Etsy') ? 'Etsy' : task.title.includes('Canva') ? 'Canva' : undefined,
@@ -134,17 +134,17 @@ export default function ReviewQueue() {
           <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-3">
             Review Queue
           </h1>
-          <p className="text-theme-background0 mt-2 font-medium text-sm md:text-base">
+          <p className="text-muted-foreground mt-2 font-medium text-sm md:text-base">
             {isLoading ? 'Loading items...' : `AI has prepared ${tasks.length} items for your review.`}
           </p>
         </div>
         <div className="flex gap-2 w-full md:w-auto">
-          <button className="flex-1 md:flex-none bg-theme-surface border border-theme text-slate-600 px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 font-bold hover:bg-theme-background transition-colors text-sm">
+          <button className="flex-1 md:flex-none bg-theme-surface border border-slate-200 text-slate-600 px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 font-bold hover:bg-theme-background transition-colors text-sm">
             <Filter className="w-4 h-4" />
             Filter
           </button>
           {!isLoading && tasks.length > 0 && (
-            <button className="flex-[2] md:flex-none bg-primary text-white px-6 py-2.5 rounded-xl font-bold hover:bg-primary transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 text-sm">
+            <button className="flex-[2] md:flex-none bg-primary text-slate-900 px-6 py-2.5 rounded-xl font-bold hover:bg-amber-400 transition-all shadow-lg shadow-amber-200/20 flex items-center justify-center gap-2 text-sm">
               <CheckCircle2 className="w-4 h-4" />
               Approve All
             </button>
@@ -169,19 +169,19 @@ export default function ReviewQueue() {
           ))
         ) : !isLoading && (
           <div className="bg-theme-surface rounded-3xl border border-theme p-12 text-center">
-            <p className="text-theme-background0 italic text-lg">Your review queue is currently empty.</p>
+            <p className="text-muted-foreground italic text-lg">Your review queue is currently empty.</p>
             <p className="text-slate-400 text-sm mt-2">The AI is working on new suggestions based on your goals.</p>
           </div>
         )}
         
         {tasks.length > 0 && (
-          <div className="bg-primary/10 border border-primary/20 rounded-3xl p-6 flex items-start gap-4">
-            <div className="bg-primary p-2 rounded-xl text-white">
+          <div className="bg-primary/5 border border-primary/20 rounded-3xl p-6 flex items-start gap-4">
+            <div className="bg-primary p-2 rounded-xl text-slate-900">
               <Stars className="w-5 h-5" />
             </div>
             <div>
               <h4 className="font-bold text-foreground">AI Strategy Note</h4>
-              <p className="text-primary text-sm mt-1 leading-relaxed">
+              <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
                 I've prioritized these items based on current market trends and your active goals. 
                 Approving these will help maintain your growth momentum.
               </p>

@@ -16,7 +16,7 @@ interface FinancialGateProps {
   isOpen: boolean;
   onClose: () => void;
   onApprove: () => void;
-  type: 'subscription' | 'transfer' | 'purchase';
+  type: 'subscription' | 'transfer' | 'authorization';
   amount: string;
   description: string;
   platform?: string;
@@ -55,7 +55,7 @@ export function FinancialGate({
 
         <div className="px-8 pb-8">
           <h2 className="text-2xl font-bold text-foreground mt-2">Financial Approval Required</h2>
-          <p className="text-theme-background0 mt-2 text-sm leading-relaxed">
+          <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
             Your AI Partner is requesting approval for a {type}. No funds will be moved without your explicit consent.
           </p>
 
@@ -67,16 +67,15 @@ export function FinancialGate({
                 <span className="text-3xl font-black text-foreground">{amount}</span>
               </div>
               {platform && (
-                <div className="bg-theme-surface px-3 py-1 rounded-lg border border-theme text-[10px] font-bold text-slate-600 uppercase">
+                <div className="bg-theme-surface px-3 py-1 rounded-lg border border-slate-200 text-[10px] font-bold text-slate-600 uppercase">
                   {platform}
                 </div>
               )}
             </div>
             
-            <div className="space-y-3">
               <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5" />
-                <p className="text-sm font-medium text-slate-700">{description}</p>
+                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shadow-[0_0_5px_rgba(251,191,36,0.5)]" />
+                <p className="text-sm font-medium text-slate-400">{description}</p>
               </div>
               {reason && (
                 <div className="flex items-start gap-2">
@@ -90,12 +89,12 @@ export function FinancialGate({
           {/* Security Note */}
           <div className="mt-6 space-y-4">
             {type === 'subscription' && (
-              <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl">
+              <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl">
                 <div className="flex gap-3">
                   <TrendingUp className="w-5 h-5 text-primary shrink-0" />
                   <div>
                     <h4 className="text-xs font-black text-foreground uppercase tracking-widest">Billing Transparency</h4>
-                    <p className="text-[11px] text-blue-800 leading-relaxed mt-1">
+                    <p className="text-[11px] text-muted-foreground leading-relaxed mt-1">
                       We secure your monthly dues automatically from your business earnings. If your empire hasn't generated profit yet, dues are charged to your primary card until you're in the green.
                     </p>
                   </div>
@@ -123,7 +122,7 @@ export function FinancialGate({
             </button>
             <button 
               onClick={onApprove}
-              className="px-6 py-3.5 rounded-2xl text-sm font-bold text-white bg-primary hover:bg-primary transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
+              className="px-6 py-3.5 rounded-2xl text-sm font-bold text-slate-900 bg-primary hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-200/20"
             >
               Approve <ArrowRight className="w-4 h-4" />
             </button>

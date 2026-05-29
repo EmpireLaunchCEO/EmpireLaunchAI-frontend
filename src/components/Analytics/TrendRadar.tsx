@@ -38,7 +38,7 @@ export function TrendRadar() {
         
         <div className="relative z-10 space-y-6">
           <div className="flex items-center gap-3">
-            <div className="bg-primary p-2 rounded-xl">
+            <div className="bg-blue-500 p-2 rounded-xl">
               <Zap className="w-5 h-5 text-white" />
             </div>
             <h3 className="text-xl font-bold">AI Trend Radar</h3>
@@ -66,7 +66,7 @@ export function TrendRadar() {
             <div className="flex justify-between items-start">
               <div className={cn(
                 "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest",
-                card.impact === 'High' ? "bg-orange-50 text-orange-600" : "bg-primary/10 text-primary"
+                card.impact === 'High' ? "bg-orange-50 text-orange-600" : "bg-blue-50 text-blue-600"
               )}>
                 {card.impact} Impact
               </div>
@@ -78,14 +78,14 @@ export function TrendRadar() {
 
             <div className="space-y-2">
               <h4 className="text-lg font-bold text-foreground">{card.title}</h4>
-              <p className="text-sm text-theme-background0 leading-relaxed">{card.description}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{card.description}</p>
             </div>
 
             <div className="pt-4 mt-auto flex gap-3">
               <button className="flex-1 bg-slate-900 text-white py-3 rounded-2xl text-sm font-bold hover:bg-slate-800 transition-all">
                 Generate Draft
               </button>
-              <button className="px-6 py-3 rounded-2xl text-sm font-bold border border-theme hover:bg-theme-background transition-all">
+              <button className="px-6 py-3 rounded-2xl text-sm font-bold border border-slate-200 hover:bg-theme-background transition-all">
                 Dismiss
               </button>
             </div>

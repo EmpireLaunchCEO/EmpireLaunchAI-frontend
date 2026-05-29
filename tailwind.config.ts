@@ -9,12 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        primary: "var(--primary)",
+        background: "rgb(var(--background-rgb) / <alpha-value>)",
+        foreground: "rgb(var(--foreground-rgb) / <alpha-value>)",
+        primary: "rgb(var(--primary-rgb) / <alpha-value>)",
         secondary: "var(--secondary)",
         accent: "var(--accent)",
         muted: "var(--muted)",
+        surface: "rgb(var(--surface-rgb) / <alpha-value>)",
+        "theme-surface": "rgb(var(--surface-rgb) / <alpha-value>)",
+        "theme-background": "rgb(var(--background-rgb) / <alpha-value>)",
+        theme: "rgb(var(--surface-border-rgb) / <alpha-value>)",
       },
       animation: {
         'spin-slow': 'spin 3s linear infinite',

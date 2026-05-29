@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { approvalService, ApprovalRequest } from '@/lib/api-service';
 import { BlueprintGate } from './Gates/BlueprintGate';
 import { VisualDraftGate } from './Gates/VisualDraftGate';
+import { HighIntelPostApproval } from './Gates/HighIntelPostApproval';
 import { GoLiveGate } from './Gates/GoLiveGate';
 import { CreativeBlueprint } from './CreativeBlueprint';
 
@@ -48,47 +49,47 @@ export function ApprovalQueue() {
     <div className="space-y-6">
       <div className="flex items-center justify-between px-2">
          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
-               <Bot className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-slate-950">
+               <Bot className="w-3.5 h-3.5" />
             </div>
-            <h2 className="text-lg font-black text-foreground tracking-tight uppercase italic">Strategic Approvals Pending.</h2>
+            <h2 className="text-base font-black text-foreground tracking-tight uppercase italic">Strategic Approvals Pending.</h2>
          </div>
-         <span className="bg-primary/10 text-primary text-[10px] font-black px-2 py-1 rounded-full border border-primary/20 uppercase tracking-widest">
+         <span className="bg-primary/10 text-primary text-[8px] font-black px-2 py-1 rounded-full border border-primary/20 uppercase tracking-widest">
            {requests.length} Action{requests.length > 1 ? 's' : ''} Required
          </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {requests.map((req) => (
           <motion.button 
             key={req.id}
             onClick={() => setActiveRequest(req)}
-            className="p-6 bg-theme-surface border-2 border-theme-background rounded-[32px] hover:border-primary transition-all text-left group shadow-sm"
-            whileHover={{ y: -4 }}
+            className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] hover:border-primary transition-all text-left group shadow-sm"
+            whileHover={{ y: -2 }}
           >
-            <div className="flex justify-between items-start mb-6">
+            <div className="flex justify-between items-start mb-4">
                <div className={cn(
-                 "p-3 rounded-2xl",
+                 "p-2.5 rounded-xl",
                  req.type === 'blueprint' ? "bg-primary/10 text-primary" :
-                 req.type === 'content' ? "bg-indigo-50 text-indigo-600" : "bg-emerald-50 text-emerald-600"
+                 req.type === 'content' ? "bg-amber-500/10 text-amber-500" : "bg-emerald-500/10 text-emerald-500"
                )}>
-                  {req.type === 'blueprint' ? <Zap className="w-5 h-5" /> : 
-                   req.type === 'content' ? <ShieldCheck className="w-5 h-5" /> : <CheckCircle2 className="w-5 h-5" />}
+                  {req.type === 'blueprint' ? <Zap className="w-4 h-4" /> : 
+                   req.type === 'content' ? <ShieldCheck className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
                </div>
-               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{req.type}</span>
+               <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">{req.type}</span>
             </div>
             
-            <h4 className="font-bold text-foreground mb-2">
+            <h4 className="font-bold text-sm text-foreground mb-1">
               {req.type === 'blueprint' ? 'Approve 30-Day Strategy' : 
                req.type === 'content' ? `Review ${req.payload?.platform ?? 'Draft'} Draft` : `Ready to Launch on ${req.payload?.platform ?? 'Platform'}`}
             </h4>
-            <p className="text-xs text-theme-background0 line-clamp-2 leading-relaxed">
+            <p className="text-[10px] text-muted-foreground line-clamp-2 leading-relaxed">
               {req.type === 'blueprint' ? `Expansion plan for ${req.payload?.niche ?? 'your empire'}` :
                req.type === 'content' ? (req.payload?.title ?? 'Untitled Content') : `Final manifest for ${req.payload?.title ?? 'Production Item'}`}
             </p>
             
-            <div className="mt-6 flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest group-hover:gap-3 transition-all">
-               Review Request <Zap className="w-3 h-3 fill-current" />
+            <div className="mt-4 flex items-center gap-2 text-primary font-black text-[9px] uppercase tracking-widest group-hover:gap-3 transition-all">
+               Review Request <Zap className="w-2.5 h-2.5 fill-current" />
             </div>
           </motion.button>
         ))}
@@ -151,19 +152,42 @@ export function ApprovalQueue() {
                              id: activeRequest.id,
                              title: activeRequest.payload.title,
                              platform: activeRequest.payload.platform,
-                             status: 'editing',
+                             status: 'drafting',
                              dueDate: 'Today'
                            }} 
                            onClose={() => handleDecision(activeRequest.id, 'approved')} 
                          />
                        </div>
                      ) : (
-                       <VisualDraftGate 
-                         payload={activeRequest.payload}
-                         onApprove={() => handleDecision(activeRequest.id, 'approved')}
-                         onReject={() => handleDecision(activeRequest.id, 'rejected')}
-                         onManualAssist={() => setShowBlueprint(true)}
-                       />
+                       activeRequest.payload.platform && ['TikTok', 'Instagram', 'Facebook', 'YouTube'].includes(activeRequest.payload.platform) ? (
+                         <HighIntelPostApproval 
+                            payload={{
+                              title: activeRequest.payload.title,
+                              platform: activeRequest.payload.platform.toLowerCase() as any,
+                              previewUrl: activeRequest.payload.assets?.[0]?.previewUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop',
+                              strategicReasoning: activeRequest.payload.strategicReasoning || 'Detected 24% surge in interest for minimalist digital assets in your target niche. This post leverages "Efficiency Guilt" psychological triggers.',
+                              targetAudience: activeRequest.payload.targetAudience || 'Solopreneurs (25-35) interested in productivity and minimalist aesthetics.',
+                              trendAlignment: activeRequest.payload.trendAlignment || '#DigitalZen #ProductivityHacks',
+                              confidenceScore: activeRequest.payload.confidenceScore || 94,
+                              goldenHour: activeRequest.payload.goldenHour || '6:15 PM EST',
+                              suggestedTimes: activeRequest.payload.suggestedTimes || ['6:15 PM EST', '8:30 PM EST', '11:00 AM EST'],
+                              caption: activeRequest.payload.caption,
+                              predictedReach: activeRequest.payload.predictedReach || '12.4K - 18.2K',
+                              predictedCTR: activeRequest.payload.predictedCTR || '4.8%'
+                            }}
+                            onApprove={() => handleDecision(activeRequest.id, 'approved')}
+                            onReject={() => handleDecision(activeRequest.id, 'rejected')}
+                            onRefine={(feedback) => console.log('Refining with feedback:', feedback)}
+                            onBack={() => setActiveRequest(null)}
+                         />
+                       ) : (
+                         <VisualDraftGate 
+                           payload={activeRequest.payload}
+                           onApprove={() => handleDecision(activeRequest.id, 'approved')}
+                           onReject={() => handleDecision(activeRequest.id, 'rejected')}
+                           onManualAssist={() => setShowBlueprint(true)}
+                         />
+                       )
                      )
                    )}
 

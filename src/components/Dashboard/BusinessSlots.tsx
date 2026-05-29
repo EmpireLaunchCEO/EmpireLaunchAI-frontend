@@ -22,28 +22,28 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
         "relative overflow-hidden rounded-[32px] p-6 h-48 transition-all duration-500",
         isLocked 
           ? "bg-theme-background border-2 border-theme opacity-80" 
-          : "bg-theme-surface border-2 border-primary/10 shadow-xl shadow-foreground/5 hover:shadow-2xl hover:shadow-foreground/10"
+          : "bg-theme-surface border-2 border-blue-50 shadow-xl shadow-blue-900/5 hover:shadow-2xl hover:shadow-blue-900/10"
       )}>
         {/* Active Content */}
         {!isLocked && (
           <div className="flex flex-col h-full justify-between relative z-10">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Primary Empire</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Primary Empire</span>
               </div>
-              <h3 className="text-xl font-black text-foreground leading-tight">{name}</h3>
-              <p className="text-sm font-medium text-theme-background0">{niche}</p>
+              <h3 className="text-lg font-black text-foreground leading-tight tracking-tight uppercase italic">{name}</h3>
+              <p className="text-xs font-medium text-muted-foreground">{niche}</p>
             </div>
             
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="bg-primary/10 px-2 py-1 rounded-lg">
-                  <span className="text-[10px] font-black text-primary uppercase tracking-tighter">Score: {growthScore}</span>
+                <div className="bg-primary/10 px-2 py-1 rounded-lg border border-primary/20">
+                  <span className="text-[9px] font-black text-primary uppercase tracking-tighter">Score: {growthScore}</span>
                 </div>
                 <TrendingUp className="w-3 h-3 text-primary" />
               </div>
-              <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-primary transition-colors" />
+              <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-primary transition-colors" />
             </div>
           </div>
         )}
@@ -73,27 +73,27 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
               <div className="absolute inset-0 bg-theme-surface/30 rounded-full blur-xl group-hover/lock:scale-150 transition-transform duration-700" />
               
               <div className="relative bg-theme-surface/80 backdrop-blur-2xl w-16 h-16 rounded-[24px] flex items-center justify-center shadow-2xl border border-white/50">
-                <Lock className="w-7 h-7 text-primary" />
+                <Lock className="w-7 h-7 text-blue-600" />
                 <Stars className="absolute -top-2 -right-2 w-5 h-5 text-amber-400 animate-pulse" />
               </div>
               
-              <motion.div 
+              <motion.div
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 className="absolute top-20 left-1/2 -translate-x-1/2 whitespace-nowrap"
               >
                 <span className="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
-                  Unlock Business 2
+                  Authorize Slot
                 </span>
-              </motion.div>
-            </div>
+
+
           </motion.div>
         )}
       </div>
       
       {/* Decorative gradient for active slot */}
       {!isLocked && (
-        <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-indigo-600/20 rounded-[36px] -z-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-[36px] -z-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
       )}
     </div>
   );

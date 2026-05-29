@@ -12,13 +12,16 @@ import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesS
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { SuccessHubOverview } from '@/components/Dashboard/SuccessHub/SuccessHubOverview';
-import { Stars, Zap, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard } from 'lucide-react';
+import { Stars, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService } from '@/lib/api-service';
+import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
+import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
+import { useSearchParams } from 'next/navigation';
 
 interface Goal {
   id: string;
@@ -28,7 +31,7 @@ interface Goal {
 }
 
 export default function Dashboard() {
-  const { activeEmpireId, isLinkingComplete, addToast } = useEmpire();
+  const { activeEmpireId, isLinkingComplete } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
@@ -78,6 +81,11 @@ export default function Dashboard() {
   }, [activeEmpireId]);
 
   const handleExecute = async (goal: string) => {
+    if (!isLinkingComplete && (window as any).interceptTeacher) {
+      (window as any).interceptTeacher(goal);
+      return;
+    }
+
     if (partnerStatus !== 'idle') return;
     
     setPartnerStatus('creating');
@@ -111,33 +119,19 @@ export default function Dashboard() {
     }
   };
 
-  const handleRefresh = async () => {
-    setIsLoading(true);
-    await fetchData();
-    addToast({ title: 'Data Refreshed', message: 'Neural bridge synchronized with latest empire metrics.', type: 'success' });
-  };
-
   return (
-    <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <PullToRefresh onRefresh={fetchData}>
+      <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
               <LayoutDashboard className="w-3 h-3" />
-              Success Hub <span className="ml-2 text-[8px] bg-primary/20 px-2 py-0.5 rounded-full">v4.2.5 (STABLE)</span>
+              Success Hub
             </div>
-            <div className="flex items-center gap-4">
-              <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
-                {empireData?.name || "Success Hub"}.
-              </h1>
-              <button 
-                onClick={handleRefresh}
-                className="p-2 hover:bg-primary/10 rounded-full transition-colors group"
-                title="Refresh Data"
-              >
-                <Zap className={cn("w-5 h-5 text-primary", isLoading && "animate-pulse")} />
-              </button>
-            </div>
-            <p className="text-sm md:text-base text-theme-background0 font-medium">
+            <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
+              {empireData?.name || "Success Hub"}.
+            </h1>
+            <p className="text-sm md:text-base text-muted-foreground font-medium">
               Monitoring your {empireData?.niche || "business"} growth and autonomous operations.
             </p>
           </div>
@@ -157,11 +151,16 @@ export default function Dashboard() {
 
         <BusinessSlots currentEmpire={empireData} />
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-12 md:space-y-20"
-        >
+        {!isLinkingComplete ? (
+          <div className="bg-theme-surface border-2 border-theme rounded-[48px] p-8">
+             <GuidedLinking />
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-12 md:space-y-20"
+          >
             {/* Thinking Status Overlay */}
             <AnimatePresence>
               {partnerStatus !== 'idle' && (
@@ -169,10 +168,10 @@ export default function Dashboard() {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="p-6 bg-slate-900 rounded-[32px] text-white shadow-2xl flex items-center gap-6 relative overflow-hidden z-50"
+                  className="p-6 bg-theme-surface rounded-[32px] text-foreground shadow-2xl border-2 border-theme flex items-center gap-6 relative overflow-hidden z-50"
                 >
                   <div className="relative z-10 w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shrink-0">
-                    <Loader2 className="w-8 h-8 animate-spin" />
+                    <Loader2 className="w-8 h-8 animate-spin text-white" />
                   </div>
                   <div className="relative z-10 flex-1">
                     <div className="flex items-center justify-between mb-2">
@@ -200,12 +199,12 @@ export default function Dashboard() {
             <section className="space-y-10 pt-20 border-t border-theme">
                <div className="flex items-center justify-between">
                  <div className="flex items-center gap-3">
-                   <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                   <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center">
                      <LayoutDashboard className="w-5 h-5 text-slate-600" />
                    </div>
                    <div>
                      <h2 className="text-2xl font-black text-foreground tracking-tight">Control Gates</h2>
-                     <p className="text-xs text-theme-background0 font-medium">Human-in-the-loop validation for autonomous actions.</p>
+                     <p className="text-xs text-muted-foreground font-medium">Human-in-the-loop validation for autonomous actions.</p>
                    </div>
                  </div>
                </div>
@@ -232,7 +231,8 @@ export default function Dashboard() {
                 <EmpireConstellation />
               </div>
             </section>
-        </motion.div>
+          </motion.div>
+        )}
 
         <AnimatePresence>
           {isCelebrating && (
@@ -251,7 +251,7 @@ export default function Dashboard() {
                   <Stars className="w-16 h-16 text-primary" />
                 </motion.div>
                 <h2 className="text-5xl font-black text-white tracking-tighter">Neural Sync Established.</h2>
-                <p className="text-primary/20 text-xl font-medium">Welcome to your Empire Command Center.</p>
+                <p className="text-white/80 text-xl font-medium">Welcome to your Empire Command Center.</p>
               </div>
             </motion.div>
           )}
@@ -263,6 +263,7 @@ export default function Dashboard() {
         />
 
         {isLinkingComplete && <NotificationOnboarding />}
-    </div>
+      </div>
+    </PullToRefresh>
   );
 }

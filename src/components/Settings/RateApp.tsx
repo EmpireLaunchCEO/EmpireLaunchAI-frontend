@@ -70,12 +70,12 @@ export function RateApp() {
   return (
     <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8 shadow-sm">
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+        <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
           <Star className="w-6 h-6" />
         </div>
         <div>
           <h3 className="text-xl font-black text-foreground tracking-tight">Rate EmpireLaunch AI</h3>
-          <p className="text-sm font-medium text-theme-background0">Share your thoughts with the engineers.</p>
+          <p className="text-sm font-medium text-muted-foreground">Share your thoughts with the engineers.</p>
         </div>
       </div>
 
@@ -118,7 +118,7 @@ export function RateApp() {
                   value={review}
                   onChange={(e) => setReview(e.target.value)}
                   placeholder={rating >= 4 ? "Tell us about your success..." : "What's missing from your workflow?"}
-                  className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold text-base min-h-[120px] resize-none"
+                  className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-base min-h-[120px] resize-none"
                 />
                 <MessageSquare className="absolute right-5 bottom-5 w-5 h-5 text-slate-300" />
               </div>

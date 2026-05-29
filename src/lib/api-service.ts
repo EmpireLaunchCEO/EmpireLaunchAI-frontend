@@ -1,5 +1,3 @@
-import { API_URL } from './config';
-
 export interface RevenueTransaction {
   id: string;
   amount: number;
@@ -251,6 +249,31 @@ export const creativeService = {
   },
 
   async getBlueprint(taskId: string): Promise<CreativeBlueprintData> {
+    if (taskId === 'dt_2') {
+      return {
+        id: taskId,
+        title: 'Dynamic Business Reveal Video',
+        intelligence: 'High-velocity "Hook-Value-CTA" structure optimized for TikTok/Reels. Using fast-cut transitions and high-contrast overlays.',
+        palette: ['#000000', '#FFFFFF', '#FBBF24', '#EF4444'],
+        fonts: [
+          { platform: 'CapCut', pairing: 'Modern Bold + Classic Italic' },
+          { platform: 'Overlays', pairing: 'Montserrat ExtraBold' }
+        ],
+        script: [
+          { label: 'Hook (0:00)', text: 'Stop scrolling! Your business is about to change.' },
+          { label: 'Body Text', text: 'EmpireLaunch AI automates your growth so you can focus on scale.' },
+          { label: 'CTA', text: 'Link in Bio to start your Empire.' },
+          { label: 'CapCut Effects', text: 'Glitch Transition, Bounce In, Shake 2' }
+        ],
+        compositionUrl: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?q=80&w=400&auto=format&fit=crop',
+        platformLink: 'https://www.capcut.com/editor',
+        variations: [
+          { id: 'v1', name: 'The Minimalist', description: 'Focus on white space and thin typography.', previewUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop' },
+          { id: 'v2', name: 'The Bold', description: 'High-contrast colors and heavy fonts.', previewUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop' }
+        ]
+      };
+    }
+
     return {
       id: taskId,
       title: 'Vintage Botanical Journal Cover',
@@ -340,6 +363,85 @@ export const approvalService = {
     //   method: 'POST', 
     //   body: JSON.stringify({ status, details }) 
     // });
+    return true;
+  }
+};
+
+export interface TrustScore {
+  score: number;
+  velocity: number;
+  sentiment: number;
+  agility: number;
+}
+
+export interface SentimentPoint {
+  date: string;
+  score: number;
+}
+
+export interface InboxDraft {
+  id: string;
+  type: 'THANK_YOU' | 'REVIEW_REQUEST' | 'SUPPORT_FOLLOWUP';
+  platform: string;
+  customer: string;
+  subject: string;
+  body: string;
+  reasoning: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+}
+
+export const retentionService = {
+  async getTrustPulse(): Promise<TrustScore> {
+    // Mocking ETS data
+    return {
+      score: 88,
+      velocity: 92,
+      sentiment: 85,
+      agility: 82
+    };
+  },
+
+  async getSentimentMap(): Promise<SentimentPoint[]> {
+    return [
+      { date: '2024-05-22', score: 78 },
+      { date: '2024-05-23', score: 82 },
+      { date: '2024-05-24', score: 80 },
+      { date: '2024-05-25', score: 85 },
+      { date: '2024-05-26', score: 88 },
+      { date: '2024-05-27', score: 87 },
+      { date: '2024-05-28', score: 90 },
+    ];
+  },
+
+  async getInboxDrafts(): Promise<InboxDraft[]> {
+    return [
+      {
+        id: 'dr_1',
+        type: 'THANK_YOU',
+        platform: 'Etsy',
+        customer: 'Sarah J.',
+        subject: 'Thank you for your order!',
+        body: "Hi Sarah, thank you for purchasing the Digital Zen Journal! I hope it helps you stay organized and calm. Let me know if you have any questions.",
+        reasoning: "Instant handshake builds initial trust and confirms delivery access.",
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'dr_2',
+        type: 'REVIEW_REQUEST',
+        platform: 'Fiverr',
+        customer: 'Alex Miller',
+        subject: 'How is your new design?',
+        body: "Hi Alex! It's been a week since I delivered your Vintage Botanical Cover. I'd love to hear how it's working for your brand. If you're happy with the result, would you mind leaving a quick review?",
+        reasoning: "7-day post-delivery nudge. Optimized for review conversion without incentivization.",
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      }
+    ];
+  },
+
+  async respondToDraft(id: string, status: 'approved' | 'rejected'): Promise<boolean> {
     return true;
   }
 };
@@ -521,38 +623,6 @@ export const analyticsService = {
         impact: "Medium",
         metric: "12% search lift",
         type: "optimization"
-      }
-    ];
-  },
-
-  async getStrategySuggestions() {
-    return [
-      {
-        id: 'strat_1',
-        type: 'TREND_PIVOT',
-        title: 'Pivot to Minimalist Boho',
-        suggestion: 'The market is shifting from "Vintage" to "Boho Minimalist". I suggest updating your active Etsy listings to reflect this trend.',
-        reasoning: 'The Revenue Oracle detected a 22% increase in "Boho" search volume across TikTok and Pinterest in the last 48 hours.',
-        roiImpact: 45000, // $450.00
-        status: 'pending'
-      },
-      {
-        id: 'strat_2',
-        type: 'SEO_OPTIMIZATION',
-        title: 'Keyword Refresh: "ADHD Planner"',
-        suggestion: 'Competition for "Digital Planner" rose by 15%. I recommend switching focus to "ADHD Organization Guide" to maintain top placement.',
-        reasoning: 'Neural Discovery found a high-converting keyword gap in the neurodiversity niche.',
-        roiImpact: 12500, // $125.00
-        status: 'pending'
-      },
-      {
-        id: 'strat_3',
-        type: 'AD_BOOST',
-        title: 'Boost TikTok "Morning Routine"',
-        suggestion: 'Your recent video is outperforming baseline engagement by 3.4x. A $20 ad boost could yield an estimated 5:1 ROI.',
-        reasoning: 'Viral Watch triggered an alert for high engagement velocity on platform TikTok.',
-        roiImpact: 85000, // $850.00
-        status: 'pending'
       }
     ];
   }

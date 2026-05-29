@@ -32,7 +32,7 @@ const mockEmpires: Empire[] = [
     id: '2',
     name: 'PixelPlanners',
     logoInitial: 'P',
-    primaryColor: 'bg-primary',
+    primaryColor: 'bg-blue-500',
     milestoneProgress: 45,
     status: 'planning',
     pendingApprovals: 3,
@@ -166,7 +166,7 @@ export function EmpireSwitcher() {
                     >
                       <span className="font-bold text-slate-200 truncate w-full">{empire.name}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-theme-background0 uppercase font-black tracking-wider">
+                        <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider">
                           {empire.milestoneProgress}% Target
                         </span>
                         {empire.pendingApprovals > 0 && (
@@ -203,14 +203,14 @@ export function EmpireSwitcher() {
             "flex items-center transition-all duration-200",
             isExpanded ? "gap-4 w-full" : "justify-center w-full"
           )}>
-            <div className="w-12 h-12 rounded-full border-2 border-dashed border-slate-700 flex items-center justify-center text-theme-background0 hover:border-theme-background0 hover:text-slate-300 transition-colors">
+            <div className="w-12 h-12 rounded-full border-2 border-dashed border-slate-700 flex items-center justify-center text-muted-foreground hover:border-theme0 hover:text-slate-300 transition-colors">
               <Plus className="w-6 h-6" />
             </div>
             {isExpanded && (
               <motion.span 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-sm font-bold text-theme-background0 group-hover:text-slate-300"
+                className="text-sm font-bold text-muted-foreground group-hover:text-slate-300"
               >
                 New Empire
               </motion.span>
@@ -234,7 +234,7 @@ export function EmpireSwitcher() {
                 className="flex flex-col overflow-hidden"
               >
                 <span className="text-sm font-bold truncate">John Doe</span>
-                <span className="text-[10px] text-theme-background0 uppercase font-black tracking-widest">Pro User</span>
+                <span className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Pro User</span>
               </motion.div>
             )}
          </div>

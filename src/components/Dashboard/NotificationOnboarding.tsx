@@ -210,7 +210,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                     <div className="space-y-4 pt-4">
                       <button
                         onClick={handleActivate}
-                        disabled={status !== 'idle'}
+                        disabled={status === 'subscribing'}
                         className="w-full py-5 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-foreground rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all shadow-xl shadow-amber-400/10 active:scale-[0.98]"
                       >
                         Activate Real-Time Pulse
@@ -218,7 +218,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                       
                       <button
                         onClick={handleClose}
-                        className="text-theme-background0 font-bold text-xs uppercase tracking-[0.2em] hover:text-slate-300 transition-colors"
+                        className="text-muted-foreground font-bold text-xs uppercase tracking-[0.2em] hover:text-slate-300 transition-colors"
                       >
                         I'll Check Manually
                       </button>
@@ -269,7 +269,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
             
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/5 rounded-full blur-[100px] -mr-32 -mt-32" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary/5 rounded-full blur-[80px] -ml-24 -mb-24" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-600/5 rounded-full blur-[80px] -ml-24 -mb-24" />
           </motion.div>
         </div>
       )}

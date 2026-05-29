@@ -42,7 +42,7 @@ export const VideoPerformance = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-black text-foreground tracking-tight">Video Performance</h3>
-        <button className="text-[10px] font-black text-primary uppercase tracking-widest hover:text-primary transition-colors">
+        <button className="text-[10px] font-black text-primary uppercase tracking-widest hover:opacity-80 transition-colors">
           View All Content
         </button>
       </div>
@@ -54,7 +54,7 @@ export const VideoPerformance = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="bg-theme-surface rounded-[32px] overflow-hidden border-2 border-theme-background shadow-sm hover:shadow-md transition-all group"
+            className="bg-theme-surface rounded-[32px] overflow-hidden border border-theme shadow-sm hover:shadow-md transition-all group"
           >
             <div className="relative aspect-square">
               <img 
@@ -62,7 +62,7 @@ export const VideoPerformance = () => {
                 alt="Thumbnail" 
                 className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
               
               <div className="absolute top-4 left-4">
                 <div className="bg-theme-surface/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
@@ -81,7 +81,7 @@ export const VideoPerformance = () => {
                    </div>
                    <span className="text-white text-xs font-bold">{video.platform}</span>
                 </div>
-                <div className="bg-primary text-white px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1">
+                <div className="bg-primary text-slate-950 px-2 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1">
                    <MousePointer2 className="w-2.5 h-2.5" />
                    {video.clicks} Clicks
                 </div>
@@ -89,15 +89,15 @@ export const VideoPerformance = () => {
             </div>
 
             <div className="p-5 space-y-4">
-              <div className="flex items-center justify-between text-theme-background0">
+              <div className="flex items-center justify-between text-muted-foreground">
                 <div className="flex flex-col items-center flex-1 border-r border-theme">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/70 mb-1 flex items-center gap-1">
                     <Eye className="w-2.5 h-2.5" /> Views
                   </span>
                   <span className="text-sm font-black text-foreground">{video.views}</span>
                 </div>
                 <div className="flex flex-col items-center flex-1">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/70 mb-1 flex items-center gap-1">
                     <Heart className="w-2.5 h-2.5" /> Likes
                   </span>
                   <span className="text-sm font-black text-foreground">{video.likes}</span>
@@ -107,9 +107,9 @@ export const VideoPerformance = () => {
               <div className="bg-theme-background rounded-2xl p-3 border border-theme">
                 <div className="flex items-center gap-2 mb-1">
                   <Stars className="w-3.5 h-3.5 text-primary" />
-                  <span className="text-[8px] font-black uppercase tracking-widest text-theme-background0">AI Intelligent Insight</span>
+                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">AI Intelligent Insight</span>
                 </div>
-                <p className="text-[11px] font-bold text-slate-700 leading-snug">
+                <p className="text-[11px] font-bold text-foreground leading-snug">
                   {video.insight}
                 </p>
               </div>

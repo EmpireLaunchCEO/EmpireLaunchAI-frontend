@@ -34,7 +34,7 @@ export function ProgressConstellation({ currentStep, totalSteps }: ProgressConst
               y1={`${prevStar.y}%`}
               x2={`${star.x}%`}
               y2={`${star.y}%`}
-              stroke={isActive ? "#3b82f6" : "#e2e8f0"}
+              stroke={isActive ? "var(--primary)" : "rgba(var(--foreground-rgb), 0.1)"}
               strokeWidth="2"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: isActive ? 1 : 0 }}
@@ -60,7 +60,7 @@ export function ProgressConstellation({ currentStep, totalSteps }: ProgressConst
           >
             <div className={cn(
               "relative w-12 h-12 rounded-full flex items-center justify-center transition-all duration-700 shadow-2xl",
-              isActive ? "bg-primary text-white ring-8 ring-primary/10" : "bg-theme-surface text-slate-300 border-2 border-theme"
+              isActive ? "bg-primary text-slate-900 ring-8 ring-primary/10" : "bg-theme-surface text-slate-500 border-2 border-slate-800"
             )}>
               {isCompleted ? (
                 <CheckCircle2 className="w-6 h-6" />
@@ -70,7 +70,7 @@ export function ProgressConstellation({ currentStep, totalSteps }: ProgressConst
               
               {isActive && !isCompleted && (
                 <motion.div
-                  className="absolute inset-0 rounded-full bg-primary -z-10"
+                  className="absolute inset-0 rounded-full bg-primary/40 -z-10"
                   animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
                   transition={{ repeat: Infinity, duration: 2 }}
                 />

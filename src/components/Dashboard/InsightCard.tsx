@@ -30,13 +30,13 @@ export function InsightCard({ platform, title, description, roi, onExecute, isEx
           </div>
           <span className="text-sm font-semibold text-slate-400 uppercase tracking-wider">{platform}</span>
         </div>
-        <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">
+        <div className="bg-green-100/10 text-green-500 px-3 py-1 rounded-full text-xs font-bold border border-green-500/20">
           {roi} ROI
         </div>
       </div>
       
       <h4 className="text-lg font-bold text-foreground mb-2">{title}</h4>
-      <p className="text-slate-600 text-sm mb-6 leading-relaxed">
+      <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
         {description}
       </p>
       
@@ -48,7 +48,7 @@ export function InsightCard({ platform, title, description, roi, onExecute, isEx
             "flex-1 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all",
             isExecuting 
               ? "bg-primary text-white cursor-wait" 
-              : "bg-slate-900 text-white hover:bg-slate-800"
+              : "bg-primary text-white hover:bg-primary/80"
           )}
         >
           {isExecuting ? (
@@ -63,10 +63,10 @@ export function InsightCard({ platform, title, description, roi, onExecute, isEx
             </>
           )}
         </button>
-        <button className="p-2.5 rounded-xl border border-theme text-slate-400 hover:text-slate-600 hover:bg-theme-background transition-all">
+        <button className="p-2.5 rounded-xl border border-theme text-slate-400 hover:text-foreground hover:bg-theme-background transition-all">
           <ExternalLink className="w-5 h-5" />
         </button>
-        <button className="p-2.5 rounded-xl border border-theme text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all">
+        <button className="p-2.5 rounded-xl border border-theme text-slate-400 hover:text-red-500 hover:bg-red-50/10 transition-all">
           <X className="w-5 h-5" />
         </button>
       </div>

@@ -164,7 +164,7 @@ export function ApprovalGate({
             {/* Pulse Progress Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-slate-800">
               <motion.div 
-                className="h-full bg-primary shadow-[0_0_10px_rgba(59,130,246,0.8)]"
+                className="h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"
                 animate={{ 
                   width: gateState === 'discovery' ? '30%' : 
                          gateState === 'barrier' ? '50%' : 
@@ -182,17 +182,17 @@ export function ApprovalGate({
               <div className="flex items-center gap-4 flex-1">
                 <div className={cn(
                   "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500",
-                  isAiActive ? "bg-primary shadow-[0_0_20px_rgba(59,130,246,0.4)]" : "bg-slate-800"
+                  isAiActive ? "bg-blue-600 shadow-[0_0_20px_rgba(59,130,246,0.4)]" : "bg-slate-800"
                 )}>
                   {isAiActive ? <Bot className="w-6 h-6 text-white" /> : <User className="w-6 h-6 text-slate-400" />}
                 </div>
                 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">
                       {isAiActive ? "AI Orchestrator" : "Human Controller"}
                     </span>
-                    {isAiActive && <Loader2 className="w-3 h-3 text-primary animate-spin" />}
+                    {isAiActive && <Loader2 className="w-3 h-3 text-blue-400 animate-spin" />}
                   </div>
                   
                   {/* Thought Stream (Last message) */}
@@ -214,7 +214,7 @@ export function ApprovalGate({
 
               <button 
                 onClick={onClose}
-                className="p-2 hover:bg-theme-surface/5 rounded-full transition-colors text-theme-background0 hover:text-white"
+                className="p-2 hover:bg-theme-surface/5 rounded-full transition-colors text-muted-foreground hover:text-white"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -236,15 +236,15 @@ export function ApprovalGate({
                 gateState === 'barrier' ? "h-full opacity-100" : "h-[100px] opacity-40 blur-sm pointer-events-none"
               )}
             >
-              <div className="bg-slate-100 px-4 py-2 flex items-center justify-between border-b border-theme">
+              <div className="bg-slate-100 px-4 py-2 flex items-center justify-between border-b border-slate-200">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-slate-300" />
                   <div className="w-3 h-3 rounded-full bg-slate-300" />
                   <div className="w-3 h-3 rounded-full bg-slate-300" />
                 </div>
-                <div className="flex items-center gap-2 bg-theme-surface px-3 py-1 rounded-md border border-theme shadow-sm">
+                <div className="flex items-center gap-2 bg-theme-surface px-3 py-1 rounded-md border border-slate-200 shadow-sm">
                   <ShieldCheck className="w-3 h-3 text-green-600" />
-                  <span className="text-[10px] font-bold text-theme-background0 truncate max-w-[200px]">{initialUrl}</span>
+                  <span className="text-[10px] font-bold text-muted-foreground truncate max-w-[200px]">{initialUrl}</span>
                 </div>
                 <div className="w-12" />
               </div>
@@ -257,14 +257,14 @@ export function ApprovalGate({
                         {platformName[0]}
                       </div>
                       <h4 className="text-2xl font-black text-foreground">Sign in to {platformName}</h4>
-                      <p className="text-sm font-medium text-theme-background0 italic">"Detected MFA requirement. Please sign in to continue."</p>
+                      <p className="text-sm font-medium text-muted-foreground italic">"Detected MFA requirement. Please sign in to continue."</p>
                     </div>
                     
                     <div className="space-y-4">
                       {getDeepLink(platformName) && (
                         <button 
                           onClick={handleDeepLink}
-                          className="w-full py-4 bg-primary text-white rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-3 border-b-4 border-blue-800 active:border-b-0 active:translate-y-1"
+                          className="w-full py-4 bg-blue-600 text-white rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-500 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-3 border-b-4 border-blue-800 active:border-b-0 active:translate-y-1"
                         >
                           <Smartphone className="w-4 h-4" />
                           One-Tap App Login
@@ -273,7 +273,7 @@ export function ApprovalGate({
                       
                       <div className="relative">
                         <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                          <div className="w-full border-t border-theme"></div>
+                          <div className="w-full border-t border-slate-200"></div>
                         </div>
                         <div className="relative flex justify-center text-xs uppercase font-black tracking-widest">
                           <span className="bg-theme-surface px-2 text-slate-400">or manual web login</span>
@@ -285,7 +285,7 @@ export function ApprovalGate({
                         <input 
                           type="text" 
                           defaultValue="ceo@my-empire.com"
-                          className="w-full px-4 py-3 bg-theme-background border border-theme rounded-xl text-sm font-bold focus:outline-none focus:border-primary"
+                          className="w-full px-4 py-3 bg-theme-background border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:border-blue-600"
                         />
                       </div>
                       <div className="space-y-2">
@@ -293,12 +293,12 @@ export function ApprovalGate({
                         <input 
                           type="password" 
                           defaultValue="••••••••••••"
-                          className="w-full px-4 py-3 bg-theme-background border border-theme rounded-xl text-sm font-bold focus:outline-none focus:border-primary"
+                          className="w-full px-4 py-3 bg-theme-background border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:border-blue-600"
                         />
                       </div>
                       <button 
                         onClick={handleUserSignIn}
-                        className="w-full py-4 bg-slate-900 text-white rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary transition-all shadow-xl shadow-slate-200"
+                        className="w-full py-4 bg-slate-900 text-white rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl shadow-slate-200"
                       >
                         Sign In
                       </button>
@@ -326,8 +326,8 @@ export function ApprovalGate({
                   className="space-y-1"
                 >
                   <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                    <span className="text-[9px] font-mono text-theme-background0">{new Date(thought.timestamp).toLocaleTimeString()}</span>
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                    <span className="text-[9px] font-mono text-muted-foreground">{new Date(thought.timestamp).toLocaleTimeString()}</span>
                   </div>
                   <p className="text-[11px] font-mono text-slate-300 leading-relaxed">
                     {thought.text}
@@ -342,21 +342,21 @@ export function ApprovalGate({
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="absolute inset-0 z-50 bg-primary flex flex-col items-center justify-center text-white"
+                  className="absolute inset-0 z-50 bg-blue-600 flex flex-col items-center justify-center text-white"
                 >
                   <motion.div
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ repeat: Infinity, duration: 2 }}
                     className="w-24 h-24 bg-theme-surface rounded-full flex items-center justify-center mb-8 shadow-2xl"
                   >
-                    <CheckCircle2 className="w-12 h-12 text-primary" />
+                    <CheckCircle2 className="w-12 h-12 text-blue-600" />
                   </motion.div>
                   <h3 className="text-4xl font-black italic tracking-tight mb-2 uppercase">Neural Link Established.</h3>
-                  <p className="text-primary/20 font-bold uppercase tracking-widest text-sm italic">{platformName} is now part of your empire!</p>
+                  <p className="text-blue-100 font-bold uppercase tracking-widest text-sm italic">{platformName} is now part of your empire!</p>
                   
                   <button 
                     onClick={onClose}
-                    className="mt-12 px-10 py-4 bg-theme-surface text-primary rounded-full font-black text-xs uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all shadow-2xl shadow-blue-800/40"
+                    className="mt-12 px-10 py-4 bg-theme-surface text-blue-600 rounded-full font-black text-xs uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all shadow-2xl shadow-blue-800/40"
                   >
                     Return to Mission Hub
                   </button>
@@ -368,12 +368,12 @@ export function ApprovalGate({
           {/* Bottom: Handoff Action Bar */}
           <div className="shrink-0 p-8 bg-slate-950 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-primary/10 border border-primary/20 text-primary">
+              <div className="p-3 rounded-xl bg-blue-600/10 border border-blue-500/20 text-blue-400">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
                 <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Trust Shield Active</h5>
-                <p className="text-[10px] font-medium text-theme-background0 max-w-[240px]">Isolated browser session. Your password is never stored or visible to the AI agent.</p>
+                <p className="text-[10px] font-medium text-muted-foreground max-w-[240px]">Isolated browser session. Your password is never stored or visible to the AI agent.</p>
               </div>
             </div>
 
@@ -381,7 +381,7 @@ export function ApprovalGate({
               {gateState === 'barrier' ? (
                 <button 
                   onClick={handleUserSignIn}
-                  className="flex-1 md:flex-none px-10 py-5 bg-primary text-white rounded-[24px] font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-primary transition-all shadow-2xl shadow-foreground/40 group"
+                  className="flex-1 md:flex-none px-10 py-5 bg-blue-600 text-white rounded-[24px] font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-blue-500 transition-all shadow-2xl shadow-blue-900/40 group"
                 >
                   Sign-in Completed
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -406,8 +406,8 @@ export function ApprovalGate({
           <div className="absolute right-8 bottom-32 hidden lg:block">
             <div className="bg-slate-800/50 backdrop-blur-sm border border-white/10 rounded-2xl p-4 w-48 shadow-xl">
               <div className="flex items-center gap-2 mb-2">
-                <AlertCircle className="w-3 h-3 text-primary" />
-                <span className="text-[9px] font-black uppercase text-primary tracking-widest">Secure Session</span>
+                <AlertCircle className="w-3 h-3 text-blue-400" />
+                <span className="text-[9px] font-black uppercase text-blue-400 tracking-widest">Secure Session</span>
               </div>
               <p className="text-[10px] text-slate-400 leading-relaxed font-medium italic">
                 EmpireLaunch AI uses a sandboxed remote browser. We only receive the session cookies to resume setup after you sign in.

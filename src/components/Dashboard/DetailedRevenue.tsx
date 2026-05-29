@@ -46,7 +46,7 @@ export function DetailedRevenue() {
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Milestone Progress */}
-        <div className="bg-slate-900 rounded-[40px] p-8 text-white space-y-6 relative overflow-hidden shadow-2xl shadow-foreground/20">
+        <div className="bg-theme-surface rounded-[40px] p-8 text-foreground space-y-6 relative overflow-hidden shadow-2xl border-2 border-theme">
           <div className="relative z-10 flex justify-between items-start">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
@@ -55,8 +55,8 @@ export function DetailedRevenue() {
               </div>
               <h3 className="text-2xl font-black">{activeMilestone?.label}</h3>
             </div>
-            <div className="bg-theme-surface/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-               <span className="text-[10px] font-black text-white uppercase tracking-widest">
+            <div className="bg-primary/10 backdrop-blur-md px-3 py-1 rounded-full border border-primary/20">
+               <span className="text-[10px] font-black text-primary uppercase tracking-widest">
                  {progressPercent.toFixed(1)}% Complete
                </span>
             </div>
@@ -65,23 +65,23 @@ export function DetailedRevenue() {
           <div className="relative z-10 space-y-4">
              <div className="flex justify-between items-end">
                <div className="flex items-end gap-2">
-                 <span className="text-4xl font-black text-white">${activeMilestone?.current.toLocaleString()}</span>
-                 <span className="text-white/40 font-bold mb-1">/ ${activeMilestone?.target.toLocaleString()}</span>
+                 <span className="text-4xl font-black text-foreground">${activeMilestone?.current.toLocaleString()}</span>
+                 <span className="text-muted-foreground font-bold mb-1">/ ${activeMilestone?.target.toLocaleString()}</span>
                </div>
                <span className="text-xs font-bold text-primary">+${(activeMilestone?.target - activeMilestone?.current).toLocaleString()} remaining</span>
              </div>
              
-             <div className="h-3 w-full bg-theme-surface/5 rounded-full overflow-hidden border border-white/5">
+             <div className="h-3 w-full bg-theme-background rounded-full overflow-hidden border border-theme">
                 <motion.div 
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 1.5, ease: "easeOut" }}
-                  className="h-full bg-gradient-to-r from-primary to-indigo-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
+                  className="h-full bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]"
                 />
              </div>
           </div>
 
-          <div className="absolute right-0 bottom-0 p-8 opacity-10">
+          <div className="absolute right-0 bottom-0 p-8 opacity-5">
              <DollarSign className="w-48 h-48 -mr-12 -mb-12 rotate-12" />
           </div>
         </div>
@@ -98,7 +98,7 @@ export function DetailedRevenue() {
               </div>
            </div>
            <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                  <CheckCircle2 className="w-5 h-5" />
               </div>
               <div className="space-y-1">
@@ -108,7 +108,7 @@ export function DetailedRevenue() {
            </div>
            <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm col-span-2 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white shadow-lg">
+                <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-white shadow-lg">
                    <DollarSign className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
@@ -123,7 +123,7 @@ export function DetailedRevenue() {
 
       {/* Recent Transactions List */}
       <div className="bg-theme-surface border border-theme rounded-[40px] overflow-hidden shadow-sm">
-        <div className="p-8 border-b border-theme-background flex justify-between items-center">
+        <div className="p-8 border-b border-theme flex justify-between items-center">
           <div className="flex items-center gap-3">
              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
                 <Clock className="w-5 h-5" />
@@ -133,7 +133,7 @@ export function DetailedRevenue() {
           <button className="text-xs font-bold text-primary uppercase tracking-widest">Download CSV</button>
         </div>
         
-        <div className="divide-y divide-theme-background">
+        <div className="divide-y divide-theme">
           {transactions.map((t) => (
             <div key={t.id} className="p-6 hover:bg-theme-background transition-colors flex items-center justify-between group">
               <div className="flex items-center gap-6">
@@ -171,7 +171,7 @@ export function DetailedRevenue() {
           ))}
         </div>
         
-        <button className="w-full py-6 bg-theme-background text-theme-background0 font-bold text-sm hover:bg-slate-100 transition-colors">
+        <button className="w-full py-6 bg-theme-background text-muted-foreground font-bold text-sm hover:bg-theme-surface transition-colors border-t border-theme">
           View All Transactions
         </button>
       </div>

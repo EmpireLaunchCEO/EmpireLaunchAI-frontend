@@ -23,14 +23,14 @@ const Cycle = ({ name, status, progress, nextAction }: CycleProps) => (
           fill="transparent"
           stroke="currentColor"
           strokeWidth="4"
-          className="text-slate-100"
+          className="text-slate-100/10"
         />
         <motion.circle
           cx="32"
           cy="32"
           r="28"
           fill="transparent"
-          stroke={status === 'pending-approval' ? '#f59e0b' : '#3b82f6'}
+          stroke={status === 'pending-approval' ? '#f59e0b' : 'var(--primary)'}
           strokeWidth="4"
           strokeDasharray={2 * Math.PI * 28}
           initial={{ strokeDashoffset: 2 * Math.PI * 28 }}
@@ -56,12 +56,12 @@ const Cycle = ({ name, status, progress, nextAction }: CycleProps) => (
         <span className={cn(
           "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded",
           status === 'active' ? "bg-primary/10 text-primary" : 
-          status === 'pending-approval' ? "bg-amber-50 text-amber-600" : "bg-theme-background text-theme-background0"
+          status === 'pending-approval' ? "bg-amber-50 text-amber-600" : "bg-theme-background text-muted-foreground"
         )}>
           {status}
         </span>
       </div>
-      <p className="text-xs text-theme-background0 truncate">Next: {nextAction}</p>
+      <p className="text-xs text-muted-foreground truncate">Next: {nextAction}</p>
     </div>
 
     <div className="flex items-center gap-2">

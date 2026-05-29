@@ -43,7 +43,7 @@ export function PaymentButtonList() {
     <div className="bg-theme-surface border border-theme rounded-[40px] p-8 shadow-sm space-y-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white">
+          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-foreground">
             <CreditCard className="w-5 h-5" />
           </div>
           <h3 className="text-xl font-black text-foreground">Payment Buttons</h3>
@@ -55,16 +55,16 @@ export function PaymentButtonList() {
 
       <div className="space-y-4">
         {buttons.map((button) => (
-          <div key={button.id} className="p-5 border border-theme-background rounded-[24px] hover:border-primary/20 transition-colors flex items-center justify-between group">
+          <div key={button.id} className="p-5 border border-theme rounded-[24px] hover:border-primary/30 transition-colors flex items-center justify-between group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-theme-background flex items-center justify-center text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+              <div className="w-12 h-12 rounded-2xl bg-theme-background flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                  <MousePointer2 className="w-6 h-6" />
               </div>
               <div className="space-y-1">
                  <h4 className="font-bold text-foreground">{button.label}</h4>
                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{button.productName}</span>
-                    <span className="w-1 h-1 rounded-full bg-slate-300" />
+                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{button.productName}</span>
+                    <span className="w-1 h-1 rounded-full bg-muted-foreground/30" />
                     <span className="text-[10px] font-bold text-primary">${button.price}</span>
                  </div>
               </div>
@@ -79,10 +79,10 @@ export function PaymentButtonList() {
                 onClick={() => handleCopy(button.id)}
                 className="p-3 hover:bg-theme-background rounded-xl transition-colors relative"
               >
-                {copiedId === button.id ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-slate-400" />}
+                {copiedId === button.id ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-muted-foreground" />}
               </button>
               <button className="p-3 hover:bg-theme-background rounded-xl transition-colors">
-                <ExternalLink className="w-4 h-4 text-slate-400" />
+                <ExternalLink className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
           </div>

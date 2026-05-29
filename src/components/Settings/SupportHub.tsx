@@ -19,7 +19,7 @@ export function SupportHub() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="p-8 rounded-[40px] bg-slate-900 text-white space-y-8 shadow-xl">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-theme-surface/10 flex items-center justify-center text-primary">
+            <div className="w-12 h-12 rounded-2xl bg-theme-surface/10 flex items-center justify-center text-blue-400">
               <LifeBuoy className="w-6 h-6" />
             </div>
             <div>
@@ -28,18 +28,18 @@ export function SupportHub() {
             </div>
           </div>
 
-          <button className="w-full flex items-center justify-center gap-3 bg-primary text-white px-8 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary transition-all shadow-xl shadow-foreground/20 group">
+          <button className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white px-8 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 group">
             Contact Support Hub <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
           </button>
 
           <div className="pt-4 border-t border-white/10 space-y-4">
-            <p className="text-[10px] font-black uppercase tracking-widest text-theme-background0">Recent Tickets</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Recent Tickets</p>
             <div className="space-y-3">
               {supportTickets.map((ticket) => (
                 <div key={ticket.id} className="flex items-center justify-between p-4 rounded-2xl bg-theme-surface/5 border border-white/5 hover:border-white/10 transition-colors">
                   <div className="space-y-1">
                     <p className="text-xs font-bold">{ticket.subject}</p>
-                    <p className="text-[10px] font-medium text-theme-background0">{ticket.id} • {ticket.date}</p>
+                    <p className="text-[10px] font-medium text-muted-foreground">{ticket.id} • {ticket.date}</p>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${
                     ticket.status === 'Resolved' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
@@ -59,7 +59,7 @@ export function SupportHub() {
             </div>
             <div>
               <h3 className="text-xl font-black text-foreground tracking-tight">FAQ & Documents</h3>
-              <p className="text-sm font-medium text-theme-background0">Master the Empire Engine.</p>
+              <p className="text-sm font-medium text-muted-foreground">Master the Empire Engine.</p>
             </div>
           </div>
 
@@ -70,9 +70,9 @@ export function SupportHub() {
               "Maximizing TikTok Virality",
               "Setting up Payouts"
             ].map((item) => (
-              <button key={item} className="w-full flex items-center justify-between p-5 rounded-2xl bg-theme-background border-2 border-theme-background hover:border-primary/20 hover:bg-primary/10/30 transition-all group">
+              <button key={item} className="w-full flex items-center justify-between p-5 rounded-2xl bg-theme-background border-2 border-theme hover:border-blue-600/20 hover:bg-blue-50/30 transition-all group">
                 <div className="flex items-center gap-3">
-                  <FileText className="w-4 h-4 text-slate-400 group-hover:text-primary transition-colors" />
+                  <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
                   <span className="text-sm font-bold text-slate-700">{item}</span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" />
@@ -80,7 +80,7 @@ export function SupportHub() {
             ))}
           </div>
           
-          <button className="w-full text-center text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-primary transition-colors">
+          <button className="w-full text-center text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 hover:text-blue-700 transition-colors">
             View Knowledge Base
           </button>
         </div>

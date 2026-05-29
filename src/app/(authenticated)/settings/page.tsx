@@ -21,7 +21,7 @@ import {
   Lock,
   Diamond,
   Power,
-  Palette as PaletteIcon,
+  Palette,
   Scale,
   LifeBuoy,
   Stars,
@@ -34,19 +34,20 @@ import { SupportHub } from '@/components/Settings/SupportHub';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { TermsModal } from '@/components/Legal/TermsModal';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
   if (platform.toLowerCase() === 'etsy') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-primary shadow-2xl space-y-8 relative overflow-hidden">
+        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-blue-600 shadow-2xl space-y-8 relative overflow-hidden">
           {/* AI Brain Pulse in background */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] -z-10" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[80px] -z-10" />
           
           <div className="flex items-center justify-between border-b border-theme pb-6">
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
-              <Bot className="w-6 h-6 text-primary" /> Connecting Etsy Marketplace
+              <Bot className="w-6 h-6 text-blue-600" /> Connecting Etsy Marketplace
             </h3>
             <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
               <X className="w-6 h-6 text-slate-400" />
@@ -60,7 +61,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                 id="etsy-api-key"
                 type="text"
                 placeholder="Paste keystring here..."
-                className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold text-lg"
+                className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg"
               />
             </div>
             <div className="space-y-3">
@@ -69,14 +70,14 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                 id="etsy-shared-secret"
                 type="text"
                 placeholder="Paste secret here..."
-                className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold text-lg"
+                className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg"
               />
             </div>
           </div>
           
           <div className="flex justify-end gap-4 pt-4">
             <button onClick={onClose} className="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
-            <button className="px-10 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary transition-all shadow-xl shadow-blue-200">Save Connection</button>
+            <button className="px-10 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-200">Save Connection</button>
           </div>
         </div>
       </div>
@@ -91,7 +92,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
 
           <div className="flex items-center justify-between border-b border-theme pb-6">
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
-              <Share2 className="w-6 h-6 text-primary" /> Connecting TikTok Marketing
+              <Share2 className="w-6 h-6 text-blue-600" /> Connecting TikTok Marketing
             </h3>
             <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
               <X className="w-6 h-6 text-slate-400" />
@@ -104,7 +105,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
               <div className="relative">
                 <select
                   id="tiktok-marketing-api"
-                  className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold appearance-none text-lg"
+                  className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold appearance-none text-lg"
                 >
                   <option>Select...</option>
                   <option>Marketing API</option>
@@ -120,7 +121,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                 type="text"
                 readOnly
                 value="https://empire-launch-ai-frontend.vercel.app/api/auth/callback/tiktok"
-                className="w-full p-5 rounded-3xl bg-slate-100 border-2 border-theme outline-none transition-all font-bold text-lg text-theme-background0 cursor-not-allowed"
+                className="w-full p-5 rounded-3xl bg-slate-100 border-2 border-theme outline-none transition-all font-bold text-lg text-muted-foreground cursor-not-allowed"
               />
             </div>
           </div>
@@ -137,12 +138,12 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
   if (platform.toLowerCase() === 'bannerbear') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-theme shadow-2xl space-y-8 relative overflow-hidden">
+        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-slate-200 shadow-2xl space-y-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-slate-100 blur-[80px] -z-10" />
           
           <div className="flex items-center justify-between border-b border-theme pb-6">
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
-              <Stars className="w-6 h-6 text-foreground" /> Connecting Bannerbear AI
+              <Stars className="w-6 h-6 text-blue-900" /> Connecting Bannerbear AI
             </h3>
             <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
               <X className="w-6 h-6 text-slate-400" />
@@ -156,18 +157,18 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                 id="bannerbear-api-key"
                 type="password"
                 placeholder="Paste your Bannerbear API key..."
-                className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold text-lg"
+                className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg"
               />
             </div>
             
-            <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20">
-              <p className="text-xs font-bold text-primary leading-relaxed text-center">
+            <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100">
+              <p className="text-xs font-bold text-blue-700 leading-relaxed text-center">
                 <Bot className="w-4 h-4 inline mr-2" />
                 This key allows the Empire AI to automatically generate your social media graphics and videos using your Bannerbear templates.
               </p>
-              <div className="mt-3 pt-3 border-t border-primary/20/50 flex flex-col items-center">
-                <p className="text-[10px] text-primary uppercase tracking-widest font-black mb-1">Workflow Note</p>
-                <p className="text-[11px] font-medium text-primary/80">Part of your <span className="font-black italic">Creative Blueprint</span> for autonomous asset production.</p>
+              <div className="mt-3 pt-3 border-t border-blue-100/50 flex flex-col items-center">
+                <p className="text-[10px] text-blue-500 uppercase tracking-widest font-black mb-1">Workflow Note</p>
+                <p className="text-[11px] font-medium text-blue-600/80">Part of your <span className="font-black italic">Creative Blueprint</span> for autonomous asset production.</p>
               </div>
             </div>
           </div>
@@ -191,7 +192,7 @@ const tabs = [
   { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
   { id: 'user-info', name: 'User Info', icon: User },
   { id: 'bank-info', name: 'Bank Info', icon: Building2 },
-  { id: 'theme-style', name: 'Theme & Style', icon: PaletteIcon },
+  { id: 'theme-style', name: 'Theme & Style', icon: Palette },
   { id: 'cloud-storage', name: 'Cloud & Storage', icon: Globe },
   { id: 'account-settings', name: 'Account Settings', icon: Lock },
   { id: 'subscription', name: 'Subscription', icon: Diamond },
@@ -206,13 +207,8 @@ export default function SettingsPage() {
     setTheme, 
     aiMode, 
     setAiMode,
-    bankConnected,
-    setBankConnected,
-    directToBank,
-    setDirectToBank,
     notificationSettings,
-    updateNotificationSettings,
-    addToast
+    updateNotificationSettings
   } = useEmpire();
   const [activeTab, setActiveTab] = useState('link-center');
   const [searchQuery, setSearchQuery] = useState('');
@@ -250,20 +246,13 @@ export default function SettingsPage() {
   };
 
   const colorSchemes = [
-    { id: 'classic-blue', name: 'Classic Blue', primary: 'bg-primary', secondary: 'bg-slate-900', description: 'The original high-velocity interface.' },
-    { id: 'empire-gold', name: 'Empire Gold', primary: 'bg-amber-400', secondary: 'bg-slate-900', description: 'Luxurious gold and obsidian for a premium aesthetic.' },
-    { id: 'emerald-growth', name: 'Emerald Growth', primary: 'bg-emerald-600', secondary: 'bg-slate-900', description: 'Focus on revenue and prosperity.' },
-    { id: 'rose-gold', name: 'Rose Gold', primary: 'bg-rose-500', secondary: 'bg-slate-900', description: 'Premium, elegant aesthetic for luxury brands.' },
-    { id: 'cyber-purple', name: 'Cyber Purple', primary: 'bg-purple-600', secondary: 'bg-indigo-900', description: 'High-intelligence futuristic look.' },
+    { id: 'empire-gold', name: 'Obsidian Gold', primary: 'bg-amber-400', secondary: 'bg-slate-900', description: 'Premium gold and obsidian for the modern CEO.' },
+    { id: 'crystal-clean', name: 'Crystal Clean', primary: 'bg-blue-400', secondary: 'bg-white', description: 'Minimalist interface focused on absolute clarity.' },
+    { id: 'electric-empire', name: 'Electric Empire', primary: 'bg-cyan-400', secondary: 'bg-violet-900', description: 'Futuristic look with vibrant neon accents.' },
   ];
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleRefresh = async () => {
-    setIsLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    addToast({ title: 'System Synchronized', message: 'Core engine settings have been updated.', type: 'success' });
   };
 
   const [isSwitching, setIsSwitching] = useState(false);
@@ -278,8 +267,9 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="p-6 md:p-12 max-w-6xl mx-auto space-y-8 md:space-y-12 pb-32">
-      <AnimatePresence>
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="p-6 md:p-12 max-w-6xl mx-auto space-y-8 md:space-y-12 pb-32">
+        <AnimatePresence>
           {isSwitching && (
             <motion.div 
               initial={{ opacity: 0 }}
@@ -288,10 +278,10 @@ export default function SettingsPage() {
               className="fixed inset-0 z-[200] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center"
             >
               <div className="bg-theme-surface p-8 rounded-[40px] shadow-2xl flex flex-col items-center gap-4 text-center">
-                <Loader2 className="w-12 h-12 text-primary animate-spin" />
+                <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
                 <div>
                   <h4 className="font-black text-foreground">Neural Syncing...</h4>
-                  <p className="text-xs font-medium text-theme-background0">Recalibrating AI autonomy protocols.</p>
+                  <p className="text-xs font-medium text-muted-foreground">Recalibrating AI autonomy protocols.</p>
                 </div>
               </div>
             </motion.div>
@@ -299,26 +289,18 @@ export default function SettingsPage() {
         </AnimatePresence>
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
           <div>
-            <div className="flex items-center gap-4">
-              <h1 className="text-3xl md:text-4xl font-black text-foreground flex items-center gap-3">
-                Settings
-              </h1>
-              <button 
-                onClick={handleRefresh}
-                className="p-2 hover:bg-primary/10 rounded-full transition-colors"
-              >
-                <Zap className={cn("w-5 h-5 text-primary", isLoading && "animate-pulse")} />
-              </button>
-            </div>
-            <p className="text-theme-background0 mt-2 text-base md:text-lg font-medium">
-              Manage your Empire configuration and account security. <span className="opacity-50">v4.2.3</span>
+            <h1 className="text-3xl md:text-4xl font-black text-foreground flex items-center gap-3">
+              Settings
+            </h1>
+            <p className="text-muted-foreground mt-2 text-base md:text-lg font-medium">
+              Manage your Empire configuration and account security.
             </p>
           </div>
         </header>
 
         <div className="flex flex-col md:flex-row gap-8 md:gap-12">
           {/* Navigation Sidebar */}
-          <aside className="flex md:flex-col overflow-x-auto md:overflow-visible w-full md:w-64 shrink-0 gap-2 pb-2 md:pb-0 border-b md:border-b-0 border-theme md:border-none">
+          <aside className="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full md:w-64 shrink-0 gap-2 pb-2 md:pb-0 border-b md:border-b-0 border-theme md:border-none">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -354,14 +336,14 @@ export default function SettingsPage() {
                 {!activeSetupPlatform && (
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-                      <Search className="w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Search className="w-5 h-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
                     </div>
                     <input
                       type="text"
                       placeholder="Search for apps you want to link (e.g. Etsy, TikTok, Shopify, Pinterest...)"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-14 pr-6 py-5 rounded-[28px] bg-theme-surface border-2 border-theme focus:border-primary outline-none transition-all text-lg font-bold text-foreground shadow-sm"
+                      className="w-full pl-14 pr-6 py-5 rounded-[28px] bg-theme-surface border-2 border-theme focus:border-blue-600 outline-none transition-all text-lg font-bold text-foreground shadow-sm"
                     />
                     {searchQuery && (
                       <button 
@@ -369,7 +351,7 @@ export default function SettingsPage() {
                           startSetup(searchQuery);
                           setSearchQuery('');
                         }}
-                        className="absolute right-3 top-2 bottom-2 px-6 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary transition-all flex items-center gap-2"
+                        className="absolute right-3 top-2 bottom-2 px-6 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all flex items-center gap-2"
                       >
                         <Plus className="w-4 h-4" /> Link App
                       </button>
@@ -382,7 +364,7 @@ export default function SettingsPage() {
                   <div className="p-8 rounded-[32px] bg-slate-900 text-white space-y-6">
                     <div className="flex items-center justify-between">
                       <h3 className="text-xl font-bold italic flex items-center gap-2">
-                        <Bot className="w-5 h-5 text-primary" /> Etsy Marketplace
+                        <Bot className="w-5 h-5 text-blue-400" /> Etsy Marketplace
                       </h3>
                       <span className="flex items-center gap-1.5 text-amber-400 font-bold text-xs uppercase tracking-widest">
                         <AlertCircle className="w-4 h-4" /> Setup Required
@@ -398,7 +380,7 @@ export default function SettingsPage() {
                         window.open('https://www.etsy.com/developers/register', '_blank');
                         startSetup('etsy');
                       }}
-                      className="w-full flex items-center justify-center gap-2 bg-primary text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary transition-all shadow-xl shadow-foreground/20 group"
+                      className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 group"
                     >
                       Launch Guided Setup <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
@@ -407,14 +389,14 @@ export default function SettingsPage() {
                   <div className="p-8 rounded-[32px] bg-theme-background border-2 border-theme space-y-6">
                     <div className="flex items-center justify-between">
                       <h3 className="text-xl font-bold italic flex items-center gap-2 text-foreground">
-                        <Share2 className="w-5 h-5 text-primary" /> TikTok Marketing
+                        <Share2 className="w-5 h-5 text-blue-600" /> TikTok Marketing
                       </h3>
                       <span className="flex items-center gap-1.5 text-amber-600 font-bold text-xs uppercase tracking-widest">
                         <AlertCircle className="w-4 h-4" /> Setup Required
                       </span>
                     </div>
                     
-                    <p className="text-theme-background0 text-sm leading-relaxed">
+                    <p className="text-muted-foreground text-sm leading-relaxed">
                       Link TikTok for Business to automate your viral marketing campaigns and video scheduling.
                     </p>
 
@@ -432,14 +414,14 @@ export default function SettingsPage() {
                   <div className="p-8 rounded-[32px] bg-theme-surface border-2 border-theme space-y-6">
                     <div className="flex items-center justify-between">
                       <h3 className="text-xl font-bold italic flex items-center gap-2 text-foreground">
-                        <Stars className="w-5 h-5 text-foreground" /> Bannerbear AI
+                        <Stars className="w-5 h-5 text-blue-900" /> Bannerbear AI
                       </h3>
-                      <span className="flex items-center gap-1.5 text-primary font-bold text-[10px] uppercase tracking-[0.2em]">
+                      <span className="flex items-center gap-1.5 text-blue-600 font-bold text-[10px] uppercase tracking-[0.2em]">
                         <Stars className="w-3.5 h-3.5" /> API Ready
                       </span>
                     </div>
                     
-                    <p className="text-theme-background0 text-sm leading-relaxed">
+                    <p className="text-muted-foreground text-sm leading-relaxed">
                       Automate your creative production. Link Bannerbear to generate high-converting social assets and videos from templates.
                     </p>
 
@@ -448,7 +430,7 @@ export default function SettingsPage() {
                         window.open('https://www.bannerbear.com/dashboard', '_blank');
                         startSetup('bannerbear');
                       }}
-                      className="w-full flex items-center justify-center gap-2 bg-foreground text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-800 transition-all shadow-xl shadow-blue-200 group"
+                      className="w-full flex items-center justify-center gap-2 bg-blue-900 text-white px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-800 transition-all shadow-xl shadow-blue-200 group"
                     >
                       Connect Project API <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
@@ -464,12 +446,12 @@ export default function SettingsPage() {
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                       <Zap className="w-6 h-6" />
                     </div>
                     <div>
                       <h3 className="text-xl font-black text-foreground tracking-tight">AI Control Mode</h3>
-                      <p className="text-sm font-medium text-theme-background0">Choose how much autonomy your AI partner has.</p>
+                      <p className="text-sm font-medium text-muted-foreground">Choose how much autonomy your AI partner has.</p>
                     </div>
                   </div>
 
@@ -479,7 +461,7 @@ export default function SettingsPage() {
                       onClick={() => handleAiModeToggle('co-pilot')}
                       className={cn(
                         "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 relative overflow-hidden",
-                        aiMode === 'co-pilot' ? "border-amber-400 bg-amber-50/50" : "border-theme bg-theme-surface hover:border-theme"
+                        aiMode === 'co-pilot' ? "border-amber-400 bg-amber-50/50" : "border-theme bg-theme-surface hover:border-slate-200"
                       )}
                     >
                       <div className="flex items-center justify-between">
@@ -490,7 +472,7 @@ export default function SettingsPage() {
                       </div>
                       <div>
                         <h4 className="text-lg font-black text-foreground">Co-Pilot</h4>
-                        <p className="text-xs font-bold text-theme-background0 leading-relaxed">
+                        <p className="text-xs font-bold text-muted-foreground leading-relaxed">
                           AI makes suggestions and researches trends, but waits for your approval before posting or listing items.
                         </p>
                       </div>
@@ -501,7 +483,7 @@ export default function SettingsPage() {
                       onClick={() => handleAiModeToggle('empire')}
                       className={cn(
                         "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 relative overflow-hidden",
-                        aiMode === 'empire' ? "border-amber-400 bg-amber-50/50" : "border-theme bg-theme-surface hover:border-theme"
+                        aiMode === 'empire' ? "border-amber-400 bg-amber-50/50" : "border-theme bg-theme-surface hover:border-slate-200"
                       )}
                     >
                       <div className="flex items-center justify-between">
@@ -511,53 +493,21 @@ export default function SettingsPage() {
                         )}
                       </div>
                       <div>
-                        <h4 className="text-lg font-black text-foreground">Empire Mode</h4>
-                        <p className="text-xs font-bold text-theme-background0 leading-relaxed">
+                        <h4 className="text-lg font-black text-foreground">Auto-Pilot</h4>
+                        <p className="text-xs font-bold text-muted-foreground leading-relaxed">
                           AI executes strategies, posts content, and manages listings autonomously to maximize growth 24/7.
                         </p>
                       </div>
                     </button>
                   </div>
 
-                  {/* Direct to Bank Toggle */}
-                  <div className="p-8 rounded-[32px] bg-theme-surface border-2 border-theme space-y-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                          <Building2 className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <h4 className="font-black text-foreground">Direct-to-Bank Revenue</h4>
-                          <p className="text-xs font-bold text-theme-background0">Ensure all generated revenue bypasses intermediaries.</p>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => setDirectToBank(!directToBank)}
-                        className={cn(
-                          "w-14 h-8 rounded-full transition-all relative flex items-center px-1",
-                          directToBank ? "bg-emerald-600" : "bg-slate-200"
-                        )}
-                      >
-                        <motion.div 
-                          animate={{ x: directToBank ? 24 : 0 }}
-                          className="w-6 h-6 bg-white rounded-full shadow-md"
-                        />
-                      </button>
-                    </div>
-                    {directToBank && (
-                      <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-[10px] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4" /> Revenue Flow: Verified Path
-                      </div>
-                    )}
-                  </div>
-
                   <div className="p-6 bg-slate-900 rounded-3xl text-white">
                     <div className="flex items-center gap-3 mb-2">
-                      <Bot className="w-5 h-5 text-primary" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-primary">Empire Wisdom</span>
+                      <Bot className="w-5 h-5 text-blue-400" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Empire Wisdom</span>
                     </div>
                     <p className="text-sm font-medium text-slate-300">
-                      Empire Mode is recommended for maximum velocity once your initial strategy is calibrated.
+                      Auto-Pilot mode is recommended for maximum velocity once your initial strategy is calibrated.
                     </p>
                   </div>
                 </div>
@@ -568,31 +518,31 @@ export default function SettingsPage() {
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                       <Bell className="w-6 h-6" />
                     </div>
                     <div>
                       <h3 className="text-xl font-black text-foreground tracking-tight">Notification Channels</h3>
-                      <p className="text-sm font-medium text-theme-background0">Configure how and when your Empire alerts you.</p>
+                      <p className="text-sm font-medium text-muted-foreground">Configure how and when your Empire alerts you.</p>
                     </div>
                   </div>
 
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center text-primary shadow-sm">
+                        <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center text-blue-600 shadow-sm">
                           <CreditCard className="w-5 h-5" />
                         </div>
                         <div>
                           <h4 className="font-black text-foreground">Sales Notifications</h4>
-                          <p className="text-xs font-bold text-theme-background0">Get alerted instantly when a customer makes a purchase.</p>
+                          <p className="text-xs font-bold text-muted-foreground">Get alerted instantly when a customer completes an order.</p>
                         </div>
                       </div>
                       <button 
                         onClick={() => updateNotificationSettings({ sales: !notificationSettings.sales })}
                         className={cn(
                           "w-14 h-8 rounded-full transition-all relative flex items-center px-1",
-                          notificationSettings.sales ? "bg-primary" : "bg-slate-200"
+                          notificationSettings.sales ? "bg-blue-600" : "bg-slate-200"
                         )}
                       >
                         <motion.div 
@@ -604,19 +554,19 @@ export default function SettingsPage() {
 
                     <div className="flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center text-primary shadow-sm">
+                        <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center text-blue-600 shadow-sm">
                           <Bot className="w-5 h-5" />
                         </div>
                         <div>
                           <h4 className="font-black text-foreground">Approval Requests</h4>
-                          <p className="text-xs font-bold text-theme-background0">Notifications for when your AI needs you to review content or strategies.</p>
+                          <p className="text-xs font-bold text-muted-foreground">Notifications for when your AI needs you to review content or strategies.</p>
                         </div>
                       </div>
                       <button 
                         onClick={() => updateNotificationSettings({ approvals: !notificationSettings.approvals })}
                         className={cn(
                           "w-14 h-8 rounded-full transition-all relative flex items-center px-1",
-                          notificationSettings.approvals ? "bg-primary" : "bg-slate-200"
+                          notificationSettings.approvals ? "bg-blue-600" : "bg-slate-200"
                         )}
                       >
                         <motion.div 
@@ -627,12 +577,12 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="p-6 bg-primary rounded-3xl text-white">
+                  <div className="p-6 bg-blue-600 rounded-3xl text-white">
                     <div className="flex items-center gap-3 mb-2">
                       <Zap className="w-5 h-5 text-blue-200" />
                       <span className="text-[10px] font-black uppercase tracking-widest text-blue-200">Real-Time Sync</span>
                     </div>
-                    <p className="text-sm font-medium text-primary/10/80 leading-relaxed">
+                    <p className="text-sm font-medium text-blue-50/80 leading-relaxed">
                       All notifications are delivered via our low-latency neural bridge directly to your command center and linked devices.
                     </p>
                   </div>
@@ -651,7 +601,7 @@ export default function SettingsPage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-black text-foreground tracking-tight">Profile Information</h3>
-                      <p className="text-sm font-medium text-theme-background0">How your empire recognizes you.</p>
+                      <p className="text-sm font-medium text-muted-foreground">How your empire recognizes you.</p>
                     </div>
                   </div>
 
@@ -682,85 +632,23 @@ export default function SettingsPage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-black text-foreground tracking-tight">Payout Destination</h3>
-                      <p className="text-sm font-medium text-theme-background0">Securely link your bank for direct revenue transfers.</p>
+                      <p className="text-sm font-medium text-muted-foreground">Securely link your bank for direct revenue transfers.</p>
                     </div>
                   </div>
 
-                  {!bankConnected ? (
-                    <div className="p-8 bg-theme-background rounded-[32px] border-2 border-dashed border-theme text-center space-y-6 relative overflow-hidden group">
-                      <div className="absolute inset-0 bg-emerald-50/0 group-hover:bg-emerald-50/30 transition-colors" />
-                      <div className="relative z-10 w-20 h-20 rounded-full bg-theme-surface shadow-lg flex items-center justify-center mx-auto border-2 border-theme-background">
-                        <Shield className="w-10 h-10 text-slate-300" />
-                      </div>
-                      <div className="relative z-10 space-y-2">
-                        <h4 className="text-lg font-black text-foreground tracking-tight">Secured by Stripe Connect</h4>
-                        <p className="text-xs font-bold text-theme-background0 max-w-sm mx-auto leading-relaxed">
-                          Link your bank account to receive payments directly. Your data is encrypted and handled by industry-standard protocols.
-                        </p>
-                      </div>
-                      <button 
-                        onClick={async () => {
-                          window.open('https://connect.stripe.com/oauth/authorize', '_blank');
-                          // Simulate onboarding
-                          await new Promise(r => setTimeout(r, 2000));
-                          setBankConnected(true);
-                          addToast({
-                            title: 'Bank Linked',
-                            message: 'Your payout destination has been successfully verified.',
-                            type: 'success'
-                          });
-                        }}
-                        className="relative z-10 px-10 py-5 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 flex items-center gap-3 mx-auto"
-                      >
-                        Start Secure Onboarding <ExternalLink className="w-4 h-4" />
-                      </button>
+                  <div className="p-6 bg-theme-background rounded-3xl border-2 border-dashed border-slate-200 text-center space-y-4">
+                    <div className="w-16 h-16 rounded-full bg-theme-surface shadow-sm flex items-center justify-center mx-auto">
+                      <Shield className="w-8 h-8 text-slate-300" />
                     </div>
-                  ) : (
-                    <div className="space-y-6">
-                      <div className="p-8 rounded-[32px] bg-emerald-50 border-4 border-emerald-100 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-6">
-                          <CheckCircle2 className="w-8 h-8 text-emerald-600" />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">Primary Payout Method</p>
-                          <h4 className="text-2xl font-black text-slate-900 flex items-center gap-3">
-                            JP Morgan Chase <span className="text-sm font-bold text-emerald-600 bg-white px-3 py-1 rounded-full border border-emerald-100">VERIFIED</span>
-                          </h4>
-                        </div>
-                        <div className="mt-8 flex items-center gap-12">
-                          <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Account Number</p>
-                            <p className="font-mono font-bold text-slate-600">•••• •••• 4242</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Routing Number</p>
-                            <p className="font-mono font-bold text-slate-600">•••• •••• 1234</p>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex gap-4">
-                        <button 
-                          onClick={() => setBankConnected(false)}
-                          className="px-6 py-4 bg-white border-2 border-slate-200 text-theme-background0 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-theme-background transition-all"
-                        >
-                          Disconnect Account
-                        </button>
-                        <button className="flex-1 px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all flex items-center justify-center gap-2">
-                          View Payout Schedule <ChevronRight className="w-4 h-4" />
-                        </button>
-                      </div>
+                    <div className="space-y-2">
+                      <h4 className="font-black text-foreground tracking-tight">Secured by Stripe</h4>
+                      <p className="text-xs font-bold text-muted-foreground max-w-xs mx-auto">
+                        Your banking details are encrypted and never stored on our servers.
+                      </p>
                     </div>
-                  )}
-
-                  <div className="p-6 bg-slate-900 rounded-3xl text-white">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Shield className="w-5 h-5 text-emerald-400" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Security Protocol</span>
-                    </div>
-                    <p className="text-sm font-medium text-slate-300">
-                      Revenue is deposited directly to your bank account within 2-3 business days of a sale. No middleman, no delays.
-                    </p>
+                    <button className="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 flex items-center gap-2 mx-auto">
+                      Connect via Stripe <ExternalLink className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -770,12 +658,12 @@ export default function SettingsPage() {
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                      <PaletteIcon className="w-6 h-6" />
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                      <Palette className="w-6 h-6" />
                     </div>
                     <div>
                       <h3 className="text-xl font-black text-foreground tracking-tight">Color Scheme</h3>
-                      <p className="text-sm font-medium text-theme-background0">Personalize your Command Center's aesthetic.</p>
+                      <p className="text-sm font-medium text-muted-foreground">Personalize your Command Center's aesthetic.</p>
                     </div>
                   </div>
 
@@ -786,7 +674,7 @@ export default function SettingsPage() {
                         onClick={() => setTheme(scheme.id)}
                         className={cn(
                           "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 group",
-                          theme === scheme.id ? "border-primary bg-primary/10" : "border-theme-background bg-theme-background/50 hover:border-theme"
+                          theme === scheme.id ? "border-blue-600 bg-blue-50" : "border-theme bg-theme-background/50 hover:border-slate-200"
                         )}
                       >
                         <div className="flex items-center justify-between">
@@ -794,11 +682,11 @@ export default function SettingsPage() {
                             <div className={cn("w-6 h-6 rounded-full shadow-inner", scheme.primary)} />
                             <div className={cn("w-6 h-6 rounded-full shadow-inner", scheme.secondary)} />
                           </div>
-                          {theme === scheme.id && <CheckCircle2 className="w-6 h-6 text-primary" />}
+                          {theme === scheme.id && <CheckCircle2 className="w-6 h-6 text-blue-600" />}
                         </div>
                         <div>
                           <h4 className="text-lg font-black text-foreground">{scheme.name}</h4>
-                          <p className="text-xs font-bold text-theme-background0 leading-relaxed">
+                          <p className="text-xs font-bold text-muted-foreground leading-relaxed">
                             {scheme.description}
                           </p>
                         </div>
@@ -808,8 +696,8 @@ export default function SettingsPage() {
 
                   <div className="p-6 bg-slate-900 rounded-3xl text-white">
                     <div className="flex items-center gap-3 mb-2">
-                      <Stars className="w-5 h-5 text-primary" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-primary">Pro Tip</span>
+                      <Stars className="w-5 h-5 text-blue-400" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">Pro Tip</span>
                     </div>
                     <p className="text-sm font-medium text-slate-300">
                       Your color scheme syncs across all your devices linked to this empire.
@@ -823,44 +711,44 @@ export default function SettingsPage() {
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                     <Globe className="w-6 h-6" />
                   </div>
                   <div>
                     <h3 className="text-xl font-black text-foreground tracking-tight">Empire Cloud Hub</h3>
-                    <p className="text-sm font-medium text-theme-background0">Manage your high-velocity storage and global data sync.</p>
+                    <p className="text-sm font-medium text-muted-foreground">Manage your high-velocity storage and global data sync.</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="p-8 rounded-[32px] bg-slate-900 text-white space-y-6 relative overflow-hidden">
                     <div className="relative z-10">
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2">Neural Storage Pool</p>
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 mb-2">Neural Storage Pool</p>
                       <h4 className="text-3xl font-black">Unlimited.</h4>
                       <p className="text-slate-400 text-xs font-medium mt-4 leading-relaxed">
                         Your videos, graphics, and business assets are automatically hosted on our global high-speed CDNs.
                       </p>
                     </div>
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px]" />
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-[60px]" />
                   </div>
 
                   <div className="p-8 rounded-[32px] bg-theme-background border-2 border-theme space-y-6">
                     <div>
                       <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Data Integrity</p>
                       <h4 className="text-xl font-black text-foreground italic">Protected.</h4>
-                      <p className="text-theme-background0 text-xs font-medium mt-4 leading-relaxed">
+                      <p className="text-muted-foreground text-xs font-medium mt-4 leading-relaxed">
                         Redundant backups across 3 global regions. Your financial and personal data is never stored locally.
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-6 bg-primary/10 rounded-3xl border border-primary/20">
+                <div className="p-6 bg-blue-50 rounded-3xl border border-blue-100">
                   <div className="flex items-center gap-3 mb-2">
-                    <Shield className="w-5 h-5 text-primary" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Enterprise Scale Active</span>
+                    <Shield className="w-5 h-5 text-blue-600" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">Enterprise Scale Active</span>
                   </div>
-                  <p className="text-sm font-medium text-foreground/70">
+                  <p className="text-sm font-medium text-blue-900/70">
                     EmpireLaunch AI utilizes a decentralized storage mesh. As you create more content, your cloud footprint automatically scales to match your velocity without additional fees.
                   </p>
                 </div>
@@ -877,29 +765,29 @@ export default function SettingsPage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-black text-foreground tracking-tight">Account & Security</h3>
-                      <p className="text-sm font-medium text-theme-background0">Manage your password and security protocols.</p>
+                      <p className="text-sm font-medium text-muted-foreground">Manage your password and security protocols.</p>
                     </div>
                   </div>
 
                   <div className="space-y-6">
                     <button className="w-full flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme hover:border-slate-300 transition-all group">
                       <div className="flex items-center gap-4">
-                        <Shield className="w-6 h-6 text-slate-400 group-hover:text-primary transition-colors" />
+                        <Shield className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
                         <div className="text-left">
                           <h4 className="font-black text-foreground">Two-Factor Authentication</h4>
-                          <p className="text-xs font-bold text-theme-background0">Add an extra layer of security to your empire.</p>
+                          <p className="text-xs font-bold text-muted-foreground">Add an extra layer of security to your empire.</p>
                         </div>
                       </div>
                       <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
                     </button>
 
                     {/* Redeem Key Section */}
-                    <div className="p-8 rounded-[32px] bg-primary/10 border-2 border-primary/20 space-y-4">
+                    <div className="p-8 rounded-[32px] bg-blue-50 border-2 border-blue-100 space-y-4">
                       <div className="flex items-center gap-3">
-                        <Stars className="w-5 h-5 text-primary" />
+                        <Stars className="w-5 h-5 text-blue-600" />
                         <h4 className="font-black text-foreground">Redeem Access Key</h4>
                       </div>
-                      <p className="text-xs font-bold text-theme-background0 leading-relaxed">
+                      <p className="text-xs font-bold text-muted-foreground leading-relaxed">
                         If you have an Empire Launch key, enter it below to upgrade your account or extend your subscription.
                       </p>
                       <div className="flex gap-2">
@@ -909,12 +797,12 @@ export default function SettingsPage() {
                           value={redeemKeyValue}
                           onChange={(e) => setRedeemKeyValue(e.target.value.toUpperCase())}
                           disabled={isRedeeming}
-                          className="flex-1 p-4 rounded-2xl bg-theme-surface border-2 border-primary/20 focus:border-primary outline-none font-mono text-sm uppercase tracking-widest disabled:opacity-50"
+                          className="flex-1 p-4 rounded-2xl bg-theme-surface border-2 border-blue-100 focus:border-blue-600 outline-none font-mono text-sm uppercase tracking-widest disabled:opacity-50"
                         />
                         <button 
                           onClick={handleRedeem}
                           disabled={isRedeeming || !redeemKeyValue}
-                          className="px-6 py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary transition-all shadow-lg shadow-blue-200 disabled:opacity-50 flex items-center gap-2"
+                          className="px-6 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 disabled:opacity-50 flex items-center gap-2"
                         >
                           {isRedeeming ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Redeem'}
                         </button>
@@ -936,10 +824,10 @@ export default function SettingsPage() {
 
                     <button className="w-full flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme hover:border-slate-300 transition-all group">
                       <div className="flex items-center gap-4">
-                        <Lock className="w-6 h-6 text-slate-400 group-hover:text-primary transition-colors" />
+                        <Lock className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
                         <div className="text-left">
                           <h4 className="font-black text-foreground">Change Password</h4>
-                          <p className="text-xs font-bold text-theme-background0">Update your access credentials.</p>
+                          <p className="text-xs font-bold text-muted-foreground">Update your access credentials.</p>
                         </div>
                       </div>
                       <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
@@ -950,10 +838,10 @@ export default function SettingsPage() {
                       className="w-full flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme hover:border-slate-300 transition-all group"
                     >
                       <div className="flex items-center gap-4">
-                        <Scale className="w-6 h-6 text-slate-400 group-hover:text-primary transition-colors" />
+                        <Scale className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors" />
                         <div className="text-left">
                           <h4 className="font-black text-foreground">Neural Agreement</h4>
-                          <p className="text-xs font-bold text-theme-background0">Review our Data Protection & AI Approval policies.</p>
+                          <p className="text-xs font-bold text-muted-foreground">Review our Data Protection & AI Approval policies.</p>
                         </div>
                       </div>
                       <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
@@ -972,19 +860,19 @@ export default function SettingsPage() {
             {activeTab === 'subscription' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="p-8 rounded-[40px] bg-gradient-to-br from-slate-900 to-slate-800 text-white space-y-8 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-[100px] -mr-48 -mt-48" />
+                  <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] -mr-48 -mt-48" />
                   
                   <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div className="flex items-center gap-6">
                       <div className="w-16 h-16 rounded-3xl bg-theme-surface/10 flex items-center justify-center backdrop-blur-md">
-                        <Diamond className="w-8 h-8 text-primary" />
+                        <Diamond className="w-8 h-8 text-blue-400" />
                       </div>
                       <div>
                         <h3 className="text-2xl font-black tracking-tight">Empire Elite Plan</h3>
                         <p className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.3em]">Status: Active</p>
                       </div>
                     </div>
-                    <div className="px-6 py-2 bg-primary/20 border border-primary/40 rounded-full text-blue-300 font-black text-[10px] uppercase tracking-widest">
+                    <div className="px-6 py-2 bg-blue-500/20 border border-blue-500/40 rounded-full text-blue-300 font-black text-[10px] uppercase tracking-widest">
                       Next Payout: June 1st
                     </div>
                   </div>
@@ -992,7 +880,7 @@ export default function SettingsPage() {
                   <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="p-6 rounded-3xl bg-theme-surface/5 border border-white/10">
                       <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Monthly Fee</p>
-                      <p className="text-2xl font-black tracking-tight">$30<span className="text-sm text-theme-background0">/mo</span></p>
+                      <p className="text-2xl font-black tracking-tight">$30<span className="text-sm text-muted-foreground">/mo</span></p>
                     </div>
                     <div className="p-6 rounded-3xl bg-theme-surface/5 border border-white/10">
                       <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-2">Post Autonomy</p>
@@ -1017,31 +905,31 @@ export default function SettingsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-6">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xl font-black text-foreground">Unlock Business 2</h4>
+                        <h4 className="text-xl font-black text-foreground">Initialize Business 2</h4>
                         <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">$30 One-time</span>
                       </div>
-                      <p className="text-sm text-theme-background0 font-medium">Add a second independent business slot to your Empire dashboard.</p>
-                      <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary transition-all shadow-xl shadow-slate-200">
-                        Purchase Slot
+                      <p className="text-sm text-muted-foreground font-medium">Add a second independent business slot to your Empire dashboard.</p>
+                      <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary hover:text-slate-900 transition-all shadow-xl shadow-slate-200">
+                        Authorize Slot
                       </button>
                    </div>
 
                    <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-6">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xl font-black text-foreground">Unlock Business 3</h4>
+                        <h4 className="text-xl font-black text-foreground">Initialize Business 3</h4>
                         <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">$30 One-time</span>
                       </div>
-                      <p className="text-sm text-theme-background0 font-medium">Maximize your reach with a third automated business slot.</p>
-                      <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary transition-all shadow-xl shadow-slate-200">
-                        Purchase Slot
+                      <p className="text-sm text-muted-foreground font-medium">Maximize your reach with a third automated business slot.</p>
+                      <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary hover:text-slate-900 transition-all shadow-xl shadow-slate-200">
+                        Authorize Slot
                       </button>
                    </div>
-                </div>
+
               </div>
             )}
           </main>
         </div>
       </div>
-    
+    </PullToRefresh>
   );
 }

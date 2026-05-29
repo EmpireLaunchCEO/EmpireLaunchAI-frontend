@@ -3,102 +3,104 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #2563eb;
-  --secondary: #0f172a;
-  --accent: #3b82f6;
-  --muted: #f1f5f9;
-  --surface: #ffffff;
-  --surface-border: #f1f5f9;
+  --background-rgb: 2, 6, 23; /* Obsidian Background Default */
+  --foreground-rgb: 248, 250, 252; /* Light text Default */
+  --primary-rgb: 251, 191, 36; /* Amber 400 - Gold Default */
+  --surface-rgb: 15, 23, 42; /* Deep Slate Surface Default */
+  --surface-border-rgb: 30, 41, 59; /* Slate 800 Default */
+  
+  --background: rgb(var(--background-rgb));
+  --foreground: rgb(var(--foreground-rgb));
+  --primary: rgb(var(--primary-rgb));
+  --surface: rgb(var(--surface-rgb));
+  --surface-border: rgb(var(--surface-border-rgb));
+}
+
+body.theme-crystal-clean {
+  --primary-rgb: 14, 165, 233; /* Azure Blue */
+  --background-rgb: 255, 255, 255; /* Pure White */
+  --foreground-rgb: 15, 23, 42; /* Slate 900 */
+  --surface-rgb: 248, 250, 252; /* Sky Gray */
+  --surface-border-rgb: 226, 232, 240; /* Slate 200 */
+}
+
+body.theme-electric-empire {
+  --primary-rgb: 34, 211, 238; /* Neon Cyan */
+  --background-rgb: 46, 16, 101; /* Deep Violet */
+  --foreground-rgb: 255, 255, 255; /* Pure White */
+  --surface-rgb: 30, 10, 80; /* Darker Violet */
+  --surface-border-rgb: 139, 92, 246; /* Violet 500 */
 }
 
 body.theme-classic-blue {
-  --primary: #3b82f6; /* Blue 500 */
-  --secondary: #0f172a;
-  --accent: #60a5fa;
-  --background: #020617; /* Obsidian */
-  --foreground: #f8fafc; /* White/Slate-50 */
-  --muted: #0f172a;
-  --surface: #0f172a;
-  --surface-border: #1e293b;
+  --primary-rgb: 37, 99, 235;
+  --background-rgb: 248, 250, 252;
+  --foreground-rgb: 15, 23, 42;
+  --surface-rgb: 255, 255, 255;
+  --surface-border-rgb: 226, 232, 240;
 }
 
 body.theme-empire-gold {
-  --primary: #fbbf24; /* Amber 400 - Gold */
-  --secondary: #0f172a;
-  --accent: #f59e0b; /* Amber 500 */
-  --background: #020617; /* Obsidian Background */
-  --foreground: #f8fafc; /* White/Slate-50 */
-  --muted: #0f172a; 
-  --surface: #0f172a; /* Deep Slate Surface */
-  --surface-border: #fbbf2444; /* Faint Gold Border */
+  --primary-rgb: 251, 191, 36; /* Amber 400 - Gold */
+  --background-rgb: 2, 6, 23; /* Obsidian Background */
+  --foreground-rgb: 248, 250, 252; /* Light text */
+  --surface-rgb: 15, 23, 42; /* Deep Slate Surface */
+  --surface-border-rgb: 30, 41, 59; /* Slate 800 */
 }
 
-
 body.theme-emerald-growth {
-  --primary: #10b981; /* Emerald 500 */
-  --secondary: #0f172a;
-  --accent: #34d399;
-  --background: #020617; /* Obsidian */
-  --foreground: #f8fafc; /* White/Slate-50 */
-  --muted: #0f172a;
-  --surface: #0f172a;
-  --surface-border: #10b98144;
+  --primary-rgb: 5, 150, 105;
+  --background-rgb: 240, 253, 244;
+  --foreground-rgb: 6, 78, 59;
+  --surface-rgb: 255, 255, 255;
+  --surface-border-rgb: 167, 243, 208;
 }
 
 body.theme-rose-gold {
-  --primary: #f43f5e; /* Rose 500 */
-  --secondary: #0f172a;
-  --accent: #fb7185;
-  --background: #020617; /* Obsidian */
-  --foreground: #f8fafc; /* White/Slate-50 */
-  --muted: #0f172a;
-  --surface: #0f172a;
-  --surface-border: #f43f5e44;
+  --primary-rgb: 244, 63, 94;
+  --background-rgb: 255, 241, 242;
+  --foreground-rgb: 136, 19, 55;
+  --surface-rgb: 255, 255, 255;
+  --surface-border-rgb: 254, 205, 211;
 }
 
 body.theme-cyber-purple {
-  --primary: #a855f7; /* Purple 500 */
-  --secondary: #0f172a;
-  --accent: #c084fc;
-  --background: #020617; /* Obsidian */
-  --foreground: #f8fafc; /* White/Slate-50 */
-  --muted: #0f172a;
-  --surface: #0f172a;
-  --surface-border: #a855f744;
+  --primary-rgb: 147, 51, 234;
+  --background-rgb: 250, 245, 255;
+  --foreground-rgb: 88, 28, 135;
+  --surface-rgb: 255, 255, 255;
+  --surface-border-rgb: 233, 213, 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #020617;
-    --foreground: #ededed;
-    --surface: #0f172a;
-    --surface-border: #1e293b;
+    --background-rgb: 10, 10, 10;
+    --foreground-rgb: 237, 237, 237;
+    --surface-rgb: 23, 23, 23;
+    --surface-border-rgb: 38, 38, 38;
   }
 }
 
-/* Force everything that should be background to use theme variables */
-[class*="bg-theme-background"] {
-  background-color: var(--background) !important;
+/* Fallback for components that use the direct variables */
+:root {
+  --background: rgb(var(--background-rgb));
+  --foreground: rgb(var(--foreground-rgb));
+  --primary: rgb(var(--primary-rgb));
+  --surface: rgb(var(--surface-rgb));
+  --surface-border: rgb(var(--surface-border-rgb));
 }
 
-[class*="bg-theme-surface"] {
+/* Force everything that should be background to use theme variables */
+[class*="bg-white"], [class*="bg-slate-50"], [class*="bg-slate-100"] {
   background-color: var(--surface) !important;
 }
 
-[class*="text-theme-background0"] {
+[class*="text-slate-900"], [class*="text-black"] {
   color: var(--foreground) !important;
-  opacity: 0.7;
 }
 
-[class*="border-theme"] {
+[class*="border-slate-100"], [class*="border-slate-200"], [class*="border-slate-50"] {
   border-color: var(--surface-border) !important;
-}
-
-html {
-  scroll-behavior: smooth;
-  height: -webkit-fill-available;
 }
 
 body {
@@ -106,15 +108,16 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.5s ease, color 0.5s ease;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  overflow-y: auto;
-  overscroll-behavior-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* Force headings to use theme foreground when a theme is active */
-body[class*="theme-"] h1, body[class*="theme-"] h2, body[class*="theme-"] h3, body[class*="theme-"] h4 {
+body.theme-classic-blue h1, body.theme-classic-blue h2, body.theme-classic-blue h3,
+body.theme-empire-gold h1, body.theme-empire-gold h2, body.theme-empire-gold h3,
+body.theme-crystal-clean h1, body.theme-crystal-clean h2, body.theme-crystal-clean h3,
+body.theme-electric-empire h1, body.theme-electric-empire h2, body.theme-electric-empire h3,
+body.theme-emerald-growth h1, body.theme-emerald-growth h2, body.theme-emerald-growth h3,
+body.theme-rose-gold h1, body.theme-rose-gold h2, body.theme-rose-gold h3,
+body.theme-cyber-purple h1, body.theme-cyber-purple h2, body.theme-cyber-purple h3 {
   color: var(--foreground) !important;
 }
 

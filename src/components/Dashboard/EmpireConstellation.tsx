@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 export function EmpireConstellation() {
   // Constellation Node Definitions
   const nodes = [
-    { id: 'revenue', label: 'Revenue', x: 50, y: 15, icon: DollarSign, color: 'text-primary', value: '$12.4K' },
+    { id: 'revenue', label: 'Revenue', x: 50, y: 15, icon: DollarSign, color: 'text-blue-500', value: '$12.4K' },
     { id: 'growth', label: 'Growth', x: 15, y: 40, icon: TrendingUp, color: 'text-emerald-500', value: '+24%' },
     { id: 'engagement', label: 'Reach', x: 85, y: 40, icon: Users, color: 'text-purple-500', value: '185K' },
     { id: 'efficiency', label: 'Efficiency', x: 50, y: 85, icon: Zap, color: 'text-amber-500', value: '92%' },
@@ -69,7 +69,7 @@ export function EmpireConstellation() {
           >
             <div className="relative flex flex-col items-center">
               <div className={cn(
-                "w-12 h-12 rounded-2xl bg-theme-surface border-2 border-theme flex items-center justify-center shadow-lg transition-all group-hover:scale-110 group-hover:border-blue-200 group-hover:shadow-primary/20",
+                "w-12 h-12 rounded-2xl bg-theme-surface border-2 border-theme flex items-center justify-center shadow-lg transition-all group-hover:scale-110 group-hover:border-primary/50 group-hover:shadow-primary/20",
                 node.id === 'activity' ? "w-16 h-16 bg-slate-900 border-slate-800" : ""
               )}>
                 <node.icon className={cn("w-6 h-6", node.color, node.id === 'activity' ? "text-white" : "")} />
@@ -92,8 +92,8 @@ export function EmpireConstellation() {
         ))}
       </div>
 
-      <div className="pt-6 border-t border-theme-background">
-        <p className="text-xs text-theme-background0 leading-relaxed italic text-center">
+      <div className="pt-6 border-t border-theme">
+        <p className="text-xs text-muted-foreground leading-relaxed italic text-center">
           "The nodes represent your Empire's vital organs. The brighter the connection, the stronger the synergy."
         </p>
       </div>

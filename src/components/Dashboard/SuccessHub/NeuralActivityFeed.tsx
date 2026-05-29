@@ -35,7 +35,7 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
 
     socket.on('ai-log', (data: { message: string }) => {
       setLogs(prev => {
-        const nextLogs: { id: number; text: string; status: 'processing' | 'done' }[] = [...prev, { id: Date.now(), text: data.message, status: 'processing' }];
+        const nextLogs = [...prev, { id: Date.now(), text: data.message, status: 'processing' }];
         if (nextLogs.length > 1) {
           nextLogs[nextLogs.length - 2].status = 'done';
         }
@@ -46,14 +46,14 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
     socket.on('job-started', (data: { goal: string }) => {
       setLogs(prev => [
         ...prev, 
-        { id: Date.now(), text: `[SYSTEM] Goal Received: ${data.goal}`, status: 'done' as const }
+        { id: Date.now(), text: `[SYSTEM] Goal Received: ${data.goal}`, status: 'done' }
       ].slice(-10));
     });
 
     socket.on('job-completed', (data: { resultSummary: string }) => {
       setLogs(prev => [
         ...prev, 
-        { id: Date.now(), text: `[SYSTEM] Success: ${data.resultSummary}`, status: 'done' as const }
+        { id: Date.now(), text: `[SYSTEM] Success: ${data.resultSummary}`, status: 'done' }
       ].slice(-10));
     });
 
@@ -69,7 +69,7 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
         const newThought = MOCK_THOUGHTS[Math.floor(Math.random() * MOCK_THOUGHTS.length)];
         setLogs(prev => {
           // If we have real logs coming in, maybe slow down mock logs or stop them
-          const nextLogs: { id: number; text: string; status: 'processing' | 'done' }[] = [...prev, { id: logId++, text: newThought, status: 'processing' }];
+          const nextLogs = [...prev, { id: logId++, text: newThought, status: 'processing' }];
           if (nextLogs.length > 1) {
             nextLogs[nextLogs.length - 2].status = 'done';
           }
@@ -94,13 +94,13 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
   return (
     <div className="bg-slate-900 rounded-[32px] p-6 border border-slate-800 shadow-2xl relative overflow-hidden group">
       <div className="absolute top-0 right-0 p-4 opacity-10">
-        <Cpu className="w-24 h-24 text-primary animate-pulse" />
+        <Cpu className="w-24 h-24 text-blue-500 animate-pulse" />
       </div>
       
       <div className="flex items-center justify-between mb-6 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
-            <Terminal className="w-5 h-5 text-primary" />
+          <div className="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center border border-blue-500/30">
+            <Terminal className="w-5 h-5 text-blue-400" />
           </div>
           <div>
             <h3 className="text-white font-bold text-lg tracking-tight">Neural Activity</h3>
@@ -110,7 +110,7 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
             </div>
           </div>
         </div>
-        <div className="text-[10px] font-mono text-theme-background0 bg-slate-800/50 px-3 py-1 rounded-full border border-slate-700">
+        <div className="text-[10px] font-mono text-muted-foreground bg-slate-800/50 px-3 py-1 rounded-full border border-slate-700">
           SECURE_V3.4
         </div>
       </div>
@@ -127,21 +127,21 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
             >
               <div className="mt-0.5">
                 {log.status === 'processing' ? (
-                  <Zap className="w-3.5 h-3.5 text-primary animate-bounce" />
+                  <Zap className="w-3.5 h-3.5 text-blue-400 animate-bounce" />
                 ) : (
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                 )}
               </div>
               <div className="flex-1">
-                <span className="text-theme-background0 mr-2">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
-                <span className={log.status === 'processing' ? "text-primary/20" : "text-slate-400"}>
+                <span className="text-muted-foreground mr-2">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
+                <span className={log.status === 'processing' ? "text-blue-100" : "text-slate-400"}>
                   {log.text}
                 </span>
                 {log.status === 'processing' && (
                   <motion.span
                     animate={{ opacity: [0, 1, 0] }}
                     transition={{ repeat: Infinity, duration: 1 }}
-                    className="inline-block w-1.5 h-3 bg-primary ml-1 translate-y-0.5"
+                    className="inline-block w-1.5 h-3 bg-blue-400 ml-1 translate-y-0.5"
                   />
                 )}
               </div>
@@ -153,15 +153,15 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
       <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
         <div className="flex gap-4">
           <div className="flex flex-col">
-            <span className="text-[8px] font-black uppercase tracking-widest text-theme-background0">Cycles</span>
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Cycles</span>
             <span className="text-white font-mono text-sm">1,242</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[8px] font-black uppercase tracking-widest text-theme-background0">Stability</span>
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Stability</span>
             <span className="text-emerald-400 font-mono text-sm">99.9%</span>
           </div>
         </div>
-        <button className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-blue-300 transition-colors">
+        <button className="text-[10px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 transition-colors">
           Expand Console
         </button>
       </div>

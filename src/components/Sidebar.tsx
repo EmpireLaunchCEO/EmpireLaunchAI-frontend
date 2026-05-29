@@ -14,24 +14,19 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { id: 'desktop-nav-home', name: 'Home', href: '/dashboard', icon: LayoutDashboard },
-  { id: 'desktop-nav-ec', name: 'EC (empire center)', href: '/empire-center', icon: ClipboardCheck },
-  { id: 'desktop-nav-lc', name: 'LC (link center)', href: '/link-center', icon: Stars },
-  { id: 'desktop-nav-settings', name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Empire Center', href: '/empire-center', icon: ClipboardCheck },
+  { name: 'Neural Link', href: '/link-center', icon: Stars },
+  { name: 'Control Gates', href: '/review', icon: ShieldCheck },
+  { name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
-interface SidebarProps {
-  className?: string;
-}
-
-export function Sidebar({ className }: SidebarProps) {
+export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className={cn(
-      "flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-[72px] top-0 border-r border-theme shadow-sm",
-      className
-    )}>
+    <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-[72px] top-0 border-r border-theme shadow-sm">
       <div className="p-6 flex items-center gap-2">
         <div className="bg-primary p-2 rounded-xl shadow-lg shadow-primary/20">
           <Stars className="w-5 h-5 text-white" />
@@ -45,12 +40,11 @@ export function Sidebar({ className }: SidebarProps) {
           return (
             <Link
               key={item.name}
-              id={item.id}
               href={item.href}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm",
                 isActive 
-                ? "bg-primary text-white shadow-xl shadow-primary/20" 
+                ? "bg-primary text-white shadow-xl shadow-primary/10" 
                 : "text-slate-400 hover:text-foreground hover:bg-theme-background"
               )}
             >
@@ -65,7 +59,7 @@ export function Sidebar({ className }: SidebarProps) {
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">AI Brain Live</span>
           </div>
-          <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20">
+          <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
              <p className="text-[11px] font-bold text-primary leading-relaxed italic">
                "Analyzing TikTok market trends for 'Boho Luxe'... I'll suggest new content soon."
              </p>

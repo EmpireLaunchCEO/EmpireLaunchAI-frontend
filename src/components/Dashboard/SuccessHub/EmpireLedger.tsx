@@ -12,18 +12,18 @@ const MOCK_INVOICES = [
 
 export const EmpireLedger = ({ health }: { health: any }) => {
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme-background shadow-sm space-y-8">
+    <div className="bg-theme-surface rounded-[40px] p-8 border border-theme shadow-sm space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <CreditCard className="w-5 h-5 text-primary" />
-            <h3 className="text-sm font-black uppercase tracking-widest text-slate-400">Empire Ledger</h3>
+            <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">Empire Ledger</h3>
           </div>
           <h2 className="text-2xl font-black text-foreground tracking-tight">Financial Intelligence</h2>
         </div>
         <div className="text-right">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Projected ROI</p>
-          <div className="flex items-center gap-2 text-emerald-600">
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Projected ROI</p>
+          <div className="flex items-center gap-2 text-emerald-500">
             <TrendingUp className="w-4 h-4" />
             <span className="text-xl font-black">${(health?.revenue || 4250).toLocaleString()}</span>
           </div>
@@ -41,22 +41,22 @@ export const EmpireLedger = ({ health }: { health: any }) => {
           >
             <div className="flex items-center gap-4">
               <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${
-                inv.type === 'Credit' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-200 text-slate-600'
+                inv.type === 'Credit' ? 'bg-emerald-500/20 text-emerald-500' : 'bg-theme-surface text-muted-foreground'
               }`}>
                 {inv.type === 'Credit' ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownLeft className="w-5 h-5" />}
               </div>
               <div>
                 <p className="text-sm font-bold text-foreground">{inv.customer}</p>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[10px] text-theme-background0 font-medium">{inv.id}</span>
-                  <span className="text-[10px] text-slate-300">•</span>
-                  <span className="text-[10px] text-theme-background0 font-medium">{inv.date}</span>
+                  <span className="text-[10px] text-muted-foreground font-medium">{inv.id}</span>
+                  <span className="text-[10px] text-muted-foreground/30">•</span>
+                  <span className="text-[10px] text-muted-foreground font-medium">{inv.date}</span>
                 </div>
               </div>
             </div>
             <div className="text-right flex items-center gap-6">
               <div>
-                <p className={`text-sm font-black ${inv.type === 'Credit' ? 'text-foreground' : 'text-theme-background0'}`}>
+                <p className={`text-sm font-black ${inv.type === 'Credit' ? 'text-foreground' : 'text-muted-foreground'}`}>
                   {inv.type === 'Credit' ? '+' : '-'}${inv.amount.toFixed(2)}
                 </p>
                 <span className={`text-[9px] font-black uppercase tracking-widest ${
@@ -65,8 +65,8 @@ export const EmpireLedger = ({ health }: { health: any }) => {
                   {inv.status}
                 </span>
               </div>
-              <button className="w-8 h-8 rounded-xl bg-theme-surface border border-theme flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <Download className="w-4 h-4 text-slate-400" />
+              <button className="w-8 h-8 rounded-xl bg-theme-background border border-theme flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <Download className="w-4 h-4 text-muted-foreground" />
               </button>
             </div>
           </motion.div>
@@ -74,16 +74,16 @@ export const EmpireLedger = ({ health }: { health: any }) => {
       </div>
 
       <div className="grid grid-cols-2 gap-4 pt-4">
-        <div className="bg-primary/10/50 rounded-3xl p-5 border border-primary/20/50">
+        <div className="bg-primary/5 rounded-3xl p-5 border border-primary/20">
            <span className="text-[10px] font-black uppercase tracking-widest text-primary/60 block mb-1 text-center">Stripe Connect</span>
            <div className="flex items-center justify-center gap-2">
              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
              <span className="text-sm font-bold text-foreground">Synchronized</span>
            </div>
         </div>
-        <div className="bg-slate-900 rounded-3xl p-5 border border-slate-800 flex flex-col items-center justify-center">
-           <span className="text-[10px] font-black uppercase tracking-widest text-theme-background0 block mb-1">Success Fee</span>
-           <span className="text-sm font-bold text-white">$30.00 / $1,000</span>
+        <div className="bg-theme-background rounded-3xl p-5 border border-theme flex flex-col items-center justify-center">
+           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Success Fee</span>
+           <span className="text-sm font-bold text-foreground">$30.00 / $1,000</span>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { EmpireSwitcher } from "@/components/EmpireSwitcher";
 import { MobileNav } from "@/components/MobileNav";
 import { SubscriptionGuard } from "@/components/SubscriptionGuard";
+import { OnboardingTour } from "@/components/Dashboard/OnboardingTour";
 import { NotificationBell } from "@/components/Dashboard/NotificationBell";
 
 export default function AuthenticatedLayout({
@@ -11,17 +12,18 @@ export default function AuthenticatedLayout({
 }>) {
   return (
     <SubscriptionGuard>
-      <div className="bg-theme-background transition-colors duration-500">
+      <div className="flex bg-theme-background h-screen relative overflow-hidden">
+        <OnboardingTour />
         <EmpireSwitcher />
-        <Sidebar className="hidden lg:flex" />
-        <main className="w-full lg:ml-[328px] bg-theme-background lg:rounded-l-[48px] shadow-2xl shadow-black/20 border-l border-theme relative transition-colors duration-500 pt-[env(safe-area-inset-top)] pb-[calc(env(safe-area-inset-bottom)+8rem)]">
+        <Sidebar />
+        <main className="flex-1 lg:ml-[328px] h-full bg-theme-surface lg:rounded-l-[48px] shadow-2xl shadow-slate-200 border-l border-theme overflow-y-auto relative lg:pb-0">
           <div className="absolute top-8 right-8 z-[60] hidden lg:block">
-            <NotificationBell id="notification-bell-desktop" />
+            <NotificationBell />
           </div>
           {children}
         </main>
-        <div className="fixed top-[calc(env(safe-area-inset-top)+1rem)] right-4 z-[100] lg:hidden">
-          <NotificationBell id="notification-bell-mobile" />
+        <div className="fixed top-4 right-4 z-[100] lg:hidden">
+          <NotificationBell />
         </div>
         <MobileNav />
       </div>

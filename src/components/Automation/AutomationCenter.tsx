@@ -25,7 +25,7 @@ const flows = [
   { 
     id: 'gratitude', 
     name: 'The "Gratitude" Flow', 
-    description: 'Triggered 1 hour after purchase. A sincere "Thank You" email.',
+    description: 'Triggered 1 hour after activation. A sincere "Thank You" email.',
     status: 'active',
     icon: Heart,
     color: 'text-rose-500'
@@ -33,7 +33,7 @@ const flows = [
   { 
     id: 'social-proof', 
     name: 'The "Social Proof" Request', 
-    description: 'Triggered 7 days after purchase. Asks for a review on Etsy.',
+    description: 'Triggered 7 days after activation. Asks for a review on Etsy.',
     status: 'active',
     icon: Star,
     color: 'text-amber-500'
@@ -49,7 +49,7 @@ export function AutomationCenter() {
       <div className="flex justify-between items-center bg-theme-surface p-8 rounded-[40px] border border-theme shadow-sm">
         <div className="space-y-1">
           <h3 className="text-xl font-bold text-foreground">Automation Control</h3>
-          <p className="text-sm text-theme-background0">Manage how AI communicates with your customers.</p>
+          <p className="text-sm text-muted-foreground">Manage how AI communicates with your customers.</p>
         </div>
         <div className="flex items-center gap-4 bg-theme-background px-6 py-4 rounded-3xl">
           <span className="text-sm font-bold text-slate-700">Manual Review (HITL)</span>
@@ -81,7 +81,7 @@ export function AutomationCenter() {
                   </div>
                   <div>
                     <h5 className="font-bold text-foreground">{flow.name}</h5>
-                    <p className="text-xs text-theme-background0 mt-1">{flow.description}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{flow.description}</p>
                   </div>
                 </div>
                 <span className="bg-green-50 text-green-600 text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest">
@@ -124,7 +124,7 @@ export function AutomationCenter() {
               </div>
               <span className="text-xs font-black text-primary uppercase tracking-widest">High Trust</span>
             </div>
-            <div className="flex items-end gap-2">
+
               <span className="text-4xl font-black text-white">88</span>
               <span className="text-white/40 font-bold mb-1">/100</span>
             </div>
@@ -134,10 +134,10 @@ export function AutomationCenter() {
           </div>
 
           <div className="bg-theme-surface rounded-[40px] border border-theme shadow-sm overflow-hidden flex flex-col">
-            <div className="p-8 border-b border-theme-background">
+            <div className="p-8 border-b border-theme">
               <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest">Recent Sent Log</h4>
             </div>
-            <div className="divide-y divide-theme-background">
+            <div className="divide-y divide-slate-50">
               {sentLog.map((log) => (
                 <div key={log.id} className="p-6 hover:bg-theme-background transition-colors flex justify-between items-center">
                   <div className="flex gap-4">
@@ -146,7 +146,7 @@ export function AutomationCenter() {
                     </div>
                     <div>
                       <p className="text-sm font-bold text-foreground">{log.recipient}</p>
-                      <p className="text-[10px] text-theme-background0 truncate max-w-[200px]">{log.subject}</p>
+                      <p className="text-[10px] text-muted-foreground truncate max-w-[200px]">{log.subject}</p>
                     </div>
                   </div>
                   <div className="text-right">
