@@ -249,8 +249,8 @@ export function SetupAssistant() {
                 </button>
               </div>
             </div>
-            </div>
-
+          </div>
+        </div>
       </AnimatePresence>
 
       {/* Spotlight effect */}
