@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { 
-  TrendingUp, 
-  ExternalLink, 
-  Play, 
+import {
+  TrendingUp,
+  ExternalLink,
+  Play,
   X,
   Stars,
   Loader2
@@ -34,20 +34,20 @@ export function InsightCard({ platform, title, description, roi, onExecute, isEx
           {roi} ROI
         </div>
       </div>
-      
+
       <h4 className="text-lg font-bold text-foreground mb-2">{title}</h4>
       <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
         {description}
       </p>
-      
+
       <div className="flex items-center gap-3">
-        <button 
+        <button
           onClick={onExecute}
           disabled={isExecuting}
           className={cn(
             "flex-1 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all",
-            isExecuting 
-              ? "bg-primary text-white cursor-wait" 
+            isExecuting
+              ? "bg-primary text-white cursor-wait"
               : "bg-primary text-white hover:bg-primary/80"
           )}
         >

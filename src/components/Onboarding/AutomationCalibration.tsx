@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  User, 
-  Shield, 
-  Zap, 
-  CheckCircle2, 
+import {
+  User,
+  Shield,
+  Zap,
+  CheckCircle2,
   AlertCircle,
   Stars,
   MousePointer2,
@@ -35,7 +35,7 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
           style={{ width: 'calc(50% - 6px)' }}
           transition={{ type: "spring", stiffness: 400, damping: 35 }}
         />
-        
+
         <button
           onClick={() => onModeChange('co-pilot')}
           className={cn(
@@ -47,7 +47,7 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
           <span className="font-black uppercase tracking-[0.2em] text-[9px] md:text-[10px]">Co-Pilot</span>
           <span className="text-[8px] font-bold opacity-60">Manual Approval</span>
         </button>
-        
+
         <button
           id="automation-empire-mode"
           onClick={() => onModeChange('empire')}
@@ -66,7 +66,7 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
       </div>
 
       {mode === 'empire' && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-primary/5 border border-primary/10 p-4 rounded-2xl max-w-md mx-auto text-center"

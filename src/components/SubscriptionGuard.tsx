@@ -23,9 +23,9 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
   const handleRedeemKey = () => {
     setIsProcessing(true);
     setError('');
-    
+
     const cleanKey = accessKey.trim().toUpperCase();
-    
+
     // In a real app, this would call /api/auth/redeemKey
     // For this simulation, we check for the Master Owner key or any valid key format
     setTimeout(() => {
@@ -51,7 +51,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-amber-600/10 blur-[120px] rounded-full animate-pulse delay-700" />
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="relative z-10 w-full max-w-md bg-slate-900 border border-primary/20 rounded-[40px] p-6 sm:p-10 shadow-2xl text-center space-y-8 overflow-y-auto max-h-[90vh] no-scrollbar"
@@ -76,7 +76,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
               </div>
               <h3 className="text-xl font-black text-white uppercase italic tracking-tighter mb-1">Empire Master</h3>
               <p className="text-primary text-[10px] font-black uppercase tracking-widest mb-6">Unlimited Autonomy License</p>
-              
+
               <div className="space-y-3 mb-8">
                 {[
                   'Full Autonomous Execution',
@@ -168,7 +168,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         ) : (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="p-8 bg-slate-950 border border-slate-800 rounded-[40px] text-left space-y-6"
@@ -189,7 +189,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
                 />
                 <Sparkles className="absolute right-5 top-5 w-5 h-5 text-primary/40" />
               </div>
-              
+
               {error && (
                 <p className="text-red-500 text-[9px] font-black uppercase tracking-widest ml-2">{error}</p>
               )}

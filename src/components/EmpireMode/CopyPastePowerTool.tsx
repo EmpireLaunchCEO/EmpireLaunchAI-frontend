@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Copy, 
-  Check, 
-  X, 
-  ChevronRight, 
+import {
+  Copy,
+  Check,
+  X,
+  ChevronRight,
   ChevronLeft,
   MousePointer2,
   CheckCircle2,
@@ -56,7 +56,7 @@ export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist:
   };
 
   const toggleCheck = (id: string) => {
-    setChecklist(prev => prev.map(item => 
+    setChecklist(prev => prev.map(item =>
       item.id === id ? { ...item, completed: !item.completed } : item
     ));
   };
@@ -73,17 +73,17 @@ export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist:
   const allCompleted = checklist.every(item => item.completed);
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ x: 300 }}
       animate={{ x: isExpanded ? 0 : 260 }}
       className="fixed right-0 top-1/2 -translate-y-1/2 z-[400] flex items-center"
     >
-      <button 
+      <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-10 h-24 bg-slate-900 text-white rounded-l-3xl flex flex-col items-center justify-center shadow-2xl border-y border-l border-white/10 hover:bg-primary transition-all group"
       >
         <div className="mb-2">
-           {platform.toLowerCase().includes('kittl') ? <Palette className="w-4 h-4 text-primary" /> : 
+           {platform.toLowerCase().includes('kittl') ? <Palette className="w-4 h-4 text-primary" /> :
             platform.toLowerCase().includes('capcut') ? <Scissors className="w-4 h-4 text-primary" /> : <Layout className="w-4 h-4 text-primary" />}
         </div>
         {isExpanded ? <ChevronRight className="w-5 h-5 text-primary" /> : <ChevronLeft className="w-5 h-5 text-primary" />}
@@ -107,7 +107,7 @@ export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist:
            {/* Deep Link Section */}
            <div className="space-y-4">
               <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Execution Link</h4>
-              <a 
+              <a
                 href={getDeepLink(platform)}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -161,7 +161,7 @@ export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist:
            {/* Visual DNA Section */}
            <div className="space-y-4">
               <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Visual DNA</h4>
-              
+
               {/* Colors */}
               <div className="flex flex-wrap gap-2">
                  {blueprint.palette?.map((color: string) => (
@@ -233,9 +233,9 @@ export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist:
                         )}
                      </div>
                      <p className="text-sm font-bold text-foreground line-clamp-2 pr-4 italic leading-snug">"{item.text}"</p>
-                     
+
                      {copiedLabel === item.label && (
-                       <motion.div 
+                       <motion.div
                          initial={{ scale: 0.8, opacity: 0 }}
                          animate={{ scale: 1, opacity: 1 }}
                          className="absolute inset-0 bg-green-500/10 flex items-center justify-center pointer-events-none"
@@ -250,13 +250,13 @@ export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist:
         </div>
 
         <div className="p-8 bg-slate-900 space-y-4 border-t border-white/5">
-           <button 
+           <button
              onClick={onComplete}
              disabled={!allCompleted}
              className={cn(
                "w-full py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all shadow-xl",
-               allCompleted 
-                 ? "bg-primary text-slate-900 hover:bg-amber-400 shadow-amber-900/40" 
+               allCompleted
+                 ? "bg-primary text-slate-900 hover:bg-amber-400 shadow-amber-900/40"
                  : "bg-slate-800 text-muted-foreground cursor-not-allowed"
              )}
            >

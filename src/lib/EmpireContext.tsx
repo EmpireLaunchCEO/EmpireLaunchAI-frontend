@@ -41,7 +41,7 @@ interface EmpireContextType {
   updatePlatformPermission: (platform: string, level: 'co-pilot' | 'empire') => void;
   autoSendRetention: boolean;
   setAutoSendRetention: (enabled: boolean) => void;
-  
+
   // Notifications
   notifications: Notification[];
   unreadCount: number;
@@ -54,7 +54,7 @@ interface EmpireContextType {
   updateNotificationSettings: (settings: { sales?: boolean; approvals?: boolean }) => void;
   isNotificationModalDismissed: boolean;
   dismissNotificationModal: () => void;
-  
+
   // Toast System
   toasts: Toast[];
   addToast: (toast: Omit<Toast, 'id'>) => void;
@@ -77,7 +77,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
     return '1';
   });
-  
+
   const [isPaid, setIsPaidState] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('isPaid') === 'true';
@@ -374,8 +374,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <EmpireContext.Provider value={{ 
-      activeEmpireId, 
+    <EmpireContext.Provider value={{
+      activeEmpireId,
       setActiveEmpireId: handleSetActiveEmpireId,
       isOnboarded,
       isInitialized,
@@ -404,7 +404,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       updatePlatformPermission,
       autoSendRetention,
       setAutoSendRetention,
-      
+
       // Notifications
       notifications,
       unreadCount,
@@ -414,7 +414,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       updateNotificationSettings,
       isNotificationModalDismissed,
       dismissNotificationModal,
-      
+
       toasts,
       addToast,
       removeToast

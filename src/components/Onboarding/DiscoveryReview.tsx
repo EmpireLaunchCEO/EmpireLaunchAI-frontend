@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Bot, 
-  ShieldCheck, 
-  Zap, 
-  CheckCircle2, 
+import {
+  Bot,
+  ShieldCheck,
+  Zap,
+  CheckCircle2,
   XCircle,
   Eye,
   Lock,
@@ -40,7 +40,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
     await discoveryService.approveResult(id);
     setResults(prev => prev.filter(r => r.id !== id));
     setProcessingId(null);
-    
+
     if (results.length === 1) {
       onComplete();
     }
@@ -81,7 +81,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
       <div className="space-y-4">
         <AnimatePresence mode="popLayout">
           {results.map((result) => (
-            <motion.div 
+            <motion.div
               key={result.id}
               layout
               initial={{ opacity: 0, y: 20 }}
@@ -92,7 +92,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex items-start gap-4 flex-1">
                   <div className="p-3 bg-theme-background rounded-xl text-slate-400">
-                    {result.type === 'credential' ? <Lock className="w-5 h-5" /> : 
+                    {result.type === 'credential' ? <Lock className="w-5 h-5" /> :
                      result.type === 'invoice' ? <Mail className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </div>
                   <div className="space-y-1 flex-1">
@@ -110,7 +110,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
                 </div>
 
                 <div className="flex gap-2 shrink-0">
-                  <button 
+                  <button
                     disabled={processingId === result.id}
                     onClick={() => handleReject(result.id)}
                     className="flex-1 md:flex-none px-6 py-3 border-2 border-theme text-slate-400 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
@@ -118,7 +118,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
                     <XCircle className="w-4 h-4" />
                     Ignore
                   </button>
-                  <button 
+                  <button
                     disabled={processingId === result.id}
                     onClick={() => handleApprove(result.id)}
                     className="flex-1 md:flex-none px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg flex items-center justify-center gap-2"
@@ -137,7 +137,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
         </AnimatePresence>
 
         {results.length === 0 && !loading && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="text-center py-12 space-y-4"
@@ -147,7 +147,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
             </div>
             <h4 className="text-xl font-black text-foreground">Neural Scan Complete.</h4>
             <p className="text-sm text-muted-foreground max-w-xs mx-auto">All assets have been processed and integrated into your dashboard.</p>
-            <button 
+            <button
               onClick={onComplete}
               className="mt-4 px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-200"
             >

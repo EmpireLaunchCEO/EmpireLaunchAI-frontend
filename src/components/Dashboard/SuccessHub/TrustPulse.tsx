@@ -29,29 +29,29 @@ export const TrustPulse = () => {
   }
 
   const metrics = [
-    { 
-      label: 'Review Velocity', 
-      value: score.velocity, 
-      weight: '40%', 
-      icon: History, 
-      color: 'text-amber-500', 
-      bgColor: 'bg-amber-500/10' 
+    {
+      label: 'Review Velocity',
+      value: score.velocity,
+      weight: '40%',
+      icon: History,
+      color: 'text-amber-500',
+      bgColor: 'bg-amber-500/10'
     },
-    { 
-      label: 'Sentiment Analysis', 
-      value: score.sentiment, 
-      weight: '40%', 
-      icon: Heart, 
-      color: 'text-rose-500', 
-      bgColor: 'bg-rose-500/10' 
+    {
+      label: 'Sentiment Analysis',
+      value: score.sentiment,
+      weight: '40%',
+      icon: Heart,
+      color: 'text-rose-500',
+      bgColor: 'bg-rose-500/10'
     },
-    { 
-      label: 'Response Agility', 
-      value: score.agility, 
-      weight: '20%', 
-      icon: Zap, 
-      color: 'text-blue-500', 
-      bgColor: 'bg-blue-500/10' 
+    {
+      label: 'Response Agility',
+      value: score.agility,
+      weight: '20%',
+      icon: Zap,
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-500/10'
     },
   ];
 
@@ -92,7 +92,7 @@ export const TrustPulse = () => {
                <p className="text-[8px] font-black text-muted-foreground/50 uppercase tracking-widest">Weight: {metric.weight}</p>
             </div>
             <div className="h-1 bg-theme-surface rounded-full overflow-hidden">
-               <motion.div 
+               <motion.div
                  initial={{ width: 0 }}
                  animate={{ width: `${metric.value}%` }}
                  transition={{ delay: 0.5 + idx * 0.1, duration: 1 }}
@@ -111,7 +111,7 @@ export const TrustPulse = () => {
               <span className="text-[10px] font-bold text-foreground">Score Trend</span>
            </div>
         </div>
-        
+
         <div className="h-32 w-full flex items-end justify-between gap-1 px-2 relative">
            {/* Grid lines */}
            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-5">
@@ -124,7 +124,7 @@ export const TrustPulse = () => {
              const height = `${((point.score - minScore) / (range || 1)) * 100}%`;
              return (
                <div key={point.date} className="flex-1 flex flex-col items-center gap-2 group relative">
-                 <motion.div 
+                 <motion.div
                    initial={{ height: 0 }}
                    animate={{ height: height }}
                    transition={{ delay: 0.8 + idx * 0.05, duration: 0.5 }}
@@ -133,7 +133,7 @@ export const TrustPulse = () => {
                  <span className="text-[8px] font-bold text-muted-foreground rotate-45 mt-2 origin-left whitespace-nowrap">
                     {new Date(point.date).toLocaleDateString('en-US', { weekday: 'short' })}
                  </span>
-                 
+
                  {/* Tooltip */}
                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[8px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 border border-white/10 shadow-xl">
                     {point.score}% Sentiment

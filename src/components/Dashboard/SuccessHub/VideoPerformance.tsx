@@ -57,17 +57,17 @@ export const VideoPerformance = () => {
             className="bg-theme-surface rounded-[32px] overflow-hidden border border-theme shadow-sm hover:shadow-md transition-all group"
           >
             <div className="relative aspect-square">
-              <img 
-                src={video.thumbnail} 
-                alt="Thumbnail" 
+              <img
+                src={video.thumbnail}
+                alt="Thumbnail"
                 className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-              
+
               <div className="absolute top-4 left-4">
                 <div className="bg-theme-surface/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
                   <div className={`w-1.5 h-1.5 rounded-full ${
-                    video.status === 'Trending' ? 'bg-emerald-500 animate-pulse' : 
+                    video.status === 'Trending' ? 'bg-emerald-500 animate-pulse' :
                     video.status === 'Stable' ? 'bg-primary' : 'bg-amber-500'
                   }`} />
                   <span className="text-[10px] font-black uppercase tracking-widest text-foreground">{video.status}</span>

@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Activity, 
-  Search, 
-  Cpu, 
+import {
+  Activity,
+  Search,
+  Cpu,
   Zap,
   TrendingUp,
   Brain,
@@ -83,14 +83,14 @@ export function EmpirePulse() {
     )}>
       {/* Background Brain Waves Effect */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
-         <motion.div 
-           animate={{ 
+         <motion.div
+           animate={{
              scale: [1, 1.2, 1],
              opacity: [0.3, 0.5, 0.3],
              backgroundColor: hasPendingApprovals ? 'rgba(245, 158, 11, 0.3)' : 'rgba(59, 130, 246, 0.3)'
            }}
            transition={{ duration: 4, repeat: Infinity }}
-           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[120px]" 
+           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-[120px]"
          />
       </div>
 
@@ -101,8 +101,8 @@ export function EmpirePulse() {
              "w-24 h-24 rounded-[32px] bg-slate-900 border border-white/10 flex items-center justify-center shadow-inner relative overflow-hidden transition-colors duration-500",
              hasPendingApprovals && "border-amber-500/30"
            )}>
-              <motion.div 
-                animate={{ 
+              <motion.div
+                animate={{
                   boxShadow: hasPendingApprovals ? [
                     '0 0 0px rgba(245, 158, 11, 0)',
                     '0 0 20px rgba(245, 158, 11, 0.5)',
@@ -144,10 +144,10 @@ export function EmpirePulse() {
                 </AnimatePresence>
               </motion.div>
            </div>
-           
+
            {/* Pulsing Dots / Static Dots */}
            {!hasPendingApprovals && (
-             <motion.div 
+             <motion.div
                animate={{ rotate: 360 }}
                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                className="absolute -inset-4"
@@ -214,12 +214,12 @@ export function EmpirePulse() {
                     )}>{pulse.progress}%</span>
                  </div>
                  <div className="h-1.5 w-full bg-theme-surface/5 rounded-full overflow-hidden">
-                    <motion.div 
+                    <motion.div
                       initial={{ width: 0 }}
-                      animate={{ 
+                      animate={{
                         width: `${pulse.progress}%`,
-                        background: hasPendingApprovals 
-                          ? "linear-gradient(90deg, #F59E0B, #D97706)" 
+                        background: hasPendingApprovals
+                          ? "linear-gradient(90deg, #F59E0B, #D97706)"
                           : "linear-gradient(90deg, #2563EB, #4F46E5)"
                       }}
                       className="h-full shadow-[0_0_10px_rgba(59,130,246,0.5)]"

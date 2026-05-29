@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from 'react';
-import { 
-  ClipboardList, 
-  CheckCircle2, 
-  Search, 
-  MessageSquare, 
-  History, 
-  Globe, 
+import {
+  ClipboardList,
+  CheckCircle2,
+  Search,
+  MessageSquare,
+  History,
+  Globe,
   Zap,
   Clock,
   ExternalLink,
@@ -74,8 +74,8 @@ export default function EmpireCenterPage() {
             onClick={() => setActiveTab(tab.id as any)}
             className={cn(
               "flex items-center gap-2 px-6 py-3 rounded-[20px] font-bold text-sm transition-all",
-              activeTab === tab.id 
-                ? "bg-theme-surface text-foreground shadow-sm" 
+              activeTab === tab.id
+                ? "bg-theme-surface text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-slate-700"
             )}
           >
@@ -103,7 +103,7 @@ export default function EmpireCenterPage() {
                     <h3 className="text-xl font-black text-foreground">Pending Approvals</h3>
                     <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px] font-black uppercase">2 Action Required</span>
                   </div>
-                  
+
                   <div className="space-y-4">
                     {duties.filter(d => d.type === 'approval').map(duty => (
                       <div key={duty.id} className="p-6 bg-theme-background rounded-3xl flex items-center justify-between gap-4 border border-transparent hover:border-blue-200 transition-all">
@@ -135,7 +135,7 @@ export default function EmpireCenterPage() {
                     <h3 className="text-xl font-black text-foreground">AI Active Research</h3>
                     <button className="text-xs font-black text-blue-600 uppercase tracking-widest">New Request +</button>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4">
                       <div className="flex items-center gap-3">
@@ -143,7 +143,7 @@ export default function EmpireCenterPage() {
                         <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
                       </div>
                       <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <motion.div 
+                        <motion.div
                           initial={{ width: "0%" }}
                           animate={{ width: "65%" }}
                           className="bg-blue-600 h-full"
@@ -230,7 +230,7 @@ export default function EmpireCenterPage() {
                 <div className="space-y-6">
                   <div className="space-y-3">
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">Current Objective</label>
-                    <textarea 
+                    <textarea
                       placeholder="e.g. Focus on maximizing Etsy visibility for the new Summer Journal collection."
                       className="w-full bg-theme-surface/5 border-2 border-white/10 rounded-3xl p-6 text-sm font-medium outline-none focus:border-blue-600 transition-all min-h-[120px]"
                     />
@@ -269,21 +269,21 @@ export default function EmpireCenterPage() {
                   </div>
                   <h4 className="font-black text-foreground text-sm">Empire Notes</h4>
                 </div>
-                <button 
+                <button
                   onClick={() => setEmpireNotes('')}
                   className="text-slate-300 hover:text-red-500 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
-              
-              <textarea 
+
+              <textarea
                 value={empireNotes}
                 onChange={(e) => setEmpireNotes(e.target.value)}
                 placeholder="Press the mic and say 'Notes...' to dictate your thoughts here."
                 className="w-full bg-amber-50/30 border-2 border-transparent rounded-3xl p-6 text-sm font-medium outline-none focus:border-amber-200 transition-all min-h-[200px] text-slate-700 placeholder:text-amber-600/30"
               />
-              
+
               <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-amber-600/50">
                 <Stars className="w-3 h-3" />
                 AI Sync: Real-time
@@ -300,8 +300,8 @@ export default function EmpireCenterPage() {
               <p className="text-xs text-muted-foreground font-medium leading-relaxed">
                 Send feedback to the AI regarding past posts or research quality.
               </p>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="Type your feedback..."
                 className="w-full bg-theme-background border-2 border-transparent rounded-2xl p-4 text-xs font-bold focus:border-blue-600 transition-all outline-none"
               />

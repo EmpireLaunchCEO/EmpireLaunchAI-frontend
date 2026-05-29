@@ -13,7 +13,7 @@ interface GrowthTrackerProps {
   progress?: number;
 }
 
-export const GrowthTracker = ({ 
+export const GrowthTracker = ({
   goalTitle = "$1,000 Monthly Revenue",
   currentValue = 742,
   targetValue = 1000,
@@ -21,7 +21,7 @@ export const GrowthTracker = ({
   progress
 }: GrowthTrackerProps) => {
   const percentage = progress !== undefined ? progress : Math.min(Math.round((currentValue / targetValue) * 100), 100);
-  
+
   return (
     <div className="bg-theme-surface rounded-[40px] p-8 border border-theme shadow-sm relative overflow-hidden group">
       <div className="flex flex-col md:flex-row gap-8 items-center">
@@ -65,7 +65,7 @@ export const GrowthTracker = ({
               Level 04
             </span>
           </div>
-          
+
           {/* Glowing particles effect */}
           <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
              <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary rounded-full animate-ping" />

@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  BarChart3, 
-  TrendingUp, 
-  Users, 
-  Heart, 
-  Share2, 
-  MessageSquare, 
-  ArrowUpRight, 
+import {
+  BarChart3,
+  TrendingUp,
+  Users,
+  Heart,
+  Share2,
+  MessageSquare,
+  ArrowUpRight,
   ArrowDownRight,
   Globe,
   PieChart,
@@ -131,7 +131,7 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
                       </div>
                    </div>
                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${(metric.views / totalViews * 100)}%` }}
                         transition={{ delay: idx * 0.2, duration: 1 }}

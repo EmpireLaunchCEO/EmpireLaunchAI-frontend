@@ -92,7 +92,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
 
       // Success State
       setStatus('success');
-      
+
       // Simulate "Ding" visual pulse
       setTimeout(() => {
         dismissNotificationModal();
@@ -124,7 +124,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
             className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
             onClick={status === 'subscribing' ? undefined : handleClose}
           />
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -133,7 +133,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
           >
             <AnimatePresence mode="wait">
               {status === 'idle' || status === 'error' ? (
-                <motion.div 
+                <motion.div
                   key="onboarding"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -143,13 +143,13 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                   <div className="pt-12 pb-6 flex flex-col items-center">
                     <div className="relative">
                       <div className="absolute inset-0 bg-amber-400/20 blur-3xl rounded-full" />
-                      <motion.div 
-                        animate={{ 
+                      <motion.div
+                        animate={{
                           rotate: status === 'error' ? [0, -10, 10, -10, 10, 0] : [0, -5, 5, -5, 5, 0],
                           scale: [1, 1.05, 1]
                         }}
-                        transition={{ 
-                          duration: 2, 
+                        transition={{
+                          duration: 2,
                           repeat: Infinity,
                           repeatDelay: status === 'error' ? 0.5 : 3
                         }}
@@ -169,14 +169,14 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                         {status === 'error' ? 'Connection Failed' : <>Your Empire <span className="text-amber-400">Never Sleeps</span></>}
                       </h2>
                       <p className="text-slate-400 font-medium text-sm">
-                        {status === 'error' 
-                          ? 'We couldn\'t establish the neural link. Please check your browser settings.' 
+                        {status === 'error'
+                          ? 'We couldn\'t establish the neural link. Please check your browser settings.'
                           : 'Enable alerts to stay synchronized with your autonomous agents and market velocity.'}
                       </p>
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 text-left">
-                      <motion.div 
+                      <motion.div
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
@@ -191,7 +191,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                         </div>
                       </motion.div>
 
-                      <motion.div 
+                      <motion.div
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
@@ -215,7 +215,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                       >
                         Activate Real-Time Pulse
                       </button>
-                      
+
                       <button
                         onClick={handleClose}
                         className="text-muted-foreground font-bold text-xs uppercase tracking-[0.2em] hover:text-slate-300 transition-colors"
@@ -226,7 +226,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                   </div>
                 </motion.div>
               ) : status === 'subscribing' ? (
-                <motion.div 
+                <motion.div
                   key="subscribing"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -243,14 +243,14 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                   </div>
                 </motion.div>
               ) : (
-                <motion.div 
+                <motion.div
                   key="success"
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="flex flex-col items-center justify-center space-y-6 text-center"
                 >
-                   <motion.div 
-                    animate={{ 
+                   <motion.div
+                    animate={{
                       scale: [1, 1.2, 1],
                       boxShadow: ["0 0 0px rgba(251,191,36,0)", "0 0 60px rgba(251,191,36,0.4)", "0 0 0px rgba(251,191,36,0)"]
                     }}
@@ -266,7 +266,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                 </motion.div>
               )}
             </AnimatePresence>
-            
+
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/5 rounded-full blur-[100px] -mr-32 -mt-32" />
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-600/5 rounded-full blur-[80px] -ml-24 -mb-24" />

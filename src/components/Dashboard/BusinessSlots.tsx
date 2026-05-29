@@ -20,8 +20,8 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
     <div className="relative group cursor-pointer">
       <div className={cn(
         "relative overflow-hidden rounded-[32px] p-6 h-48 transition-all duration-500",
-        isLocked 
-          ? "bg-theme-background border-2 border-theme opacity-80" 
+        isLocked
+          ? "bg-theme-background border-2 border-theme opacity-80"
           : "bg-theme-surface border-2 border-blue-50 shadow-xl shadow-blue-900/5 hover:shadow-2xl hover:shadow-blue-900/10"
       )}>
         {/* Active Content */}
@@ -35,7 +35,7 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
               <h3 className="text-lg font-black text-foreground leading-tight tracking-tight uppercase italic">{name}</h3>
               <p className="text-xs font-medium text-muted-foreground">{niche}</p>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="bg-primary/10 px-2 py-1 rounded-lg border border-primary/20">
@@ -63,7 +63,7 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
 
         {/* The Shiny Glass Lock Overlay */}
         {isLocked && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             whileHover={{ opacity: 1 }}
             className="absolute inset-0 z-20 backdrop-blur-md bg-theme-surface/10 flex items-center justify-center p-6 border border-white/20"
@@ -71,12 +71,12 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
             <div className="relative group/lock">
               {/* Glass background */}
               <div className="absolute inset-0 bg-theme-surface/30 rounded-full blur-xl group-hover/lock:scale-150 transition-transform duration-700" />
-              
+
               <div className="relative bg-theme-surface/80 backdrop-blur-2xl w-16 h-16 rounded-[24px] flex items-center justify-center shadow-2xl border border-white/50">
                 <Lock className="w-7 h-7 text-blue-600" />
                 <Stars className="absolute -top-2 -right-2 w-5 h-5 text-amber-400 animate-pulse" />
               </div>
-              
+
               <motion.div
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -88,9 +88,11 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
 
 
           </motion.div>
-        )}
+              </div>
+            </motion.div>
+          )}
       </div>
-      
+
       {/* Decorative gradient for active slot */}
       {!isLocked && (
         <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-[36px] -z-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -106,13 +108,13 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
         <h2 className="text-xl font-black text-foreground tracking-tight">Active Empires</h2>
         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Slots 1/3</span>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <BusinessSlot 
-          id="1" 
-          name={currentEmpire?.name || "The First Empire"} 
-          niche={currentEmpire?.niche || "Niche Pending"} 
-          status="active" 
+        <BusinessSlot
+          id="1"
+          name={currentEmpire?.name || "The First Empire"}
+          niche={currentEmpire?.niche || "Niche Pending"}
+          status="active"
           growthScore={92}
         />
         <BusinessSlot id="2" name="Empty" niche="Empty" status="locked" />

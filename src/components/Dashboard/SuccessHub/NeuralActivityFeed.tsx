@@ -27,7 +27,7 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
     // Connect to WebSocket
     const socket = io(API_URL);
     const userId = '00000000-0000-0000-0000-000000000000'; // Real apps would use auth
-    
+
     socket.on('connect', () => {
       console.log('Connected to Neural Pulse');
       socket.emit('subscribe', userId);
@@ -45,14 +45,14 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
 
     socket.on('job-started', (data: { goal: string }) => {
       setLogs(prev => [
-        ...prev, 
+        ...prev,
         { id: Date.now(), text: `[SYSTEM] Goal Received: ${data.goal}`, status: 'done' }
       ].slice(-10));
     });
 
     socket.on('job-completed', (data: { resultSummary: string }) => {
       setLogs(prev => [
-        ...prev, 
+        ...prev,
         { id: Date.now(), text: `[SYSTEM] Success: ${data.resultSummary}`, status: 'done' }
       ].slice(-10));
     });
@@ -79,7 +79,7 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
 
       const interval = setInterval(addLog, 8000); // Slower mocks if idling
       addLog();
-      
+
       return () => {
         clearInterval(interval);
         socket.disconnect();
@@ -96,7 +96,7 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
       <div className="absolute top-0 right-0 p-4 opacity-10">
         <Cpu className="w-24 h-24 text-blue-500 animate-pulse" />
       </div>
-      
+
       <div className="flex items-center justify-between mb-6 relative z-10">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center border border-blue-500/30">

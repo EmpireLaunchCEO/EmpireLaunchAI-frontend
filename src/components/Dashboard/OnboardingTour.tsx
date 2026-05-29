@@ -2,17 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  X, 
-  ChevronRight, 
-  ChevronLeft, 
-  Stars, 
+import {
+  X,
+  ChevronRight,
+  ChevronLeft,
+  Stars,
   Bot,
   ArrowDown,
   LayoutDashboard,
   ClipboardList,
   PlusCircle,
-  Settings as SettingsIcon, 
+  Settings as SettingsIcon,
   Zap,
   Bell
 } from 'lucide-react';
@@ -127,11 +127,11 @@ export function OnboardingTour() {
           if (el) {
             const rect = el.getBoundingClientRect();
             setPointerX(rect.left + rect.width / 2);
-            
+
             // SIGNIFICANT OFFSET: Keep the pointer high above the bottom bar
             if (step.target?.startsWith('nav-')) {
               // Points to bottom nav, place bubble well above and arrow pointing down
-              setPointerY(rect.top - 40); 
+              setPointerY(rect.top - 40);
             } else if (step.target === 'notification-bell') {
               // Points to notification bell (top right), place arrow pointing up
               setPointerY(rect.bottom + 20);
@@ -221,23 +221,23 @@ export function OnboardingTour() {
             <div className="flex items-center justify-between pt-4">
               <div className="flex gap-1.5">
                 {tourSteps.map((_, i) => (
-                  <div 
-                    key={i} 
-                    className={`h-1.5 rounded-full transition-all duration-500 ${i === currentStep ? 'w-6 bg-primary' : 'w-1.5 bg-theme-background'}`} 
+                  <div
+                    key={i}
+                    className={`h-1.5 rounded-full transition-all duration-500 ${i === currentStep ? 'w-6 bg-primary' : 'w-1.5 bg-theme-background'}`}
                   />
                 ))}
               </div>
 
               <div className="flex gap-2">
                 {currentStep > 0 && (
-                  <button 
+                  <button
                     onClick={prevStep}
                     className="p-3 rounded-xl bg-theme-background text-slate-400 hover:bg-theme-surface border border-theme transition-all"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                 )}
-                <button 
+                <button
                   onClick={nextStep}
                   className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary/80 transition-all shadow-lg active:scale-95"
                 >
@@ -252,7 +252,7 @@ export function OnboardingTour() {
 
       {/* DYNAMIC POINTER WITH ABSOLUTE Z-INDEX ADVANTAGE */}
       {pointerX !== null && pointerY !== null && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, left: pointerX, top: pointerY }}
           className="fixed z-[10001] flex flex-col items-center gap-1 -translate-x-1/2 -translate-y-full pointer-events-none"

@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ChevronRight, 
+import {
+  ChevronRight,
   ChevronLeft,
   CheckCircle2,
   Stars,
@@ -42,11 +42,11 @@ import { API_URL } from '@/lib/config';
 import { CreditCard, Lock, Sparkles } from 'lucide-react';
 
 export default function Onboarding() {
-  const { 
-    completeOnboarding, 
-    setActiveEmpireId, 
-    isOnboarded, 
-    isInitialized, 
+  const {
+    completeOnboarding,
+    setActiveEmpireId,
+    isOnboarded,
+    isInitialized,
     setIsPaid,
     language,
     setLanguage,
@@ -85,14 +85,14 @@ export default function Onboarding() {
       const interval = setInterval(() => {
         setDiscoveryLogIndex((prev) => {
           const next = Math.min(prev + 1, discoveryLogs.length - 1);
-          
+
           if (next === discoveryLogs.length - 1) {
             clearInterval(interval);
             setTimeout(() => {
               setShowDiscoveryReview(true);
             }, 1000);
           }
-          
+
           return next;
         });
       }, 800);
@@ -116,7 +116,7 @@ export default function Onboarding() {
 
   const handleActivate = async () => {
     setIsActivating(true);
-    
+
     // In co-pilot mode, we just finish. In empire mode, we do the discovery review.
     if (data.automationMode === 'co-pilot') {
        await finalizeActivation();
@@ -127,7 +127,7 @@ export default function Onboarding() {
     try {
       const response = await fetch(`${API_URL}/api/agent/initialize`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer mock-mobile-token'
         },
@@ -141,7 +141,7 @@ export default function Onboarding() {
       });
 
       const result = await response.json();
-      
+
       if (result.status === 'success') {
         setActiveEmpireId(result.empire.id);
         completeOnboarding();
@@ -179,7 +179,7 @@ export default function Onboarding() {
             <div className="text-center space-y-12">
               <div className="relative inline-block">
                 <motion.div
-                  animate={{ 
+                  animate={{
                     scale: [1, 1.1, 1],
                     rotate: [0, 360],
                   }}
@@ -231,7 +231,7 @@ export default function Onboarding() {
               </div>
             </div>
           ) : (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               className="bg-theme-surface rounded-[48px] p-8 md:p-12 shadow-2xl max-h-[85vh] overflow-y-auto"
@@ -262,10 +262,10 @@ export default function Onboarding() {
   return (
     <div className="h-screen bg-theme-surface flex flex-col items-center overflow-y-auto no-scrollbar">
       <PWAInstallPrompt />
-      <TermsModal 
-        isOpen={isTermsOpen} 
-        onClose={() => setIsTermsOpen(false)} 
-        onAccept={handleAcceptTerms} 
+      <TermsModal
+        isOpen={isTermsOpen}
+        onClose={() => setIsTermsOpen(false)}
+        onAccept={handleAcceptTerms}
       />
       <div className="fixed left-0 top-0 bottom-0 w-1 bg-slate-100 hidden lg:block z-[70]" />
       <div className="fixed left-8 top-1/2 -translate-y-1/2 -rotate-90 origin-left hidden lg:flex items-center gap-4 z-[70]">
@@ -298,9 +298,9 @@ export default function Onboarding() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <PlatformMatrix 
-                  connectedPlatforms={data.connectedPlatforms} 
-                  onConnect={handleConnect} 
+                <PlatformMatrix
+                  connectedPlatforms={data.connectedPlatforms}
+                  onConnect={handleConnect}
                 />
               </motion.div>
             )}
@@ -323,9 +323,9 @@ export default function Onboarding() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <AutomationCalibration 
-                  mode={data.automationMode} 
-                  onModeChange={(mode) => updateData({ automationMode: mode })} 
+                <AutomationCalibration
+                  mode={data.automationMode}
+                  onModeChange={(mode) => updateData({ automationMode: mode })}
                 />
               </motion.div>
             )}
@@ -408,8 +408,8 @@ export default function Onboarding() {
                        <div className="space-y-2">
                          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Access Key</label>
                          <div className="relative group">
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               value={accessKey}
                               onChange={(e) => setAccessKey(e.target.value)}
                               placeholder="ENTER YOUR LICENSE KEY"
@@ -470,7 +470,7 @@ export default function Onboarding() {
             <ChevronLeft className="w-4 h-4" />
             Previous
           </button>
-          
+
           {currentStep < steps.length ? (
             <button
               onClick={nextStep}
@@ -497,10 +497,10 @@ export default function Onboarding() {
           )}
         </div>
       </div>
-      
-      <ApprovalGate 
-        isOpen={showApprovalGate} 
-        onClose={() => setShowApprovalGate(false)} 
+
+      <ApprovalGate
+        isOpen={showApprovalGate}
+        onClose={() => setShowApprovalGate(false)}
         platformName={gatePlatform}
         onSuccess={() => {
           setTimeout(() => {

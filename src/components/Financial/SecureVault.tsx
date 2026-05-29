@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from 'react';
-import { 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  ShieldCheck, 
-  Save, 
+import {
+  Lock,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  Save,
   AlertCircle,
   ExternalLink,
   ChevronRight,
@@ -53,7 +53,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
       "border-2 rounded-3xl transition-all overflow-hidden",
       isExpanded ? "border-blue-600 ring-4 ring-blue-50" : "border-theme hover:border-slate-200"
     )}>
-      <button 
+      <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full p-4 md:p-6 flex items-center justify-between bg-theme-surface"
       >
@@ -109,7 +109,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
                     className="w-full bg-theme-surface border border-slate-200 rounded-xl md:rounded-2xl px-4 md:px-5 py-3 md:py-4 text-sm md:text-base text-foreground outline-none focus:border-blue-600 transition-colors pr-12"
                   />
                   {field.type === 'password' && (
-                    <button 
+                    <button
                       onClick={() => toggleValueVisibility(field.id)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-600"
                     >
@@ -123,9 +123,9 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-2 md:pt-4">
             {helpUrl ? (
-              <a 
-                href={helpUrl} 
-                target="_blank" 
+              <a
+                href={helpUrl}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-[10px] md:text-xs font-bold text-slate-400 hover:text-blue-600 flex items-center gap-1.5 transition-colors"
               >
@@ -135,13 +135,13 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
             ) : <div />}
 
             <div className="flex gap-3 w-full md:w-auto">
-              <button 
+              <button
                 onClick={() => setIsExpanded(false)}
                 className="flex-1 md:flex-none px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base text-slate-600 hover:bg-slate-200 transition-colors"
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={handleSave}
                 disabled={isSaving}
                 className="flex-1 md:flex-none bg-slate-900 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-xl font-bold text-sm md:text-base flex items-center justify-center gap-2 hover:bg-slate-800 transition-all disabled:opacity-50"
@@ -183,7 +183,7 @@ export function SecureVault() {
       </div>
 
       <div className="space-y-4">
-        <VaultItem 
+        <VaultItem
           id="etsy"
           name="Etsy Developer Keys"
           description="Enables automated listing and inventory management."
@@ -197,7 +197,7 @@ export function SecureVault() {
           ]}
         />
 
-        <VaultItem 
+        <VaultItem
           id="tiktok"
           name="TikTok for Business"
           description="Enables automated video posting and trend analytics."
@@ -211,7 +211,7 @@ export function SecureVault() {
           ]}
         />
 
-        <VaultItem 
+        <VaultItem
           id="stripe"
           name="Stripe Connect"
           description="Handles secure payments and direct payouts to your bank."
@@ -225,7 +225,7 @@ export function SecureVault() {
           ]}
         />
 
-        <VaultItem 
+        <VaultItem
           id="canva"
           name="Canva Automation"
           description="Allows AI to generate and import designs for your products."

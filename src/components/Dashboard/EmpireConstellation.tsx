@@ -74,14 +74,14 @@ export function EmpireConstellation() {
               )}>
                 <node.icon className={cn("w-6 h-6", node.color, node.id === 'activity' ? "text-white" : "")} />
               </div>
-              
+
               <div className="absolute top-full mt-2 flex flex-col items-center opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-slate-900 text-white p-2 rounded-xl text-[10px] z-10 pointer-events-none">
                 <span className="font-black uppercase tracking-widest">{node.label}</span>
                 <span className="font-bold text-primary">{node.value}</span>
               </div>
 
               {node.id === 'activity' && (
-                <motion.div 
+                <motion.div
                   className="absolute inset-0 rounded-2xl bg-primary -z-10"
                   animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0, 0.3] }}
                   transition={{ repeat: Infinity, duration: 3 }}

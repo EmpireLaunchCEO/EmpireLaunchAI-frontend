@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
-import { 
-  BarChart3, 
-  Zap, 
-  Settings2, 
+import {
+  BarChart3,
+  Zap,
+  Settings2,
   Activity,
   ChevronRight,
   TrendingUp,
@@ -36,7 +36,7 @@ export default function AnalyticsPage() {
           <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Intelligence Command</h1>
           <p className="text-muted-foreground text-sm md:text-base font-medium italic">High-intelligence performance tracking and automated growth.</p>
         </div>
-        
+
         <div className="flex bg-slate-100 p-1 rounded-[20px] md:rounded-[24px] overflow-x-auto no-scrollbar max-w-full">
           {tabs.map((tab) => (
             <button
@@ -44,8 +44,8 @@ export default function AnalyticsPage() {
               onClick={() => setActiveTab(tab.id)}
               className={cn(
                 "flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 rounded-[16px] md:rounded-[20px] text-xs md:text-sm font-bold transition-all whitespace-nowrap",
-                activeTab === tab.id 
-                  ? "bg-theme-surface text-foreground shadow-sm" 
+                activeTab === tab.id
+                  ? "bg-theme-surface text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-slate-700 hover:bg-theme-surface/50"
               )}
             >
@@ -86,7 +86,7 @@ export default function AnalyticsPage() {
                   +18.4% this month
                 </div>
               </div>
-              
+
               <div className="md:col-span-2 bg-theme-surface p-8 rounded-[40px] border border-theme shadow-sm">
                 <div className="flex justify-between items-center mb-6">
                    <h4 className="font-bold text-foreground">Revenue Trends</h4>
@@ -103,9 +103,9 @@ export default function AnalyticsPage() {
                 </div>
                 <div className="h-24 flex items-end gap-1 px-2">
                   {[30, 45, 35, 60, 55, 80, 70, 95, 85, 100, 90, 110].map((h, i) => (
-                    <div 
-                      key={i} 
-                      className="flex-1 bg-slate-100 rounded-t-sm relative group cursor-pointer hover:bg-blue-100 transition-colors" 
+                    <div
+                      key={i}
+                      className="flex-1 bg-slate-100 rounded-t-sm relative group cursor-pointer hover:bg-blue-100 transition-colors"
                       style={{ height: `${h}%` }}
                     >
                       <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">

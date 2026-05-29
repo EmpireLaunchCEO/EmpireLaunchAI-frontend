@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  DollarSign, 
-  ArrowUpRight, 
-  TrendingUp, 
-  CheckCircle2, 
+import {
+  DollarSign,
+  ArrowUpRight,
+  TrendingUp,
+  CheckCircle2,
   Clock,
   ArrowRight,
   Target
@@ -70,9 +70,9 @@ export function DetailedRevenue() {
                </div>
                <span className="text-xs font-bold text-primary">+${(activeMilestone?.target - activeMilestone?.current).toLocaleString()} remaining</span>
              </div>
-             
+
              <div className="h-3 w-full bg-theme-background rounded-full overflow-hidden border border-theme">
-                <motion.div 
+                <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercent}%` }}
                   transition={{ duration: 1.5, ease: "easeOut" }}
@@ -132,7 +132,7 @@ export function DetailedRevenue() {
           </div>
           <button className="text-xs font-bold text-primary uppercase tracking-widest">Download CSV</button>
         </div>
-        
+
         <div className="divide-y divide-theme">
           {transactions.map((t) => (
             <div key={t.id} className="p-6 hover:bg-theme-background transition-colors flex items-center justify-between group">
@@ -157,7 +157,7 @@ export function DetailedRevenue() {
                    </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-6">
                  <div className="text-right">
                     <p className="text-lg font-black text-foreground">+${t.amount.toFixed(2)}</p>
@@ -170,7 +170,7 @@ export function DetailedRevenue() {
             </div>
           ))}
         </div>
-        
+
         <button className="w-full py-6 bg-theme-background text-muted-foreground font-bold text-sm hover:bg-theme-surface transition-colors border-t border-theme">
           View All Transactions
         </button>

@@ -16,7 +16,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   const [isAtTop, setIsAtTop] = useState(true);
   const controls = useAnimation();
   const y = useMotionValue(0);
-  
+
   const THRESHOLD = 60;
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
     window.addEventListener('scroll', handleScroll, true);
     // Also check on mount
     handleScroll({ target: document.querySelector('main') } as any);
-    
+
     return () => window.removeEventListener('scroll', handleScroll, true);
   }, []);
 
@@ -49,10 +49,10 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
     if (y.get() >= THRESHOLD && !isRefreshing && isAtTop) {
       setIsRefreshing(true);
       setPullProgress(1);
-      
+
       // Snap to refreshing position
       await controls.start({ y: 70, transition: { type: "spring", stiffness: 300, damping: 20 } });
-      
+
       try {
         await onRefresh();
       } finally {
@@ -72,7 +72,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       {/* Pull indicator */}
       <motion.div
         className="absolute top-12 left-0 right-0 flex justify-center z-[1000] pointer-events-none"
-        style={{ 
+        style={{
           opacity: isRefreshing ? 1 : pullProgress,
           y: isRefreshing ? 40 : 0
         }}
@@ -94,7 +94,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
               duration: 0.1
             }}
           >
-            <BrandedGlobe 
+            <BrandedGlobe
               size="xl"
               animate={isRefreshing}
               className={cn(

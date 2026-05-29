@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  CheckCircle2, 
-  ChevronRight, 
-  Target, 
-  Calendar, 
-  ShoppingBag, 
+import {
+  CheckCircle2,
+  ChevronRight,
+  Target,
+  Calendar,
+  ShoppingBag,
   Edit3,
   Check,
   X,
@@ -55,7 +55,7 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
                <ShoppingBag className="w-5 h-5 text-blue-600" />
                <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Product Lineup</h4>
             </div>
-            <button 
+            <button
               onClick={() => setIsEditing(!isEditing)}
               className="p-2 hover:bg-theme-background rounded-xl transition-colors text-slate-400"
             >
@@ -73,7 +73,7 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
                 {isEditing ? (
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold text-slate-400">$</span>
-                    <input 
+                    <input
                       type="number"
                       value={product.price}
                       onChange={(e) => handlePriceChange(i, e.target.value)}
@@ -118,14 +118,14 @@ export function BlueprintGate({ payload, onApprove, onReject }: BlueprintGatePro
       </div>
 
       <div className="flex gap-4">
-        <button 
+        <button
           onClick={onReject}
           className="flex-1 py-5 border-2 border-theme rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
         >
           <X className="w-4 h-4" />
           Request New Pivot
         </button>
-        <button 
+        <button
           onClick={() => onApprove(editedPayload)}
           className="flex-[2] py-5 bg-blue-600 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-900 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-2 group"
         >

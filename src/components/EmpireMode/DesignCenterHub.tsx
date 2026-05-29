@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Palette, 
-  Scissors, 
-  Layout, 
-  ExternalLink, 
-  Clock, 
-  CheckCircle2, 
-  Plus, 
+import {
+  Palette,
+  Scissors,
+  Layout,
+  ExternalLink,
+  Clock,
+  CheckCircle2,
+  Plus,
   Bot,
   Zap,
   ChevronRight,
@@ -61,7 +61,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
           { name: 'CapCut', icon: Scissors, color: 'text-foreground', bg: 'bg-slate-800', link: 'https://www.capcut.com' },
           { name: 'Canva', icon: Layout, color: 'text-amber-500', bg: 'bg-amber-500/10', link: 'https://www.canva.com' },
         ].map((p) => (
-          <a 
+          <a
             key={p.name}
             href={p.link}
             target="_blank"

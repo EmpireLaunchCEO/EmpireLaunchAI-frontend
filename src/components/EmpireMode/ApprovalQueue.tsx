@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Bot, 
-  ShieldCheck, 
-  Zap, 
-  CheckCircle2, 
+import {
+  Bot,
+  ShieldCheck,
+  Zap,
+  CheckCircle2,
   AlertCircle,
   Loader2,
   X,
@@ -61,7 +61,7 @@ export function ApprovalQueue() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {requests.map((req) => (
-          <motion.button 
+          <motion.button
             key={req.id}
             onClick={() => setActiveRequest(req)}
             className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] hover:border-primary transition-all text-left group shadow-sm"
@@ -73,21 +73,21 @@ export function ApprovalQueue() {
                  req.type === 'blueprint' ? "bg-primary/10 text-primary" :
                  req.type === 'content' ? "bg-amber-500/10 text-amber-500" : "bg-emerald-500/10 text-emerald-500"
                )}>
-                  {req.type === 'blueprint' ? <Zap className="w-4 h-4" /> : 
+                  {req.type === 'blueprint' ? <Zap className="w-4 h-4" /> :
                    req.type === 'content' ? <ShieldCheck className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
                </div>
                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">{req.type}</span>
             </div>
-            
+
             <h4 className="font-bold text-sm text-foreground mb-1">
-              {req.type === 'blueprint' ? 'Approve 30-Day Strategy' : 
+              {req.type === 'blueprint' ? 'Approve 30-Day Strategy' :
                req.type === 'content' ? `Review ${req.payload?.platform ?? 'Draft'} Draft` : `Ready to Launch on ${req.payload?.platform ?? 'Platform'}`}
             </h4>
             <p className="text-[10px] text-muted-foreground line-clamp-2 leading-relaxed">
               {req.type === 'blueprint' ? `Expansion plan for ${req.payload?.niche ?? 'your empire'}` :
                req.type === 'content' ? (req.payload?.title ?? 'Untitled Content') : `Final manifest for ${req.payload?.title ?? 'Production Item'}`}
             </p>
-            
+
             <div className="mt-4 flex items-center gap-2 text-primary font-black text-[9px] uppercase tracking-widest group-hover:gap-3 transition-all">
                Review Request <Zap className="w-2.5 h-2.5 fill-current" />
             </div>
@@ -99,15 +99,15 @@ export function ApprovalQueue() {
       <AnimatePresence>
         {activeRequest && (
           <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 md:p-8">
-             <motion.div 
+             <motion.div
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
                exit={{ opacity: 0 }}
                onClick={() => setActiveRequest(null)}
                className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
              />
-             
-             <motion.div 
+
+             <motion.div
                initial={{ scale: 0.9, opacity: 0, y: 20 }}
                animate={{ scale: 1, opacity: 1, y: 0 }}
                exit={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -121,7 +121,7 @@ export function ApprovalQueue() {
                          </div>
                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Empire Intelligence Gate</span>
                       </div>
-                      <button 
+                      <button
                         onClick={() => setActiveRequest(null)}
                         className="p-3 hover:bg-slate-100 rounded-full transition-colors"
                       >
@@ -130,8 +130,8 @@ export function ApprovalQueue() {
                    </div>
 
                    {activeRequest.type === 'blueprint' && (
-                     <BlueprintGate 
-                       payload={activeRequest.payload} 
+                     <BlueprintGate
+                       payload={activeRequest.payload}
                        onApprove={(p) => handleDecision(activeRequest.id, 'approved')}
                        onReject={() => handleDecision(activeRequest.id, 'rejected')}
                      />
@@ -140,27 +140,27 @@ export function ApprovalQueue() {
                    {activeRequest.type === 'content' && (
                      showBlueprint ? (
                        <div className="space-y-6">
-                         <button 
+                         <button
                            onClick={() => setShowBlueprint(false)}
                            className="flex items-center gap-2 text-slate-400 hover:text-foreground transition-colors font-bold text-sm uppercase tracking-widest mb-4"
                          >
                            <ChevronLeft className="w-4 h-4" />
                            Back to Draft
                          </button>
-                         <CreativeBlueprint 
+                         <CreativeBlueprint
                            task={{
                              id: activeRequest.id,
                              title: activeRequest.payload.title,
                              platform: activeRequest.payload.platform,
                              status: 'drafting',
                              dueDate: 'Today'
-                           }} 
-                           onClose={() => handleDecision(activeRequest.id, 'approved')} 
+                           }}
+                           onClose={() => handleDecision(activeRequest.id, 'approved')}
                          />
                        </div>
                      ) : (
                        activeRequest.payload.platform && ['TikTok', 'Instagram', 'Facebook', 'YouTube'].includes(activeRequest.payload.platform) ? (
-                         <HighIntelPostApproval 
+                         <HighIntelPostApproval
                             payload={{
                               title: activeRequest.payload.title,
                               platform: activeRequest.payload.platform.toLowerCase() as any,
@@ -181,7 +181,7 @@ export function ApprovalQueue() {
                             onBack={() => setActiveRequest(null)}
                          />
                        ) : (
-                         <VisualDraftGate 
+                         <VisualDraftGate
                            payload={activeRequest.payload}
                            onApprove={() => handleDecision(activeRequest.id, 'approved')}
                            onReject={() => handleDecision(activeRequest.id, 'rejected')}
@@ -192,7 +192,7 @@ export function ApprovalQueue() {
                    )}
 
                    {activeRequest.type === 'golive' && (
-                     <GoLiveGate 
+                     <GoLiveGate
                        payload={activeRequest.payload}
                        onApprove={() => handleDecision(activeRequest.id, 'approved')}
                        onReject={() => handleDecision(activeRequest.id, 'rejected')}

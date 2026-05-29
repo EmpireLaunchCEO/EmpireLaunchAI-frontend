@@ -54,7 +54,7 @@ export function EmpireSwitcher() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
-    <div 
+    <div
       className={cn(
         "hidden lg:flex flex-col bg-slate-950 text-white h-screen fixed left-0 top-0 z-[60] transition-all duration-300 border-r border-slate-800 shadow-2xl",
         isExpanded ? "w-[240px]" : "w-[72px]"
@@ -65,7 +65,7 @@ export function EmpireSwitcher() {
       <div className="p-4 flex items-center justify-center h-16 border-b border-slate-800 shrink-0">
         <AnimatePresence mode="wait">
           {isExpanded ? (
-            <motion.div 
+            <motion.div
               key="expanded-header"
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
@@ -99,7 +99,7 @@ export function EmpireSwitcher() {
             >
               {/* Active Indicator */}
               {activeEmpireId === empire.id && (
-                <motion.div 
+                <motion.div
                   layoutId="active-indicator"
                   className="absolute -left-3 w-1.5 h-10 bg-primary rounded-r-full z-10"
                 />
@@ -127,7 +127,7 @@ export function EmpireSwitcher() {
                       r="20"
                       fill="transparent"
                       stroke={
-                        empire.status === 'on-track' ? '#10b981' : 
+                        empire.status === 'on-track' ? '#10b981' :
                         empire.status === 'action-needed' ? '#f43f5e' : '#3b82f6'
                       }
                       strokeWidth="2.5"
@@ -138,7 +138,7 @@ export function EmpireSwitcher() {
                       strokeLinecap="round"
                     />
                   </svg>
-                  
+
                   <div className={cn(
                     "absolute inset-[6px] rounded-full flex items-center justify-center text-lg font-bold transition-transform group-hover:scale-105",
                     empire.primaryColor,
@@ -158,7 +158,7 @@ export function EmpireSwitcher() {
                 {/* Name and Progress Details (Expanded Only) */}
                 <AnimatePresence>
                   {isExpanded && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -10 }}
@@ -180,7 +180,7 @@ export function EmpireSwitcher() {
                 </AnimatePresence>
               </div>
             </button>
-            
+
             {/* Tooltip (Collapsed Only) */}
             <AnimatePresence>
               {!isExpanded && hoveredId === empire.id && (
@@ -207,7 +207,7 @@ export function EmpireSwitcher() {
               <Plus className="w-6 h-6" />
             </div>
             {isExpanded && (
-              <motion.span 
+              <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="text-sm font-bold text-muted-foreground group-hover:text-slate-300"
@@ -228,7 +228,7 @@ export function EmpireSwitcher() {
               JD
             </div>
             {isExpanded && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="flex flex-col overflow-hidden"

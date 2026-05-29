@@ -60,7 +60,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast, onRemove: () => void }) 
       )}>
         {icons[toast.type]}
       </div>
-      
+
       <div className="flex-1 min-w-0 py-0.5">
         <h4 className={cn(
           "text-xs font-black uppercase tracking-widest",
@@ -76,7 +76,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast, onRemove: () => void }) 
         </p>
       </div>
 
-      <button 
+      <button
         onClick={onRemove}
         className={cn(
           "p-1 rounded-lg transition-colors",

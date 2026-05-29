@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Stars, 
-  CheckCircle2, 
+import {
+  Stars,
+  CheckCircle2,
   ArrowRight,
   ShieldCheck,
   Bot
@@ -51,16 +51,16 @@ export function VisualVariationSelector({ variations, selectedId, onSelect, onCo
             )}
           >
             <div className="aspect-[4/5] bg-slate-900 relative overflow-hidden">
-               <img 
-                 src={v.previewUrl} 
+               <img
+                 src={v.previewUrl}
                  className={cn(
                    "w-full h-full object-cover transition-transform duration-700 opacity-80",
                    selectedId === v.id ? "scale-110 opacity-100" : "group-hover:scale-105"
                  )}
-                 alt={v.name} 
+                 alt={v.name}
                />
                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80" />
-               
+
                {selectedId === v.id && (
                  <div className="absolute top-6 right-6 bg-primary text-slate-900 p-2 rounded-full shadow-lg">
                     <CheckCircle2 className="w-5 h-5" />
@@ -72,7 +72,7 @@ export function VisualVariationSelector({ variations, selectedId, onSelect, onCo
                   <p className="text-white/80 text-xs font-medium line-clamp-2">{v.description}</p>
                </div>
             </div>
-            
+
             <div className="p-6">
                <div className="flex items-center gap-2 mb-4">
                   <ShieldCheck className="w-3 h-3 text-emerald-500" />
@@ -95,8 +95,8 @@ export function VisualVariationSelector({ variations, selectedId, onSelect, onCo
            onClick={onConfirm}
            className={cn(
              "px-12 py-5 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 transition-all shadow-2xl",
-             selectedId 
-               ? "bg-primary text-slate-900 hover:bg-amber-400 shadow-amber-900/20" 
+             selectedId
+               ? "bg-primary text-slate-900 hover:bg-amber-400 shadow-amber-900/20"
                : "bg-slate-800 text-slate-500 cursor-not-allowed border border-white/5"
            )}
          >

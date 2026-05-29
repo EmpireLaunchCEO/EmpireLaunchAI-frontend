@@ -24,7 +24,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
             exit={{ opacity: 0 }}
             className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl"
           />
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -53,8 +53,8 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                   <h3>1. Military-Grade Protection</h3>
                 </div>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  Your payment and personal information are secured using <strong>Military-grade Envelope Encryption (AES-256-GCM)</strong>. 
-                  EmpireLaunchAI operates under a "Zero-Knowledge" policy; we do not have access to your raw banking credentials or marketplace tokens. 
+                  Your payment and personal information are secured using <strong>Military-grade Envelope Encryption (AES-256-GCM)</strong>.
+                  EmpireLaunchAI operates under a "Zero-Knowledge" policy; we do not have access to your raw banking credentials or marketplace tokens.
                   <strong>We will NEVER sell your personal, business, or empire-critical data to any third party.</strong>
                 </p>
               </section>
@@ -65,8 +65,8 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                   <h3>2. Scam Detection & Account Suspension</h3>
                 </div>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  EmpireLaunchAI reserves the absolute right to suspend or cancel any account that our AI intelligence systems detect as engaging in scamming, 
-                  fraudulent activity, or unethical business practices. Suspension is at the sole discretion of the system's security protocols. 
+                  EmpireLaunchAI reserves the absolute right to suspend or cancel any account that our AI intelligence systems detect as engaging in scamming,
+                  fraudulent activity, or unethical business practices. Suspension is at the sole discretion of the system's security protocols.
                   <strong> In the event of suspension or cancellation due to detected fraudulent activity, NO REFUNDS will be issued.</strong>
                 </p>
               </section>
@@ -77,7 +77,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                   <h3>3. Legal Waiver & Jury Trial</h3>
                 </div>
                 <p className="text-sm text-slate-400 leading-relaxed italic">
-                  By accepting this agreement, you waive all rights to pursue legal action or sue EmpireLaunchAI or its creator for any reason. 
+                  By accepting this agreement, you waive all rights to pursue legal action or sue EmpireLaunchAI or its creator for any reason.
                   You explicitly waive the right to a trial by jury and agree to binding arbitration for any disputes arising from the use of this software.
                 </p>
               </section>
@@ -88,7 +88,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                   <h3>4. AI Autonomy & Approval</h3>
                 </div>
                 <p className="text-sm text-slate-400 leading-relaxed">
-                  The AI will NEVER initiate a transaction, subscription, or financial commitment without your explicit, one-time approval. 
+                  The AI will NEVER initiate a transaction, subscription, or financial commitment without your explicit, one-time approval.
                   You maintain full authority over all empire-building actions.
                 </p>
               </section>
@@ -110,13 +110,13 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
             {/* Footer */}
             <div className="p-8 border-t border-white/5 shrink-0 bg-slate-950/50 flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="flex gap-4 w-full">
-                <button 
+                <button
                   onClick={onClose}
                   className="flex-1 md:flex-none px-8 py-4 rounded-2xl border-2 border-white/10 font-black text-xs uppercase tracking-widest text-slate-500 hover:text-white hover:bg-white/5 transition-all"
                 >
                   Decline
                 </button>
-                <button 
+                <button
                   onClick={onAccept}
                   className="flex-1 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl bg-primary text-slate-900 hover:bg-white shadow-amber-900/20"
                 >

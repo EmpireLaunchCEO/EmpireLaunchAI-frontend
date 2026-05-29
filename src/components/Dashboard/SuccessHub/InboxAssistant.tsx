@@ -49,20 +49,20 @@ export const InboxAssistant = () => {
           </div>
           <h3 className="text-xl font-black text-foreground tracking-tight italic uppercase">Inbox Assistant</h3>
         </div>
-        
+
         <div className="flex items-center gap-3 bg-theme-surface border border-theme p-1.5 rounded-2xl shadow-sm">
            <div className="flex items-center gap-2 px-2">
               <Zap className={cn("w-3.5 h-3.5", autoSendRetention ? "text-amber-500 fill-amber-500" : "text-muted-foreground")} />
               <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Auto-Send</span>
            </div>
-           <button 
+           <button
              onClick={() => setAutoSendRetention(!autoSendRetention)}
              className={cn(
                "w-10 h-6 rounded-full relative transition-colors duration-300",
                autoSendRetention ? "bg-amber-500" : "bg-theme-background border border-theme"
              )}
            >
-             <motion.div 
+             <motion.div
                animate={{ x: autoSendRetention ? 18 : 2 }}
                className="w-4 h-4 bg-white rounded-full absolute top-1 shadow-sm"
              />
@@ -110,14 +110,14 @@ export const InboxAssistant = () => {
                       AI Calibrated
                    </div>
                 </div>
-                
+
                 <div className="p-6 rounded-3xl bg-theme-background border border-theme relative group/body hover:border-primary/30 transition-colors">
                   <p className="text-sm text-foreground font-medium leading-relaxed">
                     <span className="text-muted-foreground font-bold">Subject:</span> {draft.subject}
                     <br /><br />
                     {draft.body}
                   </p>
-                  <button 
+                  <button
                     onClick={() => handleCopy(`${draft.subject}\n\n${draft.body}`, draft.id)}
                     className="absolute top-4 right-4 p-2.5 bg-theme-surface rounded-xl border border-theme shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-primary/10 hover:border-primary/20"
                   >
@@ -136,15 +136,15 @@ export const InboxAssistant = () => {
               </div>
 
               <div className="flex items-center gap-3">
-                <motion.button 
+                <motion.button
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleDecision(draft.id, 'approved')}
                   className="flex-1 flex items-center justify-center gap-2 bg-primary text-foreground py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:shadow-lg hover:shadow-primary/20 transition-all"
                 >
                   Approve & Send <ChevronRight className="w-4 h-4" />
                 </motion.button>
-                
-                <motion.button 
+
+                <motion.button
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleDecision(draft.id, 'rejected')}
                   className="p-4 rounded-2xl bg-theme-background text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 border border-theme transition-all"

@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Bot, 
-  User, 
-  ShieldCheck, 
-  Zap, 
-  X, 
-  Loader2, 
-  ExternalLink, 
+import {
+  Bot,
+  User,
+  ShieldCheck,
+  Zap,
+  X,
+  Loader2,
+  ExternalLink,
   AlertCircle,
   CheckCircle2,
   ArrowRight,
@@ -33,12 +33,12 @@ interface ApprovalGateProps {
   onSuccess?: () => void;
 }
 
-export function ApprovalGate({ 
-  isOpen, 
-  onClose, 
-  platformName, 
+export function ApprovalGate({
+  isOpen,
+  onClose,
+  platformName,
   initialUrl = "https://www.etsy.com/signin",
-  onSuccess 
+  onSuccess
 }: ApprovalGateProps) {
   const [gateState, setGateState] = useState<GateState>('discovery');
   const [thoughts, setThoughts] = useState<Thought[]>([]);
@@ -89,7 +89,7 @@ export function ApprovalGate({
           timestamp: Date.now()
         };
         setThoughts(prev => [...prev, newThought]);
-        
+
         if (msg.state !== gateState) {
           setGateState(msg.state as GateState);
           if (msg.state === 'barrier') {
@@ -130,7 +130,7 @@ export function ApprovalGate({
         text: "Neural Link Stabilized. Resuming autonomous store calibration...",
         timestamp: Date.now()
       }]);
-      
+
       setTimeout(() => {
         setGateState('success');
         if (onSuccess) onSuccess();
@@ -144,7 +144,7 @@ export function ApprovalGate({
     <AnimatePresence>
       <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-8">
         {/* Backdrop */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -163,15 +163,15 @@ export function ApprovalGate({
           <div className="shrink-0 bg-slate-950/50 border-b border-white/5 p-6 relative">
             {/* Pulse Progress Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-slate-800">
-              <motion.div 
+              <motion.div
                 className="h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"
-                animate={{ 
-                  width: gateState === 'discovery' ? '30%' : 
-                         gateState === 'barrier' ? '50%' : 
+                animate={{
+                  width: gateState === 'discovery' ? '30%' :
+                         gateState === 'barrier' ? '50%' :
                          gateState === 'verification' ? '75%' : '100%',
                   opacity: isAiActive ? [0.6, 1, 0.6] : 1
                 }}
-                transition={{ 
+                transition={{
                   width: { duration: 1 },
                   opacity: { repeat: Infinity, duration: 1.5 }
                 }}
@@ -186,7 +186,7 @@ export function ApprovalGate({
                 )}>
                   {isAiActive ? <Bot className="w-6 h-6 text-white" /> : <User className="w-6 h-6 text-slate-400" />}
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">
@@ -194,11 +194,11 @@ export function ApprovalGate({
                     </span>
                     {isAiActive && <Loader2 className="w-3 h-3 text-blue-400 animate-spin" />}
                   </div>
-                  
+
                   {/* Thought Stream (Last message) */}
                   <div className="h-6 overflow-hidden">
                     <AnimatePresence mode="wait">
-                      <motion.p 
+                      <motion.p
                         key={thoughts[thoughts.length - 1]?.id}
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
@@ -212,7 +212,7 @@ export function ApprovalGate({
                 </div>
               </div>
 
-              <button 
+              <button
                 onClick={onClose}
                 className="p-2 hover:bg-theme-surface/5 rounded-full transition-colors text-muted-foreground hover:text-white"
               >
@@ -230,7 +230,7 @@ export function ApprovalGate({
             </div>
 
             {/* The Window Container */}
-            <motion.div 
+            <motion.div
               className={cn(
                 "relative z-10 w-full max-w-2xl bg-theme-surface rounded-2xl shadow-2xl overflow-hidden transition-all duration-700",
                 gateState === 'barrier' ? "h-full opacity-100" : "h-[100px] opacity-40 blur-sm pointer-events-none"
@@ -248,7 +248,7 @@ export function ApprovalGate({
                 </div>
                 <div className="w-12" />
               </div>
-              
+
               <div className="w-full h-full bg-theme-surface flex flex-col items-center justify-center p-12">
                 {gateState === 'barrier' ? (
                   <div className="w-full max-w-sm space-y-6">
@@ -259,10 +259,10 @@ export function ApprovalGate({
                       <h4 className="text-2xl font-black text-foreground">Sign in to {platformName}</h4>
                       <p className="text-sm font-medium text-muted-foreground italic">"Detected MFA requirement. Please sign in to continue."</p>
                     </div>
-                    
+
                     <div className="space-y-4">
                       {getDeepLink(platformName) && (
-                        <button 
+                        <button
                           onClick={handleDeepLink}
                           className="w-full py-4 bg-blue-600 text-white rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-500 transition-all shadow-xl shadow-blue-200 flex items-center justify-center gap-3 border-b-4 border-blue-800 active:border-b-0 active:translate-y-1"
                         >
@@ -270,7 +270,7 @@ export function ApprovalGate({
                           One-Tap App Login
                         </button>
                       )}
-                      
+
                       <div className="relative">
                         <div className="absolute inset-0 flex items-center" aria-hidden="true">
                           <div className="w-full border-t border-slate-200"></div>
@@ -282,21 +282,21 @@ export function ApprovalGate({
 
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Email or Username</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           defaultValue="ceo@my-empire.com"
                           className="w-full px-4 py-3 bg-theme-background border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:border-blue-600"
                         />
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Password</label>
-                        <input 
-                          type="password" 
+                        <input
+                          type="password"
                           defaultValue="••••••••••••"
                           className="w-full px-4 py-3 bg-theme-background border border-slate-200 rounded-xl text-sm font-bold focus:outline-none focus:border-blue-600"
                         />
                       </div>
-                      <button 
+                      <button
                         onClick={handleUserSignIn}
                         className="w-full py-4 bg-slate-900 text-white rounded-xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl shadow-slate-200"
                       >
@@ -314,12 +314,12 @@ export function ApprovalGate({
             </motion.div>
 
             {/* Thought Stream Panel (History) */}
-            <div 
+            <div
               ref={thoughtStreamRef}
               className="absolute left-8 bottom-8 w-64 h-48 overflow-y-auto space-y-3 pr-4 hidden md:block"
             >
               {thoughts.map((thought, i) => (
-                <motion.div 
+                <motion.div
                   key={thought.id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 0.6 }}
@@ -339,7 +339,7 @@ export function ApprovalGate({
             {/* Success Overlay */}
             <AnimatePresence>
               {gateState === 'success' && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="absolute inset-0 z-50 bg-blue-600 flex flex-col items-center justify-center text-white"
@@ -353,8 +353,8 @@ export function ApprovalGate({
                   </motion.div>
                   <h3 className="text-4xl font-black italic tracking-tight mb-2 uppercase">Neural Link Established.</h3>
                   <p className="text-blue-100 font-bold uppercase tracking-widest text-sm italic">{platformName} is now part of your empire!</p>
-                  
-                  <button 
+
+                  <button
                     onClick={onClose}
                     className="mt-12 px-10 py-4 bg-theme-surface text-blue-600 rounded-full font-black text-xs uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all shadow-2xl shadow-blue-800/40"
                   >
@@ -379,7 +379,7 @@ export function ApprovalGate({
 
             <div className="flex gap-3 w-full md:w-auto">
               {gateState === 'barrier' ? (
-                <button 
+                <button
                   onClick={handleUserSignIn}
                   className="flex-1 md:flex-none px-10 py-5 bg-blue-600 text-white rounded-[24px] font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-blue-500 transition-all shadow-2xl shadow-blue-900/40 group"
                 >
@@ -392,8 +392,8 @@ export function ApprovalGate({
                   <Zap className="w-4 h-4 animate-pulse" />
                 </div>
               )}
-              
-              <button 
+
+              <button
                 onClick={onClose}
                 className="px-6 py-5 rounded-[24px] border border-white/10 text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-theme-surface/5 transition-all"
               >
@@ -401,7 +401,7 @@ export function ApprovalGate({
               </button>
             </div>
           </div>
-          
+
           {/* Security Transparency Explainer (Floating) */}
           <div className="absolute right-8 bottom-32 hidden lg:block">
             <div className="bg-slate-800/50 backdrop-blur-sm border border-white/10 rounded-2xl p-4 w-48 shadow-xl">

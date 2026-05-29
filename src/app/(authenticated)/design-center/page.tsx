@@ -54,7 +54,7 @@ export default function DesignCenterPage() {
             exit={{ opacity: 0 }}
           >
             <div className="mb-8">
-               <button 
+               <button
                  onClick={() => setActiveTask(null)}
                  className="flex items-center gap-2 text-slate-400 hover:text-foreground transition-colors font-bold text-sm uppercase tracking-widest"
                >

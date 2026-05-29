@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { 
-  ShoppingBag, 
-  Calendar, 
-  RefreshCcw, 
-  Send, 
+import {
+  ShoppingBag,
+  Calendar,
+  RefreshCcw,
+  Send,
   Clock,
   Stars,
   ChevronDown,
@@ -38,7 +38,7 @@ const platformConfig = {
 export function ReviewCard({ id, platform, title, scheduledTime, description, previousVersion, onApprove, onRegenerate }: ReviewCardProps) {
   const [tone, setTone] = useState('Professional');
   const [isComparing, setIsComparing] = useState(false);
-  
+
   // Local state to handle AI refinements while allowing user edits
   const [currentTitle, setCurrentTitle] = useState(title);
   const [currentDescription, setCurrentDescription] = useState(description);
@@ -51,7 +51,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
 
   const config = platformConfig[platform];
   const Icon = config.icon;
-  
+
   return (
     <div className="bg-theme-surface rounded-3xl shadow-sm border border-theme overflow-hidden">
       <div className="p-4 md:p-6 border-b border-theme flex flex-col md:flex-row justify-between items-start md:items-center bg-theme-background/50 gap-4">
@@ -78,7 +78,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
           </div>
         </div>
       </div>
-      
+
       <div className="p-4 md:p-6">
         <div className="aspect-video bg-slate-100 rounded-2xl mb-6 flex items-center justify-center relative group cursor-pointer overflow-hidden">
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -86,14 +86,14 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
           </div>
           <Stars className="w-12 h-12 text-slate-300" />
         </div>
-        
+
         <div className="space-y-4">
           <div>
             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Title</label>
             <div className="relative">
               <HighlightedText text={currentTitle} isNew={!!previousVersion} />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={currentTitle}
                 onChange={(e) => setCurrentTitle(e.target.value)}
                 className="w-full bg-theme-background/50 border border-theme rounded-xl px-4 py-3 font-semibold text-foreground outline-none focus:border-blue-600 transition-colors absolute inset-0 bg-transparent"
@@ -106,7 +106,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Description</label>
             <div className="relative">
               <HighlightedText text={currentDescription} isNew={!!previousVersion} />
-              <textarea 
+              <textarea
                 value={currentDescription}
                 onChange={(e) => setCurrentDescription(e.target.value)}
                 rows={4}
@@ -117,10 +117,10 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
             </div>
           </div>
         </div>
-        
+
         <div className="mt-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex flex-wrap gap-2">
-            <button 
+            <button
               onClick={() => onRegenerate?.(id)}
               className="flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-200 transition-colors shrink-0"
             >
@@ -129,7 +129,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
             </button>
             {previousVersion && (
               <div className="flex flex-wrap gap-2 animate-in fade-in slide-in-from-left-2 duration-300">
-                <button 
+                <button
                   onClick={() => setIsComparing(true)}
                   className="flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-100 transition-colors border border-blue-100 shrink-0"
                 >
@@ -145,12 +145,12 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
               </div>
             )}
           </div>
-          
+
           <div className="flex gap-2">
             <button className="flex-1 md:flex-none bg-slate-100 text-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-200 transition-colors">
               Save Draft
             </button>
-            <button 
+            <button
               onClick={() => onApprove?.(id)}
               className="flex-[2] md:flex-none bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-100"
             >
@@ -162,7 +162,7 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
       </div>
 
       {previousVersion && (
-        <ComparisonMode 
+        <ComparisonMode
           isOpen={isComparing}
           onClose={() => setIsComparing(false)}
           originalTitle={previousVersion.title}

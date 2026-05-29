@@ -2,13 +2,13 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ChevronLeft, 
-  ChevronDown, 
-  CheckCircle2, 
-  Stars, 
-  Clock, 
-  Target, 
+import {
+  ChevronLeft,
+  ChevronDown,
+  CheckCircle2,
+  Stars,
+  Clock,
+  Target,
   TrendingUp,
   Zap,
   ShieldCheck,
@@ -74,7 +74,7 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
 
       {/* Header */}
       <header className="flex items-center justify-between p-6 border-b border-white/5 relative z-10 backdrop-blur-md bg-slate-950/50">
-        <button 
+        <button
           onClick={onBack}
           className="flex items-center gap-2 text-muted-foreground hover:text-white transition-colors group"
         >
@@ -92,7 +92,7 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
 
       <div className="flex-1 overflow-y-auto p-6 md:p-10 relative z-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          
+
           {/* Left Column: Post Preview & Platform Context */}
           <div className="space-y-10">
             <div className="relative aspect-[9/16] max-w-[380px] mx-auto bg-black rounded-[56px] overflow-hidden shadow-[0_0_100px_-20px_rgba(0,0,0,1)] border-[14px] border-slate-900 group">
@@ -149,12 +149,12 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
               </div>
 
               {/* Real Content Preview */}
-              <img 
-                src={payload.previewUrl} 
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]" 
+              <img
+                src={payload.previewUrl}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]"
                 alt="Post Preview"
               />
-              
+
               {/* Video Play Overlay */}
               <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                  <div className="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/20 shadow-2xl">
@@ -184,7 +184,7 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
 
           {/* Right Column: Intelligence, Scheduling & Refinement */}
           <div className="space-y-12">
-            
+
             {/* Strategic Reasoning Section */}
             <div className="space-y-6">
               <div className="flex items-center justify-between">
@@ -197,7 +197,7 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
                    <span className="text-[10px] font-black text-green-500 uppercase tracking-widest">Growth Validated</span>
                 </div>
               </div>
-              
+
               <div className="bg-slate-900/40 border border-white/10 rounded-[40px] p-8 space-y-8 relative overflow-hidden backdrop-blur-xl">
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-primary">
@@ -246,7 +246,7 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
 
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-primary/20 rounded-[28px] blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
-                <button 
+                <button
                   onClick={() => setIsTimeDropdownOpen(!isTimeDropdownOpen)}
                   className="relative w-full bg-slate-900/80 border border-white/10 rounded-[24px] p-6 flex items-center justify-between transition-all hover:border-primary/40 backdrop-blur-md"
                 >
@@ -264,7 +264,7 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
 
                 <AnimatePresence>
                   {isTimeDropdownOpen && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
@@ -306,18 +306,18 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
                   <Bot className="w-4 h-4 text-primary" />
                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Neural Refinement</span>
                </div>
-               <form 
+               <form
                  onSubmit={handleRefineSubmit}
                  className="relative group"
                >
-                  <input 
+                  <input
                     type="text"
                     value={refineFeedback}
                     onChange={(e) => setRefineFeedback(e.target.value)}
                     placeholder="e.g., 'Make the hook more aggressive' or 'Change the vibe to retro'..."
                     className="w-full bg-slate-900/50 border border-white/10 rounded-full py-5 px-8 pr-16 text-sm font-bold text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 focus:bg-slate-900 transition-all shadow-inner"
                   />
-                  <button 
+                  <button
                     type="submit"
                     disabled={!refineFeedback.trim() || isRefining}
                     className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-primary flex items-center justify-center text-foreground hover:scale-110 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale disabled:hover:scale-100 shadow-lg"
@@ -343,15 +343,15 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
                  <Zap className="w-7 h-7 relative z-10 fill-current" />
                  <div className="absolute inset-0 bg-white/30 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-[-25deg]" />
                </motion.button>
-               
+
                <div className="grid grid-cols-2 gap-5">
-                  <button 
+                  <button
                     onClick={onReject}
                     className="py-5 border border-white/10 rounded-[28px] font-black text-xs uppercase tracking-[0.2em] text-muted-foreground hover:bg-white/5 hover:text-white transition-all shadow-sm active:scale-95"
                   >
                     Reject Draft
                   </button>
-                  <button 
+                  <button
                     onClick={() => onRefine?.('optimize')}
                     className="py-5 bg-slate-900 border border-white/5 rounded-[28px] font-black text-xs uppercase tracking-[0.2em] text-white hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-sm active:scale-95"
                   >

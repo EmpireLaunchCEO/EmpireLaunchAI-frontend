@@ -13,10 +13,10 @@ import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 
 export default function LinkCenterPage() {
   const { isLinkingComplete, connectedPlatforms, platformPermissions } = useEmpire();
-  
+
   // Define platform icons/colors locally or import them
   // For now I'll just use a simple list
-  
+
   const handleRefresh = async () => {
     // Simulate refresh logic
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -40,7 +40,7 @@ export default function LinkCenterPage() {
         </div>
 
         {isLinkingComplete && (
-          <Link 
+          <Link
             href="/dashboard"
             className="flex items-center gap-2 bg-theme-surface text-foreground px-6 py-3 rounded-2xl border-2 border-theme font-bold text-sm shadow-sm hover:bg-theme-background transition-all group"
           >
@@ -75,9 +75,9 @@ export default function LinkCenterPage() {
             {connectedPlatforms.map(id => {
               const tier = platformPermissions[id] || 'co-pilot';
               const caps = PLATFORM_CAPABILITIES[id]?.capabilities?.find(c => c.tier === tier);
-              
+
               return (
-                <motion.div 
+                <motion.div
                   key={id}
                   whileHover={{ y: -5 }}
                   className="p-6 bg-theme-surface border-2 border-theme rounded-[32px] space-y-6 relative overflow-hidden group"
@@ -119,7 +119,7 @@ export default function LinkCenterPage() {
               );
             })}
           </div>
-          
+
           <div className="p-8 rounded-[40px] bg-amber-500/5 border-2 border-amber-500/20 flex flex-col md:flex-row items-center gap-8">
              <div className="w-16 h-16 rounded-[24px] bg-amber-500 flex items-center justify-center text-foreground shrink-0">
                 <ShieldAlert className="w-8 h-8" />

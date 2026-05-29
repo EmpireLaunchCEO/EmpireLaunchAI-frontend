@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   Rocket,
   ShieldCheck,
   DollarSign,
@@ -101,7 +101,7 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
                     <div className="space-y-1">
                        <h5 className="font-bold text-white">Bank Info Verification</h5>
                        <p className="text-xs text-slate-400 leading-relaxed">
-                          {payload?.bankInfoVerified 
+                          {payload?.bankInfoVerified
                             ? "Your settlement account is linked and ready for direct deposits."
                             : "I've detected missing settlement info. Please verify your bank details before deployment."}
                        </p>
@@ -129,14 +129,14 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
       </div>
 
       <div className="flex gap-4">
-        <button 
+        <button
           onClick={onReject}
           className="flex-1 py-5 border-2 border-theme rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
         >
           <X className="w-4 h-4" />
           Hold Deployment
         </button>
-        <button 
+        <button
           onClick={onApprove}
           className="flex-[2] py-5 bg-emerald-600 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-900 transition-all shadow-xl shadow-emerald-200 flex items-center justify-center gap-3 group"
         >

@@ -32,7 +32,7 @@ export const EmpireLedger = ({ health }: { health: any }) => {
 
       <div className="space-y-4">
         {MOCK_INVOICES.map((inv, idx) => (
-          <motion.div 
+          <motion.div
             key={inv.id}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}

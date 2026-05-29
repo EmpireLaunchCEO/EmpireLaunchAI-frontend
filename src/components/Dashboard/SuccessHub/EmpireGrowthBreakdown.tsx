@@ -18,29 +18,29 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
   const consistencyScore = Math.min(100, Math.round(growthScore * 0.95));
 
   const metrics = [
-    { 
-      label: 'Revenue Velocity', 
-      value: revenueScore, 
-      weight: '50%', 
-      icon: TrendingUp, 
-      color: 'text-emerald-500', 
-      bgColor: 'bg-emerald-50' 
+    {
+      label: 'Revenue Velocity',
+      value: revenueScore,
+      weight: '50%',
+      icon: TrendingUp,
+      color: 'text-emerald-500',
+      bgColor: 'bg-emerald-50'
     },
-    { 
-      label: 'Engagement Pulse', 
-      value: engagementScore, 
-      weight: '30%', 
-      icon: BarChart3, 
-      color: 'text-blue-500', 
-      bgColor: 'bg-blue-50' 
+    {
+      label: 'Engagement Pulse',
+      value: engagementScore,
+      weight: '30%',
+      icon: BarChart3,
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-50'
     },
-    { 
-      label: 'Operation Consistency', 
-      value: consistencyScore, 
-      weight: '20%', 
-      icon: Zap, 
-      color: 'text-purple-500', 
-      bgColor: 'bg-purple-50' 
+    {
+      label: 'Operation Consistency',
+      value: consistencyScore,
+      weight: '20%',
+      icon: Zap,
+      color: 'text-purple-500',
+      bgColor: 'bg-purple-50'
     },
   ];
 
@@ -76,7 +76,7 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
               <span className="text-xs font-black text-foreground">{metric.value}%</span>
             </div>
             <div className="h-2 bg-theme-background rounded-full overflow-hidden">
-              <motion.div 
+              <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${metric.value}%` }}
                 transition={{ delay: 0.5 + idx * 0.1, duration: 1, ease: "easeOut" }}

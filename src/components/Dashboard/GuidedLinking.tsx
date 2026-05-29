@@ -2,15 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  Stars, 
-  Mail, 
-  ShoppingBag, 
-  Video, 
-  Camera, 
-  Globe, 
-  Share2, 
+import {
+  Search,
+  Stars,
+  Mail,
+  ShoppingBag,
+  Video,
+  Camera,
+  Globe,
+  Share2,
   Zap,
   CheckCircle2,
   Lock,
@@ -48,18 +48,18 @@ interface GuidedLinkingProps {
 }
 
 export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
-  const { 
-    connectedPlatforms, 
-    connectPlatform, 
-    activeSetupPlatform, 
-    startSetup, 
-    finishSetup, 
+  const {
+    connectedPlatforms,
+    connectPlatform,
+    activeSetupPlatform,
+    startSetup,
+    finishSetup,
     completeLinkingPhase,
     updatePlatformPermission,
     platformPermissions
   } = useEmpire();
   const router = useRouter();
-  
+
   const handleComplete = () => {
     if (onClose) {
       onClose();
@@ -72,7 +72,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
   const [showTeacher, setShowTeacher] = useState(true);
   const [linkingStep, setLinkingStep] = useState<'tier' | 'auth' | 'keys'>('tier');
   const [selectedTier, setSelectedTier] = useState<'co-pilot' | 'empire'>('co-pilot');
-  
+
   const [teacherMessage, setTeacherMessage] = useState('');
   const [displayedMessage, setDisplayedMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -101,15 +101,15 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
   // Typing effect
   useEffect(() => {
     if (!teacherMessage) return;
-    
+
     setIsTyping(true);
     setDisplayedMessage('');
-    
+
     let i = 0;
     const interval = setInterval(() => {
       i++;
       setDisplayedMessage(teacherMessage.slice(0, i));
-      
+
       if (i >= teacherMessage.length) {
         clearInterval(interval);
         setIsTyping(false);
@@ -129,8 +129,8 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
     }
   }, [searchQuery]);
 
-  const filteredPlatforms = availablePlatforms.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+  const filteredPlatforms = availablePlatforms.filter(p =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
     !connectedPlatforms.includes(p.id)
   );
 
@@ -138,7 +138,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
     startSetup(platformId);
     setLinkingStep('tier');
     setSearchQuery('');
-    
+
     if (platformId === 'gmail') {
       setTeacherMessage("Excellent! Choose your intelligence tier for Gmail. Co-Pilot for tracking, or Empire Mode for automated responses.");
     } else if (platformId === 'imap') {
@@ -160,7 +160,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
       updatePlatformPermission(activeSetupPlatform, selectedTier);
       finishSetup();
       setLinkingStep('tier');
-      
+
       if (activeSetupPlatform === 'gmail' || activeSetupPlatform === 'imap') {
         setTeacherMessage("Excellent! Your neural link to email is established. This will allow me to monitor verification codes and customer inquiries autonomously.");
         setConversationTrigger(prev => prev + 1);
@@ -218,10 +218,10 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        
+
         {/* Animated Ring on focus */}
         <div className="absolute inset-0 -z-10 bg-primary/5 blur-2xl rounded-[32px] opacity-0 group-focus-within:opacity-100 transition-opacity" />
-        
+
         {/* Search Results Dropdown */}
         <AnimatePresence>
           {searchQuery && (
@@ -258,7 +258,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
 
       {/* Connected Platforms Quick View (Always visible below search) */}
       {connectedPlatforms.length > 0 && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="space-y-6"
@@ -272,8 +272,8 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               const platform = availablePlatforms.find(p => p.id === id);
               if (!platform) return null;
               return (
-                <motion.div 
-                  key={id} 
+                <motion.div
+                  key={id}
                   layoutId={id}
                   className="p-6 bg-theme-surface border-2 border-theme rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
                 >
@@ -322,7 +322,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                   )}
                 </div>
               </div>
-              
+
               <div className="space-y-6 flex-1">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -346,19 +346,19 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 <div className="flex flex-wrap gap-4 pt-4">
                   {hasNoPlatforms ? (
                     <>
-                      <button 
+                      <button
                         onClick={() => handleSelectPlatform('gmail')}
                         className="px-8 py-4 bg-primary hover:opacity-90 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 shadow-lg shadow-primary/20 group text-foreground"
                       >
                         Start with Gmail <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </button>
-                      <button 
+                      <button
                         onClick={handleImapStart}
                         className="px-8 py-4 bg-theme-surface hover:opacity-90 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3"
                       >
                         Other Email (IMAP)
                       </button>
-                      <button 
+                      <button
                         onClick={handleManualPreFill}
                         className="px-8 py-4 bg-transparent border-2 border-theme hover:bg-theme-surface rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 text-muted-foreground hover:text-foreground"
                       >
@@ -366,7 +366,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                       </button>
                     </>
                   ) : connectedPlatforms.length >= 2 ? (
-                    <button 
+                    <button
                       onClick={handleComplete}
                       className="px-10 py-5 bg-gradient-to-r from-primary to-amber-600 hover:opacity-90 rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all flex items-center gap-3 shadow-2xl shadow-primary/40 group animate-pulse text-foreground"
                     >
@@ -380,7 +380,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 </div>
               </div>
             </div>
-            
+
             {/* Background elements for premium feel */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-10 -mr-48 -mt-48" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-600 rounded-full blur-[100px] opacity-10 -ml-32 -mb-32" />
@@ -415,7 +415,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               </div>
 
               <div className="flex gap-4">
-                <button 
+                <button
                   onClick={finishSetup}
                   className="px-8 py-4 rounded-2xl border-2 border-theme text-muted-foreground font-black text-xs uppercase tracking-widest hover:bg-theme-background transition-all"
                 >
@@ -429,7 +429,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 <div className="space-y-12">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Co-Pilot Card */}
-                    <div 
+                    <div
                       onClick={() => setSelectedTier('co-pilot')}
                       className={cn(
                         "p-8 rounded-[40px] border-4 transition-all cursor-pointer relative group h-full flex flex-col",
@@ -457,7 +457,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                     </div>
 
                     {/* Auto-Pilot Card */}
-                    <div 
+                    <div
                       onClick={() => setSelectedTier('empire')}
                       className={cn(
                         "p-8 rounded-[40px] border-4 transition-all cursor-pointer relative group h-full flex flex-col overflow-hidden",
@@ -482,7 +482,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                           )
                         ))}
                       </ul>
-                      
+
                       {/* Secure Vault Indicator */}
                       <div className="mt-8 p-4 bg-slate-950/50 rounded-2xl border border-white/10 flex items-center gap-4">
                         <ShieldCheck className="w-8 h-8 text-amber-500 shrink-0" />
@@ -495,7 +495,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                   </div>
 
                   <div className="flex justify-center">
-                    <button 
+                    <button
                       onClick={() => setLinkingStep('auth')}
                       className="px-12 py-5 bg-primary text-foreground rounded-[24px] font-black text-sm uppercase tracking-[0.2em] hover:opacity-90 transition-all shadow-xl shadow-primary/20 flex items-center gap-3 group"
                     >
@@ -520,7 +520,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                       {currentPlatform.id === 'imap' ? 'Email Credentials' : 'Secure Authorization'}
                     </h3>
                     <p className="text-base font-medium text-muted-foreground leading-relaxed mb-8">
-                      {currentPlatform.id === 'imap' 
+                      {currentPlatform.id === 'imap'
                         ? "Enter your email and App Password to allow IMAP access."
                         : `Connect your ${currentPlatform.name} account via our encrypted OAuth gateway.`
                       }
@@ -528,13 +528,13 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                     {linkingStep === 'auth' && (
                       <div className="space-y-4">
                         {currentPlatform.id === 'imap' && (
-                          <input 
-                            type="email" 
+                          <input
+                            type="email"
                             placeholder="Email Address"
                             className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors"
                           />
                         )}
-                        <button 
+                        <button
                           onClick={handleAuth}
                           className="w-full py-5 bg-primary text-foreground rounded-[24px] font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-primary/20"
                         >
@@ -558,7 +558,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                     <p className="text-base font-medium text-muted-foreground leading-relaxed mb-8">
                       Verifying API endpoints and establishing autonomous bridge protocols.
                     </p>
-                    
+
                     {linkingStep === 'keys' ? (
                       <div className="space-y-5">
                         <div className="space-y-2">
@@ -569,7 +569,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Secure Token</label>
                           <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold" />
                         </div>
-                        <button 
+                        <button
                           onClick={handleLink}
                           className="w-full py-5 bg-primary text-foreground rounded-[24px] font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl"
                         >
@@ -585,7 +585,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 </div>
               )}
             </div>
-            
+
             <div className="absolute -right-32 -bottom-32 w-96 h-96 bg-theme-background rounded-full -z-10" />
           </motion.div>
         )}

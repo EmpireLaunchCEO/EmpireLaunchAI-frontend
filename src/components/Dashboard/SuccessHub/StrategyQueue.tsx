@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Zap, 
-  TrendingUp, 
-  Search, 
-  ArrowRight, 
-  CheckCircle2, 
-  X, 
-  Brain, 
+import {
+  Zap,
+  TrendingUp,
+  Search,
+  ArrowRight,
+  CheckCircle2,
+  X,
+  Brain,
   Target,
   Sparkles,
   TrendingDown
@@ -100,13 +100,13 @@ export function StrategyQueue() {
               </div>
 
               <div className="flex items-center gap-3">
-                <button 
+                <button
                   onClick={() => handleApprove(strat.id)}
                   className="flex-1 py-4 bg-amber-400 text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-amber-300 transition-all shadow-lg shadow-amber-400/10 flex items-center justify-center gap-2 group/btn"
                 >
                   Apply Strategy <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                 </button>
-                <button 
+                <button
                   onClick={() => handleDismiss(strat.id)}
                   className="p-4 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 rounded-2xl transition-all"
                 >

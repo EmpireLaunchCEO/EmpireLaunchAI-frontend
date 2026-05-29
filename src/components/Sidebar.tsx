@@ -3,8 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  LayoutDashboard, 
+import {
+  LayoutDashboard,
   Settings,
   Stars,
   ClipboardCheck,
@@ -33,7 +33,7 @@ export function Sidebar() {
         </div>
         <span className="text-lg font-black tracking-tight text-foreground uppercase italic">Empire.</span>
       </div>
-      
+
       <nav className="flex-1 px-4 py-4 space-y-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
@@ -43,8 +43,8 @@ export function Sidebar() {
               href={item.href}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm",
-                isActive 
-                ? "bg-primary text-white shadow-xl shadow-primary/10" 
+                isActive
+                ? "bg-primary text-white shadow-xl shadow-primary/10"
                 : "text-slate-400 hover:text-foreground hover:bg-theme-background"
               )}
             >
@@ -66,7 +66,7 @@ export function Sidebar() {
           </div>
         </div>
       </nav>
-      
+
       <div className="p-6 border-t border-theme">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center shadow-lg">

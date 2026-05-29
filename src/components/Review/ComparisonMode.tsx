@@ -30,8 +30,8 @@ export function ComparisonMode({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
       <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-md" onClick={onClose} />
-      
-      <motion.div 
+
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-theme-surface w-full max-w-6xl h-[80vh] rounded-[40px] shadow-2xl relative overflow-hidden flex flex-col"
@@ -47,7 +47,7 @@ export function ComparisonMode({
               <p className="text-muted-foreground text-sm font-medium">Review the changes made by your AI Partner</p>
             </div>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="p-3 hover:bg-slate-100 rounded-2xl transition-colors"
           >
@@ -103,14 +103,14 @@ export function ComparisonMode({
 
         {/* Footer Actions */}
         <div className="p-8 border-t border-theme bg-theme-background/30 flex justify-end gap-4 shrink-0">
-          <button 
+          <button
             onClick={onReject}
             className="px-8 py-4 rounded-2xl text-sm font-bold text-slate-600 bg-theme-surface border border-slate-200 hover:bg-theme-background transition-colors flex items-center gap-2"
           >
             <RotateCcw className="w-4 h-4" />
             Keep Original
           </button>
-          <button 
+          <button
             onClick={onAccept}
             className="px-10 py-4 rounded-2xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all flex items-center gap-2 shadow-xl shadow-blue-100"
           >

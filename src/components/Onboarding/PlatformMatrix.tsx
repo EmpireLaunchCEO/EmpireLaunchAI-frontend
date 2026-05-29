@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  CheckCircle2, 
-  Plus, 
-  HelpCircle, 
-  ShoppingBag, 
-  Video, 
-  Camera, 
-  Globe, 
+import {
+  CheckCircle2,
+  Plus,
+  HelpCircle,
+  ShoppingBag,
+  Video,
+  Camera,
+  Globe,
   Share2,
   ExternalLink,
   ChevronRight,
@@ -75,7 +75,7 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
               <div className="mt-auto">
                 <h3 className="text-lg md:text-xl font-black text-white uppercase italic tracking-tight">{platform.name}</h3>
                 <div className="mt-3 md:mt-4 flex flex-col gap-2">
-                  <button 
+                  <button
                     onClick={() => setConsultingPlatform(platform.id)}
                     className="w-full py-2.5 md:py-3 px-4 bg-primary/10 text-primary rounded-xl md:rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-primary hover:text-slate-900 transition-all flex items-center justify-center gap-2 group/btn border border-primary/20"
                   >

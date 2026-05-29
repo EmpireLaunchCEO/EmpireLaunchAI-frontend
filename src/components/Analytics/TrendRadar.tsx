@@ -5,7 +5,7 @@ import { Stars, Zap, Eye, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const trendingKeywords = [
-  "Boho Aesthetic", "Digital Productivity", "Sage Green Decor", 
+  "Boho Aesthetic", "Digital Productivity", "Sage Green Decor",
   "Minimalist Planning", "Passive Income Tips", "Creative Journaling"
 ];
 
@@ -35,7 +35,7 @@ export function TrendRadar() {
         <div className="absolute top-0 right-0 p-8 opacity-10">
           <Stars className="w-32 h-32" />
         </div>
-        
+
         <div className="relative z-10 space-y-6">
           <div className="flex items-center gap-3">
             <div className="bg-blue-500 p-2 rounded-xl">
@@ -48,7 +48,7 @@ export function TrendRadar() {
             <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">Current Pulse</p>
             <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
               {trendingKeywords.map((keyword) => (
-                <div 
+                <div
                   key={keyword}
                   className="bg-slate-800 border border-slate-700 px-4 py-2 rounded-full whitespace-nowrap text-sm font-bold hover:bg-slate-700 transition-colors cursor-default"
                 >

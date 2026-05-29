@@ -19,7 +19,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
 
   const handleVoiceCommand = useCallback((text: string) => {
     const query = text.toLowerCase().trim();
-    
+
     if (query.startsWith('note') || query.startsWith('notes')) {
       // Extract the note content
       const noteContent = text.replace(/^(note|notes)\s*/i, '');
@@ -32,7 +32,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
       const aiQuery = text.replace(/^ai\s*/i, '');
       if (aiQuery) {
         setValue(aiQuery);
-        // Automatically submit? 
+        // Automatically submit?
         return false; // Let user review before send
       }
     }
@@ -84,7 +84,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!value.trim()) return;
-    
+
     setIsProcessing(true);
     if (onExecute) {
       await onExecute(value);
@@ -99,7 +99,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
   return (
     <div className="fixed bottom-24 lg:bottom-8 left-4 lg:left-80 right-4 lg:right-8 flex flex-col items-center gap-4 z-[40]">
       {tip && !isProcessing && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-theme-surface/80 backdrop-blur-md px-4 py-2 rounded-full border border-theme shadow-sm"
@@ -109,7 +109,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
           </p>
         </motion.div>
       )}
-      <form 
+      <form
         onSubmit={handleSubmit}
         className="w-full max-w-3xl bg-theme-surface rounded-2xl shadow-2xl border border-theme p-2 flex items-center gap-2 pointer-events-auto"
       >
@@ -136,7 +136,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
             )}
           </AnimatePresence>
         </div>
-        
+
         <input
           type="text"
           value={value}
@@ -148,7 +148,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
           )}
           disabled={isProcessing}
         />
-        
+
         <button
           type="button"
           onClick={toggleListening}

@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Upload, 
-  ShieldCheck, 
-  Stars, 
-  CheckCircle2, 
+import {
+  Upload,
+  ShieldCheck,
+  Stars,
+  CheckCircle2,
   AlertCircle,
   Loader2,
   Image as ImageIcon,
@@ -43,11 +43,11 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
     setStatus('uploading');
     // Simulate upload
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     setStatus('validating');
     // Simulate AI Perceptual Hashing & Uniqueness check
     await new Promise(resolve => setTimeout(resolve, 2500));
-    
+
     setScore(94); // High uniqueness score
     setStatus('success');
   };
@@ -82,10 +82,10 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                 ) : (
                   <img src={preview} className="w-full h-full object-cover" alt="Upload Preview" />
                 )}
-                
+
                 <AnimatePresence>
                   {status === 'validating' && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       className="absolute inset-0 bg-primary/20 backdrop-blur-sm flex items-center justify-center"
@@ -99,9 +99,9 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                        </div>
                     </motion.div>
                   )}
-                  
+
                   {status === 'success' && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       className="absolute inset-0 bg-primary/90 backdrop-blur-md flex items-center justify-center text-slate-900"
@@ -119,7 +119,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                   )}
                 </AnimatePresence>
 
-                <button 
+                <button
                   onClick={() => { setPreview(null); setFile(null); setStatus('idle'); }}
                   className="absolute top-6 right-6 p-2 bg-slate-900/50 backdrop-blur-md text-white rounded-xl hover:bg-red-500 transition-colors"
                 >
@@ -176,7 +176,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
 
            <div className="flex flex-col gap-3">
               {status === 'idle' && preview && (
-                <button 
+                <button
                   onClick={startValidation}
                   className="w-full py-5 bg-primary text-slate-900 rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-amber-400 transition-all shadow-xl flex items-center justify-center gap-3 group"
                 >
@@ -184,9 +184,9 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                   <Stars className="w-4 h-4" />
                 </button>
               )}
-              
+
               {status === 'success' && (
-                <button 
+                <button
                   onClick={() => onValidated(preview!)}
                   className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary hover:text-slate-900 transition-all shadow-xl flex items-center justify-center gap-3 border border-white/5"
                 >
@@ -196,7 +196,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
               )}
 
               {status === 'idle' && !preview && (
-                <button 
+                <button
                   disabled
                   className="w-full py-5 bg-slate-800 text-slate-500 rounded-3xl font-black text-xs uppercase tracking-[0.2em] cursor-not-allowed border border-white/5"
                 >
@@ -204,7 +204,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                 </button>
               )}
 
-              <button 
+              <button
                 onClick={onCancel}
                 className="w-full py-4 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-foreground transition-colors"
               >

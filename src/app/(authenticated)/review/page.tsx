@@ -52,11 +52,11 @@ export default function ReviewQueue() {
 
   const handleApprove = async (id: string) => {
     const task = tasks.find(t => t.id === id);
-    
+
     // Simulate a check for financial requirement
     if (
-      task?.title.toLowerCase().includes('subscription') || 
-      task?.title.toLowerCase().includes('buy') || 
+      task?.title.toLowerCase().includes('subscription') ||
+      task?.title.toLowerCase().includes('buy') ||
       task?.title.toLowerCase().includes('listing fee') ||
       (task?.title.toLowerCase().includes('etsy') && task?.title.toLowerCase().includes('listing'))
     ) {
@@ -155,7 +155,7 @@ export default function ReviewQueue() {
       <div className="max-w-4xl mx-auto space-y-8">
         {tasks.length > 0 ? (
           tasks.map((task) => (
-            <ReviewCard 
+            <ReviewCard
               key={task.id}
               id={task.id}
               platform={task.title.includes('Etsy') ? 'Etsy' : task.title.includes('TikTok') ? 'TikTok' : 'Instagram'}
@@ -173,7 +173,7 @@ export default function ReviewQueue() {
             <p className="text-slate-400 text-sm mt-2">The AI is working on new suggestions based on your goals.</p>
           </div>
         )}
-        
+
         {tasks.length > 0 && (
           <div className="bg-primary/5 border border-primary/20 rounded-3xl p-6 flex items-start gap-4">
             <div className="bg-primary p-2 rounded-xl text-slate-900">
@@ -182,7 +182,7 @@ export default function ReviewQueue() {
             <div>
               <h4 className="font-bold text-foreground">AI Strategy Note</h4>
               <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
-                I've prioritized these items based on current market trends and your active goals. 
+                I've prioritized these items based on current market trends and your active goals.
                 Approving these will help maintain your growth momentum.
               </p>
             </div>
@@ -190,7 +190,7 @@ export default function ReviewQueue() {
         )}
       </div>
 
-      <FinancialGate 
+      <FinancialGate
         isOpen={financialGate.isOpen}
         onClose={() => setFinancialGate(prev => ({ ...prev, isOpen: false }))}
         onApprove={handleFinancialApprove}
@@ -200,8 +200,8 @@ export default function ReviewQueue() {
         platform={financialGate.platform}
       />
 
-      <ConversationalInput 
-        onExecute={handleRefine} 
+      <ConversationalInput
+        onExecute={handleRefine}
         tip='Try saying "Make the description more playful"'
       />
     </div>

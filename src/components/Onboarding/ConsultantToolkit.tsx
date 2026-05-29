@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Wrench, 
-  Smartphone, 
-  Layout, 
-  Mail, 
-  Layers, 
+import {
+  Wrench,
+  Smartphone,
+  Layout,
+  Mail,
+  Layers,
   BarChart,
   CheckCircle2,
   Info,
@@ -20,11 +20,11 @@ import { cn } from '@/lib/utils';
 import wisdomData from '@/data/business_wisdom.json';
 
 const getToolRecommendations = (businessAngle: string) => {
-  const angleKey = businessAngle === 'physical' ? 'Print-on-Demand' : 
+  const angleKey = businessAngle === 'physical' ? 'Print-on-Demand' :
                    businessAngle === 'services' ? 'Dropshipping' : 'Digital Marketing';
-  
+
   const recommendations = (wisdomData.tool_recommendations as any)[angleKey] || [];
-  
+
   return recommendations.map((tool: any) => {
     const costInfo = (wisdomData.cost_analysis as any)[tool.name];
     let cost = tool.type === 'Essential' ? "Pay per order" : "Free tier";

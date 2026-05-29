@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Bot, 
-  ChevronRight, 
-  ChevronLeft, 
-  Copy, 
-  Check, 
+import {
+  Bot,
+  ChevronRight,
+  ChevronLeft,
+  Copy,
+  Check,
   X,
   Stars,
   Zap,
@@ -89,7 +89,7 @@ export function SetupAssistant() {
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
 
-  const steps = activeSetupPlatform ? (platformMap[activeSetupPlatform.toLowerCase()] || []) : 
+  const steps = activeSetupPlatform ? (platformMap[activeSetupPlatform.toLowerCase()] || []) :
                (pathname === '/onboarding' ? onboardingSteps : null);
 
   const step = (steps && currentStep >= 0 && currentStep < (steps as any[]).length) ? (steps as any[])[currentStep] : null;
@@ -250,11 +250,11 @@ export function SetupAssistant() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </AnimatePresence>
 
       {/* Spotlight effect */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/40 transition-opacity"
         style={{
           clipPath: targetElement ? `polygon(0% 0%, 0% 100%, ${targetElement.offsetLeft}px 100%, ${targetElement.offsetLeft}px ${targetElement.offsetTop}px, ${targetElement.offsetLeft + targetElement.offsetWidth}px ${targetElement.offsetTop}px, ${targetElement.offsetLeft + targetElement.offsetWidth}px ${targetElement.offsetTop + targetElement.offsetHeight}px, ${targetElement.offsetLeft}px ${targetElement.offsetTop + targetElement.offsetHeight}px, ${targetElement.offsetLeft}px 100%, 100% 100%, 100% 0%)` : 'none'

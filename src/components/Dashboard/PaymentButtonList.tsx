@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  CreditCard, 
-  ExternalLink, 
-  Copy, 
+import {
+  CreditCard,
+  ExternalLink,
+  Copy,
   Check,
   MoreVertical,
   MousePointer2
@@ -75,7 +75,7 @@ export function PaymentButtonList() {
                  <p className="text-sm font-black text-foreground">{button.usageCount} Clicks</p>
                  <p className="text-[10px] font-bold text-green-500">Active</p>
               </div>
-              <button 
+              <button
                 onClick={() => handleCopy(button.id)}
                 className="p-3 hover:bg-theme-background rounded-xl transition-colors relative"
               >

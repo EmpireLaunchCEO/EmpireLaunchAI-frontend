@@ -17,15 +17,15 @@ const Insight = ({ type, title, description, impact, color }: InsightProps) => (
   <div className="bg-theme-surface p-6 rounded-[32px] border border-theme shadow-sm relative overflow-hidden group">
     <div className="flex justify-between items-start mb-4">
       <div className={cn("p-3 rounded-2xl", color)}>
-        {type === 'trend' ? <TrendingUp className="w-5 h-5 text-white" /> : 
-         type === 'research' ? <Search className="w-5 h-5 text-white" /> : 
+        {type === 'trend' ? <TrendingUp className="w-5 h-5 text-white" /> :
+         type === 'research' ? <Search className="w-5 h-5 text-white" /> :
          <Lightbulb className="w-5 h-5 text-white" />}
       </div>
       <span className="text-[10px] font-black text-primary bg-primary/10 px-2 py-1 rounded-md uppercase tracking-widest">
         Impact: {impact}
       </span>
     </div>
-    
+
     <div className="space-y-2">
       <h4 className="font-bold text-foreground leading-tight">{title}</h4>
       <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{description}</p>
@@ -54,21 +54,21 @@ export function AIOptimizationHub() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        <Insight 
+        <Insight
           type="trend"
           title="Viral Hook: 'Boho Minimalist'"
           description="Etsy search volume for 'minimalist boho wall art' is up 114%. I suggest creating 3 new variants today."
           impact="High"
           color="bg-purple-600"
         />
-        <Insight 
+        <Insight
           type="research"
           title="Competitor Gap Analysis"
           description="Top 3 competitors in your niche are currently low on stock for 'Digital Wedding Planners'. Perfect time to boost ads."
           impact="Medium"
           color="bg-blue-600"
         />
-        <Insight 
+        <Insight
           type="suggestion"
           title="Price Optimization: +$2.50"
           description="Based on market velocity, your 'Luxe Bundle' is underpriced. Increasing by $2.50 will boost profit by 12% without affecting volume."

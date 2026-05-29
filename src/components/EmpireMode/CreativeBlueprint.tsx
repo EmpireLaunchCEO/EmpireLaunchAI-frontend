@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { 
-  ChevronLeft, 
-  ExternalLink, 
-  Copy, 
-  Check, 
-  Stars, 
-  ShieldCheck, 
-  Scissors, 
-  Palette, 
-  AlertTriangle, 
+import {
+  ChevronLeft,
+  ExternalLink,
+  Copy,
+  Check,
+  Stars,
+  ShieldCheck,
+  Scissors,
+  Palette,
+  AlertTriangle,
   RefreshCw,
   ArrowRight,
   Bot,
@@ -40,7 +40,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
       const data = await creativeService.getBlueprint(task.id);
       setBlueprint(data);
       setLoading(false);
-      
+
       // If task is already in 'editing' or 'drafting', skip variation selection
       if (task.status === 'editing' || task.status === 'drafting') {
         setStep('blueprint');
@@ -76,7 +76,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
           >
-            <VisualVariationSelector 
+            <VisualVariationSelector
               variations={blueprint.variations}
               selectedId={selectedVariation}
               onSelect={setSelectedVariation}
@@ -149,14 +149,14 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                        </div>
                        <div className="flex items-center gap-3">
                           {blueprint.palette.map((color) => (
-                            <button 
+                            <button
                               key={color}
                               onClick={() => handleCopy(color, color)}
                               className="group relative"
                             >
-                               <div 
-                                 className="w-12 h-12 rounded-2xl border-2 border-theme shadow-sm transition-transform group-hover:scale-110" 
-                                 style={{ backgroundColor: color }} 
+                               <div
+                                 className="w-12 h-12 rounded-2xl border-2 border-theme shadow-sm transition-transform group-hover:scale-110"
+                                 style={{ backgroundColor: color }}
                                />
                                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                                   <span className="text-[8px] font-black text-slate-400">{color}</span>
@@ -189,10 +189,10 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                        <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Composition Guide</h4>
                     </div>
                     <div className="relative aspect-[21/9] bg-slate-900 rounded-3xl overflow-hidden border border-white/5">
-                       <img 
-                         src={blueprint.compositionUrl} 
-                         className="w-full h-full object-cover opacity-30 grayscale" 
-                         alt="Composition Wireframe" 
+                       <img
+                         src={blueprint.compositionUrl}
+                         className="w-full h-full object-cover opacity-30 grayscale"
+                         alt="Composition Wireframe"
                        />
                        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                           <p className="text-xs font-bold text-slate-400 max-w-xs">
@@ -220,14 +220,14 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                        "Launch {task.platform} to begin. I'll stay pinned to your screen with the Copy-Paste Power Tool."
                     </p>
 
-                    <button 
+                    <button
                       onClick={() => setStep('power_tool')}
                       className="w-full py-5 bg-primary text-slate-900 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] hover:bg-amber-400 transition-all shadow-xl flex items-center justify-center gap-3 group"
                     >
                        Start Designing
                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
-                    
+
                     <div className="pt-6 border-t border-white/5">
                        <div className="flex items-center gap-2 text-emerald-400">
                           <ShieldCheck className="w-4 h-4" />
@@ -253,7 +253,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
       </AnimatePresence>
 
       {step === 'power_tool' && (
-        <CopyPastePowerTool 
+        <CopyPastePowerTool
           blueprint={blueprint}
           platform={task.platform}
           platformLink={blueprint.platformLink}
@@ -266,7 +266,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <ValidationGate 
+          <ValidationGate
             taskTitle={task.title}
             platform={task.platform}
             onValidated={(url) => {

@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from 'react';
-import { 
-  Mail, 
-  MessageSquare, 
-  ShieldCheck, 
-  History, 
-  Eye, 
+import {
+  Mail,
+  MessageSquare,
+  ShieldCheck,
+  History,
+  Eye,
   Settings2,
   Heart,
   Star,
@@ -22,17 +22,17 @@ const sentLog = [
 ];
 
 const flows = [
-  { 
-    id: 'gratitude', 
-    name: 'The "Gratitude" Flow', 
+  {
+    id: 'gratitude',
+    name: 'The "Gratitude" Flow',
     description: 'Triggered 1 hour after activation. A sincere "Thank You" email.',
     status: 'active',
     icon: Heart,
     color: 'text-rose-500'
   },
-  { 
-    id: 'social-proof', 
-    name: 'The "Social Proof" Request', 
+  {
+    id: 'social-proof',
+    name: 'The "Social Proof" Request',
     description: 'Triggered 7 days after activation. Asks for a review on Etsy.',
     status: 'active',
     icon: Star,
@@ -53,7 +53,7 @@ export function AutomationCenter() {
         </div>
         <div className="flex items-center gap-4 bg-theme-background px-6 py-4 rounded-3xl">
           <span className="text-sm font-bold text-slate-700">Manual Review (HITL)</span>
-          <button 
+          <button
             onClick={() => setHitlMode(!hitlMode)}
             className={cn(
               "w-12 h-6 rounded-full transition-all relative",
@@ -92,10 +92,10 @@ export function AutomationCenter() {
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
                   <span className="text-xs font-bold text-slate-400">Tone: {tone < 33 ? 'Professional' : tone < 66 ? 'Balanced' : 'Warm & Personal'}</span>
-                  <input 
-                    type="range" 
-                    min="0" 
-                    max="100" 
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
                     value={tone}
                     onChange={(e) => setTone(parseInt(e.target.value))}
                     className="w-32 accent-primary"

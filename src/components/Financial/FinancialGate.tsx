@@ -1,11 +1,11 @@
 "use client";
 
 import React from 'react';
-import { 
-  X, 
-  CreditCard, 
-  ArrowRight, 
-  ShieldCheck, 
+import {
+  X,
+  CreditCard,
+  ArrowRight,
+  ShieldCheck,
   AlertCircle,
   TrendingUp,
   ExternalLink
@@ -23,29 +23,29 @@ interface FinancialGateProps {
   reason?: string;
 }
 
-export function FinancialGate({ 
-  isOpen, 
-  onClose, 
-  onApprove, 
-  type, 
-  amount, 
-  description, 
+export function FinancialGate({
+  isOpen,
+  onClose,
+  onApprove,
+  type,
+  amount,
+  description,
   platform,
-  reason 
+  reason
 }: FinancialGateProps) {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
-      
+
       <div className="bg-theme-surface w-full max-w-md rounded-[32px] shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
         {/* Header */}
         <div className="p-8 pb-4 flex justify-between items-start">
           <div className="bg-primary/10 p-3 rounded-2xl">
             <CreditCard className="w-6 h-6 text-primary" />
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 hover:bg-slate-100 rounded-full transition-colors"
           >
@@ -72,7 +72,7 @@ export function FinancialGate({
                 </div>
               )}
             </div>
-            
+
               <div className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shadow-[0_0_5px_rgba(251,191,36,0.5)]" />
                 <p className="text-sm font-medium text-slate-400">{description}</p>
@@ -114,25 +114,26 @@ export function FinancialGate({
 
           {/* Actions */}
           <div className="mt-8 grid grid-cols-2 gap-4">
-            <button 
+            <button
               onClick={onClose}
               className="px-6 py-3.5 rounded-2xl text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
             >
               Decline
             </button>
-            <button 
+            <button
               onClick={onApprove}
               className="px-6 py-3.5 rounded-2xl text-sm font-bold text-slate-900 bg-primary hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-200/20"
             >
               Approve <ArrowRight className="w-4 h-4" />
             </button>
           </div>
-          
+
           <button className="w-full mt-4 flex items-center justify-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors">
             View full security details <ExternalLink className="w-3 h-3" />
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 }

@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  CheckCircle2, 
-  ChevronRight, 
+import {
+  CheckCircle2,
+  ChevronRight,
   Scissors,
   Star,
   Download,
@@ -51,8 +51,8 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
         {/* Preview Area */}
         <div className="lg:col-span-2 space-y-6">
            <div className="relative aspect-video bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl group">
-              <img 
-                src={(payload?.assets ?? [])[activeIndex]?.previewUrl ?? 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop'} 
+              <img
+                src={(payload?.assets ?? [])[activeIndex]?.previewUrl ?? 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop'}
                 className="w-full h-full object-cover opacity-80"
                 alt="Draft Preview"
               />
@@ -76,7 +76,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
 
            <div className="flex justify-center gap-2">
               {(payload?.assets ?? []).map((_, i) => (
-                <button 
+                <button
                   key={i}
                   onClick={() => setIndex(i)}
                   className={cn(
@@ -102,7 +102,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
                  <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Quality Rating</h4>
                  <div className="flex gap-2">
                     {[1,2,3,4,5].map((s) => (
-                      <button 
+                      <button
                         key={s}
                         onClick={() => setRating(s)}
                         className={cn(
@@ -130,7 +130,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
            </div>
 
            <div className="flex flex-col gap-3">
-              <button 
+              <button
                 onClick={() => onApprove()}
                 className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl flex items-center justify-center gap-3 group"
               >
@@ -139,7 +139,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
               </button>
 
               {onManualAssist && (
-                <button 
+                <button
                   onClick={onManualAssist}
                   className="w-full py-4 bg-indigo-50 text-indigo-600 border-2 border-indigo-100 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-indigo-100 transition-all flex items-center justify-center gap-2 group"
                 >
@@ -147,7 +147,7 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
                   Manual AI Assist
                 </button>
               )}
-              <button 
+              <button
                 onClick={onReject}
                 className="w-full py-4 border-2 border-theme rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
               >

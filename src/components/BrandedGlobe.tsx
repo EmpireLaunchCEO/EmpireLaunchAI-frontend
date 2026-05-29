@@ -36,10 +36,10 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-amber-500/20 animate-pulse" />
-      <img 
-        src="/branded-globe.png" 
-        alt="Empire Globe" 
-        className="w-full h-full object-cover scale-110 relative z-10" 
+      <img
+        src="/branded-globe.png"
+        alt="Empire Globe"
+        className="w-full h-full object-cover scale-110 relative z-10"
         onError={(e) => {
           e.currentTarget.style.display = 'none';
         }}

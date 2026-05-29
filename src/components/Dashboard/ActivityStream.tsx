@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  ShoppingBag, 
-  Video, 
-  Instagram, 
-  Target, 
-  Search, 
+import {
+  ShoppingBag,
+  Video,
+  Instagram,
+  Target,
+  Search,
   Zap,
   ArrowRight,
   ExternalLink,
@@ -80,7 +80,7 @@ export function ActivityStream() {
 
       <div className="relative space-y-8 before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-[2px] before:bg-theme-background">
         {activities.map((activity, index) => (
-          <motion.div 
+          <motion.div
             key={activity.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -93,7 +93,7 @@ export function ActivityStream() {
             )}>
                {getIcon(activity.type)}
             </div>
-            
+
             <div className="space-y-1 flex-1">
                <div className="flex items-center justify-between">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{activity.platform}</span>
@@ -104,7 +104,7 @@ export function ActivityStream() {
                     <h4 className="text-sm font-bold text-foreground leading-tight">
                       {activity.title}
                     </h4>
-                    
+
                     {activity.meta?.reasoning && (
                       <p className="text-[10px] text-muted-foreground italic leading-relaxed bg-theme-background p-2 rounded-lg border border-theme">
                         <span className="text-blue-500 font-bold not-italic mr-1">AI Logic:</span>
@@ -121,9 +121,9 @@ export function ActivityStream() {
                   </div>
 
                   {activity.meta?.link && (
-                    <a 
-                      href={activity.meta.link} 
-                      target="_blank" 
+                    <a
+                      href={activity.meta.link}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="shrink-0 p-2 bg-theme-background text-slate-400 hover:bg-blue-600 hover:text-white rounded-xl transition-all"
                     >
@@ -132,7 +132,7 @@ export function ActivityStream() {
                   )}
 
                   {activity.meta?.gateId && (
-                    <Link 
+                    <Link
                       href={`/review?id=${activity.meta.gateId}`}
                       className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-xl transition-all text-[10px] font-black uppercase tracking-widest"
                     >
@@ -145,7 +145,7 @@ export function ActivityStream() {
           </motion.div>
         ))}
       </div>
-      
+
       <button className="w-full py-4 bg-theme-background text-muted-foreground font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-100 transition-colors">
         Full History
       </button>

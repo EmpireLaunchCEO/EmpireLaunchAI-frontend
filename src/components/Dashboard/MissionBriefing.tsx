@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  CheckCircle2, 
-  Flag, 
-  Stars, 
+import {
+  CheckCircle2,
+  Flag,
+  Stars,
   ArrowRight,
   Target,
   Share2,
@@ -118,7 +118,7 @@ export function MissionBriefing() {
 
               if (step.href && step.status === 'current') {
                 return (
-                  <Link 
+                  <Link
                     href={step.href}
                     key={step.id}
                     className={cn(
@@ -131,7 +131,7 @@ export function MissionBriefing() {
               }
 
               return (
-                <motion.div 
+                <motion.div
                   key={step.id}
                   whileHover={{ x: 4 }}
                   className={cn(
@@ -158,16 +158,16 @@ export function MissionBriefing() {
                 <span className="font-bold text-foreground text-sm">Status: Operational</span>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <p className="text-xs font-medium text-slate-400 leading-relaxed italic">
-                {steps[2].status === 'current' 
+                {steps[2].status === 'current'
                   ? "\"Owner, I've analyzed your initial profile. Our next move is the Platform Bridge. Connecting your Etsy or TikTok will allow me to start automating your growth strategy immediately.\""
                   : "\"I've successfully linked your store. I'm currently running AI Deep Research on your competitors. I'll have a list of winning product suggestions ready for your review in about 20 minutes.\""
                 }
               </p>
-              
-              <Link 
+
+              <Link
                 href={steps[2].status === 'current' ? "/settings" : "/review"}
                 className="block w-full py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-primary/80 transition-colors text-center active:scale-[0.98]"
               >

@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Stars, 
-  ArrowRight, 
-  Shield, 
-  Rocket, 
-  Target, 
-  Globe, 
+import {
+  Stars,
+  ArrowRight,
+  Shield,
+  Rocket,
+  Target,
+  Globe,
   Coins,
   ChevronDown,
   Languages,
@@ -45,8 +45,8 @@ export default function LandingPage() {
     <div className="min-h-screen bg-slate-950 text-white selection:bg-blue-500/30 overflow-x-hidden">
       {/* High-Intelligence Background */}
       <div className="fixed inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full animate-pulse delay-700" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-surface-border/10 blur-[120px] rounded-full animate-pulse delay-700" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
       </div>
 
@@ -64,7 +64,7 @@ export default function LandingPage() {
       </nav>
 
       <main className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-120px)] px-6 py-20 text-center max-w-md mx-auto lg:max-w-md">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="space-y-12 w-full"
@@ -78,7 +78,7 @@ export default function LandingPage() {
           {/* Hero Heading */}
           <h1 className="text-5xl md:text-6xl font-black tracking-tighter leading-[0.85] uppercase italic">
             Command Your <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-amber-200 to-yellow-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-cyan-400 to-violet-500">
               Digital Empire
             </span>
           </h1>

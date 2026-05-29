@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from 'react';
-import { 
-  Settings as SettingsIcon, 
-  Share2, 
-  CreditCard, 
-  Bell, 
-  Shield, 
+import {
+  Settings as SettingsIcon,
+  Share2,
+  CreditCard,
+  Bell,
+  Shield,
   ExternalLink,
   CheckCircle2,
   AlertCircle,
@@ -44,7 +44,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
         <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-blue-600 shadow-2xl space-y-8 relative overflow-hidden">
           {/* AI Brain Pulse in background */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[80px] -z-10" />
-          
+
           <div className="flex items-center justify-between border-b border-theme pb-6">
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
               <Bot className="w-6 h-6 text-blue-600" /> Connecting Etsy Marketplace
@@ -74,7 +74,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
               />
             </div>
           </div>
-          
+
           <div className="flex justify-end gap-4 pt-4">
             <button onClick={onClose} className="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
             <button className="px-10 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-200">Save Connection</button>
@@ -125,7 +125,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
               />
             </div>
           </div>
-          
+
           <div className="flex justify-end gap-4 pt-4">
             <button onClick={onClose} className="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
             <button className="px-10 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">Sync TikTok</button>
@@ -140,7 +140,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
       <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
         <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-slate-200 shadow-2xl space-y-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-slate-100 blur-[80px] -z-10" />
-          
+
           <div className="flex items-center justify-between border-b border-theme pb-6">
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
               <Stars className="w-6 h-6 text-blue-900" /> Connecting Bannerbear AI
@@ -160,7 +160,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                 className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg"
               />
             </div>
-            
+
             <div className="p-4 rounded-2xl bg-blue-50 border border-blue-100">
               <p className="text-xs font-bold text-blue-700 leading-relaxed text-center">
                 <Bot className="w-4 h-4 inline mr-2" />
@@ -172,7 +172,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
               </div>
             </div>
           </div>
-          
+
           <div className="flex justify-end gap-4 pt-4">
             <button onClick={onClose} className="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
             <button className="px-10 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">Connect API</button>
@@ -181,7 +181,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
       </div>
     );
   }
-  
+
   return null;
 };
 
@@ -199,13 +199,13 @@ const tabs = [
 ];
 
 export default function SettingsPage() {
-  const { 
-    startSetup, 
-    activeSetupPlatform, 
-    finishSetup, 
-    theme, 
-    setTheme, 
-    aiMode, 
+  const {
+    startSetup,
+    activeSetupPlatform,
+    finishSetup,
+    theme,
+    setTheme,
+    aiMode,
     setAiMode,
     notificationSettings,
     updateNotificationSettings
@@ -213,7 +213,7 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('link-center');
   const [searchQuery, setSearchQuery] = useState('');
   const [isTermsOpen, setIsTermsOpen] = useState(false);
-  
+
   const [redeemKeyValue, setRedeemKeyValue] = useState('');
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [redeemStatus, setRedeemStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
@@ -226,9 +226,9 @@ export default function SettingsPage() {
       const res = await fetch(`${API_URL}/api/auth/redeem-key`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          key: redeemKeyValue, 
-          userId: '00000000-0000-0000-0000-000000000000' 
+        body: JSON.stringify({
+          key: redeemKeyValue,
+          userId: '00000000-0000-0000-0000-000000000000'
         })
       });
       if (res.ok) {
@@ -271,7 +271,7 @@ export default function SettingsPage() {
       <div className="p-6 md:p-12 max-w-6xl mx-auto space-y-8 md:space-y-12 pb-32">
         <AnimatePresence>
           {isSwitching && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -308,8 +308,8 @@ export default function SettingsPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all whitespace-nowrap",
-                  activeTab === tab.id 
-                    ? "bg-slate-900 text-white shadow-xl shadow-slate-200" 
+                  activeTab === tab.id
+                    ? "bg-slate-900 text-white shadow-xl shadow-slate-200"
                     : "text-slate-400 hover:text-slate-600 hover:bg-theme-background"
                 )}
               >
@@ -323,12 +323,12 @@ export default function SettingsPage() {
           <main className="flex-1 min-w-0">
             {activeTab === 'link-center' && (
               <div className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                
+
                 {/* Integration Form Overlay */}
                 {activeSetupPlatform && (
-                  <IntegrationForm 
-                    platform={activeSetupPlatform} 
-                    onClose={() => finishSetup()} 
+                  <IntegrationForm
+                    platform={activeSetupPlatform}
+                    onClose={() => finishSetup()}
                   />
                 )}
 
@@ -346,7 +346,7 @@ export default function SettingsPage() {
                       className="w-full pl-14 pr-6 py-5 rounded-[28px] bg-theme-surface border-2 border-theme focus:border-blue-600 outline-none transition-all text-lg font-bold text-foreground shadow-sm"
                     />
                     {searchQuery && (
-                      <button 
+                      <button
                         onClick={() => {
                           startSetup(searchQuery);
                           setSearchQuery('');
@@ -370,12 +370,12 @@ export default function SettingsPage() {
                         <AlertCircle className="w-4 h-4" /> Setup Required
                       </span>
                     </div>
-                    
+
                     <p className="text-slate-400 text-sm leading-relaxed">
                       Connect your Etsy account to allow the AI to research trends and manage your shop listings automatically.
                     </p>
 
-                    <button 
+                    <button
                       onClick={() => {
                         window.open('https://www.etsy.com/developers/register', '_blank');
                         startSetup('etsy');
@@ -395,12 +395,12 @@ export default function SettingsPage() {
                         <AlertCircle className="w-4 h-4" /> Setup Required
                       </span>
                     </div>
-                    
+
                     <p className="text-muted-foreground text-sm leading-relaxed">
                       Link TikTok for Business to automate your viral marketing campaigns and video scheduling.
                     </p>
 
-                    <button 
+                    <button
                       onClick={() => {
                         window.open('https://business-api.tiktok.com/portal/app', '_blank');
                         startSetup('tiktok');
@@ -420,12 +420,12 @@ export default function SettingsPage() {
                         <Stars className="w-3.5 h-3.5" /> API Ready
                       </span>
                     </div>
-                    
+
                     <p className="text-muted-foreground text-sm leading-relaxed">
                       Automate your creative production. Link Bannerbear to generate high-converting social assets and videos from templates.
                     </p>
 
-                    <button 
+                    <button
                       onClick={() => {
                         window.open('https://www.bannerbear.com/dashboard', '_blank');
                         startSetup('bannerbear');
@@ -538,14 +538,14 @@ export default function SettingsPage() {
                           <p className="text-xs font-bold text-muted-foreground">Get alerted instantly when a customer completes an order.</p>
                         </div>
                       </div>
-                      <button 
+                      <button
                         onClick={() => updateNotificationSettings({ sales: !notificationSettings.sales })}
                         className={cn(
                           "w-14 h-8 rounded-full transition-all relative flex items-center px-1",
                           notificationSettings.sales ? "bg-blue-600" : "bg-slate-200"
                         )}
                       >
-                        <motion.div 
+                        <motion.div
                           animate={{ x: notificationSettings.sales ? 24 : 0 }}
                           className="w-6 h-6 bg-theme-surface rounded-full shadow-md"
                         />
@@ -562,14 +562,14 @@ export default function SettingsPage() {
                           <p className="text-xs font-bold text-muted-foreground">Notifications for when your AI needs you to review content or strategies.</p>
                         </div>
                       </div>
-                      <button 
+                      <button
                         onClick={() => updateNotificationSettings({ approvals: !notificationSettings.approvals })}
                         className={cn(
                           "w-14 h-8 rounded-full transition-all relative flex items-center px-1",
                           notificationSettings.approvals ? "bg-blue-600" : "bg-slate-200"
                         )}
                       >
-                        <motion.div 
+                        <motion.div
                           animate={{ x: notificationSettings.approvals ? 24 : 0 }}
                           className="w-6 h-6 bg-theme-surface rounded-full shadow-md"
                         />
@@ -669,7 +669,7 @@ export default function SettingsPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {colorSchemes.map((scheme) => (
-                      <button 
+                      <button
                         key={scheme.id}
                         onClick={() => setTheme(scheme.id)}
                         className={cn(
@@ -791,15 +791,15 @@ export default function SettingsPage() {
                         If you have an Empire Launch key, enter it below to upgrade your account or extend your subscription.
                       </p>
                       <div className="flex gap-2">
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           placeholder="ENTER-KEY-HERE"
                           value={redeemKeyValue}
                           onChange={(e) => setRedeemKeyValue(e.target.value.toUpperCase())}
                           disabled={isRedeeming}
                           className="flex-1 p-4 rounded-2xl bg-theme-surface border-2 border-blue-100 focus:border-blue-600 outline-none font-mono text-sm uppercase tracking-widest disabled:opacity-50"
                         />
-                        <button 
+                        <button
                           onClick={handleRedeem}
                           disabled={isRedeeming || !redeemKeyValue}
                           className="px-6 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 disabled:opacity-50 flex items-center gap-2"
@@ -808,7 +808,7 @@ export default function SettingsPage() {
                         </button>
                       </div>
                       {redeemStatus && (
-                        <motion.div 
+                        <motion.div
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           className={cn(
@@ -833,7 +833,7 @@ export default function SettingsPage() {
                       <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
                     </button>
 
-                    <button 
+                    <button
                       onClick={() => setIsTermsOpen(true)}
                       className="w-full flex items-center justify-between p-6 rounded-3xl bg-theme-background border-2 border-theme hover:border-slate-300 transition-all group"
                     >
@@ -849,10 +849,10 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
-                <TermsModal 
-                  isOpen={isTermsOpen} 
-                  onClose={() => setIsTermsOpen(false)} 
-                  onAccept={() => setIsTermsOpen(false)} 
+                <TermsModal
+                  isOpen={isTermsOpen}
+                  onClose={() => setIsTermsOpen(false)}
+                  onAccept={() => setIsTermsOpen(false)}
                 />
               </div>
             )}
@@ -861,7 +861,7 @@ export default function SettingsPage() {
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="p-8 rounded-[40px] bg-gradient-to-br from-slate-900 to-slate-800 text-white space-y-8 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] -mr-48 -mt-48" />
-                  
+
                   <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div className="flex items-center gap-6">
                       <div className="w-16 h-16 rounded-3xl bg-theme-surface/10 flex items-center justify-center backdrop-blur-md">
@@ -928,8 +928,8 @@ export default function SettingsPage() {
               </div>
             )}
           </main>
-        </div>
-      </div>
-    </PullToRefresh>
-  );
-}
+          </div>
+          </div>
+          </PullToRefresh>
+          );
+          }

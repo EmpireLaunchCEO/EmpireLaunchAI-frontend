@@ -28,11 +28,11 @@ export const GrowthBurst = ({ active }: { active: boolean }) => {
           <motion.div
             key={p.id}
             initial={{ scale: 0, x: 0, y: 0, opacity: 1 }}
-            animate={{ 
-              scale: [0, 1, 0.5], 
-              x: p.x, 
-              y: p.y, 
-              opacity: 0 
+            animate={{
+              scale: [0, 1, 0.5],
+              x: p.x,
+              y: p.y,
+              opacity: 0
             }}
             transition={{ duration: 1.5, ease: "easeOut" }}
             className="absolute w-2 h-2 rounded-full"

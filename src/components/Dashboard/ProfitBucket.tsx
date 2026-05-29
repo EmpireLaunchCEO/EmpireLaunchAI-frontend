@@ -41,7 +41,7 @@ export function ProfitBucket({ withholdableEarnings = 125050, securedDues = 1800
               cy="50"
               r="40"
               fill="transparent"
-              stroke="currentColor" 
+              stroke="currentColor"
               className="text-primary"
               strokeWidth="12"
               strokeDasharray="251.2"

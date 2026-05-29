@@ -79,7 +79,7 @@ export function SupportHub() {
               </button>
             ))}
           </div>
-          
+
           <button className="w-full text-center text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 hover:text-blue-700 transition-colors">
             View Knowledge Base
           </button>

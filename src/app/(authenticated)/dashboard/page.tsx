@@ -87,22 +87,22 @@ export default function Dashboard() {
     }
 
     if (partnerStatus !== 'idle') return;
-    
+
     setPartnerStatus('creating');
     setExecutingInsight(goal);
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     try {
       const response = await fetch(`${API_URL}/api/agent/start`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer mock-mobile-token'
         },
-        body: JSON.stringify({ 
-          goal, 
+        body: JSON.stringify({
+          goal,
           userId: '00000000-0000-0000-0000-000000000000',
-          empireId: activeEmpireId 
+          empireId: activeEmpireId
         }),
       });
       const data = await response.json();
@@ -164,7 +164,7 @@ export default function Dashboard() {
             {/* Thinking Status Overlay */}
             <AnimatePresence>
               {partnerStatus !== 'idle' && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -179,8 +179,8 @@ export default function Dashboard() {
                       <span className="text-[10px] font-bold text-slate-400">Phase: Research & Analysis</span>
                     </div>
                     <p className="text-lg font-bold">
-                      {partnerStatus === 'researching' 
-                        ? 'Analyzing global market velocity...' 
+                      {partnerStatus === 'researching'
+                        ? 'Analyzing global market velocity...'
                         : `Executing Strategy: "${executingInsight?.substring(0, 60)}..."`}
                     </p>
                   </div>
@@ -188,8 +188,8 @@ export default function Dashboard() {
               )}
             </AnimatePresence>
 
-            <SuccessHubOverview 
-              empireData={empireData} 
+            <SuccessHubOverview
+              empireData={empireData}
               pulseData={pulseData}
               healthData={healthData}
               transactions={transactions}
@@ -208,7 +208,7 @@ export default function Dashboard() {
                    </div>
                  </div>
                </div>
-               
+
                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                  <div className="space-y-6">
                     <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 ml-2">Content Approval</h3>

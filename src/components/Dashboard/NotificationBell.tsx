@@ -13,7 +13,7 @@ export function NotificationBell() {
 
   return (
     <div className="relative">
-      <button 
+      <button
         id="notification-bell"
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-3 rounded-2xl bg-theme-surface border-2 border-theme hover:border-primary transition-all group shadow-sm"
@@ -45,7 +45,7 @@ export function NotificationBell() {
                     </span>
                   )}
                 </div>
-                <button 
+                <button
                   onClick={markAllAsRead}
                   className="text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-80 transition-colors"
                 >
@@ -64,8 +64,8 @@ export function NotificationBell() {
                 ) : (
                   <div className="divide-y divide-theme">
                     {notifications.map((n) => (
-                      <div 
-                        key={n.id} 
+                      <div
+                        key={n.id}
                         className={cn(
                           "p-5 hover:bg-theme-background transition-colors relative group",
                           !n.read && "bg-primary/5"

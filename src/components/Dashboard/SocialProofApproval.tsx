@@ -64,12 +64,12 @@ export function SocialProofApproval() {
               <div className="flex items-center gap-3">
                 <div className="flex gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
+                    <Star
+                      key={i}
                       className={cn(
                         "w-4 h-4",
                         i < rating.rating ? "fill-amber-400 text-amber-400" : "text-slate-200"
-                      )} 
+                      )}
                     />
                   ))}
                 </div>

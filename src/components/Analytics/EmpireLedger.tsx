@@ -1,10 +1,10 @@
 "use client";
 
 import React from 'react';
-import { 
-  CreditCard, 
-  ArrowUpRight, 
-  ArrowDownRight, 
+import {
+  CreditCard,
+  ArrowUpRight,
+  ArrowDownRight,
   ShieldCheck,
   TrendingUp,
   ChevronRight,
@@ -114,7 +114,7 @@ export function EmpireLedger() {
           </div>
 
           <div className="h-4 bg-theme-surface/10 rounded-full overflow-hidden relative">
-            <div 
+            <div
               className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full transition-all duration-1000"
               style={{ width: `${progress}%` }}
             />

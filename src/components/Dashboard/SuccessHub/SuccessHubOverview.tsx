@@ -22,7 +22,7 @@ interface SuccessHubOverviewProps {
 
 export const SuccessHubOverview = ({ empireData, pulseData, healthData, transactions }: SuccessHubOverviewProps) => {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="space-y-8 md:space-y-16 pb-20"
@@ -30,7 +30,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
       {/* Primary Intelligence Row */}
       <section className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8 items-start">
         <div className="lg:col-span-3">
-          <GrowthTracker 
+          <GrowthTracker
             goalTitle={empireData?.activeGoal || "$1,000 Monthly Revenue"}
             currentValue={healthData?.revenue || 0}
             targetValue={1000}
@@ -55,7 +55,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
       <SocialProofApproval />
 
       {/* Insight Banner */}
-      <motion.div 
+      <motion.div
         whileHover={{ scale: 1.01 }}
         className="bg-gradient-to-r from-primary to-amber-600 rounded-[32px] p-1 shadow-xl shadow-primary/20"
       >
@@ -91,11 +91,11 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
              <ActivityStream />
           </div>
         </div>
-        
+
         <div className="lg:col-span-5 sticky top-8 space-y-10">
           <EmpireLedger health={healthData} />
           <InboxAssistant />
-          
+
           <div className="mt-10 bg-theme-surface rounded-[40px] p-8 text-foreground border border-theme relative overflow-hidden">
              <div className="relative z-10 space-y-6">
                 <div className="flex items-center gap-3">
@@ -107,7 +107,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
                 </p>
                 <div className="flex items-center gap-4">
                    <div className="flex-1 h-2 bg-theme-background rounded-full overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         animate={{ width: ['20%', '85%', '85%'] }}
                         transition={{ duration: 10, repeat: Infinity }}
                         className="h-full bg-primary rounded-full"
@@ -129,7 +129,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
             Empire Performance Sync
           </div>
           <p className="text-muted-foreground text-sm font-medium max-w-lg">
-            Your empire is currently operating at <span className="text-foreground font-bold">98.4% efficiency</span>. 
+            Your empire is currently operating at <span className="text-foreground font-bold">98.4% efficiency</span>.
             All linked systems are synchronized and data-flows are secured.
           </p>
         </div>

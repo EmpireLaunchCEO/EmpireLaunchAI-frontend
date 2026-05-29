@@ -55,7 +55,7 @@ const Cycle = ({ name, status, progress, nextAction }: CycleProps) => (
         <h4 className="font-bold text-foreground truncate">{name}</h4>
         <span className={cn(
           "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded",
-          status === 'active' ? "bg-primary/10 text-primary" : 
+          status === 'active' ? "bg-primary/10 text-primary" :
           status === 'pending-approval' ? "bg-amber-50 text-amber-600" : "bg-theme-background text-muted-foreground"
         )}>
           {status}
@@ -87,22 +87,22 @@ export function AutonomousCyclesStatus() {
       </div>
 
       <div className="space-y-4">
-        <Cycle 
-          name="Etsy Content Factory" 
-          status="active" 
-          progress={65} 
+        <Cycle
+          name="Etsy Content Factory"
+          status="active"
+          progress={65}
           nextAction="Generate listing keywords"
         />
-        <Cycle 
-          name="TikTok Growth Loop" 
-          status="pending-approval" 
-          progress={90} 
+        <Cycle
+          name="TikTok Growth Loop"
+          status="pending-approval"
+          progress={90}
           nextAction="Post #MorningRoutine draft"
         />
-        <Cycle 
-          name="Market Trend Monitor" 
-          status="active" 
-          progress={32} 
+        <Cycle
+          name="Market Trend Monitor"
+          status="active"
+          progress={32}
           nextAction="Scraping competitor updates"
         />
       </div>

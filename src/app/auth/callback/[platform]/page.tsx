@@ -50,7 +50,7 @@ export default function AuthCallback() {
         if (response.ok) {
           setStatus('success');
           setMessage(`${platform.charAt(0).toUpperCase() + platform.slice(1)} connected successfully!`);
-          
+
           // Clear storage
           localStorage.removeItem(`${platform}_auth_state`);
           localStorage.removeItem(`${platform}_code_verifier`);
@@ -100,7 +100,7 @@ export default function AuthCallback() {
             </div>
             <h2 className="text-2xl font-bold text-foreground">Connection Failed</h2>
             <p className="text-muted-foreground font-medium">{message}</p>
-            <button 
+            <button
               onClick={() => router.push('/onboarding')}
               className="mt-4 bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 transition-all"
             >

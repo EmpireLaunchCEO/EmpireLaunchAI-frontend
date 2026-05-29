@@ -67,7 +67,7 @@ export function ProgressConstellation({ currentStep, totalSteps }: ProgressConst
               ) : (
                 <span className="text-sm font-black tracking-tighter">{stepNum}</span>
               )}
-              
+
               {isActive && !isCompleted && (
                 <motion.div
                   className="absolute inset-0 rounded-full bg-primary/40 -z-10"

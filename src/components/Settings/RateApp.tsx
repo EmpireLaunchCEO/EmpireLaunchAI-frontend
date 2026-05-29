@@ -16,7 +16,7 @@ export function RateApp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmittedLoading(true);
-    
+
     try {
       const success = await socialProofService.submitRating(rating, review);
       if (success) {
@@ -31,22 +31,22 @@ export function RateApp() {
 
   if (isSubmitted) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="p-10 rounded-[40px] bg-emerald-50 border-4 border-emerald-100 text-center space-y-6 relative overflow-hidden"
       >
         {rating >= 4 && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: [0.1, 0.3, 0.1] }}
             transition={{ duration: 2, repeat: Infinity }}
             className="absolute inset-0 bg-gradient-to-r from-amber-200/20 via-emerald-200/20 to-amber-200/20"
           />
         )}
-        
+
         <div className="relative z-10">
-          <motion.div 
+          <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
             transition={{ delay: 0.2, type: 'spring' }}
@@ -57,7 +57,7 @@ export function RateApp() {
           <div className="space-y-2">
             <h3 className="text-2xl font-black text-foreground italic">Neural Sync Complete!</h3>
             <p className="text-sm font-bold text-slate-600 max-w-sm mx-auto leading-relaxed">
-              {rating >= 4 
+              {rating >= 4
                 ? "Your 5-star insight has been transmitted. The engineers are celebrating this milestone! 🚀"
                 : "Thank you for the data. We're already optimizing the engine based on your feedback."}
             </p>
@@ -88,13 +88,13 @@ export function RateApp() {
             onClick={() => setRating(star)}
             className="p-2 transition-transform hover:scale-125 active:scale-95"
           >
-            <Star 
+            <Star
               className={cn(
                 "w-10 h-10 transition-colors",
-                (hoveredRating || rating) >= star 
-                  ? "fill-amber-400 text-amber-400" 
+                (hoveredRating || rating) >= star
+                  ? "fill-amber-400 text-amber-400"
                   : "text-slate-200"
-              )} 
+              )}
             />
           </button>
         ))}
@@ -102,7 +102,7 @@ export function RateApp() {
 
       <AnimatePresence>
         {rating > 0 && (
-          <motion.form 
+          <motion.form
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
