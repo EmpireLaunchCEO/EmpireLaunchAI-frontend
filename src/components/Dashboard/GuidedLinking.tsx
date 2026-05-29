@@ -195,7 +195,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                   })}
                 </div>
               ) : (
-                <div className="p-8 text-center text-theme-background0 font-medium">
+                <div className="p-8 text-center text-slate-400 font-medium">
                   No platforms found matching "{searchQuery}"
                 </div>
               )}

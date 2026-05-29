@@ -1,0 +1,42 @@
+
+> EmpireLaunchAI-frontend@4.1.7 build
+> next build
+
+   ▲ Next.js 15.1.0
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+   Generating static pages (0/15) ...
+   Generating static pages (3/15) 
+   Generating static pages (7/15) 
+   Generating static pages (11/15) 
+ ✓ Generating static pages (15/15)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    6.25 kB         151 kB
+├ ○ /_not-found                          979 B           106 kB
+├ ○ /analytics                           10.2 kB         166 kB
+├ ○ /apple-icon.png                      0 B                0 B
+├ ƒ /auth/callback/[platform]            2.13 kB         107 kB
+├ ○ /dashboard                           37.2 kB         209 kB
+├ ○ /design-center                       4.29 kB         172 kB
+├ ○ /empire-center                       6.04 kB         162 kB
+├ ○ /icon.png                            0 B                0 B
+├ ○ /link-center                         6.91 kB         167 kB
+├ ○ /onboarding                          17.6 kB         180 kB
+├ ○ /review                              9.4 kB          165 kB
+└ ○ /settings                            15.8 kB         178 kB
++ First Load JS shared by all            105 kB
+  ├ chunks/4bd1b696-3037c942e96cafd9.js  52.9 kB
+  ├ chunks/517-188fdb04460a9aee.js       50.5 kB
+  └ other shared chunks (total)          1.91 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
