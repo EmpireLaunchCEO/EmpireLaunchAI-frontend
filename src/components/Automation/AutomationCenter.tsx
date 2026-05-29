@@ -3,35 +3,31 @@
 import React, { useState } from 'react';
 import {
   Mail,
-  MessageSquare,
-  ShieldCheck,
-  History,
+  Activity,
   Eye,
   Settings2,
-  Heart,
   Star,
-  Activity,
-  ToggleLeft as Toggle
+  ToggleLeft as Toggle,
+  ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const sentLog = [
   { id: '1', recipient: 'sarah.j@example.com', subject: 'A special thank you from Celestial Journals', date: '10m ago', type: 'Gratitude' },
   { id: '2', recipient: 'mike_p@provider.net', subject: 'How is your Zen Journal doing?', date: '1h ago', type: 'Social Proof' },
-  { id: '3', recipient: 'creativelady@blog.com', subject: 'Your download is ready!', date: '3h ago', type: 'Fulfillment' },
 ];
 
 const flows = [
   {
     id: 'gratitude',
-    name: 'The "Gratitude" Flow',
-    description: 'Triggered 1 hour after activation. A sincere "Thank You" email.',
+    name: 'The "Gratitude" Sequence',
+    description: 'Sent immediately after purchase. Builds trust and sets expectations.',
     status: 'active',
-    icon: Heart,
-    color: 'text-rose-500'
+    icon: Mail,
+    color: 'text-blue-500'
   },
   {
-    id: 'social-proof',
+    id: 'proof',
     name: 'The "Social Proof" Request',
     description: 'Triggered 7 days after activation. Asks for a review on Etsy.',
     status: 'active',
@@ -69,7 +65,6 @@ export function AutomationCenter() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Email Sequences */}
         <div className="space-y-6">
           <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest pl-4">Automated Sequences</h4>
           {flows.map((flow) => (
@@ -84,22 +79,12 @@ export function AutomationCenter() {
                     <p className="text-xs text-muted-foreground mt-1">{flow.description}</p>
                   </div>
                 </div>
-                <span className="bg-green-50 text-green-600 text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest">
-                  Active
-                </span>
+                <span className="bg-green-50 text-green-600 text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest">Active</span>
               </div>
-
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
                   <span className="text-xs font-bold text-slate-400">Tone: {tone < 33 ? 'Professional' : tone < 66 ? 'Balanced' : 'Warm & Personal'}</span>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={tone}
-                    onChange={(e) => setTone(parseInt(e.target.value))}
-                    className="w-32 accent-primary"
-                  />
+                  <input type="range" min="0" max="100" value={tone} onChange={(e) => setTone(parseInt(e.target.value))} className="w-32 accent-primary" />
                 </div>
                 <div className="flex gap-2">
                   <button className="flex-1 bg-theme-background text-foreground py-3 rounded-2xl text-xs font-bold hover:bg-slate-100 transition-all flex items-center justify-center gap-2">
@@ -114,7 +99,6 @@ export function AutomationCenter() {
           ))}
         </div>
 
-        {/* Sent Log & Trust Pulse */}
         <div className="space-y-8">
           <div className="bg-slate-900 rounded-[40px] p-8 text-white space-y-6">
             <div className="flex justify-between items-center">
@@ -124,13 +108,11 @@ export function AutomationCenter() {
               </div>
               <span className="text-xs font-black text-primary uppercase tracking-widest">High Trust</span>
             </div>
-
+            <div className="flex items-baseline gap-1">
               <span className="text-4xl font-black text-white">88</span>
-              <span className="text-white/40 font-bold mb-1">/100</span>
+              <span className="text-white/40 font-bold">/100</span>
             </div>
-            <p className="text-sm text-white/50 leading-relaxed">
-              "Customers love your fast response times and the personalized touch in follow-up emails."
-            </p>
+            <p className="text-sm text-white/50 leading-relaxed">"Customers love your fast response times and the personalized touch."</p>
           </div>
 
           <div className="bg-theme-surface rounded-[40px] border border-theme shadow-sm overflow-hidden flex flex-col">
@@ -156,9 +138,7 @@ export function AutomationCenter() {
                 </div>
               ))}
             </div>
-            <button className="p-4 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors text-center">
-              View Full History
-            </button>
+            <button className="p-4 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors text-center">View Full History</button>
           </div>
         </div>
       </div>

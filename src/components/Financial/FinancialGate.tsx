@@ -5,7 +5,6 @@ import {
   X,
   CreditCard,
   ArrowRight,
-  ShieldCheck,
   AlertCircle,
   TrendingUp,
   ExternalLink
@@ -40,15 +39,11 @@ export function FinancialGate({
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
 
       <div className="bg-theme-surface w-full max-w-md rounded-[32px] shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
-        {/* Header */}
         <div className="p-8 pb-4 flex justify-between items-start">
           <div className="bg-primary/10 p-3 rounded-2xl">
             <CreditCard className="w-6 h-6 text-primary" />
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-full transition-colors"
-          >
+          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
             <X className="w-5 h-5 text-slate-400" />
           </button>
         </div>
@@ -59,7 +54,6 @@ export function FinancialGate({
             Your AI Partner is requesting approval for a {type}. No funds will be moved without your explicit consent.
           </p>
 
-          {/* Transaction Card */}
           <div className="bg-theme-background rounded-2xl p-6 mt-6 border border-theme">
             <div className="flex justify-between items-start mb-4">
               <div>
@@ -72,7 +66,7 @@ export function FinancialGate({
                 </div>
               )}
             </div>
-
+            <div className="space-y-3">
               <div className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shadow-[0_0_5px_rgba(251,191,36,0.5)]" />
                 <p className="text-sm font-medium text-slate-400">{description}</p>
@@ -86,7 +80,6 @@ export function FinancialGate({
             </div>
           </div>
 
-          {/* Security Note */}
           <div className="mt-6 space-y-4">
             {type === 'subscription' && (
               <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl">
@@ -95,7 +88,7 @@ export function FinancialGate({
                   <div>
                     <h4 className="text-xs font-black text-foreground uppercase tracking-widest">Billing Transparency</h4>
                     <p className="text-[11px] text-muted-foreground leading-relaxed mt-1">
-                      We secure your monthly dues automatically from your business earnings. If your empire hasn't generated profit yet, dues are charged to your primary card until you're in the green.
+                      We secure your monthly dues automatically from your business earnings.
                     </p>
                   </div>
                 </div>
@@ -104,36 +97,25 @@ export function FinancialGate({
             <SecureIndicator />
           </div>
 
-          {/* Warning */}
           <div className="mt-6 flex gap-3 p-4 bg-amber-50 border border-amber-100 rounded-2xl">
             <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
             <p className="text-xs text-amber-800 leading-relaxed">
-              <strong>Wait!</strong> Always verify the recipient and amount. EmpireLaunchAI will never ask for your password in this popup.
+              <strong>Wait!</strong> Always verify the recipient. EmpireLaunchAI will never ask for your password here.
             </p>
           </div>
 
-          {/* Actions */}
           <div className="mt-8 grid grid-cols-2 gap-4">
-            <button
-              onClick={onClose}
-              className="px-6 py-3.5 rounded-2xl text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
-            >
-              Decline
-            </button>
-            <button
-              onClick={onApprove}
-              className="px-6 py-3.5 rounded-2xl text-sm font-bold text-slate-900 bg-primary hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-200/20"
-            >
+            <button onClick={onClose} className="px-6 py-3.5 rounded-2xl text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">Decline</button>
+            <button onClick={onApprove} className="px-6 py-3.5 rounded-2xl text-sm font-bold text-slate-900 bg-primary hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-200/20">
               Approve <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
           <button className="w-full mt-4 flex items-center justify-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors">
-            View full security details <ExternalLink className="w-3 h-3" />
+            View security details <ExternalLink className="w-3 h-3" />
           </button>
         </div>
       </div>
-    </div>
     </div>
   );
 }
