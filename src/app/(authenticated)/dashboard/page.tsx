@@ -19,7 +19,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService } from '@/lib/api-service';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
-import { useSearchParams } from 'next/navigation';
 
 interface Goal {
   id: string;
