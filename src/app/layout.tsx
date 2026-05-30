@@ -38,7 +38,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var currentVersion = '4.6.1-STRICT-PRICE';
+                  var currentVersion = '4.6.2-TOUR-SMART-SYNC';
                   
                   // Check server version
                   fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })

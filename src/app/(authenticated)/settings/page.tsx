@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { 
   User, 
   Share2, 
@@ -20,7 +21,8 @@ import {
   ExternalLink,
   LifeBuoy,
   Mail,
-  ShieldCheck
+  ShieldCheck,
+  AlertCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
@@ -122,9 +124,17 @@ const SupportHub = () => (
 );
 
 export default function SettingsPage() {
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('link-center');
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
   const [theme, setTheme] = useState('blue');
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   const tabs = [
     { id: 'link-center', name: 'Link Center', icon: Share2 },
@@ -156,6 +166,7 @@ export default function SettingsPage() {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
+                id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all whitespace-nowrap",
@@ -250,6 +261,109 @@ export default function SettingsPage() {
                         </div>
                         <span className="font-black text-[10px] uppercase tracking-widest text-slate-600">{p}</span>
                       </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'ai-intelligence' && (
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                      <Zap className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-foreground tracking-tight uppercase italic">AI Intelligence Calibration</h3>
+                      <p className="text-sm font-medium text-muted-foreground">Define how much control you hand over to your Empire Engine.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button 
+                      id="mode-copilot"
+                      className="p-8 rounded-[32px] border-4 border-primary bg-primary/5 text-left space-y-4 group relative overflow-hidden"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-lg">
+                          <Bot className="w-6 h-6" />
+                        </div>
+                        <CheckCircle2 className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <h4 className="text-xl font-black text-foreground uppercase italic">Co-Pilot Mode</h4>
+                        <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-tight italic">Manual Approval Required</p>
+                      </div>
+                      <p className="text-sm text-slate-500 leading-relaxed">
+                        I'll draft everything—posts, descriptions, and price syncs—but nothing goes live until you click 'Approve'.
+                      </p>
+                    </button>
+
+                    <button 
+                      id="mode-autopilot"
+                      className="p-8 rounded-[32px] border-2 border-theme bg-theme-background text-left space-y-4 group hover:border-primary transition-all grayscale hover:grayscale-0 opacity-60 hover:opacity-100"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white">
+                          <Zap className="w-6 h-6" />
+                        </div>
+                      </div>
+                      <div>
+                        <h4 className="text-xl font-black text-foreground uppercase italic">Auto-Pilot Mode</h4>
+                        <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-tight italic">Full Autonomous Execution</p>
+                      </div>
+                      <p className="text-sm text-slate-500 leading-relaxed">
+                        I'll autonomously manage daily operations 24/7. You only intervene for major financial pivots.
+                      </p>
+                      <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                         <Stars size={10} />
+                         Recommended for Growth
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className="p-6 bg-slate-900 rounded-[32px] border border-slate-800 flex items-start gap-4">
+                    <AlertCircle className="w-6 h-6 text-primary mt-1 shrink-0" />
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-black text-white uppercase tracking-widest">Autonomous Safety</h4>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-relaxed">
+                        Even in Auto-Pilot, I will NEVER initiate new subscriptions or spend your money without a one-time approval for the specific transaction.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'notifications' && (
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                      <Bell className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-foreground tracking-tight uppercase italic">Intelligence Pulse</h3>
+                      <p className="text-sm font-medium text-muted-foreground">Configure how your Empire alerts you of critical events.</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {[
+                      { id: 'sales', name: 'New Revenue Milestones', desc: 'Notify when customers click your social "Buy" buttons.' },
+                      { id: 'content', name: 'Content Ready for Review', desc: 'Alert when a high-converting video is drafted and ready.' },
+                      { id: 'trends', name: 'Market Pivot Detected', desc: 'AI found a new trend your empire should capitalize on.' }
+                    ].map((n) => (
+                      <div key={n.id} className="flex items-center justify-between p-6 bg-theme-background border-2 border-theme rounded-3xl group hover:border-blue-100 transition-all">
+                        <div className="space-y-1">
+                          <h4 className="font-bold text-foreground">{n.name}</h4>
+                          <p className="text-xs text-muted-foreground">{n.desc}</p>
+                        </div>
+                        <div className="w-14 h-8 bg-blue-600 rounded-full flex items-center px-1 shadow-inner relative">
+                           <div className="w-6 h-6 bg-white rounded-full shadow-lg absolute right-1" />
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>

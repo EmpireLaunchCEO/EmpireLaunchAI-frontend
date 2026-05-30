@@ -16,7 +16,7 @@ import {
   Zap,
   Bell
 } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface TourStep {
   title: string;
@@ -33,6 +33,7 @@ export function OnboardingTour() {
   const [pointerY, setPointerY] = useState<number | null>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const tourSteps: TourStep[] = [
     {
@@ -73,35 +74,35 @@ export function OnboardingTour() {
       description: "Within Settings, the Link Center tab lets you perform the deep API handshakes with Etsy, TikTok, and more.",
       target: "tab-link-center",
       icon: PlusCircle,
-      page: "/settings"
+      page: "/settings?tab=link-center"
     },
     {
       title: "AI Intelligence",
       description: "This is the brain of the operation. Here you decide how much control I have.",
       target: "tab-ai-intelligence",
       icon: Zap,
-      page: "/settings"
+      page: "/settings?tab=ai-intelligence"
     },
     {
       title: "Co-Pilot Mode",
       description: "In Co-Pilot, I'll do the heavy lifting but I'll always ask for your final approval before taking action.",
       target: "mode-copilot",
       icon: Bot,
-      page: "/settings"
+      page: "/settings?tab=ai-intelligence"
     },
     {
       title: "Auto-Pilot Mode",
       description: "Switch to Auto-Pilot for maximum growth. I'll execute strategies and manage your empire autonomously 24/7.",
       target: "mode-autopilot",
       icon: Zap,
-      page: "/settings"
+      page: "/settings?tab=ai-intelligence"
     },
     {
       title: "Notification Center",
       description: "Configure your alerts here. We can notify you of new sales or when the AI has content ready for your final look.",
       target: "tab-notifications",
       icon: SettingsIcon,
-      page: "/settings"
+      page: "/settings?tab=notifications"
     },
     {
       title: "Real-Time Alerts",
@@ -132,11 +133,14 @@ export function OnboardingTour() {
             if (step.target?.startsWith('nav-')) {
               // Points to bottom nav, place bubble well above and arrow pointing down
               setPointerY(rect.top - 40);
+            } else if (step.target?.startsWith('tab-') || step.target?.startsWith('mode-')) {
+              // Points to settings tabs or modes (usually top or middle), place arrow pointing up
+              setPointerY(rect.bottom + 20);
             } else if (step.target === 'notification-bell') {
               // Points to notification bell (top right), place arrow pointing up
               setPointerY(rect.bottom + 20);
             } else {
-              // Points to settings tabs, place arrow pointing up
+              // Fallback
               setPointerY(rect.bottom + 20);
             }
           }
@@ -150,7 +154,7 @@ export function OnboardingTour() {
     updatePointer();
     window.addEventListener('resize', updatePointer);
     return () => window.removeEventListener('resize', updatePointer);
-  }, [currentStep, pathname]);
+  }, [currentStep, pathname, searchParams]);
 
   useEffect(() => {
     const hasSeenTour = localStorage.getItem('empire_tour_v419');

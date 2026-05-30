@@ -1,6 +1,6 @@
 {
-  "version": "4.6.1-STRICT-PRICE",
-  "deploy_id": "strict_sync_9901",
+  "version": "4.6.2-TOUR-SMART-SYNC",
+  "deploy_id": "tour_sync_2219",
   "critical": true,
   "cache_bust": true
 }
