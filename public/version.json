@@ -1,6 +1,6 @@
 {
-  "version": "4.6.4-MOBILE-SYNC",
-  "deploy_id": "mobile_sync_2245",
+  "version": "4.6.5-STABLE",
+  "deploy_id": "stable_fix_2250",
   "critical": true,
   "cache_bust": true
 }
