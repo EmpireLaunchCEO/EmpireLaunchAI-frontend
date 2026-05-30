@@ -72,7 +72,7 @@ export default function EmpireCenterPage() {
       </header>
 
       {/* Primary Tabs */}
-      <div className="flex bg-slate-100 p-1.5 rounded-[24px] w-fit overflow-x-auto no-scrollbar max-w-full">
+      <div className="flex bg-slate-100 p-1.5 rounded-[24px] w-full overflow-x-auto no-scrollbar border-2 border-theme">
         {[
           { id: 'duties', label: 'Duties', icon: Zap },
           { id: 'history', label: 'Posts', icon: History },
@@ -83,7 +83,7 @@ export default function EmpireCenterPage() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
             className={cn(
-              "flex items-center gap-2 px-6 py-3 rounded-[20px] font-bold text-sm transition-all",
+              "flex items-center gap-2 px-6 py-3 rounded-[20px] font-bold text-sm transition-all shrink-0",
               activeTab === tab.id
                 ? "bg-theme-surface text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-slate-700"

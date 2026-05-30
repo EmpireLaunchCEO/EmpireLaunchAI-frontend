@@ -1,6 +1,11 @@
 {
-  "version": "4.7.7-EXPENSE-LEDGER",
-  "deploy_id": "expense_ledger_2024",
-  "critical": true,
-  "cache_bust": true
+  "version": "4.7.8",
+  "buildId": "launch-v4-7-8",
+  "changelog": [
+    "Strict global text color enforcement (Theme primary on all text)",
+    "Fixed Settings preview dots (Static borders)",
+    "Corrected Empire Center horizontal scroll overflow",
+    "Stabilized vertical scrolling for Home and EC pages",
+    "Improved Electric Blue theme definition"
+  ]
 }

@@ -109,7 +109,8 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       <motion.div
         drag={isAtTop ? "y" : false}
         dragConstraints={{ top: 0, bottom: 400 }}
-        dragElastic={0.4}
+        dragElastic={0.1}
+        dragDirectionLock
         onDragEnd={handleDragEnd}
         animate={controls}
         style={{ y }}

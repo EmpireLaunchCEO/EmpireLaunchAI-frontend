@@ -502,11 +502,11 @@ export default function SettingsPage() {
                         <div className="flex items-center justify-between">
                           <div className="flex gap-2">
                             <div 
-                              className="w-6 h-6 rounded-full border border-white/10" 
+                              className="w-6 h-6 rounded-full border static-border" 
                               style={{ backgroundColor: scheme.primary }} 
                             />
                             <div 
-                              className="w-6 h-6 rounded-full border border-white/10" 
+                              className="w-6 h-6 rounded-full border static-border" 
                               style={{ backgroundColor: scheme.secondary }} 
                             />
                           </div>

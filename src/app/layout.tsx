@@ -28,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="canonical" href="https://empire-launch-ai-frontend.vercel.app" />
         <link rel="manifest" href="/manifest.json?v=500" />
         <link rel="apple-touch-icon" href="/branded-globe.png?v=500" />
         <link rel="icon" href="/branded-globe.png?v=500" />

@@ -58,40 +58,38 @@ body {
 }
 
 /* GLOBAL TWO-TONE OVERRIDE */
+
+/* Every piece of text should use the primary color */
+*, p, span, h1, h2, h3, h4, h5, h6, label, input, button, textarea {
+  color: var(--primary) !important;
+}
+
+/* EXCEPT for text inside elements that have a primary background or specific overrides */
+.bg-primary *, .bg-blue-600 *, .bg-emerald-600 *, .bg-electric-blue *, 
+[class*="bg-slate-900"] *, [class*="bg-slate-800"] *, 
+.bg-primary, .bg-blue-600, .bg-emerald-600, .bg-electric-blue,
+.text-white, .text-white *, .bg-emerald-600, .bg-emerald-600 * {
+  color: var(--foreground) !important;
+}
+
+/* Icons should generally follow the primary color unless specified */
+svg {
+  color: inherit !important;
+}
+
+/* Specific exclusions for readability */
+.text-muted-foreground, .text-slate-400, .text-slate-500 {
+  opacity: 0.8;
+}
+
 /* Every box outline should use the border color */
 .border, .border-2, .border-4, .border-theme {
   border-color: var(--surface-border) !important;
 }
 
-/* Every piece of text should use the primary color */
-p, span, h1, h2, h3, h4, h5, h6, label, input, button {
-  color: var(--primary) !important;
-}
-
-/* EXCEPT for text inside elements that have a primary background */
-.bg-primary p, .bg-primary span, .bg-primary h1, .bg-primary h2, .bg-primary h3, .bg-primary h4, .bg-primary h5, .bg-primary h6, .bg-primary label,
-.bg-blue-600 p, .bg-blue-600 span, .bg-blue-600 h1, .bg-blue-600 h2, .bg-blue-600 h3, .bg-blue-600 h4, .bg-blue-600 h5, .bg-blue-600 h6, .bg-blue-600 label,
-.bg-emerald-600 p, .bg-emerald-600 span, .bg-emerald-600 h1, .bg-emerald-600 h2, .bg-emerald-600 h3, .bg-emerald-600 h4, .bg-emerald-600 h5, .bg-emerald-600 label,
-[class*="bg-slate-900"] p, [class*="bg-slate-900"] span, [class*="bg-slate-900"] h1, [class*="bg-slate-900"] h2, [class*="bg-slate-900"] h3, [class*="bg-slate-900"] h4, [class*="bg-slate-900"] h5, [class*="bg-slate-900"] h6, [class*="bg-slate-900"] label {
-  color: var(--foreground) !important;
-}
-
-/* And special case for the checkout button which needs to be readable */
-button.bg-slate-900 {
-  color: var(--foreground) !important;
-}
-
-/* Primary Backgrounds */
-.bg-primary, .bg-blue-600, .bg-emerald-600, .bg-electric-blue {
-  background-color: var(--primary) !important;
-}
-
-/* THEME ACCENT COLOR FOR TEXT ON EVERYTHING (as requested) */
-/* The user said: "one color should be main background, the other color should be the outline of boxes, and ALL TEXT ON EVERYTHING" */
-/* I will interpret "other color" as the Primary/Accent color */
-
-[data-theme] p, [data-theme] span, [data-theme] h1, [data-theme] h2, [data-theme] h3, [data-theme] h4, [data-theme] h5, [data-theme] h6, [data-theme] label, [data-theme] div:not(.bg-primary) {
-  /* Only apply if not inside a primary colored button/box */
+/* Static borders for theme dots in settings */
+.static-border {
+  border-color: rgba(255,255,255,0.1) !important;
 }
 
 /* Re-applying core styles */
