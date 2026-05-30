@@ -1,6 +1,6 @@
 {
-  "version": "4.6.6-ULTRA-STABLE",
-  "deploy_id": "ultra_stable_2255",
+  "version": "4.6.7-NUCLEAR-STABILITY",
+  "deploy_id": "nuclear_2259",
   "critical": true,
   "cache_bust": true
 }

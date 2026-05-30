@@ -38,44 +38,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var currentVersion = '4.6.6-ULTRA-STABLE';
-                  
-                  // Check server version
-                  fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
-                    .then(function(r) { return r.json(); })
-                    .then(function(data) {
-                      if (data.version && data.version !== currentVersion) {
-                        var lastReload = localStorage.getItem('last_version_reload');
-                        if (lastReload !== data.version) {
-                          localStorage.setItem('last_version_reload', data.version);
-                          localStorage.setItem('app_version', data.version);
-                          if ('serviceWorker' in navigator) {
-                            navigator.serviceWorker.getRegistrations().then(function(regs) {
-                              for(var r of regs) r.unregister();
-                            });
-                          }
-                          window.location.reload(true);
-                        }
-                      }
-                    }).catch(function() {});
-
-                  var installedVersion = localStorage.getItem('app_version');
-                  if (installedVersion !== currentVersion) {
-                    localStorage.setItem('app_version', currentVersion);
-                    window.location.reload(true);
-                  }
-
-                  // Register Service Worker
-                  if ('serviceWorker' in navigator) {
-                    window.addEventListener('load', function() {
-                      navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                      }, function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                      });
-                    });
-                  }
-
+                  // VERSION CHECK DISABLED TO PREVENT REFRESH LOOPS
                   var onboarded = localStorage.getItem('isOnboarded');
                   var path = window.location.pathname;
                   if (onboarded === 'true' && (path === '/' || path === '/onboarding')) {
