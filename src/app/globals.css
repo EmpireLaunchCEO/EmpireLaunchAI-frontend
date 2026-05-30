@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  /* ELECTRIC EMPIRE DEFAULT - Neon Cyan/Deep Violet Vibe */
-  --primary-rgb: 34, 211, 238; /* Neon Cyan */
+  /* ELECTRIC EMPIRE DEFAULT - Pure Neon Blue and Deep Violet */
+  --primary-rgb: 0, 112, 255; /* Electric Blue (No Teal) */
   --background-rgb: 10, 5, 25; /* Near Black Violet */
   --foreground-rgb: 255, 255, 255; /* Pure White */
   --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
-  --surface-border-rgb: 139, 92, 246; /* Violet 500 */
+  --surface-border-rgb: 112, 0, 255; /* Electric Purple (No Teal) */
   
   --background: rgb(var(--background-rgb));
   --foreground: rgb(var(--foreground-rgb));
@@ -47,7 +47,7 @@ h1, h2, h3 {
 }
 
 .text-gradient-electric {
-  background: linear-gradient(to right, #00f2ff, #7000ff, #00f2ff);
+  background: linear-gradient(to right, #0070ff, #7000ff, #0070ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

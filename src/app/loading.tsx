@@ -8,8 +8,8 @@ export default function RootLoading() {
   return (
     <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6">
       <div className="relative">
-        <div className="absolute inset-0 bg-cyan-500/20 blur-[60px] animate-pulse" />
-        <div className="absolute inset-0 bg-violet-500/20 blur-[60px] animate-pulse delay-700" />
+        <div className="absolute inset-0 bg-blue-600/20 blur-[60px] animate-pulse" />
+        <div className="absolute inset-0 bg-purple-600/20 blur-[60px] animate-pulse delay-700" />
         <BrandedGlobe size="xl" className="relative z-10 shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
       </div>
 
