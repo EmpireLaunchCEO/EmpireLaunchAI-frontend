@@ -28,17 +28,34 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=4.6.0" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=4.6.0" />
-        <link rel="icon" href="/branded-globe.png?v=4.6.0" />
+        <link rel="manifest" href="/manifest.json?v=468" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=468" />
+        <link rel="icon" href="/branded-globe.png?v=468" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  // VERSION CHECK DISABLED TO PREVENT REFRESH LOOPS
+                  // 1. FORCE KILL ALL SERVICE WORKERS
+                  if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(function(regs) {
+                      for(var r of regs) { r.unregister(); }
+                    });
+                  }
+                  
+                  // 2. FORCE CLEAR APP CACHE
+                  if ('caches' in window) {
+                    caches.keys().then(function(names) {
+                      for (var name of names) { caches.delete(name); }
+                    });
+                  }
+
+                  // 3. CLEAN REDIRECT
                   var onboarded = localStorage.getItem('isOnboarded');
                   var path = window.location.pathname;
                   if (onboarded === 'true' && (path === '/' || path === '/onboarding')) {
