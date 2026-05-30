@@ -19,18 +19,18 @@
 
 [data-theme='emerald'] {
   --primary-rgb: 16, 185, 129; /* Growth Green */
-  --background-rgb: 10, 5, 25; /* Standardized Empire Dark */
-  --foreground-rgb: 255, 255, 255; /* Pure White */
-  --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
-  --surface-border-rgb: 16, 185, 129; /* Growth Green */
+  --background-rgb: 10, 5, 25;
+  --foreground-rgb: 255, 255, 255;
+  --surface-rgb: 20, 10, 45;
+  --surface-border-rgb: 16, 185, 129;
 }
 
 [data-theme='pink'] {
   --primary-rgb: 255, 0, 153; /* Electric Pink */
-  --background-rgb: 10, 5, 25; /* Standardized Empire Dark */
-  --foreground-rgb: 255, 255, 255; /* Pure White */
-  --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
-  --surface-border-rgb: 255, 0, 153; /* Electric Pink */
+  --background-rgb: 10, 5, 25;
+  --foreground-rgb: 255, 255, 255;
+  --surface-rgb: 20, 10, 45;
+  --surface-border-rgb: 255, 0, 153;
 }
 
 [data-theme='teal'] {
@@ -68,7 +68,7 @@ body {
 .bg-primary *, .bg-blue-600 *, .bg-emerald-600 *, .bg-electric-blue *, 
 [class*="bg-slate-900"] *, [class*="bg-slate-800"] *, 
 .bg-primary, .bg-blue-600, .bg-emerald-600, .bg-electric-blue,
-.text-white, .text-white *, .bg-emerald-600, .bg-emerald-600 * {
+.text-white, .text-white *, .bg-emerald-500, .bg-emerald-500 *, .bg-emerald-600, .bg-emerald-600 * {
   color: var(--foreground) !important;
 }
 
@@ -82,14 +82,19 @@ svg {
   opacity: 0.8;
 }
 
-/* Every box outline should use the border color */
-.border, .border-2, .border-4, .border-theme {
+/* Every box outline should use the border color - REMOVED generic .border from here to avoid forcing theme color on everything */
+.border-theme {
   border-color: var(--surface-border) !important;
 }
 
-/* Static borders for theme dots in settings */
+/* Force specific elements to use the theme border */
+.bg-theme-surface {
+  border-color: var(--surface-border) !important;
+}
+
+/* Static borders for theme dots in settings - Force these to be neutral */
 .static-border {
-  border-color: rgba(255,255,255,0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Re-applying core styles */
@@ -155,8 +160,4 @@ button {
 
 [class*="text-slate-900"], [class*="text-black"] {
   color: var(--foreground) !important;
-}
-
-[class*="border-slate-100"], [class*="border-slate-200"], [class*="border-slate-50"] {
-  border-color: var(--surface-border) !important;
 }
