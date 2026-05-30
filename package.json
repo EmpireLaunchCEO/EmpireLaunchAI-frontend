@@ -1,6 +1,6 @@
 {
   "name": "EmpireLaunchAI-frontend",
-  "version": "4.6.2-TOUR-SMART-SYNC",
+  "version": "4.7.0-ELECTRIC-REVENUE",
   "private": true,
   "scripts": {
     "dev": "next dev",

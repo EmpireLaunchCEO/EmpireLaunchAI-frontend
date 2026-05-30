@@ -1,6 +1,6 @@
 {
-  "version": "4.6.9-ROCK-SOLID",
-  "deploy_id": "rock_solid_2320",
+  "version": "4.7.0-ELECTRIC-REVENUE",
+  "deploy_id": "electric_rev_2024",
   "critical": true,
   "cache_bust": true
 }

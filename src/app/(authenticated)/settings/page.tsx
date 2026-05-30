@@ -26,8 +26,55 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
+import { useEmpire } from '@/lib/EmpireContext';
+import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
+  if (platform.toLowerCase() === 'stripe') {
+    return (
+      <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
+        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-emerald-600 shadow-2xl space-y-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/5 blur-[80px] -z-10" />
+          <div className="flex items-center justify-between border-b border-theme pb-6">
+            <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
+              <ShieldCheck className="w-6 h-6 text-emerald-600" /> Connecting Stripe Gateway
+            </h3>
+            <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+              <X className="w-6 h-6 text-slate-400" />
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-3">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400">Publishable Key</label>
+              <input id="stripe-pub-key" type="text" placeholder="pk_live_..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-emerald-600 outline-none transition-all font-bold text-lg" />
+            </div>
+            <div className="space-y-3">
+              <label className="text-xs font-black uppercase tracking-widest text-slate-400">Secret Key</label>
+              <input id="stripe-sec-key" type="password" placeholder="sk_live_..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-emerald-600 outline-none transition-all font-bold text-lg" />
+            </div>
+          </div>
+          <div className="flex justify-end gap-4 pt-4">
+            <button onClick={onClose} className="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
+            <button 
+              onClick={() => {
+                const pub = (document.getElementById('stripe-pub-key') as HTMLInputElement)?.value;
+                const sec = (document.getElementById('stripe-sec-key') as HTMLInputElement)?.value;
+                if (pub && sec) {
+                  localStorage.setItem('empire_vault_stripe', JSON.stringify({ publishableKey: pub, secretKey: sec }));
+                  window.dispatchEvent(new CustomEvent('empire:vault-updated'));
+                  onClose();
+                }
+              }}
+              className="px-10 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200"
+            >
+              Link Stripe Account
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (platform.toLowerCase() === 'etsy') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
@@ -127,7 +174,8 @@ export default function SettingsPage() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('link-center');
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
-  const [theme, setTheme] = useState('blue');
+  const { theme, setTheme, aiMode, setAiMode } = useEmpire();
+  const { isLinked: isStripeLinked } = useStripeStatus();
 
   useEffect(() => {
     const handleSwitchTab = (e: any) => {
@@ -151,10 +199,6 @@ export default function SettingsPage() {
     return () => window.removeEventListener('empire:switch-tab', handleSwitchTab);
   }, []);
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
   const tabs = [
     { id: 'link-center', name: 'Link Center', icon: Share2 },
     { id: 'financials', name: 'Financials', icon: CreditCard },
@@ -166,8 +210,10 @@ export default function SettingsPage() {
   ];
 
   const colorSchemes = [
-    { id: 'blue', name: 'Electric Empire', primary: 'bg-blue-600', secondary: 'bg-indigo-900', description: 'The standard neon high-contrast look.' },
-    { id: 'emerald', name: 'Growth Green', primary: 'bg-emerald-600', secondary: 'bg-slate-900', description: 'Focused on clarity and profitability.' }
+    { id: 'blue', name: 'Electric Empire', primary: 'bg-blue-600', secondary: 'bg-[#140a2d]', description: 'The standard neon high-contrast look.' },
+    { id: 'emerald', name: 'Growth Green', primary: 'bg-emerald-600', secondary: 'bg-[#140a2d]', description: 'Focused on clarity and profitability.' },
+    { id: 'pink', name: 'Electric Pink', primary: 'bg-[#ff0099]', secondary: 'bg-[#140a2d]', description: 'High-energy vibrant neon aesthetic.' },
+    { id: 'teal', name: 'Electric Teal', primary: 'bg-[#00ffc8]', secondary: 'bg-[#140a2d]', description: 'Cybernetic and fresh digital appearance.' }
   ];
 
   return (
@@ -233,15 +279,31 @@ export default function SettingsPage() {
                         <Building2 className="w-5 h-5 text-primary" />
                         <h4 className="font-black text-white uppercase italic tracking-wider">Gateway Configuration</h4>
                       </div>
-                      <span className="px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-[8px] font-black uppercase">Pending Setup</span>
+                      <span className={cn(
+                        "px-3 py-1 rounded-full text-[8px] font-black uppercase",
+                        isStripeLinked ? "bg-emerald-500/10 text-emerald-500" : "bg-amber-500/10 text-amber-500"
+                      )}>
+                        {isStripeLinked ? "Connected & Live" : "Pending Setup"}
+                      </span>
                     </div>
                     
                     <p className="text-xs text-slate-400 font-medium leading-relaxed">
-                      "To enable 'Buy' buttons on social media and automated invoicing, you must link your payout account. All transactions are safeguarded with hardware-level encryption."
+                      {isStripeLinked 
+                        ? "Your Stripe account is successfully linked. All 'Buy' buttons are now active and routing funds directly to your verified bank account."
+                        : "To enable 'Buy' buttons on social media and automated invoicing, you must link your payout account. All transactions are safeguarded with hardware-level encryption."
+                      }
                     </p>
 
-                    <button className="w-full py-5 bg-primary text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-white transition-all shadow-xl shadow-amber-900/20">
-                      Setup Payout Gateway
+                    <button 
+                      onClick={() => setActiveTab('link-center')}
+                      className={cn(
+                        "w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl",
+                        isStripeLinked 
+                          ? "bg-white/10 text-white hover:bg-white/20 shadow-none" 
+                          : "bg-primary text-slate-900 hover:bg-white shadow-amber-900/20"
+                      )}
+                    >
+                      {isStripeLinked ? "Manage Payout Gateway" : "Setup Payout Gateway"}
                     </button>
                   </div>
 
@@ -273,12 +335,28 @@ export default function SettingsPage() {
                     </div>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {['Etsy', 'TikTok', 'Instagram', 'YouTube', 'Facebook', 'Gmail', 'Fiverr'].map((p) => (
-                      <button key={p} onClick={() => setActivePlatform(p)} className="p-6 rounded-[32px] border-2 border-theme bg-theme-background hover:border-blue-600 transition-all flex flex-col items-center gap-3 group">
-                        <div className="w-12 h-12 rounded-2xl bg-theme-surface flex items-center justify-center group-hover:bg-blue-50 transition-colors">
-                          <Bot className="w-6 h-6 text-slate-400 group-hover:text-blue-600" />
+                    {['Etsy', 'TikTok', 'Instagram', 'YouTube', 'Facebook', 'Gmail', 'Fiverr', 'Stripe'].map((p) => (
+                      <button 
+                        key={p} 
+                        onClick={() => setActivePlatform(p)} 
+                        className={cn(
+                          "p-6 rounded-[32px] border-2 transition-all flex flex-col items-center gap-3 group",
+                          p === 'Stripe' && isStripeLinked ? "border-emerald-600 bg-emerald-50/50" : "border-theme bg-theme-background hover:border-blue-600"
+                        )}
+                      >
+                        <div className={cn(
+                          "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors",
+                          p === 'Stripe' && isStripeLinked ? "bg-emerald-100" : "bg-theme-surface group-hover:bg-blue-50"
+                        )}>
+                          {p === 'Stripe' && isStripeLinked 
+                            ? <ShieldCheck className="w-6 h-6 text-emerald-600" />
+                            : <Bot className={cn("w-6 h-6 transition-colors", p === 'Stripe' && isStripeLinked ? "text-emerald-600" : "text-slate-400 group-hover:text-blue-600")} />
+                          }
                         </div>
-                        <span className="font-black text-[10px] uppercase tracking-widest text-slate-600">{p}</span>
+                        <span className={cn(
+                          "font-black text-[10px] uppercase tracking-widest",
+                          p === 'Stripe' && isStripeLinked ? "text-emerald-700" : "text-slate-600"
+                        )}>{p}</span>
                       </button>
                     ))}
                   </div>
@@ -302,13 +380,17 @@ export default function SettingsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <button 
                       id="mode-copilot"
-                      className="p-8 rounded-[32px] border-4 border-primary bg-primary/5 text-left space-y-4 group relative overflow-hidden"
+                      onClick={() => setAiMode('co-pilot')}
+                      className={cn(
+                        "p-8 rounded-[32px] border-4 text-left space-y-4 group relative overflow-hidden transition-all",
+                        aiMode === 'co-pilot' ? "border-primary bg-primary/5" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
+                      )}
                     >
                       <div className="flex items-center justify-between">
                         <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-lg">
                           <Bot className="w-6 h-6" />
                         </div>
-                        <CheckCircle2 className="w-6 h-6 text-primary" />
+                        {aiMode === 'co-pilot' && <CheckCircle2 className="w-6 h-6 text-primary" />}
                       </div>
                       <div>
                         <h4 className="text-xl font-black text-foreground uppercase italic">Co-Pilot Mode</h4>
@@ -321,12 +403,17 @@ export default function SettingsPage() {
 
                     <button 
                       id="mode-autopilot"
-                      className="p-8 rounded-[32px] border-2 border-theme bg-theme-background text-left space-y-4 group hover:border-primary transition-all grayscale hover:grayscale-0 opacity-60 hover:opacity-100"
+                      onClick={() => setAiMode('empire')}
+                      className={cn(
+                        "p-8 rounded-[32px] border-4 text-left space-y-4 group relative overflow-hidden transition-all",
+                        aiMode === 'empire' ? "border-primary bg-primary/5" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
+                      )}
                     >
                       <div className="flex items-center justify-between">
                         <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white">
                           <Zap className="w-6 h-6" />
                         </div>
+                        {aiMode === 'empire' && <CheckCircle2 className="w-6 h-6 text-primary" />}
                       </div>
                       <div>
                         <h4 className="text-xl font-black text-foreground uppercase italic">Auto-Pilot Mode</h4>
@@ -403,17 +490,24 @@ export default function SettingsPage() {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {colorSchemes.map((scheme) => (
-                      <button key={scheme.id} onClick={() => setTheme(scheme.id)} className={cn("p-6 rounded-[32px] border-4 text-left transition-all space-y-4 group", theme === scheme.id ? "border-blue-600 bg-blue-50" : "border-theme bg-theme-background hover:border-slate-200")}>
+                      <button 
+                        key={scheme.id} 
+                        onClick={() => setTheme(scheme.id)} 
+                        className={cn(
+                          "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 group", 
+                          theme === scheme.id ? "border-primary bg-primary/5" : "border-theme bg-theme-background hover:border-primary/10"
+                        )}
+                      >
                         <div className="flex items-center justify-between">
                           <div className="flex gap-2">
                             <div className={cn("w-6 h-6 rounded-full", scheme.primary)} />
                             <div className={cn("w-6 h-6 rounded-full", scheme.secondary)} />
                           </div>
-                          {theme === scheme.id && <CheckCircle2 className="w-6 h-6 text-blue-600" />}
+                          {theme === scheme.id && <CheckCircle2 className="w-6 h-6 text-primary" />}
                         </div>
                         <div>
-                          <h4 className="text-lg font-black text-foreground">{scheme.name}</h4>
-                          <p className="text-xs font-bold text-muted-foreground">{scheme.description}</p>
+                          <h4 className="text-lg font-black text-foreground uppercase italic">{scheme.name}</h4>
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-tight italic">{scheme.description}</p>
                         </div>
                       </button>
                     ))}

@@ -19,10 +19,26 @@
 
 [data-theme='emerald'] {
   --primary-rgb: 16, 185, 129; /* Growth Green */
-  --background-rgb: 15, 23, 42; /* Slate 900 */
+  --background-rgb: 10, 5, 25; /* Standardized Empire Dark */
   --foreground-rgb: 255, 255, 255; /* Pure White */
-  --surface-rgb: 30, 41, 59; /* Slate 800 */
+  --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
   --surface-border-rgb: 16, 185, 129; /* Growth Green */
+}
+
+[data-theme='pink'] {
+  --primary-rgb: 255, 0, 153; /* Electric Pink */
+  --background-rgb: 10, 5, 25; /* Standardized Empire Dark */
+  --foreground-rgb: 255, 255, 255; /* Pure White */
+  --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
+  --surface-border-rgb: 255, 0, 153; /* Electric Pink */
+}
+
+[data-theme='teal'] {
+  --primary-rgb: 0, 255, 200; /* Electric Teal */
+  --background-rgb: 10, 5, 25; /* Standardized Empire Dark */
+  --foreground-rgb: 255, 255, 255; /* Pure White */
+  --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
+  --surface-border-rgb: 0, 255, 200; /* Electric Teal */
 }
 
 body {

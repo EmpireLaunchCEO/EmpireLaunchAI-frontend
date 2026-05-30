@@ -165,8 +165,14 @@ export function SecureVault() {
     tiktok: false,
   });
 
-  const handleSave = (id: string) => {
+  const handleSave = async (id: string, keys: any) => {
+    // In a real app, this would be encrypted and sent to a secure backend
+    // For now, we'll store it in localStorage to trigger UI changes
+    localStorage.setItem(`empire_vault_${id}`, JSON.stringify(keys));
     setIntegrations(prev => ({ ...prev, [id]: true }));
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('empire:vault-updated'));
   };
 
   return (

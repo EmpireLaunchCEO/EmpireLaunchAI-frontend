@@ -204,7 +204,14 @@ export default function EmpireCenterPage() {
                             </div>
                           </td>
                           <td className="py-6">
-                            <span className="text-slate-400 text-sm">{post.date}</span>
+                            <a 
+                              href={`/p/${post.id}`} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1.5 text-slate-400 hover:text-blue-600 transition-colors text-[10px] font-black uppercase"
+                            >
+                              View Live <ExternalLink className="w-3 h-3" />
+                            </a>
                           </td>
                         </tr>
                       ))}

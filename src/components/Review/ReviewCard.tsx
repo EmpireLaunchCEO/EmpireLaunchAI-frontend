@@ -12,8 +12,10 @@ import {
   Camera,
   Video,
   ShieldCheck,
-  ArrowLeftRight
+  ArrowLeftRight,
+  ExternalLink
 } from 'lucide-react';
+import { BuyButton } from '../Public/BuyButton';
 import { SecureIndicator } from './SecureIndicator';
 import { ComparisonMode } from './ComparisonMode';
 import { HighlightedText } from './HighlightedText';
@@ -80,11 +82,34 @@ export function ReviewCard({ id, platform, title, scheduledTime, description, pr
       </div>
 
       <div className="p-4 md:p-6">
-        <div className="aspect-video bg-slate-100 rounded-2xl mb-6 flex items-center justify-center relative group cursor-pointer overflow-hidden">
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <span className="text-white font-bold bg-theme-surface/20 backdrop-blur-md px-4 py-2 rounded-xl border border-white/30">Edit Preview</span>
+        <div className="aspect-video bg-slate-100 rounded-2xl mb-6 flex items-center justify-center relative group cursor-pointer overflow-hidden border-2 border-theme shadow-inner">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-50" />
+          
+          <div className="relative z-10 flex flex-col items-center gap-4 p-6 text-center">
+             <div className="flex items-center gap-1">
+               {[1, 2, 3, 4, 5].map((i) => (
+                 <Stars key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
+               ))}
+             </div>
+             <div className="space-y-1">
+               <p className="text-xs font-black uppercase tracking-widest text-slate-400">Live Preview</p>
+               <h4 className="font-bold text-slate-800 text-sm">{currentTitle}</h4>
+             </div>
+             
+             {/* THE PAYMENT BUTTON PREVIEW */}
+             <div className="scale-75 origin-center">
+                <BuyButton 
+                  productId={id}
+                  productName={currentTitle}
+                  price="$24.99"
+                  sellerName="Your Empire"
+                />
+             </div>
           </div>
-          <Stars className="w-12 h-12 text-slate-300" />
+
+          <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20 backdrop-blur-[2px]">
+            <span className="text-white font-black uppercase tracking-widest bg-theme-surface/20 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/30 text-xs">Edit Preview Visuals</span>
+          </div>
         </div>
 
         <div className="space-y-4">

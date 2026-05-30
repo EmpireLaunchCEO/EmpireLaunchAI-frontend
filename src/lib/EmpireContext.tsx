@@ -311,9 +311,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
   const [theme, setThemeState] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('empireTheme') || 'empire-cyan';
+      return localStorage.getItem('empireTheme') || 'blue';
     }
-    return 'empire-cyan';
+    return 'blue';
   });
 
   const setTheme = (newTheme: string) => {
@@ -321,6 +321,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== 'undefined') {
       localStorage.setItem('empireTheme', newTheme);
       document.body.className = `theme-${newTheme}`;
+      document.documentElement.setAttribute('data-theme', newTheme);
     }
   };
 
@@ -356,6 +357,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       document.body.className = `theme-${theme}`;
+      document.documentElement.setAttribute('data-theme', theme);
     }
   }, [theme]);
 
