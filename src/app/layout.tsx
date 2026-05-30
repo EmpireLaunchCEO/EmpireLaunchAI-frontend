@@ -28,9 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=3.3.1" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=3.3.1" />
-        <link rel="icon" href="/branded-globe.png?v=3.3.1" />
+        <link rel="manifest" href="/manifest.json?v=4.5.4" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=4.5.4" />
+        <link rel="icon" href="/branded-globe.png?v=4.5.4" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <script
@@ -39,7 +39,7 @@ export default function RootLayout({
               (function() {
                 try {
                   // Cache-Busting: Clear legacy service workers and local storage if on old version
-                  var currentVersion = '4.5.1';
+                  var currentVersion = '4.5.4';
                   var installedVersion = localStorage.getItem('app_version');
                   if (installedVersion !== currentVersion) {
                     localStorage.clear();
