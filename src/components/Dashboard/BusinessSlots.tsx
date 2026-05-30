@@ -80,11 +80,15 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
               <motion.div
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="absolute top-20 left-1/2 -translate-x-1/2 whitespace-nowrap"
+                className="absolute top-20 left-1/2 -translate-x-1/2 whitespace-nowrap flex flex-col items-center gap-2"
               >
-                <span className="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
-                  Authorize Slot
+                <span className="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full shadow-2xl border border-white/10">
+                  Authorize Slot ($40)
                 </span>
+                <span className="text-[8px] font-black text-blue-600 uppercase tracking-widest bg-white/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                  + $40/mo added to sub
+                </span>
+              </motion.div>
 
 
           </motion.div>

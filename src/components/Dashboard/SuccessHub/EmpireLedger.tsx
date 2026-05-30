@@ -7,8 +7,8 @@ import { motion } from 'framer-motion';
 const MOCK_INVOICES = [
   { id: 'INV-001', customer: 'Etsy Customer', amount: 24.99, date: 'Today', status: 'Settled', type: 'Credit' },
   { id: 'INV-002', customer: 'Fiverr Client', amount: 150.00, date: 'Yesterday', status: 'Pending', type: 'Credit' },
-  { id: 'INV-003', customer: 'Platform Fee', amount: 30.00, date: 'May 21', status: 'Settled', type: 'Debit' },
-];
+  { id: 'INV-003', customer: 'Platform Fee', amount: 40.00, date: 'May 21', status: 'Settled', type: 'Debit' },
+  ];
 
 export const EmpireLedger = ({ health }: { health: any }) => {
   return (
@@ -83,7 +83,7 @@ export const EmpireLedger = ({ health }: { health: any }) => {
         </div>
         <div className="bg-theme-background rounded-3xl p-5 border border-theme flex flex-col items-center justify-center">
            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Success Fee</span>
-           <span className="text-sm font-bold text-foreground">$30.00 / $1,000</span>
+           <span className="text-sm font-bold text-foreground">$40.00 / $1,000</span>
         </div>
       </div>
     </div>

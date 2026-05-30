@@ -15,13 +15,13 @@ import { cn } from '@/lib/utils';
 const transactions = [
   { id: '1', type: 'sale', platform: 'Etsy', amount: 45.00, date: '2h ago', status: 'completed' },
   { id: '2', type: 'sale', platform: 'Stripe', amount: 29.99, date: '5h ago', status: 'completed' },
-  { id: '3', type: 'fee', platform: 'EmpireLaunch', amount: -30.00, name: 'Success Fee ($1,000 Milestone)', date: 'Yesterday', status: 'processed' },
+  { id: '3', type: 'fee', platform: 'EmpireLaunch', amount: -40.00, name: 'Success Fee ($1,000 Milestone)', date: 'Yesterday', status: 'processed' },
   { id: '4', type: 'sale', platform: 'Etsy', amount: 15.50, date: 'Yesterday', status: 'completed' },
-];
+  ];
 
-export function EmpireLedger() {
-  const securedDues = 45; // $45 secured
-  const totalDues = 60; // $60 total (Sub + Success Fee)
+  export function EmpireLedger() {
+  const securedDues = 60; // $60 secured
+  const totalDues = 80; // $80 total (Sub + Success Fee)
   const progress = (securedDues / totalDues) * 100;
 
   return (
@@ -127,7 +127,7 @@ export function EmpireLedger() {
             <div className="space-y-1">
               <p className="text-xs font-bold">On Track</p>
               <p className="text-[10px] text-white/40 leading-relaxed">
-                You've reached 75% of your $1,000 revenue milestone. $30 success fee will be secured shortly.
+                You've reached 75% of your $1,000 revenue milestone. $40 success fee will be secured shortly.
               </p>
             </div>
           </div>

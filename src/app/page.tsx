@@ -54,9 +54,9 @@ export default function LandingPage() {
           <span className="font-black text-2xl tracking-tighter uppercase italic">EmpireLaunch <span className="text-primary">AI</span></span>
         </div>
         <div className="hidden md:flex items-center gap-2 bg-theme-surface/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-          <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Live: v4.5.2 (Autonomous Final)</span>
-        </div>
+            <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Live: v4.5.3 (Autonomous Final)</span>
+          </div>
       </nav>
 
       <main className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-120px)] px-6 py-20 text-center max-w-md mx-auto lg:max-w-md">
@@ -96,7 +96,7 @@ export default function LandingPage() {
             </button>
           </div>
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none">
-            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.5.2-STRICT-REBUILD-BLUE-PURPLE</span>
+            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.5.3-STRICT-REBUILD-BLUE-PURPLE</span>
           </div>
         </motion.div>
 

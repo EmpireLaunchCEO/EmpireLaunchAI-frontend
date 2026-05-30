@@ -300,11 +300,29 @@ export default function SettingsPage() {
                         <Diamond className="w-8 h-8 text-blue-400" />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-black">Empire Elite Plan</h3>
-                        <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Status: Active</p>
+                        <h3 className="text-2xl font-black italic">Empire Elite</h3>
+                        <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Base Subscription: $40 / Month</p>
                       </div>
                     </div>
+                    <div className="text-right">
+                       <span className="text-3xl font-black">$40</span>
+                       <span className="text-[10px] font-black text-slate-500 block uppercase tracking-widest">Current Base</span>
+                    </div>
                   </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                    <div className="p-6 rounded-[32px] bg-white/5 border border-white/10 space-y-2">
+                      <h4 className="text-xs font-black uppercase tracking-widest text-blue-400">Empire Expansion</h4>
+                      <p className="text-lg font-bold">$40 Unlock + $40/mo</p>
+                      <p className="text-[10px] text-slate-400 font-medium leading-relaxed">Per additional business slot authorized. Charged immediately upon activation.</p>
+                    </div>
+                    <div className="p-6 rounded-[32px] bg-white/5 border border-white/10 space-y-2">
+                      <h4 className="text-xs font-black uppercase tracking-widest text-emerald-400">Success Fee</h4>
+                      <p className="text-lg font-bold">$40 / $1,000</p>
+                      <p className="text-[10px] text-slate-400 font-medium leading-relaxed">Secured automatically upon revenue milestones.</p>
+                    </div>
+                  </div>
+
                   <button className="w-full py-4 bg-white/5 hover:bg-red-500/10 text-slate-400 hover:text-red-400 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">Cancel Subscription</button>
                 </div>
               </div>

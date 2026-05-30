@@ -413,9 +413,10 @@ export default function Onboarding() {
                        <div className="flex justify-between items-start">
                          <div>
                            <h3 className="text-xl font-black text-white uppercase italic tracking-tighter">Empire Master</h3>
+                           <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-1">+ $40/mo per extra business</p>
                          </div>
                          <div className="text-right">
-                           <span className="text-2xl font-black text-white">$30</span>
+                           <span className="text-2xl font-black text-white">$40</span>
                            <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">/Month</span>
                          </div>
                        </div>
