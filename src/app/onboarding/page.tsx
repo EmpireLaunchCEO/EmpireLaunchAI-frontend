@@ -347,13 +347,23 @@ export default function Onboarding() {
                        <div className="flex justify-between items-start">
                          <div>
                            <h3 className="text-xl font-black text-white uppercase italic tracking-tighter">Empire Master</h3>
-                           <p className="text-primary text-[10px] font-black uppercase tracking-widest mt-1">Unlimited Autonomy License</p>
                          </div>
                          <div className="text-right">
                            <span className="text-2xl font-black text-white">$30</span>
                            <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">/Month</span>
                          </div>
                        </div>
+
+                       <button
+                         onClick={async () => {
+                           setIsTermsOpen(true);
+                         }}
+                         disabled={isActivating || isPaying}
+                         className="w-full bg-primary text-slate-900 py-4 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl shadow-amber-900/20 flex items-center justify-center gap-2 group"
+                       >
+                         {isPaying ? "Verifying Key..." : "Authorize Engine"}
+                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                       </button>
 
                        <div className="space-y-2">
                          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Access Key</label>
@@ -472,20 +482,7 @@ export default function Onboarding() {
           </button>
 
           {currentStep === 1 ? (
-            <button
-              onClick={async () => {
-                if (!accessKey || accessKey.length < 5) {
-                   alert("Please enter a valid Access Key to authorize.");
-                   return;
-                }
-                setIsTermsOpen(true);
-              }}
-              disabled={isActivating || isPaying}
-              className="bg-primary text-slate-900 px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-white transition-all shadow-2xl shadow-amber-900/20 group disabled:opacity-50 w-full md:w-auto justify-center"
-            >
-              {isPaying ? "Verifying Key..." : "Authorize Engine"}
-              <CheckCircle2 className="w-4 h-4" />
-            </button>
+            <div className="w-full md:w-auto" />
           ) : currentStep < steps.length ? (
             <button
               onClick={nextStep}

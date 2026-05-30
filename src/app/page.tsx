@@ -77,9 +77,9 @@ export default function LandingPage() {
 
           {/* Hero Heading */}
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.8] uppercase italic flex flex-col">
-            <span className="text-white">Command Your</span>
+            <span className="text-white text-4xl md:text-5xl mb-2">Grow Your Empire.</span>
             <span className="text-gradient-electric">
-              Digital Empire
+              Your Empire Awaits
             </span>
           </h1>
 
