@@ -59,29 +59,33 @@ body {
 
 /* GLOBAL TWO-TONE OVERRIDE */
 
-/* Default text color should be primary (neon) */
-h1, h2, h3, h4, h5, h6, p, span, label, input, textarea {
-  color: inherit;
+/* Every piece of text uses the Purple-to-Blue Gradient */
+h1, h2, h3, h4, h5, h6, p, span, label, input, textarea, .text-theme {
+  background: linear-gradient(135deg, #a855f7 0%, #0070ff 100%) fixed;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
 }
 
 /* EXCEPT for text inside elements that have a primary background */
-/* These elements should keep white text for readability */
 .bg-primary, .bg-primary *,
 .bg-blue-600, .bg-blue-600 *,
 .bg-emerald-600, .bg-emerald-600 *,
 .bg-electric-blue, .bg-electric-blue *,
 .text-white-force {
+  -webkit-text-fill-color: var(--foreground) !important;
   color: var(--foreground) !important;
+  background: none !important;
 }
 
-/* Ensure gradients always stay as gradients */
+/* Ensure gradients always stay as gradients even if classes are nested */
 .text-gradient-empire-core {
-  background: linear-gradient(135deg, #a855f7 0%, #0070ff 100%);
+  background: linear-gradient(135deg, #a855f7 0%, #0070ff 100%) fixed;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
-  display: inline-block;
 }
 
 /* Icons should follow the text color */
