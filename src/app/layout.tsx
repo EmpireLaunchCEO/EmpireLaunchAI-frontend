@@ -39,7 +39,7 @@ export default function RootLayout({
               (function() {
                 try {
                   // Cache-Busting: Clear legacy service workers and local storage if on old version
-                  var currentVersion = '4.5.0';
+                  var currentVersion = '4.5.1';
                   var installedVersion = localStorage.getItem('app_version');
                   if (installedVersion !== currentVersion) {
                     localStorage.clear();
