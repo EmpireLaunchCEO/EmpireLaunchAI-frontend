@@ -1,6 +1,6 @@
 {
-  "version": "4.7.3-ELECTRIC-BLUE",
-  "deploy_id": "electric_blue_2024",
+  "version": "4.7.4-FINAL-STABLE",
+  "deploy_id": "final_stable_2024",
   "critical": true,
   "cache_bust": true
 }

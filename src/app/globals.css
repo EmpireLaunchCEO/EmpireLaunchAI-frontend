@@ -82,7 +82,7 @@ button.bg-slate-900 {
 }
 
 /* Primary Backgrounds */
-.bg-primary, .bg-blue-600, .bg-emerald-600 {
+.bg-primary, .bg-blue-600, .bg-emerald-600, .bg-electric-blue {
   background-color: var(--primary) !important;
 }
 
