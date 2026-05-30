@@ -1,6 +1,6 @@
 {
-  "version": "4.6.0-HYPE",
-  "deploy_id": "hype_build_8892",
+  "version": "4.6.1-STRICT-PRICE",
+  "deploy_id": "strict_sync_9901",
   "critical": true,
   "cache_bust": true
 }

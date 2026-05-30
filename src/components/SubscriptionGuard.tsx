@@ -92,7 +92,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
               </div>
 
               <div className="flex items-baseline gap-2 mb-8">
-                <span className="text-4xl font-black text-white">$30</span>
+                <span className="text-4xl font-black text-white">$40</span>
                 <span className="text-slate-500 font-black uppercase tracking-widest text-[10px]">/ Month</span>
               </div>
 
