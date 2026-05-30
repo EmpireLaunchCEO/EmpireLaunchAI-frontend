@@ -1,6 +1,6 @@
 {
-  "version": "4.7.1-UI-FIX",
-  "deploy_id": "ui_fix_2024",
+  "version": "4.7.2-VIBRANT-TEAL",
+  "deploy_id": "vibrant_teal_2024",
   "critical": true,
   "cache_bust": true
 }

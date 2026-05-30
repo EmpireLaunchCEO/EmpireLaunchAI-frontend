@@ -34,11 +34,11 @@
 }
 
 [data-theme='teal'] {
-  --primary-rgb: 0, 255, 200; /* Electric Teal */
+  --primary-rgb: 0, 255, 255; /* Electric Teal (Now Ultra-Vibrant Cyan) */
   --background-rgb: 10, 5, 25; /* Standardized Empire Dark */
   --foreground-rgb: 255, 255, 255; /* Pure White */
   --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
-  --surface-border-rgb: 0, 255, 200; /* Electric Teal */
+  --surface-border-rgb: 0, 255, 255; /* Electric Teal */
 }
 
 body {
