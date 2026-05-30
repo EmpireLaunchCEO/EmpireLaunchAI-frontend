@@ -1,6 +1,6 @@
 {
-  "version": "4.6.8-SUPER-STABLE",
-  "deploy_id": "super_nuclear_2301",
+  "version": "4.6.9-ROCK-SOLID",
+  "deploy_id": "rock_solid_2320",
   "critical": true,
   "cache_bust": true
 }

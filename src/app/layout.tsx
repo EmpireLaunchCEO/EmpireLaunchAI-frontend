@@ -41,25 +41,9 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  // 1. FORCE KILL ALL SERVICE WORKERS
-                  if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistrations().then(function(regs) {
-                      for(var r of regs) { r.unregister(); }
-                    });
-                  }
-                  
-                  // 2. FORCE CLEAR APP CACHE
-                  if ('caches' in window) {
-                    caches.keys().then(function(names) {
-                      for (var name of names) { caches.delete(name); }
-                    });
-                  }
-
-                  // 3. CLEAN REDIRECT
                   var onboarded = localStorage.getItem('isOnboarded');
                   var path = window.location.pathname;
                   if (onboarded === 'true' && (path === '/' || path === '/onboarding')) {
-                    document.documentElement.style.display = 'none';
                     window.location.replace('/dashboard');
                   }
                 } catch (e) {}
