@@ -138,7 +138,7 @@ export default function Dashboard() {
               <LayoutDashboard className="w-3 h-3" />
               Success Hub
             </div>
-            <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight">
               {empireData?.name || "Success Hub"}.
             </h1>
             <p className="text-sm md:text-base text-muted-foreground font-medium">

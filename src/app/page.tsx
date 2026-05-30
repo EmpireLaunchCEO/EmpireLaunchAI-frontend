@@ -38,7 +38,7 @@ export default function LandingPage() {
   );
 
   return (
-    <div className="min-h-screen bg-theme-background text-foreground selection:bg-blue-500/30 overflow-x-hidden">
+    <div className="min-h-screen bg-theme-background selection:bg-blue-500/30 overflow-x-hidden">
       {/* High-Intelligence Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />

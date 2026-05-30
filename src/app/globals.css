@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  /* ELECTRIC EMPIRE DEFAULT - Pure Neon Blue and Deep Violet */
-  --primary-rgb: 0, 112, 255; /* Electric Blue */
+  /* ELECTRIC EMPIRE DEFAULT - Vivid Purple-Blue Hybrid */
+  --primary-rgb: 168, 85, 247; /* Vibrant Purple */
   --background-rgb: 10, 5, 25; /* Near Black Violet */
   --foreground-rgb: 255, 255, 255; /* Pure White */
-  --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
-  --surface-border-rgb: 112, 0, 255; /* Electric Purple */
+  --surface-rgb: 15, 8, 35; /* Deeper Violet Surface */
+  --surface-border-rgb: 0, 112, 255; /* Electric Blue Outlines */
   
   --background: rgb(var(--background-rgb));
   --foreground: rgb(var(--foreground-rgb));
@@ -51,7 +51,7 @@
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--primary);
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
   overflow-x: hidden;
@@ -59,31 +59,34 @@ body {
 
 /* GLOBAL TWO-TONE OVERRIDE */
 
-/* Every piece of text should use the primary color */
-h1, h2, h3, h4, h5, h6, p, span, label, input, textarea, div:not([class*="bg-"]):not([class*="static-"]) {
-  color: var(--primary) !important;
+/* Default text color should be primary (neon) */
+h1, h2, h3, h4, h5, h6, p, span, label, input, textarea {
+  color: inherit;
 }
 
-/* Specific button text colors */
-button:not(.bg-primary):not([class*="bg-slate-900"]):not([class*="bg-blue-600"]) {
-  color: var(--primary) !important;
-}
-
-/* EXCEPT for text inside elements that have a primary background or specific dark overrides */
+/* EXCEPT for text inside elements that have a primary background */
 /* These elements should keep white text for readability */
 .bg-primary, .bg-primary *,
 .bg-blue-600, .bg-blue-600 *,
 .bg-emerald-600, .bg-emerald-600 *,
 .bg-electric-blue, .bg-electric-blue *,
-[class*="bg-slate-900"], [class*="bg-slate-900"] *,
-[class*="bg-slate-800"], [class*="bg-slate-800"] *,
 .text-white-force {
   color: var(--foreground) !important;
 }
 
+/* Ensure gradients always stay as gradients */
+.text-gradient-empire-core {
+  background: linear-gradient(135deg, #a855f7 0%, #0070ff 100%);
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  display: inline-block;
+}
+
 /* Icons should follow the text color */
 svg {
-  color: inherit !important;
+  color: inherit;
 }
 
 /* Specific exclusions for readability / muted effects */
