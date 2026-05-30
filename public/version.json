@@ -1,4 +1,6 @@
 {
-  "version": "4.5.4",
-  "timestamp": "2026-05-30T17:15:00Z"
+  "version": "4.6.0-HYPE",
+  "deploy_id": "hype_build_8892",
+  "critical": true,
+  "cache_bust": true
 }

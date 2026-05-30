@@ -14,9 +14,7 @@ export default function AuthenticatedLayout({
     <SubscriptionGuard>
       <div className="flex bg-theme-background h-screen relative overflow-hidden">
         <OnboardingTour />
-        <EmpireSwitcher />
-        <Sidebar />
-        <main className="flex-1 lg:ml-[328px] h-full bg-theme-surface lg:rounded-l-[48px] shadow-2xl shadow-slate-200 border-l border-theme overflow-y-auto relative lg:pb-0">
+        <main className="flex-1 h-full bg-theme-surface shadow-2xl shadow-slate-200 border-l border-theme overflow-y-auto relative pb-24 lg:pb-32">
           <div className="absolute top-8 right-8 z-[60] hidden lg:block">
             <NotificationBell />
           </div>

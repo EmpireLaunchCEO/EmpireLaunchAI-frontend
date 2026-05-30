@@ -1,31 +1,56 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, Stars, TrendingUp, ChevronRight, Briefcase } from 'lucide-react';
+import { Lock, Stars, TrendingUp, ChevronRight, Briefcase, Video, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { StudioTeaserModal } from '../Studio/StudioTeaserModal';
 
 interface BusinessSlotProps {
   id: string;
   name: string;
   niche: string;
-  status: 'active' | 'locked';
+  status: 'active' | 'locked' | 'hype';
   growthScore?: number;
+  onHypeClick?: () => void;
 }
 
-const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) => {
+const BusinessSlot = ({ name, niche, status, growthScore, onHypeClick }: BusinessSlotProps) => {
   const isLocked = status === 'locked';
+  const isHype = status === 'hype';
 
   return (
-    <div className="relative group cursor-pointer">
+    <div className="relative group cursor-pointer" onClick={isHype ? onHypeClick : undefined}>
       <div className={cn(
         "relative overflow-hidden rounded-[32px] p-6 h-48 transition-all duration-500",
         isLocked
           ? "bg-theme-background border-2 border-theme opacity-80"
+          : isHype
+          ? "bg-gradient-to-br from-blue-600 to-indigo-700 border-2 border-blue-400 text-white shadow-2xl shadow-blue-500/20"
           : "bg-theme-surface border-2 border-blue-50 shadow-xl shadow-blue-900/5 hover:shadow-2xl hover:shadow-blue-900/10"
       )}>
+        {/* Hype Content */}
+        {isHype && (
+          <div className="flex flex-col h-full justify-between relative z-10">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-3 h-3 text-yellow-300 animate-pulse" />
+                <span className="text-[9px] font-black uppercase tracking-widest text-blue-100">Neural Expansion</span>
+              </div>
+              <h3 className="text-xl font-black leading-[0.9] tracking-tighter uppercase italic">Empire Studio</h3>
+              <p className="text-[10px] font-bold text-blue-100 mt-2 uppercase tracking-tight">AI Creative Engine</p>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black bg-white/20 px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-md border border-white/20">
+                View Blueprint
+              </span>
+              <Video className="w-6 h-6 text-white/50" />
+            </div>
+          </div>
+        )}
+
         {/* Active Content */}
-        {!isLocked && (
+        {!isLocked && !isHype && (
           <div className="flex flex-col h-full justify-between relative z-10">
             <div>
               <div className="flex items-center gap-2 mb-2">
@@ -103,14 +128,16 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
 };
 
 export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
+  const [isStudioOpen, setIsStudioOpen] = useState(false);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between px-2">
-        <h2 className="text-xl font-black text-foreground tracking-tight">Active Empires</h2>
-        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Slots 1/3</span>
+        <h2 className="text-xl font-black text-foreground tracking-tight uppercase italic">Empire Slots</h2>
+        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Expansion Enabled</span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <BusinessSlot
           id="1"
           name={currentEmpire?.name || "The First Empire"}
@@ -118,9 +145,21 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
           status="active"
           growthScore={92}
         />
+        <BusinessSlot
+          id="studio"
+          name="Empire Studio"
+          niche="Creative Engine"
+          status="hype"
+          onHypeClick={() => setIsStudioOpen(true)}
+        />
         <BusinessSlot id="2" name="Empty" niche="Empty" status="locked" />
         <BusinessSlot id="3" name="Empty" niche="Empty" status="locked" />
       </div>
+
+      <StudioTeaserModal 
+        isOpen={isStudioOpen} 
+        onClose={() => setIsStudioOpen(false)} 
+      />
     </div>
   );
 }

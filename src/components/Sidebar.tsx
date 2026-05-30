@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -9,9 +9,12 @@ import {
   Stars,
   ClipboardCheck,
   BarChart3,
-  ShieldCheck
+  ShieldCheck,
+  Video,
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { StudioTeaserModal } from './Studio/StudioTeaserModal';
 
 const navItems = [
   { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
@@ -24,37 +27,53 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [isStudioOpen, setIsStudioOpen] = useState(false);
 
   return (
-    <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-[72px] top-0 border-r border-theme shadow-sm">
-      <div className="p-6 flex items-center gap-2">
-        <div className="bg-primary p-2 rounded-xl shadow-lg shadow-primary/20">
-          <Stars className="w-5 h-5 text-white" />
+    <>
+      <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-[72px] top-0 border-r border-theme shadow-sm">
+        <div className="p-6 flex items-center gap-2">
+          <div className="bg-primary p-2 rounded-xl shadow-lg shadow-primary/20">
+            <Stars className="w-5 h-5 text-white" />
+          </div>
+          <span className="text-lg font-black tracking-tight text-foreground uppercase italic">Empire.</span>
         </div>
-        <span className="text-lg font-black tracking-tight text-foreground uppercase italic">Empire.</span>
-      </div>
 
-      <nav className="flex-1 px-4 py-4 space-y-1">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm",
-                isActive
-                ? "bg-primary text-white shadow-xl shadow-primary/10"
-                : "text-slate-400 hover:text-foreground hover:bg-theme-background"
-              )}
-            >
-              <item.icon className="w-5 h-5" />
-              <span>{item.name}</span>
-            </Link>
-          );
-        })}
+        <nav className="flex-1 px-4 py-4 space-y-1">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm",
+                  isActive
+                  ? "bg-primary text-white shadow-xl shadow-primary/10"
+                  : "text-slate-400 hover:text-foreground hover:bg-theme-background"
+                )}
+              >
+                <item.icon className="w-5 h-5" />
+                <span>{item.name}</span>
+              </Link>
+            );
+          })}
 
-        <div className="mt-8 px-4 pt-6 border-t border-theme">
+          <button
+            onClick={() => setIsStudioOpen(true)}
+            className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm text-slate-400 hover:text-foreground hover:bg-theme-background relative group"
+          >
+            <div className="flex items-center gap-3">
+              <Video className="w-5 h-5 text-blue-500 group-hover:text-blue-600" />
+              <span>Empire Studio</span>
+            </div>
+            <div className="flex items-center gap-1 bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-[10px] font-black uppercase">
+              <Sparkles size={8} />
+              NEW
+            </div>
+          </button>
+
+          <div className="mt-8 px-4 pt-6 border-t border-theme">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">AI Brain Live</span>
@@ -67,17 +86,23 @@ export function Sidebar() {
         </div>
       </nav>
 
-      <div className="p-6 border-t border-theme">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center shadow-lg">
-            <span className="text-xs font-black text-white">JD</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-black text-foreground">John Doe</span>
-            <span className="text-[10px] font-black text-primary uppercase tracking-widest">Founder</span>
+        <div className="p-6 border-t border-theme">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center shadow-lg">
+              <span className="text-xs font-black text-white">JD</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-black text-foreground">John Doe</span>
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest">Founder</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <StudioTeaserModal 
+        isOpen={isStudioOpen} 
+        onClose={() => setIsStudioOpen(false)} 
+      />
+    </>
   );
 }
