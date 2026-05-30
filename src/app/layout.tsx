@@ -28,9 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=4.5.4" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=4.5.4" />
-        <link rel="icon" href="/branded-globe.png?v=4.5.4" />
+        <link rel="manifest" href="/manifest.json?v=4.6.0" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=4.6.0" />
+        <link rel="icon" href="/branded-globe.png?v=4.6.0" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <script
@@ -38,7 +38,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var currentVersion = '4.5.4';
+                  var currentVersion = '4.6.0-HYPE';
                   
                   // Check server version
                   fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
