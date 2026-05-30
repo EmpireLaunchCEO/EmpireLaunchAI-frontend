@@ -86,14 +86,14 @@ export function OnboardingTour() {
     {
       title: "Co-Pilot Mode",
       description: "In Co-Pilot, I'll do the heavy lifting but I'll always ask for your final approval before taking action.",
-      target: "mode-copilot",
+      target: "tab-ai-intelligence",
       icon: Bot,
       page: "/settings?tab=ai-intelligence"
     },
     {
       title: "Auto-Pilot Mode",
       description: "Switch to Auto-Pilot for maximum growth. I'll execute strategies and manage your empire autonomously 24/7.",
-      target: "mode-autopilot",
+      target: "tab-ai-intelligence",
       icon: Zap,
       page: "/settings?tab=ai-intelligence"
     },
