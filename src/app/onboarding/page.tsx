@@ -428,7 +428,7 @@ export default function Onboarding() {
                               type="text"
                               value={accessKey}
                               onChange={(e) => setAccessKey(e.target.value)}
-                              placeholder="0000-0000-0000"
+                              placeholder="OWNER-ADMIN-..."
                               className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none shadow-inner text-white"
                             />
                          </div>
@@ -436,7 +436,8 @@ export default function Onboarding() {
 
                        <button
                          onClick={async () => {
-                           if (accessKey === '0000-0000-0000' || accessKey.length > 5) {
+                           const cleanKey = accessKey.trim().toUpperCase();
+                           if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
                               setIsPaid(true);
                               nextStep();
                            } else {
@@ -563,7 +564,8 @@ export default function Onboarding() {
           ) : (
             <button
               onClick={() => {
-                if (accessKey === '0000-0000-0000' || accessKey.length > 5) {
+                const cleanKey = accessKey.trim().toUpperCase();
+                if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
                    setIsPaid(true);
                    handleActivate();
                 } else {

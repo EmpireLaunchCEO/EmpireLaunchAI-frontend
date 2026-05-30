@@ -27,9 +27,9 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
     const cleanKey = accessKey.trim().toUpperCase();
 
     // In a real app, this would call /api/auth/redeemKey
-    // For this simulation, we check for the Master Owner key or any valid key format
+    // For this simulation, we check for the Master Owner key
     setTimeout(() => {
-      if (cleanKey.startsWith('OWNER-') || cleanKey.startsWith('BETA-')) {
+      if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
         setIsPaid(true);
         setIsProcessing(false);
       } else {
@@ -175,7 +175,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
           >
             <div>
               <h3 className="text-xl font-black text-white uppercase italic tracking-tighter">Redeem Key.</h3>
-              <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Enter your master or beta access code</p>
+              <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1">Enter your admin access code</p>
             </div>
 
             <div className="space-y-4">
@@ -184,7 +184,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
                   type="text"
                   value={accessKey}
                   onChange={(e) => setAccessKey(e.target.value)}
-                  placeholder="XXXX-XXXX-XXXX-XXXX"
+                  placeholder="OWNER-ADMIN-..."
                   className="w-full bg-slate-900 border border-slate-800 rounded-2xl p-5 text-sm font-black tracking-widest uppercase focus:border-primary/60 outline-none transition-all text-white placeholder:text-slate-700"
                 />
                 <Sparkles className="absolute right-5 top-5 w-5 h-5 text-primary/40" />
