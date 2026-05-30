@@ -31,7 +31,7 @@ interface Goal {
 }
 
 export default function Dashboard() {
-  const { activeEmpireId, isLinkingComplete } = useEmpire();
+  const { activeEmpireId, isLinkingComplete, aiMode } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
@@ -140,7 +140,7 @@ export default function Dashboard() {
             <div className="flex flex-col items-start md:items-end">
               <div className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-2xl border border-primary/20 font-bold text-sm shadow-sm">
                 <Stars className="w-4 h-4" />
-                AI Co-Pilot: Active
+                {aiMode === 'empire' ? 'AI Auto-Pilot: Active' : 'AI Co-Pilot: Active'}
               </div>
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 ml-1 md:ml-0">
                 Neural Sync: 100.0%

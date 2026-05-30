@@ -210,10 +210,10 @@ export default function SettingsPage() {
   ];
 
   const colorSchemes = [
-    { id: 'blue', name: 'Electric Empire', primary: 'bg-blue-600', secondary: 'bg-[#140a2d]', description: 'The standard neon high-contrast look.' },
-    { id: 'emerald', name: 'Growth Green', primary: 'bg-emerald-600', secondary: 'bg-[#140a2d]', description: 'Focused on clarity and profitability.' },
-    { id: 'pink', name: 'Electric Pink', primary: 'bg-[#ff0099]', secondary: 'bg-[#140a2d]', description: 'High-energy vibrant neon aesthetic.' },
-    { id: 'teal', name: 'Electric Teal', primary: 'bg-[#00ffc8]', secondary: 'bg-[#140a2d]', description: 'Cybernetic and fresh digital appearance.' }
+    { id: 'blue', name: 'Electric Empire', primary: '#0070ff', secondary: '#140a2d', description: 'The standard neon high-contrast look.' },
+    { id: 'emerald', name: 'Growth Green', primary: '#10b981', secondary: '#140a2d', description: 'Focused on clarity and profitability.' },
+    { id: 'pink', name: 'Electric Pink', primary: '#ff0099', secondary: '#140a2d', description: 'High-energy vibrant neon aesthetic.' },
+    { id: 'teal', name: 'Electric Teal', primary: '#00ffc8', secondary: '#140a2d', description: 'Cybernetic and fresh digital appearance.' }
   ];
 
   return (
@@ -500,8 +500,14 @@ export default function SettingsPage() {
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex gap-2">
-                            <div className={cn("w-6 h-6 rounded-full", scheme.primary)} />
-                            <div className={cn("w-6 h-6 rounded-full", scheme.secondary)} />
+                            <div 
+                              className="w-6 h-6 rounded-full border border-white/10" 
+                              style={{ backgroundColor: scheme.primary }} 
+                            />
+                            <div 
+                              className="w-6 h-6 rounded-full border border-white/10" 
+                              style={{ backgroundColor: scheme.secondary }} 
+                            />
                           </div>
                           {theme === scheme.id && <CheckCircle2 className="w-6 h-6 text-primary" />}
                         </div>
