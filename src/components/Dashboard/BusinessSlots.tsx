@@ -89,12 +89,9 @@ const BusinessSlot = ({ name, niche, status, growthScore }: BusinessSlotProps) =
                   + $40/mo added to sub
                 </span>
               </motion.div>
-
-
+            </div>
           </motion.div>
-              </div>
-            </motion.div>
-          )}
+        )}
       </div>
 
       {/* Decorative gradient for active slot */}
