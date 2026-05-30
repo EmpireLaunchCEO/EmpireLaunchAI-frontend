@@ -28,18 +28,51 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=468" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=468" />
-        <link rel="icon" href="/branded-globe.png?v=468" />
+        <link rel="manifest" href="/manifest.json?v=500" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=500" />
+        <link rel="icon" href="/branded-globe.png?v=500" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        <meta http-equiv="Pragma" content="no-cache" />
-        <meta http-equiv="Expires" content="0" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
+                // 1. SERVICE WORKER TERMINATOR
+                if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                      registration.unregister().then(function(boolean) {
+                         if(boolean) console.log('Legacy Service Worker Terminated');
+                      });
+                    }
+                  }).catch(function(err) {
+                    console.log('Service Worker termination failed: ', err);
+                  });
+                }
+
+                // 2. RELOAD LOOP GUARD
+                try {
+                  var now = Date.now();
+                  var lastReload = parseInt(localStorage.getItem('last_empire_reload') || '0');
+                  var reloadCount = parseInt(localStorage.getItem('empire_reload_count') || '0');
+                  
+                  if (now - lastReload < 5000) {
+                    reloadCount++;
+                  } else {
+                    reloadCount = 0;
+                  }
+                  
+                  localStorage.setItem('last_empire_reload', now.toString());
+                  localStorage.setItem('empire_reload_count', reloadCount.toString());
+                  
+                  if (reloadCount > 3) {
+                    console.error('CRITICAL: Reload loop detected. Stabilizing engine...');
+                    // STOP RELOADING - if we were about to reload, we don't.
+                    return;
+                  }
+                } catch(e) {}
+
+                // 3. ONBOARDING REDIRECT
                 try {
                   var onboarded = localStorage.getItem('isOnboarded');
                   var path = window.location.pathname;
