@@ -55,7 +55,7 @@ export default function LandingPage() {
         </div>
         <div className="hidden md:flex items-center gap-2 bg-theme-surface/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
           <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Live: v3.3.1 (Autonomous Final)</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Live: v4.5.2 (Autonomous Final)</span>
         </div>
       </nav>
 
