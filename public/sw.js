@@ -1,4 +1,4 @@
-const CACHE_NAME = 'empire-launch-ai-v1';
+const CACHE_NAME = 'empire-launch-ai-v4.5.1';
 const ASSETS_TO_CACHE = [
   '/',
   '/manifest.json',
