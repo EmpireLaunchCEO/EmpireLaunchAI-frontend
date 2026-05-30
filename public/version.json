@@ -1,10 +1,10 @@
 {
-  "version": "4.8.2",
-  "buildId": "launch-v4-8-2",
+  "version": "4.8.3",
+  "buildId": "launch-v4-8-3",
   "changelog": [
-    "Compacted Empire Center tabs to eliminate horizontal overflow",
-    "Priority Vertical Scroll: Swiping up now immediately kills the Pull-to-Refresh drag",
-    "Reduced drag elasticity for a more stable UI feel",
-    "Renamed 'Expenses' and 'Directives' tabs for better mobile fitting"
+    "Integrated theme engine into Landing Page (bg-theme-background)",
+    "Enforced theme colors on 'YOUR EMPIRE AWAITS' and all hero text",
+    "Balanced global text logic to prevent accidental white-outs",
+    "Restored neon visibility across all authentication and entry routes"
   ]
 }
