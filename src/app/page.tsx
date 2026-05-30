@@ -51,7 +51,7 @@ export default function LandingPage() {
           <div className="bg-primary p-2 rounded-xl">
             <Target className="w-6 h-6 text-slate-950" />
           </div>
-          <span className="font-black text-2xl tracking-tighter uppercase italic">EmpireLaunch <span className="text-primary">AI</span></span>
+          <span className="font-black text-2xl tracking-tighter uppercase italic text-gradient-empire-core">EmpireLaunch AI</span>
         </div>
         <div className="hidden md:flex items-center gap-2 bg-theme-surface/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
             <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
@@ -66,8 +66,8 @@ export default function LandingPage() {
           className="space-y-12 w-full"
         >
           {/* Tagline */}
-          <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-md px-5 py-2 rounded-full border border-primary/20 text-primary font-bold text-[10px] uppercase tracking-[0.2em]">
-            <Stars className="w-4 h-4" />
+          <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-md px-5 py-2 rounded-full border border-primary/20 font-bold text-[10px] uppercase tracking-[0.2em] text-gradient-empire-core">
+            <Stars className="w-4 h-4 text-primary" />
             Autonomous Business Engineering
           </div>
 
