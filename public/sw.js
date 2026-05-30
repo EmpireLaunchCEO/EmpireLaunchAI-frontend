@@ -1,9 +1,8 @@
-const CACHE_NAME = 'empire-launch-ai-v4.5.1';
+const CACHE_NAME = 'empire-launch-ai-v4.5.4';
 const ASSETS_TO_CACHE = [
   '/',
   '/manifest.json',
   '/branded-globe.png',
-  '/branded-globe.png?v=3.3.1',
   '/favicon.ico',
 ];
 
@@ -17,10 +16,22 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
+  // Clear old caches
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => clients.claim())
+  );
 });
 
 self.addEventListener('fetch', (event) => {
+  // Network-First strategy for navigation to ensure we always get latest HTML/Version check
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request).catch(() => {
@@ -30,6 +41,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Cache-First for assets, but we should ideally use Network-First for JSON/API if needed
   event.respondWith(
     caches.match(event.request).then((response) => {
       return response || fetch(event.request);

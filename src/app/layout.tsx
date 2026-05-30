@@ -38,8 +38,25 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  // Cache-Busting: Clear legacy service workers and local storage if on old version
                   var currentVersion = '4.5.4';
+                  
+                  // Check server version
+                  fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                      if (data.version && data.version !== currentVersion) {
+                        console.log('New version detected:', data.version);
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        if ('serviceWorker' in navigator) {
+                          navigator.serviceWorker.getRegistrations().then(function(regs) {
+                            for(var r of regs) r.unregister();
+                          });
+                        }
+                        window.location.reload(true);
+                      }
+                    }).catch(function() {});
+
                   var installedVersion = localStorage.getItem('app_version');
                   if (installedVersion !== currentVersion) {
                     localStorage.clear();
