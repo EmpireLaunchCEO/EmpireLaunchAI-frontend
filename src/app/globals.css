@@ -40,11 +40,25 @@ body {
 }
 
 h1, h2, h3 {
-  color: var(--foreground) !important;
   letter-spacing: -0.05em;
   text-transform: uppercase;
   font-style: italic;
   font-weight: 900;
+}
+
+.text-gradient-electric {
+  background: linear-gradient(to right, var(--primary), #22d3ee, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% auto;
+  animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
 }
 
 button {

@@ -30,11 +30,11 @@ import { PWAInstallPrompt } from '@/components/Onboarding/PWAInstallPrompt';
 import { TermsModal } from '@/components/Legal/TermsModal';
 
 const steps = [
-  { id: 1, title: 'Identity' },
-  { id: 2, title: 'Matrix' },
-  { id: 3, title: 'Toolkit' },
-  { id: 4, title: 'Calibration' },
-  { id: 5, title: 'Authorization' },
+  { id: 1, title: 'Authorization' },
+  { id: 2, title: 'Identity' },
+  { id: 3, title: 'Matrix' },
+  { id: 4, title: 'Toolkit' },
+  { id: 5, title: 'Calibration' },
 ];
 
 import { useEmpire } from '@/lib/EmpireContext';
@@ -256,7 +256,7 @@ export default function Onboarding() {
     await new Promise(r => setTimeout(r, 2000));
     setIsPaid(true);
     setIsPaying(false);
-    handleActivate();
+    nextStep();
   };
 
   return (
@@ -283,56 +283,6 @@ export default function Onboarding() {
             {currentStep === 1 && (
               <motion.div
                 key="step1"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <EmpireIdentity data={data} updateData={updateData} />
-              </motion.div>
-            )}
-
-            {currentStep === 2 && (
-              <motion.div
-                key="step2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <PlatformMatrix
-                  connectedPlatforms={data.connectedPlatforms}
-                  onConnect={handleConnect}
-                />
-              </motion.div>
-            )}
-
-            {currentStep === 3 && (
-              <motion.div
-                key="step3"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <ConsultantToolkit businessAngle={data.angle} />
-              </motion.div>
-            )}
-
-            {currentStep === 4 && (
-              <motion.div
-                key="step4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <AutomationCalibration
-                  mode={data.automationMode}
-                  onModeChange={(mode) => updateData({ automationMode: mode })}
-                />
-              </motion.div>
-            )}
-
-            {currentStep === 5 && (
-              <motion.div
-                key="step5"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -412,7 +362,7 @@ export default function Onboarding() {
                               type="text"
                               value={accessKey}
                               onChange={(e) => setAccessKey(e.target.value)}
-                              placeholder="ENTER YOUR LICENSE KEY"
+                              placeholder="0000-0000-0000"
                               className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none shadow-inner"
                             />
                          </div>
@@ -456,6 +406,56 @@ export default function Onboarding() {
                 </div>
               </motion.div>
             )}
+
+            {currentStep === 2 && (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <EmpireIdentity data={data} updateData={updateData} />
+              </motion.div>
+            )}
+
+            {currentStep === 3 && (
+              <motion.div
+                key="step3"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <PlatformMatrix
+                  connectedPlatforms={data.connectedPlatforms}
+                  onConnect={handleConnect}
+                />
+              </motion.div>
+            )}
+
+            {currentStep === 4 && (
+              <motion.div
+                key="step4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <ConsultantToolkit businessAngle={data.angle} />
+              </motion.div>
+            )}
+
+            {currentStep === 5 && (
+              <motion.div
+                key="step5"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <AutomationCalibration
+                  mode={data.automationMode}
+                  onModeChange={(mode) => updateData({ automationMode: mode })}
+                />
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
 
@@ -471,15 +471,7 @@ export default function Onboarding() {
             Previous
           </button>
 
-          {currentStep < steps.length ? (
-            <button
-              onClick={nextStep}
-              className="bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl shadow-slate-950 group w-full md:w-auto justify-center"
-            >
-              Next Phase
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          ) : (
+          {currentStep === 1 ? (
             <button
               onClick={async () => {
                 if (!accessKey || accessKey.length < 5) {
@@ -491,7 +483,24 @@ export default function Onboarding() {
               disabled={isActivating || isPaying}
               className="bg-primary text-slate-900 px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-white transition-all shadow-2xl shadow-amber-900/20 group disabled:opacity-50 w-full md:w-auto justify-center"
             >
-              {isPaying ? "Verifying Key..." : isActivating ? "Establishing Sync..." : "Authorize Engine"}
+              {isPaying ? "Verifying Key..." : "Authorize Engine"}
+              <CheckCircle2 className="w-4 h-4" />
+            </button>
+          ) : currentStep < steps.length ? (
+            <button
+              onClick={nextStep}
+              className="bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl shadow-slate-950 group w-full md:w-auto justify-center"
+            >
+              Next Phase
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          ) : (
+            <button
+              onClick={handleActivate}
+              disabled={isActivating}
+              className="bg-primary text-slate-900 px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-white transition-all shadow-2xl shadow-amber-900/20 group disabled:opacity-50 w-full md:w-auto justify-center"
+            >
+              {isActivating ? "Establishing Sync..." : "Finish Setup"}
               <CheckCircle2 className="w-4 h-4" />
             </button>
           )}
