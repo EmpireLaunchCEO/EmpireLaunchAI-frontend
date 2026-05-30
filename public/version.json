@@ -1,6 +1,6 @@
 {
-  "version": "4.7.5-SCROLL-STABLE",
-  "deploy_id": "scroll_stable_2024",
+  "version": "4.7.7-EXPENSE-LEDGER",
+  "deploy_id": "expense_ledger_2024",
   "critical": true,
   "cache_bust": true
 }

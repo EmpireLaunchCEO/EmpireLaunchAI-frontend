@@ -15,7 +15,9 @@ import {
   ThumbsDown,
   Stars,
   StickyNote,
-  Trash2
+  Trash2,
+  CreditCard,
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,10 +35,17 @@ const postHistory = [
   { id: 3, site: 'Instagram', title: 'New Product Teaser', date: '1 day ago', status: 'live' },
 ];
 
+const expenses = [
+  { id: 1, source: 'GoDaddy', item: 'Domain: YourEmpire.com', cost: 14.99, cycle: 'annual', nextPayment: 'June 12, 2024', status: 'ai-managed' },
+  { id: 2, source: 'Kittl', item: 'Pro Design Suite', cost: 0.00, cycle: 'monthly', nextPayment: 'N/A (Free Tier)', status: 'ai-managed' },
+  { id: 3, source: 'Canva', item: 'Content Creation', cost: 0.00, cycle: 'monthly', nextPayment: 'N/A (Free Tier)', status: 'ai-managed' },
+  { id: 4, source: 'Stripe', item: 'Payment Gateway', cost: 0.00, cycle: 'usage-based', nextPayment: 'Per Transaction', status: 'ai-managed' },
+];
+
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 
 export default function EmpireCenterPage() {
-  const [activeTab, setActiveTab] = useState<'duties' | 'history' | 'ai-config'>('duties');
+  const [activeTab, setActiveTab] = useState<'duties' | 'history' | 'expenses' | 'ai-config'>('duties');
   const { empireNotes, setEmpireNotes } = useEmpire();
 
   const handleRefresh = async () => {
@@ -63,11 +72,12 @@ export default function EmpireCenterPage() {
       </header>
 
       {/* Primary Tabs */}
-      <div className="flex bg-slate-100 p-1.5 rounded-[24px] w-fit">
+      <div className="flex bg-slate-100 p-1.5 rounded-[24px] w-fit overflow-x-auto no-scrollbar max-w-full">
         {[
-          { id: 'duties', label: 'Active Duties', icon: Zap },
-          { id: 'history', label: 'Post History', icon: History },
-          { id: 'ai-config', label: 'AI Directives', icon: Stars },
+          { id: 'duties', label: 'Duties', icon: Zap },
+          { id: 'history', label: 'Posts', icon: History },
+          { id: 'expenses', label: 'Expenses', icon: CreditCard },
+          { id: 'ai-config', label: 'Directives', icon: Stars },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -217,6 +227,73 @@ export default function EmpireCenterPage() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'expenses' && (
+              <motion.div
+                key="expenses"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-8"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-black text-foreground">Expense Ledger</h3>
+                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">AI Managed Subscriptions & Fees</p>
+                  </div>
+                  <div className="bg-primary/10 px-4 py-2 rounded-2xl border border-primary/20">
+                    <span className="text-primary font-black text-xs uppercase tracking-tighter">Automatic Mode: Active</span>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {expenses.map((expense) => (
+                    <div key={expense.id} className="p-6 bg-theme-background rounded-[32px] border border-theme hover:border-primary/30 transition-all group">
+                      <div className="flex flex-col md:flex-row justify-between gap-6">
+                        <div className="flex items-center gap-5">
+                          <div className="w-14 h-14 rounded-2xl bg-theme-surface flex items-center justify-center border border-theme group-hover:border-primary/20">
+                            <Globe className="w-7 h-7 text-slate-400 group-hover:text-primary transition-colors" />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-black text-foreground uppercase tracking-tight">{expense.source}</h4>
+                            <p className="text-sm font-bold text-slate-500">{expense.item}</p>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 items-center">
+                          <div className="text-left md:text-right">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Amount</p>
+                            <p className="text-lg font-black text-foreground">${expense.cost.toFixed(2)}</p>
+                          </div>
+                          <div className="text-left md:text-right">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Next Payout</p>
+                            <p className="text-sm font-black text-slate-600 uppercase">{expense.nextPayment}</p>
+                          </div>
+                          <div className="col-span-2 md:col-span-1">
+                             <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full border border-green-100">
+                               <ShieldCheck className="w-4 h-4" />
+                               <span className="text-[10px] font-black uppercase tracking-widest">AI Secured</span>
+                             </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-6 bg-slate-900 rounded-[32px] text-white flex flex-col md:flex-row items-center justify-between gap-6">
+                   <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center">
+                         <Stars className="w-6 h-6 text-primary" />
+                      </div>
+                      <p className="text-sm font-bold italic text-slate-300">"I am monitoring all monthly cycles to ensure zero service interruptions."</p>
+                   </div>
+                   <button className="px-8 py-4 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary transition-all shrink-0">
+                      Audit All Sources
+                   </button>
                 </div>
               </motion.div>
             )}
