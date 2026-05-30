@@ -213,7 +213,8 @@ export default function SettingsPage() {
     { id: 'blue', name: 'Electric Empire', primary: '#0070ff', secondary: '#140a2d', description: 'The standard neon high-contrast look.' },
     { id: 'emerald', name: 'Growth Green', primary: '#10b981', secondary: '#140a2d', description: 'Focused on clarity and profitability.' },
     { id: 'pink', name: 'Electric Pink', primary: '#ff0099', secondary: '#140a2d', description: 'High-energy vibrant neon aesthetic.' },
-    { id: 'teal', name: 'Electric Teal', primary: '#00ffff', secondary: '#140a2d', description: 'Cybernetic and fresh digital appearance.' }
+    { id: 'teal', name: 'Electric Teal', primary: '#00ffff', secondary: '#140a2d', description: 'Cybernetic and fresh digital appearance.' },
+    { id: 'electric-blue', name: 'Electric Blue', primary: '#00a2ff', secondary: '#140a2d', description: 'High-voltage neon sky blue.' }
   ];
 
   return (

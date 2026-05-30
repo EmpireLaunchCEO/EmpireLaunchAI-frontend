@@ -1,6 +1,6 @@
 {
-  "version": "4.7.2-VIBRANT-TEAL",
-  "deploy_id": "vibrant_teal_2024",
+  "version": "4.7.3-ELECTRIC-BLUE",
+  "deploy_id": "electric_blue_2024",
   "critical": true,
   "cache_bust": true
 }
