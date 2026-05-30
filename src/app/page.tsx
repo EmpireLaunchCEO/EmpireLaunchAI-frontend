@@ -73,7 +73,7 @@ export default function LandingPage() {
 
           {/* Hero Heading */}
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.8] uppercase italic">
-            <span className="text-gradient-electric">
+            <span className="text-gradient-empire-core">
               Your Empire Awaits
             </span>
           </h1>
@@ -96,7 +96,7 @@ export default function LandingPage() {
             </button>
           </div>
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none">
-            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.5.0-HARD-LOCK-BLUE-PURPLE</span>
+            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.5.1-STRICT-REBUILD-BLUE-PURPLE</span>
           </div>
         </motion.div>
 
@@ -122,4 +122,9 @@ export default function LandingPage() {
     </div>
   );
 }
-// Build Trigger: Sun May 24 23:55:54 UTC 2026
+
+/**
+ * SOURCE LOCK VERIFICATION
+ * TIMESTAMP: 2026-05-30T02:45:00Z
+ * NO TEAL / NO TURQUOISE / NO "GROW YOUR EMPIRE"
+ */
