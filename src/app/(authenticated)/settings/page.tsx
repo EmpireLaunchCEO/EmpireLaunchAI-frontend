@@ -19,7 +19,8 @@ import {
   CreditCard,
   ExternalLink,
   LifeBuoy,
-  Mail
+  Mail,
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
@@ -127,6 +128,7 @@ export default function SettingsPage() {
 
   const tabs = [
     { id: 'link-center', name: 'Link Center', icon: Share2 },
+    { id: 'financials', name: 'Financials', icon: CreditCard },
     { id: 'ai-intelligence', name: 'AI Intelligence', icon: Zap },
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
@@ -167,6 +169,66 @@ export default function SettingsPage() {
           </aside>
 
           <main className="flex-1">
+            {activeTab === 'financials' && (
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                      <CreditCard className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-foreground tracking-tight uppercase italic">Empire Financials</h3>
+                      <p className="text-sm font-medium text-muted-foreground">Authorize your banking gateway for automated revenue collection.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Bank Account Nickname</label>
+                      <input type="text" placeholder="e.g. Empire Main Operating" className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold text-lg" />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Settlement Method</label>
+                      <select className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold appearance-none text-lg">
+                        <option>Stripe Connect (Incl. Cash App, Venmo, Cards)</option>
+                        <option>Direct Bank Transfer (ACH)</option>
+                        <option>PayPal Business</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="p-8 rounded-[32px] bg-slate-900 border border-slate-800 space-y-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Building2 className="w-5 h-5 text-primary" />
+                        <h4 className="font-black text-white uppercase italic tracking-wider">Gateway Configuration</h4>
+                      </div>
+                      <span className="px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-[8px] font-black uppercase">Pending Setup</span>
+                    </div>
+                    
+                    <p className="text-xs text-slate-400 font-medium leading-relaxed">
+                      "To enable 'Buy' buttons on social media and automated invoicing, you must link your payout account. All transactions are safeguarded with hardware-level encryption."
+                    </p>
+
+                    <button className="w-full py-5 bg-primary text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-white transition-all shadow-xl shadow-amber-900/20">
+                      Setup Payout Gateway
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-4 pt-4 opacity-50 grayscale">
+                    <div className="flex items-center gap-1">
+                      <Lock className="w-3 h-3" />
+                      <span className="text-[8px] font-black uppercase tracking-widest">PCI-DSS Compliant</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3" />
+                      <span className="text-[8px] font-black uppercase tracking-widest">Secure Bank Bridge</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {activeTab === 'link-center' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {activePlatform && <IntegrationForm platform={activePlatform} onClose={() => setActivePlatform(null)} />}

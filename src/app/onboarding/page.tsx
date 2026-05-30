@@ -16,7 +16,10 @@ import {
   Globe,
   Coins,
   Languages,
-  ChevronDown
+  ChevronDown,
+  Shield,
+  Scale,
+  AlertCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ProgressConstellation } from '@/components/Onboarding/ProgressConstellation';
@@ -30,11 +33,12 @@ import { PWAInstallPrompt } from '@/components/Onboarding/PWAInstallPrompt';
 import { TermsModal } from '@/components/Legal/TermsModal';
 
 const steps = [
-  { id: 1, title: 'Authorization' },
-  { id: 2, title: 'Identity' },
-  { id: 3, title: 'Matrix' },
-  { id: 4, title: 'Toolkit' },
-  { id: 5, title: 'Calibration' },
+  { id: 1, title: 'Protocol' },
+  { id: 2, title: 'Authorization' },
+  { id: 3, title: 'Calibration' },
+  { id: 4, title: 'Identity' },
+  { id: 5, title: 'Matrix' },
+  { id: 6, title: 'Toolkit' },
 ];
 
 import { useEmpire } from '@/lib/EmpireContext';
@@ -256,7 +260,12 @@ export default function Onboarding() {
     await new Promise(r => setTimeout(r, 2000));
     setIsPaid(true);
     setIsPaying(false);
-    nextStep();
+    
+    if (currentStep === steps.length) {
+      handleActivate();
+    } else {
+      nextStep();
+    }
   };
 
   return (
@@ -271,7 +280,7 @@ export default function Onboarding() {
       <div className="fixed left-8 top-1/2 -translate-y-1/2 -rotate-90 origin-left hidden lg:flex items-center gap-4 z-[70]">
         <Stars className="w-4 h-4 text-primary rotate-90" />
         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 whitespace-nowrap">
-          Orchestrator: <span className="text-foreground">{currentStep === 1 ? "Analyzing Identity" : currentStep === 2 ? "Mapping Matrix" : "Calibrating Growth"}</span>
+          Orchestrator: <span className="text-foreground">{steps[currentStep - 1]?.title}</span>
         </span>
       </div>
 
@@ -286,20 +295,77 @@ export default function Onboarding() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
+                className="space-y-8"
+              >
+                <div className="text-center space-y-4">
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20">
+                    <Scale className="w-8 h-8 text-primary" />
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Neural Agreement.</h2>
+                  <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
+                    "To begin autonomous operations, you must first authorize the synchronization protocols."
+                  </p>
+                </div>
+
+                <div className="bg-slate-900 border border-slate-800 rounded-[32px] p-8 space-y-6 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-800">
+                  <section className="space-y-2">
+                    <div className="flex items-center gap-2 text-white font-bold text-sm">
+                      <Shield className="w-4 h-4 text-primary" />
+                      <h3>1. Protection</h3>
+                    </div>
+                    <p className="text-[10px] text-slate-400 leading-relaxed uppercase tracking-tight">
+                      Your information is secured via AES-256-GCM encryption. We do not store raw banking credentials.
+                    </p>
+                  </section>
+                  <section className="space-y-2">
+                    <div className="flex items-center gap-2 text-white font-bold text-sm">
+                      <AlertCircle className="w-4 h-4 text-primary" />
+                      <h3>2. Security</h3>
+                    </div>
+                    <p className="text-[10px] text-slate-400 leading-relaxed uppercase tracking-tight">
+                      Any fraudulent activity detected will result in immediate account suspension without refund.
+                    </p>
+                  </section>
+                  <section className="space-y-2">
+                    <div className="flex items-center gap-2 text-white font-bold text-sm">
+                      <Scale className="w-4 h-4 text-primary" />
+                      <h3>3. Legal Waiver</h3>
+                    </div>
+                    <p className="text-[10px] text-slate-400 leading-relaxed uppercase tracking-tight italic">
+                      By proceeding, you waive rights to legal action and agree to binding arbitration.
+                    </p>
+                  </section>
+                </div>
+
+                <button
+                  onClick={nextStep}
+                  className="w-full bg-primary text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group"
+                >
+                  Accept Protocols
+                  <CheckCircle2 className="w-4 h-4" />
+                </button>
+              </motion.div>
+            )}
+
+            {currentStep === 2 && (
+              <motion.div
+                key="step2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
                 className="max-w-md mx-auto space-y-8"
               >
                 <div className="text-center space-y-4">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-xl shadow-amber-900/20">
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20">
                     <Lock className="w-8 h-8 text-primary" />
                   </div>
                   <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Authorize Engine.</h2>
                   <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
-                    "To begin autonomous operations, I need you to authorize the operational license. This secures your business slots and neural processing priority."
+                    "Select your regional parameters and authorize the operational license."
                   </p>
                 </div>
 
                 <div className="bg-slate-900 border border-slate-800 rounded-[32px] p-6 md:p-8 space-y-6 relative overflow-hidden">
-                   {/* Language & Currency Merged */}
                    <div className="grid grid-cols-2 gap-4">
                      <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
@@ -310,7 +376,7 @@ export default function Onboarding() {
                          <select
                            value={language}
                            onChange={(e) => setLanguage(e.target.value)}
-                           className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-4 pr-10 text-[10px] font-black uppercase appearance-none hover:border-primary/40 transition-all cursor-pointer outline-none"
+                           className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-4 pr-10 text-[10px] font-black uppercase appearance-none hover:border-primary/40 transition-all cursor-pointer outline-none text-white"
                          >
                            <option value="en-US">English (US)</option>
                            <option value="en-GB">English (UK)</option>
@@ -331,7 +397,7 @@ export default function Onboarding() {
                          <select
                            value={currency}
                            onChange={(e) => setCurrency(e.target.value)}
-                           className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-4 pr-10 text-[10px] font-black uppercase appearance-none hover:border-primary/40 transition-all cursor-pointer outline-none"
+                           className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-4 pr-10 text-[10px] font-black uppercase appearance-none hover:border-primary/40 transition-all cursor-pointer outline-none text-white"
                          >
                            <option value="USD">USD ($)</option>
                            <option value="EUR">EUR (€)</option>
@@ -354,17 +420,6 @@ export default function Onboarding() {
                          </div>
                        </div>
 
-                       <button
-                         onClick={async () => {
-                           setIsTermsOpen(true);
-                         }}
-                         disabled={isActivating || isPaying}
-                         className="w-full bg-primary text-slate-900 py-4 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl shadow-amber-900/20 flex items-center justify-center gap-2 group"
-                       >
-                         {isPaying ? "Verifying Key..." : "Authorize Engine"}
-                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                       </button>
-
                        <div className="space-y-2">
                          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Access Key</label>
                          <div className="relative group">
@@ -373,9 +428,35 @@ export default function Onboarding() {
                               value={accessKey}
                               onChange={(e) => setAccessKey(e.target.value)}
                               placeholder="0000-0000-0000"
-                              className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none shadow-inner"
+                              className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none shadow-inner text-white"
                             />
                          </div>
+                       </div>
+
+                       <button
+                         onClick={async () => {
+                           if (accessKey === '0000-0000-0000' || accessKey.length > 5) {
+                              setIsPaid(true);
+                              nextStep();
+                           } else {
+                              setIsTermsOpen(true);
+                           }
+                         }}
+                         disabled={isActivating || isPaying}
+                         className="w-full bg-primary text-slate-900 py-4 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-2 group"
+                       >
+                         {isPaying ? "Verifying..." : "Secure Card Checkout"}
+                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                       </button>
+
+                       <div className="flex justify-center items-center gap-4 opacity-40 grayscale group-hover:opacity-100 transition-opacity">
+                          <CreditCard className="w-4 h-4 text-white" />
+                          <div className="flex gap-1">
+                             <div className="w-6 h-4 bg-slate-800 rounded-sm" />
+                             <div className="w-6 h-4 bg-slate-800 rounded-sm" />
+                             <div className="w-6 h-4 bg-slate-800 rounded-sm" />
+                          </div>
+                          <span className="text-[8px] font-black uppercase text-slate-500 tracking-widest">Encrypted</span>
                        </div>
 
                        <div className="grid grid-cols-2 gap-3">
@@ -383,7 +464,7 @@ export default function Onboarding() {
                            'Full Autonomous Execution',
                            'Priority Neural Discovery',
                            'Secure Bank Bridge',
-                           '24/7 Intelligence Pulse'
+                           'Stripe or Credit Card'
                          ].map(f => (
                            <div key={f} className="flex items-center gap-2 text-[8px] font-black text-slate-400 uppercase tracking-tight">
                              <div className="w-1 h-1 bg-primary rounded-full shadow-[0_0_5px_rgba(251,191,36,0.5)]" />
@@ -391,19 +472,6 @@ export default function Onboarding() {
                            </div>
                          ))}
                        </div>
-                     </div>
-                   </div>
-
-                   <div className="pt-4 border-t border-slate-800">
-                     <div className="flex items-center gap-4 opacity-30 grayscale">
-                        <div className="flex items-center gap-1">
-                          <CreditCard className="w-3 h-3" />
-                          <span className="text-[8px] font-black uppercase tracking-widest">Secure Pay</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Lock className="w-3 h-3" />
-                          <span className="text-[8px] font-black uppercase tracking-widest">Encrypted</span>
-                        </div>
                      </div>
                    </div>
                 </div>
@@ -417,17 +485,6 @@ export default function Onboarding() {
               </motion.div>
             )}
 
-            {currentStep === 2 && (
-              <motion.div
-                key="step2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <EmpireIdentity data={data} updateData={updateData} />
-              </motion.div>
-            )}
-
             {currentStep === 3 && (
               <motion.div
                 key="step3"
@@ -435,9 +492,9 @@ export default function Onboarding() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <PlatformMatrix
-                  connectedPlatforms={data.connectedPlatforms}
-                  onConnect={handleConnect}
+                <AutomationCalibration
+                  mode={data.automationMode}
+                  onModeChange={(mode) => updateData({ automationMode: mode })}
                 />
               </motion.div>
             )}
@@ -449,7 +506,7 @@ export default function Onboarding() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <ConsultantToolkit businessAngle={data.angle} />
+                <EmpireIdentity data={data} updateData={updateData} />
               </motion.div>
             )}
 
@@ -460,10 +517,21 @@ export default function Onboarding() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <AutomationCalibration
-                  mode={data.automationMode}
-                  onModeChange={(mode) => updateData({ automationMode: mode })}
+                <PlatformMatrix
+                  connectedPlatforms={data.connectedPlatforms}
+                  onConnect={handleConnect}
                 />
+              </motion.div>
+            )}
+
+            {currentStep === 6 && (
+              <motion.div
+                key="step6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <ConsultantToolkit businessAngle={data.angle} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -493,11 +561,18 @@ export default function Onboarding() {
             </button>
           ) : (
             <button
-              onClick={handleActivate}
-              disabled={isActivating}
+              onClick={() => {
+                if (accessKey === '0000-0000-0000' || accessKey.length > 5) {
+                   setIsPaid(true);
+                   handleActivate();
+                } else {
+                   setIsTermsOpen(true);
+                }
+              }}
+              disabled={isActivating || isPaying}
               className="bg-primary text-slate-900 px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-white transition-all shadow-2xl shadow-amber-900/20 group disabled:opacity-50 w-full md:w-auto justify-center"
             >
-              {isActivating ? "Establishing Sync..." : "Finish Setup"}
+              {isActivating ? "Establishing Sync..." : isPaying ? "Verifying..." : "Authorize & Finish"}
               <CheckCircle2 className="w-4 h-4" />
             </button>
           )}

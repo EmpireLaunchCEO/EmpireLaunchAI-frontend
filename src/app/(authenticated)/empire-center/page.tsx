@@ -79,7 +79,7 @@ export default function EmpireCenterPage() {
                 : "text-muted-foreground hover:text-slate-700"
             )}
           >
-            <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-blue-600" : "")} />
+            <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-primary" : "")} />
             {tab.label}
           </button>
         ))}
@@ -139,14 +139,14 @@ export default function EmpireCenterPage() {
                   <div className="space-y-4">
                     <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4">
                       <div className="flex items-center gap-3">
-                        <Stars className="w-5 h-5 text-blue-600" />
+                        <Stars className="w-5 h-5 text-primary" />
                         <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
                       </div>
                       <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                         <motion.div
                           initial={{ width: "0%" }}
                           animate={{ width: "65%" }}
-                          className="bg-blue-600 h-full"
+                          className="bg-primary h-full shadow-[0_0_10px_rgba(251,191,36,0.5)]"
                         />
                       </div>
                       <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">

@@ -11,13 +11,11 @@ interface ProgressConstellationProps {
 }
 
 export function ProgressConstellation({ currentStep, totalSteps }: ProgressConstellationProps) {
-  // Define star positions (in percentage)
-  const stars = [
-    { x: 10, y: 50 },
-    { x: 35, y: 20 },
-    { x: 65, y: 80 },
-    { x: 90, y: 50 },
-  ];
+  // Dynamically generate star positions based on totalSteps
+  const stars = Array.from({ length: totalSteps }, (_, i) => ({
+    x: 10 + (80 / (totalSteps - 1)) * i,
+    y: i % 2 === 0 ? 50 : (i % 4 === 1 ? 20 : 80)
+  }));
 
   return (
     <div className="relative w-full max-w-xl h-24 mb-20 mx-auto mt-8">

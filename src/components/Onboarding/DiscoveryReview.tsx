@@ -68,13 +68,13 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4 bg-blue-600/5 p-6 rounded-[32px] border border-blue-600/10">
-        <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg">
+      <div className="flex items-center gap-4 bg-primary/5 p-6 rounded-[32px] border border-primary/20">
+        <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-slate-950 shadow-lg shadow-amber-900/20">
           <Bot className="w-6 h-6" />
         </div>
         <div>
-          <h3 className="text-xl font-black text-foreground leading-tight">Neural Scan Findings.</h3>
-          <p className="text-sm text-muted-foreground font-medium">I've identified potential assets in your Gmail. Please approve which ones I should integrate into your empire.</p>
+          <h3 className="text-xl font-black text-foreground leading-tight uppercase italic">Neural Scan Findings.</h3>
+          <p className="text-sm text-muted-foreground font-medium italic">"I've identified potential assets in your ecosystem. Authorize the ones I should integrate into your empire."</p>
         </div>
       </div>
 
@@ -121,7 +121,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
                   <button
                     disabled={processingId === result.id}
                     onClick={() => handleApprove(result.id)}
-                    className="flex-1 md:flex-none px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg flex items-center justify-center gap-2"
+                    className="flex-1 md:flex-none px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary hover:text-slate-900 transition-all shadow-lg flex items-center justify-center gap-2"
                   >
                     {processingId === result.id ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
