@@ -34,19 +34,19 @@
 }
 
 [data-theme='teal'] {
-  --primary-rgb: 0, 255, 255; /* Electric Teal (Now Ultra-Vibrant Cyan) */
-  --background-rgb: 10, 5, 25; /* Standardized Empire Dark */
-  --foreground-rgb: 255, 255, 255; /* Pure White */
-  --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
-  --surface-border-rgb: 0, 255, 255; /* Electric Teal */
+  --primary-rgb: 0, 255, 255; /* Vibrant Cyan */
+  --background-rgb: 10, 5, 25;
+  --foreground-rgb: 255, 255, 255;
+  --surface-rgb: 20, 10, 45;
+  --surface-border-rgb: 0, 255, 255;
 }
 
 [data-theme='electric-blue'] {
-  --primary-rgb: 0, 162, 255; /* Electric Blue (Brighter Neon Blue) */
-  --background-rgb: 10, 5, 25; /* Standardized Empire Dark */
-  --foreground-rgb: 255, 255, 255; /* Pure White */
-  --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
-  --surface-border-rgb: 0, 162, 255; /* Electric Blue */
+  --primary-rgb: 0, 162, 255; /* Neon Blue */
+  --background-rgb: 10, 5, 25;
+  --foreground-rgb: 255, 255, 255;
+  --surface-rgb: 20, 10, 45;
+  --surface-border-rgb: 0, 162, 255;
 }
 
 body {

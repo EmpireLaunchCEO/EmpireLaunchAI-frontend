@@ -54,9 +54,13 @@ export default function Dashboard() {
   }, [isLinkingComplete, isLoading]);
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
+      // Artificially delay to show the refresh globe and clear cache
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
       const [empireRes, pulseRes, healthRes, txRes] = await Promise.all([
-        fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`),
+        fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`, { cache: 'no-store' }),
         analyticsService.getEmpirePulse(),
         analyticsService.getEmpireHealth(),
         analyticsService.getRevenueTransactions()
@@ -69,6 +73,12 @@ export default function Dashboard() {
       setPulseData(pulseRes);
       setHealthData(healthRes);
       setTransactions(txRes);
+      
+      // Force a soft version check
+      const verRes = await fetch('/version.json', { cache: 'no-store' });
+      const verData = await verRes.json();
+      console.log('Refreshed to version:', verData.version);
+      
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {

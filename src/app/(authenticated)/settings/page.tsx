@@ -211,10 +211,10 @@ export default function SettingsPage() {
 
   const colorSchemes = [
     { id: 'blue', name: 'Electric Empire', primary: '#0070ff', secondary: '#140a2d', description: 'The standard neon high-contrast look.' },
-    { id: 'emerald', name: 'Growth Green', primary: '#10b981', secondary: '#140a2d', description: 'Focused on clarity and profitability.' },
-    { id: 'pink', name: 'Electric Pink', primary: '#ff0099', secondary: '#140a2d', description: 'High-energy vibrant neon aesthetic.' },
-    { id: 'teal', name: 'Electric Teal', primary: '#00ffff', secondary: '#140a2d', description: 'Cybernetic and fresh digital appearance.' },
-    { id: 'electric-blue', name: 'Electric Blue', primary: '#00a2ff', secondary: '#140a2d', description: 'High-voltage neon sky blue.' }
+    { id: 'emerald', name: 'Growth Green', primary: '#10b981', secondary: '#052c22', description: 'Focused on clarity and profitability.' },
+    { id: 'pink', name: 'Electric Pink', primary: '#ff0099', secondary: '#2d0a1f', description: 'High-energy vibrant neon aesthetic.' },
+    { id: 'teal', name: 'Vibrant Cyan', primary: '#00ffff', secondary: '#0a2d2d', description: 'Cybernetic and fresh digital appearance.' },
+    { id: 'electric-blue', name: 'Neon Blue', primary: '#00a2ff', secondary: '#0a1a2d', description: 'High-voltage neon sky blue.' }
   ];
 
   return (
@@ -500,13 +500,13 @@ export default function SettingsPage() {
                         )}
                       >
                         <div className="flex items-center justify-between">
-                          <div className="flex gap-2">
+                          <div className="flex items-end gap-3">
                             <div 
-                              className="w-6 h-6 rounded-full border static-border" 
+                              className="w-10 h-10 rounded-2xl border-2 static-border shadow-lg shadow-black/20" 
                               style={{ backgroundColor: scheme.primary }} 
                             />
                             <div 
-                              className="w-6 h-6 rounded-full border static-border" 
+                              className="w-6 h-6 rounded-lg border static-border opacity-60" 
                               style={{ backgroundColor: scheme.secondary }} 
                             />
                           </div>
