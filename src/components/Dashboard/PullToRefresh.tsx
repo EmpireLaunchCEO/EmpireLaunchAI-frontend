@@ -109,8 +109,14 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       <motion.div
         drag={isAtTop ? "y" : false}
         dragConstraints={{ top: 0, bottom: 400 }}
-        dragElastic={0.1}
+        dragElastic={0.05}
         dragDirectionLock
+        onDragStart={(e, info) => {
+          // If the user is swiping UP (negative Y), kill the drag to let native scroll take over
+          if (info.delta.y < 0) {
+             controls.stop();
+          }
+        }}
         onDragEnd={handleDragEnd}
         animate={controls}
         style={{ y }}

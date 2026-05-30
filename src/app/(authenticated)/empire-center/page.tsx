@@ -71,26 +71,26 @@ export default function EmpireCenterPage() {
         </div>
       </header>
 
-      {/* Primary Tabs */}
-      <div className="flex bg-slate-100 p-1.5 rounded-[24px] w-full overflow-x-auto no-scrollbar border-2 border-theme">
+      {/* Primary Tabs - Optimized for mobile fit and vertical scroll priority */}
+      <div className="flex bg-slate-100 p-1 rounded-[20px] w-full max-w-full overflow-hidden border-2 border-theme">
         {[
           { id: 'duties', label: 'Duties', icon: Zap },
           { id: 'history', label: 'Posts', icon: History },
-          { id: 'expenses', label: 'Expenses', icon: CreditCard },
-          { id: 'ai-config', label: 'Directives', icon: Stars },
+          { id: 'expenses', label: 'Costs', icon: CreditCard },
+          { id: 'ai-config', label: 'Rules', icon: Stars },
         ].map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
             className={cn(
-              "flex items-center gap-2 px-6 py-3 rounded-[20px] font-bold text-sm transition-all shrink-0",
+              "flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-[16px] font-black text-[10px] uppercase tracking-tighter transition-all shrink-0",
               activeTab === tab.id
                 ? "bg-theme-surface text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-slate-700"
             )}
           >
-            <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-primary" : "")} />
-            {tab.label}
+            <tab.icon className={cn("w-3.5 h-3.4", activeTab === tab.id ? "text-primary" : "")} />
+            <span className="truncate">{tab.label}</span>
           </button>
         ))}
       </div>

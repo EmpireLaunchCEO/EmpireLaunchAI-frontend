@@ -1,10 +1,10 @@
 {
-  "version": "4.8.1",
-  "buildId": "launch-v4-8-1",
+  "version": "4.8.2",
+  "buildId": "launch-v4-8-2",
   "changelog": [
-    "Fixed theme dot color inheritance (Dots now show true colors regardless of active theme)",
-    "Corrected secondary theme colors for better visual distinction",
-    "Shrunk Pull-to-Refresh globe icon size",
-    "Isolated theme border logic to prevent global purple overrides"
+    "Compacted Empire Center tabs to eliminate horizontal overflow",
+    "Priority Vertical Scroll: Swiping up now immediately kills the Pull-to-Refresh drag",
+    "Reduced drag elasticity for a more stable UI feel",
+    "Renamed 'Expenses' and 'Directives' tabs for better mobile fitting"
   ]
 }
