@@ -1,6 +1,6 @@
 {
-  "version": "4.7.4-FINAL-STABLE",
-  "deploy_id": "final_stable_2024",
+  "version": "4.7.5-SCROLL-STABLE",
+  "deploy_id": "scroll_stable_2024",
   "critical": true,
   "cache_bust": true
 }

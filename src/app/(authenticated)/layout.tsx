@@ -12,9 +12,9 @@ export default function AuthenticatedLayout({
 }>) {
   return (
     <SubscriptionGuard>
-      <div className="flex bg-theme-background h-screen relative overflow-hidden">
+      <div className="flex bg-theme-background h-[100dvh] relative overflow-hidden">
         <OnboardingTour />
-        <main className="flex-1 min-h-0 bg-theme-surface shadow-2xl shadow-slate-200 border-l border-theme overflow-y-auto relative pb-80 md:pb-40">
+        <main className="flex-1 min-h-0 bg-theme-surface shadow-2xl shadow-slate-200 border-l border-theme overflow-y-auto relative pb-80 md:pb-40 overscroll-contain">
           <div className="absolute top-8 right-8 z-[60] hidden lg:block">
             <NotificationBell id="notification-bell-desktop" />
           </div>
