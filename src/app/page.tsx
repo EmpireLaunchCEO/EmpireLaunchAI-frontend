@@ -95,6 +95,9 @@ export default function LandingPage() {
               <div className="absolute inset-0 rounded-[24px] bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             </button>
           </div>
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none">
+            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.5.0-HARD-LOCK-BLUE-PURPLE</span>
+          </div>
         </motion.div>
 
         {/* Removed TermsModal from landing - it's a mandatory gate at the end of onboarding */}
