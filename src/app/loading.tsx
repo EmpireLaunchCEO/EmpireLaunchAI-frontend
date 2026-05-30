@@ -8,12 +8,9 @@ export default function RootLoading() {
   return (
     <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6">
       <div className="relative">
-        <motion.div
-          className="w-24 h-24 border-4 border-blue-500/20 border-t-blue-500 rounded-full"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-        />
-        <BrandedGlobe size="lg" className="absolute inset-0 m-auto shadow-[0_0_40px_rgba(59,130,246,0.5)]" />
+        <div className="absolute inset-0 bg-cyan-500/20 blur-[60px] animate-pulse" />
+        <div className="absolute inset-0 bg-violet-500/20 blur-[60px] animate-pulse delay-700" />
+        <BrandedGlobe size="xl" className="relative z-10 shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
       </div>
 
       <div className="flex flex-col items-center gap-2">

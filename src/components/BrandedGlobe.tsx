@@ -35,11 +35,12 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
         ease: "easeInOut"
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-amber-500/20 animate-pulse" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-[#00f2ff] via-[#b026ff] to-[#00f2ff] opacity-40 animate-spin-slow blur-sm" />
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/30 to-violet-500/30" />
       <img
         src="/branded-globe.png"
         alt="Empire Globe"
-        className="w-full h-full object-cover scale-110 relative z-10"
+        className="w-full h-full object-cover scale-110 relative z-10 brightness-110 contrast-125"
         onError={(e) => {
           e.currentTarget.style.display = 'none';
         }}
