@@ -197,23 +197,25 @@ export function OnboardingTour() {
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: -20 }}
-          className="bg-theme-surface rounded-[40px] shadow-2xl max-w-md w-full overflow-hidden border-4 border-primary relative pointer-events-auto"
+          className="bg-teal-500 rounded-[40px] shadow-2xl max-w-md w-full overflow-hidden border-4 border-white relative pointer-events-auto"
         >
-          <div className="p-8 space-y-6">
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-400 via-teal-500 to-emerald-600 opacity-90" />
+          
+          <div className="relative p-8 space-y-6">
             <div className="flex items-center justify-between">
-              <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-white">
+              <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30 shadow-lg">
                 <Icon className="w-8 h-8" />
               </div>
-              <button onClick={handleComplete} className="p-2 hover:bg-theme-background rounded-full transition-colors text-slate-400">
+              <button onClick={handleComplete} className="p-2 hover:bg-white/10 rounded-full transition-colors text-white/70">
                 <X className="w-6 h-6" />
               </button>
             </div>
 
             <div className="space-y-3">
-              <h2 className="text-2xl font-black text-foreground leading-tight italic">
+              <h2 className="text-2xl font-black text-white leading-tight italic drop-shadow-sm">
                 {step.title}
               </h2>
-              <p className="text-muted-foreground font-bold leading-relaxed">
+              <p className="text-teal-50 font-bold leading-relaxed drop-shadow-sm">
                 {step.description}
               </p>
             </div>
@@ -223,7 +225,7 @@ export function OnboardingTour() {
                 {tourSteps.map((_, i) => (
                   <div
                     key={i}
-                    className={`h-1.5 rounded-full transition-all duration-500 ${i === currentStep ? 'w-6 bg-primary' : 'w-1.5 bg-theme-background'}`}
+                    className={`h-1.5 rounded-full transition-all duration-500 ${i === currentStep ? 'w-6 bg-white' : 'w-1.5 bg-white/30'}`}
                   />
                 ))}
               </div>
@@ -232,14 +234,14 @@ export function OnboardingTour() {
                 {currentStep > 0 && (
                   <button
                     onClick={prevStep}
-                    className="p-3 rounded-xl bg-theme-background text-slate-400 hover:bg-theme-surface border border-theme transition-all"
+                    className="p-3 rounded-xl bg-white/10 text-white hover:bg-white/20 border border-white/20 transition-all"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                 )}
                 <button
                   onClick={nextStep}
-                  className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary/80 transition-all shadow-lg active:scale-95"
+                  className="flex items-center gap-2 bg-white text-teal-600 px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-teal-50 transition-all shadow-lg active:scale-95"
                 >
                   {currentStep === tourSteps.length - 1 ? 'Finish' : 'Next'}
                   <ChevronRight className="w-4 h-4" />
@@ -260,26 +262,26 @@ export function OnboardingTour() {
         >
           {step.target?.startsWith('nav-') ? (
             <>
-              <div className="bg-primary text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-white whitespace-nowrap">
+              <div className="bg-teal-500 text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-white whitespace-nowrap animate-pulse shadow-teal-500/50">
                 Look Here
               </div>
               <motion.div
                 animate={{ y: [0, 5, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
-                <ArrowDown className="w-10 h-10 text-primary drop-shadow-xl fill-primary stroke-white stroke-[1px]" />
+                <ArrowDown className="w-10 h-10 text-teal-500 drop-shadow-xl fill-teal-500 stroke-white stroke-[1px]" />
               </motion.div>
             </>
           ) : (
             <div className="flex flex-col-reverse items-center gap-1 translate-y-[100%]">
-              <div className="bg-primary text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-white whitespace-nowrap">
+              <div className="bg-teal-500 text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-white whitespace-nowrap animate-pulse shadow-teal-500/50">
                 Look Here
               </div>
               <motion.div
                 animate={{ y: [0, -5, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
-                <ArrowDown className="w-10 h-10 text-primary drop-shadow-xl fill-primary stroke-white stroke-[1px] rotate-180" />
+                <ArrowDown className="w-10 h-10 text-teal-500 drop-shadow-xl fill-teal-500 stroke-white stroke-[1px] rotate-180" />
               </motion.div>
             </div>
           )}
