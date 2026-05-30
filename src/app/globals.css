@@ -60,12 +60,13 @@ body {
 /* GLOBAL TWO-TONE OVERRIDE */
 
 /* Every piece of text uses the Purple-to-Blue Gradient */
-h1, h2, h3, h4, h5, h6, p, span, label, input, textarea, .text-theme {
-  background: linear-gradient(135deg, #a855f7 0%, #0070ff 100%) fixed;
+h1, h2, h3, h4, h5, h6, p, span, label, input, textarea, div:not([class*="bg-"]):not([class*="w-"]):not([class*="h-"]) {
+  background: linear-gradient(135deg, #a855f7 0%, #0070ff 100%);
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
+  display: inline-block;
 }
 
 /* EXCEPT for text inside elements that have a primary background */
