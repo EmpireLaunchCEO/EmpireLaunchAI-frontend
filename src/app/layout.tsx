@@ -38,37 +38,30 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var currentVersion = '4.6.5-STABLE';
+                  var currentVersion = '4.6.6-ULTRA-STABLE';
                   
                   // Check server version
                   fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
                     .then(function(r) { return r.json(); })
                     .then(function(data) {
                       if (data.version && data.version !== currentVersion) {
-                        console.log('New version detected:', data.version);
-                        localStorage.clear();
-                        sessionStorage.clear();
-                        if ('serviceWorker' in navigator) {
-                          navigator.serviceWorker.getRegistrations().then(function(regs) {
-                            for(var r of regs) r.unregister();
-                          });
+                        var lastReload = localStorage.getItem('last_version_reload');
+                        if (lastReload !== data.version) {
+                          localStorage.setItem('last_version_reload', data.version);
+                          localStorage.setItem('app_version', data.version);
+                          if ('serviceWorker' in navigator) {
+                            navigator.serviceWorker.getRegistrations().then(function(regs) {
+                              for(var r of regs) r.unregister();
+                            });
+                          }
+                          window.location.reload(true);
                         }
-                        window.location.reload(true);
                       }
                     }).catch(function() {});
 
                   var installedVersion = localStorage.getItem('app_version');
                   if (installedVersion !== currentVersion) {
-                    localStorage.clear();
-                    sessionStorage.clear();
                     localStorage.setItem('app_version', currentVersion);
-                    if ('serviceWorker' in navigator) {
-                      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                        for(var registration of registrations) {
-                          registration.unregister();
-                        }
-                      });
-                    }
                     window.location.reload(true);
                   }
 

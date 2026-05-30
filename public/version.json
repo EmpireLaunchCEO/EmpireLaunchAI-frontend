@@ -1,6 +1,6 @@
 {
-  "version": "4.6.5-STABLE",
-  "deploy_id": "stable_fix_2250",
+  "version": "4.6.6-ULTRA-STABLE",
+  "deploy_id": "ultra_stable_2255",
   "critical": true,
   "cache_bust": true
 }

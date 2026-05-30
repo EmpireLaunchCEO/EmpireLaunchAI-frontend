@@ -134,7 +134,11 @@ export default function SettingsPage() {
       const tabId = e.detail;
       setActiveTab(tabId);
       
-      // Smooth scroll the tab into view if on mobile
+      // Update URL without a full page refresh to keep things stable
+      const newUrl = `${window.location.pathname}?tab=${tabId}`;
+      window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl);
+      
+      // Smooth scroll the tab into view
       setTimeout(() => {
         const tabEl = document.getElementById(`tab-${tabId}`);
         if (tabEl) {
