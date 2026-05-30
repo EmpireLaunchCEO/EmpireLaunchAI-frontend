@@ -55,7 +55,7 @@ export default function LandingPage() {
         </div>
         <div className="hidden md:flex items-center gap-2 bg-theme-surface/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
             <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Live: v4.5.3 (Autonomous Final)</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Live: v4.5.4 (Autonomous Final)</span>
           </div>
       </nav>
 
@@ -96,7 +96,7 @@ export default function LandingPage() {
             </button>
           </div>
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none">
-            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.5.3-STRICT-REBUILD-BLUE-PURPLE</span>
+            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.5.4-STRICT-REBUILD-BLUE-PURPLE</span>
           </div>
         </motion.div>
 
