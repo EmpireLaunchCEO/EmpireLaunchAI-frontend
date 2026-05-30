@@ -107,7 +107,7 @@ export function OnboardingTour() {
     {
       title: "Real-Time Alerts",
       description: "Keep an eye on this bell! It will pulse when you have new sales or when I need your approval on a new strategy.",
-      target: "notification-bell",
+      target: "notification-bell-mobile",
       icon: Bell,
       page: "/dashboard"
     },

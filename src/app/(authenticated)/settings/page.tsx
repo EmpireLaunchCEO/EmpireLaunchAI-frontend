@@ -151,6 +151,10 @@ export default function SettingsPage() {
     return () => window.removeEventListener('empire:switch-tab', handleSwitchTab);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
   const tabs = [
     { id: 'link-center', name: 'Link Center', icon: Share2 },
     { id: 'financials', name: 'Financials', icon: CreditCard },

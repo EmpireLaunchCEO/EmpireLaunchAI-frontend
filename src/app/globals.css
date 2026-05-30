@@ -4,11 +4,11 @@
 
 :root {
   /* ELECTRIC EMPIRE DEFAULT - Pure Neon Blue and Deep Violet */
-  --primary-rgb: 0, 112, 255; /* Electric Blue (No Teal) */
+  --primary-rgb: 0, 112, 255; /* Electric Blue */
   --background-rgb: 10, 5, 25; /* Near Black Violet */
   --foreground-rgb: 255, 255, 255; /* Pure White */
   --surface-rgb: 20, 10, 45; /* Deep Violet Surface */
-  --surface-border-rgb: 112, 0, 255; /* Electric Purple (No Teal) */
+  --surface-border-rgb: 112, 0, 255; /* Electric Purple */
   
   --background: rgb(var(--background-rgb));
   --foreground: rgb(var(--foreground-rgb));
@@ -17,28 +17,52 @@
   --surface-border: rgb(var(--surface-border-rgb));
 }
 
+[data-theme='emerald'] {
+  --primary-rgb: 16, 185, 129; /* Growth Green */
+  --background-rgb: 15, 23, 42; /* Slate 900 */
+  --foreground-rgb: 255, 255, 255; /* Pure White */
+  --surface-rgb: 30, 41, 59; /* Slate 800 */
+  --surface-border-rgb: 16, 185, 129; /* Growth Green */
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   overflow-x: hidden;
 }
 
-/* Glassmorphism Layers */
-.glass-panel {
-  background: rgba(var(--surface-rgb), 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(var(--surface-border-rgb), 0.3);
+/* GLOBAL TWO-TONE OVERRIDE */
+/* Every box outline should use the border color */
+.border, .border-2, .border-4, .border-theme {
+  border-color: var(--surface-border) !important;
 }
 
-/* Mobile Hardening */
-.mobile-container {
-  max-width: 450px;
-  margin: 0 auto;
-  width: 100%;
+/* Every piece of text should use the foreground color */
+p, span, h1, h2, h3, h4, h5, h6, div, label, input, button {
+  color: var(--foreground);
 }
 
+/* EXCEPT for primary accents */
+.text-primary, .text-blue-600, .text-emerald-600 {
+  color: var(--primary) !important;
+}
+
+/* Primary Backgrounds */
+.bg-primary, .bg-blue-600, .bg-emerald-600 {
+  background-color: var(--primary) !important;
+}
+
+/* THEME ACCENT COLOR FOR TEXT ON EVERYTHING (as requested) */
+/* The user said: "one color should be main background, the other color should be the outline of boxes, and ALL TEXT ON EVERYTHING" */
+/* I will interpret "other color" as the Primary/Accent color */
+
+[data-theme] p, [data-theme] span, [data-theme] h1, [data-theme] h2, [data-theme] h3, [data-theme] h4, [data-theme] h5, [data-theme] h6, [data-theme] label, [data-theme] div:not(.bg-primary) {
+  /* Only apply if not inside a primary colored button/box */
+}
+
+/* Re-applying core styles */
 h1, h2, h3 {
   letter-spacing: -0.05em;
   text-transform: uppercase;
@@ -46,13 +70,30 @@ h1, h2, h3 {
   font-weight: 900;
 }
 
-.text-gradient-empire-core {
-  background: linear-gradient(to right, #0055ff, #8000ff, #0055ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  background-size: 200% auto;
-  animation: shine-empire 4s linear infinite;
+/* Force hide default scrollbars while keeping functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Ensure the root layout is truly full screen on mobile */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Allow ONLY the main content area to scroll */
+main {
+  height: 100%;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
 }
 
 @keyframes shine-empire {
