@@ -47,12 +47,12 @@ h1, h2, h3 {
 }
 
 .text-gradient-electric {
-  background: linear-gradient(to right, var(--primary), #22d3ee, #8b5cf6);
+  background: linear-gradient(to right, #00f2ff, #7000ff, #00f2ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   background-size: 200% auto;
-  animation: shine 3s linear infinite;
+  animation: shine 4s linear infinite;
 }
 
 @keyframes spin-slow {

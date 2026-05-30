@@ -35,8 +35,8 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
         ease: "easeInOut"
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-tr from-[#00f2ff] via-[#b026ff] to-[#00f2ff] opacity-40 animate-spin-slow blur-sm" />
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/30 to-violet-500/30" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-[#00f2ff] via-[#b026ff] to-[#00f2ff] opacity-60 animate-spin-slow blur-md" />
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/40 to-violet-600/40" />
       <img
         src="/branded-globe.png"
         alt="Empire Globe"
