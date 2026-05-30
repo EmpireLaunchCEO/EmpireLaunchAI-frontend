@@ -130,11 +130,22 @@ export default function SettingsPage() {
   const [theme, setTheme] = useState('blue');
 
   useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab) {
-      setActiveTab(tab);
-    }
-  }, [searchParams]);
+    const handleSwitchTab = (e: any) => {
+      const tabId = e.detail;
+      setActiveTab(tabId);
+      
+      // Smooth scroll the tab into view if on mobile
+      setTimeout(() => {
+        const tabEl = document.getElementById(`tab-${tabId}`);
+        if (tabEl) {
+          tabEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }, 100);
+    };
+
+    window.addEventListener('empire:switch-tab', handleSwitchTab);
+    return () => window.removeEventListener('empire:switch-tab', handleSwitchTab);
+  }, []);
 
   const tabs = [
     { id: 'link-center', name: 'Link Center', icon: Share2 },

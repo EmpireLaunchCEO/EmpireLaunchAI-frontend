@@ -173,9 +173,21 @@ export function OnboardingTour() {
     const nextIdx = currentStep + 1;
     if (nextIdx < tourSteps.length) {
       const nextStepData = tourSteps[nextIdx];
-      if (nextStepData.page && pathname !== nextStepData.page) {
-        router.push(nextStepData.page);
+      
+      // If the step has a specific page, go there
+      if (nextStepData.page) {
+        const [basePath, query] = nextStepData.page.split('?');
+        if (pathname !== basePath) {
+          router.push(nextStepData.page);
+        } else if (query) {
+          // If we are already on the page but need to switch a tab
+          const tabMatch = query.match(/tab=([^&]+)/);
+          if (tabMatch) {
+            window.dispatchEvent(new CustomEvent('empire:switch-tab', { detail: tabMatch[1] }));
+          }
+        }
       }
+      
       setCurrentStep(nextIdx);
     } else {
       handleComplete();
