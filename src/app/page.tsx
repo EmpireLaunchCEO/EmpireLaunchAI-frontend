@@ -96,7 +96,7 @@ export default function LandingPage() {
             </button>
           </div>
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none">
-            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.5.1-STRICT-REBUILD-BLUE-PURPLE</span>
+            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.5.2-STRICT-REBUILD-BLUE-PURPLE</span>
           </div>
         </motion.div>
 
