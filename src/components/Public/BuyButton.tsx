@@ -70,9 +70,7 @@ export function BuyButton({ productId, productName, price, sellerName, className
                 <div className="flex flex-col items-end">
                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Secure Checkout</span>
                   <div className="flex gap-1 mt-1">
-                    <div className="w-4 h-2.5 bg-slate-200 rounded-sm" />
-                    <div className="w-4 h-2.5 bg-slate-200 rounded-sm" />
-                    <div className="w-4 h-2.5 bg-slate-200 rounded-sm" />
+                    <CreditCard className="w-4 h-4 text-slate-300" />
                   </div>
                 </div>
               </div>
