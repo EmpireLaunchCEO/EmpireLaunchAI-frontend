@@ -185,6 +185,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
                   value={accessKey}
                   onChange={(e) => setAccessKey(e.target.value)}
                   placeholder="ADMIN-CODE-..."
+                  autoComplete="off"
                   className="w-full bg-slate-900 border border-slate-800 rounded-2xl p-5 text-sm font-black tracking-widest uppercase focus:border-primary/60 outline-none transition-all text-white placeholder:text-slate-700"
                 />
                 <Sparkles className="absolute right-5 top-5 w-5 h-5 text-primary/40" />

@@ -276,13 +276,6 @@ export default function Onboarding() {
         onClose={() => setIsTermsOpen(false)}
         onAccept={handleAcceptTerms}
       />
-      <div className="fixed left-0 top-0 bottom-0 w-1 bg-slate-100 hidden z-[70]" />
-      <div className="fixed left-8 top-1/2 -translate-y-1/2 -rotate-90 origin-left hidden items-center gap-4 z-[70]">
-        <Stars className="w-4 h-4 text-primary rotate-90" />
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 whitespace-nowrap">
-          Engine: <span className="text-foreground">{steps[currentStep - 1]?.title}</span>
-        </span>
-      </div>
 
       <div className="w-full max-w-md px-6 py-8 md:py-16 flex flex-col mx-auto flex-grow">
         <ProgressConstellation currentStep={currentStep} totalSteps={steps.length} />
@@ -429,6 +422,7 @@ export default function Onboarding() {
                               value={accessKey}
                               onChange={(e) => setAccessKey(e.target.value)}
                               placeholder="ADMIN-CODE-..."
+                              autoComplete="off"
                               className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none shadow-inner text-white"
                             />
                          </div>
