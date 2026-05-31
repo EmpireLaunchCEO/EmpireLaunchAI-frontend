@@ -280,7 +280,7 @@ export default function Onboarding() {
       <div className="fixed left-8 top-1/2 -translate-y-1/2 -rotate-90 origin-left hidden items-center gap-4 z-[70]">
         <Stars className="w-4 h-4 text-primary rotate-90" />
         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 whitespace-nowrap">
-          Orchestrator: <span className="text-foreground">{steps[currentStep - 1]?.title}</span>
+          Engine: <span className="text-foreground">{steps[currentStep - 1]?.title}</span>
         </span>
       </div>
 
@@ -428,7 +428,7 @@ export default function Onboarding() {
                               type="text"
                               value={accessKey}
                               onChange={(e) => setAccessKey(e.target.value)}
-                              placeholder="OWNER-ADMIN-..."
+                              placeholder="ADMIN-CODE-..."
                               className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none shadow-inner text-white"
                             />
                          </div>
@@ -453,12 +453,7 @@ export default function Onboarding() {
 
                        <div className="flex justify-center items-center gap-4 opacity-40 grayscale group-hover:opacity-100 transition-opacity">
                           <CreditCard className="w-4 h-4 text-white" />
-                          <div className="flex gap-1">
-                             <div className="w-6 h-4 bg-slate-800 rounded-sm" />
-                             <div className="w-6 h-4 bg-slate-800 rounded-sm" />
-                             <div className="w-6 h-4 bg-slate-800 rounded-sm" />
-                          </div>
-                          <span className="text-[8px] font-black uppercase text-slate-500 tracking-widest">Encrypted</span>
+                          <span className="text-[8px] font-black uppercase text-slate-500 tracking-widest">Gateway Connected</span>
                        </div>
 
                        <div className="grid grid-cols-2 gap-3">
