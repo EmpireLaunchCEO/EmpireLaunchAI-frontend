@@ -45,6 +45,8 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { CreditCard, Lock, Sparkles } from 'lucide-react';
 
+import { io } from 'socket.io-client';
+
 export default function Onboarding() {
   const {
     completeOnboarding,
@@ -75,6 +77,7 @@ export default function Onboarding() {
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
   const [gatePlatform, setGatePlatform] = useState('Etsy');
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
+  const [realLogs, setRealLogs] = useState<string[]>([]);
 
   const discoveryLogs = [
     "Scanning linked email accounts...",
@@ -103,6 +106,52 @@ export default function Onboarding() {
       return () => clearInterval(interval);
     }
   }, [isActivating, data.automationMode, showDiscoveryReview]);
+
+  // WebSocket for real-time progress
+  useEffect(() => {
+    if (isActivating) {
+      const socket = io(API_URL);
+      const userId = '00000000-0000-0000-0000-000000000000';
+
+      socket.on('connect', () => {
+        socket.emit('subscribe', userId);
+      });
+
+      socket.on('ai-log', (data: { message: string }) => {
+        setRealLogs(prev => [...prev, data.message]);
+      });
+
+      socket.on('empire-initialized', (data) => {
+        console.log('Empire initialized via WebSocket:', data);
+        setTimeout(() => {
+          completeOnboarding();
+          window.location.href = '/dashboard';
+        }, 1500);
+      });
+
+      // Polling fallback
+      const pollInterval = setInterval(async () => {
+        try {
+          const res = await fetch(`${API_URL}/api/agent/goal/latest`, {
+             headers: { 'Authorization': 'Bearer mock-mobile-token' }
+          });
+          const goal = await res.json();
+          if (goal && goal.status === 'active') {
+             console.log('Empire active detected via polling');
+             completeOnboarding();
+             window.location.href = '/dashboard';
+          }
+        } catch (e) {
+          // Silent fail for polling
+        }
+      }, 3000);
+
+      return () => {
+        socket.disconnect();
+        clearInterval(pollInterval);
+      };
+    }
+  }, [isActivating]);
 
   useEffect(() => {
     if (isInitialized && isOnboarded) {
@@ -147,18 +196,22 @@ export default function Onboarding() {
       const result = await response.json();
 
       if (result.status === 'success') {
-        setActiveEmpireId(result.empire.id);
-        completeOnboarding();
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 2000);
+        if (result.empire?.id) {
+          setActiveEmpireId(result.empire.id);
+        }
+        
+        // If co-pilot, we wait for the webhook/websocket in the background
+        if (data.automationMode === 'co-pilot') {
+          // The useEffect will handle the transition once empire-initialized is received
+        }
       }
     } catch (error) {
       console.error('Error during activation:', error);
-      completeOnboarding();
+      // Fallback after timeout
       setTimeout(() => {
+        completeOnboarding();
         window.location.href = '/dashboard';
-      }, 2000);
+      }, 5000);
     }
   };
 
@@ -208,7 +261,7 @@ export default function Onboarding() {
                 <div className="flex items-center justify-center gap-3 h-6">
                   <AnimatePresence mode="wait">
                     <motion.div
-                      key={discoveryLogIndex}
+                      key={realLogs.length > 0 ? 'real-' + realLogs.length : 'discovery-' + discoveryLogIndex}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
@@ -216,7 +269,7 @@ export default function Onboarding() {
                     >
                       <Loader2 className="w-4 h-4 text-primary animate-spin" />
                       <p className="text-primary font-black tracking-widest text-xs uppercase">
-                        {discoveryLogs[discoveryLogIndex]}
+                        {realLogs.length > 0 ? realLogs[realLogs.length - 1] : discoveryLogs[discoveryLogIndex]}
                       </p>
                     </motion.div>
                   </AnimatePresence>
