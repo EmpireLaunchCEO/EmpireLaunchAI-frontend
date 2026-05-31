@@ -68,7 +68,9 @@ export default function LandingPage() {
           {/* Tagline */}
           <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-md px-5 py-2 rounded-full border border-primary/20 font-bold text-[10px] uppercase tracking-[0.2em]">
             <Stars className="w-4 h-4 text-primary" />
-            Autonomous Business Engineering
+            <span className="bg-gradient-to-r from-[#a855f7] to-[#0070ff] bg-clip-text text-transparent">
+              Autonomous Business Engineering
+            </span>
           </div>
 
           {/* Hero Heading */}
