@@ -75,7 +75,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
                 Active Plan
               </div>
               <h3 className="text-xl font-black text-white uppercase italic tracking-tighter mb-1">Empire Master</h3>
-              <p className="text-primary text-[10px] font-black uppercase tracking-widest mb-6">Unlimited Autonomy License</p>
+              {/* License text removed per owner request */}
 
               <div className="space-y-3 mb-8">
                 {[

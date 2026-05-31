@@ -29,11 +29,12 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="canonical" href="https://empire-launch-ai-frontend.vercel.app" />
-        <link rel="manifest" href="/manifest.json?v=500" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=500" />
-        <link rel="icon" href="/branded-globe.png?v=500" />
+        <link rel="manifest" href="/manifest.json?v=501" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=501" />
+        <link rel="icon" href="/branded-globe.png?v=501" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="EmpireLaunch" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
