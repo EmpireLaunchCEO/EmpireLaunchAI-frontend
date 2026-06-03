@@ -55,15 +55,9 @@
   --surface-border-rgb: 0, 162, 255;
 }
 
-html, body {
-  background-color: #0a0519 !important; /* Force immediate dark background to prevent white flash */
-  color: white;
-  height: 100dvh;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
+/* FORCE DARK BACKGROUND IMMEDIATELY */
+html {
+  background-color: #0a0519 !important;
 }
 
 body {
@@ -71,12 +65,12 @@ body {
   color: var(--primary);
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: hidden;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 /* GLOBAL TWO-TONE OVERRIDE */
-
-/* Every piece of text uses the Primary-to-Secondary Gradient */
 h1, h2, h3, h4, h5, h6, p, span, label, .text-theme {
   background: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%);
   -webkit-background-clip: text !important;
@@ -111,7 +105,7 @@ option {
 
 /* Ensure gradients always stay as gradients even if classes are nested */
 .text-gradient-empire-core {
-  background: linear-gradient(135deg, #a855f7 0%, #0070ff 100%) fixed;
+  background: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%) fixed;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
@@ -149,24 +143,6 @@ h1, h2, h3 {
   text-transform: uppercase;
   font-style: italic;
   font-weight: 900;
-}
-
-/* Allow ONLY the main content area to scroll */
-main {
-  min-height: 0;
-  flex: 1 1 auto;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Standard reset for PWA */
-html, body {
-  height: 100dvh;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
