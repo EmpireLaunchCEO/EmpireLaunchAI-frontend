@@ -201,7 +201,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
   // Expose interception to window for simplicity in this prototype or use a ref in real app
   useEffect(() => {
     (window as any).interceptTeacher = handleInterception;
-    return () => delete (window as any).interceptTeacher;
+    return () => { delete (window as any).interceptTeacher; };
   }, [connectedPlatforms]);
 
   return (

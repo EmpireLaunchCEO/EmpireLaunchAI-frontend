@@ -218,7 +218,7 @@ export default function SettingsPage() {
   ];
 
   return (
-    <PullToRefresh>
+    <div className="overflow-auto h-full w-full">
       <div className="max-w-6xl mx-auto space-y-12 pb-24">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div className="space-y-2">
@@ -564,6 +564,6 @@ export default function SettingsPage() {
           </main>
         </div>
       </div>
-    </PullToRefresh>
+    </div>
   );
 }

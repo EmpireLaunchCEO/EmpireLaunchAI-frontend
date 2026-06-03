@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { API_URL } from '@/lib/config';
 
 interface Notification {
   id: string;

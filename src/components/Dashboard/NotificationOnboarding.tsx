@@ -210,7 +210,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                     <div className="space-y-4 pt-4">
                       <button
                         onClick={handleActivate}
-                        disabled={status === 'subscribing'}
+                        disabled={status !== 'idle' && status !== 'error'}
                         className="w-full py-5 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 text-foreground rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all shadow-xl shadow-amber-400/10 active:scale-[0.98]"
                       >
                         Activate Real-Time Pulse

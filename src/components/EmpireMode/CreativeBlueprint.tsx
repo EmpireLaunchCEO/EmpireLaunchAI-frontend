@@ -42,7 +42,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
       setLoading(false);
 
       // If task is already in 'editing' or 'drafting', skip variation selection
-      if (task.status === 'editing' || task.status === 'drafting') {
+      if (task.status === 'editing') {
         setStep('blueprint');
       }
     }

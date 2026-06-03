@@ -481,6 +481,5 @@ export default function EmpireCenterPage() {
         </div>
       </div>
     </div>
-    </PullToRefresh>
-  );
-}
+    );
+    }

@@ -165,7 +165,7 @@ export function ApprovalQueue() {
                              id: activeRequest.id,
                              title: activeRequest.payload.title,
                              platform: activeRequest.payload.platform,
-                             status: 'drafting',
+                             status: 'blueprint_ready',
                              dueDate: 'Today'
                            }}
                            onClose={() => handleDecision(activeRequest.id, 'approved')}

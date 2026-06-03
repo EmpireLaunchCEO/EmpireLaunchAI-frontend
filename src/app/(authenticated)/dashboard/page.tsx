@@ -273,6 +273,5 @@ export default function Dashboard() {
 
         {isLinkingComplete && <NotificationOnboarding />}
       </div>
-    </PullToRefresh>
   );
 }

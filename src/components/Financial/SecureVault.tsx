@@ -195,7 +195,7 @@ export function SecureVault() {
           description="Enables automated listing and inventory management."
           icon={Lock}
           isLocked={!integrations.etsy}
-          onSave={() => handleSave('etsy')}
+          onSave={(keys) => handleSave('etsy', keys)}
           helpUrl="https://www.etsy.com/developers/register"
           fields={[
             { id: 'apiKey', label: 'API Key (Keystring)', type: 'text', placeholder: 'Enter your Etsy API key' },
@@ -209,7 +209,7 @@ export function SecureVault() {
           description="Enables automated video posting and trend analytics."
           icon={Lock}
           isLocked={!integrations.tiktok}
-          onSave={() => handleSave('tiktok')}
+          onSave={(keys) => handleSave('tiktok', keys)}
           helpUrl="https://ads.tiktok.com/marketing_api/homepage"
           fields={[
             { id: 'clientKey', label: 'Client Key', type: 'text', placeholder: 'Enter TikTok Client Key' },
@@ -223,7 +223,7 @@ export function SecureVault() {
           description="Handles secure payments and direct payouts to your bank."
           icon={Lock}
           isLocked={!integrations.stripe}
-          onSave={() => handleSave('stripe')}
+          onSave={(keys) => handleSave('stripe', keys)}
           helpUrl="https://dashboard.stripe.com/apikeys"
           fields={[
             { id: 'publishableKey', label: 'Publishable Key', type: 'text', placeholder: 'pk_live_...' },
@@ -237,7 +237,7 @@ export function SecureVault() {
           description="Allows AI to generate and import designs for your products."
           icon={Lock}
           isLocked={!integrations.canva}
-          onSave={() => handleSave('canva')}
+          onSave={(keys) => handleSave('canva', keys)}
           fields={[
             { id: 'clientId', label: 'Client ID', type: 'text', placeholder: 'Enter Canva client ID' },
             { id: 'clientSecret', label: 'Client Secret', type: 'password', placeholder: 'Enter client secret' },

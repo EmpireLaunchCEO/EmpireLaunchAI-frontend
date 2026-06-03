@@ -1,3 +1,5 @@
+import { API_URL } from '@/lib/config';
+
 export interface RevenueTransaction {
   id: string;
   amount: number;
@@ -623,6 +625,32 @@ export const analyticsService = {
         impact: "Medium",
         metric: "12% search lift",
         type: "optimization"
+      }
+    ];
+  },
+
+  async getStrategySuggestions(): Promise<any[]> {
+    return [
+      {
+        id: 'strat_1',
+        title: "Cross-Platform Synergi",
+        description: "Your TikTok engagement is high. I recommend auto-generating 3 Instagram Reels from your top performing videos to capture the IG audience.",
+        impact: "High",
+        type: "growth"
+      },
+      {
+        id: 'strat_2',
+        title: "Pricing Optimization",
+        description: "Competitor prices for 'Digital Planners' on Etsy have dropped by 5%. Adjusting your price to $24.99 could increase sales volume by 15%.",
+        impact: "Medium",
+        type: "optimization"
+      },
+      {
+        id: 'strat_3',
+        title: "Keyword Injection",
+        description: "I found 5 trending keywords for your niche. I can automatically update your Etsy listing tags to include 'Aesthetic Daily' and 'Mindfulness Journal'.",
+        impact: "Medium",
+        type: "seo"
       }
     ];
   }

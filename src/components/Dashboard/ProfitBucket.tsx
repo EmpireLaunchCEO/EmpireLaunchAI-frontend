@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBucket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp } from 'lucide-react';
+import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ProfitBucketProps {

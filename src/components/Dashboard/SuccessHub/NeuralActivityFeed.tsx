@@ -35,25 +35,25 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
 
     socket.on('ai-log', (data: { message: string }) => {
       setLogs(prev => {
-        const nextLogs = [...prev, { id: Date.now(), text: data.message, status: 'processing' }];
+        const nextLogs = [...prev, { id: Date.now(), text: data.message, status: 'processing' as const }];
         if (nextLogs.length > 1) {
-          nextLogs[nextLogs.length - 2].status = 'done';
+          nextLogs[nextLogs.length - 2].status = 'done' as const;
         }
-        return nextLogs.slice(-10); // Keep more logs if they are real
+        return nextLogs.slice(-10);
       });
     });
 
     socket.on('job-started', (data: { goal: string }) => {
       setLogs(prev => [
         ...prev,
-        { id: Date.now(), text: `[SYSTEM] Goal Received: ${data.goal}`, status: 'done' }
+        { id: Date.now(), text: `[SYSTEM] Goal Received: ${data.goal}`, status: 'done' as const }
       ].slice(-10));
     });
 
     socket.on('job-completed', (data: { resultSummary: string }) => {
       setLogs(prev => [
         ...prev,
-        { id: Date.now(), text: `[SYSTEM] Success: ${data.resultSummary}`, status: 'done' }
+        { id: Date.now(), text: `[SYSTEM] Success: ${data.resultSummary}`, status: 'done' as const }
       ].slice(-10));
     });
 
@@ -69,9 +69,9 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
         const newThought = MOCK_THOUGHTS[Math.floor(Math.random() * MOCK_THOUGHTS.length)];
         setLogs(prev => {
           // If we have real logs coming in, maybe slow down mock logs or stop them
-          const nextLogs = [...prev, { id: logId++, text: newThought, status: 'processing' }];
+          const nextLogs = [...prev, { id: logId++, text: newThought, status: 'processing' as const }];
           if (nextLogs.length > 1) {
-            nextLogs[nextLogs.length - 2].status = 'done';
+            nextLogs[nextLogs.length - 2].status = 'done' as const;
           }
           return nextLogs.slice(-6);
         });
