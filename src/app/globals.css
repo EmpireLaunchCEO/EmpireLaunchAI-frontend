@@ -5,6 +5,7 @@
 :root {
   /* ELECTRIC EMPIRE DEFAULT - Vivid Purple-Blue Hybrid */
   --primary-rgb: 168, 85, 247; /* Vibrant Purple */
+  --secondary-rgb: 0, 112, 255; /* Electric Blue */
   --background-rgb: 10, 5, 25; /* Near Black Violet */
   --foreground-rgb: 255, 255, 255; /* Pure White */
   --surface-rgb: 15, 8, 35; /* Deeper Violet Surface */
@@ -13,12 +14,14 @@
   --background: rgb(var(--background-rgb));
   --foreground: rgb(var(--foreground-rgb));
   --primary: rgb(var(--primary-rgb));
+  --secondary: rgb(var(--secondary-rgb));
   --surface: rgb(var(--surface-rgb));
   --surface-border: rgb(var(--surface-border-rgb));
 }
 
 [data-theme='emerald'] {
   --primary-rgb: 16, 185, 129; /* Growth Green */
+  --secondary-rgb: 5, 150, 105;
   --background-rgb: 10, 5, 25;
   --foreground-rgb: 255, 255, 255;
   --surface-rgb: 20, 10, 45;
@@ -27,6 +30,7 @@
 
 [data-theme='pink'] {
   --primary-rgb: 255, 0, 153; /* Electric Pink */
+  --secondary-rgb: 190, 24, 93;
   --background-rgb: 10, 5, 25;
   --foreground-rgb: 255, 255, 255;
   --surface-rgb: 20, 10, 45;
@@ -35,6 +39,7 @@
 
 [data-theme='teal'] {
   --primary-rgb: 0, 255, 255; /* Vibrant Cyan */
+  --secondary-rgb: 8, 145, 178;
   --background-rgb: 10, 5, 25;
   --foreground-rgb: 255, 255, 255;
   --surface-rgb: 20, 10, 45;
@@ -43,10 +48,22 @@
 
 [data-theme='electric-blue'] {
   --primary-rgb: 0, 162, 255; /* Neon Blue */
+  --secondary-rgb: 3, 105, 161;
   --background-rgb: 10, 5, 25;
   --foreground-rgb: 255, 255, 255;
   --surface-rgb: 20, 10, 45;
   --surface-border-rgb: 0, 162, 255;
+}
+
+html, body {
+  background-color: #0a0519 !important; /* Force immediate dark background to prevent white flash */
+  color: white;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body {
@@ -59,9 +76,9 @@ body {
 
 /* GLOBAL TWO-TONE OVERRIDE */
 
-/* Every piece of text uses the Purple-to-Blue Gradient */
+/* Every piece of text uses the Primary-to-Secondary Gradient */
 h1, h2, h3, h4, h5, h6, p, span, label, .text-theme {
-  background: linear-gradient(135deg, #a855f7 0%, #0070ff 100%);
+  background: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%);
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;

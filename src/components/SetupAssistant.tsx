@@ -141,6 +141,9 @@ export function SetupAssistant() {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
       setCopied(false);
+    } else if (activeSetupPlatform) {
+      // If we are on the first step and hit 'Not Using', we finish/skip this setup
+      finishSetup();
     }
   };
 
@@ -233,14 +236,12 @@ export function SetupAssistant() {
               </div>
 
               <div className="flex gap-2 pt-2">
-                {currentStep > 0 && (
-                  <button
-                    onClick={prev}
-                    className="flex-1 px-4 py-3 rounded-xl bg-theme-surface/5 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:bg-theme-surface/10"
-                  >
-                    Back
-                  </button>
-                )}
+                <button
+                  onClick={prev}
+                  className="px-4 py-3 rounded-xl bg-theme-surface/5 text-slate-400 font-bold text-[10px] uppercase tracking-widest hover:bg-theme-surface/10"
+                >
+                  {currentStep > 0 ? 'Back' : 'Not Using'}
+                </button>
                 <button
                   onClick={next}
                   className="flex-[2] bg-primary text-slate-950 px-4 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white transition-all"

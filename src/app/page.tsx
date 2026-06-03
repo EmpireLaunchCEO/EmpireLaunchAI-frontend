@@ -31,14 +31,27 @@ export default function LandingPage() {
     setIsOnboarded(true);
   }, []);
 
-  if (!isMounted) return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-      <BrandedGlobe size="xl" />
-    </div>
-  );
-
   return (
-    <div className="min-h-screen bg-theme-background selection:bg-blue-500/30 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0519] selection:bg-blue-500/30 overflow-x-hidden">
+      <AnimatePresence>
+        {!isMounted && (
+          <motion.div 
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 z-[100] bg-[#0a0519] flex flex-col items-center justify-center gap-6"
+          >
+            <BrandedGlobe size="xl" />
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
+              <span className="text-[10px] font-black text-white uppercase tracking-[0.3em] opacity-40">
+                Initializing Intelligence
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* High-Intelligence Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
