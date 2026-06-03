@@ -14,7 +14,10 @@ import {
 import { cn } from '@/lib/utils';
 import { analyticsService, RevenueTransaction, RevenueMilestone } from '@/lib/api-service';
 
+import { useEmpire } from '@/lib/EmpireContext';
+
 export function DetailedRevenue() {
+  const { connectedPlatforms } = useEmpire();
   const [transactions, setTransactions] = useState<RevenueTransaction[]>([]);
   const [milestones, setMilestones] = useState<RevenueMilestone[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,12 +28,18 @@ export function DetailedRevenue() {
         analyticsService.getRevenueTransactions(),
         analyticsService.getRevenueMilestones()
       ]);
-      setTransactions(tData);
+      
+      // Filter transactions based on linked platforms
+      const filteredT = tData.filter(t => 
+        connectedPlatforms.some(cp => cp.toLowerCase() === t.platform.toLowerCase())
+      );
+      
+      setTransactions(filteredT);
       setMilestones(mData);
       setLoading(false);
     }
     loadData();
-  }, []);
+  }, [connectedPlatforms]);
 
   const totalRevenue = transactions.reduce((acc, t) => acc + t.amount, 0);
   const activeMilestone = milestones.find(m => !m.isCompleted) || milestones[milestones.length - 1];

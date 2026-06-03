@@ -322,7 +322,7 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="h-screen bg-theme-surface flex flex-col items-center overflow-y-auto no-scrollbar">
+    <div className="min-h-screen bg-theme-surface flex flex-col items-center">
       <PWAInstallPrompt />
       <TermsModal
         isOpen={isTermsOpen}

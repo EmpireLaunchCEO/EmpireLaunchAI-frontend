@@ -31,7 +31,7 @@ export function Sidebar() {
 
   return (
     <>
-      <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-[72px] top-0 border-r border-theme shadow-sm">
+      <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-0 lg:left-[72px] top-0 border-r border-theme shadow-sm transition-all duration-300">
         <div className="p-6 flex items-center gap-2">
           <div className="bg-primary p-2 rounded-xl shadow-lg shadow-primary/20">
             <Stars className="w-5 h-5 text-white" />

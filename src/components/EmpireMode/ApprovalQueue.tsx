@@ -20,7 +20,10 @@ import { HighIntelPostApproval } from './Gates/HighIntelPostApproval';
 import { GoLiveGate } from './Gates/GoLiveGate';
 import { CreativeBlueprint } from './CreativeBlueprint';
 
+import { useEmpire } from '@/lib/EmpireContext';
+
 export function ApprovalQueue() {
+  const { connectedPlatforms } = useEmpire();
   const [requests, setRequests] = useState<ApprovalRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeRequest, setActiveRequest] = useState<ApprovalRequest | null>(null);
@@ -29,11 +32,21 @@ export function ApprovalQueue() {
   useEffect(() => {
     async function loadRequests() {
       const data = await approvalService.getPendingRequests();
-      setRequests(data);
+      
+      // Filter requests based on linked platforms
+      // 'blueprint' type is universal, others depend on platform
+      const filtered = data.filter(req => {
+        if (req.type === 'blueprint') return true;
+        const platform = req.payload?.platform?.toLowerCase();
+        if (!platform) return true;
+        return connectedPlatforms.some(cp => cp.toLowerCase() === platform);
+      });
+
+      setRequests(filtered);
       setLoading(false);
     }
     loadRequests();
-  }, []);
+  }, [connectedPlatforms]);
 
   const handleDecision = async (id: string, status: 'approved' | 'rejected') => {
     await approvalService.respond(id, status);

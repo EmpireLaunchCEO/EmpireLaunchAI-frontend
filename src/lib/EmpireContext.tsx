@@ -243,7 +243,26 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
   // Keep initialization for things that need to happen after mount
   useEffect(() => {
-    setIsInitialized(true);
+    const syncWithBackend = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/agent/goal/latest`, {
+          headers: { 'Authorization': 'Bearer mock-mobile-token' }
+        });
+        if (res.ok) {
+          const goal = await res.json();
+          if (goal && goal.id) {
+            setActiveEmpireId(goal.id);
+            localStorage.setItem('activeEmpireId', goal.id);
+            setIsOnboarded(true);
+            localStorage.setItem('isOnboarded', 'true');
+          }
+        }
+      } catch (e) {
+        console.error('Initial sync failed', e);
+      }
+      setIsInitialized(true);
+    };
+    syncWithBackend();
   }, []);
 
   const handleSetActiveEmpireId = (id: string) => {
@@ -283,11 +302,14 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
   const connectPlatform = (platform: string) => {
     if (!platform) return;
-    const newPlatforms = [...new Set([...connectedPlatforms, platform])];
-    setConnectedPlatforms(newPlatforms);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('connectedPlatforms', JSON.stringify(newPlatforms));
-    }
+    setConnectedPlatforms(prev => {
+      if (prev.includes(platform)) return prev;
+      const next = [...new Set([...prev, platform])];
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('connectedPlatforms', JSON.stringify(next));
+      }
+      return next;
+    });
   };
 
   const [empireNotes, setEmpireNotesState] = useState(() => {
@@ -320,7 +342,11 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     setThemeState(newTheme);
     if (typeof window !== 'undefined') {
       localStorage.setItem('empireTheme', newTheme);
-      document.body.className = `theme-${newTheme}`;
+      // Clean up previous themes
+      document.body.classList.forEach(cls => {
+        if (cls.startsWith('theme-')) document.body.classList.remove(cls);
+      });
+      document.body.classList.add(`theme-${newTheme}`);
       document.documentElement.setAttribute('data-theme', newTheme);
     }
   };
@@ -356,7 +382,11 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   // Sync theme class on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      document.body.className = `theme-${theme}`;
+      // Clean up previous themes
+      document.body.classList.forEach(cls => {
+        if (cls.startsWith('theme-')) document.body.classList.remove(cls);
+      });
+      document.body.classList.add(`theme-${theme}`);
       document.documentElement.setAttribute('data-theme', theme);
     }
   }, [theme]);

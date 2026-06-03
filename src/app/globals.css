@@ -55,28 +55,52 @@
   --surface-border-rgb: 0, 162, 255;
 }
 
-/* FORCE DARK BACKGROUND IMMEDIATELY */
-html {
-  background-color: #0a0519 !important;
-}
+/* 
+   SCROLL ARCHITECTURE v514
+   Total native scroll restoration for mobile PWA.
+*/
 
-body {
-  background: var(--background);
-  color: var(--primary);
-  font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  min-height: 100vh;
+html, body {
+  background-color: #0a0519 !important;
   margin: 0;
   padding: 0;
+  /* Use auto height to let content define the scroll area */
+  height: auto !important;
+  min-height: 100% !important;
+  /* Allow native scrolling at the root */
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* GLOBAL TWO-TONE OVERRIDE */
-h1, h2, h3, h4, h5, h6, p, span, label, .text-theme {
+/* Ensure no global touch-action blocks scrolling */
+* {
+  box-sizing: border-box;
+  touch-action: auto !important; 
+}
+
+/* 
+   PERFORMANCE FIX: 
+   Gradients only for headers. 
+   Applying background-clip to every p/span/label causes massive scroll lag on iOS.
+*/
+h1, h2, h3, .text-theme-gradient {
   background: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%);
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
+}
+
+/* Normal text should be solid for performance */
+p, span, label, div {
+  color: inherit;
+  -webkit-text-fill-color: inherit;
+  background-clip: border-box;
+}
+
+.text-muted-foreground, .text-slate-400, .text-slate-500 {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* Ensure inputs and selects are readable and solid */
@@ -103,38 +127,13 @@ option {
   background: none !important;
 }
 
-/* Ensure gradients always stay as gradients even if classes are nested */
-.text-gradient-empire-core {
-  background: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%) fixed;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  color: transparent !important;
-}
-
-/* Icons should follow the text color */
-svg {
-  color: inherit;
-}
-
-/* Specific exclusions for readability / muted effects */
-.text-muted-foreground, .text-slate-400, .text-slate-500 {
-  opacity: 0.7;
-}
-
 /* Box Outlines */
 .border-theme, .border-2, .border-4 {
   border-color: var(--surface-border) !important;
 }
 
-/* Force specific elements to use the theme border */
 .bg-theme-surface {
   border-color: var(--surface-border) !important;
-}
-
-/* Static borders for theme dots in settings */
-.static-border {
-  border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Re-applying core styles */

@@ -18,13 +18,25 @@ import { cn } from '@/lib/utils';
 import { analyticsService, ActivityEvent } from '@/lib/api-service';
 import Link from 'next/link';
 
+import { useEmpire } from '@/lib/EmpireContext';
+
 export function ActivityStream() {
+  const { connectedPlatforms } = useEmpire();
   const [activities, setActivities] = useState<ActivityEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
   const loadData = async () => {
     const data = await analyticsService.getActivityStream();
-    setActivities(data);
+    
+    // Filter activities based on linked platforms
+    // We allow 'AI' and 'Empire' types as they are system-level
+    const filtered = data.filter(activity => {
+      const platform = activity.platform.toLowerCase();
+      if (platform === 'ai' || platform === 'empire') return true;
+      return connectedPlatforms.some(cp => cp.toLowerCase() === platform);
+    });
+
+    setActivities(filtered);
     setLoading(false);
   };
 

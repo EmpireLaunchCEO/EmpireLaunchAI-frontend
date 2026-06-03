@@ -4,6 +4,8 @@ import React from 'react';
 import { Play, Eye, Heart, Share2, MousePointer2, Stars, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+import { useEmpire } from '@/lib/EmpireContext';
+
 const MOCK_VIDEOS = [
   {
     id: 1,
@@ -38,6 +40,14 @@ const MOCK_VIDEOS = [
 ];
 
 export const VideoPerformance = () => {
+  const { connectedPlatforms } = useEmpire();
+  
+  const filteredVideos = MOCK_VIDEOS.filter(v => 
+    connectedPlatforms.some(cp => cp.toLowerCase() === v.platform.toLowerCase())
+  );
+
+  if (filteredVideos.length === 0) return null;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

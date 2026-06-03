@@ -15,8 +15,6 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   themeColor: '#fbbf24',
 };
 
@@ -29,9 +27,9 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="canonical" href="https://empire-launch-ai-frontend.vercel.app" />
-        <link rel="manifest" href="/manifest.json?v=501" />
-        <link rel="apple-touch-icon" href="/branded-globe.png?v=501" />
-        <link rel="icon" href="/branded-globe.png?v=501" />
+        <link rel="manifest" href="/manifest.json?v=515" />
+        <link rel="apple-touch-icon" href="/branded-globe.png?v=515" />
+        <link rel="icon" href="/branded-globe.png?v=515" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="EmpireLaunch" />
@@ -52,7 +50,19 @@ export default function RootLayout({
                   });
                 }
 
-                // 2. RELOAD LOOP GUARD
+                // 2. SCROLL RECOVERY SCRIPT
+                function forceScroll() {
+                  document.documentElement.style.overflow = 'auto';
+                  document.documentElement.style.height = 'auto';
+                  document.body.style.overflow = 'visible';
+                  document.body.style.height = 'auto';
+                }
+                
+                window.addEventListener('load', forceScroll);
+                window.addEventListener('resize', forceScroll);
+                setInterval(forceScroll, 2000); // Periodic check to fight dynamic scroll locks
+
+                // 3. RELOAD LOOP GUARD
                 try {
                   var now = Date.now();
                   var lastReload = parseInt(localStorage.getItem('last_empire_reload') || '0');

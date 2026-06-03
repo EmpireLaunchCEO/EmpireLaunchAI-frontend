@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   ClipboardList,
   CheckCircle2,
@@ -46,7 +47,22 @@ import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'duties' | 'history' | 'expenses' | 'ai-config'>('duties');
-  const { empireNotes, setEmpireNotes } = useEmpire();
+  const { empireNotes, setEmpireNotes, connectedPlatforms } = useEmpire();
+
+  const isPlatformConnected = (platform: string) => {
+    return connectedPlatforms.some(p => p.toLowerCase() === platform.toLowerCase());
+  };
+
+  const filteredDuties = duties.filter(d => isPlatformConnected(d.platform));
+  const filteredHistory = postHistory.filter(h => isPlatformConnected(h.site));
+  
+  const filteredExpenses = expenses.filter(e => {
+    if (e.source === 'Stripe') return isPlatformConnected('Stripe');
+    if (e.source === 'Canva' || e.source === 'Kittl' || e.source === 'GoDaddy') {
+       return connectedPlatforms.length > 0;
+    }
+    return isPlatformConnected(e.source);
+  });
 
   const handleRefresh = async () => {
     // Simulate refresh logic
@@ -54,8 +70,7 @@ export default function EmpireCenterPage() {
   };
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
-      <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
+    <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
@@ -111,31 +126,56 @@ export default function EmpireCenterPage() {
                 <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xl font-black text-foreground">Pending Approvals</h3>
-                    <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px] font-black uppercase">2 Action Required</span>
+                    {filteredDuties.filter(d => d.type === 'approval').length > 0 && (
+                      <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                        {filteredDuties.filter(d => d.type === 'approval').length} Action Required
+                      </span>
+                    )}
                   </div>
 
                   <div className="space-y-4">
-                    {duties.filter(d => d.type === 'approval').map(duty => (
-                      <div key={duty.id} className="p-6 bg-theme-background rounded-3xl flex items-center justify-between gap-4 border border-transparent hover:border-blue-200 transition-all">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-theme-surface rounded-2xl flex items-center justify-center shadow-sm">
-                            <Clock className="w-6 h-6 text-amber-500" />
+                    {filteredDuties.filter(d => d.type === 'approval').length > 0 ? (
+                      filteredDuties.filter(d => d.type === 'approval').map(duty => (
+                        <div key={duty.id} className="p-6 bg-theme-background rounded-3xl flex items-center justify-between gap-4 border border-transparent hover:border-blue-200 transition-all">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 bg-theme-surface rounded-2xl flex items-center justify-center shadow-sm">
+                              <Clock className="w-6 h-6 text-amber-500" />
+                            </div>
+                            <div>
+                              <p className="font-bold text-foreground">{duty.title}</p>
+                              <p className="text-xs text-muted-foreground uppercase font-black tracking-widest">{duty.platform}</p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="font-bold text-foreground">{duty.title}</p>
-                            <p className="text-xs text-muted-foreground uppercase font-black tracking-widest">{duty.platform}</p>
+                          <div className="flex gap-2">
+                            <button className="p-3 bg-theme-surface hover:bg-red-50 text-red-500 rounded-xl transition-colors shadow-sm">
+                              <ThumbsDown className="w-4 h-4" />
+                            </button>
+                            <button className="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors shadow-lg shadow-blue-200">
+                              <ThumbsUp className="w-4 h-4" />
+                            </button>
                           </div>
                         </div>
-                        <div className="flex gap-2">
-                          <button className="p-3 bg-theme-surface hover:bg-red-50 text-red-500 rounded-xl transition-colors shadow-sm">
-                            <ThumbsDown className="w-4 h-4" />
-                          </button>
-                          <button className="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors shadow-lg shadow-blue-200">
-                            <ThumbsUp className="w-4 h-4" />
-                          </button>
+                      ))
+                    ) : (
+                      <div className="p-12 text-center space-y-4 bg-theme-background rounded-3xl border-2 border-dashed border-theme">
+                        <div className="w-16 h-16 bg-theme-surface rounded-full flex items-center justify-center mx-auto">
+                          <ShieldCheck className="w-8 h-8 text-slate-300" />
                         </div>
+                        <div className="space-y-1">
+                          <p className="font-black text-foreground uppercase italic">All Clear</p>
+                          <p className="text-xs text-muted-foreground font-medium">
+                            {connectedPlatforms.length === 0 
+                              ? "Link your platforms to see pending duties." 
+                              : "No actions required at this time."}
+                          </p>
+                        </div>
+                        {connectedPlatforms.length === 0 && (
+                          <Link href="/link-center" className="inline-block px-6 py-3 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase tracking-widest">
+                            Go to Link Center
+                          </Link>
+                        )}
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
 
@@ -147,23 +187,29 @@ export default function EmpireCenterPage() {
                   </div>
 
                   <div className="space-y-4">
-                    <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4">
-                      <div className="flex items-center gap-3">
-                        <Stars className="w-5 h-5 text-primary" />
-                        <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
+                    {connectedPlatforms.length > 0 ? (
+                      <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4">
+                        <div className="flex items-center gap-3">
+                          <Stars className="w-5 h-5 text-primary" />
+                          <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
+                        </div>
+                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: "0%" }}
+                            animate={{ width: "65%" }}
+                            className="bg-primary h-full shadow-[0_0_10px_rgba(251,191,36,0.5)]"
+                          />
+                        </div>
+                        <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+                          <span>Phase: Data Synthesis</span>
+                          <span>65% Complete</span>
+                        </div>
                       </div>
-                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: "0%" }}
-                          animate={{ width: "65%" }}
-                          className="bg-primary h-full shadow-[0_0_10px_rgba(251,191,36,0.5)]"
-                        />
+                    ) : (
+                      <div className="p-8 text-center text-muted-foreground font-medium text-xs italic">
+                        Link a marketplace to initialize research protocols.
                       </div>
-                      <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-                        <span>Phase: Data Synthesis</span>
-                        <span>65% Complete</span>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -185,48 +231,55 @@ export default function EmpireCenterPage() {
                 </div>
 
                 <div className="overflow-hidden">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="text-left text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-theme">
-                        <th className="pb-4">Site</th>
-                        <th className="pb-4">Asset</th>
-                        <th className="pb-4">Status</th>
-                        <th className="pb-4">Time</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-50">
-                      {postHistory.map((post) => (
-                        <tr key={post.id} className="group">
-                          <td className="py-6">
-                            <div className="flex items-center gap-2">
-                              <div className="w-4 h-4 rounded-full overflow-hidden">
-                                <img src="/branded-globe.png" alt="Platform" className="w-full h-full object-cover" />
-                              </div>
-                              <span className="font-black text-xs text-foreground uppercase tracking-tighter">{post.site}</span>
-                            </div>
-                          </td>
-                          <td className="py-6">
-                            <span className="font-bold text-slate-700">{post.title}</span>
-                          </td>
-                          <td className="py-6">
-                            <div className="flex items-center gap-1.5 text-green-600 text-[10px] font-black uppercase">
-                              <CheckCircle2 className="w-3 h-3" /> {post.status}
-                            </div>
-                          </td>
-                          <td className="py-6">
-                            <a 
-                              href={`/p/${post.id}`} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 text-slate-400 hover:text-blue-600 transition-colors text-[10px] font-black uppercase"
-                            >
-                              View Live <ExternalLink className="w-3 h-3" />
-                            </a>
-                          </td>
+                  {filteredHistory.length > 0 ? (
+                    <table className="w-full">
+                      <thead>
+                        <tr className="text-left text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-theme">
+                          <th className="pb-4">Site</th>
+                          <th className="pb-4">Asset</th>
+                          <th className="pb-4">Status</th>
+                          <th className="pb-4">Time</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {filteredHistory.map((post) => (
+                          <tr key={post.id} className="group">
+                            <td className="py-6">
+                              <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 rounded-full overflow-hidden">
+                                  <img src="/branded-globe.png" alt="Platform" className="w-full h-full object-cover" />
+                                </div>
+                                <span className="font-black text-xs text-foreground uppercase tracking-tighter">{post.site}</span>
+                              </div>
+                            </td>
+                            <td className="py-6">
+                              <span className="font-bold text-slate-700">{post.title}</span>
+                            </td>
+                            <td className="py-6">
+                              <div className="flex items-center gap-1.5 text-green-600 text-[10px] font-black uppercase">
+                                <CheckCircle2 className="w-3 h-3" /> {post.status}
+                              </div>
+                            </td>
+                            <td className="py-6">
+                              <a 
+                                href={`/p/${post.id}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1.5 text-slate-400 hover:text-blue-600 transition-colors text-[10px] font-black uppercase"
+                              >
+                                View Live <ExternalLink className="w-3 h-3" />
+                              </a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="p-12 text-center space-y-4">
+                      <History className="w-12 h-12 text-slate-200 mx-auto" />
+                      <p className="text-sm font-bold text-slate-400">No posts have been established yet.</p>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -250,38 +303,45 @@ export default function EmpireCenterPage() {
                 </div>
 
                 <div className="space-y-4">
-                  {expenses.map((expense) => (
-                    <div key={expense.id} className="p-6 bg-theme-background rounded-[32px] border border-theme hover:border-primary/30 transition-all group">
-                      <div className="flex flex-col md:flex-row justify-between gap-6">
-                        <div className="flex items-center gap-5">
-                          <div className="w-14 h-14 rounded-2xl bg-theme-surface flex items-center justify-center border border-theme group-hover:border-primary/20">
-                            <Globe className="w-7 h-7 text-slate-400 group-hover:text-primary transition-colors" />
+                  {filteredExpenses.length > 0 ? (
+                    filteredExpenses.map((expense) => (
+                      <div key={expense.id} className="p-6 bg-theme-background rounded-[32px] border border-theme hover:border-primary/30 transition-all group">
+                        <div className="flex flex-col md:flex-row justify-between gap-6">
+                          <div className="flex items-center gap-5">
+                            <div className="w-14 h-14 rounded-2xl bg-theme-surface flex items-center justify-center border border-theme group-hover:border-primary/20">
+                              <Globe className="w-7 h-7 text-slate-400 group-hover:text-primary transition-colors" />
+                            </div>
+                            <div>
+                              <h4 className="text-lg font-black text-foreground uppercase tracking-tight">{expense.source}</h4>
+                              <p className="text-sm font-bold text-slate-500">{expense.item}</p>
+                            </div>
                           </div>
-                          <div>
-                            <h4 className="text-lg font-black text-foreground uppercase tracking-tight">{expense.source}</h4>
-                            <p className="text-sm font-bold text-slate-500">{expense.item}</p>
-                          </div>
-                        </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 items-center">
-                          <div className="text-left md:text-right">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Amount</p>
-                            <p className="text-lg font-black text-foreground">${expense.cost.toFixed(2)}</p>
-                          </div>
-                          <div className="text-left md:text-right">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Next Payout</p>
-                            <p className="text-sm font-black text-slate-600 uppercase">{expense.nextPayment}</p>
-                          </div>
-                          <div className="col-span-2 md:col-span-1">
-                             <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full border border-green-100">
-                               <ShieldCheck className="w-4 h-4" />
-                               <span className="text-[10px] font-black uppercase tracking-widest">AI Secured</span>
-                             </div>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 items-center">
+                            <div className="text-left md:text-right">
+                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Amount</p>
+                              <p className="text-lg font-black text-foreground">${expense.cost.toFixed(2)}</p>
+                            </div>
+                            <div className="text-left md:text-right">
+                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Next Payout</p>
+                              <p className="text-sm font-black text-slate-600 uppercase">{expense.nextPayment}</p>
+                            </div>
+                            <div className="col-span-2 md:col-span-1">
+                               <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full border border-green-100">
+                                 <ShieldCheck className="w-4 h-4" />
+                                 <span className="text-[10px] font-black uppercase tracking-widest">AI Secured</span>
+                               </div>
+                            </div>
                           </div>
                         </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="p-12 text-center space-y-4 bg-theme-background rounded-3xl border-2 border-dashed border-theme">
+                      <CreditCard className="w-12 h-12 text-slate-200 mx-auto" />
+                      <p className="text-sm font-bold text-slate-400">No active operational costs detected.</p>
                     </div>
-                  ))}
+                  )}
                 </div>
 
                 <div className="p-6 bg-slate-900 rounded-[32px] text-white flex flex-col md:flex-row items-center justify-between gap-6">
@@ -324,7 +384,7 @@ export default function EmpireCenterPage() {
                     <button className="p-6 bg-theme-surface/5 border border-white/10 rounded-[32px] text-left hover:bg-theme-surface/10 transition-all">
                       <Search className="w-6 h-6 text-blue-500 mb-4" />
                       <p className="font-bold text-sm">Market Research</p>
-                      <p className="text-[10px] text-muted-foreground uppercase font-black mt-1">Status: Active</p>
+                      <p className="text-[10px] text-muted-foreground uppercase font-black mt-1">Status: {connectedPlatforms.length > 0 ? "Active" : "Waiting for Link"}</p>
                     </button>
                     <button className="p-6 bg-theme-surface/5 border border-white/10 rounded-[32px] text-left hover:bg-theme-surface/10 transition-all">
                       <ExternalLink className="w-6 h-6 text-purple-500 mb-4" />
@@ -393,16 +453,30 @@ export default function EmpireCenterPage() {
 
            <div className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[40px] p-8 text-white space-y-4">
               <h4 className="text-lg font-black leading-tight">Next 24 Hours.</h4>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
-                  <p className="text-xs font-medium text-indigo-100">Post 'Product Showcase' to TikTok (Pending Approval)</p>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
-                  <p className="text-xs font-medium text-indigo-100">Finalize 'Email Sequence' for new subscribers</p>
-                </li>
-              </ul>
+              {connectedPlatforms.length > 0 ? (
+                <ul className="space-y-4">
+                  {isPlatformConnected('TikTok') && (
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
+                      <p className="text-xs font-medium text-indigo-100">Post 'Product Showcase' to TikTok (Pending Approval)</p>
+                    </li>
+                  )}
+                  {isPlatformConnected('Gmail') && (
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
+                      <p className="text-xs font-medium text-indigo-100">Finalize 'Email Sequence' for new subscribers</p>
+                    </li>
+                  )}
+                  {!isPlatformConnected('TikTok') && !isPlatformConnected('Gmail') && (
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
+                      <p className="text-xs font-medium text-indigo-100">Scanning connected platforms for growth opportunities...</p>
+                    </li>
+                  )}
+                </ul>
+              ) : (
+                <p className="text-xs font-black uppercase tracking-widest text-blue-200">Waiting for platform linkage...</p>
+              )}
            </div>
         </div>
       </div>

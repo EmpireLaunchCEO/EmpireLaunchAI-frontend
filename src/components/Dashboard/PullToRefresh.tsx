@@ -107,20 +107,19 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       </motion.div>
 
       <motion.div
-        drag={isAtTop ? "y" : false}
-        dragConstraints={{ top: 0, bottom: 400 }}
-        dragElastic={0.05}
-        dragDirectionLock
-        onDragStart={(e, info) => {
-          // If the user is swiping UP (negative Y), kill the drag to let native scroll take over
-          if (info.delta.y < 0) {
-             controls.stop();
+        onPan={(e, info) => {
+          // Only pull down if at the very top and moving down
+          if (isAtTop && info.offset.y > 0) {
+            y.set(info.offset.y * 0.4);
+          } else if (info.offset.y < 0 && y.get() > 0) {
+            const newVal = Math.max(0, y.get() + info.delta.y);
+            y.set(newVal);
           }
         }}
-        onDragEnd={handleDragEnd}
+        onPanEnd={handleDragEnd}
         animate={controls}
-        style={{ y }}
-        className="relative z-10"
+        style={{ y, touchAction: "pan-y" }}
+        className="relative z-10 w-full"
       >
         {children}
       </motion.div>
