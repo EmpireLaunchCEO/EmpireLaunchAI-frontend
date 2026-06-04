@@ -87,6 +87,8 @@ export default function Onboarding() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('onboarding_step', currentStep.toString());
+      // Ensure we scroll to top when changing main steps
+      window.scrollTo(0, 0);
     }
   }, [currentStep]);
 

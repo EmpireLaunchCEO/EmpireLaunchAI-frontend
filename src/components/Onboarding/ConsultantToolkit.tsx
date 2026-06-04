@@ -76,6 +76,11 @@ export function ConsultantToolkit({ businessAngle, onToolkitComplete }: Consulta
   const [toolkitPage, setToolkitPage] = React.useState(1);
   const allTools = getToolRecommendations(businessAngle);
   
+  // Ensure we start at the top when switching sub-pages
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [toolkitPage]);
+
   // Split tools into 2 pages: Essential and Growth
   const tools = toolkitPage === 1 
     ? allTools.filter((t: any) => t.type === 'Essential')
