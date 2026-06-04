@@ -19,17 +19,25 @@ import {
 
 import { BrandedGlobe } from "@/components/BrandedGlobe";
 import { TermsModal } from '@/components/Legal/TermsModal';
+import { useEmpire } from '@/lib/EmpireContext';
 
 export default function LandingPage() {
   const router = useRouter();
+  const { isOnboarded, isPaid, isInitialized } = useEmpire();
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [language, setLanguage] = useState('en-US');
   const [currency, setCurrency] = useState('USD');
-  const [isMounted, setIsOnboarded] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsOnboarded(true);
+    setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (isInitialized && (isOnboarded || isPaid)) {
+      router.replace('/dashboard');
+    }
+  }, [isInitialized, isOnboarded, isPaid, router]);
 
   return (
     <div className="min-h-screen bg-[#0a0519] selection:bg-blue-500/30 overflow-x-hidden">

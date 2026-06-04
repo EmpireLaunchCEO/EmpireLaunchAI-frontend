@@ -12,6 +12,7 @@ import { InboxAssistant } from './InboxAssistant';
 import { SocialProofApproval } from '../SocialProofApproval';
 import { ActivityStream } from '../ActivityStream';
 import { Stars, Brain, Zap, Globe } from 'lucide-react';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface SuccessHubOverviewProps {
   empireData: any;
@@ -82,7 +83,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
              <div className="flex items-center justify-between mb-8">
                <div className="flex items-center gap-3">
                  <div className="w-10 h-10 rounded-xl bg-theme-background flex items-center justify-center overflow-hidden border border-white/10">
-                   <img src="/branded-globe.png" alt="Globe" className="w-6 h-6 object-cover" />
+                   <BrandedGlobe size="sm" />
                  </div>
                  <h3 className="text-xl font-black text-foreground">Unified Activity Feed</h3>
                </div>

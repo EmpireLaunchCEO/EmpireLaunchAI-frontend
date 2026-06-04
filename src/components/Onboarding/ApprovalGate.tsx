@@ -8,7 +8,6 @@ import {
   ShieldCheck,
   Zap,
   X,
-  Loader2,
   ExternalLink,
   AlertCircle,
   CheckCircle2,

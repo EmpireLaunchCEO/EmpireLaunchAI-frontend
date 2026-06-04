@@ -11,7 +11,6 @@ import {
   Eye,
   Lock,
   Mail,
-  Loader2,
   AlertCircle
 } from 'lucide-react';
 import { BrandedGlobe } from '@/components/BrandedGlobe';

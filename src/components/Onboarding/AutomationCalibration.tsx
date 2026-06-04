@@ -80,9 +80,9 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mt-8 md:mt-12">
         <div className={cn(
           "p-6 md:p-8 rounded-[32px] md:rounded-[40px] border-2 transition-all",
-          mode === 'co-pilot' ? "border-primary bg-primary/5 shadow-2xl shadow-amber-900/10" : "border-slate-800 bg-slate-900 opacity-40"
+          mode === 'co-pilot' ? "border-primary bg-primary/5 shadow-2xl shadow-cyan-900/10" : "border-slate-800 bg-slate-900 opacity-40"
         )}>
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-primary/20 shadow-[0_0_20px_rgba(251,191,36,0.2)] flex items-center justify-center mb-4 md:mb-6 text-white border border-primary/40">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.25)] flex items-center justify-center mb-4 md:mb-6 text-white border border-primary/40">
             <User className="w-5 h-5 md:w-6 h-6" />
           </div>
           <h3 className="text-lg md:text-xl font-black text-white uppercase italic tracking-tight mb-2">High Control</h3>
@@ -101,9 +101,9 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
 
         <div className={cn(
           "p-6 md:p-8 rounded-[32px] md:rounded-[40px] border-2 transition-all",
-          mode === 'empire' ? "border-primary bg-primary/5 shadow-2xl shadow-amber-900/10" : "border-slate-800 bg-slate-900 opacity-40"
+          mode === 'empire' ? "border-primary bg-primary/5 shadow-2xl shadow-cyan-900/10" : "border-slate-800 bg-slate-900 opacity-40"
         )}>
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-primary/20 shadow-[0_0_20px_rgba(251,191,36,0.2)] flex items-center justify-center mb-4 md:mb-6 text-white border border-primary/40">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.25)] flex items-center justify-center mb-4 md:mb-6 text-white border border-primary/40">
             <Zap className="w-5 h-5 md:w-6 h-6 fill-current" />
           </div>
           <h3 className="text-lg md:text-xl font-black text-white uppercase italic tracking-tight mb-2">High Autonomy</h3>

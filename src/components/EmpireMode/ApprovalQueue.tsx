@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Palette,
   AlertCircle,
-  Loader2,
   X,
   ChevronLeft
 } from 'lucide-react';

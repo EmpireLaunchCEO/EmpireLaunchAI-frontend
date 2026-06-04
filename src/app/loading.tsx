@@ -17,16 +17,6 @@ export default function RootLoading() {
         <h2 className="text-cyan-300 font-black uppercase tracking-[0.3em] text-sm animate-pulse">
           Synchronizing Nodes
         </h2>
-        <div className="flex gap-1">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-1.5 h-1.5 bg-cyan-400 rounded-full"
-              animate={{ opacity: [0, 1, 0] }}
-              transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
-            />
-          ))}
-        </div>
       </div>
 
       <div className="absolute bottom-10 flex items-center gap-2 opacity-20">

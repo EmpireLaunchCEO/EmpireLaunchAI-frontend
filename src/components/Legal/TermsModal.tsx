@@ -12,7 +12,7 @@ interface TermsModalProps {
 }
 
 export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
-  const [agreed, setAgreed] = useState(true);
+  const [agreed, setAgreed] = useState(false);
 
   return (
     <AnimatePresence>
@@ -35,7 +35,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
             <div className="p-8 border-b border-white/5 shrink-0 relative overflow-hidden">
                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16" />
                <div className="flex items-center gap-4 relative z-10">
-                 <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-slate-950 shadow-xl shadow-amber-900/20">
+                 <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-slate-950 shadow-xl shadow-cyan-900/20">
                    <Scale className="w-6 h-6" />
                  </div>
                  <div>
@@ -93,18 +93,30 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                 </p>
               </section>
 
-              <div className="p-6 bg-slate-950 rounded-3xl space-y-4 border border-white/5">
+              <button 
+                onClick={() => setAgreed(!agreed)}
+                className={cn(
+                  "w-full p-6 rounded-3xl space-y-4 border transition-all text-left group",
+                  agreed ? "bg-primary/10 border-primary" : "bg-slate-950 border-white/5 hover:border-white/20"
+                )}
+              >
                 <div className="flex items-start gap-4">
                   <div className="mt-1">
-                    <div className="w-6 h-6 rounded-lg bg-primary flex items-center justify-center">
-                      <CheckCircle2 className="w-4 h-4 text-slate-950" />
+                    <div className={cn(
+                      "w-6 h-6 rounded-lg flex items-center justify-center transition-all",
+                      agreed ? "bg-primary" : "bg-slate-800 border border-white/10 group-hover:border-primary/50"
+                    )}>
+                      {agreed && <CheckCircle2 className="w-4 h-4 text-slate-950" />}
                     </div>
                   </div>
-                  <span className="text-xs font-bold text-slate-400 leading-normal italic uppercase">
-                    By clicking "Accept" below, you confirm your synchronization with these protocols.
+                  <span className={cn(
+                    "text-xs font-bold leading-normal italic uppercase transition-colors",
+                    agreed ? "text-primary" : "text-slate-400 group-hover:text-slate-200"
+                  )}>
+                    I explicitly agree to the synchronization protocols and legal waivers listed above.
                   </span>
                 </div>
-              </div>
+              </button>
             </div>
 
             {/* Footer */}
@@ -118,7 +130,13 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                 </button>
                 <button
                   onClick={onAccept}
-                  className="flex-1 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl bg-primary text-slate-900 hover:bg-white shadow-amber-900/20"
+                  disabled={!agreed}
+                  className={cn(
+                    "flex-1 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl",
+                    agreed 
+                      ? "bg-primary text-slate-900 hover:bg-white shadow-cyan-900/20" 
+                      : "bg-slate-800 text-slate-600 cursor-not-allowed"
+                  )}
                 >
                   Accept & Synchronize
                 </button>

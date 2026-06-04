@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Lock, CreditCard, Sparkles, CheckCircle2, ArrowRight, Languages, Coins, ChevronDown } from 'lucide-react';
+import { BrandedGlobe } from './BrandedGlobe';
 
 export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
   const { isPaid, setIsPaid, language, setLanguage, currency, setCurrency } = useEmpire();
@@ -147,7 +148,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
                   {isProcessing ? (
                     <>
                       Initializing...
-                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                      <BrandedGlobe size="sm" />
                     </>
                   ) : (
                     <>

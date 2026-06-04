@@ -8,7 +8,6 @@ import {
   Stars,
   CheckCircle2,
   AlertCircle,
-  Loader2,
   Image as ImageIcon,
   Check,
   Bot

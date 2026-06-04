@@ -12,7 +12,6 @@ import {
   Zap,
   Bot,
   ShieldCheck,
-  Loader2,
   Globe,
   Coins,
   Languages,
@@ -276,6 +275,7 @@ export default function Onboarding() {
     setIsPaid(true);
     setIsPaying(false);
     
+    // Check if we are at the end of onboarding
     if (currentStep === steps.length) {
       handleActivate();
     } else {
@@ -317,24 +317,8 @@ export default function Onboarding() {
         >
           {!showDiscoveryReview ? (
             <div className="text-center space-y-12">
-              <div className="relative inline-block">
-                <motion.div
-                  animate={{
-                    scale: [1, 1.1, 1],
-                    rotate: [0, 360],
-                  }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                  className="w-32 h-32 rounded-[40px] border-4 border-primary/30 flex items-center justify-center"
-                >
-                  <div className="w-24 h-24 rounded-[32px] border-4 border-primary/50 flex items-center justify-center">
-                    <Zap className="w-12 h-12 text-primary fill-current" />
-                  </div>
-                </motion.div>
-                <motion.div
-                  animate={{ opacity: [0.2, 0.5, 0.2] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute inset-0 bg-primary blur-[60px] -z-10"
-                />
+              <div className="relative inline-block mb-8">
+                <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
               </div>
 
               <div className="space-y-4">
@@ -407,8 +391,8 @@ export default function Onboarding() {
                 className="space-y-8"
               >
                 <div className="text-center space-y-4">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20">
-                    <Scale className="w-8 h-8 text-primary" />
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
+                    <BrandedGlobe size="md" animate={true} />
                   </div>
                   <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Neural Agreement.</h2>
                   <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
@@ -468,8 +452,8 @@ export default function Onboarding() {
                 className="max-w-md mx-auto space-y-8"
               >
                 <div className="text-center space-y-4">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20">
-                    <Lock className="w-8 h-8 text-primary" />
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
+                    <BrandedGlobe size="md" animate={true} />
                   </div>
                   <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Authorize Engine.</h2>
                   <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
@@ -600,8 +584,8 @@ export default function Onboarding() {
                            'Secure Bank Bridge',
                            'Verified Encryption'
                          ].map(f => (
-                           <div key={f} className="flex items-center gap-2 text-[9px] font-black text-slate-100 uppercase tracking-tight">
-                             <div className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+                           <div key={f} className="flex items-center gap-2 text-[10px] font-black text-white-force uppercase tracking-tight">
+                             <div className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(0,229,255,0.6)]" />
                              {f}
                            </div>
                          ))}

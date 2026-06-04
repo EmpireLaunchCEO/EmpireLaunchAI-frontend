@@ -262,6 +262,10 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
             setIsOnboarded(true);
             localStorage.setItem('isOnboarded', 'true');
           }
+          if (settings.isPaid !== undefined) {
+            setIsPaidState(settings.isPaid);
+            localStorage.setItem('isPaid', settings.isPaid ? 'true' : 'false');
+          }
         }
 
         const res = await fetch(`${API_URL}/api/agent/goal/latest`, {

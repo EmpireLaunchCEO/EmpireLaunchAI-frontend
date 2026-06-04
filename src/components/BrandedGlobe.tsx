@@ -35,12 +35,26 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
         ease: "easeInOut"
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-tr from-[#0070ff] via-[#7000ff] to-[#0070ff] opacity-60 animate-spin-slow blur-md" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-[#0070ff] via-[#7000ff] to-[#0070ff] opacity-40 blur-md" />
+      
+      {/* CSS Globe Fallback structure */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-20">
+        <div className="w-full h-full rounded-full border border-primary/50" />
+        <div className="absolute w-[1px] h-full bg-primary/50" />
+        <div className="absolute w-full h-[1px] bg-primary/50" />
+        <div className="absolute w-full h-full rounded-full border-x border-primary/50 scale-x-50" />
+        <div className="absolute w-full h-full rounded-full border-y border-primary/50 scale-y-50" />
+      </div>
+
       <div className="absolute inset-0 bg-gradient-to-br from-blue-600/40 to-purple-700/40" />
       <img
-        src="/branded-globe.png"
+        src="/branded-globe.png?v=515"
         alt="Empire Globe"
-        className="w-full h-full object-cover scale-110 relative z-10 brightness-110 contrast-125"
+        className="w-full h-full object-cover scale-110 relative z-10 brightness-110 contrast-125 transition-opacity duration-300 opacity-0"
+        style={{ imageRendering: 'auto' }}
+        onLoad={(e) => {
+          e.currentTarget.style.opacity = '1';
+        }}
         onError={(e) => {
           e.currentTarget.style.display = 'none';
         }}
