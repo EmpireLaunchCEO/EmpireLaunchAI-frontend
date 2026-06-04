@@ -75,7 +75,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
               <div className="absolute top-3 sm:top-4 right-4 sm:right-6 bg-primary text-slate-950 px-2 sm:px-3 py-1 rounded-full text-[7px] sm:text-[8px] font-black uppercase tracking-widest animate-pulse">
                 Active Plan
               </div>
-              <h3 className="text-lg sm:text-xl font-black text-white uppercase italic tracking-tighter mb-1">Empire Master</h3>
+              <h3 className="text-lg sm:text-xl font-black text-white uppercase italic tracking-tighter mb-1 pr-2">Empire Master</h3>
 
               <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
                 {[

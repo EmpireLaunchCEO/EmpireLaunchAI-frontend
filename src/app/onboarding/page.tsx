@@ -508,7 +508,7 @@ export default function Onboarding() {
                      <div className="space-y-4">
                        <div className="flex justify-between items-start">
                          <div>
-                           <h3 className="text-xl font-black text-white uppercase italic tracking-tighter">Empire Master</h3>
+                           <h3 className="text-xl font-black text-white uppercase italic tracking-tighter pr-2">Empire Master</h3>
                            <p className="text-[8px] font-bold text-primary uppercase tracking-widest mt-1">Full Access License</p>
                          </div>
                          <div className="text-right">
