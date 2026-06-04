@@ -126,13 +126,17 @@ export default function Onboarding() {
   // Effect to handle redirection when onboarded
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    if (isInitialized && isOnboarded) {
+    // Only redirect if initialized and onboarded, and we are on the client
+    if (typeof window !== 'undefined' && isInitialized && isOnboarded) {
       // Small delay to ensure state is stable before redirecting
       timeoutId = setTimeout(() => {
+        console.log('Onboarding complete, shifting to dashboard...');
         router.replace('/dashboard');
-      }, 800);
+      }, 1200); // Increased delay for stability
     }
-    return () => clearTimeout(timeoutId);
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [isInitialized, isOnboarded, router]);
 
   useEffect(() => {
@@ -295,20 +299,19 @@ export default function Onboarding() {
     setIsTermsOpen(true);
   };
 
-  if (isOnboarded) {
-    return (
-      <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6 text-center p-6">
-        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
-            Neural Sync Established
-          </h2>
-          <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">Transferring to Command Center...</p>
-        </div>
+  // Transition Screen (Inner Component to avoid fixed element overlay issues)
+  const EstablishedScreen = () => (
+    <div className="absolute inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6 text-center p-6">
+      <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+      <div className="flex flex-col items-center gap-2">
+        <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+          Neural Sync Established
+        </h2>
+        <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">Transferring to Command Center...</p>
       </div>
-    );
-  }
-  
+    </div>
+  );
+
   if (!isInitialized) {
     return (
       <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6">
@@ -401,7 +404,8 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-theme-surface flex flex-col items-center overflow-x-hidden">
+    <div className="min-h-screen bg-theme-surface flex flex-col items-center overflow-x-hidden relative">
+      {isOnboarded && <EstablishedScreen />}
       <TermsModal
         isOpen={isTermsOpen}
         onClose={() => setIsTermsOpen(false)}

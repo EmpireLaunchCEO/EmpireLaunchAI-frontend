@@ -12,10 +12,10 @@ interface BrandedGlobeProps {
 
 export function BrandedGlobe({ className, size = 'md', animate = true }: BrandedGlobeProps) {
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-10 h-10',
-    xl: 'w-20 h-20',
+    sm: 'w-6 h-6',
+    md: 'w-8 h-8',
+    lg: 'w-16 h-16',
+    xl: 'w-28 h-28',
   };
 
   return (
@@ -38,29 +38,29 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
       <div className="absolute inset-0 bg-gradient-to-tr from-[#0070ff] via-[#7000ff] to-[#0070ff] opacity-40 blur-md" />
       
       {/* CSS Globe Fallback structure */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-20">
-        <div className="w-full h-full rounded-full border border-primary/50" />
-        <div className="absolute w-[1px] h-full bg-primary/50" />
-        <div className="absolute w-full h-[1px] bg-primary/50" />
-        <div className="absolute w-full h-full rounded-full border-x border-primary/50 scale-x-50" />
-        <div className="absolute w-full h-full rounded-full border-y border-primary/50 scale-y-50" />
+      <div className="absolute inset-0 flex items-center justify-center opacity-40 fallback-globe rounded-full">
+        <div className="w-full h-full rounded-full border border-primary/30" />
+        <div className="absolute w-[1px] h-full bg-primary/20" />
+        <div className="absolute w-full h-[1px] bg-primary/20" />
+        <div className="absolute w-full h-full rounded-full border-x border-primary/20 scale-x-50" />
+        <div className="absolute w-full h-full rounded-full border-y border-primary/20 scale-y-50" />
       </div>
 
       <div className="absolute inset-0 bg-gradient-to-br from-blue-600/40 to-purple-700/40" />
       <img
         src="/branded-globe.png?v=515"
         alt="Empire Globe"
-        className="w-full h-full object-cover scale-110 relative z-10 brightness-110 contrast-125 transition-opacity duration-300 opacity-0"
+        className="w-full h-full object-cover scale-110 relative z-10 brightness-110 contrast-125 transition-opacity duration-500 opacity-0"
         style={{ imageRendering: 'auto' }}
         onLoad={(e) => {
-          e.currentTarget.style.opacity = '1';
+          e.currentTarget.classList.add('opacity-100');
         }}
         onError={(e) => {
           e.currentTarget.style.display = 'none';
         }}
       />
-      <div className="absolute inset-0 flex items-center justify-center">
-         <div className="w-1/2 h-1/2 rounded-full bg-primary/20 blur-xl" />
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+         <div className="w-1/2 h-1/2 rounded-full bg-primary/30 blur-xl animate-pulse" />
       </div>
     </motion.div>
   );

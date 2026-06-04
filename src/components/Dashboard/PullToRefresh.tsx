@@ -80,16 +80,16 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
         <div className="bg-theme-surface rounded-full p-1.5 shadow-[0_0_20px_rgba(0,0,0,0.5)] border-2 border-primary/40 flex items-center justify-center overflow-hidden">
           <motion.div
             animate={isRefreshing ? {
-              scale: [1, 1.1, 1],
-              rotate: 360
+              scale: [1, 1.15, 1],
+              rotate: [0, 10, 0, -10, 0]
             } : {
               scale: pullProgress,
-              rotate: pullProgress * 360
+              rotate: pullProgress * 180
             }}
             transition={isRefreshing ? {
-              duration: 2,
+              duration: 1.5,
               repeat: Infinity,
-              ease: "linear"
+              ease: "easeInOut"
             } : {
               duration: 0.1
             }}

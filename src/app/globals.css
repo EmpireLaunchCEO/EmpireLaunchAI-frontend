@@ -192,6 +192,13 @@ h1, h2, h3 {
   font-weight: 900;
 }
 
+/* Fallback Globe Styling */
+.fallback-globe {
+  background: radial-gradient(circle at center, rgb(var(--primary-rgb)) 0%, transparent 70%);
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
+  box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2);
+}
+
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 

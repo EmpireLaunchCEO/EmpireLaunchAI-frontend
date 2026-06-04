@@ -47,7 +47,14 @@ export default function Dashboard() {
     }
   }, [isLinkingComplete, isLoading]);
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const fetchData = useCallback(async () => {
+    if (!mounted) return;
     setIsLoading(true);
     try {
       // Artificially delay to show the refresh globe and clear cache
@@ -86,6 +93,34 @@ export default function Dashboard() {
     fetchData();
   }, [fetchData]);
 
+  // Prevent hydration mismatch by only rendering after mount
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
+        <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+            Neural Sync Established
+          </h2>
+        </div>
+      </div>
+    );
+  }
+
+  // Safe Guard: If not initialized, wait for context
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
+        <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+            Initializing Session
+          </h2>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading && !empireData) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
@@ -95,6 +130,23 @@ export default function Dashboard() {
             Neural Syncing
           </h2>
         </div>
+      </div>
+    );
+  }
+
+  // Fallback for null data after loading (prevents crash)
+  if (!empireData && !isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6 p-8 text-center">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(255,0,0,0.2)]" />
+        <h2 className="text-xl font-black text-white uppercase italic">Connection Interrupted.</h2>
+        <p className="text-slate-400 text-sm max-w-xs mx-auto">I'm having trouble retrieving your empire data. Pull down to retry or check your network.</p>
+        <button 
+          onClick={() => window.location.reload()}
+          className="mt-4 px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest border border-white/10"
+        >
+          Reboot System
+        </button>
       </div>
     );
   }
