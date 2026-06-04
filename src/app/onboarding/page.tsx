@@ -139,9 +139,15 @@ export default function Onboarding() {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (typeof window !== 'undefined' && isInitialized && isOnboarded) {
-      timeoutId = setTimeout(() => {
-        router.replace('/dashboard');
-      }, 1200);
+      // ONLY redirect if we are in standalone mode (PWA)
+      // This prevents the "flash" and auto-redirect in the browser
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      
+      if (isStandalone) {
+        timeoutId = setTimeout(() => {
+          router.replace('/dashboard');
+        }, 1200);
+      }
     }
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
@@ -346,16 +352,28 @@ export default function Onboarding() {
                 </div>
               </div>
 
-              <div className="max-w-sm mx-auto space-y-2">
+              <div className="max-w-sm mx-auto space-y-4">
                 {isPWADismissed && (
                    <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-4">
                      Please follow the installation steps in your browser menu to unlock production access.
                    </p>
                 )}
+                
+                {isOnboarded && !window.matchMedia('(display-mode: standalone)').matches && (
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    onClick={() => router.replace('/dashboard')}
+                    className="w-full bg-white text-slate-900 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:bg-primary transition-all mb-4"
+                  >
+                    Launch Command Center
+                  </motion.button>
+                )}
+
                 <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
-                    animate={{ width: isPWADismissed ? "90%" : "100%" }}
+                    animate={{ width: (isOnboarded || isPWADismissed) ? "100%" : "70%" }}
                     transition={{ duration: 4, ease: "easeInOut" }}
                     className="h-full bg-primary shadow-[0_0_15px_rgba(251,191,36,0.5)]"
                   />

@@ -192,17 +192,17 @@ export default function Dashboard() {
 
   return (
     <PullToRefresh onRefresh={fetchData}>
-      <div className="p-4 md:p-8 pb-24 max-w-7xl mx-auto space-y-6 md:space-y-12">
+      <div className="p-4 md:p-8 pb-24 max-w-7xl mx-auto space-y-8 md:space-y-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
               <LayoutDashboard className="w-3 h-3" />
               Success Hub
             </div>
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+            <h1 className="text-2xl md:text-4xl font-black tracking-tight leading-tight">
               {empireData?.name || "Success Hub"}.
             </h1>
-            <p className="text-sm md:text-base text-muted-foreground font-medium">
+            <p className="text-xs md:text-base text-muted-foreground font-medium italic">
               Monitoring your {empireData?.niche || "business"} growth and autonomous operations.
             </p>
           </div>

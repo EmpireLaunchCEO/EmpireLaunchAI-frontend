@@ -22,7 +22,7 @@ const BusinessSlot = ({ name, niche, status, growthScore, onHypeClick }: Busines
   return (
     <div className="relative group cursor-pointer" onClick={isHype ? onHypeClick : undefined}>
       <div className={cn(
-        "relative overflow-hidden rounded-[32px] p-6 h-48 transition-all duration-500",
+        "relative overflow-hidden rounded-[24px] md:rounded-[32px] p-5 md:p-6 h-40 md:h-48 transition-all duration-500",
         isLocked
           ? "bg-theme-background border-2 border-theme opacity-80"
           : isHype

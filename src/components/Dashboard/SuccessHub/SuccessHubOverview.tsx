@@ -26,10 +26,10 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6 md:space-y-16 pb-12"
+      className="space-y-8 md:space-y-16 pb-12"
     >
       {/* Primary Intelligence Row */}
-      <section className="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-8 items-start">
+      <section className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8 items-start">
         <div className="lg:col-span-3">
           <GrowthTracker
             goalTitle={empireData?.activeGoal || "$1,000 Monthly Revenue"}
@@ -44,7 +44,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
       </section>
 
       {/* Growth & Trust Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         <EmpireGrowthBreakdown growthScore={healthData?.growthScore || 84} healthData={healthData} />
         <TrustPulse />
       </section>
@@ -56,46 +56,46 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
       {/* Insight Banner */}
       <motion.div
         whileHover={{ scale: 1.01 }}
-        className="bg-gradient-to-r from-primary to-amber-600 rounded-[32px] p-1 shadow-xl shadow-primary/20"
+        className="bg-gradient-to-r from-primary to-amber-600 rounded-[24px] md:rounded-[32px] p-0.5 md:p-1 shadow-xl shadow-primary/20"
       >
-        <div className="bg-theme-background/10 backdrop-blur-md rounded-[30px] p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="bg-theme-background/10 backdrop-blur-md rounded-[23px] md:rounded-[30px] p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4 text-white">
-            <div className="w-12 h-12 rounded-2xl bg-theme-surface/20 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-theme-surface/20 flex items-center justify-center shrink-0">
               <Brain className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-bold text-lg leading-tight">Intelligent Scaling Opportunity Identified</h4>
-              <p className="text-white/70 text-sm font-medium">Your TikTok engagement velocity suggests a 15% higher conversion for 'Digital Planners'.</p>
+              <h4 className="font-bold text-base md:text-lg leading-tight uppercase italic">Intelligent Scaling Opportunity Identified</h4>
+              <p className="text-white/70 text-[10px] md:text-sm font-medium">Your TikTok engagement velocity suggests a 15% higher conversion for 'Digital Planners'.</p>
             </div>
           </div>
-          <button className="bg-theme-surface text-foreground px-8 py-3 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-theme-surface/90 transition-colors shadow-lg shadow-black/20">
+          <button className="w-full md:w-auto bg-theme-surface text-foreground px-8 py-3 rounded-2xl font-black text-[10px] md:text-sm uppercase tracking-widest hover:bg-theme-surface/90 transition-colors shadow-lg shadow-black/20">
             Execute Pivot
           </button>
         </div>
       </motion.div>
 
       {/* Mid Section: Social & Financial */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        <div className="lg:col-span-7 space-y-12">
-          <div className="bg-theme-surface rounded-[40px] p-8 border border-theme">
-             <div className="flex items-center justify-between mb-8">
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+        <div className="lg:col-span-7 space-y-8 lg:space-y-12">
+          <div className="bg-theme-surface rounded-[32px] md:rounded-[40px] p-6 md:p-8 border border-theme">
+             <div className="flex items-center justify-between mb-6 md:mb-8">
                <div className="flex items-center gap-3">
-                 <div className="w-10 h-10 rounded-xl bg-theme-background flex items-center justify-center overflow-hidden border border-white/10">
+                 <div className="w-10 h-10 rounded-xl bg-theme-background flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
                    <BrandedGlobe size="sm" />
                  </div>
-                 <h3 className="text-xl font-black text-foreground">Unified Activity Feed</h3>
+                 <h3 className="text-lg md:text-xl font-black text-foreground uppercase italic tracking-tight">Unified Activity Feed</h3>
                </div>
-               <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Real-time Sync</span>
+               <span className="hidden md:block text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Real-time Sync</span>
              </div>
              <ActivityStream />
           </div>
         </div>
 
-        <div className="lg:col-span-5 sticky top-8 space-y-10">
+        <div className="lg:col-span-5 sticky top-8 space-y-8 lg:space-y-10">
           <EmpireLedger health={healthData} />
           <InboxAssistant />
 
-          <div className="mt-10 bg-theme-surface rounded-[40px] p-8 text-foreground border border-theme relative overflow-hidden">
+          <div className="bg-theme-surface rounded-[32px] md:rounded-[40px] p-6 md:p-8 text-foreground border border-theme relative overflow-hidden">
              <div className="relative z-10 space-y-6">
                 <div className="flex items-center gap-3">
                   <Zap className="w-6 h-6 text-primary fill-current" />

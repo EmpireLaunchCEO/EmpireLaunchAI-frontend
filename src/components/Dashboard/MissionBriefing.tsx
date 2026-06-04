@@ -66,23 +66,23 @@ const steps: Step[] = [
 
 export function MissionBriefing() {
   return (
-    <div className="bg-theme-surface rounded-[48px] p-8 lg:p-12 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
+    <div className="bg-theme-surface rounded-[32px] md:rounded-[48px] p-6 lg:p-12 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
       {/* Background Glows */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-10 -mr-48 -mt-48" />
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/40 rounded-full blur-[100px] opacity-10 -ml-32 -mb-32" />
 
-      <div className="relative z-10 flex flex-col lg:flex-row gap-12 items-start">
-        <div className="flex-1 space-y-8 w-full">
+      <div className="relative z-10 flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+        <div className="flex-1 space-y-6 lg:space-y-8 w-full">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.3em]">
               <Target className="w-3 h-3" />
               Active Mission: Expansion Phase I
             </div>
-            <h2 className="text-3xl lg:text-5xl font-black tracking-tight leading-[0.9]">
+            <h2 className="text-2xl lg:text-5xl font-black tracking-tight leading-[0.9]">
               Establish Your <br />
               <span className="text-primary italic">Foundation.</span>
             </h2>
-            <p className="text-slate-400 font-medium max-w-md text-sm lg:text-base leading-relaxed">
+            <p className="text-slate-400 font-medium max-w-md text-xs lg:text-base leading-relaxed italic">
               I've prepared your initial growth sequence. Complete these steps to hand off full autonomy to the Empire Brain.
             </p>
           </div>
