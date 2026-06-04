@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Zap, X, ShieldCheck, Loader2 } from 'lucide-react';
+import { Bell, Zap, X, ShieldCheck } from 'lucide-react';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
@@ -231,15 +232,15 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex flex-col items-center justify-center space-y-6"
+                  className="flex flex-col items-center justify-center space-y-8"
                 >
                   <div className="relative">
-                    <Loader2 className="w-16 h-16 text-amber-400 animate-spin" />
-                    <div className="absolute inset-0 bg-amber-400/20 blur-2xl rounded-full animate-pulse" />
+                    <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_60px_rgba(251,191,36,0.4)]" />
+                    <div className="absolute inset-0 bg-amber-400/10 blur-2xl rounded-full animate-pulse" />
                   </div>
                   <div className="text-center space-y-2">
                     <h3 className="text-xl font-black text-white uppercase tracking-widest">Establishing Bridge</h3>
-                    <p className="text-slate-400 text-xs font-bold">Synchronizing neural pathways...</p>
+                    <p className="text-slate-400 text-xs font-bold uppercase tracking-tighter">Synchronizing neural pathways...</p>
                   </div>
                 </motion.div>
               ) : (

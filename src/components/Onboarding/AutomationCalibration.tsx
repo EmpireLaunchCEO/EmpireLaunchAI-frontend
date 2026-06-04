@@ -29,7 +29,7 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
 
       <div className="flex p-2 md:p-3 bg-slate-900 rounded-[32px] md:rounded-[40px] relative h-24 md:h-28 items-center max-w-md mx-auto border-4 border-slate-800 shadow-inner">
         <motion.div
-          className="absolute inset-1.5 md:inset-2 bg-slate-950 rounded-[24px] md:rounded-[32px] shadow-2xl z-10 border border-primary/20"
+          className="absolute inset-1.5 md:inset-2 bg-slate-800 rounded-[24px] md:rounded-[32px] shadow-2xl z-10 border border-primary/20"
           initial={false}
           animate={{ x: mode === 'co-pilot' ? 0 : '100%' }}
           style={{ width: 'calc(50% - 6px)' }}
@@ -40,12 +40,12 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
           onClick={() => onModeChange('co-pilot')}
           className={cn(
             "flex-1 flex flex-col items-center justify-center gap-1 relative z-20 transition-colors duration-500 py-3 md:py-4",
-            mode === 'co-pilot' ? "text-primary" : "text-slate-500 hover:text-slate-400"
+            mode === 'co-pilot' ? "text-white" : "text-slate-400 hover:text-slate-300"
           )}
         >
-          <MousePointer2 className="w-5 h-5 md:w-6 h-6" />
+          <MousePointer2 className={cn("w-5 h-5 md:w-6 h-6", mode === 'co-pilot' ? "text-primary" : "text-inherit")} />
           <span className="font-black uppercase tracking-[0.2em] text-[9px] md:text-[10px]">Co-Pilot</span>
-          <span className="text-[8px] font-bold opacity-60">Manual Approval</span>
+          <span className={cn("text-[8px] font-bold", mode === 'co-pilot' ? "text-primary/80" : "opacity-60")}>Manual Approval</span>
         </button>
 
         <button
@@ -53,15 +53,15 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
           onClick={() => onModeChange('empire')}
           className={cn(
             "flex-1 flex flex-col items-center justify-center gap-1 relative z-20 transition-colors duration-500 py-3 md:py-4",
-            mode === 'empire' ? "text-primary" : "text-slate-500 hover:text-slate-400"
+            mode === 'empire' ? "text-white" : "text-slate-400 hover:text-slate-300"
           )}
         >
-          <div className="absolute -top-3 px-2 py-0.5 bg-primary text-slate-900 text-[7px] font-black uppercase tracking-widest rounded-full shadow-lg animate-bounce">
+          <div className={cn("absolute -top-3 px-2 py-0.5 text-[7px] font-black uppercase tracking-widest rounded-full shadow-lg animate-bounce", mode === 'empire' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
             Recommended
           </div>
-          <Bot className="w-5 h-5 md:w-6 h-6" />
+          <Bot className={cn("w-5 h-5 md:w-6 h-6", mode === 'empire' ? "text-primary" : "text-inherit")} />
           <span className="font-black uppercase tracking-[0.2em] text-[9px] md:text-[10px]">Auto-Pilot</span>
-          <span className="text-[8px] font-bold opacity-60">Full Autonomy</span>
+          <span className={cn("text-[8px] font-bold", mode === 'empire' ? "text-primary/80" : "opacity-60")}>Full Autonomy</span>
         </button>
       </div>
 
@@ -91,7 +91,7 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
           </p>
           <ul className="mt-4 md:mt-6 space-y-3">
             {['Manual Publishing', 'Manual Price Sync', 'Human Customer Service'].map(f => (
-              <li key={f} className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
+              <li key={f} className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
                 <CheckCircle2 className="w-4 h-4 text-primary" />
                 {f}
               </li>
@@ -112,7 +112,7 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
           </p>
           <ul className="mt-4 md:mt-6 space-y-3">
             {['Auto-Posting', 'Dynamic Pricing', 'AI Support Desk'].map(f => (
-              <li key={f} className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
+              <li key={f} className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
                 <CheckCircle2 className="w-4 h-4 text-primary" />
                 {f}
               </li>
@@ -125,7 +125,7 @@ export function AutomationCalibration({ mode, onModeChange }: AutomationCalibrat
         <AlertCircle className="w-6 h-6 text-primary mt-1 shrink-0" />
         <div className="space-y-1">
           <h4 className="text-sm font-black text-white uppercase tracking-widest">Safety First Security</h4>
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-relaxed">
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 leading-relaxed">
             Regardless of the mode, the AI will NEVER spend money or initiate subscriptions without your explicit one-time approval.
           </p>
         </div>

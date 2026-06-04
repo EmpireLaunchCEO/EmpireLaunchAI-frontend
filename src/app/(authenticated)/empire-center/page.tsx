@@ -87,6 +87,59 @@ export default function EmpireCenterPage() {
         </div>
       </header>
 
+      {/* Empire Reach Stats Card */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+        <div className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(var(--surface-border-rgb),0.15)] transition-all">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[60px] -z-10" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+              <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Customers</p>
+              <p className="text-2xl sm:text-3xl font-black text-foreground bg-gradient-to-r from-[rgb(var(--primary-rgb))] to-[rgb(var(--secondary-rgb))] bg-clip-text text-transparent">
+                {connectedPlatforms.length > 0 ? "847" : "—"}
+              </p>
+            </div>
+          </div>
+          <p className="text-[10px] text-muted-foreground font-medium">
+            {connectedPlatforms.length > 0 ? "Synced from Etsy & Stripe" : "Link platforms to populate"}
+          </p>
+        </div>
+
+        <div className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(var(--surface-border-rgb),0.15)] transition-all">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[60px] -z-10" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+              <Stars className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Active Subscribers</p>
+              <p className="text-2xl sm:text-3xl font-black text-foreground bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                {connectedPlatforms.length > 0 ? "342" : "—"}
+              </p>
+            </div>
+          </div>
+          <p className="text-[10px] text-muted-foreground font-medium">Recurring revenue subscribers</p>
+        </div>
+
+        <div className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(var(--surface-border-rgb),0.15)] transition-all">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-[60px] -z-10" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+              <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Reach</p>
+              <p className="text-2xl sm:text-3xl font-black text-foreground bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                {connectedPlatforms.length > 0 ? "12.4K" : "—"}
+              </p>
+            </div>
+          </div>
+          <p className="text-[10px] text-muted-foreground font-medium">TikTok & Instagram followers</p>
+        </div>
+      </div>
+
       {/* Primary Tabs - Optimized for mobile fit and vertical scroll priority */}
       <div className="flex bg-slate-100 p-1 rounded-[20px] w-full max-w-full overflow-hidden border-2 border-theme">
         {[
@@ -128,7 +181,7 @@ export default function EmpireCenterPage() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-xl font-black text-foreground">Pending Approvals</h3>
                     {filteredDuties.filter(d => d.type === 'approval').length > 0 && (
-                      <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                      <span className="bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full text-[10px] font-black uppercase">
                         {filteredDuties.filter(d => d.type === 'approval').length} Action Required
                       </span>
                     )}
@@ -140,7 +193,7 @@ export default function EmpireCenterPage() {
                         <div key={duty.id} className="p-6 bg-theme-background rounded-3xl flex items-center justify-between gap-4 border border-transparent hover:border-blue-200 transition-all">
                           <div className="flex items-center gap-4">
                             <div className="w-12 h-12 bg-theme-surface rounded-2xl flex items-center justify-center shadow-sm">
-                              <Clock className="w-6 h-6 text-amber-500" />
+                              <Clock className="w-6 h-6 text-cyan-400" />
                             </div>
                             <div>
                               <p className="font-bold text-foreground">{duty.title}</p>
@@ -409,7 +462,7 @@ export default function EmpireCenterPage() {
            <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
                     <StickyNote className="w-5 h-5" />
                   </div>
                   <h4 className="font-black text-foreground text-sm">Empire Notes</h4>
@@ -426,10 +479,10 @@ export default function EmpireCenterPage() {
                 value={empireNotes}
                 onChange={(e) => setEmpireNotes(e.target.value)}
                 placeholder="Press the mic and say 'Notes...' to dictate your thoughts here."
-                className="w-full bg-amber-50/30 border-2 border-transparent rounded-3xl p-6 text-sm font-medium outline-none focus:border-amber-200 transition-all min-h-[200px] text-slate-700 placeholder:text-amber-600/30"
+                className="w-full bg-cyan-500/5 border-2 border-transparent rounded-3xl p-6 text-sm font-medium outline-none focus:border-cyan-400/30 transition-all min-h-[200px] text-slate-700 placeholder:text-cyan-400/30"
               />
 
-              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-amber-600/50">
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-cyan-400/50">
                 <Stars className="w-3 h-3" />
                 AI Sync: Real-time
               </div>

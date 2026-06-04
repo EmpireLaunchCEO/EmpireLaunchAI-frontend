@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import { BrandedGlobe } from '@/components/BrandedGlobe';
+
 type GateState = 'discovery' | 'barrier' | 'verification' | 'resumption' | 'success';
 
 interface Thought {
@@ -192,7 +194,7 @@ export function ApprovalGate({
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">
                       {isAiActive ? "AI Orchestrator" : "Human Controller"}
                     </span>
-                    {isAiActive && <Loader2 className="w-3 h-3 text-blue-400 animate-spin" />}
+                    {isAiActive && <BrandedGlobe size="sm" animate={true} className="w-3 h-3" />}
                   </div>
 
                   {/* Thought Stream (Last message) */}
@@ -305,8 +307,8 @@ export function ApprovalGate({
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center gap-4 text-slate-400">
-                    <Loader2 className="w-12 h-12 animate-spin" />
+                  <div className="flex flex-col items-center gap-6 text-slate-400">
+                    <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_50px_rgba(59,130,246,0.3)]" />
                     <p className="font-bold uppercase tracking-widest text-xs">Bridge Synchronizing...</p>
                   </div>
                 )}

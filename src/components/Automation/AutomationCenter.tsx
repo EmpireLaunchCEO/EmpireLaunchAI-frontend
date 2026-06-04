@@ -32,7 +32,7 @@ const flows = [
     description: 'Triggered 7 days after activation. Asks for a review on Etsy.',
     status: 'active',
     icon: Star,
-    color: 'text-amber-500'
+    color: 'text-cyan-400'
   }
 ];
 

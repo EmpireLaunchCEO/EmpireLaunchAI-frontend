@@ -36,12 +36,18 @@ const platforms = [
   { id: 'capcut', name: 'Capcut (Video)', icon: Video, color: 'text-primary', bg: 'bg-primary/10' },
 ];
 
+import { BrandedGlobe } from '@/components/BrandedGlobe';
+
 interface PlatformMatrixProps {
   connectedPlatforms: string[];
   onConnect: (id: string) => void;
 }
 
 export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrixProps) {
+  // Use the global context's platforms to ensure NO duplicates or re-population
+  const { connectedPlatforms: globalPlatforms, connectPlatform } = useEmpire();
+  
+  const displayPlatforms = [...new Set([...connectedPlatforms, ...globalPlatforms])];
   const [consultingPlatform, setConsultingPlatform] = useState<string | null>(null);
 
   return (

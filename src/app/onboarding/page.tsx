@@ -31,6 +31,7 @@ import { ApprovalGate } from '@/components/Onboarding/ApprovalGate';
 import { DiscoveryReview } from '@/components/Onboarding/DiscoveryReview';
 import { PWAInstallPrompt } from '@/components/Onboarding/PWAInstallPrompt';
 import { TermsModal } from '@/components/Legal/TermsModal';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 const steps = [
   { id: 1, title: 'Protocol' },
@@ -53,6 +54,7 @@ export default function Onboarding() {
     setActiveEmpireId,
     isOnboarded,
     isInitialized,
+    isPaid,
     setIsPaid,
     language,
     setLanguage,
@@ -61,6 +63,8 @@ export default function Onboarding() {
     isProtocolAccepted,
     acceptProtocols
   } = useEmpire();
+  
+  const userId = '00000000-0000-0000-0000-000000000000'; // Default for MVP, should be dynamic in production
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -76,13 +80,31 @@ export default function Onboarding() {
   }, [currentStep]);
 
   const [accessKey, setAccessKey] = useState('');
-  const [data, setData] = useState({
-    name: '',
-    niche: '',
-    angle: '',
-    connectedPlatforms: [] as string[],
-    automationMode: 'co-pilot' as 'co-pilot' | 'empire',
+  const [data, setData] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('onboarding_data');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse onboarding data', e);
+        }
+      }
+    }
+    return {
+      name: '',
+      niche: '',
+      angle: '',
+      connectedPlatforms: [] as string[],
+      automationMode: 'co-pilot' as 'co-pilot' | 'empire',
+    };
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('onboarding_data', JSON.stringify(data));
+    }
+  }, [data]);
 
   const [isActivating, setIsActivating] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
@@ -174,11 +196,37 @@ export default function Onboarding() {
   }, [isInitialized, isOnboarded, router]);
 
   if (isOnboarded) return null;
-  if (!isInitialized) return null;
+  if (!isInitialized) {
+    return (
+      <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-blue-200 font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+            Synchronizing Nodes
+          </h2>
+        </div>
+      </div>
+    );
+  }
 
   const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
 
-  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+  const nextStep = () => {
+    // SECURITY GATE: Prevent moving past Step 2 (Authorization) without payment/key
+    if (currentStep === 2 && !isPaid) {
+      console.warn('Authorization required to proceed.');
+      return;
+    }
+    setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+  };
+
+  // ENFORCEMENT: If the user refreshes and is on Step 3+ but isPaid is false, boot them back
+  useEffect(() => {
+    if (isInitialized && currentStep > 2 && !isPaid) {
+      setCurrentStep(2);
+    }
+  }, [currentStep, isPaid, isInitialized]);
+
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   const handleActivate = async () => {
@@ -279,9 +327,9 @@ export default function Onboarding() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-4"
                     >
-                      <Loader2 className="w-4 h-4 text-primary animate-spin" />
+                      <BrandedGlobe size="sm" animate={true} />
                       <p className="text-primary font-black tracking-widest text-xs uppercase">
                         {realLogs.length > 0 ? realLogs[realLogs.length - 1] : discoveryLogs[discoveryLogIndex]}
                       </p>
@@ -485,7 +533,7 @@ export default function Onboarding() {
                        </div>
 
                        <div className="space-y-2">
-                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Access Key</label>
+                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Access Key</label>
                          <div className="relative group">
                             <input
                               type="text"
@@ -502,8 +550,18 @@ export default function Onboarding() {
                          onClick={async () => {
                            const cleanKey = accessKey.trim().toUpperCase();
                            if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
-                              setIsPaid(true);
-                              nextStep();
+                              try {
+                                await fetch(`${API_URL}/api/auth/redeem-key`, {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({ userId, key: cleanKey })
+                                });
+                                setIsPaid(true);
+                                nextStep();
+                              } catch (e) {
+                                console.error('Failed to redeem owner key', e);
+                                setIsTermsOpen(true);
+                              }
                            } else {
                               setIsTermsOpen(true);
                            }
@@ -511,13 +569,13 @@ export default function Onboarding() {
                          disabled={isActivating || isPaying}
                          className="w-full bg-primary text-slate-900 py-4 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-2 group"
                        >
-                         {isPaying ? "Verifying..." : "Secure Card Checkout"}
+                         {isPaying ? "Verifying..." : accessKey.trim() ? "Authorize Access Key" : "Secure Card Checkout"}
                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                        </button>
 
                        <div className="flex justify-center items-center gap-4 opacity-40 grayscale group-hover:opacity-100 transition-opacity">
                           <CreditCard className="w-4 h-4 text-white" />
-                          <span className="text-[8px] font-black uppercase text-slate-500 tracking-widest">Gateway Connected</span>
+                          <span className="text-[8px] font-black uppercase text-slate-400 tracking-widest">Gateway Connected</span>
                        </div>
 
                        <div className="grid grid-cols-2 gap-3">
@@ -615,24 +673,42 @@ export default function Onboarding() {
           ) : currentStep < steps.length ? (
             <button
               onClick={nextStep}
-              className="bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl shadow-slate-950 group w-full md:w-auto justify-center"
+              disabled={currentStep === 2 && !isPaid}
+              className={cn(
+                "bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl shadow-slate-950 group w-full md:w-auto justify-center",
+                currentStep === 2 && !isPaid && "opacity-50 cursor-not-allowed bg-slate-800"
+              )}
             >
-              Next Phase
+              {currentStep === 2 && !isPaid ? "Waiting for Authorization" : "Next Phase"}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           ) : (
             <button
-              onClick={() => {
-                const cleanKey = accessKey.trim().toUpperCase();
-                if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
-                   setIsPaid(true);
-                   handleActivate();
+              onClick={async () => {
+                if (isPaid) {
+                  handleActivate();
                 } else {
-                   setIsTermsOpen(true);
+                  const cleanKey = accessKey.trim().toUpperCase();
+                  if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
+                    try {
+                      await fetch(`${API_URL}/api/auth/redeem-key`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId, key: cleanKey })
+                      });
+                      setIsPaid(true);
+                      handleActivate();
+                    } catch (e) {
+                      console.error('Failed to redeem owner key', e);
+                      setIsTermsOpen(true);
+                    }
+                  } else {
+                    setIsTermsOpen(true);
+                  }
                 }
               }}
               disabled={isActivating || isPaying}
-              className="bg-primary text-slate-900 px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-white transition-all shadow-2xl shadow-amber-900/20 group disabled:opacity-50 w-full md:w-auto justify-center"
+              className="bg-primary text-slate-950 px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-white transition-all shadow-2xl shadow-cyan-900/20 group disabled:opacity-50 w-full md:w-auto justify-center"
             >
               {isActivating ? "Establishing Sync..." : isPaying ? "Verifying..." : "Authorize & Finish"}
               <CheckCircle2 className="w-4 h-4" />

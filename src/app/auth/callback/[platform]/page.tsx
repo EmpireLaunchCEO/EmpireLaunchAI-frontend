@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
-import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle } from 'lucide-react';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { API_URL } from '@/lib/config';
 
 export default function AuthCallback() {
@@ -76,7 +77,7 @@ export default function AuthCallback() {
       <div className="max-w-md w-full bg-theme-surface rounded-3xl shadow-xl p-10 text-center">
         {status === 'loading' && (
           <div className="flex flex-col items-center gap-6">
-            <Loader2 className="w-16 h-16 text-blue-600 animate-spin" />
+            <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
             <h2 className="text-2xl font-bold text-foreground">Connecting...</h2>
             <p className="text-muted-foreground font-medium">{message}</p>
           </div>

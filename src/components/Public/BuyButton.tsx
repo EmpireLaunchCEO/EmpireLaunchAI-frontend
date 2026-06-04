@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ShoppingCart, ShieldCheck, Lock, CreditCard, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
+import { ShoppingCart, ShieldCheck, Lock, CreditCard, CheckCircle2, ArrowRight } from 'lucide-react';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
@@ -131,11 +132,11 @@ export function BuyButton({ productId, productName, price, sellerName, className
                 )}
 
                 {step === 'processing' && (
-                  <div className="py-12 flex flex-col items-center justify-center space-y-6 animate-in fade-in duration-300">
+                  <div className="py-12 flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-300">
                     <div className="relative">
-                      <Loader2 className="w-16 h-16 text-blue-600 animate-spin" />
+                      <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_50px_rgba(37,99,235,0.2)]" />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full" />
+                        <div className="w-8 h-8 bg-blue-100/50 rounded-full animate-ping" />
                       </div>
                     </div>
                     <div className="text-center space-y-2">

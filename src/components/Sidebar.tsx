@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -14,11 +14,11 @@ import {
   Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { StudioTeaserModal } from './Studio/StudioTeaserModal';
 
 const navItems = [
   { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Empire Center', href: '/empire-center', icon: ClipboardCheck },
+  { name: 'Empire Studio', href: '/studio', icon: Video },
   { name: 'Neural Link', href: '/link-center', icon: Stars },
   { name: 'Control Gates', href: '/review', icon: ShieldCheck },
   { name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },
@@ -27,7 +27,6 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [isStudioOpen, setIsStudioOpen] = useState(false);
 
   return (
     <>
@@ -59,20 +58,6 @@ export function Sidebar() {
             );
           })}
 
-          <button
-            onClick={() => setIsStudioOpen(true)}
-            className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm text-slate-400 hover:text-foreground hover:bg-theme-background relative group"
-          >
-            <div className="flex items-center gap-3">
-              <Video className="w-5 h-5 text-blue-500 group-hover:text-blue-600" />
-              <span>Empire Studio</span>
-            </div>
-            <div className="flex items-center gap-1 bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-[10px] font-black uppercase">
-              <Sparkles size={8} />
-              NEW
-            </div>
-          </button>
-
           <div className="mt-8 px-4 pt-6 border-t border-theme">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -98,11 +83,6 @@ export function Sidebar() {
           </div>
         </div>
       </div>
-
-      <StudioTeaserModal 
-        isOpen={isStudioOpen} 
-        onClose={() => setIsStudioOpen(false)} 
-      />
     </>
   );
 }

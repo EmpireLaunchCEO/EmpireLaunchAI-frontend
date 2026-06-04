@@ -1,77 +1,13 @@
 
-> EmpireLaunchAI-frontend@3.3.3 dev
-> next dev -p 3000
+> EmpireLaunchAI-frontend@4.7.0-ELECTRIC-REVENUE dev
+> next dev
 
 ▲ Next.js 16.2.6 (Turbopack)
 - Local:         http://localhost:3000
 - Network:       http://169.254.0.21:3000
-✓ Ready in 486ms
-⚠ `eslint` configuration in next.config.mjs is no longer supported. See more info here: https://nextjs.org/docs/app/api-reference/cli/next#next-lint-options
-⚠ Invalid next.config.mjs options detected: 
-⚠     Unrecognized key(s) in object: 'eslint'
-⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+- Environments: .env.local
+✓ Ready in 615ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
 
 ○ Compiling / ...
-⨯ ./src/components/SetupAssistant.tsx:253:15
-Expected '</', got 'jsx text'
-  [90m251 |[0m             </div>
-  [90m252 |[0m           </div>
-[31m[1m>[0m [90m253 |[0m         </div>
-  [90m    |[0m               [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-[31m[1m>[0m [90m254 |[0m       </[33mAnimatePresence[0m>
-  [90m    |[0m [31m[1m^^^^^^[0m
-  [90m255 |[0m
-  [90m256 |[0m       {[90m/* Spotlight effect */[0m}
-  [90m257 |[0m       <div
-
-Parsing ecmascript source code failed
-
-Import trace:
-  Server Component:
-    ./src/components/SetupAssistant.tsx
-    ./src/app/layout.tsx
-
-
- HEAD / 500 in 8.5s (next.js: 8.4s, application-code: 144ms)
-⨯ ./src/components/SetupAssistant.tsx:253:15
-Expected '</', got 'jsx text'
-  [90m251 |[0m             </div>
-  [90m252 |[0m           </div>
-[31m[1m>[0m [90m253 |[0m         </div>
-  [90m    |[0m               [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-[31m[1m>[0m [90m254 |[0m       </[33mAnimatePresence[0m>
-  [90m    |[0m [31m[1m^^^^^^[0m
-  [90m255 |[0m
-  [90m256 |[0m       {[90m/* Spotlight effect */[0m}
-  [90m257 |[0m       <div
-
-Parsing ecmascript source code failed
-
-Import trace:
-  Server Component:
-    ./src/components/SetupAssistant.tsx
-    ./src/app/layout.tsx
-
-
- HEAD / 500 in 16ms (next.js: 6ms, application-code: 10ms)
-⨯ ./src/components/SetupAssistant.tsx:253:15
-Expected '</', got 'jsx text'
-  [90m251 |[0m             </div>
-  [90m252 |[0m           </div>
-[31m[1m>[0m [90m253 |[0m         </div>
-  [90m    |[0m               [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-[31m[1m>[0m [90m254 |[0m       </[33mAnimatePresence[0m>
-  [90m    |[0m [31m[1m^^^^^^[0m
-  [90m255 |[0m
-  [90m256 |[0m       {[90m/* Spotlight effect */[0m}
-  [90m257 |[0m       <div
-
-Parsing ecmascript source code failed
-
-Import trace:
-  Server Component:
-    ./src/components/SetupAssistant.tsx
-    ./src/app/layout.tsx
-
-
- HEAD / 500 in 10ms (next.js: 3ms, application-code: 7ms)
+ GET / 200 in 6.4s (next.js: 6.0s, proxy.ts: 89ms, application-code: 281ms)

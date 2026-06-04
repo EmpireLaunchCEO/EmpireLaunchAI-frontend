@@ -14,7 +14,7 @@ import {
   Loader2,
   AlertCircle
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { discoveryService, DiscoveryResult } from '@/lib/api-service';
 
 interface DiscoveryReviewProps {
@@ -59,8 +59,8 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 space-y-4">
-        <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+      <div className="flex flex-col items-center justify-center p-12 space-y-6">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
         <p className="text-sm font-black text-slate-400 uppercase tracking-widest">Neural Discovery in Progress...</p>
       </div>
     );
@@ -124,7 +124,7 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
                     className="flex-1 md:flex-none px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary hover:text-slate-900 transition-all shadow-lg flex items-center justify-center gap-2"
                   >
                     {processingId === result.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <BrandedGlobe size="sm" animate={true} />
                     ) : (
                       <CheckCircle2 className="w-4 h-4" />
                     )}

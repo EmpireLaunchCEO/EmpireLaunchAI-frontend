@@ -210,7 +210,7 @@ export default function SettingsPage() {
   ];
 
   const colorSchemes = [
-    { id: 'blue', name: 'Electric Empire', primary: '#0070ff', secondary: '#7000ff', description: 'The standard neon high-contrast look.' },
+    { id: 'blue', name: 'Electric Empire', primary: '#00e5ff', secondary: '#7c3aed', description: 'Neon Cyan-to-Deep Violet standard.' },
     { id: 'emerald', name: 'Growth Green', primary: '#10b981', secondary: '#059669', description: 'Focused on clarity and profitability.' },
     { id: 'pink', name: 'Electric Pink', primary: '#ff0099', secondary: '#be185d', description: 'High-energy vibrant neon aesthetic.' },
     { id: 'teal', name: 'Vibrant Cyan', primary: '#00ffff', secondary: '#0891b2', description: 'Cybernetic and fresh digital appearance.' },
@@ -239,7 +239,7 @@ export default function SettingsPage() {
                   "flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold transition-all whitespace-nowrap shrink-0",
                   activeTab === tab.id 
                     ? "bg-primary text-white shadow-xl shadow-primary/20 scale-105" 
-                    : "text-slate-400 hover:text-foreground hover:bg-theme-background"
+                    : "text-slate-300 hover:text-foreground hover:bg-theme-background"
                 )}
               >
                 <tab.icon className="w-5 h-5" />
@@ -264,11 +264,11 @@ export default function SettingsPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Bank Account Nickname</label>
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-300">Bank Account Nickname</label>
                       <input type="text" placeholder="e.g. Empire Main Operating" className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold text-lg" />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Settlement Method</label>
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-300">Settlement Method</label>
                       <select className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold appearance-none text-lg">
                         <option>Stripe Connect (Incl. Cash App, Venmo, Cards)</option>
                         <option>Direct Bank Transfer (ACH)</option>
@@ -285,7 +285,7 @@ export default function SettingsPage() {
                       </div>
                       <span className={cn(
                         "px-3 py-1 rounded-full text-[8px] font-black uppercase",
-                        isStripeLinked ? "bg-emerald-500/10 text-emerald-500" : "bg-amber-500/10 text-amber-500"
+                        isStripeLinked ? "bg-emerald-500/10 text-emerald-500" : "bg-cyan-500/10 text-cyan-400"
                       )}>
                         {isStripeLinked ? "Connected & Live" : "Pending Setup"}
                       </span>
@@ -304,7 +304,7 @@ export default function SettingsPage() {
                         "w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl",
                         isStripeLinked 
                           ? "bg-white/10 text-white hover:bg-white/20 shadow-none" 
-                          : "bg-primary text-slate-900 hover:bg-white shadow-amber-900/20"
+                          : "bg-primary text-slate-950 hover:bg-white shadow-cyan-900/20"
                       )}
                     >
                       {isStripeLinked ? "Manage Payout Gateway" : "Setup Payout Gateway"}

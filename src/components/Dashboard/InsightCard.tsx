@@ -8,8 +8,7 @@ import {
   Play,
   X,
   Stars,
-  Loader2
-} from 'lucide-react';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface InsightCardProps {
   platform: 'Etsy' | 'TikTok' | 'Instagram' | 'Youtube';
@@ -47,13 +46,13 @@ export function InsightCard({ platform, title, description, roi, onExecute, isEx
           className={cn(
             "flex-1 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all",
             isExecuting
-              ? "bg-primary text-white cursor-wait"
-              : "bg-primary text-white hover:bg-primary/80"
+              ? "bg-primary text-slate-900 cursor-wait"
+              : "bg-primary text-slate-900 hover:bg-white"
           )}
         >
           {isExecuting ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <BrandedGlobe size="sm" animate={true} />
               Creating...
             </>
           ) : (

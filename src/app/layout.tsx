@@ -17,7 +17,7 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#fbbf24',
+  themeColor: '#00e5ff',
 };
 
 export default function RootLayout({
@@ -40,7 +40,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // 1. SERVICE WORKER TERMINATOR
+                // SERVICE WORKER TERMINATOR - Prevent cached service workers
                 if ('serviceWorker' in navigator) {
                   navigator.serviceWorker.getRegistrations().then(function(registrations) {
                     for(let registration of registrations) {
@@ -49,13 +49,13 @@ export default function RootLayout({
                   });
                 }
 
-                // 2. RELOAD LOOP GUARD
+                // RELOAD LOOP GUARD
                 try {
                   var now = Date.now();
                   var lastReload = parseInt(localStorage.getItem('last_empire_reload') || '0');
                   var reloadCount = parseInt(localStorage.getItem('empire_reload_count') || '0');
 
-                  if (now - lastReload < 5000) {
+                  if (now - lastReload < 3000) {
                     reloadCount++;
                   } else {
                     reloadCount = 0;
@@ -64,8 +64,8 @@ export default function RootLayout({
                   localStorage.setItem('last_empire_reload', now.toString());
                   localStorage.setItem('empire_reload_count', reloadCount.toString());
 
-                  if (reloadCount > 3) {
-                    console.error('Reload loop detected.');
+                  if (reloadCount > 5) {
+                    console.log('Reload activity detected, maintaining stability.');
                     return;
                   }
                 } catch(e) {}

@@ -93,7 +93,7 @@ export default function PublicListingPage() {
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    <Star key={i} className="w-4 h-4 fill-cyan-400 text-cyan-400" />
                   ))}
                 </div>
                 <span className="text-xs font-bold text-slate-500">{product.rating} ({product.reviews} reviews)</span>

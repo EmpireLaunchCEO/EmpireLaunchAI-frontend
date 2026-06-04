@@ -15,7 +15,7 @@ import {
   ChevronRight,
   Stars
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { VaultInjected } from '@/components/VaultInjected';
 import { creativeService, DesignTask } from '@/lib/api-service';
 
 interface DesignCenterHubProps {
@@ -123,6 +123,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
                         )}>
                           {task.status.replace('_', ' ')}
                         </span>
+                        {task.status === 'blueprint_ready' && <VaultInjected />}
                      </div>
                      <h4 className="text-lg font-bold text-foreground">{task.title}</h4>
                   </div>

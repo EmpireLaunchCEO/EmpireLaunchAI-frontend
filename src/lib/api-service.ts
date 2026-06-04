@@ -208,7 +208,7 @@ export interface ApprovalRequest {
   id: string;
   userId: string;
   taskId?: string;
-  type: 'blueprint' | 'content' | 'golive' | 'financial';
+  type: 'blueprint' | 'content' | 'golive' | 'financial' | 'dna';
   status: 'pending' | 'approved' | 'rejected';
   payload: any;
   decisionDetails?: string;
@@ -323,6 +323,46 @@ export const approvalService = {
             { day: 5, action: 'TikTok Launch Sequence' },
             { day: 7, action: 'Instagram Growth Phase' }
           ]
+        },
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'req_dna_1',
+        userId: '0000',
+        type: 'dna',
+        status: 'pending',
+        payload: {
+          id: 'dna_req_1',
+          title: 'Vintage Botanical Journal Cover',
+          niche: 'Digital Zen Journals',
+          intelligence: 'Matches current 2024 minimalist botanical trend on Etsy. High engagement for "earth tone" palettes, with proven conversion on morning-routine content.',
+          colors: [
+            { hex: '#2D4F1E', role: 'Primary', locked: true },
+            { hex: '#E4D5B7', role: 'Background', locked: false },
+            { hex: '#8B4513', role: 'Accent', locked: false },
+            { hex: '#F5F5DC', role: 'Highlight', locked: false },
+            { hex: '#FBBF24', role: 'CTA Button', locked: false },
+          ],
+          fonts: [
+            { platform: 'Kittl', pairing: 'Montserrat + Playfair Display' },
+            { platform: 'CapCut', pairing: 'Modern Bold + Classic Italic' },
+            { platform: 'Canva', pairing: 'Lora + Poppins' },
+            { platform: 'System', pairing: 'Serif + Sans' },
+          ],
+          script: [
+            { label: 'Hook (0:00)', text: 'Your morning routine is about to change forever.' },
+            { label: 'Problem (0:03)', text: 'Most people struggle to stay organized because they use the wrong system.' },
+            { label: 'Solution (0:06)', text: 'The Digital Zen Journal aligns your tasks with your energy levels.' },
+            { label: 'CTA (0:09)', text: 'Link in bio to transform your mornings today.' },
+            { label: 'CapCut Effects', text: 'Glitch Transition, Bounce In, Shake 2, Soft Blur' },
+          ],
+          pacing: {
+            label: 'Fast-Cut Vertical',
+            beats: ['0:00 Hook (3s)', '0:03 Problem (3s)', '0:06 Solution (4s)', '0:10 CTA (4s)'],
+            tempo: 'fast'
+          },
+          compositionUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop',
+          confidence: 94
         },
         createdAt: new Date().toISOString()
       },

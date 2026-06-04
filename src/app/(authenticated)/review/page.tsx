@@ -144,7 +144,7 @@ export default function ReviewQueue() {
             Filter
           </button>
           {!isLoading && tasks.length > 0 && (
-            <button className="flex-[2] md:flex-none bg-primary text-slate-900 px-6 py-2.5 rounded-xl font-bold hover:bg-amber-400 transition-all shadow-lg shadow-amber-200/20 flex items-center justify-center gap-2 text-sm">
+            <button className="flex-[2] md:flex-none bg-primary text-slate-900 px-6 py-2.5 rounded-xl font-bold hover:bg-cyan-400 transition-all shadow-lg shadow-cyan-400/20 flex items-center justify-center gap-2 text-sm">
               <CheckCircle2 className="w-4 h-4" />
               Approve All
             </button>

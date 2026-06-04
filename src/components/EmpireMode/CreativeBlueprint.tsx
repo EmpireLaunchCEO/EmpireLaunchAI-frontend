@@ -19,6 +19,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { creativeService, CreativeBlueprintData, DesignTask } from '@/lib/api-service';
+import { VaultInjected } from '@/components/VaultInjected';
 import { VisualVariationSelector } from './VisualVariationSelector';
 import { CopyPastePowerTool } from './CopyPastePowerTool';
 import { ValidationGate } from './Gates/ValidationGate';
@@ -99,6 +100,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
                  <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
                     <Stars className="w-3 h-3" />
                     Creative Direction
+                    <VaultInjected />
                  </div>
                  <h1 className="text-4xl font-black text-foreground tracking-tight italic">{task.title}.</h1>
                  <p className="text-muted-foreground font-medium italic">Strategic blueprint for {task.platform} execution.</p>

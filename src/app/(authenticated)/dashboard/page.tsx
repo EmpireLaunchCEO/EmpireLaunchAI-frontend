@@ -12,7 +12,7 @@ import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesS
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { SuccessHubOverview } from '@/components/Dashboard/SuccessHub/SuccessHubOverview';
-import { Stars, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard, Globe } from 'lucide-react';
+import { Stars, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard, Globe, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,6 +21,7 @@ import { analyticsService } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useSearchParams } from 'next/navigation';
 
 interface Goal {
@@ -90,6 +91,19 @@ export default function Dashboard() {
     fetchData();
   }, [activeEmpireId]);
 
+  if (isLoading && !empireData) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-blue-200 font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+            Neural Syncing
+          </h2>
+        </div>
+      </div>
+    );
+  }
+
   const handleExecute = async (goal: string) => {
     if (!isLinkingComplete && (window as any).interceptTeacher) {
       (window as any).interceptTeacher(goal);
@@ -153,8 +167,11 @@ export default function Dashboard() {
               className="w-10 h-10 rounded-xl bg-theme-surface border border-theme flex items-center justify-center text-slate-400 hover:text-primary transition-all group relative"
               title="Manual Neural Sync"
             >
-              <Globe className={cn("w-5 h-5", isLoading ? "animate-spin text-primary" : "group-hover:rotate-12")} />
-              {isLoading && <div className="absolute inset-0 rounded-xl border-2 border-primary border-t-transparent animate-spin" />}
+              <BrandedGlobe 
+                size="md" 
+                animate={isLoading} 
+                className={cn(isLoading ? "opacity-100" : "opacity-40 group-hover:opacity-100")} 
+              />
             </button>
 
             <div className="flex flex-col items-start md:items-end">
@@ -191,7 +208,7 @@ export default function Dashboard() {
                   className="p-6 bg-theme-surface rounded-[32px] text-foreground shadow-2xl border-2 border-theme flex items-center gap-6 relative overflow-hidden z-50"
                 >
                   <div className="relative z-10 w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shrink-0">
-                    <Loader2 className="w-8 h-8 animate-spin text-white" />
+                    <BrandedGlobe size="lg" animate={true} className="ring-2 ring-white/20" />
                   </div>
                   <div className="relative z-10 flex-1">
                     <div className="flex items-center justify-between mb-2">

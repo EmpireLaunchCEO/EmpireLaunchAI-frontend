@@ -7,6 +7,7 @@ import {
   ShieldCheck,
   Zap,
   CheckCircle2,
+  Palette,
   AlertCircle,
   Loader2,
   X,
@@ -14,10 +15,12 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { approvalService, ApprovalRequest } from '@/lib/api-service';
+import { VaultInjected } from '@/components/VaultInjected';
 import { BlueprintGate } from './Gates/BlueprintGate';
 import { VisualDraftGate } from './Gates/VisualDraftGate';
 import { HighIntelPostApproval } from './Gates/HighIntelPostApproval';
 import { GoLiveGate } from './Gates/GoLiveGate';
+import { DnaApprovalGate } from './Gates/DnaApprovalGate';
 import { CreativeBlueprint } from './CreativeBlueprint';
 
 import { useEmpire } from '@/lib/EmpireContext';
@@ -84,20 +87,27 @@ export function ApprovalQueue() {
                <div className={cn(
                  "p-2.5 rounded-xl",
                  req.type === 'blueprint' ? "bg-primary/10 text-primary" :
+                 req.type === 'dna' ? "bg-purple-500/10 text-purple-500" :
                  req.type === 'content' ? "bg-amber-500/10 text-amber-500" : "bg-emerald-500/10 text-emerald-500"
                )}>
                   {req.type === 'blueprint' ? <Zap className="w-4 h-4" /> :
+                   req.type === 'dna' ? <Palette className="w-4 h-4" /> :
                    req.type === 'content' ? <ShieldCheck className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
                </div>
-               <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">{req.type}</span>
+               <div className="flex items-center gap-1.5">
+                 {req.type === 'dna' && <VaultInjected />}
+                 <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">{req.type}</span>
+               </div>
             </div>
 
             <h4 className="font-bold text-sm text-foreground mb-1">
               {req.type === 'blueprint' ? 'Approve 30-Day Strategy' :
+               req.type === 'dna' ? `Validate ${req.payload?.title || 'Style DNA'}` :
                req.type === 'content' ? `Review ${req.payload?.platform ?? 'Draft'} Draft` : `Ready to Launch on ${req.payload?.platform ?? 'Platform'}`}
             </h4>
             <p className="text-[10px] text-muted-foreground line-clamp-2 leading-relaxed">
               {req.type === 'blueprint' ? `Expansion plan for ${req.payload?.niche ?? 'your empire'}` :
+               req.type === 'dna' ? `Style DNA: ${(req.payload?.colors || []).length} colors, ${(req.payload?.fonts || []).length} font pairings` :
                req.type === 'content' ? (req.payload?.title ?? 'Untitled Content') : `Final manifest for ${req.payload?.title ?? 'Production Item'}`}
             </p>
 
@@ -147,6 +157,15 @@ export function ApprovalQueue() {
                        payload={activeRequest.payload}
                        onApprove={(p) => handleDecision(activeRequest.id, 'approved')}
                        onReject={() => handleDecision(activeRequest.id, 'rejected')}
+                     />
+                   )}
+
+                   {activeRequest.type === 'dna' && (
+                     <DnaApprovalGate
+                       dna={activeRequest.payload}
+                       onApprove={() => handleDecision(activeRequest.id, 'approved')}
+                       onReject={() => handleDecision(activeRequest.id, 'rejected')}
+                       onRefine={(feedback) => console.log('DNA Refinement:', feedback)}
                      />
                    )}
 

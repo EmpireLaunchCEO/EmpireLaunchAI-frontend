@@ -43,7 +43,7 @@ const Cycle = ({ name, status, progress, nextAction }: CycleProps) => (
         {status === 'active' ? (
           <Activity className="w-6 h-6 text-primary animate-pulse" />
         ) : status === 'pending-approval' ? (
-          <AlertCircle className="w-6 h-6 text-amber-500" />
+          <AlertCircle className="w-6 h-6 text-cyan-400" />
         ) : (
           <Pause className="w-6 h-6 text-slate-400" />
         )}

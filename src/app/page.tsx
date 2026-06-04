@@ -68,11 +68,11 @@ export default function LandingPage() {
         </div>
         <div className="hidden md:flex items-center gap-2 bg-theme-surface/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
             <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Live: v4.6.0-HYPE (Studio Build)</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Live: v4.7.0-HYPE (Empire Studio)</span>
           </div>
       </nav>
 
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-120px)] px-6 py-20 text-center max-w-md mx-auto lg:max-w-md">
+      <main className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-120px)] px-6 py-20 text-center max-w-lg mx-auto lg:max-w-2xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -81,7 +81,7 @@ export default function LandingPage() {
           {/* Tagline */}
           <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-md px-5 py-2 rounded-full border border-primary/20 font-bold text-[10px] uppercase tracking-[0.2em]">
             <Stars className="w-4 h-4 text-primary" />
-            <span className="bg-gradient-to-r from-[#a855f7] to-[#0070ff] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#00e5ff] to-[#7c3aed] bg-clip-text text-transparent">
               Autonomous Business Engineering
             </span>
           </div>
@@ -103,7 +103,7 @@ export default function LandingPage() {
             {/* Main Action */}
             <button
               onClick={() => router.push('/onboarding')}
-              className="group relative bg-primary text-slate-900 px-10 py-5 rounded-[24px] font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(251,191,36,0.3)] flex items-center justify-center gap-3 w-full uppercase tracking-tighter italic"
+              className="group relative bg-primary text-slate-950 px-10 py-5 rounded-[24px] font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(0,229,255,0.3)] flex items-center justify-center gap-3 w-full uppercase tracking-tighter italic"
             >
               Authorize Engine
               <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
@@ -111,7 +111,7 @@ export default function LandingPage() {
             </button>
           </div>
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none">
-            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.6.0-HYPE-BLUE-PURPLE</span>
+            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.7.0-ELECTRIC-EMPIRE</span>
           </div>
         </motion.div>
 
@@ -126,8 +126,8 @@ export default function LandingPage() {
             <p className="text-xs text-slate-400 font-medium leading-relaxed uppercase tracking-tight">Your financial data and personal credentials are protected via encrypted sandboxes.</p>
           </div>
           <div className="bg-theme-surface/5 p-8 rounded-[40px] border border-white/5 text-left space-y-4 hover:bg-theme-surface/[0.07] transition-all">
-            <div className="bg-amber-500/20 p-4 rounded-2xl w-fit">
-              <Rocket className="w-8 h-8 text-amber-400" />
+            <div className="bg-primary/20 p-4 rounded-2xl w-fit">
+              <Rocket className="w-8 h-8 text-primary" />
             </div>
             <h3 className="text-xl font-black uppercase italic tracking-tighter">Hyper Scaling</h3>
             <p className="text-xs text-slate-400 font-medium leading-relaxed uppercase tracking-tight">AI intelligence monitors global trends 24/7 to adjust your strategy instantly.</p>

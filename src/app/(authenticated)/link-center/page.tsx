@@ -87,14 +87,14 @@ export default function LinkCenterPage() {
                       <h3 className="font-black text-lg capitalize text-foreground">{id}</h3>
                       <div className={cn(
                         "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                        tier === 'empire' ? "bg-amber-500/10 text-amber-500" : "bg-primary/10 text-primary"
+                        tier === 'empire' ? "bg-cyan-500/10 text-cyan-400" : "bg-primary/10 text-primary"
                       )}>
                         {tier === 'empire' ? <Stars className="w-3 h-3" /> : <Cpu className="w-3 h-3" />}
                         {tier === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
                       </div>
                     </div>
                     <div className="w-10 h-10 rounded-xl bg-theme-background flex items-center justify-center border border-theme">
-                       <ShieldCheck className={cn("w-5 h-5", tier === 'empire' ? "text-amber-500" : "text-primary")} />
+                       <ShieldCheck className={cn("w-5 h-5", tier === 'empire' ? "text-cyan-400" : "text-primary")} />
                     </div>
                   </div>
 
@@ -113,15 +113,15 @@ export default function LinkCenterPage() {
 
                   {/* Decorative background icon */}
                   {tier === 'empire' && (
-                    <Stars className="absolute -right-4 -bottom-4 w-24 h-24 text-amber-500/5 rotate-12 group-hover:scale-110 transition-transform" />
+                    <Stars className="absolute -right-4 -bottom-4 w-24 h-24 text-cyan-400/5 rotate-12 group-hover:scale-110 transition-transform" />
                   )}
                 </motion.div>
               );
             })}
           </div>
 
-          <div className="p-8 rounded-[40px] bg-amber-500/5 border-2 border-amber-500/20 flex flex-col md:flex-row items-center gap-8">
-             <div className="w-16 h-16 rounded-[24px] bg-amber-500 flex items-center justify-center text-foreground shrink-0">
+          <div className="p-8 rounded-[40px] bg-primary/5 border-2 border-primary/20 flex flex-col md:flex-row items-center gap-8">
+             <div className="w-16 h-16 rounded-[24px] bg-primary flex items-center justify-center text-foreground shrink-0">
                 <ShieldAlert className="w-8 h-8" />
              </div>
              <div className="flex-1 space-y-1 text-center md:text-left">

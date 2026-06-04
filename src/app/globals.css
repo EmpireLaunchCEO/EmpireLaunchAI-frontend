@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  /* ELECTRIC EMPIRE DEFAULT - Vivid Purple-Blue Hybrid */
-  --primary-rgb: 168, 85, 247; /* Vibrant Purple */
-  --secondary-rgb: 0, 112, 255; /* Electric Blue */
+  /* ELECTRIC EMPIRE DEFAULT - Neon Cyan to Deep Violet */
+  --primary-rgb: 0, 229, 255; /* Neon Cyan */
+  --secondary-rgb: 124, 58, 237; /* Deep Violet */
   --background-rgb: 10, 5, 25; /* Near Black Violet */
   --foreground-rgb: 255, 255, 255; /* Pure White */
-  --surface-rgb: 15, 8, 35; /* Deeper Violet Surface */
-  --surface-border-rgb: 0, 112, 255; /* Electric Blue Outlines */
+  --surface-rgb: 12, 8, 30; /* Deeper Violet Surface */
+  --surface-border-rgb: 0, 229, 255; /* Neon Cyan Outlines */
   
   --background: rgb(var(--background-rgb));
   --foreground: rgb(var(--foreground-rgb));
@@ -56,8 +56,9 @@
 }
 
 /* 
-   SCROLL ARCHITECTURE v514
+   SCROLL ARCHITECTURE v515
    Total native scroll restoration for mobile PWA.
+   overflow-y: auto with !important to prevent framework override
 */
 
 html, body {
@@ -66,7 +67,7 @@ html, body {
   padding: 0;
   min-height: 100vh;
   /* Allow native scrolling at the root */
-  overflow-y: auto;
+  overflow-y: auto !important;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 }
@@ -101,15 +102,39 @@ h1, h2, h3, .text-theme-gradient {
   color: transparent !important;
 }
 
-/* Normal text should be solid for performance */
-p, span, label, div {
+/* VIBRANT TEXT - Apply accent color to all text elements */
+p, span, label, div, li, td, th, a {
   color: inherit;
   -webkit-text-fill-color: inherit;
   background-clip: border-box;
 }
 
 .text-muted-foreground, .text-slate-400, .text-slate-500 {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* VIBRANT OUTLINES - All UI boxes get themed outlines */
+.border-theme, .border-2, .border-4, .border {
+  border-color: var(--surface-border) !important;
+}
+
+.bg-theme-surface {
+  border-color: var(--surface-border) !important;
+}
+
+/* VIBRANT BOX SHADOW - Add subtle glow to theme surfaces */
+.bg-theme-surface, .bg-theme-background {
+  box-shadow: inset 0 0 0 1px rgba(var(--surface-border-rgb), 0.15);
+}
+
+/* VIBRANT ACCENT for interactive elements */
+button:not(.no-vibrant):hover, 
+a:hover,
+input:focus, 
+select:focus, 
+textarea:focus {
+  outline: 2px solid rgba(var(--surface-border-rgb), 0.4);
+  outline-offset: 2px;
 }
 
 /* Ensure inputs and selects are readable and solid */
@@ -137,15 +162,6 @@ option {
   background: none !important;
 }
 
-/* Box Outlines */
-.border-theme, .border-2, .border-4 {
-  border-color: var(--surface-border) !important;
-}
-
-.bg-theme-surface {
-  border-color: var(--surface-border) !important;
-}
-
 /* Re-applying core styles */
 h1, h2, h3 {
   letter-spacing: -0.05em;
@@ -163,8 +179,34 @@ button {
   letter-spacing: -0.02em;
 }
 
-/* Force override for legacy components - Targeted to specific sections instead of global */
-.theme-surface-override [class*="bg-white"], 
-.theme-surface-override [class*="bg-slate-50"] {
-  background-color: var(--surface) !important;
+/* Mobile scroll container fix */
+main, .scroll-container, [role="main"] {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile touch optimization */
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: auto !important;
+    position: relative;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  /* Prevent elastic overscroll on iOS */
+  body {
+    overscroll-behavior-y: none;
+  }
+  
+  /* Ensure mobile nav doesn't block content */
+  .pb-24 {
+    padding-bottom: 6rem !important;
+  }
+  .pb-32 {
+    padding-bottom: 8rem !important;
+  }
+  .pb-40 {
+    padding-bottom: 10rem !important;
+  }
 }
