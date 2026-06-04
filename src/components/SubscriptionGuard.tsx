@@ -13,6 +13,16 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
   const [accessKey, setAccessKey] = useState('');
   const [error, setError] = useState('');
 
+  // PWA Standalone Auto-Unlock
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+      if (isStandalone && !isPaid) {
+        setIsPaid(true);
+      }
+    }
+  }, [isPaid, setIsPaid]);
+
   const handleSimulatePayment = () => {
     setIsProcessing(true);
     setTimeout(() => {

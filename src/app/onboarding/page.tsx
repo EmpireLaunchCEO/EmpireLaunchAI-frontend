@@ -217,13 +217,14 @@ export default function Onboarding() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
-      if (isStandalone && !isOnboarded) {
-        // Automatically complete onboarding for PWA users to let them into the dashboard "Tour"
+      if (isStandalone && (!isOnboarded || !isPaid)) {
+        // Automatically authorize and complete onboarding for PWA users
+        setIsPaid(true);
         completeOnboarding();
         router.replace('/dashboard');
       }
     }
-  }, [router, isOnboarded, completeOnboarding]);
+  }, [router, isOnboarded, isPaid, completeOnboarding, setIsPaid]);
 
   // ENFORCEMENT
   useEffect(() => {
