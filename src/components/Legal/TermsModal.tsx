@@ -92,8 +92,9 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                   You maintain full authority over all empire-building actions.
                 </p>
               </section>
+            </div>
 
-              {/* Footer */}
+            {/* Footer */}
             <div className="p-8 border-t border-white/5 shrink-0 bg-slate-950/50 flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="flex gap-4 w-full">
                 <button
