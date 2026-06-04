@@ -11,6 +11,7 @@ interface BrandedGlobeProps {
 }
 
 export function BrandedGlobe({ className, size = 'md', animate = true }: BrandedGlobeProps) {
+  const [isLoaded, setIsLoaded] = React.useState(false);
   const sizeClasses = {
     sm: 'w-6 h-6',
     md: 'w-8 h-8',
@@ -21,7 +22,7 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
   return (
     <motion.div
       className={cn(
-        "rounded-full overflow-hidden flex items-center justify-center bg-slate-900 border border-white/10 relative",
+        "rounded-full overflow-hidden flex items-center justify-center bg-slate-900 border border-white/10 relative shrink-0",
         sizeClasses[size],
         className
       )}
@@ -38,7 +39,10 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
       <div className="absolute inset-0 bg-gradient-to-tr from-[#0070ff] via-[#7000ff] to-[#0070ff] opacity-40 blur-md" />
       
       {/* CSS Globe Fallback structure */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-40 fallback-globe rounded-full">
+      <div className={cn(
+        "absolute inset-0 flex items-center justify-center fallback-globe rounded-full transition-opacity duration-700",
+        isLoaded ? "opacity-20" : "opacity-60"
+      )}>
         <div className="w-full h-full rounded-full border border-primary/30" />
         <div className="absolute w-[1px] h-full bg-primary/20" />
         <div className="absolute w-full h-[1px] bg-primary/20" />
@@ -50,11 +54,12 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
       <img
         src="/branded-globe.png?v=515"
         alt="Empire Globe"
-        className="w-full h-full object-cover scale-110 relative z-10 brightness-110 contrast-125 transition-opacity duration-500 opacity-0"
+        className={cn(
+          "w-full h-full object-cover scale-110 relative z-10 brightness-110 contrast-125 transition-opacity duration-1000",
+          isLoaded ? "opacity-100" : "opacity-0"
+        )}
         style={{ imageRendering: 'auto' }}
-        onLoad={(e) => {
-          e.currentTarget.classList.add('opacity-100');
-        }}
+        onLoad={() => setIsLoaded(true)}
         onError={(e) => {
           e.currentTarget.style.display = 'none';
         }}

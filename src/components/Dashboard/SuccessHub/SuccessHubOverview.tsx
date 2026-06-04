@@ -53,8 +53,6 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
          <VideoPerformance />
       </section>
 
-      <SocialProofApproval />
-
       {/* Insight Banner */}
       <motion.div
         whileHover={{ scale: 1.01 }}

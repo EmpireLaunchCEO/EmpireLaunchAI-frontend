@@ -46,6 +46,19 @@ import { CreditCard, Lock, Sparkles } from 'lucide-react';
 
 import { io } from 'socket.io-client';
 
+// Transition Screen (Moved outside to avoid re-renders)
+const EstablishedScreen = () => (
+  <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6 text-center p-6">
+    <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+    <div className="flex flex-col items-center gap-2">
+      <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+        Neural Sync Established
+      </h2>
+      <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">Transferring to Command Center...</p>
+    </div>
+  </div>
+);
+
 export default function Onboarding() {
   const {
     completeOnboarding,
@@ -62,7 +75,7 @@ export default function Onboarding() {
     acceptProtocols
   } = useEmpire();
   
-  const userId = '00000000-0000-0000-0000-000000000000'; // Default for MVP, should be dynamic in production
+  const userId = '00000000-0000-0000-0000-000000000000'; 
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -78,7 +91,6 @@ export default function Onboarding() {
   }, [currentStep]);
 
   const [accessKey, setAccessKey] = useState('');
-  const [redeemKeyToUse, setRedeemKeyToUse] = useState('');
   const [data, setData] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('onboarding_data');
@@ -126,13 +138,10 @@ export default function Onboarding() {
   // Effect to handle redirection when onboarded
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    // Only redirect if initialized and onboarded, and we are on the client
     if (typeof window !== 'undefined' && isInitialized && isOnboarded) {
-      // Small delay to ensure state is stable before redirecting
       timeoutId = setTimeout(() => {
-        console.log('Onboarding complete, shifting to dashboard...');
         router.replace('/dashboard');
-      }, 1200); // Increased delay for stability
+      }, 1200);
     }
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
@@ -144,14 +153,12 @@ export default function Onboarding() {
       const interval = setInterval(() => {
         setDiscoveryLogIndex((prev) => {
           const next = Math.min(prev + 1, discoveryLogs.length - 1);
-
           if (next === discoveryLogs.length - 1) {
             clearInterval(interval);
             setTimeout(() => {
               setShowDiscoveryReview(true);
             }, 1000);
           }
-
           return next;
         });
       }, 800);
@@ -163,8 +170,6 @@ export default function Onboarding() {
   useEffect(() => {
     if (isActivating) {
       const socket = io(API_URL);
-      const userId = '00000000-0000-0000-0000-000000000000';
-
       socket.on('connect', () => {
         socket.emit('subscribe', userId);
       });
@@ -174,7 +179,6 @@ export default function Onboarding() {
       });
 
       socket.on('empire-initialized', (data) => {
-        console.log('Empire initialized via WebSocket:', data);
         setTimeout(() => {
           completeOnboarding();
         }, 1500);
@@ -188,12 +192,9 @@ export default function Onboarding() {
           });
           const goal = await res.json();
           if (goal && goal.status === 'active') {
-             console.log('Empire active detected via polling');
              completeOnboarding();
           }
-        } catch (e) {
-          // Silent fail for polling
-        }
+        } catch (e) {}
       }, 3000);
 
       return () => {
@@ -203,7 +204,7 @@ export default function Onboarding() {
     }
   }, [isActivating, completeOnboarding]);
 
-  // ENFORCEMENT: If the user refreshes and is on Step 3+ but isPaid is false, boot them back
+  // ENFORCEMENT
   useEffect(() => {
     if (isInitialized && currentStep > 2 && !isPaid) {
       setCurrentStep(2);
@@ -219,7 +220,7 @@ export default function Onboarding() {
           'Authorization': 'Bearer mock-mobile-token'
         },
         body: JSON.stringify({
-          userId: '00000000-0000-0000-0000-000000000000',
+          userId,
           name: data.name,
           niche: data.niche,
           angle: data.angle,
@@ -228,20 +229,13 @@ export default function Onboarding() {
       });
 
       const result = await response.json();
-
       if (result.status === 'success') {
         if (result.empire?.id) {
           setActiveEmpireId(result.empire.id);
         }
-        
-        // If co-pilot, we wait for the webhook/websocket in the background
-        if (data.automationMode === 'co-pilot') {
-          // The useEffect will handle the transition once empire-initialized is received
-        }
       }
     } catch (error) {
       console.error('Error during activation:', error);
-      // Fallback after timeout
       setTimeout(() => {
         completeOnboarding();
       }, 5000);
@@ -250,8 +244,6 @@ export default function Onboarding() {
 
   const handleActivate = async () => {
     setIsActivating(true);
-
-    // In co-pilot mode, we just finish. In empire mode, we do the discovery review.
     if (data.automationMode === 'co-pilot') {
        await finalizeActivation();
     }
@@ -264,11 +256,7 @@ export default function Onboarding() {
   const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
 
   const nextStep = () => {
-    // SECURITY GATE: Prevent moving past Step 2 (Authorization) without payment/key
-    if (currentStep === 2 && !isPaid) {
-      console.warn('Authorization required to proceed.');
-      return;
-    }
+    if (currentStep === 2 && !isPaid) return;
     setCurrentStep((prev) => Math.min(prev + 1, steps.length));
   };
 
@@ -282,8 +270,6 @@ export default function Onboarding() {
 
   const handleAcceptTerms = async () => {
     setIsTermsOpen(false);
-    
-    // Check if we are at the end of onboarding
     if (currentStep === steps.length) {
       handleActivate();
     } else {
@@ -298,19 +284,6 @@ export default function Onboarding() {
     setIsPaying(false);
     setIsTermsOpen(true);
   };
-
-  // Transition Screen (Inner Component to avoid fixed element overlay issues)
-  const EstablishedScreen = () => (
-    <div className="absolute inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6 text-center p-6">
-      <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
-      <div className="flex flex-col items-center gap-2">
-        <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
-          Neural Sync Established
-        </h2>
-        <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">Transferring to Command Center...</p>
-      </div>
-    </div>
-  );
 
   if (!isInitialized) {
     return (
@@ -588,10 +561,7 @@ export default function Onboarding() {
                               onClick={async () => {
                                 const cleanKey = accessKey.trim().toUpperCase();
                                 if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
-                                    setIsActivating(true);
-                                    await new Promise(r => setTimeout(r, 1500));
                                     setIsPaid(true);
-                                    setIsActivating(false);
                                     setIsTermsOpen(true);
                                 } else {
                                     handleSecurePayment();
@@ -604,7 +574,7 @@ export default function Onboarding() {
                          )}
                        </div>
 
-                       {/* Feature List (The "Box" - now with better visibility) */}
+                       {/* Feature List */}
                        <div className="grid grid-cols-2 gap-3 p-5 bg-slate-950 rounded-2xl border border-slate-800 shadow-inner">
                          {[
                            'Autonomous Execution',

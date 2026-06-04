@@ -25,7 +25,7 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useSearchParams } from 'next/navigation';
 
 export default function Dashboard() {
-  const { activeEmpireId, isLinkingComplete, aiMode } = useEmpire();
+  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
