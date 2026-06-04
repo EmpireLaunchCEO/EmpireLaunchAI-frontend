@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -12,16 +12,13 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
-import { StudioTeaserModal } from './Studio/StudioTeaserModal';
 
 export function MobileNav() {
   const pathname = usePathname();
   const { isLinkingComplete } = useEmpire();
-  const [isStudioOpen, setIsStudioOpen] = useState(false);
 
   return (
-    <>
-      <div className="fixed bottom-0 left-0 right-0 lg:bottom-8 lg:left-1/2 lg:-translate-x-1/2 lg:w-fit lg:min-w-[500px] bg-theme-surface/80 lg:bg-slate-900/90 backdrop-blur-xl border-t lg:border border-theme lg:border-white/10 px-6 py-3 lg:px-8 lg:py-4 z-[100] flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.05)] lg:shadow-2xl lg:rounded-full">
+    <div className="fixed bottom-0 left-0 right-0 lg:bottom-8 lg:left-1/2 lg:-translate-x-1/2 lg:w-fit lg:min-w-[500px] bg-theme-surface/80 lg:bg-slate-900/90 backdrop-blur-xl border-t lg:border border-theme lg:border-white/10 px-6 py-3 lg:px-8 lg:py-4 z-[100] flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.05)] lg:shadow-2xl lg:rounded-full">
         {/* Home */}
         <Link
           href="/dashboard"
@@ -68,17 +65,31 @@ export function MobileNav() {
           )}>EC</span>
         </Link>
 
-        {/* Studio (Hype) */}
-        <button
-          onClick={() => setIsStudioOpen(true)}
-          className="flex flex-col items-center gap-1 transition-all text-blue-400 hover:text-blue-300 relative group"
+        {/* Studio — Now Direct Link */}
+        <Link
+          href="/studio"
+          id="nav-studio"
+          className={cn(
+            "flex flex-col items-center gap-1 transition-all relative group",
+            pathname === '/studio' ? "scale-110" : "text-blue-400 hover:text-blue-300"
+          )}
         >
-          <div className="p-2 rounded-xl bg-blue-500 text-white shadow-xl shadow-blue-500/40 lg:bg-blue-900/30 group-hover:scale-110 transition-transform">
+          <div className={cn(
+            "p-2 rounded-xl transition-all shadow-2xl",
+            pathname === '/studio'
+              ? "bg-white text-slate-900 shadow-white/20"
+              : "bg-blue-500 text-white shadow-xl shadow-blue-500/40 lg:bg-blue-900/30"
+          )}>
             <Video className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-tighter text-blue-400">Studio</span>
-          <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-400 rounded-full animate-pulse border-2 border-slate-900" />
-        </button>
+          <span className={cn(
+            "text-[10px] font-black uppercase tracking-tighter",
+            pathname === '/studio' ? "text-white" : "text-blue-400"
+          )}>Studio</span>
+          {pathname !== '/studio' && (
+            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900" />
+          )}
+        </Link>
 
         {/* LC: Link Center */}
         <Link
@@ -126,11 +137,5 @@ export function MobileNav() {
           )}>Settings</span>
         </Link>
       </div>
-
-      <StudioTeaserModal 
-        isOpen={isStudioOpen} 
-        onClose={() => setIsStudioOpen(false)} 
-      />
-    </>
   );
 }
