@@ -659,17 +659,22 @@ export default function Onboarding() {
           {currentStep === 1 ? (
             <div className="w-full md:w-auto" />
           ) : currentStep < steps.length ? (
-            <button
-              onClick={nextStep}
-              disabled={currentStep === 2 && !isPaid}
-              className={cn(
-                "bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl shadow-slate-950 group w-full md:w-auto justify-center",
-                currentStep === 2 && !isPaid && "opacity-50 cursor-not-allowed bg-slate-800"
+            <AnimatePresence>
+              {!(currentStep === 2 && !isPaid) && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  onClick={nextStep}
+                  className={cn(
+                    "bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl shadow-slate-950 group w-full md:w-auto justify-center"
+                  )}
+                >
+                  Next Phase
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
               )}
-            >
-              {currentStep === 2 && !isPaid ? "Waiting for Authorization" : "Next Phase"}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+            </AnimatePresence>
           ) : (
              <div className="w-full md:w-auto" />
           )}
