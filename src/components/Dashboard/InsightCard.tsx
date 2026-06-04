@@ -8,6 +8,7 @@ import {
   Play,
   X,
   Stars,
+} from 'lucide-react';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface InsightCardProps {
