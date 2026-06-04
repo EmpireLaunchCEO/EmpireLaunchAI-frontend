@@ -20,6 +20,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { creativeService, CreativeBlueprintData, DesignTask } from '@/lib/api-service';
 import { VaultInjected } from '@/components/VaultInjected';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { VisualVariationSelector } from './VisualVariationSelector';
 import { CopyPastePowerTool } from './CopyPastePowerTool';
 import { ValidationGate } from './Gates/ValidationGate';
@@ -59,7 +60,7 @@ export function CreativeBlueprint({ task, onClose }: CreativeBlueprintProps) {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-20 space-y-4">
-        <RefreshCw className="w-10 h-10 text-primary animate-spin" />
+        <BrandedGlobe size="sm" animate={true} />
         <p className="text-slate-400 font-black uppercase tracking-widest text-xs italic">Consulting Market Intelligence...</p>
       </div>
     );

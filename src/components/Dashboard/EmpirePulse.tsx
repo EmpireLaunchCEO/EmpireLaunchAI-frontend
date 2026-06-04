@@ -61,7 +61,7 @@ export function EmpirePulse() {
   if (loading || !pulse) {
     return (
       <div className="h-40 flex items-center justify-center bg-slate-900 rounded-[40px]">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <BrandedGlobe size="sm" animate={true} />
       </div>
     );
   }

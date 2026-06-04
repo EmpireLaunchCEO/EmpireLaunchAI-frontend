@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import { BrandedGlobe } from '@/components/BrandedGlobe';
+
 // ─── Type Definitions (mirrors backend VisualSummary) ──────────────────────
 
 export interface VisualStylePreview {
@@ -497,7 +499,7 @@ export function StudioVibesSelector({ onVibeSelected }: StudioVibesSelectorProps
             exit={{ opacity: 0 }}
             className="flex flex-col items-center justify-center py-16 space-y-6"
           >
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary/30 border-t-primary animate-spin" />
+            <BrandedGlobe size="sm" animate={true} />
             <div className="text-center space-y-2">
               <p className="font-black text-foreground text-lg">Synthesizing Design...</p>
               <p className="text-sm text-muted-foreground italic">Applying "{selectedVibe?.primaryVibe}" DNA to your asset</p>

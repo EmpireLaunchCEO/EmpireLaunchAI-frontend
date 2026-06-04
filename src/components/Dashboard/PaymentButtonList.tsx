@@ -13,6 +13,8 @@ import {
 import { cn } from '@/lib/utils';
 import { analyticsService, PaymentButton } from '@/lib/api-service';
 
+import { BrandedGlobe } from '@/components/BrandedGlobe';
+
 export function PaymentButtonList() {
   const [buttons, setButtons] = useState<PaymentButton[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +37,7 @@ export function PaymentButtonList() {
 
   if (loading) {
     return <div className="h-40 flex items-center justify-center">
-      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <BrandedGlobe size="sm" animate={true} />
     </div>;
   }
 

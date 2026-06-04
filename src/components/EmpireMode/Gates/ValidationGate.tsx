@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import { BrandedGlobe } from '@/components/BrandedGlobe';
+
 interface ValidationGateProps {
   taskTitle: string;
   platform: string;
@@ -92,7 +94,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                     >
                        <div className="text-center space-y-4">
                           <div className="relative">
-                             <div className="w-20 h-20 border-4 border-white/20 border-t-primary rounded-full animate-spin mx-auto" />
+                             <BrandedGlobe size="lg" animate={true} className="mx-auto" />
                              <Bot className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-primary" />
                           </div>
                           <p className="text-white font-black uppercase tracking-[0.2em] text-xs">Scanning Visual DNA...</p>

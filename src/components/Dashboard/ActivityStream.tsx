@@ -58,7 +58,7 @@ export function ActivityStream() {
       case 'comment': return <Instagram className="w-4 h-4" />;
       case 'milestone': return <Target className="w-4 h-4" />;
       case 'research': return <Search className="w-4 h-4" />;
-      case 'production': return <RefreshCw className="w-4 h-4 animate-spin" />;
+      case 'production': return <BrandedGlobe size="sm" animate={true} />;
       default: return <Zap className="w-4 h-4" />;
     }
   };
@@ -77,7 +77,7 @@ export function ActivityStream() {
 
   if (loading) {
     return <div className="h-40 flex items-center justify-center">
-      <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      <BrandedGlobe size="sm" animate={true} />
     </div>;
   }
 

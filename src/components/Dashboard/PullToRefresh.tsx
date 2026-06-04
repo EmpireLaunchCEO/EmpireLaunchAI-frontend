@@ -77,7 +77,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
           scale: isRefreshing ? 1 : Math.max(0.5, pullProgress)
         }}
       >
-        <div className="bg-theme-surface rounded-full p-3 shadow-[0_0_50px_rgba(0,0,0,0.8)] border-4 border-primary/40 flex items-center justify-center overflow-hidden">
+        <div className="bg-theme-surface rounded-full p-1.5 shadow-[0_0_20px_rgba(0,0,0,0.5)] border-2 border-primary/40 flex items-center justify-center overflow-hidden">
           <motion.div
             animate={isRefreshing ? {
               scale: [1, 1.1, 1],
@@ -95,11 +95,11 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
             }}
           >
             <BrandedGlobe
-              size="lg"
+              size="sm"
               animate={isRefreshing}
               className={cn(
                 "transition-colors",
-                isRefreshing ? "opacity-100 ring-4 ring-primary/20" : "opacity-80"
+                isRefreshing ? "opacity-100 ring-1 ring-primary/20" : "opacity-80"
               )}
             />
           </motion.div>

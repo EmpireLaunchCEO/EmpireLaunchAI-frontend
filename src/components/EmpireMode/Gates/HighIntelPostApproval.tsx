@@ -25,6 +25,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface HighIntelPostApprovalProps {
   payload: {
@@ -323,7 +324,7 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
                     className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-primary flex items-center justify-center text-foreground hover:scale-110 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale disabled:hover:scale-100 shadow-lg"
                   >
                     {isRefining ? (
-                      <div className="w-5 h-5 border-2 border-foreground/30 border-t-foreground rounded-full animate-spin" />
+                      <BrandedGlobe size="sm" animate={true} />
                     ) : (
                       <Send className="w-4 h-4" />
                     )}

@@ -16,6 +16,8 @@ import { analyticsService, RevenueTransaction, RevenueMilestone } from '@/lib/ap
 
 import { useEmpire } from '@/lib/EmpireContext';
 
+import { BrandedGlobe } from '@/components/BrandedGlobe';
+
 export function DetailedRevenue() {
   const { connectedPlatforms } = useEmpire();
   const [transactions, setTransactions] = useState<RevenueTransaction[]>([]);
@@ -47,7 +49,7 @@ export function DetailedRevenue() {
 
   if (loading) {
     return <div className="h-40 flex items-center justify-center">
-      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <BrandedGlobe size="sm" animate={true} />
     </div>;
   }
 

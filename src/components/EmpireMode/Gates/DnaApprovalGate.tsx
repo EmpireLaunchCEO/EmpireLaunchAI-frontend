@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { VaultInjected } from '@/components/VaultInjected';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface DnaColor {
   hex: string;
@@ -374,7 +375,7 @@ export function DnaApprovalGate({
               disabled={!feedback.trim()}
               className="px-4 py-2 bg-primary/10 text-primary rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-primary/20 transition-all disabled:opacity-50"
             >
-              <RefreshCw className="w-3.5 h-3.5 inline mr-1" />
+              <BrandedGlobe size="sm" animate={true} className="inline mr-1" />
               Refine
             </button>
           </div>

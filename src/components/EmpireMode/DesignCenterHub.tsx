@@ -18,6 +18,8 @@ import {
 import { VaultInjected } from '@/components/VaultInjected';
 import { creativeService, DesignTask } from '@/lib/api-service';
 
+import { BrandedGlobe } from '@/components/BrandedGlobe';
+
 interface DesignCenterHubProps {
   onSelectTask: (task: DesignTask) => void;
 }
@@ -97,7 +99,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
         <div className="grid grid-cols-1 gap-4">
            {loading ? (
              <div className="p-12 flex justify-center">
-               <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+               <BrandedGlobe size="sm" animate={true} />
              </div>
            ) : tasks.map((task) => (
              <motion.button
