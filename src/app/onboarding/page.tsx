@@ -323,10 +323,10 @@ export default function Onboarding() {
               </div>
 
               <div className="space-y-4">
-                <h2 className="text-4xl font-black text-white tracking-tight uppercase italic">
-                  {isPWADismissed ? "Download App to Continue." : "Establishing Neural Sync."}
+                <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight uppercase italic">
+                  {isPWADismissed ? "Download to Home Screen to Continue." : "Establishing Neural Sync."}
                 </h2>
-                <div className="flex items-center justify-center gap-3 h-6">
+                <div className="flex items-center justify-center gap-3 min-h-6">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={isPWADismissed ? 'pwa-wait' : (realLogs.length > 0 ? 'real-' + realLogs.length : 'discovery-' + discoveryLogIndex)}
@@ -338,7 +338,7 @@ export default function Onboarding() {
                       <BrandedGlobe size="sm" animate={true} />
                       <p className="text-primary font-black tracking-widest text-xs uppercase">
                         {isPWADismissed 
-                          ? "Add to Home Screen for Production Access" 
+                          ? "Close out the browser version, then reopen app from Home Screen." 
                           : (realLogs.length > 0 ? realLogs[realLogs.length - 1] : discoveryLogs[discoveryLogIndex])}
                       </p>
                     </motion.div>
@@ -346,10 +346,10 @@ export default function Onboarding() {
                 </div>
               </div>
 
-              <div className="max-w-xs mx-auto space-y-2">
+              <div className="max-w-sm mx-auto space-y-2">
                 {isPWADismissed && (
                    <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-4">
-                     Please follow the installation steps in your browser menu to unlock the dashboard.
+                     Please follow the installation steps in your browser menu to unlock production access.
                    </p>
                 )}
                 <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
