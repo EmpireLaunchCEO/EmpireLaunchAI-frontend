@@ -71,13 +71,13 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
     <div className="relative min-h-screen bg-theme-background">
       {/* Pull indicator */}
       <motion.div
-        className="absolute top-12 left-0 right-0 flex justify-center z-[1000] pointer-events-none"
+        className="fixed top-8 left-0 right-0 flex justify-center z-[11000] pointer-events-none"
         style={{
           opacity: isRefreshing ? 1 : pullProgress,
-          y: isRefreshing ? 40 : 0
+          scale: isRefreshing ? 1 : Math.max(0.5, pullProgress)
         }}
       >
-        <div className="bg-theme-surface rounded-full p-4 shadow-[0_0_50px_rgba(0,0,0,0.5)] border-2 border-theme flex items-center justify-center overflow-hidden">
+        <div className="bg-theme-surface rounded-full p-3 shadow-[0_0_50px_rgba(0,0,0,0.8)] border-4 border-primary/40 flex items-center justify-center overflow-hidden">
           <motion.div
             animate={isRefreshing ? {
               scale: [1, 1.1, 1],

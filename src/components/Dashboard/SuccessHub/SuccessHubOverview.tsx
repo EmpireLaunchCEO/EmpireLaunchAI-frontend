@@ -25,10 +25,10 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-8 md:space-y-16 pb-20"
+      className="space-y-6 md:space-y-16 pb-12"
     >
       {/* Primary Intelligence Row */}
-      <section className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8 items-start">
+      <section className="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-8 items-start">
         <div className="lg:col-span-3">
           <GrowthTracker
             goalTitle={empireData?.activeGoal || "$1,000 Monthly Revenue"}

@@ -206,14 +206,14 @@ export function OnboardingTour() {
   const Icon = step.icon;
 
   return (
-    <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-6 bg-slate-900/60 pointer-events-none">
+    <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-4 md:p-6 bg-slate-900/60 pointer-events-none overflow-hidden max-w-full">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: -20 }}
-          className="bg-teal-500 rounded-[40px] shadow-2xl max-w-md w-full overflow-hidden border-4 border-white relative pointer-events-auto"
+          className="bg-teal-500 rounded-[32px] md:rounded-[40px] shadow-2xl max-w-md w-full overflow-hidden border-4 border-white relative pointer-events-auto mx-auto"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-teal-400 via-teal-500 to-emerald-600 opacity-90" />
           

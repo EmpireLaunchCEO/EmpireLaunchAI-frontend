@@ -130,7 +130,8 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
+    <PullToRefresh onRefresh={fetchData}>
+      <div className="p-4 md:p-8 pb-24 max-w-7xl mx-auto space-y-6 md:space-y-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
@@ -146,6 +147,16 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-4">
+            <button 
+              onClick={() => fetchData()}
+              disabled={isLoading}
+              className="w-10 h-10 rounded-xl bg-theme-surface border border-theme flex items-center justify-center text-slate-400 hover:text-primary transition-all group relative"
+              title="Manual Neural Sync"
+            >
+              <Globe className={cn("w-5 h-5", isLoading ? "animate-spin text-primary" : "group-hover:rotate-12")} />
+              {isLoading && <div className="absolute inset-0 rounded-xl border-2 border-primary border-t-transparent animate-spin" />}
+            </button>
+
             <div className="flex flex-col items-start md:items-end">
               <div className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-2xl border border-primary/20 font-bold text-sm shadow-sm">
                 <Stars className="w-4 h-4" />
@@ -273,5 +284,6 @@ export default function Dashboard() {
 
         {isLinkingComplete && <NotificationOnboarding />}
       </div>
+    </PullToRefresh>
   );
 }

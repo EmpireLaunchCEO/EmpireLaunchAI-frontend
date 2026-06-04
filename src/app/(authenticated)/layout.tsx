@@ -12,7 +12,7 @@ export default function AuthenticatedLayout({
 }>) {
   return (
     <SubscriptionGuard>
-      <div className="flex bg-theme-background min-h-full relative">
+      <div className="flex bg-theme-background min-h-screen relative overflow-x-hidden max-w-full">
         <EmpireSwitcher />
         <Sidebar />
         <OnboardingTour />
@@ -20,7 +20,7 @@ export default function AuthenticatedLayout({
           <div className="absolute top-8 right-8 z-[60] hidden lg:block">
             <NotificationBell id="notification-bell-desktop" />
           </div>
-          <div className="min-h-full">
+          <div className="min-h-screen">
             {children}
           </div>
         </main>

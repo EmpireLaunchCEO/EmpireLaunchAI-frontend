@@ -15,6 +15,8 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   themeColor: '#fbbf24',
 };
 
@@ -30,6 +32,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json?v=515" />
         <link rel="apple-touch-icon" href="/branded-globe.png?v=515" />
         <link rel="icon" href="/branded-globe.png?v=515" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="EmpireLaunch" />
@@ -41,57 +44,31 @@ export default function RootLayout({
                 if ('serviceWorker' in navigator) {
                   navigator.serviceWorker.getRegistrations().then(function(registrations) {
                     for(let registration of registrations) {
-                      registration.unregister().then(function(boolean) {
-                         if(boolean) console.log('Legacy Service Worker Terminated');
-                      });
+                      registration.unregister();
                     }
-                  }).catch(function(err) {
-                    console.log('Service Worker termination failed: ', err);
                   });
                 }
 
-                // 2. SCROLL RECOVERY SCRIPT
-                function forceScroll() {
-                  document.documentElement.style.overflow = 'auto';
-                  document.documentElement.style.height = 'auto';
-                  document.body.style.overflow = 'visible';
-                  document.body.style.height = 'auto';
-                }
-                
-                window.addEventListener('load', forceScroll);
-                window.addEventListener('resize', forceScroll);
-                setInterval(forceScroll, 2000); // Periodic check to fight dynamic scroll locks
-
-                // 3. RELOAD LOOP GUARD
+                // 2. RELOAD LOOP GUARD
                 try {
                   var now = Date.now();
                   var lastReload = parseInt(localStorage.getItem('last_empire_reload') || '0');
                   var reloadCount = parseInt(localStorage.getItem('empire_reload_count') || '0');
-                  
+
                   if (now - lastReload < 5000) {
                     reloadCount++;
                   } else {
                     reloadCount = 0;
                   }
-                  
+
                   localStorage.setItem('last_empire_reload', now.toString());
                   localStorage.setItem('empire_reload_count', reloadCount.toString());
-                  
+
                   if (reloadCount > 3) {
-                    console.error('CRITICAL: Reload loop detected. Stabilizing engine...');
-                    // STOP RELOADING - if we were about to reload, we don't.
+                    console.error('Reload loop detected.');
                     return;
                   }
                 } catch(e) {}
-
-                // 3. ONBOARDING REDIRECT
-                try {
-                  var onboarded = localStorage.getItem('isOnboarded');
-                  var path = window.location.pathname;
-                  if (onboarded === 'true' && (path === '/' || path === '/onboarding')) {
-                    window.location.replace('/dashboard');
-                  }
-                } catch (e) {}
               })();
             `,
           }}

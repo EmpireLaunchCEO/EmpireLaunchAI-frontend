@@ -218,25 +218,28 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="overflow-auto h-full w-full">
+    <PullToRefresh onRefresh={async () => { await new Promise(r => setTimeout(r, 1000)); }}>
+      <div className="overflow-auto h-full w-full">
       <div className="max-w-6xl mx-auto space-y-12 pb-24">
         <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div className="space-y-2">
-            <h1 className="text-5xl font-black text-foreground tracking-tighter italic">Settings</h1>
-            <p className="text-muted-foreground font-medium text-lg">Configure your Global Empire parameters.</p>
+            <h1 className="text-3xl md:text-5xl font-black text-foreground tracking-tighter italic">Settings</h1>
+            <p className="text-muted-foreground font-medium text-sm md:text-lg">Configure your Global Empire parameters.</p>
           </div>
         </header>
 
-        <div className="flex flex-col md:flex-row gap-8 md:gap-12">
-          <aside className="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full md:w-64 shrink-0 gap-2 pb-2 md:pb-0 border-b md:border-b-0 border-theme md:border-none">
+        <div className="flex flex-col md:flex-row gap-8 md:gap-12 relative">
+          <aside className="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full md:w-64 shrink-0 gap-3 pb-6 md:pb-0 border-b md:border-b-0 border-theme md:border-none sticky top-0 bg-theme-surface z-10 md:relative md:bg-transparent -mx-4 px-4 md:mx-0 md:px-0">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all whitespace-nowrap",
-                  activeTab === tab.id ? "bg-slate-900 text-white shadow-xl scale-105" : "text-muted-foreground hover:bg-slate-100"
+                  "flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold transition-all whitespace-nowrap shrink-0",
+                  activeTab === tab.id 
+                    ? "bg-primary text-white shadow-xl shadow-primary/20 scale-105" 
+                    : "text-slate-400 hover:text-foreground hover:bg-theme-background"
                 )}
               >
                 <tab.icon className="w-5 h-5" />
@@ -565,5 +568,6 @@ export default function SettingsPage() {
         </div>
       </div>
     </div>
+  </PullToRefresh>
   );
 }

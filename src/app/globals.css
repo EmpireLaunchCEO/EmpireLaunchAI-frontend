@@ -64,19 +64,15 @@ html, body {
   background-color: #0a0519 !important;
   margin: 0;
   padding: 0;
-  /* Use auto height to let content define the scroll area */
-  height: auto !important;
-  min-height: 100% !important;
+  min-height: 100vh;
   /* Allow native scrolling at the root */
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
+  overflow-y: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Ensure no global touch-action blocks scrolling */
 * {
   box-sizing: border-box;
-  touch-action: auto !important; 
 }
 
 /* 
@@ -84,6 +80,19 @@ html, body {
    Gradients only for headers. 
    Applying background-clip to every p/span/label causes massive scroll lag on iOS.
 */
+h1 {
+  font-size: clamp(1.8rem, 8vw, 3.5rem);
+  line-height: 1.1;
+}
+h2 {
+  font-size: clamp(1.4rem, 6vw, 2.5rem);
+  line-height: 1.2;
+}
+h3 {
+  font-size: clamp(1.1rem, 5vw, 2rem);
+  line-height: 1.3;
+}
+
 h1, h2, h3, .text-theme-gradient {
   background: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%);
   -webkit-background-clip: text !important;
@@ -108,6 +117,7 @@ input, textarea, select {
   -webkit-text-fill-color: white !important;
   color: white !important;
   background-clip: border-box !important;
+  font-size: 16px !important;
 }
 
 option {
@@ -153,7 +163,8 @@ button {
   letter-spacing: -0.02em;
 }
 
-/* Force override for legacy components */
-[class*="bg-white"], [class*="bg-slate-50"], [class*="bg-slate-100"] {
+/* Force override for legacy components - Targeted to specific sections instead of global */
+.theme-surface-override [class*="bg-white"], 
+.theme-surface-override [class*="bg-slate-50"] {
   background-color: var(--surface) !important;
 }

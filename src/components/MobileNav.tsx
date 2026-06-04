@@ -28,16 +28,21 @@ export function MobileNav() {
           id="nav-home"
           className={cn(
             "flex flex-col items-center gap-1 transition-all",
-            pathname === '/dashboard' ? "text-primary scale-110" : "text-slate-400 lg:text-slate-500 hover:text-white"
+            pathname === '/dashboard' ? "scale-110" : "text-slate-500 hover:text-white"
           )}
         >
           <div className={cn(
-            "p-2 rounded-xl transition-all",
-            pathname === '/dashboard' ? "bg-primary/10 lg:bg-primary/20" : "bg-transparent"
+            "p-2 rounded-xl transition-all shadow-2xl",
+            pathname === '/dashboard' 
+              ? "bg-white text-slate-900 shadow-white/20" 
+              : "bg-transparent text-slate-400"
           )}>
             <Home className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-tighter">Home</span>
+          <span className={cn(
+            "text-[10px] font-black uppercase tracking-tighter",
+            pathname === '/dashboard' ? "text-white" : "text-slate-500"
+          )}>Home</span>
         </Link>
 
         {/* EC: Empire Center */}
@@ -46,28 +51,33 @@ export function MobileNav() {
           id="nav-ec"
           className={cn(
             "flex flex-col items-center gap-1 transition-all",
-            pathname === '/empire-center' ? "text-primary scale-110" : "text-slate-400 lg:text-slate-500 hover:text-white"
+            pathname === '/empire-center' ? "scale-110" : "text-slate-500 hover:text-white"
           )}
         >
           <div className={cn(
-            "p-2 rounded-xl transition-all",
-            pathname === '/empire-center' ? "bg-primary/10 lg:bg-primary/20" : "bg-transparent"
+            "p-2 rounded-xl transition-all shadow-2xl",
+            pathname === '/empire-center' 
+              ? "bg-white text-slate-900 shadow-white/20" 
+              : "bg-transparent text-slate-400"
           )}>
             <ClipboardList className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-tighter">EC</span>
+          <span className={cn(
+            "text-[10px] font-black uppercase tracking-tighter",
+            pathname === '/empire-center' ? "text-white" : "text-slate-500"
+          )}>EC</span>
         </Link>
 
         {/* Studio (Hype) */}
         <button
           onClick={() => setIsStudioOpen(true)}
-          className="flex flex-col items-center gap-1 transition-all text-blue-500 hover:text-blue-400 relative"
+          className="flex flex-col items-center gap-1 transition-all text-blue-400 hover:text-blue-300 relative group"
         >
-          <div className="p-2 rounded-xl bg-blue-50 lg:bg-blue-900/30">
+          <div className="p-2 rounded-xl bg-blue-500 text-white shadow-xl shadow-blue-500/40 lg:bg-blue-900/30 group-hover:scale-110 transition-transform">
             <Video className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-tighter">Studio</span>
-          <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-600 rounded-full animate-pulse border-2 border-white lg:border-slate-900" />
+          <span className="text-[10px] font-black uppercase tracking-tighter text-blue-400">Studio</span>
+          <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-400 rounded-full animate-pulse border-2 border-slate-900" />
         </button>
 
         {/* LC: Link Center */}
@@ -76,16 +86,21 @@ export function MobileNav() {
           id="nav-lc"
           className={cn(
             "flex flex-col items-center gap-1 transition-all",
-            pathname === '/link-center' ? "text-primary scale-110" : "text-slate-400 lg:text-slate-500 hover:text-white"
+            pathname === '/link-center' ? "scale-110" : "text-slate-500 hover:text-white"
           )}
         >
           <div className={cn(
-            "p-2 rounded-xl transition-all",
-            pathname === '/link-center' ? "bg-primary/10 lg:bg-primary/20" : "bg-transparent"
+            "p-2 rounded-xl transition-all shadow-2xl",
+            pathname === '/link-center' 
+              ? "bg-white text-slate-900 shadow-white/20" 
+              : "bg-transparent text-slate-400"
           )}>
             <PlusCircle className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-tighter">LC</span>
+          <span className={cn(
+            "text-[10px] font-black uppercase tracking-tighter",
+            pathname === '/link-center' ? "text-white" : "text-slate-500"
+          )}>LC</span>
         </Link>
 
         {/* COG: Settings */}
@@ -94,16 +109,21 @@ export function MobileNav() {
           id="nav-settings"
           className={cn(
             "flex flex-col items-center gap-1 transition-all",
-            pathname === '/settings' ? "text-primary scale-110" : "text-slate-400 lg:text-slate-500 hover:text-white"
+            pathname === '/settings' ? "scale-110" : "text-slate-500 hover:text-white"
           )}
         >
           <div className={cn(
-            "p-2 rounded-xl transition-all",
-            pathname === '/settings' ? "bg-primary/10 lg:bg-primary/20" : "bg-transparent"
+            "p-2 rounded-xl transition-all shadow-2xl",
+            pathname === '/settings' 
+              ? "bg-white text-slate-900 shadow-white/20" 
+              : "bg-transparent text-slate-400"
           )}>
             <Settings className="w-6 h-6" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-tighter">Settings</span>
+          <span className={cn(
+            "text-[10px] font-black uppercase tracking-tighter",
+            pathname === '/settings' ? "text-white" : "text-slate-500"
+          )}>Settings</span>
         </Link>
       </div>
 
