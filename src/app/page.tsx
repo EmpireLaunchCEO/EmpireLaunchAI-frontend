@@ -68,11 +68,9 @@ export default function LandingPage() {
       </div>
 
       <nav className="relative z-10 p-6 flex justify-between items-center max-w-7xl mx-auto">
-        <div className="flex items-center gap-2">
-          <div className="bg-primary p-2 rounded-xl">
-            <Target className="w-6 h-6 text-slate-950" />
-          </div>
-          <span className="font-black text-2xl tracking-tighter uppercase italic">EmpireLaunch AI</span>
+        <div className="flex items-center gap-3">
+          <BrandedGlobe size="md" className="shadow-[0_0_20px_rgba(0,229,255,0.2)]" />
+          <span className="font-black text-2xl tracking-tighter uppercase italic text-theme-gradient">EmpireLaunch AI</span>
         </div>
         <div className="hidden md:flex items-center gap-2 bg-theme-surface/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
             <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
