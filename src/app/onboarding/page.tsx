@@ -212,6 +212,19 @@ export default function Onboarding() {
     }
   }, [isActivating, completeOnboarding]);
 
+  // PWA Standalone Redirect: If the user opens from home screen, 
+  // they expect to land in the dashboard (Success Hub) immediately.
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+      if (isStandalone && !isOnboarded) {
+        // Automatically complete onboarding for PWA users to let them into the dashboard "Tour"
+        completeOnboarding();
+        router.replace('/dashboard');
+      }
+    }
+  }, [router, isOnboarded, completeOnboarding]);
+
   // ENFORCEMENT
   useEffect(() => {
     if (isInitialized && currentStep > 2 && !isPaid) {
