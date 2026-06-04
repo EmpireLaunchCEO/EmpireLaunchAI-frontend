@@ -42,6 +42,8 @@ interface EmpireContextType {
   updatePlatformPermission: (platform: string, level: 'co-pilot' | 'empire') => void;
   autoSendRetention: boolean;
   setAutoSendRetention: (enabled: boolean) => void;
+  isProtocolAccepted: boolean;
+  acceptProtocols: () => void;
 
   // Notifications
   notifications: Notification[];
@@ -246,6 +248,22 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const syncWithBackend = async () => {
       try {
+        // Hydrate settings
+        const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
+          headers: { 'Authorization': 'Bearer mock-mobile-token' }
+        });
+        if (settingsRes.ok) {
+          const settings = await settingsRes.json();
+          if (settings.protocolAccepted !== undefined) {
+            setIsProtocolAccepted(settings.protocolAccepted);
+            localStorage.setItem('isProtocolAccepted', settings.protocolAccepted ? 'true' : 'false');
+          }
+          if (settings.onboardingComplete) {
+            setIsOnboarded(true);
+            localStorage.setItem('isOnboarded', 'true');
+          }
+        }
+
         const res = await fetch(`${API_URL}/api/agent/goal/latest`, {
           headers: { 'Authorization': 'Bearer mock-mobile-token' }
         });
@@ -277,6 +295,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     setIsOnboarded(true);
     if (typeof window !== 'undefined') {
       localStorage.setItem('isOnboarded', 'true');
+      localStorage.removeItem('onboarding_step');
     }
   };
 
@@ -406,6 +425,30 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const [isProtocolAccepted, setIsProtocolAccepted] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('isProtocolAccepted') === 'true';
+    }
+    return false;
+  });
+
+  const acceptProtocols = () => {
+    setIsProtocolAccepted(true);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isProtocolAccepted', 'true');
+      
+      // Notify backend to track acceptance
+      fetch(`${API_URL}/api/settings/protocolAccepted`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer mock-mobile-token'
+        },
+        body: JSON.stringify({ value: true })
+      }).catch(err => console.error('Failed to sync protocol acceptance', err));
+    }
+  };
+
   return (
     <EmpireContext.Provider value={{
       activeEmpireId,
@@ -437,6 +480,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       updatePlatformPermission,
       autoSendRetention,
       setAutoSendRetention,
+      isProtocolAccepted,
+      acceptProtocols,
 
       // Notifications
       notifications,

@@ -57,10 +57,24 @@ export default function Onboarding() {
     language,
     setLanguage,
     currency,
-    setCurrency
+    setCurrency,
+    isProtocolAccepted,
+    acceptProtocols
   } = useEmpire();
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return parseInt(localStorage.getItem('onboarding_step') || '1');
+    }
+    return 1;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('onboarding_step', currentStep.toString());
+    }
+  }, [currentStep]);
+
   const [accessKey, setAccessKey] = useState('');
   const [data, setData] = useState({
     name: '',
@@ -323,7 +337,7 @@ export default function Onboarding() {
 
   return (
     <div className="min-h-screen bg-theme-surface flex flex-col items-center">
-      <PWAInstallPrompt />
+      {currentStep === 6 && <PWAInstallPrompt />}
       <TermsModal
         isOpen={isTermsOpen}
         onClose={() => setIsTermsOpen(false)}
@@ -384,7 +398,10 @@ export default function Onboarding() {
                 </div>
 
                 <button
-                  onClick={nextStep}
+                  onClick={() => {
+                    acceptProtocols();
+                    nextStep();
+                  }}
                   className="w-full bg-primary text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group"
                 >
                   Accept Protocols
