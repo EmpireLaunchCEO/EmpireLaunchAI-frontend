@@ -520,12 +520,12 @@ export default function Onboarding() {
                      </div>
                    </div>
 
-                   <div className="pt-4 border-t border-slate-800">
+                   <div className="pt-6 border-t border-slate-800 space-y-6">
                      <div className="space-y-4">
                        <div className="flex justify-between items-start">
                          <div>
                            <h3 className="text-xl font-black text-white uppercase italic tracking-tighter">Empire Master</h3>
-                           <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mt-1">+ $40/mo per extra business</p>
+                           <p className="text-[8px] font-bold text-primary uppercase tracking-widest mt-1">Full Access License</p>
                          </div>
                          <div className="text-right">
                            <span className="text-2xl font-black text-white">$40</span>
@@ -533,61 +533,75 @@ export default function Onboarding() {
                          </div>
                        </div>
 
-                       <div className="space-y-2">
-                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Access Key</label>
+                       {/* Path 1: Public Users - Credit Card */}
+                       <button
+                         onClick={() => setIsTermsOpen(true)}
+                         disabled={isActivating || isPaying}
+                         className="w-full bg-primary text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 group shadow-[0_0_30px_rgba(251,191,36,0.2)]"
+                       >
+                         <CreditCard className="w-5 h-5" />
+                         {isPaying ? "Processing..." : "Pay with Credit Card"}
+                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                       </button>
+
+                       <div className="relative">
+                        <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                          <div className="w-full border-t border-slate-800"></div>
+                        </div>
+                        <div className="relative flex justify-center text-[8px] uppercase font-black tracking-widest">
+                          <span className="bg-slate-900 px-3 text-slate-500 font-bold">or use access key</span>
+                        </div>
+                      </div>
+
+                       {/* Path 2: Admin/Owner Bypass */}
+                       <div className="space-y-3">
                          <div className="relative group">
                             <input
                               type="text"
                               value={accessKey}
                               onChange={(e) => setAccessKey(e.target.value)}
-                              placeholder="ADMIN-CODE-..."
+                              placeholder="ENTER ADMIN OR OWNER KEY"
                               autoComplete="off"
-                              className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none shadow-inner text-white"
+                              className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white text-center"
                             />
                          </div>
+                         {accessKey.trim() && (
+                            <button
+                              onClick={async () => {
+                                const cleanKey = accessKey.trim().toUpperCase();
+                                if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
+                                    try {
+                                      await fetch(`${API_URL}/api/auth/redeem-key`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ userId, key: cleanKey })
+                                      });
+                                      setIsPaid(true);
+                                      nextStep();
+                                    } catch (e) {
+                                      setIsTermsOpen(true);
+                                    }
+                                } else {
+                                    setIsTermsOpen(true);
+                                }
+                              }}
+                              className="w-full py-3 bg-slate-800 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-700 transition-all"
+                            >
+                              Redeem Key
+                            </button>
+                         )}
                        </div>
 
-                       <button
-                         onClick={async () => {
-                           const cleanKey = accessKey.trim().toUpperCase();
-                           if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
-                              try {
-                                await fetch(`${API_URL}/api/auth/redeem-key`, {
-                                  method: 'POST',
-                                  headers: { 'Content-Type': 'application/json' },
-                                  body: JSON.stringify({ userId, key: cleanKey })
-                                });
-                                setIsPaid(true);
-                                nextStep();
-                              } catch (e) {
-                                console.error('Failed to redeem owner key', e);
-                                setIsTermsOpen(true);
-                              }
-                           } else {
-                              setIsTermsOpen(true);
-                           }
-                         }}
-                         disabled={isActivating || isPaying}
-                         className="w-full bg-primary text-slate-900 py-4 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-2 group"
-                       >
-                         {isPaying ? "Verifying..." : accessKey.trim() ? "Authorize Access Key" : "Secure Card Checkout"}
-                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                       </button>
-
-                       <div className="flex justify-center items-center gap-4 opacity-40 grayscale group-hover:opacity-100 transition-opacity">
-                          <CreditCard className="w-4 h-4 text-white" />
-                          <span className="text-[8px] font-black uppercase text-slate-400 tracking-widest">Gateway Connected</span>
-                       </div>
-
-                       <div className="grid grid-cols-2 gap-3">
+                       {/* Feature List (The "Box" - now with better visibility) */}
+                       <div className="grid grid-cols-2 gap-3 p-4 bg-slate-950/50 rounded-2xl border border-slate-800">
                          {[
-                           'Full Autonomous Execution',
-                           'Priority Neural Discovery',
+                           'Autonomous Execution',
+                           'Priority Discovery',
                            'Secure Bank Bridge',
-                           'Stripe or Credit Card'
+                           'Verified Encryption'
                          ].map(f => (
-                           <div key={f} className="flex items-center gap-2 text-[8px] font-black text-slate-400 uppercase tracking-tight">
-                             <div className="w-1 h-1 bg-primary rounded-full shadow-[0_0_5px_rgba(251,191,36,0.5)]" />
+                           <div key={f} className="flex items-center gap-2 text-[9px] font-black text-slate-300 uppercase tracking-tight">
+                             <div className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
                              {f}
                            </div>
                          ))}
