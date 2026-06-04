@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -141,7 +141,7 @@ export default function Onboarding() {
       }, 800);
       return () => clearInterval(interval);
     }
-  }, [isActivating, data.automationMode, showDiscoveryReview]);
+  }, [isActivating, data.automationMode, showDiscoveryReview, discoveryLogs.length]);
 
   // WebSocket for real-time progress
   useEffect(() => {
@@ -187,38 +187,13 @@ export default function Onboarding() {
         clearInterval(pollInterval);
       };
     }
-  }, [isActivating]);
+  }, [isActivating, completeOnboarding, router]);
 
   useEffect(() => {
     if (isInitialized && isOnboarded) {
       router.replace('/dashboard');
     }
   }, [isInitialized, isOnboarded, router]);
-
-  if (isOnboarded) return null;
-  if (!isInitialized) {
-    return (
-      <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-blue-200 font-black uppercase tracking-[0.3em] text-sm animate-pulse">
-            Synchronizing Nodes
-          </h2>
-        </div>
-      </div>
-    );
-  }
-
-  const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
-
-  const nextStep = () => {
-    // SECURITY GATE: Prevent moving past Step 2 (Authorization) without payment/key
-    if (currentStep === 2 && !isPaid) {
-      console.warn('Authorization required to proceed.');
-      return;
-    }
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length));
-  };
 
   // ENFORCEMENT: If the user refreshes and is on Step 3+ but isPaid is false, boot them back
   useEffect(() => {
@@ -227,18 +202,7 @@ export default function Onboarding() {
     }
   }, [currentStep, isPaid, isInitialized]);
 
-  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
-
-  const handleActivate = async () => {
-    setIsActivating(true);
-
-    // In co-pilot mode, we just finish. In empire mode, we do the discovery review.
-    if (data.automationMode === 'co-pilot') {
-       await finalizeActivation();
-    }
-  };
-
-  const finalizeActivation = async () => {
+  const finalizeActivation = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}/api/agent/initialize`, {
         method: 'POST',
@@ -275,7 +239,64 @@ export default function Onboarding() {
         router.replace('/dashboard');
       }, 5000);
     }
+  }, [data, setActiveEmpireId, completeOnboarding, router]);
+
+  const handleActivate = async () => {
+    setIsActivating(true);
+
+    // In co-pilot mode, we just finish. In empire mode, we do the discovery review.
+    if (data.automationMode === 'co-pilot') {
+       await finalizeActivation();
+    }
   };
+
+  const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
+
+  const nextStep = () => {
+    // SECURITY GATE: Prevent moving past Step 2 (Authorization) without payment/key
+    if (currentStep === 2 && !isPaid) {
+      console.warn('Authorization required to proceed.');
+      return;
+    }
+    setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+  };
+
+  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+
+  const handleConnect = (id: string) => {
+    if (!data.connectedPlatforms.includes(id)) {
+      updateData({ connectedPlatforms: [...data.connectedPlatforms, id] });
+    }
+  };
+
+  const handleAcceptTerms = async () => {
+    setIsTermsOpen(false);
+    setIsPaying(true);
+    await new Promise(r => setTimeout(r, 2000));
+    setIsPaid(true);
+    setIsPaying(false);
+    
+    if (currentStep === steps.length) {
+      handleActivate();
+    } else {
+      nextStep();
+    }
+  };
+
+  if (isOnboarded) return null;
+  
+  if (!isInitialized) {
+    return (
+      <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-blue-200 font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+            Synchronizing Nodes
+          </h2>
+        </div>
+      </div>
+    );
+  }
 
   if (isActivating) {
     return (
@@ -362,26 +383,6 @@ export default function Onboarding() {
       </div>
     );
   }
-
-  const handleConnect = (id: string) => {
-    if (!data.connectedPlatforms.includes(id)) {
-      updateData({ connectedPlatforms: [...data.connectedPlatforms, id] });
-    }
-  };
-
-  const handleAcceptTerms = async () => {
-    setIsTermsOpen(false);
-    setIsPaying(true);
-    await new Promise(r => setTimeout(r, 2000));
-    setIsPaid(true);
-    setIsPaying(false);
-    
-    if (currentStep === steps.length) {
-      handleActivate();
-    } else {
-      nextStep();
-    }
-  };
 
   return (
     <div className="min-h-screen bg-theme-surface flex flex-col items-center">

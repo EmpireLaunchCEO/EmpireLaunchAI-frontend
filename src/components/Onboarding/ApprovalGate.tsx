@@ -58,6 +58,32 @@ export function ApprovalGate({
     return null;
   };
 
+  const handleUserSignIn = () => {
+    setGateState('verification');
+    setIsAiActive(true);
+    const newThought = {
+      id: 'verification-start',
+      text: "Handshake detected. Verifying secure session tokens...",
+      timestamp: Date.now()
+    };
+    setThoughts(prev => [...prev, newThought]);
+
+    // Simulate verification success
+    setTimeout(() => {
+      setGateState('resumption');
+      setThoughts(prev => [...prev, {
+        id: 'resumption',
+        text: "Neural Link Stabilized. Resuming autonomous store calibration...",
+        timestamp: Date.now()
+      }]);
+
+      setTimeout(() => {
+        setGateState('success');
+        if (onSuccess) onSuccess();
+      }, 3000);
+    }, 3000);
+  };
+
   const handleDeepLink = () => {
     const link = getDeepLink(platformName);
     if (link) {
@@ -92,12 +118,15 @@ export function ApprovalGate({
         };
         setThoughts(prev => [...prev, newThought]);
 
-        if (msg.state !== gateState) {
-          setGateState(msg.state as GateState);
-          if (msg.state === 'barrier') {
-            setIsAiActive(false);
-          }
-        }
+        setGateState(prev => {
+           if (msg.state !== prev) {
+             if (msg.state === 'barrier') {
+               setIsAiActive(false);
+             }
+             return msg.state as GateState;
+           }
+           return prev;
+        });
         currentIndex++;
       } else {
         clearInterval(interval);
@@ -113,32 +142,6 @@ export function ApprovalGate({
       thoughtStreamRef.current.scrollTop = thoughtStreamRef.current.scrollHeight;
     }
   }, [thoughts]);
-
-  const handleUserSignIn = () => {
-    setGateState('verification');
-    setIsAiActive(true);
-    const newThought = {
-      id: 'verification-start',
-      text: "Handshake detected. Verifying secure session tokens...",
-      timestamp: Date.now()
-    };
-    setThoughts(prev => [...prev, newThought]);
-
-    // Simulate verification success
-    setTimeout(() => {
-      setGateState('resumption');
-      setThoughts(prev => [...prev, {
-        id: 'resumption',
-        text: "Neural Link Stabilized. Resuming autonomous store calibration...",
-        timestamp: Date.now()
-      }]);
-
-      setTimeout(() => {
-        setGateState('success');
-        if (onSuccess) onSuccess();
-      }, 3000);
-    }, 3000);
-  };
 
   if (!isOpen) return null;
 

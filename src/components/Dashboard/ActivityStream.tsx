@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import {
   ShoppingBag,
@@ -25,7 +25,7 @@ export function ActivityStream() {
   const [activities, setActivities] = useState<ActivityEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     const data = await analyticsService.getActivityStream();
     
     // Filter activities based on linked platforms
@@ -38,7 +38,7 @@ export function ActivityStream() {
 
     setActivities(filtered);
     setLoading(false);
-  };
+  }, [connectedPlatforms]);
 
   useEffect(() => {
     loadData();
@@ -49,7 +49,7 @@ export function ActivityStream() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [loadData]);
 
   const getIcon = (type: ActivityEvent['type']) => {
     switch (type) {
@@ -127,7 +127,7 @@ export function ActivityStream() {
                     {activity.type === 'sale' && (
                       <div className="mt-2 inline-flex items-center gap-1.5 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100">
                           <span className="w-1 h-1 rounded-full bg-emerald-500" />
-                          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Revenue Locked</span>
+                          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest Revenue Locked">Revenue Locked</span>
                       </div>
                     )}
                   </div>

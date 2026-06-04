@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { MissionBriefing } from '@/components/Dashboard/MissionBriefing';
 import { ApprovalQueue } from '@/components/EmpireMode/ApprovalQueue';
 import { DetailedRevenue } from '@/components/Dashboard/DetailedRevenue';
@@ -23,13 +23,6 @@ import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useSearchParams } from 'next/navigation';
-
-interface Goal {
-  id: string;
-  title: string;
-  description: string;
-  status: string;
-}
 
 export default function Dashboard() {
   const { activeEmpireId, isLinkingComplete, aiMode } = useEmpire();
@@ -54,7 +47,7 @@ export default function Dashboard() {
     }
   }, [isLinkingComplete, isLoading]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       // Artificially delay to show the refresh globe and clear cache
@@ -76,20 +69,22 @@ export default function Dashboard() {
       setTransactions(txRes);
       
       // Force a soft version check
-      const verRes = await fetch('/version.json', { cache: 'no-store' });
-      const verData = await verRes.json();
-      console.log('Refreshed to version:', verData.version);
+      const verRes = await fetch('/version.json', { cache: 'no-store' }).catch(() => null);
+      if (verRes && verRes.ok) {
+        const verData = await verRes.json();
+        console.log('Refreshed to version:', verData.version);
+      }
       
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [activeEmpireId]);
 
   useEffect(() => {
     fetchData();
-  }, [activeEmpireId]);
+  }, [fetchData]);
 
   if (isLoading && !empireData) {
     return (

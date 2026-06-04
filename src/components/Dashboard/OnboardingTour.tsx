@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -35,7 +35,7 @@ export function OnboardingTour() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const tourSteps: TourStep[] = [
+  const tourSteps: TourStep[] = useMemo(() => [
     {
       title: "Welcome to EmpireLaunch AI",
       description: "I am your AI partner. I've built this command center to help you scale your business with zero technical knowledge required. Let me show you around!",
@@ -117,44 +117,44 @@ export function OnboardingTour() {
       icon: Stars,
       page: "/settings"
     }
-  ];
+  ], []);
+
+  const updatePointer = useCallback(() => {
+    const step = tourSteps[currentStep];
+    if (step?.target) {
+      setTimeout(() => {
+        const el = document.getElementById(step.target!);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          setPointerX(rect.left + rect.width / 2);
+
+          // SIGNIFICANT OFFSET: Keep the pointer high above the bottom bar
+          if (step.target?.startsWith('nav-')) {
+            // Points to bottom nav, place bubble well above and arrow pointing down
+            setPointerY(rect.top - 40);
+          } else if (step.target?.startsWith('tab-') || step.target?.startsWith('mode-')) {
+            // Points to settings tabs or modes (usually top or middle), place arrow pointing up
+            setPointerY(rect.bottom + 20);
+          } else if (step.target === 'notification-bell') {
+            // Points to notification bell (top right), place arrow pointing up
+            setPointerY(rect.bottom + 20);
+          } else {
+            // Fallback
+            setPointerY(rect.bottom + 20);
+          }
+        }
+      }, 300); // Increased delay for stability
+    } else {
+      setPointerX(null);
+      setPointerY(null);
+    }
+  }, [currentStep, tourSteps]);
 
   useEffect(() => {
-    const updatePointer = () => {
-      const step = tourSteps[currentStep];
-      if (step?.target) {
-        setTimeout(() => {
-          const el = document.getElementById(step.target!);
-          if (el) {
-            const rect = el.getBoundingClientRect();
-            setPointerX(rect.left + rect.width / 2);
-
-            // SIGNIFICANT OFFSET: Keep the pointer high above the bottom bar
-            if (step.target?.startsWith('nav-')) {
-              // Points to bottom nav, place bubble well above and arrow pointing down
-              setPointerY(rect.top - 40);
-            } else if (step.target?.startsWith('tab-') || step.target?.startsWith('mode-')) {
-              // Points to settings tabs or modes (usually top or middle), place arrow pointing up
-              setPointerY(rect.bottom + 20);
-            } else if (step.target === 'notification-bell') {
-              // Points to notification bell (top right), place arrow pointing up
-              setPointerY(rect.bottom + 20);
-            } else {
-              // Fallback
-              setPointerY(rect.bottom + 20);
-            }
-          }
-        }, 300); // Increased delay for stability
-      } else {
-        setPointerX(null);
-        setPointerY(null);
-      }
-    };
-
     updatePointer();
     window.addEventListener('resize', updatePointer);
     return () => window.removeEventListener('resize', updatePointer);
-  }, [currentStep, pathname, searchParams]);
+  }, [updatePointer, pathname, searchParams]);
 
   useEffect(() => {
     const hasSeenTour = localStorage.getItem('empire_tour_v419');

@@ -182,7 +182,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
     setConversationTrigger(prev => prev + 1);
   };
 
-  const handleInterception = (input: string) => {
+  const handleInterception = useCallback((input: string) => {
     const query = input.toLowerCase();
     if (query.includes('how') && query.includes('link')) {
       setTeacherMessage("Linking is easy! Just type the name of the app in the search bar above, and I'll guide you through the secure OAuth or API key setup.");
@@ -196,13 +196,13 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
       setTeacherMessage("I'm processing your request... During this linking phase, I'm focused on getting your core apps connected. Ask me how to link a specific platform!");
     }
     setConversationTrigger(prev => prev + 1);
-  };
+  }, [hasNoPlatforms]);
 
   // Expose interception to window for simplicity in this prototype or use a ref in real app
   useEffect(() => {
     (window as any).interceptTeacher = handleInterception;
     return () => { delete (window as any).interceptTeacher; };
-  }, [connectedPlatforms]);
+  }, [handleInterception]);
 
   return (
     <div className="space-y-12 max-w-4xl mx-auto pt-10 pb-20">
