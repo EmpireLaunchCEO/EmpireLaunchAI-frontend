@@ -37,6 +37,7 @@ const platforms = [
 ];
 
 import { BrandedGlobe } from '@/components/BrandedGlobe';
+import { useEmpire } from '@/lib/EmpireContext';
 
 interface PlatformMatrixProps {
   connectedPlatforms: string[];

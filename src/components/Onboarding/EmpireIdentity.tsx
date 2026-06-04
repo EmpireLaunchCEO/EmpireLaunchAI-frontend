@@ -75,29 +75,6 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
         </div>
       </div>
 
-      <AnimatePresence>
-        {aiInsight && (
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="p-5 md:p-6 rounded-[32px] md:rounded-[40px] bg-primary text-slate-900 shadow-2xl shadow-amber-900/20 relative overflow-hidden group border border-white/20"
-          >
-            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
-              <Stars className="w-12 md:w-16 h-12 md:h-16" />
-            </div>
-            <div className="flex items-start gap-3 md:gap-4 relative z-10">
-              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-900 flex items-center justify-center shrink-0">
-                <MessageSquareQuote className="w-4 h-4 md:w-6 md:h-6 text-primary" />
-              </div>
-              <p className="text-base md:text-lg font-black leading-tight italic uppercase tracking-tight">“{aiInsight}”</p>
-            </div>
-            <div className="mt-4 flex items-center justify-end">
-              <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-60">AI Consultant Insight</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

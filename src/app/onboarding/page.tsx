@@ -385,7 +385,7 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-theme-surface flex flex-col items-center">
+    <div className="min-h-screen bg-theme-surface flex flex-col items-center overflow-x-hidden">
       {currentStep === 6 && <PWAInstallPrompt />}
       <TermsModal
         isOpen={isTermsOpen}
@@ -600,7 +600,7 @@ export default function Onboarding() {
                            'Secure Bank Bridge',
                            'Verified Encryption'
                          ].map(f => (
-                           <div key={f} className="flex items-center gap-2 text-[9px] font-black text-slate-300 uppercase tracking-tight">
+                           <div key={f} className="flex items-center gap-2 text-[9px] font-black text-slate-100 uppercase tracking-tight">
                              <div className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
                              {f}
                            </div>
