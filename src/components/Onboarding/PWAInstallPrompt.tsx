@@ -15,17 +15,23 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export function PWAInstallPrompt() {
+interface PWAInstallPromptProps {
+  onDismiss?: () => void;
+}
+
+export function PWAInstallPrompt({ onDismiss }: PWAInstallPromptProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     // Check if app is already running in standalone mode
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    const isStandalone = typeof window !== 'undefined' && (
+      window.matchMedia('(display-mode: standalone)').matches
       || (window.navigator as any).standalone
-      || document.referrer.includes('android-app://');
+      || document.referrer.includes('android-app://')
+    );
 
     // Check if user has already dismissed the prompt
-    const hasSeenPrompt = localStorage.getItem('empire_pwa_prompt_seen');
+    const hasSeenPrompt = typeof window !== 'undefined' && localStorage.getItem('empire_pwa_prompt_seen');
 
     if (!isStandalone && !hasSeenPrompt) {
       // Delay showing the prompt slightly for better UX
@@ -33,12 +39,16 @@ export function PWAInstallPrompt() {
         setIsVisible(true);
       }, 2000);
       return () => clearTimeout(timer);
+    } else if (isStandalone || hasSeenPrompt) {
+      // If already standalone or seen, we can still call onDismiss to let the parent know we are "done" with the prompt
+      onDismiss?.();
     }
-  }, []);
+  }, [onDismiss]);
 
   const dismissPrompt = () => {
     setIsVisible(false);
     localStorage.setItem('empire_pwa_prompt_seen', 'true');
+    onDismiss?.();
   };
 
   return (

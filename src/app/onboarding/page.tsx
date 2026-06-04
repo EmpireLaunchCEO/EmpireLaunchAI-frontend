@@ -110,6 +110,7 @@ export default function Onboarding() {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [showApprovalGate, setShowApprovalGate] = useState(false);
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
+  const [isPWADismissed, setIsPWADismissed] = useState(false);
   const [gatePlatform, setGatePlatform] = useState('Etsy');
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
   const [realLogs, setRealLogs] = useState<string[]>([]);
@@ -121,6 +122,18 @@ export default function Onboarding() {
     "Mapping automated growth paths...",
     "Neural Discovery Complete."
   ];
+
+  // Effect to handle redirection when onboarded
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (isInitialized && isOnboarded) {
+      // Small delay to ensure state is stable before redirecting
+      timeoutId = setTimeout(() => {
+        router.replace('/dashboard');
+      }, 800);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [isInitialized, isOnboarded, router]);
 
   useEffect(() => {
     if (isActivating && data.automationMode === 'empire' && !showDiscoveryReview) {
@@ -160,7 +173,6 @@ export default function Onboarding() {
         console.log('Empire initialized via WebSocket:', data);
         setTimeout(() => {
           completeOnboarding();
-          router.replace('/dashboard');
         }, 1500);
       });
 
@@ -174,7 +186,6 @@ export default function Onboarding() {
           if (goal && goal.status === 'active') {
              console.log('Empire active detected via polling');
              completeOnboarding();
-             router.replace('/dashboard');
           }
         } catch (e) {
           // Silent fail for polling
@@ -186,13 +197,7 @@ export default function Onboarding() {
         clearInterval(pollInterval);
       };
     }
-  }, [isActivating, completeOnboarding, router]);
-
-  useEffect(() => {
-    if (isInitialized && isOnboarded) {
-      router.replace('/dashboard');
-    }
-  }, [isInitialized, isOnboarded, router]);
+  }, [isActivating, completeOnboarding]);
 
   // ENFORCEMENT: If the user refreshes and is on Step 3+ but isPaid is false, boot them back
   useEffect(() => {
@@ -235,10 +240,9 @@ export default function Onboarding() {
       // Fallback after timeout
       setTimeout(() => {
         completeOnboarding();
-        router.replace('/dashboard');
       }, 5000);
     }
-  }, [data, setActiveEmpireId, completeOnboarding, router]);
+  }, [data, setActiveEmpireId, completeOnboarding]);
 
   const handleActivate = async () => {
     setIsActivating(true);
@@ -247,6 +251,10 @@ export default function Onboarding() {
     if (data.automationMode === 'co-pilot') {
        await finalizeActivation();
     }
+  };
+
+  const handlePWADismiss = () => {
+    setIsPWADismissed(true);
   };
 
   const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
@@ -287,7 +295,19 @@ export default function Onboarding() {
     setIsTermsOpen(true);
   };
 
-  if (isOnboarded) return null;
+  if (isOnboarded) {
+    return (
+      <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6 text-center p-6">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+            Neural Sync Established
+          </h2>
+          <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">Transferring to Command Center...</p>
+        </div>
+      </div>
+    );
+  }
   
   if (!isInitialized) {
     return (
@@ -305,7 +325,7 @@ export default function Onboarding() {
   if (isActivating) {
     return (
       <div className="min-h-screen w-full bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-        <PWAInstallPrompt />
+        <PWAInstallPrompt onDismiss={handlePWADismiss} />
         <div className="absolute inset-0 opacity-20">
           <svg className="w-full h-full">
             <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
@@ -328,12 +348,12 @@ export default function Onboarding() {
 
               <div className="space-y-4">
                 <h2 className="text-4xl font-black text-white tracking-tight uppercase italic">
-                  Establishing Neural Sync.
+                  {isPWADismissed ? "Download App to Continue." : "Establishing Neural Sync."}
                 </h2>
                 <div className="flex items-center justify-center gap-3 h-6">
                   <AnimatePresence mode="wait">
                     <motion.div
-                      key={realLogs.length > 0 ? 'real-' + realLogs.length : 'discovery-' + discoveryLogIndex}
+                      key={isPWADismissed ? 'pwa-wait' : (realLogs.length > 0 ? 'real-' + realLogs.length : 'discovery-' + discoveryLogIndex)}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
@@ -341,7 +361,9 @@ export default function Onboarding() {
                     >
                       <BrandedGlobe size="sm" animate={true} />
                       <p className="text-primary font-black tracking-widest text-xs uppercase">
-                        {realLogs.length > 0 ? realLogs[realLogs.length - 1] : discoveryLogs[discoveryLogIndex]}
+                        {isPWADismissed 
+                          ? "Add to Home Screen for Production Access" 
+                          : (realLogs.length > 0 ? realLogs[realLogs.length - 1] : discoveryLogs[discoveryLogIndex])}
                       </p>
                     </motion.div>
                   </AnimatePresence>
@@ -349,10 +371,15 @@ export default function Onboarding() {
               </div>
 
               <div className="max-w-xs mx-auto space-y-2">
+                {isPWADismissed && (
+                   <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-4">
+                     Please follow the installation steps in your browser menu to unlock the dashboard.
+                   </p>
+                )}
                 <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
+                    animate={{ width: isPWADismissed ? "90%" : "100%" }}
                     transition={{ duration: 4, ease: "easeInOut" }}
                     className="h-full bg-primary shadow-[0_0_15px_rgba(251,191,36,0.5)]"
                   />
@@ -375,7 +402,6 @@ export default function Onboarding() {
 
   return (
     <div className="min-h-screen bg-theme-surface flex flex-col items-center overflow-x-hidden">
-      {currentStep === 6 && <PWAInstallPrompt />}
       <TermsModal
         isOpen={isTermsOpen}
         onClose={() => setIsTermsOpen(false)}
