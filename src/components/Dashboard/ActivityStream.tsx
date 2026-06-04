@@ -71,7 +71,7 @@ export function ActivityStream() {
       case 'milestone': return 'bg-slate-900 text-white';
       case 'research': return 'bg-amber-500 text-white';
       case 'production': return 'bg-indigo-500 text-white';
-      default: return 'bg-theme-background0 text-white';
+      default: return 'bg-theme-background text-white';
     }
   };
 
@@ -120,7 +120,7 @@ export function ActivityStream() {
                     {activity.meta?.reasoning && (
                       <p className="text-[10px] text-muted-foreground italic leading-relaxed bg-theme-background p-2 rounded-lg border border-theme">
                         <span className="text-blue-500 font-bold not-italic mr-1">AI Logic:</span>
-                        {activity.meta.reasoning}
+                        {activity.meta?.reasoning}
                       </p>
                     )}
 

@@ -12,7 +12,7 @@ import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesS
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { SuccessHubOverview } from '@/components/Dashboard/SuccessHub/SuccessHubOverview';
-import { Stars, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard } from 'lucide-react';
+import { Stars, Loader2, Home, ArrowUpRight, Plus, X, LayoutDashboard, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';

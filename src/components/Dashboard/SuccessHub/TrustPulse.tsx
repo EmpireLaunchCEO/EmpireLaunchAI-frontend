@@ -56,8 +56,9 @@ export const TrustPulse = () => {
   ];
 
   // Simple Sentiment Chart
-  const maxScore = Math.max(...sentimentMap.map(p => p.score), 100);
-  const minScore = Math.min(...sentimentMap.map(p => p.score), 0);
+  const scores = sentimentMap.length > 0 ? sentimentMap.map(p => p.score) : [0];
+  const maxScore = Math.max(...scores, 100);
+  const minScore = Math.min(...scores, 0);
   const range = maxScore - minScore;
 
   return (

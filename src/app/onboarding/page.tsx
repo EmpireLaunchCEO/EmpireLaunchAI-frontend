@@ -125,7 +125,7 @@ export default function Onboarding() {
         console.log('Empire initialized via WebSocket:', data);
         setTimeout(() => {
           completeOnboarding();
-          window.location.href = '/dashboard';
+          router.replace('/dashboard');
         }, 1500);
       });
 
@@ -139,7 +139,7 @@ export default function Onboarding() {
           if (goal && goal.status === 'active') {
              console.log('Empire active detected via polling');
              completeOnboarding();
-             window.location.href = '/dashboard';
+             router.replace('/dashboard');
           }
         } catch (e) {
           // Silent fail for polling
@@ -210,7 +210,7 @@ export default function Onboarding() {
       // Fallback after timeout
       setTimeout(() => {
         completeOnboarding();
-        window.location.href = '/dashboard';
+        router.replace('/dashboard');
       }, 5000);
     }
   };

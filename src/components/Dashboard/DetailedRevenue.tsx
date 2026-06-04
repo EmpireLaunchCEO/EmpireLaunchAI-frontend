@@ -43,7 +43,7 @@ export function DetailedRevenue() {
 
   const totalRevenue = transactions.reduce((acc, t) => acc + t.amount, 0);
   const activeMilestone = milestones.find(m => !m.isCompleted) || milestones[milestones.length - 1];
-  const progressPercent = activeMilestone ? (activeMilestone.current / activeMilestone.target) * 100 : 0;
+  const progressPercent = activeMilestone ? (activeMilestone.current / (activeMilestone.target || 1)) * 100 : 0;
 
   if (loading) {
     return <div className="h-40 flex items-center justify-center">
@@ -77,7 +77,7 @@ export function DetailedRevenue() {
                  <span className="text-4xl font-black text-foreground">${activeMilestone?.current.toLocaleString()}</span>
                  <span className="text-muted-foreground font-bold mb-1">/ ${activeMilestone?.target.toLocaleString()}</span>
                </div>
-               <span className="text-xs font-bold text-primary">+${(activeMilestone?.target - activeMilestone?.current).toLocaleString()} remaining</span>
+               <span className="text-xs font-bold text-primary">+${((activeMilestone?.target || 0) - (activeMilestone?.current || 0)).toLocaleString()} remaining</span>
              </div>
 
              <div className="h-3 w-full bg-theme-background rounded-full overflow-hidden border border-theme">

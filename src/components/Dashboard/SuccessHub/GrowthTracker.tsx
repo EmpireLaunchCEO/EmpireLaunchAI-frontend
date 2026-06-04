@@ -34,7 +34,7 @@ export const GrowthTracker = ({
               r="80"
               fill="none"
               stroke="currentColor"
-              className="text-theme-background"
+              className="text-slate-400"
               strokeWidth="12"
             />
             <motion.circle
