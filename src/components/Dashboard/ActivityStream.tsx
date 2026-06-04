@@ -19,6 +19,7 @@ import { analyticsService, ActivityEvent } from '@/lib/api-service';
 import Link from 'next/link';
 
 import { useEmpire } from '@/lib/EmpireContext';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 export function ActivityStream() {
   const { connectedPlatforms } = useEmpire();
