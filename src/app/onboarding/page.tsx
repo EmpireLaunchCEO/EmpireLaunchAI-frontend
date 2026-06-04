@@ -35,10 +35,9 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 const steps = [
   { id: 1, title: 'Protocol' },
   { id: 2, title: 'Authorization' },
-  { id: 3, title: 'Calibration' },
-  { id: 4, title: 'Identity' },
-  { id: 5, title: 'Matrix' },
-  { id: 6, title: 'Toolkit' },
+  { id: 3, title: 'Identity' },
+  { id: 4, title: 'Matrix' },
+  { id: 5, title: 'Toolkit' },
 ];
 
 import { useEmpire } from '@/lib/EmpireContext';
@@ -79,6 +78,7 @@ export default function Onboarding() {
   }, [currentStep]);
 
   const [accessKey, setAccessKey] = useState('');
+  const [redeemKeyToUse, setRedeemKeyToUse] = useState('');
   const [data, setData] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('onboarding_data');
@@ -270,10 +270,6 @@ export default function Onboarding() {
 
   const handleAcceptTerms = async () => {
     setIsTermsOpen(false);
-    setIsPaying(true);
-    await new Promise(r => setTimeout(r, 2000));
-    setIsPaid(true);
-    setIsPaying(false);
     
     // Check if we are at the end of onboarding
     if (currentStep === steps.length) {
@@ -281,6 +277,14 @@ export default function Onboarding() {
     } else {
       nextStep();
     }
+  };
+
+  const handleSecurePayment = async () => {
+    setIsPaying(true);
+    await new Promise(r => setTimeout(r, 2000));
+    setIsPaid(true);
+    setIsPaying(false);
+    setIsTermsOpen(true);
   };
 
   if (isOnboarded) return null;
@@ -301,6 +305,7 @@ export default function Onboarding() {
   if (isActivating) {
     return (
       <div className="min-h-screen w-full bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+        <PWAInstallPrompt />
         <div className="absolute inset-0 opacity-20">
           <svg className="w-full h-full">
             <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
@@ -518,7 +523,7 @@ export default function Onboarding() {
 
                        {/* Path 1: Public Users - Credit Card */}
                        <button
-                         onClick={() => setIsTermsOpen(true)}
+                         onClick={handleSecurePayment}
                          disabled={isActivating || isPaying}
                          className="w-full bg-primary text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 group shadow-[0_0_30px_rgba(251,191,36,0.2)]"
                        >
@@ -553,19 +558,13 @@ export default function Onboarding() {
                               onClick={async () => {
                                 const cleanKey = accessKey.trim().toUpperCase();
                                 if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
-                                    try {
-                                      await fetch(`${API_URL}/api/auth/redeem-key`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({ userId, key: cleanKey })
-                                      });
-                                      setIsPaid(true);
-                                      nextStep();
-                                    } catch (e) {
-                                      setIsTermsOpen(true);
-                                    }
-                                } else {
+                                    setIsActivating(true);
+                                    await new Promise(r => setTimeout(r, 1500));
+                                    setIsPaid(true);
+                                    setIsActivating(false);
                                     setIsTermsOpen(true);
+                                } else {
+                                    handleSecurePayment();
                                 }
                               }}
                               className="w-full py-3 bg-slate-800 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-700 transition-all"
@@ -611,27 +610,13 @@ export default function Onboarding() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <AutomationCalibration
-                  mode={data.automationMode}
-                  onModeChange={(mode) => updateData({ automationMode: mode })}
-                />
+                <EmpireIdentity data={data} updateData={updateData} />
               </motion.div>
             )}
 
             {currentStep === 4 && (
               <motion.div
                 key="step4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <EmpireIdentity data={data} updateData={updateData} />
-              </motion.div>
-            )}
-
-            {currentStep === 5 && (
-              <motion.div
-                key="step5"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -643,14 +628,17 @@ export default function Onboarding() {
               </motion.div>
             )}
 
-            {currentStep === 6 && (
+            {currentStep === 5 && (
               <motion.div
-                key="step6"
+                key="step5"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <ConsultantToolkit businessAngle={data.angle} />
+                <ConsultantToolkit 
+                  businessAngle={data.angle} 
+                  onToolkitComplete={handleActivate}
+                />
               </motion.div>
             )}
           </AnimatePresence>
@@ -659,7 +647,7 @@ export default function Onboarding() {
         <div className="mt-12 md:mt-20 flex flex-col-reverse md:flex-row justify-between items-center max-w-md mx-auto w-full gap-8">
           <button
             onClick={prevStep}
-            disabled={currentStep === 1 || isActivating || isPaying}
+            disabled={currentStep === 1 || isActivating || isPaying || currentStep === steps.length}
             className={cn(
               "flex items-center gap-2 font-black text-[10px] md:text-xs uppercase tracking-widest text-slate-500 hover:text-foreground transition-colors disabled:opacity-0",
             )}
@@ -683,36 +671,7 @@ export default function Onboarding() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           ) : (
-            <button
-              onClick={async () => {
-                if (isPaid) {
-                  handleActivate();
-                } else {
-                  const cleanKey = accessKey.trim().toUpperCase();
-                  if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
-                    try {
-                      await fetch(`${API_URL}/api/auth/redeem-key`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userId, key: cleanKey })
-                      });
-                      setIsPaid(true);
-                      handleActivate();
-                    } catch (e) {
-                      console.error('Failed to redeem owner key', e);
-                      setIsTermsOpen(true);
-                    }
-                  } else {
-                    setIsTermsOpen(true);
-                  }
-                }
-              }}
-              disabled={isActivating || isPaying}
-              className="bg-primary text-slate-950 px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-white transition-all shadow-2xl shadow-cyan-900/20 group disabled:opacity-50 w-full md:w-auto justify-center"
-            >
-              {isActivating ? "Establishing Sync..." : isPaying ? "Verifying..." : "Authorize & Finish"}
-              <CheckCircle2 className="w-4 h-4" />
-            </button>
+             <div className="w-full md:w-auto" />
           )}
         </div>
       </div>

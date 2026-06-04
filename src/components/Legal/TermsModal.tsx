@@ -93,33 +93,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                 </p>
               </section>
 
-              <button 
-                onClick={() => setAgreed(!agreed)}
-                className={cn(
-                  "w-full p-6 rounded-3xl space-y-4 border transition-all text-left group",
-                  agreed ? "bg-primary/10 border-primary" : "bg-slate-950 border-white/5 hover:border-white/20"
-                )}
-              >
-                <div className="flex items-start gap-4">
-                  <div className="mt-1">
-                    <div className={cn(
-                      "w-6 h-6 rounded-lg flex items-center justify-center transition-all",
-                      agreed ? "bg-primary" : "bg-slate-800 border border-white/10 group-hover:border-primary/50"
-                    )}>
-                      {agreed && <CheckCircle2 className="w-4 h-4 text-slate-950" />}
-                    </div>
-                  </div>
-                  <span className={cn(
-                    "text-xs font-bold leading-normal italic uppercase transition-colors",
-                    agreed ? "text-primary" : "text-slate-400 group-hover:text-slate-200"
-                  )}>
-                    I explicitly agree to the synchronization protocols and legal waivers listed above.
-                  </span>
-                </div>
-              </button>
-            </div>
-
-            {/* Footer */}
+              {/* Footer */}
             <div className="p-8 border-t border-white/5 shrink-0 bg-slate-950/50 flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="flex gap-4 w-full">
                 <button
@@ -130,15 +104,9 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                 </button>
                 <button
                   onClick={onAccept}
-                  disabled={!agreed}
-                  className={cn(
-                    "flex-1 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl",
-                    agreed 
-                      ? "bg-primary text-slate-900 hover:bg-white shadow-cyan-900/20" 
-                      : "bg-slate-800 text-slate-600 cursor-not-allowed"
-                  )}
+                  className="flex-1 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl bg-primary text-slate-900 hover:bg-white shadow-cyan-900/20"
                 >
-                  Accept & Synchronize
+                  ACCEPT AND SYNCHRONIZE
                 </button>
               </div>
             </div>
