@@ -576,16 +576,18 @@ export default function Onboarding() {
                        </div>
 
                        {/* Feature List (The "Box" - now with better visibility) */}
-                       <div className="grid grid-cols-2 gap-3 p-4 bg-slate-950/50 rounded-2xl border border-slate-800">
+                       <div className="grid grid-cols-2 gap-3 p-5 bg-slate-950 rounded-2xl border border-slate-800 shadow-inner">
                          {[
                            'Autonomous Execution',
                            'Priority Discovery',
                            'Secure Bank Bridge',
                            'Verified Encryption'
                          ].map(f => (
-                           <div key={f} className="flex items-center gap-2 text-[10px] font-black text-white-force uppercase tracking-tight">
-                             <div className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(0,229,255,0.6)]" />
-                             {f}
+                           <div key={f} className="flex items-center gap-2">
+                             <div className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(0,229,255,0.6)] shrink-0" />
+                             <span className="text-xs font-black text-white uppercase tracking-tight leading-none">
+                               {f}
+                             </span>
                            </div>
                          ))}
                        </div>
@@ -593,9 +595,9 @@ export default function Onboarding() {
                    </div>
                 </div>
 
-                <div className="p-4 bg-primary/5 border border-primary/10 rounded-2xl flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-1 animate-pulse shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
-                  <p className="text-[10px] text-primary/80 font-bold leading-relaxed italic uppercase tracking-tight">
+                <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-start gap-3">
+                  <div className="w-2 h-2 bg-primary rounded-full mt-1 animate-pulse shadow-[0_0_8px_rgba(0,229,255,0.8)]" />
+                  <p className="text-[11px] text-slate-300 font-bold leading-relaxed italic uppercase tracking-tight">
                     "Verification: This is a secure operational gateway. Your data remains protected via hardware-level encryption."
                   </p>
                 </div>

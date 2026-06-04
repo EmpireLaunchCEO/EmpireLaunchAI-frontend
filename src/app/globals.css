@@ -118,16 +118,16 @@ h3 {
 
 h1, h2, h3, .text-theme-gradient {
   background: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%);
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  color: transparent !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* VIBRANT TEXT - Apply accent color to all text elements */
 p, span, label, div, li, td, th, a {
   color: inherit;
-  -webkit-text-fill-color: inherit;
+  -webkit-text-fill-color: currentcolor; /* CRITICAL FIX: Prevent transparency inheritance */
   background-clip: border-box;
 }
 
