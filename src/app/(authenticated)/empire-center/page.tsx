@@ -71,17 +71,17 @@ export default function EmpireCenterPage() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
-      <div className="p-4 md:p-8 pb-40 max-w-7xl mx-auto space-y-8 md:space-y-12">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div className="p-3 md:p-8 pb-40 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 bg-theme-surface/30 p-5 md:p-0 rounded-[24px] md:rounded-none border border-theme md:border-none">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.2em]">
+          <div className="flex items-center gap-2 text-primary font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em]">
             <ClipboardList className="w-3 h-3" />
             Empire Center
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
+          <h1 className="text-xl md:text-4xl font-black text-foreground tracking-tight italic">
             Operations Hub.
           </h1>
-          <p className="text-sm md:text-base text-muted-foreground font-medium">
+          <p className="text-[10px] md:text-base text-muted-foreground font-medium italic">
             Manage duties, approvals, and AI execution roadmap.
           </p>
         </div>

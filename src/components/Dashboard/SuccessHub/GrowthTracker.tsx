@@ -23,32 +23,34 @@ export const GrowthTracker = ({
   const percentage = progress !== undefined ? progress : Math.min(Math.round((currentValue / targetValue) * 100), 100);
 
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 border border-theme shadow-sm relative overflow-hidden group">
-      <div className="flex flex-col md:flex-row gap-8 items-center">
+    <div className="bg-theme-surface rounded-[32px] md:rounded-[40px] p-6 md:p-8 border border-theme shadow-sm relative overflow-hidden group">
+      <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center">
         {/* Holographic Progress Ring */}
-        <div className="relative w-48 h-48 shrink-0">
-          <svg className="w-full h-full -rotate-90">
+        <div className="relative w-40 h-48 md:w-48 md:h-48 shrink-0 flex items-center justify-center">
+          <svg className="w-40 h-40 md:w-48 md:h-48 -rotate-90">
             <circle
-              cx="96"
-              cy="96"
-              r="80"
+              cx="80"
+              cy="80"
+              r="70"
               fill="none"
               stroke="currentColor"
-              className="text-slate-400"
-              strokeWidth="12"
+              className="text-slate-400 opacity-20 md:opacity-100"
+              strokeWidth="10"
+              style={{ cx: '50%', cy: '50%', r: '40%' }}
             />
             <motion.circle
-              cx="96"
-              cy="96"
-              r="80"
+              cx="80"
+              cy="80"
+              r="70"
               fill="none"
               stroke="url(#growthGradient)"
-              strokeWidth="12"
+              strokeWidth="10"
               strokeLinecap="round"
-              strokeDasharray={502.6}
-              initial={{ strokeDashoffset: 502.6 }}
-              animate={{ strokeDashoffset: 502.6 - (502.6 * percentage) / 100 }}
+              strokeDasharray="250"
+              initial={{ strokeDashoffset: 250 }}
+              animate={{ strokeDashoffset: 250 - (250 * percentage) / 100 }}
               transition={{ duration: 2, ease: "easeOut" }}
+              style={{ cx: '50%', cy: '50%', r: '40%' }}
             />
             <defs>
               <linearGradient id="growthGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -59,9 +61,9 @@ export const GrowthTracker = ({
           </svg>
           <GrowthBurst active={percentage >= 100} />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Status</span>
-            <span className="text-4xl font-black text-foreground tracking-tighter">{percentage}%</span>
-            <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full mt-2 tracking-wide">
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Status</span>
+            <span className="text-3xl md:text-4xl font-black text-foreground tracking-tighter">{percentage}%</span>
+            <span className="text-[8px] md:text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full mt-1.5 tracking-wide">
               Level 04
             </span>
           </div>

@@ -78,7 +78,7 @@ export function MissionBriefing() {
               <Target className="w-3 h-3" />
               Active Mission: Expansion Phase I
             </div>
-            <h2 className="text-2xl lg:text-5xl font-black tracking-tight leading-[0.9]">
+            <h2 className="text-xl lg:text-5xl font-black tracking-tight leading-[0.9]">
               Establish Your <br />
               <span className="text-primary italic">Foundation.</span>
             </h2>

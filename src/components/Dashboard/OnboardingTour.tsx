@@ -213,54 +213,54 @@ export function OnboardingTour() {
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: -20 }}
-          className="bg-teal-500 rounded-[32px] md:rounded-[40px] shadow-2xl max-w-md w-full overflow-hidden border-4 border-white relative pointer-events-auto mx-auto"
+          className="bg-teal-500 rounded-[32px] md:rounded-[40px] shadow-2xl max-w-[calc(100vw-32px)] sm:max-w-sm w-full overflow-hidden border-4 border-white relative pointer-events-auto mx-auto"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-teal-400 via-teal-500 to-emerald-600 opacity-90" />
           
-          <div className="relative p-8 space-y-6">
+          <div className="relative p-5 md:p-8 space-y-3 md:space-y-6">
             <div className="flex items-center justify-between">
-              <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-white shadow-lg">
-                <Icon className="w-8 h-8" />
+              <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-primary flex items-center justify-center text-white shadow-lg">
+                <Icon className="w-5 h-5 md:w-8 md:h-8" />
               </div>
-              <button onClick={handleComplete} className="p-2 hover:bg-white/10 rounded-full transition-colors text-white/70">
-                <X className="w-6 h-6" />
+              <button onClick={handleComplete} className="p-1.5 hover:bg-white/10 rounded-full transition-colors text-white/70">
+                <X className="w-5 h-5 md:w-6 md:h-6" />
               </button>
             </div>
 
-            <div className="space-y-3">
-              <h2 className="text-2xl font-black text-white leading-tight italic drop-shadow-sm">
+            <div className="space-y-1.5 md:space-y-3">
+              <h2 className="text-lg md:text-2xl font-black text-white leading-tight italic drop-shadow-sm">
                 {step.title}
               </h2>
-              <p className="text-white font-bold leading-relaxed drop-shadow-sm">
+              <p className="text-xs md:text-base text-white font-bold leading-relaxed drop-shadow-sm">
                 {step.description}
               </p>
             </div>
 
-            <div className="flex items-center justify-between pt-4">
-              <div className="flex gap-1.5">
+            <div className="flex items-center justify-between pt-1 md:pt-4">
+              <div className="flex gap-1">
                 {tourSteps.map((_, i) => (
                   <div
                     key={i}
-                    className={`h-1.5 rounded-full transition-all duration-500 ${i === currentStep ? 'w-6 bg-primary' : 'w-1.5 bg-white/30'}`}
+                    className={`h-1 rounded-full transition-all duration-500 ${i === currentStep ? 'w-3 md:w-6 bg-primary' : 'w-1 bg-white/30'}`}
                   />
                 ))}
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-1 md:gap-2">
                 {currentStep > 0 && (
                   <button
                     onClick={prevStep}
-                    className="p-3 rounded-xl bg-slate-900/40 text-white hover:bg-slate-900/60 border border-white/20 transition-all"
+                    className="p-1.5 md:p-3 rounded-xl bg-slate-900/40 text-white hover:bg-slate-900/60 border border-white/20 transition-all"
                   >
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
                   </button>
                 )}
                 <button
                   onClick={nextStep}
-                  className="flex items-center gap-2 bg-primary text-slate-900 px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-white transition-all shadow-lg active:scale-95"
+                  className="flex items-center gap-1 bg-primary text-slate-900 px-3.5 md:px-6 py-2 md:py-3 rounded-xl font-black text-[8px] md:text-[10px] uppercase tracking-widest hover:bg-white transition-all shadow-lg active:scale-95"
                 >
                   {currentStep === tourSteps.length - 1 ? 'Finish' : 'Next'}
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-3 md:w-4 h-3 md:h-4" />
                 </button>
               </div>
             </div>
