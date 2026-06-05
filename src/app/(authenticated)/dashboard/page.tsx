@@ -64,11 +64,12 @@ export default function Dashboard() {
     const timeoutId = setTimeout(() => {
       console.warn('[Dashboard] Sync Timeout — Force-Loading Page');
       setIsLoading(false);
-      setDashboardLoaded(true);
       controller.abort();
     }, 6000);
 
     try {
+      console.log(`[Dashboard] Connecting to API: ${API_URL}`);
+      
       // Small artificial delay for visual feedback if we already had data
       const hasExistingData = await new Promise<boolean>(resolve => {
         setEmpireData((current: any) => {
@@ -94,14 +95,11 @@ export default function Dashboard() {
       if (empireRes && empireRes.ok) {
         const eData = await empireRes.json();
         setEmpireData(eData);
+        // ONLY mark as loaded if we actually got data
+        setDashboardLoaded(true);
+      } else {
+        console.error('[Dashboard] API response failed');
       }
-      
-      setPulseData(pulseRes);
-      setHealthData(healthRes);
-      setTransactions(txRes);
-      
-      // Mark as loaded to trigger tour
-      setDashboardLoaded(true);
       
       // Soft version check
       fetch('/version.json', { cache: 'no-store' }).catch(() => {});
@@ -235,14 +233,27 @@ export default function Dashboard() {
           /* Error/Empty State */
           <div className="bg-theme-surface rounded-[48px] border-2 border-theme p-12 text-center space-y-6">
             <BrandedGlobe size="xl" className="mx-auto shadow-[0_0_60px_rgba(255,0,0,0.1)]" />
-            <h2 className="text-2xl font-black italic uppercase">Connection Interrupted.</h2>
-            <p className="text-slate-400 max-w-md mx-auto">I'm having trouble retrieving your empire data. Pull down to retry or use the button below to reboot.</p>
-            <button 
-              onClick={() => fetchData()}
-              className="px-8 py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform"
-            >
-              Retry Connection
-            </button>
+            <h2 className="text-2xl font-black italic uppercase text-red-400">Connection Interrupted.</h2>
+            <div className="max-w-md mx-auto space-y-4">
+              <p className="text-slate-400">I'm having trouble reaching the command center at <code className="text-primary break-all">{API_URL}</code>.</p>
+              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+                Verification Required: Ensure your backend is deployed and NEXT_PUBLIC_API_URL is set in Vercel.
+              </p>
+            </div>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+              <button 
+                onClick={() => fetchData()}
+                className="w-full md:w-auto px-8 py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform"
+              >
+                Retry Connection
+              </button>
+              <button 
+                onClick={() => window.location.href = '/settings'}
+                className="w-full md:w-auto px-8 py-4 bg-slate-800 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform border border-white/10"
+              >
+                System Settings
+              </button>
+            </div>
           </div>
         ) : (
           /* Full Content Area */
