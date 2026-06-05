@@ -374,17 +374,6 @@ export default function Onboarding() {
                      Please follow the installation steps in your browser menu to unlock production access.
                    </p>
                 )}
-                
-                {isOnboarded && !window.matchMedia('(display-mode: standalone)').matches && (
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    onClick={() => router.replace('/dashboard')}
-                    className="w-full bg-white text-slate-900 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:bg-primary transition-all mb-4"
-                  >
-                    Launch Command Center
-                  </motion.button>
-                )}
 
                 <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
                   <motion.div
