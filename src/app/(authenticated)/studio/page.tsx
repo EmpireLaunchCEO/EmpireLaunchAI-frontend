@@ -30,7 +30,7 @@ const vaultActivity = [
 ];
 
 export default function StudioPage() {
-  const [activeTab, setActiveTab] = useState<'gallery' | 'activity'>('gallery');
+  const [activeTab, setActiveTab] = useState<'gallery' | 'cinema' | 'activity'>('gallery');
   const [harvestActivity, setHarvestActivity] = useState(vaultActivity);
 
   const handleRefresh = async () => {
@@ -55,16 +55,16 @@ export default function StudioPage() {
               Universal Synthesis.
             </h1>
             <p className="text-sm md:text-base text-muted-foreground font-medium italic">
-              1,000,000+ DNA Codes Synced. The Studio can now create anything — from digital planners to physical products, rugs, and custom mugs.
+              Synchronizing 1,000,000+ DNA Codes. The Studio is scaling to create anything — from digital planners to rugs, and high-fidelity AI video twins.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-2xl border border-primary/20">
               <Database className="w-4 h-4 text-primary" />
-              <span className="text-[9px] font-black text-primary uppercase tracking-widest">1.2M DNA STRANDS</span>
+              <span className="text-[9px] font-black text-primary uppercase tracking-widest">Harvesting DNA Strands</span>
             </div>
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
           </div>
         </header>
 
@@ -72,6 +72,7 @@ export default function StudioPage() {
         <div className="flex bg-slate-100 dark:bg-theme-surface p-1 rounded-[20px] w-full max-w-full overflow-hidden border-2 border-theme">
           {[
             { id: 'gallery', label: 'Universal Studio', icon: Palette },
+            { id: 'cinema', label: 'Cinema Hub', icon: Video },
             { id: 'activity', label: 'DNA Harvest Feed', icon: Database },
           ].map((tab) => (
             <button
@@ -121,6 +122,77 @@ export default function StudioPage() {
 
               {/* Inspiration Gallery */}
               <InspirationGallery />
+            </motion.div>
+          )}
+
+          {activeTab === 'cinema' && (
+            <motion.div
+              key="cinema"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-8"
+            >
+              {/* Cinema Engine Intro */}
+              <div className="flex flex-col md:flex-row gap-8 items-stretch">
+                <div className="flex-1 p-8 bg-theme-surface border-2 border-primary/20 rounded-[40px] space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">
+                      <Stars className="w-6 h-6 text-purple-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-black text-white italic">Neural Twin.</h3>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-slate-400 leading-relaxed italic">
+                    "Upload a clear photo of yourself, and I'll create your Neural Twin. I can then generate high-fidelity marketing videos with perfect lip-syncing for any script you provide. Your double, but autonomous."
+                  </p>
+
+                  <div className="space-y-4">
+                    <div className="p-6 border-2 border-dashed border-theme hover:border-primary/40 rounded-3xl transition-all group cursor-pointer text-center">
+                      <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/20">
+                        <Palette className="w-6 h-6 text-slate-500 group-hover:text-primary" />
+                      </div>
+                      <p className="text-xs font-black uppercase tracking-widest text-slate-500 group-hover:text-white">Upload Facial DNA (Photo)</p>
+                    </div>
+
+                    <button className="w-full py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-primary transition-all">
+                      Synthesize Twin Double
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex-1 p-8 bg-slate-900 border border-theme rounded-[40px] flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                    <Video className="w-10 h-10 text-primary" />
+                  </div>
+                  <h4 className="text-xl font-bold text-white uppercase italic">Twin Active.</h4>
+                  <p className="text-sm text-slate-400">
+                    Once your Twin is synthesized, you can generate cinematic clips for TikTok, Instagram, and YouTube instantly.
+                  </p>
+                </div>
+              </div>
+
+              {/* Cinema Gallery Placeholder */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="aspect-[9/16] bg-theme-surface border-2 border-theme rounded-[24px] relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                    <div className="absolute bottom-4 left-4">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse" />
+                        <span className="text-[8px] font-black uppercase tracking-widest text-purple-400">Neural Ready</span>
+                      </div>
+                      <p className="text-[10px] font-bold text-white">Cinema Clip #{i}</p>
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
+                       <Zap className="w-8 h-8 text-primary" />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           )}
 
