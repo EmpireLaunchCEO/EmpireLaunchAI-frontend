@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
-import { analyticsService } from '@/lib/api-service';
+import { analyticsService, empireService } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
@@ -51,54 +51,40 @@ export default function Dashboard() {
     }
   }, [isLinkingComplete, isLoading]);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (retryCount = 0) => {
     if (!mounted) return;
     
-    // Use a local check to avoid dependency loop
-    setEmpireData((current: any) => {
-      if (!current) setIsLoading(true);
-      return current;
-    });
+    setIsLoading(true);
     
-    const controller = new AbortController();
+    // Increased timeout for Railway cold starts
     const timeoutId = setTimeout(() => {
       console.warn('[Dashboard] Sync Timeout — Force-Loading Page');
       setIsLoading(false);
-      controller.abort();
-    }, 6000);
+    }, 30000);
 
     try {
-      console.log(`[Dashboard] Connecting to API: ${API_URL}`);
+      console.log(`[Dashboard] Connecting to API (Attempt ${retryCount + 1}): ${API_URL}`);
       
-      // Small artificial delay for visual feedback if we already had data
-      const hasExistingData = await new Promise<boolean>(resolve => {
-        setEmpireData((current: any) => {
-          resolve(!!current);
-          return current;
-        });
-      });
-      
-      if (hasExistingData) await new Promise(resolve => setTimeout(resolve, 800));
-      
-      const fetchOptions = { 
-        cache: 'no-store' as const,
-        signal: controller.signal
-      };
-
-      const [empireRes, pulseRes, healthRes, txRes] = await Promise.all([
-        fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`, fetchOptions).catch(() => null),
-        analyticsService.getEmpirePulse().catch(() => null),
-        analyticsService.getEmpireHealth().catch(() => null),
-        analyticsService.getRevenueTransactions().catch(() => [])
+      const [eData, pulse, health, txs] = await Promise.all([
+        empireService.getEmpire(activeEmpireId),
+        analyticsService.getEmpirePulse(),
+        analyticsService.getEmpireHealth(),
+        analyticsService.getRevenueTransactions()
       ]);
 
-      if (empireRes && empireRes.ok) {
-        const eData = await empireRes.json();
+      if (eData) {
         setEmpireData(eData);
-        // ONLY mark as loaded if we actually got data
+        setPulseData(pulse);
+        setHealthData(health);
+        setTransactions(txs || []);
         setDashboardLoaded(true);
+      } else if (retryCount < 1) {
+        // Silent retry once
+        console.log('[Dashboard] Data empty, retrying...');
+        clearTimeout(timeoutId);
+        return fetchData(retryCount + 1);
       } else {
-        console.error('[Dashboard] API response failed');
+        console.error('[Dashboard] Failed to retrieve empire data after retry');
       }
       
       // Soft version check
@@ -106,6 +92,10 @@ export default function Dashboard() {
       
     } catch (error) {
       console.error('Fetch error:', error);
+      if (retryCount < 1) {
+        clearTimeout(timeoutId);
+        return fetchData(retryCount + 1);
+      }
     } finally {
       clearTimeout(timeoutId);
       setIsLoading(false);

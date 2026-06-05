@@ -84,51 +84,65 @@ export interface DiscoveryResult {
   confidence: number;
 }
 
+const HEADERS = {
+  'Authorization': 'Bearer mock-mobile-token',
+  'x-user-id': '00000000-0000-0000-0000-000000000000',
+  'Content-Type': 'application/json'
+};
+
+export const empireService = {
+  async getEmpire(id: string): Promise<any> {
+    try {
+      if (!id || id === 'undefined') return this.getLatestEmpire();
+      
+      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+      
+      return this.getLatestEmpire();
+    } catch (e) {
+      console.error('Empire Fetch Error:', e);
+      return this.getLatestEmpire();
+    }
+  },
+
+  async getLatestEmpire(): Promise<any> {
+    try {
+      const res = await fetch(`${API_URL}/api/agent/goal/latest`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+      return null;
+    } catch (e) {
+      console.error('Latest Empire Fetch Error:', e);
+      return null;
+    }
+  }
+};
+
 export const socialProofService = {
   async getPendingApprovals(): Promise<AppRating[]> {
     try {
-      const res = await fetch(`${API_URL}/api/reviews/flagged/00000000-0000-0000-0000-000000000000`);
+      const res = await fetch(`${API_URL}/api/reviews/flagged/00000000-0000-0000-0000-000000000000`, { headers: HEADERS });
       if (res.ok) {
         const data = await res.json();
         return data.map((r: any) => ({
           id: r.id,
           rating: r.rating,
           review: r.comment,
-          userName: 'CEO', // Backend might not store userName yet, but we'll label it CEO
-          status: 'pending',
+          userName: 'CEO', 
+          status: r.status || 'pending',
           createdAt: r.created_at
         }));
       }
     } catch (e) {
       console.error('Failed to fetch flagged reviews', e);
     }
-
-    // Fallback to mock data if API fails
-    return [
-      {
-        id: 'rate_1',
-        rating: 5,
-        review: 'EmpireLaunch AI has completely automated my Etsy shop. I am making sales while I sleep!',
-        userName: 'Sarah J.',
-        status: 'pending',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'rate_2',
-        rating: 4,
-        review: 'The AI trend research is spot on. Saved me hours of manual work.',
-        userName: 'Mike R.',
-        status: 'pending',
-        createdAt: new Date().toISOString()
-      }
-    ];
+    return [];
   },
 
   async submitRating(rating: number, comment: string): Promise<boolean> {
     try {
       const res = await fetch(`${API_URL}/api/reviews`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: HEADERS,
         body: JSON.stringify({ 
           userId: '00000000-0000-0000-0000-000000000000',
           rating,
@@ -137,7 +151,6 @@ export const socialProofService = {
       });
       return res.ok;
     } catch (e) {
-      console.error('Failed to submit review', e);
       return false;
     }
   },
@@ -146,7 +159,7 @@ export const socialProofService = {
     try {
       const res = await fetch(`${API_URL}/api/reviews/approve`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: HEADERS,
         body: JSON.stringify({ 
           userId: '00000000-0000-0000-0000-000000000000',
           reviewId: id
@@ -154,19 +167,18 @@ export const socialProofService = {
       });
       return res.ok;
     } catch (e) {
-      console.error('Failed to approve review', e);
       return false;
     }
-  },
-
-  async reject(id: string): Promise<boolean> {
-    // Backend doesn't have a specific reject endpoint yet, but we can treat it as 'handled' locally
-    return true;
   }
 };
 
 export const discoveryService = {
   async getPendingResults(): Promise<DiscoveryResult[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/discovery/pending`, { headers: HEADERS }).catch(() => null);
+      if (res && res.ok) return await res.json();
+    } catch(e) {}
+    
     return [
       { 
         id: '1', 
@@ -175,314 +187,66 @@ export const discoveryService = {
         maskedSnippet: 'Your Etsy shop "AestheticTreasures" is ready. Access key: ETSY_XXXX_XXXX', 
         maskedKey: 'ETSY_API_KEY',
         confidence: 0.98
-      },
-      { 
-        id: '2', 
-        source: 'Gmail (ceo@my-empire.com)', 
-        type: 'invoice', 
-        maskedSnippet: 'Invoice #INV-2024-001 from Kittl.com. Total: $0.00 (Free Trial)', 
-        maskedKey: 'KITTL_INV_001',
-        confidence: 0.95
-      },
-      { 
-        id: '3', 
-        source: 'Gmail (ceo@my-empire.com)', 
-        type: 'performance_report', 
-        maskedSnippet: 'Weekly growth report for @aesthetic_zen (TikTok). 124.5K views...', 
-        maskedKey: 'TIKTOK_REPORT_WK20',
-        confidence: 0.92
       }
     ];
   },
-
-  async approveResult(id: string): Promise<boolean> {
-    return true;
-  },
-
-  async rejectResult(id: string): Promise<boolean> {
-    return true;
-  }
+  async approveResult(id: string): Promise<boolean> { return true; },
+  async rejectResult(id: string): Promise<boolean> { return true; }
 };
-
-export interface ApprovalRequest {
-  id: string;
-  userId: string;
-  taskId?: string;
-  type: 'blueprint' | 'content' | 'golive' | 'financial' | 'dna';
-  status: 'pending' | 'approved' | 'rejected';
-  payload: any;
-  decisionDetails?: string;
-  createdAt: string;
-}
-
-export interface DesignTask {
-  id: string;
-  title: string;
-  platform: 'Kittl' | 'CapCut' | 'Canva' | 'Fiverr';
-  status: 'blueprint_ready' | 'editing' | 'review_required';
-  thumbnail?: string;
-  dueDate: string;
-}
-
-export interface CreativeBlueprintData {
-  id: string;
-  title: string;
-  intelligence: string;
-  palette: string[];
-  fonts: { platform: string; pairing: string }[];
-  script: { label: string; text: string }[];
-  compositionUrl: string;
-  platformLink?: string;
-  variations: {
-    id: string;
-    name: string;
-    description: string;
-    previewUrl: string;
-  }[];
-}
 
 export const creativeService = {
   async getDesignTasks(): Promise<DesignTask[]> {
     return [
-      { id: 'dt_1', title: 'Vintage Botanical Journal Cover', platform: 'Kittl', status: 'blueprint_ready', dueDate: 'Today' },
-      { id: 'dt_2', title: 'Dynamic Business Reveal Video', platform: 'CapCut', status: 'editing', dueDate: 'Tomorrow' },
-      { id: 'dt_3', title: 'Minimalist Daily Planner Page', platform: 'Canva', status: 'review_required', dueDate: 'Done' }
+      { id: 'dt_1', title: 'Vintage Botanical Journal Cover', platform: 'Kittl', status: 'blueprint_ready', dueDate: 'Today' }
     ];
   },
-
   async getBlueprint(taskId: string): Promise<CreativeBlueprintData> {
-    if (taskId === 'dt_2') {
-      return {
-        id: taskId,
-        title: 'Dynamic Business Reveal Video',
-        intelligence: 'High-velocity "Hook-Value-CTA" structure optimized for TikTok/Reels. Using fast-cut transitions and high-contrast overlays.',
-        palette: ['#000000', '#FFFFFF', '#FBBF24', '#EF4444'],
-        fonts: [
-          { platform: 'CapCut', pairing: 'Modern Bold + Classic Italic' },
-          { platform: 'Overlays', pairing: 'Montserrat ExtraBold' }
-        ],
-        script: [
-          { label: 'Hook (0:00)', text: 'Stop scrolling! Your business is about to change.' },
-          { label: 'Body Text', text: 'EmpireLaunch AI automates your growth so you can focus on scale.' },
-          { label: 'CTA', text: 'Link in Bio to start your Empire.' },
-          { label: 'CapCut Effects', text: 'Glitch Transition, Bounce In, Shake 2' }
-        ],
-        compositionUrl: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?q=80&w=400&auto=format&fit=crop',
-        platformLink: 'https://www.capcut.com/editor',
-        variations: [
-          { id: 'v1', name: 'The Minimalist', description: 'Focus on white space and thin typography.', previewUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop' },
-          { id: 'v2', name: 'The Bold', description: 'High-contrast colors and heavy fonts.', previewUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop' }
-        ]
-      };
-    }
-
     return {
       id: taskId,
       title: 'Vintage Botanical Journal Cover',
-      intelligence: 'Matches current 2024 minimalist botanical trend on Etsy. High engagement for "earth tone" palettes.',
-      palette: ['#2D4F1E', '#E4D5B7', '#8B4513', '#F5F5DC'],
-      fonts: [
-        { platform: 'Kittl', pairing: 'Montserrat + Playfair Display' },
-        { platform: 'System', pairing: 'Serif + Sans' }
-      ],
-      script: [
-        { label: 'Main Headline', text: 'Celestial Serenity' },
-        { label: 'Tagline', text: 'Align Your Soul. Master Your Day.' },
-        { label: 'Etsy Tags', text: 'digital journal, botanical cover, minimalist planner, adhd organization' }
-      ],
-      compositionUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop',
-      platformLink: 'https://www.kittl.com/templates/labels',
-      variations: [
-        { id: 'v1', name: 'The Minimalist', description: 'Focus on white space and thin typography.', previewUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop' },
-        { id: 'v2', name: 'The Bold', description: 'High-contrast colors and heavy fonts.', previewUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop' },
-        { id: 'v3', name: 'The Retro', description: 'Vintage textures and serif fonts.', previewUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop' }
-      ]
+      intelligence: 'Matches current 2024 trend.',
+      palette: ['#2D4F1E', '#E4D5B7'],
+      fonts: [],
+      script: [],
+      compositionUrl: '',
+      variations: []
     };
   }
 };
 
 export const approvalService = {
   async getPendingRequests(): Promise<ApprovalRequest[]> {
-    // In a real app: const res = await fetch(`${API_URL}/api/approvals/pending`);
-    return [
-      {
-        id: 'req_blueprint_1',
-        userId: '0000',
-        type: 'blueprint',
-        status: 'pending',
-        payload: {
-          niche: 'Digital Zen Journals',
-          products: [
-            { name: 'Zen Morning Planner', price: 19.99, type: 'PDF' },
-            { name: 'Evening Reflection Guide', price: 12.50, type: 'PDF' },
-            { name: 'Weekly Habit Tracker', price: 9.99, type: 'PDF' }
-          ],
-          roadmap: [
-            { day: 1, action: 'Store Setup & Identity Design' },
-            { day: 3, action: 'Product 1 Design & Listing' },
-            { day: 5, action: 'TikTok Launch Sequence' },
-            { day: 7, action: 'Instagram Growth Phase' }
-          ]
-        },
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'req_dna_1',
-        userId: '0000',
-        type: 'dna',
-        status: 'pending',
-        payload: {
-          id: 'dna_req_1',
-          title: 'Vintage Botanical Journal Cover',
-          niche: 'Digital Zen Journals',
-          intelligence: 'Matches current 2024 minimalist botanical trend on Etsy. High engagement for "earth tone" palettes, with proven conversion on morning-routine content.',
-          colors: [
-            { hex: '#2D4F1E', role: 'Primary', locked: true },
-            { hex: '#E4D5B7', role: 'Background', locked: false },
-            { hex: '#8B4513', role: 'Accent', locked: false },
-            { hex: '#F5F5DC', role: 'Highlight', locked: false },
-            { hex: '#FBBF24', role: 'CTA Button', locked: false },
-          ],
-          fonts: [
-            { platform: 'Kittl', pairing: 'Montserrat + Playfair Display' },
-            { platform: 'CapCut', pairing: 'Modern Bold + Classic Italic' },
-            { platform: 'Canva', pairing: 'Lora + Poppins' },
-            { platform: 'System', pairing: 'Serif + Sans' },
-          ],
-          script: [
-            { label: 'Hook (0:00)', text: 'Your morning routine is about to change forever.' },
-            { label: 'Problem (0:03)', text: 'Most people struggle to stay organized because they use the wrong system.' },
-            { label: 'Solution (0:06)', text: 'The Digital Zen Journal aligns your tasks with your energy levels.' },
-            { label: 'CTA (0:09)', text: 'Link in bio to transform your mornings today.' },
-            { label: 'CapCut Effects', text: 'Glitch Transition, Bounce In, Shake 2, Soft Blur' },
-          ],
-          pacing: {
-            label: 'Fast-Cut Vertical',
-            beats: ['0:00 Hook (3s)', '0:03 Problem (3s)', '0:06 Solution (4s)', '0:10 CTA (4s)'],
-            tempo: 'fast'
-          },
-          compositionUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop',
-          confidence: 94
-        },
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'req_content_1',
-        userId: '0000',
-        type: 'content',
-        status: 'pending',
-        payload: {
-          title: 'Morning Routine Reveal',
-          platform: 'TikTok',
-          assets: [
-            { type: 'video', url: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop', previewUrl: 'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=400&auto=format&fit=crop' }
-          ],
-          caption: 'My secret to a calm morning... #zen #journaling #morningroutine',
-          isProTemplate: true,
-          proCost: 12.99
-        },
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'req_golive_1',
-        userId: '0000',
-        type: 'golive',
-        status: 'pending',
-        payload: {
-          platform: 'Etsy',
-          title: 'Digital Zen Morning Planner',
-          price: 19.99,
-          tags: ['zen', 'planner', 'adhd', 'digital download'],
-          bankInfoVerified: false
-        },
-        createdAt: new Date().toISOString()
-      }
-    ];
+    try {
+       const res = await fetch(`${API_URL}/api/approvals/pending`, { headers: HEADERS }).catch(() => null);
+       if (res && res.ok) return await res.json();
+    } catch(e) {}
+    return [];
   },
 
   async respond(id: string, status: 'approved' | 'rejected', details?: string): Promise<boolean> {
-    // await fetch(`${API_URL}/api/approvals/${id}/respond`, { 
-    //   method: 'POST', 
-    //   body: JSON.stringify({ status, details }) 
-    // });
-    return true;
+    try {
+      const res = await fetch(`${API_URL}/api/approvals/${id}/respond`, { 
+        method: 'POST', 
+        headers: HEADERS,
+        body: JSON.stringify({ status, details }) 
+      });
+      return res.ok;
+    } catch (e) {
+      return false;
+    }
   }
 };
 
-export interface TrustScore {
-  score: number;
-  velocity: number;
-  sentiment: number;
-  agility: number;
-}
-
-export interface SentimentPoint {
-  date: string;
-  score: number;
-}
-
-export interface InboxDraft {
-  id: string;
-  type: 'THANK_YOU' | 'REVIEW_REQUEST' | 'SUPPORT_FOLLOWUP';
-  platform: string;
-  customer: string;
-  subject: string;
-  body: string;
-  reasoning: string;
-  status: 'pending' | 'approved' | 'rejected';
-  createdAt: string;
-}
-
 export const retentionService = {
   async getTrustPulse(): Promise<TrustScore> {
-    // Mocking ETS data
-    return {
-      score: 88,
-      velocity: 92,
-      sentiment: 85,
-      agility: 82
-    };
+    return { score: 88, velocity: 92, sentiment: 85, agility: 82 };
   },
-
   async getSentimentMap(): Promise<SentimentPoint[]> {
-    return [
-      { date: '2024-05-22', score: 78 },
-      { date: '2024-05-23', score: 82 },
-      { date: '2024-05-24', score: 80 },
-      { date: '2024-05-25', score: 85 },
-      { date: '2024-05-26', score: 88 },
-      { date: '2024-05-27', score: 87 },
-      { date: '2024-05-28', score: 90 },
-    ];
+    return [];
   },
-
   async getInboxDrafts(): Promise<InboxDraft[]> {
-    return [
-      {
-        id: 'dr_1',
-        type: 'THANK_YOU',
-        platform: 'Etsy',
-        customer: 'Sarah J.',
-        subject: 'Thank you for your order!',
-        body: "Hi Sarah, thank you for purchasing the Digital Zen Journal! I hope it helps you stay organized and calm. Let me know if you have any questions.",
-        reasoning: "Instant handshake builds initial trust and confirms delivery access.",
-        status: 'pending',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 'dr_2',
-        type: 'REVIEW_REQUEST',
-        platform: 'Fiverr',
-        customer: 'Alex Miller',
-        subject: 'How is your new design?',
-        body: "Hi Alex! It's been a week since I delivered your Vintage Botanical Cover. I'd love to hear how it's working for your brand. If you're happy with the result, would you mind leaving a quick review?",
-        reasoning: "7-day post-delivery nudge. Optimized for review conversion without incentivization.",
-        status: 'pending',
-        createdAt: new Date().toISOString()
-      }
-    ];
+    return [];
   },
-
   async respondToDraft(id: string, status: 'approved' | 'rejected'): Promise<boolean> {
     return true;
   }
@@ -491,207 +255,64 @@ export const retentionService = {
 export const analyticsService = {
   async getEmpirePulse(): Promise<EmpirePulseState> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/pulse`, {
-        headers: { 
-          'x-user-id': '00000000-0000-0000-0000-000000000000',
-          'Authorization': 'Bearer mock-mobile-token'
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return {
-          status: data.status as any,
-          description: data.description,
-          progress: data.progress,
-          logs: data.logs?.map((l: any) => l.message) || []
-        };
-      }
-    } catch (e) {
-      console.error('Failed to fetch empire pulse', e);
-    }
+      const res = await fetch(`${API_URL}/api/analytics/pulse`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) {}
 
     return {
       status: 'researching',
-      description: 'Analyzing global market velocity for Digital Planners...',
+      description: 'Analyzing global market velocity...',
       progress: 68,
-      logs: [
-        '[SYSTEM] Initializing Market Pulse scan...',
-        '[NEURAL] Connecting to Etsy Trend API...',
-        '[NEURAL] Pattern recognized: "Minimalist Botanical" (+14% WoW)',
-        '[ORCHESTRATOR] Evaluating manufacturing costs for Digital PDF...',
-        '[SYSTEM] Searching for free-tier Canva templates...'
-      ]
+      logs: ['[SYSTEM] Initializing Market Pulse scan...']
     };
   },
 
   async getEmpireHealth(): Promise<EmpireHealth> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/pulse`, {
-        headers: { 
-          'x-user-id': '00000000-0000-0000-0000-000000000000',
-          'Authorization': 'Bearer mock-mobile-token'
-        }
-      });
-      
+      const res = await fetch(`${API_URL}/api/analytics/pulse`, { headers: HEADERS });
       if (res.ok) {
          const data = await res.json();
-         
-         if (data.health) {
-           return {
-             growthScore: data.progress,
-             revenue: data.health.revenue,
-             pendingDues: data.health.pendingDues,
-             platformBreakdown: data.health.platformBreakdown
-           };
-         }
-         
-         // Fallback if health property is missing but pulse is okay
-         const perfRes = await fetch(`${API_URL}/api/analytics/performance`, {
-           headers: { 
-             'x-user-id': '00000000-0000-0000-0000-000000000000',
-             'Authorization': 'Bearer mock-mobile-token'
-           }
-         });
-         const perf = perfRes.ok ? await perfRes.json() : null;
-
          return {
-           growthScore: data.progress,
-           revenue: perf?.totalRevenue / 100 || 12450.00,
-           pendingDues: 60.00,
-           platformBreakdown: [
-             { platform: 'Etsy', revenue: (perf?.totalRevenue / 100) || 8400.00 },
-             { platform: 'Stripe', revenue: 0 },
-             { platform: 'Fiverr', revenue: 0 }
-           ]
+           growthScore: data.progress || 84,
+           revenue: data.health?.revenue || 0,
+           pendingDues: data.health?.pendingDues || 0,
+           platformBreakdown: data.health?.platformBreakdown || []
          };
       }
-    } catch (e) {
-      console.error('Failed to fetch health', e);
-    }
+    } catch (e) {}
 
-    return {
-      growthScore: 84,
-      revenue: 12450.00,
-      pendingDues: 60.00,
-      platformBreakdown: [
-        { platform: 'Etsy', revenue: 8400.00 },
-        { platform: 'Stripe', revenue: 3050.00 },
-        { platform: 'Fiverr', revenue: 1000.00 }
-      ]
-    };
+    return { growthScore: 84, revenue: 0, pendingDues: 0, platformBreakdown: [] };
   },
 
   async getRevenueTransactions(): Promise<RevenueTransaction[]> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/transactions`, {
-        headers: { 
-          'x-user-id': '00000000-0000-0000-0000-000000000000',
-          'Authorization': 'Bearer mock-mobile-token'
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return data.map((tx: any) => ({
-          id: tx.id,
-          amount: tx.amount / 100, // convert cents to dollars
-          platform: tx.platform,
-          date: tx.date,
-          status: 'completed', // simplified for now
-          customer: 'Customer' // backend doesn't store customer name yet
-        }));
-      }
-    } catch (e) {
-      console.error('Failed to fetch transactions', e);
-    }
-
-    return [
-      { id: '1', amount: 45.00, platform: 'Etsy', date: '2024-05-20T14:30:00Z', status: 'completed', customer: 'Sarah Jenkins' },
-      { id: '2', amount: 120.00, platform: 'Stripe', date: '2024-05-20T12:15:00Z', status: 'completed', customer: 'Mike Peterson' },
-      { id: '3', amount: 25.00, platform: 'Etsy', date: '2024-05-19T18:45:00Z', status: 'completed', customer: 'Emma Watson' },
-      { id: '4', amount: 300.00, platform: 'Fiverr', date: '2024-05-19T10:00:00Z', status: 'pending', customer: 'TechCorp Inc' },
-      { id: '5', amount: 15.50, platform: 'Etsy', date: '2024-05-18T22:30:00Z', status: 'completed', customer: 'David Bowie' },
-    ];
+      const res = await fetch(`${API_URL}/api/analytics/transactions`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) {}
+    return [];
   },
 
   async getRevenueMilestones(): Promise<RevenueMilestone[]> {
-    return [
-      { id: '1', target: 1000, current: 450, label: 'First $1k Milestone', isCompleted: false },
-      { id: '2', target: 5000, current: 5000, label: 'Empire Founding', isCompleted: true },
-      { id: '3', target: 15000, current: 12450, label: 'Scaling Peak', isCompleted: false },
-    ];
+    return [];
   },
 
   async getSocialEngagement(): Promise<EngagementMetric[]> {
-    return [
-      { platform: 'TikTok', views: 124500, likes: 8400, comments: 1200, shares: 450, conversionRate: 3.1 },
-      { platform: 'Instagram', views: 45200, likes: 3100, comments: 240, shares: 120, conversionRate: 1.2 },
-      { platform: 'YouTube', views: 12800, likes: 1500, comments: 180, shares: 90, conversionRate: 4.5 },
-    ];
+    return [];
   },
 
   async getActivityStream(): Promise<ActivityEvent[]> {
-    return [
-      { id: '1', type: 'sale', platform: 'Etsy', title: 'Sold "Digital Zen Journal" to Sarah Jenkins', timestamp: '10m ago' },
-      { id: '2', type: 'post', platform: 'TikTok', title: 'New video "Morning Routine" is trending', timestamp: '2h ago', meta: { link: 'https://tiktok.com', reasoning: 'Engagement velocity is 4.2x above baseline for the morning-routine niche.' } },
-      { id: '3', type: 'comment', platform: 'Instagram', title: 'New positive review on "Aesthetic Planner"', timestamp: '4h ago' },
-      { id: '4', type: 'production', platform: 'AI', title: 'Drafted 3 New Digital Planner Covers', timestamp: '6h ago', meta: { gateId: 'req_content_1', reasoning: 'Updating visual inventory to stay ahead of the "Sage Green" trend cycle.' } },
-      { id: '5', type: 'milestone', platform: 'Empire', title: 'Reached 75% of "Scaling Peak" milestone', timestamp: '1d ago' },
-      { id: '6', type: 'research', platform: 'AI', title: 'Completed trend analysis for "Eco-Friendly"', timestamp: '1d ago', meta: { reasoning: 'Identified a 22% gap in "Sustainable Digital Goods" market for Q3.' } },
-    ];
+    return [];
   },
 
   async getPaymentButtons(): Promise<PaymentButton[]> {
-    return [
-      { id: '1', label: 'Buy Zen Journal', productName: 'Digital Zen Journal', price: 29.99, status: 'active', usageCount: 45, platform: 'Instagram' },
-      { id: '2', label: 'Get Planner', productName: 'Aesthetic Planner', price: 15.50, status: 'active', usageCount: 12, platform: 'TikTok' },
-      { id: '3', label: 'Support Me', productName: 'Custom Donation', price: 5.00, status: 'active', usageCount: 8, platform: 'All' },
-    ];
+    return [];
   },
 
   async getOpportunityCards() {
-    return [
-      {
-        id: '1',
-        title: "TikTok 'Day in the Life' Trend",
-        description: "TikTok users are loving 'Day in the Life' videos for planners. Should I draft a script for your 'Zen Journal'?",
-        impact: "High",
-        metric: "34% niche lift",
-        type: "content"
-      },
-      {
-        id: '2',
-        title: "Sage Green Color Palette",
-        description: "Search volume for 'Sage Green Office' is peaking on Pinterest. I suggest updating your Etsy thumbnails.",
-        impact: "Medium",
-        metric: "12% search lift",
-        type: "optimization"
-      }
-    ];
+    return [];
   },
 
   async getStrategySuggestions(): Promise<any[]> {
-    return [
-      {
-        id: 'strat_1',
-        title: "Cross-Platform Synergi",
-        description: "Your TikTok engagement is high. I recommend auto-generating 3 Instagram Reels from your top performing videos to capture the IG audience.",
-        impact: "High",
-        type: "growth"
-      },
-      {
-        id: 'strat_2',
-        title: "Pricing Optimization",
-        description: "Competitor prices for 'Digital Planners' on Etsy have dropped by 5%. Adjusting your price to $24.99 could increase sales volume by 15%.",
-        impact: "Medium",
-        type: "optimization"
-      },
-      {
-        id: 'strat_3',
-        title: "Keyword Injection",
-        description: "I found 5 trending keywords for your niche. I can automatically update your Etsy listing tags to include 'Aesthetic Daily' and 'Mindfulness Journal'.",
-        impact: "Medium",
-        type: "seo"
-      }
-    ];
+    return [];
   }
 };

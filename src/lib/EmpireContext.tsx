@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { API_URL } from '@/lib/config';
+import { empireService } from '@/lib/api-service';
 
 interface Notification {
   id: string;
@@ -251,11 +252,15 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const syncWithBackend = async () => {
       try {
-        // Hydrate settings
+        // Hydrate settings first
         const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
-          headers: { 'Authorization': 'Bearer mock-mobile-token' }
-        });
-        if (settingsRes.ok) {
+          headers: { 
+            'Authorization': 'Bearer mock-mobile-token',
+            'x-user-id': '00000000-0000-0000-0000-000000000000'
+          }
+        }).catch(() => null);
+
+        if (settingsRes && settingsRes.ok) {
           const settings = await settingsRes.json();
           if (settings.protocolAccepted !== undefined) {
             setIsProtocolAccepted(settings.protocolAccepted);
@@ -271,22 +276,23 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
           }
         }
 
-        const res = await fetch(`${API_URL}/api/agent/goal/latest`, {
-          headers: { 'Authorization': 'Bearer mock-mobile-token' }
-        });
-        if (res.ok) {
-          const goal = await res.json();
-          if (goal && goal.id) {
-            setActiveEmpireId(goal.id);
-            localStorage.setItem('activeEmpireId', goal.id);
-            setIsOnboarded(true);
-            localStorage.setItem('isOnboarded', 'true');
-          }
+        // Only then fetch the goal via Service
+        const goal = await empireService.getLatestEmpire().catch(() => null);
+
+        if (goal && goal.id) {
+          console.log('[EmpireContext] Syncing Active Empire ID via Service:', goal.id);
+          setActiveEmpireId(goal.id);
+          localStorage.setItem('activeEmpireId', goal.id);
+          
+          // If we found a goal, we are definitely onboarded
+          setIsOnboarded(true);
+          localStorage.setItem('isOnboarded', 'true');
         }
       } catch (e) {
         console.error('Initial sync failed', e);
+      } finally {
+        setIsInitialized(true);
       }
-      setIsInitialized(true);
     };
     syncWithBackend();
   }, []);
