@@ -250,6 +250,7 @@ export default function Onboarding() {
         if (result.empire?.id) {
           setActiveEmpireId(result.empire.id);
         }
+        completeOnboarding();
       }
     } catch (error) {
       console.error('Error during activation:', error);
@@ -261,8 +262,6 @@ export default function Onboarding() {
 
   const handleActivate = async () => {
     setIsActivating(true);
-    // Explicitly complete onboarding in local state to allow redirect
-    completeOnboarding();
     
     if (data.automationMode === 'co-pilot') {
        await finalizeActivation();
