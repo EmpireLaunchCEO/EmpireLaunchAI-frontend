@@ -52,17 +52,17 @@ export default function StudioPage() {
               Empire Studio
             </div>
             <h1 className="text-3xl md:text-5xl font-black tracking-tighter italic">
-              Creative Foundry.
+              Universal Synthesis.
             </h1>
-            <p className="text-sm md:text-base text-muted-foreground font-medium">
-              Where harvested intelligence becomes original assets — AI-synthesized from DNA, never cloned.
+            <p className="text-sm md:text-base text-muted-foreground font-medium italic">
+              1,000,000+ DNA Codes Synced. The Studio can now create anything — from digital planners to physical products, rugs, and custom mugs.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-2xl border border-primary/20">
               <Database className="w-4 h-4 text-primary" />
-              <span className="text-[9px] font-black text-primary uppercase tracking-widest">Vault Active</span>
+              <span className="text-[9px] font-black text-primary uppercase tracking-widest">1.2M DNA STRANDS</span>
             </div>
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
           </div>
@@ -71,8 +71,8 @@ export default function StudioPage() {
         {/* Tab Navigation */}
         <div className="flex bg-slate-100 dark:bg-theme-surface p-1 rounded-[20px] w-full max-w-full overflow-hidden border-2 border-theme">
           {[
-            { id: 'gallery', label: 'Inspiration Gallery', icon: Palette },
-            { id: 'activity', label: 'Harvest Activity', icon: Database },
+            { id: 'gallery', label: 'Universal Studio', icon: Palette },
+            { id: 'activity', label: 'DNA Harvest Feed', icon: Database },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -106,11 +106,11 @@ export default function StudioPage() {
                 </div>
                 <div className="flex-1 space-y-2">
                   <p className="text-sm font-medium text-foreground italic leading-relaxed">
-                    "I've harvested trend DNA from Etsy, TikTok, and Pinterest. Every preview below is <span className="text-primary font-bold">AI-synthesized</span> — an original creation derived from collective market intelligence, not a copy of anything existing. Tell me which vibe speaks to your brand and I'll generate the perfect asset."
+                    "I've synchronized <span className="text-primary font-bold">1,000,000+ DNA codes</span> from across the global marketplace. Whether it's custom rugs, apparel, or digital blueprints, I can now synthesize <span className="text-primary font-bold">anything</span> based on market-winning patterns. Choose a vibe and let's build your next physical or digital empire item."
                   </p>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/20 text-[8px] font-black uppercase tracking-widest text-cyan-400">
                     <Database className="w-2.5 h-2.5" />
-                    Vault-Injected — Original Synthesis
+                    Universal Vault Injected — Infinite Synthesis Active
                     <Shield className="w-2.5 h-2.5" />
                   </div>
                 </div>
