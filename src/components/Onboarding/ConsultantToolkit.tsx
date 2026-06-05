@@ -14,7 +14,8 @@ import {
   ExternalLink,
   Zap,
   Stars,
-  Globe
+  Globe,
+  Video
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import wisdomData from '@/data/business_wisdom.json';
@@ -80,32 +81,32 @@ export function ConsultantToolkit({ businessAngle, onToolkitComplete }: Consulta
           Empire Harvest.
         </h2>
         <p className="text-muted-foreground text-sm uppercase font-black tracking-widest">
-          Synchronizing 1,000,000 DNA Codes
+          Synchronizing 1,000,000+ DNA Codes
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-6">
         {[
           {
+            name: "Cinema Engine",
+            tech: "High-Fidelity AI Video",
+            purpose: "Autonomous creation of cinematic marketing videos. Just upload a photo to create your Neural Twin for perfect lip-sync content.",
+            icon: Video,
+            color: "text-purple-500",
+            bg: "bg-purple-500/10"
+          },
+          {
             name: "Synthesis Engine",
-            tech: "Canva & Bannerbear",
-            purpose: "Harvesting design DNA and automatically implementing winning styles into the Global Vault for immediate use.",
+            tech: "Infinite Creation DNA",
+            purpose: "Harvesting global patterns to create anything—from digital planners to custom rugs and high-end apparel.",
             icon: Layout,
             color: "text-blue-500",
             bg: "bg-blue-500/10"
           },
           {
-            name: "Viral Harvester",
-            tech: "TikTok & Trend Data",
-            purpose: "Scraping viral content patterns and synthesizing them into the Vault as actionable marketing blueprints.",
-            icon: Smartphone,
-            color: "text-pink-500",
-            bg: "bg-pink-500/10"
-          },
-          {
             name: "Neural Pulse",
             tech: "Internet & Marketplace Scrapers",
-            purpose: "Analyzing 500,000+ best-seller data points across Etsy and the web to feed your autonomous creation cycle.",
+            purpose: "Targeting 1,000,000+ best-seller data points across Etsy and social media to feed your autonomous creation cycle.",
             icon: Globe,
             color: "text-primary",
             bg: "bg-primary/10"
@@ -122,9 +123,6 @@ export function ConsultantToolkit({ businessAngle, onToolkitComplete }: Consulta
               <div className={cn("p-4 rounded-2xl", engine.bg)}>
                 <engine.icon className={cn("w-8 h-8", engine.color)} />
               </div>
-              <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-primary/20 text-primary border border-primary/20">
-                CORE HARVEST
-              </span>
             </div>
 
             <div className="space-y-2">
