@@ -25,7 +25,6 @@ const platforms = [
   { id: 'instagram', name: 'Instagram', icon: Camera, color: 'text-purple-500', bg: 'bg-purple-500/10' },
   { id: 'youtube', name: 'YouTube (Shorts/Main)', icon: Video, color: 'text-red-500', bg: 'bg-red-500/10' },
   { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-  { id: 'gmail', name: 'Gmail (AI Assistant)', icon: Mail, color: 'text-red-400', bg: 'bg-red-400/10' },
   { id: 'pinterest', name: 'Pinterest', icon: Camera, color: 'text-rose-500', bg: 'bg-rose-500/10' },
   { id: 'shopify', name: 'Shopify Store', icon: Globe, color: 'text-green-500', bg: 'bg-green-500/10' },
   { id: 'etsy', name: 'Etsy Shop', icon: ShoppingBag, color: 'text-orange-500', bg: 'bg-orange-500/10' },
