@@ -141,15 +141,10 @@ export default function Onboarding() {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (typeof window !== 'undefined' && isInitialized && isOnboarded) {
-      // ONLY redirect if we are in standalone mode (PWA)
-      // This prevents the "flash" and auto-redirect in the browser
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      
-      if (isStandalone) {
-        timeoutId = setTimeout(() => {
-          router.replace('/dashboard');
-        }, 1200);
-      }
+      // Allow redirect in both Standalone AND Browser now to prevent being stuck
+      timeoutId = setTimeout(() => {
+        router.replace('/dashboard');
+      }, 1500);
     }
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
@@ -266,6 +261,9 @@ export default function Onboarding() {
 
   const handleActivate = async () => {
     setIsActivating(true);
+    // Explicitly complete onboarding in local state to allow redirect
+    completeOnboarding();
+    
     if (data.automationMode === 'co-pilot') {
        await finalizeActivation();
     }
@@ -382,7 +380,7 @@ export default function Onboarding() {
                 </div>
               </div>
 
-              <div className="max-w-sm mx-auto space-y-4">
+              <div className="max-w-sm mx-auto space-y-6">
                 {isPWADismissed && (
                    <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-4">
                      Please follow the installation steps in your browser menu to unlock production access.
@@ -396,6 +394,15 @@ export default function Onboarding() {
                     transition={{ duration: 4, ease: "easeInOut" }}
                     className="h-full bg-primary shadow-[0_0_15px_rgba(251,191,36,0.5)]"
                   />
+                </div>
+
+                <div className="pt-4">
+                  <button
+                    onClick={() => router.replace('/dashboard')}
+                    className="text-primary font-black text-[10px] uppercase tracking-widest hover:text-white transition-all underline underline-offset-4"
+                  >
+                    Enter Command Center Manually
+                  </button>
                 </div>
               </div>
             </div>
