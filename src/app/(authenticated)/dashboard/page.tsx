@@ -248,6 +248,15 @@ export default function Dashboard() {
                 Retry Connection
               </button>
               <button 
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.href = '/onboarding';
+                }}
+                className="w-full md:w-auto px-8 py-4 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform border border-white/10"
+              >
+                Reset System Memory
+              </button>
+              <button 
                 onClick={() => window.location.href = '/settings'}
                 className="w-full md:w-auto px-8 py-4 bg-slate-800 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform border border-white/10"
               >
