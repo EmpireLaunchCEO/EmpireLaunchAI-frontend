@@ -31,9 +31,6 @@ const platforms = [
   { id: 'etsy', name: 'Etsy Shop', icon: ShoppingBag, color: 'text-orange-500', bg: 'bg-orange-500/10' },
   { id: 'amazon', name: 'Amazon Seller', icon: ShoppingBag, color: 'text-yellow-500', bg: 'bg-yellow-500/10' },
   { id: 'fiverr', name: 'Fiverr Gigs', icon: Zap, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-  { id: 'canva', name: 'Canva (Design)', icon: Stars, color: 'text-blue-400', bg: 'bg-blue-400/10' },
-  { id: 'kittle', name: 'Kittle (Design)', icon: Stars, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },
-  { id: 'capcut', name: 'Capcut (Video)', icon: Video, color: 'text-primary', bg: 'bg-primary/10' },
 ];
 
 import { BrandedGlobe } from '@/components/BrandedGlobe';
