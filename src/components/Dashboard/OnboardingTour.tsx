@@ -17,6 +17,7 @@ import {
   Bell
 } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEmpire } from '@/lib/EmpireContext';
 
 interface TourStep {
   title: string;
@@ -34,6 +35,7 @@ export function OnboardingTour() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { isDashboardLoaded } = useEmpire();
 
   const tourSteps: TourStep[] = useMemo(() => [
     {
@@ -158,11 +160,11 @@ export function OnboardingTour() {
 
   useEffect(() => {
     const hasSeenTour = localStorage.getItem('empire_tour_v419');
-    if (!hasSeenTour) {
+    if (!hasSeenTour && isDashboardLoaded) {
       const timer = setTimeout(() => setIsVisible(true), 1500);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [isDashboardLoaded]);
 
   const handleComplete = () => {
     localStorage.setItem('empire_tour_v419', 'true');

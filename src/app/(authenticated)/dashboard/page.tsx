@@ -25,7 +25,7 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useSearchParams } from 'next/navigation';
 
 export default function Dashboard() {
-  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized } = useEmpire();
+  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, setDashboardLoaded } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
@@ -56,31 +56,46 @@ export default function Dashboard() {
   const fetchData = useCallback(async () => {
     if (!mounted) return;
     setIsLoading(true);
+    
+    // 5-second timeout safety net — prevents infinite hang on "Neural Syncing"
+    const timeout = new Promise<null>((resolve) => setTimeout(() => {
+      console.warn('[Dashboard] Data fetch timed out — showing fallback');
+      resolve(null);
+    }, 5000));
+
     try {
       // Artificially delay to show the refresh globe and clear cache
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      const [empireRes, pulseRes, healthRes, txRes] = await Promise.all([
-        fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`, { cache: 'no-store' }),
-        analyticsService.getEmpirePulse(),
-        analyticsService.getEmpireHealth(),
-        analyticsService.getRevenueTransactions()
+      const result = await Promise.race([
+        Promise.all([
+          fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`, { cache: 'no-store' }).catch(() => null),
+          analyticsService.getEmpirePulse().catch(() => null),
+          analyticsService.getEmpireHealth().catch(() => null),
+          analyticsService.getRevenueTransactions().catch(() => [])
+        ]),
+        timeout
       ]);
 
-      if (empireRes.ok) {
-        const eData = await empireRes.json();
-        setEmpireData(eData);
+      if (result) {
+        const [empireRes, pulseRes, healthRes, txRes] = result;
+        if (empireRes && empireRes.ok) {
+          const eData = await empireRes.json();
+          setEmpireData(eData);
+        }
+        setPulseData(pulseRes);
+        setHealthData(healthRes);
+        setTransactions(txRes);
+        
+        // Data is ready
+        setDashboardLoaded(true);
+      } else {
+        // Timeout case
+        setDashboardLoaded(true); // Still set to true to allow UI fallbacks/tour to show
       }
-      setPulseData(pulseRes);
-      setHealthData(healthRes);
-      setTransactions(txRes);
       
-      // Force a soft version check
-      const verRes = await fetch('/version.json', { cache: 'no-store' }).catch(() => null);
-      if (verRes && verRes.ok) {
-        const verData = await verRes.json();
-        console.log('Refreshed to version:', verData.version);
-      }
+      // Force a soft version check (non-blocking)
+      fetch('/version.json', { cache: 'no-store' }).catch(() => {});
       
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -123,10 +138,33 @@ export default function Dashboard() {
 
   if (isLoading && !empireData) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-blue-200 font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+      <div className="p-3 md:p-8 pb-24 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 bg-theme-surface/30 p-5 md:p-0 rounded-[24px] md:rounded-none border border-theme md:border-none animate-pulse">
+          <div className="space-y-2">
+            <div className="w-24 h-3 bg-primary/20 rounded-full" />
+            <div className="w-48 h-8 bg-foreground/10 rounded-xl" />
+            <div className="w-64 h-4 bg-muted-foreground/10 rounded-lg" />
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-theme-surface border border-theme flex items-center justify-center">
+              <BrandedGlobe size="md" animate={true} />
+            </div>
+            <div className="space-y-2">
+              <div className="w-32 h-8 bg-primary/10 rounded-2xl" />
+              <div className="w-24 h-3 bg-slate-400/10 rounded-full" />
+            </div>
+          </div>
+        </header>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
+          <div className="h-32 bg-theme-surface rounded-[32px] border border-theme" />
+          <div className="h-32 bg-theme-surface rounded-[32px] border border-theme" />
+          <div className="h-32 bg-theme-surface rounded-[32px] border border-theme" />
+        </div>
+
+        <div className="h-96 bg-theme-surface rounded-[48px] border-2 border-theme flex flex-col items-center justify-center gap-6 animate-pulse">
+          <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.2)]" />
+          <h2 className="text-blue-200 font-black uppercase tracking-[0.3em] text-sm">
             Neural Syncing
           </h2>
         </div>

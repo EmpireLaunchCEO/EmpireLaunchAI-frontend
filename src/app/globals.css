@@ -63,6 +63,7 @@
 
 ::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -83,6 +84,17 @@
   scrollbar-color: rgba(0, 229, 255, 0.1) transparent;
 }
 
+/* Prevent horizontal scrollbar on mobile — scrollbar-width: thin can cause overflow */
+@media (max-width: 768px) {
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 html, body {
   background-color: #0a0519 !important;
   margin: 0;
@@ -90,8 +102,10 @@ html, body {
   min-height: 100vh;
   /* Allow native scrolling at the root */
   overflow-y: auto !important;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch;
+  max-width: 100vw;
+  width: 100%;
 }
 
 * {

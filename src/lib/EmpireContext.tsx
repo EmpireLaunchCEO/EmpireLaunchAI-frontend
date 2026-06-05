@@ -44,6 +44,8 @@ interface EmpireContextType {
   setAutoSendRetention: (enabled: boolean) => void;
   isProtocolAccepted: boolean;
   acceptProtocols: () => void;
+  isDashboardLoaded: boolean;
+  setDashboardLoaded: (loaded: boolean) => void;
 
   // Notifications
   notifications: Notification[];
@@ -173,6 +175,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   };
 
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isDashboardLoaded, setDashboardLoaded] = useState(false);
   const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('activeSetupPlatform');
@@ -486,6 +489,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       setAutoSendRetention,
       isProtocolAccepted,
       acceptProtocols,
+      isDashboardLoaded,
+      setDashboardLoaded,
 
       // Notifications
       notifications,
