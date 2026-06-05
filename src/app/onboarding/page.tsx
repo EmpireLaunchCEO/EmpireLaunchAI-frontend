@@ -307,68 +307,17 @@ export default function Onboarding() {
     setIsTermsOpen(true);
   };
 
-  // Enforcement: If already onboarded but in browser, show install instructions
-  if (isInitialized && isOnboarded && typeof window !== 'undefined') {
+  // Bypass enforcement for initial setup stability
+  if (isInitialized && (isOnboarded || currentStep > 5) && typeof window !== 'undefined') {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
     if (!isStandalone) {
-      return (
-        <div className="min-h-screen w-full bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-          <PWAInstallPrompt onDismiss={handlePWADismiss} />
-          <div className="absolute inset-0 opacity-20">
-            <svg className="w-full h-full">
-              <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-                <path d="M 100 0 L 0 0 0 100" fill="none" stroke="white" strokeWidth="0.5" />
-              </pattern>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="relative z-10 w-full max-w-4xl"
-          >
-            <div className="text-center space-y-12">
-              <div className="relative inline-block mb-8">
-                <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
-              </div>
-
-              <div className="space-y-4">
-                <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight uppercase italic">
-                  Download to Home Screen to Continue.
-                </h2>
-                <div className="flex items-center justify-center gap-3 min-h-6">
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-4"
-                  >
-                    <BrandedGlobe size="sm" animate={true} />
-                    <p className="text-primary font-black tracking-widest text-xs uppercase">
-                      Close out the browser version, then reopen app from Home Screen.
-                    </p>
-                  </motion.div>
-                </div>
-              </div>
-
-              <div className="max-w-sm mx-auto space-y-4">
-                <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-4">
-                  Please follow the installation steps in your browser menu to unlock production access.
-                </p>
-                
-                <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 4, ease: "easeInOut" }}
-                    className="h-full bg-primary shadow-[0_0_15px_rgba(251,191,36,0.5)]"
-                  />
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      );
+       // Force complete if we are at the end
+       if (!isOnboarded) completeOnboarding();
+       
+       // Auto-redirect to dashboard if we are already onboarded, even in browser
+       setTimeout(() => {
+         router.replace('/dashboard');
+       }, 500);
     }
   }
 
