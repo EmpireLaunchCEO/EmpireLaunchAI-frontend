@@ -22,7 +22,6 @@ import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
-import { useSearchParams } from 'next/navigation';
 
 export default function Dashboard() {
   const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, setDashboardLoaded } = useEmpire();
@@ -34,6 +33,11 @@ export default function Dashboard() {
   const [partnerStatus, setPartnerStatus] = useState<'idle' | 'researching' | 'creating'>('idle');
   const [executingInsight, setExecutingInsight] = useState<string | null>(null);
   const [isCelebrating, setIsCelebrating] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (isLinkingComplete && !isLoading) {
@@ -47,147 +51,74 @@ export default function Dashboard() {
     }
   }, [isLinkingComplete, isLoading]);
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const fetchData = useCallback(async () => {
     if (!mounted) return;
-    setIsLoading(true);
     
-    // 5-second timeout safety net — prevents infinite hang on "Neural Syncing"
-    const timeout = new Promise<null>((resolve) => setTimeout(() => {
-      console.warn('[Dashboard] Data fetch timed out — showing fallback');
-      resolve(null);
-    }, 5000));
+    // Use a local check to avoid dependency loop
+    setEmpireData((current: any) => {
+      if (!current) setIsLoading(true);
+      return current;
+    });
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      console.warn('[Dashboard] Sync Timeout — Force-Loading Page');
+      setIsLoading(false);
+      setDashboardLoaded(true);
+      controller.abort();
+    }, 6000);
 
     try {
-      // Artificially delay to show the refresh globe and clear cache
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Small artificial delay for visual feedback if we already had data
+      const hasExistingData = await new Promise<boolean>(resolve => {
+        setEmpireData((current: any) => {
+          resolve(!!current);
+          return current;
+        });
+      });
       
-      const result = await Promise.race([
-        Promise.all([
-          fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`, { cache: 'no-store' }).catch(() => null),
-          analyticsService.getEmpirePulse().catch(() => null),
-          analyticsService.getEmpireHealth().catch(() => null),
-          analyticsService.getRevenueTransactions().catch(() => [])
-        ]),
-        timeout
+      if (hasExistingData) await new Promise(resolve => setTimeout(resolve, 800));
+      
+      const fetchOptions = { 
+        cache: 'no-store' as const,
+        signal: controller.signal
+      };
+
+      const [empireRes, pulseRes, healthRes, txRes] = await Promise.all([
+        fetch(`${API_URL}/api/agent/empire/${activeEmpireId}`, fetchOptions).catch(() => null),
+        analyticsService.getEmpirePulse().catch(() => null),
+        analyticsService.getEmpireHealth().catch(() => null),
+        analyticsService.getRevenueTransactions().catch(() => [])
       ]);
 
-      if (result) {
-        const [empireRes, pulseRes, healthRes, txRes] = result;
-        if (empireRes && empireRes.ok) {
-          const eData = await empireRes.json();
-          setEmpireData(eData);
-        }
-        setPulseData(pulseRes);
-        setHealthData(healthRes);
-        setTransactions(txRes);
-        
-        // Data is ready
-        setDashboardLoaded(true);
-      } else {
-        // Timeout case
-        setDashboardLoaded(true); // Still set to true to allow UI fallbacks/tour to show
+      if (empireRes && empireRes.ok) {
+        const eData = await empireRes.json();
+        setEmpireData(eData);
       }
       
-      // Force a soft version check (non-blocking)
+      setPulseData(pulseRes);
+      setHealthData(healthRes);
+      setTransactions(txRes);
+      
+      // Mark as loaded to trigger tour
+      setDashboardLoaded(true);
+      
+      // Soft version check
       fetch('/version.json', { cache: 'no-store' }).catch(() => {});
       
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      console.error('Fetch error:', error);
     } finally {
+      clearTimeout(timeoutId);
       setIsLoading(false);
     }
-  }, [activeEmpireId]);
+  }, [activeEmpireId, mounted, setDashboardLoaded]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  // Prevent hydration mismatch by only rendering after mount
-  if (!mounted) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
-            Neural Sync Established
-          </h2>
-        </div>
-      </div>
-    );
-  }
-
-  // Safe Guard: If not initialized, wait for context
-  if (!isInitialized) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
-            Initializing Session
-          </h2>
-        </div>
-      </div>
-    );
-  }
-
-  if (isLoading && !empireData) {
-    return (
-      <div className="p-3 md:p-8 pb-24 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 bg-theme-surface/30 p-5 md:p-0 rounded-[24px] md:rounded-none border border-theme md:border-none animate-pulse">
-          <div className="space-y-2">
-            <div className="w-24 h-3 bg-primary/20 rounded-full" />
-            <div className="w-48 h-8 bg-foreground/10 rounded-xl" />
-            <div className="w-64 h-4 bg-muted-foreground/10 rounded-lg" />
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-theme-surface border border-theme flex items-center justify-center">
-              <BrandedGlobe size="md" animate={true} />
-            </div>
-            <div className="space-y-2">
-              <div className="w-32 h-8 bg-primary/10 rounded-2xl" />
-              <div className="w-24 h-3 bg-slate-400/10 rounded-full" />
-            </div>
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
-          <div className="h-32 bg-theme-surface rounded-[32px] border border-theme" />
-          <div className="h-32 bg-theme-surface rounded-[32px] border border-theme" />
-          <div className="h-32 bg-theme-surface rounded-[32px] border border-theme" />
-        </div>
-
-        <div className="h-96 bg-theme-surface rounded-[48px] border-2 border-theme flex flex-col items-center justify-center gap-6 animate-pulse">
-          <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.2)]" />
-          <h2 className="text-blue-200 font-black uppercase tracking-[0.3em] text-sm">
-            Neural Syncing
-          </h2>
-        </div>
-      </div>
-    );
-  }
-
-  // Fallback for null data after loading (prevents crash)
-  if (!empireData && !isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6 p-8 text-center">
-        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(255,0,0,0.2)]" />
-        <h2 className="text-xl font-black text-white uppercase italic">Connection Interrupted.</h2>
-        <p className="text-slate-400 text-sm max-w-xs mx-auto">I'm having trouble retrieving your empire data. Pull down to retry or check your network.</p>
-        <button 
-          onClick={() => window.location.reload()}
-          className="mt-4 px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest border border-white/10"
-        >
-          Reboot System
-        </button>
-      </div>
-    );
-  }
+    if (mounted && isInitialized) {
+      fetchData();
+    }
+  }, [fetchData, mounted, isInitialized]);
 
   const handleExecute = async (goal: string) => {
     if (!isLinkingComplete && (window as any).interceptTeacher) {
@@ -222,15 +153,29 @@ export default function Dashboard() {
         }, 2000);
       }
     } catch (error) {
-      console.error('Error starting agent:', error);
+      console.error('Execution error:', error);
       setPartnerStatus('idle');
       setExecutingInsight(null);
     }
   };
 
+  // 1. Initial Neural Sync Overlay (Session Init)
+  if (!mounted || !isInitialized) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
+        <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
+          Initializing Neural Sync
+        </h2>
+      </div>
+    );
+  }
+
+  // 2. Main Dashboard Render
   return (
     <PullToRefresh onRefresh={fetchData}>
       <div className="p-3 md:p-8 pb-24 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12">
+        {/* Persistent Header */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 bg-theme-surface/30 p-5 md:p-0 rounded-[24px] md:rounded-none border border-theme md:border-none">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-primary font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em]">
@@ -250,7 +195,6 @@ export default function Dashboard() {
               onClick={() => fetchData()}
               disabled={isLoading}
               className="w-10 h-10 rounded-xl bg-theme-surface border border-theme flex items-center justify-center text-slate-400 hover:text-primary transition-all group relative"
-              title="Manual Neural Sync"
             >
               <BrandedGlobe 
                 size="md" 
@@ -265,95 +209,129 @@ export default function Dashboard() {
                 {aiMode === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
               </div>
               <span className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 md:mt-2">
-                Neural Sync: 100.0%
+                Neural Sync: {isLoading ? 'SYNCING...' : '100.0%'}
               </span>
             </div>
           </div>
         </header>
 
-        <BusinessSlots currentEmpire={empireData} />
+        {isLoading && !empireData ? (
+          /* Inline Loading State (No longer full page blocking) */
+          <div className="space-y-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
+              <div className="h-32 bg-theme-surface rounded-[32px] border border-theme" />
+              <div className="h-32 bg-theme-surface rounded-[32px] border border-theme" />
+              <div className="h-32 bg-theme-surface rounded-[32px] border border-theme" />
+            </div>
 
-        {!isLinkingComplete ? (
-          <div className="bg-theme-surface border-2 border-theme rounded-[48px] p-8">
-             <GuidedLinking />
+            <div className="h-96 bg-theme-surface rounded-[48px] border-2 border-theme flex flex-col items-center justify-center gap-6 animate-pulse">
+              <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.2)]" />
+              <h2 className="text-blue-200 font-black uppercase tracking-[0.3em] text-sm italic">
+                Neural Syncing...
+              </h2>
+            </div>
+          </div>
+        ) : !empireData ? (
+          /* Error/Empty State */
+          <div className="bg-theme-surface rounded-[48px] border-2 border-theme p-12 text-center space-y-6">
+            <BrandedGlobe size="xl" className="mx-auto shadow-[0_0_60px_rgba(255,0,0,0.1)]" />
+            <h2 className="text-2xl font-black italic uppercase">Connection Interrupted.</h2>
+            <p className="text-slate-400 max-w-md mx-auto">I'm having trouble retrieving your empire data. Pull down to retry or use the button below to reboot.</p>
+            <button 
+              onClick={() => fetchData()}
+              className="px-8 py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform"
+            >
+              Retry Connection
+            </button>
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="space-y-12 md:space-y-20"
-          >
-            {/* Thinking Status Overlay */}
-            <AnimatePresence>
-              {partnerStatus !== 'idle' && (
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="p-6 bg-theme-surface rounded-[32px] text-foreground shadow-2xl border-2 border-theme flex items-center gap-6 relative overflow-hidden z-50"
-                >
-                  <div className="relative z-10 w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shrink-0">
-                    <BrandedGlobe size="lg" animate={true} className="ring-2 ring-white/20" />
-                  </div>
-                  <div className="relative z-10 flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-primary">Autonomous Operation</span>
-                      <span className="text-[10px] font-bold text-slate-400">Phase: Research & Analysis</span>
-                    </div>
-                    <p className="text-lg font-bold">
-                      {partnerStatus === 'researching'
-                        ? 'Analyzing global market velocity...'
-                        : `Executing Strategy: "${executingInsight?.substring(0, 60)}..."`}
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+          /* Full Content Area */
+          <>
+            <BusinessSlots currentEmpire={empireData} />
 
-            <SuccessHubOverview
-              empireData={empireData}
-              pulseData={pulseData}
-              healthData={healthData}
-              transactions={transactions}
-            />
-
-            {/* Empire Control Gates */}
-            <section className="space-y-10 pt-20 border-t border-theme">
-               <div className="flex items-center justify-between">
-                 <div className="flex items-center gap-3">
-                   <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center">
-                     <LayoutDashboard className="w-5 h-5 text-slate-600" />
-                   </div>
-                   <div>
-                     <h2 className="text-2xl font-black text-foreground tracking-tight">Control Gates</h2>
-                     <p className="text-xs text-muted-foreground font-medium">Human-in-the-loop validation for autonomous actions.</p>
-                   </div>
-                 </div>
-               </div>
-
-               <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                 <div className="space-y-6">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 ml-2">Content Approval</h3>
-                    <ApprovalQueue />
-                 </div>
-                 <div className="space-y-6">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 ml-2">Social Proof Queue</h3>
-                    <SocialProofApproval />
-                 </div>
-               </div>
-            </section>
-
-            {/* Secondary Intelligence Hubs */}
-            <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-              <div className="lg:col-span-2">
-                <AIOptimizationHub />
+            {!isLinkingComplete ? (
+              <div className="bg-theme-surface border-2 border-theme rounded-[48px] p-8">
+                 <GuidedLinking />
               </div>
-              <div className="lg:col-span-1 space-y-10">
-                <AutonomousCyclesStatus />
-                <EmpireConstellation />
-              </div>
-            </section>
-          </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="space-y-12 md:space-y-20"
+              >
+                {/* Autonomous Action Status */}
+                <AnimatePresence>
+                  {partnerStatus !== 'idle' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="p-6 bg-theme-surface rounded-[32px] text-foreground shadow-2xl border-2 border-theme flex items-center gap-6 relative overflow-hidden z-50"
+                    >
+                      <div className="relative z-10 w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shrink-0">
+                        <BrandedGlobe size="lg" animate={true} />
+                      </div>
+                      <div className="relative z-10 flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-primary">Autonomous Operation</span>
+                          <span className="text-[10px] font-bold text-slate-400">Phase: Analysis</span>
+                        </div>
+                        <p className="text-lg font-bold">
+                          {partnerStatus === 'researching'
+                            ? 'Analyzing global market velocity...'
+                            : `Executing Strategy: "${executingInsight?.substring(0, 60)}..."`}
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <SuccessHubOverview
+                  empireData={empireData}
+                  pulseData={pulseData}
+                  healthData={healthData}
+                  transactions={transactions}
+                />
+
+                {/* Empire Control Gates */}
+                <section className="space-y-10 pt-20 border-t border-theme">
+                   <div className="flex items-center justify-between">
+                     <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center">
+                         <LayoutDashboard className="w-5 h-5 text-slate-600" />
+                       </div>
+                       <div>
+                         <h2 className="text-2xl font-black text-foreground tracking-tight italic">Control Gates</h2>
+                         <p className="text-xs text-muted-foreground font-medium italic">Human-in-the-loop validation for autonomous actions.</p>
+                       </div>
+                     </div>
+                   </div>
+
+                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                     <div className="space-y-6">
+                        <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 ml-2">Content Approval</h3>
+                        <ApprovalQueue />
+                     </div>
+                     <div className="space-y-6">
+                        <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 ml-2">Social Proof Queue</h3>
+                        <SocialProofApproval />
+                     </div>
+                   </div>
+                </section>
+
+                {/* Intelligence Hubs */}
+                <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                  <div className="lg:col-span-2">
+                    <AIOptimizationHub />
+                  </div>
+                  <div className="lg:col-span-1 space-y-10">
+                    <AutonomousCyclesStatus />
+                    <EmpireConstellation />
+                  </div>
+                </section>
+              </motion.div>
+            )}
+          </>
         )}
 
         <AnimatePresence>
@@ -372,8 +350,8 @@ export default function Dashboard() {
                 >
                   <Stars className="w-16 h-16 text-primary" />
                 </motion.div>
-                <h2 className="text-5xl font-black text-white tracking-tighter">Neural Sync Established.</h2>
-                <p className="text-white/80 text-xl font-medium">Welcome to your Empire Command Center.</p>
+                <h2 className="text-5xl font-black text-white tracking-tighter italic">Neural Sync Established.</h2>
+                <p className="text-white/80 text-xl font-medium italic">Welcome to your Empire Command Center.</p>
               </div>
             </motion.div>
           )}

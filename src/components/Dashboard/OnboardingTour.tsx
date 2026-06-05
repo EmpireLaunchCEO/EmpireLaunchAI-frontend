@@ -160,8 +160,9 @@ export function OnboardingTour() {
 
   useEffect(() => {
     const hasSeenTour = localStorage.getItem('empire_tour_v419');
+    // ONLY show tour if the dashboard has successfully loaded data or hit its final state
     if (!hasSeenTour && isDashboardLoaded) {
-      const timer = setTimeout(() => setIsVisible(true), 1500);
+      const timer = setTimeout(() => setIsVisible(true), 2500); // Wait longer for components to settle
       return () => clearTimeout(timer);
     }
   }, [isDashboardLoaded]);
