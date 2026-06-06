@@ -20,7 +20,7 @@ export const GrowthTracker = ({
   unit = "$",
   progress
 }: GrowthTrackerProps) => {
-  const percentage = progress !== undefined ? progress : Math.min(Math.round((currentValue / targetValue) * 100), 100);
+  const percentage = Math.max(0, Math.min(100, progress !== undefined ? progress : Math.round(((currentValue || 0) / (targetValue || 1)) * 100))) || 0;
 
   return (
     <div className="bg-theme-surface rounded-[32px] md:rounded-[40px] p-6 md:p-8 border border-theme shadow-sm relative overflow-hidden group">
@@ -89,11 +89,11 @@ export const GrowthTracker = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-theme-background rounded-2xl p-4 border border-theme">
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Current</span>
-              <span className="text-2xl font-black text-foreground">{unit}{currentValue.toLocaleString()}</span>
+              <span className="text-2xl font-black text-foreground">{unit}{(currentValue || 0).toLocaleString()}</span>
             </div>
             <div className="bg-theme-background rounded-2xl p-4 border border-theme">
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Target</span>
-              <span className="text-2xl font-black text-foreground">{unit}{targetValue.toLocaleString()}</span>
+              <span className="text-2xl font-black text-foreground">{unit}{(targetValue || 0).toLocaleString()}</span>
             </div>
           </div>
 

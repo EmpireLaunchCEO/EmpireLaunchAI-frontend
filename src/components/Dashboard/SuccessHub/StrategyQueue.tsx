@@ -24,7 +24,7 @@ export function StrategyQueue() {
   useEffect(() => {
     async function load() {
       const data = await analyticsService.getStrategySuggestions();
-      setSuggestions(data);
+      setSuggestions(data || []);
       setLoading(false);
     }
     load();
@@ -78,11 +78,11 @@ export function StrategyQueue() {
                   strat.type === 'SEO_OPTIMIZATION' ? "bg-primary/20 text-primary" :
                   "bg-emerald-500/20 text-emerald-400"
                 )}>
-                  {strat.type.replace('_', ' ')}
+                  {(strat.type || 'STRATEGY').replace('_', ' ')}
                 </div>
                 <div className="flex items-center gap-1.5 text-amber-400">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">Est. ROI: +${(strat.roiImpact / 100).toLocaleString()}</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest">Est. ROI: +${((strat.roiImpact || 0) / 100).toLocaleString()}</span>
                 </div>
               </div>
 

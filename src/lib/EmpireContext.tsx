@@ -17,8 +17,10 @@ interface EmpireContextType {
   activeEmpireId: string;
   setActiveEmpireId: (id: string) => void;
   isOnboarded: boolean;
+  isHandoverComplete: boolean;
   isInitialized: boolean;
   completeOnboarding: () => void;
+  setHandoverComplete: (complete: boolean) => void;
   activeSetupPlatform: string | null;
   startSetup: (platform: string) => void;
   finishSetup: () => void;
@@ -77,37 +79,39 @@ export interface Toast {
 const EmpireContext = createContext<EmpireContextType | undefined>(undefined);
 
 export function EmpireProvider({ children }: { children: React.ReactNode }) {
-  const [activeEmpireId, setActiveEmpireId] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('activeEmpireId') || '1';
-    }
-    return '1';
-  });
+  const [activeEmpireId, setActiveEmpireId] = useState('1');
+  const [isPaid, setIsPaidState] = useState(false);
+  const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>('co-pilot');
+  const [platformPermissions, setPlatformPermissions] = useState<Record<string, 'co-pilot' | 'empire'>>({});
+  const [isOnboarded, setIsOnboarded] = useState(false);
+  const [isHandoverComplete, setIsHandoverComplete] = useState(false);
+  const [isLinkingComplete, setIsLinkingComplete] = useState(false);
+  const [isNotificationModalDismissed, setIsNotificationModalDismissed] = useState(false);
+  const [empireNotes, setEmpireNotesState] = useState('');
+  const [theme, setThemeState] = useState('blue');
+  const [language, setLanguageState] = useState('en-US');
+  const [currency, setCurrencyState] = useState('USD');
+  const [autoSendRetention, setAutoSendRetentionState] = useState(false);
+  const [isProtocolAccepted, setIsProtocolAccepted] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isDashboardLoaded, setDashboardLoaded] = useState(false);
+  const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);
+  const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notificationSettings, setNotificationSettings] = useState({ sales: true, approvals: true });
+  const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const [isPaid, setIsPaidState] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('isPaid') === 'true';
-    }
-    return false;
-  });
+  const removeToast = (id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  };
 
-  const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('empireAiMode') as 'co-pilot' | 'empire') || 'co-pilot';
-    }
-    return 'co-pilot';
-  });
-
-  const [platformPermissions, setPlatformPermissions] = useState<Record<string, 'co-pilot' | 'empire'>>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        return JSON.parse(localStorage.getItem('platformPermissions') || '{}');
-      } catch {
-        return {};
-      }
-    }
-    return {};
-  });
+  const addToast = (toast: Omit<Toast, 'id'>) => {
+    const id = Math.random().toString(36).substring(2, 9);
+    setToasts(prev => [...prev, { ...toast, id }]);
+    setTimeout(() => {
+      removeToast(id);
+    }, 5000);
+  };
 
   const updatePlatformPermission = (platform: string, level: 'co-pilot' | 'empire') => {
     setPlatformPermissions(prev => {
@@ -126,46 +130,22 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const [isOnboarded, setIsOnboarded] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('isOnboarded') === 'true';
-    }
-    return false;
-  });
-
   const setIsPaid = (paid: boolean) => {
     setIsPaidState(paid);
     if (typeof window !== 'undefined') {
       localStorage.setItem('isPaid', paid ? 'true' : 'false');
+      
+      // Sync to backend
+      fetch(`${API_URL}/api/settings/isPaid`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer mock-mobile-token',
+          'x-user-id': '00000000-0000-0000-0000-000000000000'
+        },
+        body: JSON.stringify({ value: paid })
+      }).catch(err => console.error('Failed to sync payment status', err));
     }
-  };
-
-  const [isLinkingComplete, setIsLinkingComplete] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('isLinkingComplete') === 'true';
-    }
-    return false;
-  });
-
-  const [isNotificationModalDismissed, setIsNotificationModalDismissed] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('isNotificationModalDismissed') === 'true';
-    }
-    return false;
-  });
-
-  const [toasts, setToasts] = useState<Toast[]>([]);
-
-  const removeToast = (id: string) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
-  };
-
-  const addToast = (toast: Omit<Toast, 'id'>) => {
-    const id = Math.random().toString(36).substring(2, 9);
-    setToasts(prev => [...prev, { ...toast, id }]);
-    setTimeout(() => {
-      removeToast(id);
-    }, 5000);
   };
 
   const dismissNotificationModal = () => {
@@ -174,36 +154,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('isNotificationModalDismissed', 'true');
     }
   };
-
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [isDashboardLoaded, setDashboardLoaded] = useState(false);
-  const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('activeSetupPlatform');
-    }
-    return null;
-  });
-
-  const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        return JSON.parse(localStorage.getItem('connectedPlatforms') || '[]');
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  });
-
-  // Notifications State
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [notificationSettings, setNotificationSettings] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('empireNotificationSettings');
-      return saved ? JSON.parse(saved) : { sales: true, approvals: true };
-    }
-    return { sales: true, approvals: true };
-  });
 
   const updateNotificationSettings = (settings: { sales?: boolean; approvals?: boolean }) => {
     const newSettings = { ...notificationSettings, ...settings };
@@ -223,84 +173,17 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  // Simulate incoming notifications for demo purposes
-  useEffect(() => {
-    if (isLinkingComplete && isInitialized) {
-      const demoNotifications: Notification[] = [
-        {
-          id: '1',
-          title: 'New Sale!',
-          message: 'Someone just ordered your "Digital Zen Planner" on Etsy. +$24.99',
-          type: 'sale',
-          timestamp: new Date(),
-          read: false
-        },
-        {
-          id: '2',
-          title: 'Content Ready',
-          message: '3 TikTok marketing videos are ready for your approval in the Review Queue.',
-          type: 'approval',
-          timestamp: new Date(Date.now() - 1000 * 60 * 30),
-          read: false
-        }
-      ];
-      setNotifications(demoNotifications);
-    }
-  }, [isLinkingComplete, isInitialized]);
-
-  // Keep initialization for things that need to happen after mount
-  useEffect(() => {
-    const syncWithBackend = async () => {
-      try {
-        // Hydrate settings first
-        const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
-          headers: { 
-            'Authorization': 'Bearer mock-mobile-token',
-            'x-user-id': '00000000-0000-0000-0000-000000000000'
-          }
-        }).catch(() => null);
-
-        if (settingsRes && settingsRes.ok) {
-          const settings = await settingsRes.json();
-          if (settings.protocolAccepted !== undefined) {
-            setIsProtocolAccepted(settings.protocolAccepted);
-            localStorage.setItem('isProtocolAccepted', settings.protocolAccepted ? 'true' : 'false');
-          }
-          if (settings.onboardingComplete) {
-            setIsOnboarded(true);
-            localStorage.setItem('isOnboarded', 'true');
-          }
-          if (settings.isPaid !== undefined) {
-            setIsPaidState(settings.isPaid);
-            localStorage.setItem('isPaid', settings.isPaid ? 'true' : 'false');
-          }
-        }
-
-        // Only then fetch the goal via Service
-        const goal = await empireService.getLatestEmpire().catch(() => null);
-
-        if (goal && goal.id) {
-          console.log('[EmpireContext] Syncing Active Empire ID via Service:', goal.id);
-          setActiveEmpireId(goal.id);
-          localStorage.setItem('activeEmpireId', goal.id);
-          
-          // If we found a goal, we are definitely onboarded
-          setIsOnboarded(true);
-          localStorage.setItem('isOnboarded', 'true');
-        }
-      } catch (e) {
-        console.error('Initial sync failed', e);
-      } finally {
-        setIsInitialized(true);
-      }
-    };
-    syncWithBackend();
-  }, []);
-
   const handleSetActiveEmpireId = (id: string) => {
     setActiveEmpireId(id);
     if (typeof window !== 'undefined') {
       localStorage.setItem('activeEmpireId', id);
+    }
+  };
+
+  const setHandoverComplete = (complete: boolean) => {
+    setIsHandoverComplete(complete);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isHandoverComplete', complete ? 'true' : 'false');
     }
   };
 
@@ -309,6 +192,17 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== 'undefined') {
       localStorage.setItem('isOnboarded', 'true');
       localStorage.removeItem('onboarding_step');
+
+      // Sync to backend
+      fetch(`${API_URL}/api/settings/onboardingComplete`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer mock-mobile-token',
+          'x-user-id': '00000000-0000-0000-0000-000000000000'
+        },
+        body: JSON.stringify({ value: true })
+      }).catch(err => console.error('Failed to sync onboarding status', err));
     }
   };
 
@@ -316,6 +210,17 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     setIsLinkingComplete(true);
     if (typeof window !== 'undefined') {
       localStorage.setItem('isLinkingComplete', 'true');
+
+      // Sync to backend
+      fetch(`${API_URL}/api/settings/linkingComplete`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer mock-mobile-token',
+          'x-user-id': '00000000-0000-0000-0000-000000000000'
+        },
+        body: JSON.stringify({ value: true })
+      }).catch(err => console.error('Failed to sync linking status', err));
     }
   };
 
@@ -345,13 +250,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const [empireNotes, setEmpireNotesState] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('empireNotes') || '';
-    }
-    return '';
-  });
-
   const setEmpireNotes = (notes: string) => {
     setEmpireNotesState(notes);
     if (typeof window !== 'undefined') {
@@ -363,13 +261,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     const newNotes = empireNotes ? `${empireNotes}\n\n• ${note}` : `• ${note}`;
     setEmpireNotes(newNotes);
   };
-
-  const [theme, setThemeState] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('empireTheme') || 'blue';
-    }
-    return 'blue';
-  });
 
   const setTheme = (newTheme: string) => {
     setThemeState(newTheme);
@@ -384,26 +275,12 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const [language, setLanguageState] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('empireLanguage') || 'en-US';
-    }
-    return 'en-US';
-  });
-
   const setLanguage = (lang: string) => {
     setLanguageState(lang);
     if (typeof window !== 'undefined') {
       localStorage.setItem('empireLanguage', lang);
     }
   };
-
-  const [currency, setCurrencyState] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('empireCurrency') || 'USD';
-    }
-    return 'USD';
-  });
 
   const setCurrency = (curr: string) => {
     setCurrencyState(curr);
@@ -412,38 +289,12 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Sync theme class on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Clean up previous themes
-      document.body.classList.forEach(cls => {
-        if (cls.startsWith('theme-')) document.body.classList.remove(cls);
-      });
-      document.body.classList.add(`theme-${theme}`);
-      document.documentElement.setAttribute('data-theme', theme);
-    }
-  }, [theme]);
-
-  const [autoSendRetention, setAutoSendRetentionState] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('autoSendRetention') === 'true';
-    }
-    return false;
-  });
-
   const setAutoSendRetention = (enabled: boolean) => {
     setAutoSendRetentionState(enabled);
     if (typeof window !== 'undefined') {
       localStorage.setItem('autoSendRetention', enabled ? 'true' : 'false');
     }
   };
-
-  const [isProtocolAccepted, setIsProtocolAccepted] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('isProtocolAccepted') === 'true';
-    }
-    return false;
-  });
 
   const acceptProtocols = () => {
     setIsProtocolAccepted(true);
@@ -455,20 +306,161 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token'
+          'Authorization': 'Bearer mock-mobile-token',
+          'x-user-id': '00000000-0000-0000-0000-000000000000'
         },
         body: JSON.stringify({ value: true })
       }).catch(err => console.error('Failed to sync protocol acceptance', err));
     }
   };
 
+  // Sync state from localStorage and backend after mount
+  useEffect(() => {
+    const hydrateAndSync = async () => {
+      if (typeof window === 'undefined') return;
+
+      // 1. Initial Hydration from LocalStorage
+      const savedActiveEmpireId = localStorage.getItem('activeEmpireId');
+      if (savedActiveEmpireId) setActiveEmpireId(savedActiveEmpireId);
+
+      const savedIsPaid = localStorage.getItem('isPaid') === 'true';
+      if (savedIsPaid) setIsPaidState(true);
+
+      const savedAiMode = localStorage.getItem('empireAiMode') as 'co-pilot' | 'empire';
+      if (savedAiMode) setAiModeState(savedAiMode);
+
+      try {
+        const savedPermissions = JSON.parse(localStorage.getItem('platformPermissions') || '{}');
+        setPlatformPermissions(savedPermissions);
+      } catch {}
+
+      const savedIsOnboarded = localStorage.getItem('isOnboarded') === 'true';
+      if (savedIsOnboarded) setIsOnboarded(true);
+
+      const savedIsHandoverComplete = localStorage.getItem('isHandoverComplete') === 'true';
+      if (savedIsHandoverComplete) setIsHandoverComplete(true);
+
+      const savedIsLinkingComplete = localStorage.getItem('isLinkingComplete') === 'true';
+      if (savedIsLinkingComplete) setIsLinkingComplete(true);
+
+      const savedIsNotificationModalDismissed = localStorage.getItem('isNotificationModalDismissed') === 'true';
+      if (savedIsNotificationModalDismissed) setIsNotificationModalDismissed(true);
+
+      const savedNotes = localStorage.getItem('empireNotes');
+      if (savedNotes) setEmpireNotesState(savedNotes);
+
+      const savedTheme = localStorage.getItem('empireTheme');
+      if (savedTheme) setThemeState(savedTheme);
+
+      const savedLanguage = localStorage.getItem('empireLanguage');
+      if (savedLanguage) setLanguageState(savedLanguage);
+
+      const savedCurrency = localStorage.getItem('empireCurrency');
+      if (savedCurrency) setCurrencyState(savedCurrency);
+
+      const savedAutoSend = localStorage.getItem('autoSendRetention') === 'true';
+      if (savedAutoSend) setAutoSendRetentionState(true);
+
+      const savedProtocol = localStorage.getItem('isProtocolAccepted') === 'true';
+      if (savedProtocol) setIsProtocolAccepted(true);
+
+      try {
+        const savedPlatforms = JSON.parse(localStorage.getItem('connectedPlatforms') || '[]');
+        setConnectedPlatforms(savedPlatforms);
+      } catch {}
+
+      try {
+        const savedNotificationSettings = JSON.parse(localStorage.getItem('empireNotificationSettings') || '{"sales":true,"approvals":true}');
+        setNotificationSettings(savedNotificationSettings);
+      } catch {}
+
+      // 2. Sync with Backend
+      try {
+        const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
+          headers: { 
+            'Authorization': 'Bearer mock-mobile-token',
+            'x-user-id': '00000000-0000-0000-0000-000000000000'
+          }
+        }).catch(() => null);
+
+        if (settingsRes && settingsRes.ok) {
+          const settings = await settingsRes.json();
+          if (settings.protocolAccepted !== undefined) {
+            setIsProtocolAccepted(settings.protocolAccepted);
+            localStorage.setItem('isProtocolAccepted', settings.protocolAccepted ? 'true' : 'false');
+          }
+          if (settings.onboardingComplete) {
+            setIsOnboarded(true);
+            localStorage.setItem('isOnboarded', 'true');
+          }
+          if (settings.isPaid !== undefined) {
+            setIsPaidState(settings.isPaid);
+            localStorage.setItem('isPaid', settings.isPaid ? 'true' : 'false');
+          }
+        }
+
+        const goal = await empireService.getLatestEmpire().catch(() => null);
+        if (goal && goal.id) {
+          setActiveEmpireId(goal.id);
+          localStorage.setItem('activeEmpireId', goal.id);
+          setIsOnboarded(true);
+          localStorage.setItem('isOnboarded', 'true');
+        }
+      } catch (e) {
+        console.error('Initial backend sync failed', e);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    hydrateAndSync();
+  }, []);
+
+  // Sync theme class
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      document.body.classList.forEach(cls => {
+        if (cls.startsWith('theme-')) document.body.classList.remove(cls);
+      });
+      document.body.classList.add(`theme-${theme}`);
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  }, [theme]);
+
+  // Demo Notifications
+  useEffect(() => {
+    if (isLinkingComplete && isInitialized) {
+      const demoNotifications: Notification[] = [
+        {
+          id: '1',
+          title: 'New Sale!',
+          message: 'Someone just ordered your "Digital Zen Planner" on Etsy. +$24.99',
+          type: 'sale',
+          timestamp: new Date(),
+          read: false
+        },
+        {
+          id: '2',
+          title: 'Content Ready',
+          message: '3 TikTok marketing videos are ready for your approval in the Review Queue.',
+          type: 'approval',
+          timestamp: new Date(Date.now() - 1000 * 60 * 30),
+          read: false
+        }
+      ];
+      setNotifications(demoNotifications);
+    }
+  }, [isLinkingComplete, isInitialized]);
+
   return (
     <EmpireContext.Provider value={{
       activeEmpireId,
       setActiveEmpireId: handleSetActiveEmpireId,
       isOnboarded,
+      isHandoverComplete,
       isInitialized,
       completeOnboarding,
+      setHandoverComplete,
       activeSetupPlatform,
       startSetup,
       finishSetup,
@@ -497,8 +489,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       acceptProtocols,
       isDashboardLoaded,
       setDashboardLoaded,
-
-      // Notifications
       notifications,
       unreadCount,
       markAsRead,
@@ -507,7 +497,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       updateNotificationSettings,
       isNotificationModalDismissed,
       dismissNotificationModal,
-
       toasts,
       addToast,
       removeToast

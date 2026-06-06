@@ -169,6 +169,22 @@ export const socialProofService = {
     } catch (e) {
       return false;
     }
+  },
+
+  async reject(id: string): Promise<boolean> {
+    try {
+      const res = await fetch(`${API_URL}/api/reviews/reject`, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify({ 
+          userId: '00000000-0000-0000-0000-000000000000',
+          reviewId: id
+        })
+      });
+      return res.ok;
+    } catch (e) {
+      return false;
+    }
   }
 };
 
@@ -287,20 +303,44 @@ export const analyticsService = {
   async getRevenueTransactions(): Promise<RevenueTransaction[]> {
     try {
       const res = await fetch(`${API_URL}/api/analytics/transactions`, { headers: HEADERS });
-      if (res.ok) return await res.json();
+      if (res.ok) {
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      }
     } catch (e) {}
     return [];
   },
 
   async getRevenueMilestones(): Promise<RevenueMilestone[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/analytics/milestones`, { headers: HEADERS });
+      if (res.ok) {
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      }
+    } catch (e) {}
     return [];
   },
 
   async getSocialEngagement(): Promise<EngagementMetric[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/analytics/engagement`, { headers: HEADERS });
+      if (res.ok) {
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      }
+    } catch (e) {}
     return [];
   },
 
   async getActivityStream(): Promise<ActivityEvent[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/analytics/activity`, { headers: HEADERS });
+      if (res.ok) {
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      }
+    } catch (e) {}
     return [];
   },
 
@@ -313,6 +353,13 @@ export const analyticsService = {
   },
 
   async getStrategySuggestions(): Promise<any[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/analytics/strategies`, { headers: HEADERS });
+      if (res.ok) {
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      }
+    } catch (e) {}
     return [];
   }
 };

@@ -48,7 +48,7 @@ import { io } from 'socket.io-client';
 
 // Transition Screen (Moved outside to avoid re-renders)
 const EstablishedScreen = () => (
-  <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6 text-center p-6">
+  <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6 text-center p-6">
     <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
     <div className="flex flex-col items-center gap-2">
       <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
@@ -62,6 +62,7 @@ const EstablishedScreen = () => (
 export default function Onboarding() {
   const {
     completeOnboarding,
+    setHandoverComplete,
     setActiveEmpireId,
     isOnboarded,
     isInitialized,
@@ -119,6 +120,7 @@ export default function Onboarding() {
     }
   }, [data]);
 
+  const [showDownloadScreen, setShowDownloadScreen] = useState(false);
   const [isActivating, setIsActivating] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
@@ -137,11 +139,13 @@ export default function Onboarding() {
     "Neural Discovery Complete."
   ];
 
-  // Effect to handle redirection when onboarded
+  // Effect to handle redirection when onboarded - DISABLED FOR VISION TESTING
+  /*
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    if (typeof window !== 'undefined' && isInitialized && isOnboarded) {
+    if (typeof window !== 'undefined' && isInitialized && isOnboarded && isHandoverComplete) {
       // Allow redirect in both Standalone AND Browser now to prevent being stuck
+      // ONLY if handover is actually complete for this session
       timeoutId = setTimeout(() => {
         router.replace('/dashboard');
       }, 1500);
@@ -149,7 +153,8 @@ export default function Onboarding() {
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [isInitialized, isOnboarded, router]);
+  }, [isInitialized, isOnboarded, isHandoverComplete, router]);
+  */
 
   useEffect(() => {
     if (isActivating && data.automationMode === 'empire' && !showDiscoveryReview) {
@@ -183,6 +188,7 @@ export default function Onboarding() {
 
       socket.on('empire-initialized', (data) => {
         setTimeout(() => {
+          setHandoverComplete(true);
           completeOnboarding();
         }, 1500);
       });
@@ -195,6 +201,7 @@ export default function Onboarding() {
           });
           const goal = await res.json();
           if (goal && goal.status === 'active') {
+             setHandoverComplete(true);
              completeOnboarding();
           }
         } catch (e) {}
@@ -250,15 +257,17 @@ export default function Onboarding() {
         if (result.empire?.id) {
           setActiveEmpireId(result.empire.id);
         }
+        setHandoverComplete(true);
         completeOnboarding();
       }
     } catch (error) {
       console.error('Error during activation:', error);
       setTimeout(() => {
+        setHandoverComplete(true);
         completeOnboarding();
       }, 5000);
     }
-  }, [data, setActiveEmpireId, completeOnboarding]);
+  }, [data, setActiveEmpireId, completeOnboarding, setHandoverComplete]);
 
   const handleActivate = async () => {
     setIsActivating(true);
@@ -305,13 +314,10 @@ export default function Onboarding() {
   };
 
   // Bypass enforcement for initial setup stability
-  if (isInitialized && (isOnboarded || currentStep > 5) && typeof window !== 'undefined') {
+  if (isInitialized && isHandoverComplete && (isOnboarded || currentStep > 5) && typeof window !== 'undefined') {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
     if (!isStandalone) {
-       // Force complete if we are at the end
-       if (!isOnboarded) completeOnboarding();
-       
-       // Auto-redirect to dashboard if we are already onboarded, even in browser
+       // Auto-redirect to dashboard if handover is complete
        setTimeout(() => {
          router.replace('/dashboard');
        }, 500);
@@ -320,13 +326,72 @@ export default function Onboarding() {
 
   if (!isInitialized) {
     return (
-      <div className="fixed inset-0 z-[200] bg-slate-950 flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
+      <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
         <div className="flex flex-col items-center gap-2">
-          <h2 className="text-blue-200 font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
             Synchronizing Nodes
           </h2>
+          <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">Connecting to Command Center...</p>
         </div>
+      </div>
+    );
+  }
+
+  if (showDownloadScreen) {
+    return (
+      <div className="min-h-screen w-full bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+        <PWAInstallPrompt onDismiss={() => {
+          setIsPWADismissed(true);
+          handleActivate();
+        }} />
+        <div className="absolute inset-0 opacity-20">
+          <svg className="w-full h-full">
+            <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="white" strokeWidth="0.5" />
+            </pattern>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative z-10 w-full max-w-4xl"
+        >
+          <div className="text-center space-y-12">
+            <div className="relative inline-block mb-8">
+              <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight uppercase italic">
+                Download the App to Finish.
+              </h2>
+              <div className="flex items-center justify-center gap-3 min-h-6">
+                <p className="text-primary font-black tracking-widest text-xs uppercase">
+                  Add "EmpireLaunch AI" to your Home Screen to unlock the Command Center.
+                </p>
+              </div>
+            </div>
+
+            <div className="max-w-sm mx-auto space-y-6">
+              <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-4">
+                This ensures a secure, full-screen environment for your business operations.
+              </p>
+              
+              <button
+                onClick={() => {
+                  setIsPWADismissed(true);
+                  handleActivate();
+                }}
+                className="w-full py-4 bg-slate-900 border border-primary/40 text-primary font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-primary hover:text-slate-900 transition-all"
+              >
+                Already Installed / Skip
+              </button>
+            </div>
+          </div>
+        </motion.div>
       </div>
     );
   }
@@ -334,7 +399,6 @@ export default function Onboarding() {
   if (isActivating) {
     return (
       <div className="min-h-screen w-full bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-        <PWAInstallPrompt onDismiss={handlePWADismiss} />
         <div className="absolute inset-0 opacity-20">
           <svg className="w-full h-full">
             <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
@@ -680,7 +744,7 @@ export default function Onboarding() {
               >
                 <ConsultantToolkit 
                   businessAngle={data.angle} 
-                  onToolkitComplete={handleActivate}
+                  onToolkitComplete={() => setShowDownloadScreen(true)}
                 />
               </motion.div>
             )}

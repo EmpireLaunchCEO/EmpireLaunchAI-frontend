@@ -37,7 +37,7 @@
   --surface-border-rgb: 255, 0, 153;
 }
 
-[data-theme='teal'] {
+[data-theme='vibrant-cyan'] {
   --primary-rgb: 0, 255, 255; /* Vibrant Cyan */
   --secondary-rgb: 8, 145, 178;
   --background-rgb: 10, 5, 25;

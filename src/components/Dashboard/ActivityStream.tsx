@@ -31,10 +31,11 @@ export function ActivityStream() {
     
     // Filter activities based on linked platforms
     // We allow 'AI' and 'Empire' types as they are system-level
-    const filtered = data.filter(activity => {
-      const platform = activity.platform.toLowerCase();
+    const filtered = (data || []).filter(activity => {
+      if (!activity) return false;
+      const platform = (activity.platform || 'Empire').toLowerCase();
       if (platform === 'ai' || platform === 'empire') return true;
-      return connectedPlatforms.some(cp => cp.toLowerCase() === platform);
+      return (connectedPlatforms || []).some(cp => cp && cp.toLowerCase() === platform);
     });
 
     setActivities(filtered);
@@ -128,7 +129,7 @@ export function ActivityStream() {
                     {activity.type === 'sale' && (
                       <div className="mt-2 inline-flex items-center gap-1.5 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100">
                           <span className="w-1 h-1 rounded-full bg-emerald-500" />
-                          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest Revenue Locked">Revenue Locked</span>
+                          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Revenue Locked</span>
                       </div>
                     )}
                   </div>

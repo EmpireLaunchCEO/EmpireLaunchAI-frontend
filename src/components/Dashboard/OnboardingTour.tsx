@@ -206,7 +206,9 @@ export function OnboardingTour() {
   if (!isVisible) return null;
 
   const step = tourSteps[currentStep];
+  if (!step) return null;
   const Icon = step.icon;
+  if (!Icon) return null;
 
   return (
     <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-4 md:p-6 bg-slate-900/60 pointer-events-none overflow-hidden max-w-full">
@@ -216,9 +218,9 @@ export function OnboardingTour() {
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: -20 }}
-          className="bg-teal-500 rounded-[32px] md:rounded-[40px] shadow-2xl max-w-[calc(100vw-32px)] sm:max-w-sm w-full overflow-hidden border-4 border-white relative pointer-events-auto mx-auto"
+          className="bg-slate-900 rounded-[32px] md:rounded-[40px] shadow-2xl max-w-[calc(100vw-32px)] sm:max-w-sm w-full overflow-hidden border-4 border-white/10 relative pointer-events-auto mx-auto"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-400 via-teal-500 to-emerald-600 opacity-90" />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 opacity-90" />
           
           <div className="relative p-5 md:p-8 space-y-3 md:space-y-6">
             <div className="flex items-center justify-between">
@@ -281,26 +283,26 @@ export function OnboardingTour() {
         >
           {step.target?.startsWith('nav-') ? (
             <>
-              <div className="bg-teal-500 text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-white whitespace-nowrap animate-pulse shadow-teal-500/50">
+              <div className="bg-slate-900 text-primary px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-primary whitespace-nowrap animate-pulse">
                 Look Here
               </div>
               <motion.div
                 animate={{ y: [0, 5, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
-                <ArrowDown className="w-10 h-10 text-teal-500 drop-shadow-xl fill-teal-500 stroke-white stroke-[1px]" />
+                <ArrowDown className="w-10 h-10 text-primary drop-shadow-xl fill-primary stroke-white stroke-[1px]" />
               </motion.div>
             </>
           ) : (
             <div className="flex flex-col-reverse items-center gap-1 translate-y-[100%]">
-              <div className="bg-teal-500 text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-white whitespace-nowrap animate-pulse shadow-teal-500/50">
+              <div className="bg-slate-900 text-primary px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-2xl border-2 border-primary whitespace-nowrap animate-pulse">
                 Look Here
               </div>
               <motion.div
                 animate={{ y: [0, -5, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
-                <ArrowDown className="w-10 h-10 text-teal-500 drop-shadow-xl fill-teal-500 stroke-white stroke-[1px] rotate-180" />
+                <ArrowDown className="w-10 h-10 text-primary drop-shadow-xl fill-primary stroke-white stroke-[1px] rotate-180" />
               </motion.div>
             </div>
           )}

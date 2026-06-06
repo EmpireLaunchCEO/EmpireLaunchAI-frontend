@@ -33,9 +33,9 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
     load();
   }, []);
 
-  const totalViews = socialMetrics.reduce((acc, m) => acc + m.views, 0);
-  const totalEngagement = socialMetrics.reduce((acc, m) => acc + m.likes + m.comments + m.shares, 0);
-  const avgConversion = socialMetrics.reduce((acc, m) => acc + m.conversionRate, 0) / (socialMetrics.length || 1);
+  const totalViews = (socialMetrics || []).reduce((acc, m) => acc + (m?.views || 0), 0);
+  const totalEngagement = (socialMetrics || []).reduce((acc, m) => acc + (m?.likes || 0) + (m?.comments || 0) + (m?.shares || 0), 0);
+  const avgConversion = (socialMetrics || []).reduce((acc, m) => acc + (m?.conversionRate || 0), 0) / (socialMetrics && socialMetrics.length > 0 ? socialMetrics.length : 1);
 
   if (loading) return null;
 
@@ -117,23 +117,23 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                          <span className="text-sm font-bold text-white">{metric.platform}</span>
-                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{(metric.views / totalViews * 100).toFixed(0)}%</span>
+                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{(totalViews > 0 ? (metric.views / totalViews * 100) : 0).toFixed(0)}%</span>
                       </div>
                       <div className="flex items-center gap-4">
                          <div className="flex items-center gap-1.5 text-slate-400">
                             <Heart className="w-3 h-3" />
-                            <span className="text-[10px] font-bold">{metric.likes.toLocaleString()}</span>
+                            <span className="text-[10px] font-bold">{(metric.likes || 0).toLocaleString()}</span>
                          </div>
                          <div className="flex items-center gap-1.5 text-slate-400">
                             <Share2 className="w-3 h-3" />
-                            <span className="text-[10px] font-bold">{metric.shares.toLocaleString()}</span>
+                            <span className="text-[10px] font-bold">{(metric.shares || 0).toLocaleString()}</span>
                          </div>
                       </div>
                    </div>
                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
-                        animate={{ width: `${(metric.views / totalViews * 100)}%` }}
+                        animate={{ width: `${(totalViews > 0 ? (metric.views / totalViews * 100) : 0)}%` }}
                         transition={{ delay: idx * 0.2, duration: 1 }}
                         className={cn(
                           "h-full rounded-full",
@@ -177,20 +177,20 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
            </div>
 
            <div className="space-y-6">
-              {health?.platformBreakdown?.map((platform, idx) => (
-                <div key={platform.platform} className="flex items-center justify-between p-4 rounded-[24px] bg-white/5 border border-white/5 group hover:bg-white/10 transition-all">
+              {(health?.platformBreakdown || []).map((platform, idx) => (
+                <div key={platform?.platform || idx} className="flex items-center justify-between p-4 rounded-[24px] bg-white/5 border border-white/5 group hover:bg-white/10 transition-all">
                    <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-xl bg-slate-950 border border-white/10 flex items-center justify-center font-black text-[10px]">
-                         {platform.platform ? platform.platform.substring(0, 2).toUpperCase() : '??'}
+                         {String(platform?.platform || '??').substring(0, 2).toUpperCase()}
                       </div>
                       <div>
-                         <p className="text-sm font-bold text-white">{platform.platform || 'Unknown'}</p>
+                         <p className="text-sm font-bold text-white">{platform?.platform || 'Unknown'}</p>
                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Connected</p>
                       </div>
                    </div>
                    <div className="text-right">
-                      <p className="text-sm font-black text-white">${(platform.revenue || 0).toLocaleString()}</p>
-                      <p className="text-[9px] font-bold text-emerald-500">{( (platform.revenue || 0) / (health.revenue || 1) * 100).toFixed(1)}%</p>
+                      <p className="text-sm font-black text-white">${(platform?.revenue || 0).toLocaleString()}</p>
+                      <p className="text-[9px] font-bold text-emerald-500">{( (platform?.revenue || 0) / (health?.revenue || 1) * 100).toFixed(1)}%</p>
                    </div>
                 </div>
               ))}

@@ -1,27 +1,43 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useEmpire } from '@/lib/EmpireContext';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Lock, CreditCard, Sparkles, CheckCircle2, ArrowRight, Languages, Coins, ChevronDown } from 'lucide-react';
 import { BrandedGlobe } from './BrandedGlobe';
 
 export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
-  const { isPaid, setIsPaid, language, setLanguage, currency, setCurrency } = useEmpire();
+  const router = useRouter();
+  const { isPaid, setIsPaid, language, setLanguage, currency, setCurrency, isInitialized, isHandoverComplete } = useEmpire();
   const [isProcessing, setIsProcessing] = useState(false);
   const [showKeyInput, setShowKeyInput] = useState(false);
   const [accessKey, setAccessKey] = useState('');
   const [error, setError] = useState('');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // REDIRECT SAFETY CATCH: DISABLED FOR VISION TESTING
+  /*
+  useEffect(() => {
+    if (mounted && isInitialized && !isPaid && !isHandoverComplete) {
+      router.replace('/');
+    }
+  }, [mounted, isInitialized, !isPaid, !isHandoverComplete, router]);
+  */
 
   // PWA Standalone Auto-Unlock
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
+  useEffect(() => {
+    if (mounted) {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
       if (isStandalone && !isPaid) {
         setIsPaid(true);
       }
     }
-  }, [isPaid, setIsPaid]);
+  }, [isPaid, setIsPaid, mounted]);
 
   const handleSimulatePayment = () => {
     setIsProcessing(true);
@@ -49,6 +65,23 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
       }
     }, 1500);
   };
+
+  // Ensure first render matches server (which doesn't have isPaid)
+  if (!mounted || !isInitialized) {
+    return (
+      <div className="fixed inset-0 z-[999] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+            Neural Path Authorized
+          </h2>
+          <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">
+            Synchronizing Neural Path...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (isPaid) {
     return <>{children}</>;

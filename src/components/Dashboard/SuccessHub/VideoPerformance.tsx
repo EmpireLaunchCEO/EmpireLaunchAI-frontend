@@ -58,7 +58,7 @@ export const VideoPerformance = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {MOCK_VIDEOS.map((video, idx) => (
+        {filteredVideos.map((video, idx) => (
           <motion.div
             key={video.id}
             initial={{ opacity: 0, y: 20 }}

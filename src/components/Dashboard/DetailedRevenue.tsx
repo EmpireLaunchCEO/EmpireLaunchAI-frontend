@@ -32,20 +32,20 @@ export function DetailedRevenue() {
       ]);
       
       // Filter transactions based on linked platforms
-      const filteredT = tData.filter(t => 
-        connectedPlatforms.some(cp => cp.toLowerCase() === t.platform.toLowerCase())
+      const filteredT = (tData || []).filter(t => 
+        t && t.platform && (connectedPlatforms || []).some(cp => cp && cp.toLowerCase() === t.platform.toLowerCase())
       );
       
-      setTransactions(filteredT);
-      setMilestones(mData);
+      setTransactions(filteredT || []);
+      setMilestones(mData || []);
       setLoading(false);
     }
     loadData();
   }, [connectedPlatforms]);
 
-  const totalRevenue = transactions.reduce((acc, t) => acc + t.amount, 0);
-  const activeMilestone = milestones.find(m => !m.isCompleted) || milestones[milestones.length - 1];
-  const progressPercent = activeMilestone ? (activeMilestone.current / (activeMilestone.target || 1)) * 100 : 0;
+  const totalRevenue = (transactions || []).reduce((acc, t) => acc + (t?.amount || 0), 0);
+  const activeMilestone = (milestones || []).find(m => m && !m.isCompleted) || (milestones && milestones.length > 0 ? milestones[milestones.length - 1] : null);
+  const progressPercent = activeMilestone ? ((activeMilestone.current || 0) / (activeMilestone.target || 1)) * 100 : 0;
 
   if (loading) {
     return <div className="h-40 flex items-center justify-center">
@@ -76,8 +76,8 @@ export function DetailedRevenue() {
           <div className="relative z-10 space-y-4">
              <div className="flex justify-between items-end">
                <div className="flex items-end gap-2">
-                 <span className="text-4xl font-black text-foreground">${activeMilestone?.current.toLocaleString()}</span>
-                 <span className="text-muted-foreground font-bold mb-1">/ ${activeMilestone?.target.toLocaleString()}</span>
+                 <span className="text-4xl font-black text-foreground">${activeMilestone?.current?.toLocaleString() || '0'}</span>
+                 <span className="text-muted-foreground font-bold mb-1">/ ${activeMilestone?.target?.toLocaleString() || '1,000'}</span>
                </div>
                <span className="text-xs font-bold text-primary">+${((activeMilestone?.target || 0) - (activeMilestone?.current || 0)).toLocaleString()} remaining</span>
              </div>

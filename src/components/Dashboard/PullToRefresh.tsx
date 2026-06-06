@@ -38,7 +38,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   }, []);
 
   useEffect(() => {
-    return y.onChange((latest) => {
+    return y.on("change", (latest) => {
       if (!isRefreshing) {
         setPullProgress(Math.min(latest / THRESHOLD, 1));
       }

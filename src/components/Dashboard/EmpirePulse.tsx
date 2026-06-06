@@ -29,7 +29,7 @@ export function EmpirePulse() {
         approvalService.getPendingRequests()
       ]);
       setPulse(pulseData);
-      setHasPendingApprovals(approvals.length > 0);
+      setHasPendingApprovals(Array.isArray(approvals) && approvals.length > 0);
       setLoading(false);
     }
     loadData();
@@ -41,9 +41,11 @@ export function EmpirePulse() {
         approvalService.getPendingRequests()
       ]);
       // Randomize progress a bit for the demo effect
-      data.progress = Math.min(100, data.progress + Math.floor(Math.random() * 5));
-      setPulse({ ...data });
-      setHasPendingApprovals(approvals.length > 0);
+      if (data) {
+        data.progress = Math.min(100, (data.progress || 0) + Math.floor(Math.random() * 5));
+        setPulse({ ...data });
+      }
+      setHasPendingApprovals(Array.isArray(approvals) && approvals.length > 0);
     }, 5000);
 
     return () => clearInterval(interval);
