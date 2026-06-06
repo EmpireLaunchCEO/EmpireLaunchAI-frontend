@@ -22,7 +22,7 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
   return (
     <motion.div
       className={cn(
-        "rounded-full overflow-hidden flex items-center justify-center bg-slate-900 border border-white/10 relative shrink-0",
+        "rounded-full overflow-hidden flex items-center justify-center bg-theme-background border border-theme relative shrink-0",
         sizeClasses[size],
         className
       )}
@@ -36,12 +36,10 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
         ease: "easeInOut"
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-tr from-[#0070ff] via-[#7000ff] to-[#0070ff] opacity-40 blur-md" />
-      
       {/* CSS Globe Fallback structure */}
       <div className={cn(
         "absolute inset-0 flex items-center justify-center fallback-globe rounded-full transition-opacity duration-700",
-        isLoaded ? "opacity-20" : "opacity-60"
+        isLoaded ? "opacity-0" : "opacity-40"
       )}>
         <div className="w-full h-full rounded-full border border-primary/30" />
         <div className="absolute w-[1px] h-full bg-primary/20" />
@@ -50,12 +48,11 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
         <div className="absolute w-full h-full rounded-full border-y border-primary/20 scale-y-50" />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/40 to-purple-700/40" />
       <img
-        src="/apple-v11.png"
+        src="/branded-globe.png"
         alt="Empire Globe"
         className={cn(
-          "w-full h-full object-cover scale-110 relative z-10 brightness-110 contrast-125 transition-opacity duration-1000",
+          "w-full h-full object-cover scale-110 relative z-10 transition-opacity duration-1000",
           isLoaded ? "opacity-100" : "opacity-0"
         )}
         style={{ imageRendering: 'auto' }}
@@ -64,9 +61,6 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
           e.currentTarget.style.display = 'none';
         }}
       />
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-         <div className="w-1/2 h-1/2 rounded-full bg-primary/30 blur-xl animate-pulse" />
-      </div>
     </motion.div>
   );
 }

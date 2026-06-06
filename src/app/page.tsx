@@ -38,7 +38,7 @@ export default function LandingPage() {
     // Only redirect if NOT in a forced preview state
     const isForcedPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
     
-    if (isMounted && isInitialized && (isOnboarded || isPaid) && !isForcedPreview) {
+    if (isMounted && isInitialized && isOnboarded && isPaid && !isForcedPreview) {
       router.replace('/dashboard');
     }
   }, [isInitialized, isOnboarded, isPaid, isMounted, router]);
@@ -53,7 +53,7 @@ export default function LandingPage() {
 
   // Only show the sync overlay if we are initialized AND determined the user should be fast-tracked
   // For the Owner, this might flicker, but for Customers, they will land on Step 1 immediately.
-  const isFastTrack = isInitialized && isHandoverComplete && (isOnboarded || isPaid);
+  const isFastTrack = isInitialized && isHandoverComplete && isOnboarded && isPaid;
   
   return (
     <div className="min-h-screen bg-[#0a0519] selection:bg-blue-500/30 overflow-x-hidden">
@@ -122,7 +122,7 @@ export default function LandingPage() {
               onClick={() => {
                 localStorage.clear();
                 sessionStorage.clear();
-                router.push('/onboarding?preview=true');
+                window.location.href = '/onboarding?preview=true';
               }}
               className="group relative bg-primary text-slate-950 px-10 py-5 rounded-[24px] font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(0,229,255,0.3)] flex items-center justify-center gap-3 w-full uppercase tracking-tighter italic"
             >

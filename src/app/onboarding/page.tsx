@@ -154,13 +154,13 @@ export default function Onboarding() {
     );
 
     // If they open the PWA and were already at the end, just go to dashboard
-    if (isStandalone && isMounted && isInitialized && (isOnboarded || currentStep >= 5)) {
+    if (isStandalone && isMounted && isInitialized && (isOnboarded || currentStep >= 5) && isPaid) {
        console.log('[PWA] Standalone detected at end-state, fast-tracking...');
        router.replace('/dashboard');
        return;
     }
 
-    if (!isPreview && isMounted && isInitialized && isOnboarded) {
+    if (!isPreview && isMounted && isInitialized && isOnboarded && isPaid) {
       // Small delay to allow state to settle
       const timer = setTimeout(() => {
         if (active) {
