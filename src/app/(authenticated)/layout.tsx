@@ -4,6 +4,7 @@ import { MobileNav } from "@/components/MobileNav";
 import { SubscriptionGuard } from "@/components/SubscriptionGuard";
 import { OnboardingTour } from "@/components/Dashboard/OnboardingTour";
 import { NotificationBell } from "@/components/Dashboard/NotificationBell";
+import { Suspense } from "react";
 
 export default function AuthenticatedLayout({
   children,
@@ -15,7 +16,9 @@ export default function AuthenticatedLayout({
       <div className="flex bg-theme-background min-h-screen relative overflow-x-hidden max-w-full">
         <EmpireSwitcher />
         <Sidebar />
-        <OnboardingTour />
+        <Suspense fallback={null}>
+          <OnboardingTour />
+        </Suspense>
         <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[332px] overflow-x-hidden">
           <div className="absolute top-8 right-8 z-[60] hidden lg:block">
             <NotificationBell id="notification-bell-desktop" />
