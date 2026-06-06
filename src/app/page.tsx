@@ -21,7 +21,9 @@ import { BrandedGlobe } from "@/components/BrandedGlobe";
 import { TermsModal } from '@/components/Legal/TermsModal';
 import { useEmpire } from '@/lib/EmpireContext';
 
-export default function LandingPage() {
+import { Suspense } from 'react';
+
+function LandingPageContent() {
   const router = useRouter();
   const { isOnboarded, isPaid, isInitialized, isHandoverComplete } = useEmpire();
   const [isTermsOpen, setIsTermsOpen] = useState(false);
@@ -156,6 +158,18 @@ export default function LandingPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function LandingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#0a0519] flex flex-col items-center justify-center gap-6">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+      </div>
+    }>
+      <LandingPageContent />
+    </Suspense>
   );
 }
 

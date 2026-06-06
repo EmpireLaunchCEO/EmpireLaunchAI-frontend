@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { 
   User, 
   Share2, 
@@ -171,7 +171,6 @@ const SupportHub = () => (
 );
 
 export default function SettingsPage() {
-  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('link-center');
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
   const { theme, setTheme, aiMode, setAiMode } = useEmpire();
@@ -228,26 +227,29 @@ export default function SettingsPage() {
           </div>
         </header>
 
-        <div className="space-y-8 relative">
-          {/* Primary Tabs - Matching Empire Center Style with Wrap for Visibility */}
-          <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                id={`tab-${tab.id}`}
-                onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  "flex-1 min-w-[120px] sm:min-w-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-[18px] font-black text-[9px] sm:text-[10px] uppercase tracking-tighter transition-all",
-                  activeTab === tab.id
-                    ? "bg-theme-surface text-foreground shadow-sm border border-theme"
-                    : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
-                )}
-              >
-                <tab.icon className={cn("w-3.5 h-3.5", activeTab === tab.id ? "text-primary" : "")} />
-                <span className="truncate">{tab.name}</span>
-              </button>
-            ))}
-          </div>
+        <div className="flex flex-col lg:flex-row gap-8 md:gap-12 relative">
+          {/* Sidebar Navigation - Long Rounded Box down the side */}
+          <aside className="lg:w-72 shrink-0">
+            <div className="flex flex-row lg:flex-col bg-theme-background p-1.5 rounded-[24px] lg:rounded-[32px] w-full border-2 border-theme sticky top-0 lg:top-8 z-20 gap-1.5 overflow-x-auto no-scrollbar lg:overflow-visible">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  id={`tab-${tab.id}`}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "flex-1 lg:flex-none flex items-center justify-center lg:justify-start gap-2 px-4 lg:px-6 py-3 lg:py-4 rounded-[18px] lg:rounded-[24px] font-black text-[9px] lg:text-[10px] uppercase tracking-tighter transition-all whitespace-nowrap lg:whitespace-normal",
+                    activeTab === tab.id
+                      ? "bg-theme-surface text-foreground shadow-sm border border-theme"
+                      : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
+                  )}
+                >
+                  <tab.icon className={cn("w-3.5 h-3.5 lg:w-4 h-4", activeTab === tab.id ? "text-primary" : "")} />
+                  <span className="truncate">{tab.name}</span>
+                  {activeTab === tab.id && <ChevronRight className="hidden lg:block w-3 h-3 ml-auto text-primary" />}
+                </button>
+              ))}
+            </div>
+          </aside>
 
           <main className="flex-1">
             {activeTab === 'financials' && (

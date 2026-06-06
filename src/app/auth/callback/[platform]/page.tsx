@@ -7,7 +7,9 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 
-export default function AuthCallback() {
+import { Suspense } from 'react';
+
+function AuthCallbackContent() {
   const router = useRouter();
   const { isOnboarded } = useEmpire();
   const params = useParams();
@@ -76,7 +78,7 @@ export default function AuthCallback() {
     };
 
     completeConnection();
-  }, [code, platform, state, router]);
+  }, [code, platform, state, router, isOnboarded]);
 
   return (
     <div className="min-h-screen bg-theme-background flex items-center justify-center p-8">
@@ -117,5 +119,17 @@ export default function AuthCallback() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AuthCallback() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-theme-background flex items-center justify-center p-8">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.4)]" />
+      </div>
+    }>
+      <AuthCallbackContent />
+    </Suspense>
   );
 }

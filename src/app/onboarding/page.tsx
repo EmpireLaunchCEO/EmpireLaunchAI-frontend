@@ -57,7 +57,9 @@ const EstablishedScreen = () => (
   </div>
 );
 
-export default function Onboarding() {
+import { Suspense } from 'react';
+
+function OnboardingContent() {
   const router = useRouter();
   const empire = useEmpire();
   
@@ -173,7 +175,7 @@ export default function Onboarding() {
         clearTimeout(timer);
       };
     }
-  }, [isInitialized, isOnboarded, isMounted, router, isPreview, currentStep]);
+  }, [isInitialized, isOnboarded, isMounted, router, isPreview, currentStep, isPaid]);
 
   const finalizeActivation = useCallback(async () => {
     try {
@@ -736,5 +738,22 @@ export default function Onboarding() {
         }}
       />
     </div>
+  );
+}
+
+export default function Onboarding() {
+  return (
+    <Suspense fallback={
+      <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
+        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+            Loading Interface...
+          </h2>
+        </div>
+      </div>
+    }>
+      <OnboardingContent />
+    </Suspense>
   );
 }
