@@ -109,7 +109,11 @@ export default function LandingPage() {
 
             {/* Main Action */}
             <button
-              onClick={() => router.push('/onboarding')}
+              onClick={() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                router.push('/onboarding?preview=true');
+              }}
               className="group relative bg-primary text-slate-950 px-10 py-5 rounded-[24px] font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(0,229,255,0.3)] flex items-center justify-center gap-3 w-full uppercase tracking-tighter italic"
             >
               Authorize Engine

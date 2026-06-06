@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronRight,
@@ -61,7 +61,7 @@ export default function Onboarding() {
   const router = useRouter();
   const empire = useEmpire();
   
-  // Safe destructuring to prevent crashes if empire is undefined
+  // Safe destructuring
   const {
     completeOnboarding = () => {},
     setHandoverComplete = () => {},
@@ -76,7 +76,7 @@ export default function Onboarding() {
     setCurrency = () => {},
     isProtocolAccepted = false,
     acceptProtocols = () => {},
-    isHandoverComplete = false
+    isHandoverComplete: handoverStatus = false
   } = empire || {};
   
   const userId = '00000000-0000-0000-0000-000000000000'; 
@@ -103,13 +103,13 @@ export default function Onboarding() {
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
   const [realLogs, setRealLogs] = useState<string[]>([]);
 
-  const discoveryLogs = [
+  const discoveryLogs = useMemo(() => [
     "Scanning linked email accounts...",
     "Searching for marketplace API keys...",
     "Decrypting secure social tokens...",
     "Mapping automated growth paths...",
     "Neural Discovery Complete."
-  ];
+  ], []);
 
   useEffect(() => {
     setIsMounted(true);
@@ -139,15 +139,21 @@ export default function Onboarding() {
     }
   }, [data, isMounted]);
 
-  // Handle Redirection
+  const searchParams = useSearchParams();
+  const isPreview = searchParams.get('preview') === 'true';
+
+  // Handle Redirection - CRITICAL FIX: If already onboarded, we don't need handoverStatus
   useEffect(() => {
-    if (isMounted && isInitialized && isHandoverComplete && (isOnboarded || currentStep > 5)) {
+    if (!isPreview && isMounted && isInitialized && (isOnboarded || handoverStatus || currentStep > 5)) {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+      
+      // Force direct dashboard access for onboarded users
       const timer = setTimeout(() => {
         router.replace('/dashboard');
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [isInitialized, isHandoverComplete, isOnboarded, currentStep, isMounted, router]);
+  }, [isInitialized, handoverStatus, isOnboarded, currentStep, isMounted, router, isPreview]);
 
   const finalizeActivation = useCallback(async () => {
     try {
@@ -176,10 +182,9 @@ export default function Onboarding() {
       }
     } catch (error) {
       console.error('Error during activation:', error);
-      setTimeout(() => {
-        setHandoverComplete(true);
-        completeOnboarding();
-      }, 5000);
+      // Fallback: Proceed anyway
+      setHandoverComplete(true);
+      completeOnboarding();
     }
   }, [data, setActiveEmpireId, completeOnboarding, setHandoverComplete]);
 
@@ -222,6 +227,25 @@ export default function Onboarding() {
     setIsTermsOpen(true);
   };
 
+  // Discovery Log Sequence
+  useEffect(() => {
+    if (isActivating && data.automationMode === 'empire' && !showDiscoveryReview && isMounted) {
+      const interval = setInterval(() => {
+        setDiscoveryLogIndex((prev) => {
+          const next = Math.min(prev + 1, discoveryLogs.length - 1);
+          if (next === discoveryLogs.length - 1) {
+            clearInterval(interval);
+            setTimeout(() => {
+              setShowDiscoveryReview(true);
+            }, 1000);
+          }
+          return next;
+        });
+      }, 800);
+      return () => clearInterval(interval);
+    }
+  }, [isActivating, data.automationMode, showDiscoveryReview, isMounted, discoveryLogs]);
+
   if (!isMounted || !isInitialized) {
     return (
       <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
@@ -234,6 +258,11 @@ export default function Onboarding() {
         </div>
       </div>
     );
+  }
+
+  // If onboarded, show the transition screen while redirect finishes
+  if (!isPreview && (isOnboarded || handoverStatus)) {
+    return <EstablishedScreen />;
   }
 
   if (showDownloadScreen) {
@@ -375,7 +404,6 @@ export default function Onboarding() {
 
   return (
     <div className="min-h-screen bg-theme-surface flex flex-col items-center overflow-x-hidden relative">
-      {isOnboarded && <EstablishedScreen />}
       <TermsModal
         isOpen={isTermsOpen}
         onClose={() => setIsTermsOpen(false)}

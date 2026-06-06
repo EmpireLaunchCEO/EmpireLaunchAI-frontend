@@ -66,25 +66,26 @@ export default function Dashboard() {
       console.log(`[Dashboard] Connecting to API (Attempt ${retryCount + 1}): ${API_URL}`);
       
       const [eData, pulse, health, txs] = await Promise.all([
-        empireService.getEmpire(activeEmpireId),
-        analyticsService.getEmpirePulse(),
-        analyticsService.getEmpireHealth(),
-        analyticsService.getRevenueTransactions()
+        empireService.getEmpire(activeEmpireId).catch(err => { console.error('Empire Fetch:', err); return null; }),
+        analyticsService.getEmpirePulse().catch(err => { console.error('Pulse Fetch:', err); return null; }),
+        analyticsService.getEmpireHealth().catch(err => { console.error('Health Fetch:', err); return null; }),
+        analyticsService.getRevenueTransactions().catch(err => { console.error('TX Fetch:', err); return null; })
       ]);
 
       if (eData) {
         setEmpireData(eData);
-        setPulseData(pulse);
-        setHealthData(health);
+        setPulseData(pulse || { status: 'Optimizing', progress: 0, logs: [] });
+        setHealthData(health || { revenue: 0, growthScore: 80 });
         setTransactions(txs || []);
         setDashboardLoaded(true);
-      } else if (retryCount < 1) {
-        // Silent retry once
-        console.log('[Dashboard] Data empty, retrying...');
+      } else if (retryCount < 3) {
+        // Silent retry up to 3 times for cold starts
+        console.log(`[Dashboard] Data empty, retrying (${retryCount + 1})...`);
         clearTimeout(timeoutId);
+        await new Promise(resolve => setTimeout(resolve, 2000 * (retryCount + 1)));
         return fetchData(retryCount + 1);
       } else {
-        console.error('[Dashboard] Failed to retrieve empire data after retry');
+        console.error('[Dashboard] Failed to retrieve empire data after 3 retries');
       }
       
       // Soft version check
@@ -230,29 +231,30 @@ export default function Dashboard() {
                 Verification Required: Ensure your backend is deployed and NEXT_PUBLIC_API_URL is set in Vercel.
               </p>
             </div>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-              <button 
-                onClick={() => fetchData()}
-                className="w-full md:w-auto px-8 py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform"
-              >
-                Retry Connection
-              </button>
-              <button 
-                onClick={() => {
-                  localStorage.clear();
-                  window.location.href = '/onboarding';
-                }}
-                className="w-full md:w-auto px-8 py-4 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform border border-white/10"
-              >
-                Reset System Memory
-              </button>
-              <button 
-                onClick={() => window.location.href = '/settings'}
-                className="w-full md:w-auto px-8 py-4 bg-slate-800 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform border border-white/10"
-              >
-                System Settings
-              </button>
-            </div>
+                <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+                  <button 
+                    onClick={() => fetchData()}
+                    className="w-full md:w-auto px-8 py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform"
+                  >
+                    Retry Connection
+                  </button>
+                  <button 
+                    onClick={() => {
+                      localStorage.clear();
+                      sessionStorage.clear();
+                      window.location.href = '/onboarding?preview=true';
+                    }}
+                    className="w-full md:w-auto px-8 py-4 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform border border-white/10"
+                  >
+                    Review Onboarding Visuals
+                  </button>
+                  <button 
+                    onClick={() => window.location.href = '/settings'}
+                    className="w-full md:w-auto px-8 py-4 bg-slate-800 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform border border-white/10"
+                  >
+                    System Settings
+                  </button>
+                </div>
           </div>
         ) : (
           /* Full Content Area */
