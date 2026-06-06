@@ -141,7 +141,7 @@ export default function EmpireCenterPage() {
       </div>
 
       {/* Primary Tabs - Optimized for mobile fit and vertical scroll priority */}
-      <div className="flex bg-slate-100 p-1 rounded-[20px] w-full max-w-full overflow-hidden border-2 border-theme">
+      <div className="flex bg-theme-background p-1 rounded-[20px] w-full max-w-full overflow-hidden border-2 border-theme">
         {[
           { id: 'duties', label: 'Duties', icon: Zap },
           { id: 'history', label: 'Posts', icon: History },
@@ -154,8 +154,8 @@ export default function EmpireCenterPage() {
             className={cn(
               "flex-1 flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-[16px] font-black text-[10px] uppercase tracking-tighter transition-all shrink-0",
               activeTab === tab.id
-                ? "bg-theme-surface text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-slate-700"
+                ? "bg-theme-surface text-foreground shadow-sm border border-theme"
+                : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
             )}
           >
             <tab.icon className={cn("w-3.5 h-3.4", activeTab === tab.id ? "text-primary" : "")} />

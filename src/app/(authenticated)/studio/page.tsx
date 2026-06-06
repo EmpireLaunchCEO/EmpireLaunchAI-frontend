@@ -69,7 +69,7 @@ export default function StudioPage() {
         </header>
 
         {/* Tab Navigation */}
-        <div className="flex bg-slate-100 dark:bg-theme-surface p-1 rounded-[20px] w-full max-w-full overflow-hidden border-2 border-theme">
+        <div className="flex bg-theme-background p-1 rounded-[20px] w-full max-w-full overflow-hidden border-2 border-theme">
           {[
             { id: 'gallery', label: 'Universal Studio', icon: Palette },
             { id: 'cinema', label: 'Cinema Hub', icon: Video },
@@ -79,14 +79,14 @@ export default function StudioPage() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 px-3 py-3 rounded-[16px] font-black text-[10px] uppercase tracking-wider transition-all",
+                "flex-1 flex items-center justify-center gap-2 px-3 py-3 rounded-[16px] font-black text-[10px] sm:text-[11px] uppercase tracking-tighter transition-all shrink-0 min-w-fit",
                 activeTab === tab.id
-                  ? "bg-theme-surface text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-theme-surface text-foreground shadow-sm border border-theme"
+                  : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
               )}
             >
               <tab.icon className={cn("w-3.5 h-3.5", activeTab === tab.id ? "text-primary" : "")} />
-              {tab.label}
+              <span className="truncate">{tab.label}</span>
             </button>
           ))}
         </div>

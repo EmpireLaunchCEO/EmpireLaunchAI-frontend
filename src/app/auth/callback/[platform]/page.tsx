@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
+import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 
 export default function AuthCallback() {
   const router = useRouter();
+  const { isOnboarded } = useEmpire();
   const params = useParams();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -56,9 +58,13 @@ export default function AuthCallback() {
           localStorage.removeItem(`${platform}_auth_state`);
           localStorage.removeItem(`${platform}_code_verifier`);
 
-          // Redirect to dashboard after a short delay
+          // Redirect back after a short delay
           setTimeout(() => {
-            router.push('/dashboard');
+            if (isOnboarded) {
+              router.push('/dashboard');
+            } else {
+              router.push('/onboarding');
+            }
           }, 2000);
         } else {
           throw new Error(data.error || 'Failed to complete connection.');

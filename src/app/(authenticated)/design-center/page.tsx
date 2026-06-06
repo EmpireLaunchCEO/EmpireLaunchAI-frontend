@@ -18,10 +18,10 @@ export default function DesignCenterPage() {
             <Palette className="w-3 h-3" />
             Design Center
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
+          <h1 className="text-3xl md:text-5xl font-black text-foreground tracking-tighter italic">
             Creative Engine.
           </h1>
-          <p className="text-sm md:text-base text-muted-foreground font-medium">
+          <p className="text-sm md:text-base text-muted-foreground font-medium italic">
             Execute manual creative tasks with AI-generated strategic blueprints.
           </p>
         </div>

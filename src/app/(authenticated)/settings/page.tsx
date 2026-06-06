@@ -228,25 +228,26 @@ export default function SettingsPage() {
           </div>
         </header>
 
-        <div className="flex flex-col md:flex-row gap-8 md:gap-12 relative">
-          <aside className="flex md:flex-col overflow-x-auto no-scrollbar md:overflow-visible w-full md:w-64 shrink-0 gap-3 pb-6 md:pb-0 border-b md:border-b-0 border-theme md:border-none sticky top-0 bg-theme-surface z-10 md:relative md:bg-transparent -mx-4 px-4 md:mx-0 md:px-0">
+        <div className="space-y-8 relative">
+          {/* Primary Tabs - Matching Empire Center Style with Wrap for Visibility */}
+          <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 id={`tab-${tab.id}`}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold transition-all whitespace-nowrap shrink-0",
-                  activeTab === tab.id 
-                    ? "bg-primary text-white shadow-xl shadow-primary/20 scale-105" 
-                    : "text-slate-300 hover:text-foreground hover:bg-theme-background"
+                  "flex-1 min-w-[120px] sm:min-w-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-[18px] font-black text-[9px] sm:text-[10px] uppercase tracking-tighter transition-all",
+                  activeTab === tab.id
+                    ? "bg-theme-surface text-foreground shadow-sm border border-theme"
+                    : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
                 )}
               >
-                <tab.icon className="w-5 h-5" />
-                <span className="text-sm uppercase tracking-widest">{tab.name}</span>
+                <tab.icon className={cn("w-3.5 h-3.5", activeTab === tab.id ? "text-primary" : "")} />
+                <span className="truncate">{tab.name}</span>
               </button>
             ))}
-          </aside>
+          </div>
 
           <main className="flex-1">
             {activeTab === 'financials' && (
