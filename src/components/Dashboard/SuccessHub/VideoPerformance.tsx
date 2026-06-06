@@ -43,7 +43,7 @@ export const VideoPerformance = () => {
   const { connectedPlatforms } = useEmpire();
   
   const filteredVideos = MOCK_VIDEOS.filter(v => 
-    connectedPlatforms.some(cp => cp.toLowerCase() === v.platform.toLowerCase())
+    (connectedPlatforms || []).some(cp => cp && cp.toLowerCase() === v.platform.toLowerCase())
   );
 
   if (filteredVideos.length === 0) return null;

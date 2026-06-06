@@ -13,9 +13,10 @@ interface EmpireGrowthBreakdownProps {
 export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthBreakdownProps) => {
   // Formula: (0.5 * MoM_Rev) + (0.3 * ER) + (0.2 * Consistency)
   // Mocking the components of the score based on the total growthScore
-  const revenueScore = Math.min(100, Math.round(growthScore * 1.1));
-  const engagementScore = Math.min(100, Math.round(growthScore * 0.9));
-  const consistencyScore = Math.min(100, Math.round(growthScore * 0.95));
+  const safeScore = isNaN(growthScore) ? 80 : growthScore;
+  const revenueScore = Math.min(100, Math.round(safeScore * 1.1));
+  const engagementScore = Math.min(100, Math.round(safeScore * 0.9));
+  const consistencyScore = Math.min(100, Math.round(safeScore * 0.95));
 
   const metrics = [
     {

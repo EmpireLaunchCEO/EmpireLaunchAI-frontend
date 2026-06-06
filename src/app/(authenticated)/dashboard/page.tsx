@@ -23,6 +23,8 @@ import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
+import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
+
 export default function Dashboard() {
   const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, setDashboardLoaded } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
@@ -100,6 +102,7 @@ export default function Dashboard() {
     } finally {
       clearTimeout(timeoutId);
       setIsLoading(false);
+      setDashboardLoaded(true);
     }
   }, [activeEmpireId, mounted, setDashboardLoaded]);
 
@@ -149,7 +152,7 @@ export default function Dashboard() {
   };
 
   // 1. Initial Neural Sync Overlay (Session Init)
-  if (!mounted || !isInitialized) {
+  if (!mounted || !isInitialized || !isDashboardLoaded) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
         <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
@@ -162,7 +165,8 @@ export default function Dashboard() {
 
   // 2. Main Dashboard Render
   return (
-    <PullToRefresh onRefresh={fetchData}>
+    <DashboardErrorBoundary>
+      <PullToRefresh onRefresh={fetchData}>
       <div className="p-3 md:p-8 pb-24 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12">
         {/* Persistent Header */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 bg-theme-surface/30 p-5 md:p-0 rounded-[24px] md:rounded-none border border-theme md:border-none">
@@ -377,5 +381,6 @@ export default function Dashboard() {
         {isLinkingComplete && <NotificationOnboarding />}
       </div>
     </PullToRefresh>
+    </DashboardErrorBoundary>
   );
 }

@@ -132,7 +132,7 @@ export function PWAInstallPrompt({ onDismiss }: PWAInstallPromptProps) {
 
                 <button
                   onClick={dismissPrompt}
-                  className="w-full py-5 bg-primary text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-amber-400 transition-all shadow-xl shadow-amber-900/20"
+                  className="w-full py-5 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary transition-all shadow-xl shadow-white/10 active:scale-95"
                 >
                   Got it
                 </button>

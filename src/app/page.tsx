@@ -33,14 +33,15 @@ export default function LandingPage() {
     setIsMounted(true);
   }, []);
 
-  // AUTO-REDIRECT DISABLED: Sequence must be manual for testing vision
-  /*
+  // AUTO-REDIRECT: If already onboarded, go to dashboard
   useEffect(() => {
-    if (isInitialized && isHandoverComplete && (isOnboarded || isPaid)) {
+    // Only redirect if NOT in a forced preview state
+    const isForcedPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
+    
+    if (isMounted && isInitialized && (isOnboarded || isPaid) && !isForcedPreview) {
       router.replace('/dashboard');
     }
-  }, [isInitialized, isHandoverComplete, isOnboarded, isPaid, router]);
-  */
+  }, [isInitialized, isOnboarded, isPaid, isMounted, router]);
 
   if (!isMounted) {
     return (

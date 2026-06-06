@@ -58,9 +58,9 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
     });
 
     if (initialLogs && initialLogs.length > 0) {
-      setLogs(initialLogs.map((text, i) => ({
+      setLogs(initialLogs.map((log: any, i) => ({
         id: i,
-        text,
+        text: typeof log === 'string' ? log : log.message || JSON.stringify(log),
         status: i === initialLogs.length - 1 ? 'processing' : 'done'
       })));
     } else {

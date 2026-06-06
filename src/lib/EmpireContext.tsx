@@ -365,9 +365,12 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       if (savedProtocol) setIsProtocolAccepted(true);
 
       try {
-        const savedPlatforms = JSON.parse(localStorage.getItem('connectedPlatforms') || '[]');
-        setConnectedPlatforms(savedPlatforms);
-      } catch {}
+        const rawPlatforms = localStorage.getItem('connectedPlatforms');
+        const savedPlatforms = rawPlatforms ? JSON.parse(rawPlatforms) : [];
+        setConnectedPlatforms(Array.isArray(savedPlatforms) ? savedPlatforms : []);
+      } catch {
+        setConnectedPlatforms([]);
+      }
 
       try {
         const savedNotificationSettings = JSON.parse(localStorage.getItem('empireNotificationSettings') || '{"sales":true,"approvals":true}');

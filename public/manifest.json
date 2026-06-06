@@ -1,26 +1,26 @@
 {
   "name": "EmpireLaunch AI",
-  "short_name": "EmpireLaunch AI",
-  "description": "Automate your business with AI",
-  "start_url": "/dashboard",
+  "short_name": "Empire AI",
+  "description": "High-Intelligence AI Business Partner",
+  "start_url": "/dashboard?pwa=true&v=1000",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#fbbf24",
+  "background_color": "#0a0519",
+  "theme_color": "#0a0519",
   "icons": [
     {
-      "src": "/branded-globe.png?v=515",
-      "sizes": "192x192",
+      "src": "/apple-v10.png",
+      "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/branded-globe.png?v=515",
+      "src": "/icon-v10.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/branded-globe.png?v=515",
+      "src": "/icon-v10.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

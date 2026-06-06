@@ -52,7 +52,7 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
 
       <div className="absolute inset-0 bg-gradient-to-br from-blue-600/40 to-purple-700/40" />
       <img
-        src="/branded-globe.png?v=515"
+        src="/apple-v10.png"
         alt="Empire Globe"
         className={cn(
           "w-full h-full object-cover scale-110 relative z-10 brightness-110 contrast-125 transition-opacity duration-1000",

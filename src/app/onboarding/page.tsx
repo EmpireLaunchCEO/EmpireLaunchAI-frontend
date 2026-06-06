@@ -117,6 +117,9 @@ export default function Onboarding() {
       const savedStep = localStorage.getItem('onboarding_step');
       if (savedStep) setCurrentStep(parseInt(savedStep));
       
+      const savedPopup = localStorage.getItem('onboarding_show_popup');
+      if (savedPopup === 'true') setShowDownloadScreen(true);
+      
       const savedData = localStorage.getItem('onboarding_data');
       if (savedData) {
         try {
@@ -142,18 +145,35 @@ export default function Onboarding() {
   const searchParams = useSearchParams();
   const isPreview = searchParams.get('preview') === 'true';
 
-  // Handle Redirection - CRITICAL FIX: If already onboarded, we don't need handoverStatus
+  // Handle Redirection - Simplified for stability
   useEffect(() => {
-    if (!isPreview && isMounted && isInitialized && (isOnboarded || handoverStatus || currentStep > 5)) {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
-      
-      // Force direct dashboard access for onboarded users
-      const timer = setTimeout(() => {
-        router.replace('/dashboard');
-      }, 1000);
-      return () => clearTimeout(timer);
+    let active = true;
+    
+    const isStandalone = typeof window !== 'undefined' && (
+      window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone
+    );
+
+    // If they open the PWA and were already at the end, just go to dashboard
+    if (isStandalone && isMounted && isInitialized && (isOnboarded || currentStep >= 5)) {
+       console.log('[PWA] Standalone detected at end-state, fast-tracking...');
+       router.replace('/dashboard');
+       return;
     }
-  }, [isInitialized, handoverStatus, isOnboarded, currentStep, isMounted, router, isPreview]);
+
+    if (!isPreview && isMounted && isInitialized && isOnboarded) {
+      // Small delay to allow state to settle
+      const timer = setTimeout(() => {
+        if (active) {
+          console.log('[Onboarding] Redirecting to Dashboard...');
+          router.replace('/dashboard');
+        }
+      }, 800);
+      return () => {
+        active = false;
+        clearTimeout(timer);
+      };
+    }
+  }, [isInitialized, isOnboarded, isMounted, router, isPreview, currentStep]);
 
   const finalizeActivation = useCallback(async () => {
     try {
@@ -177,22 +197,21 @@ export default function Onboarding() {
         if (result.empire?.id) {
           setActiveEmpireId(result.empire.id);
         }
-        setHandoverComplete(true);
+        completeOnboarding();
+      } else {
+        // Fallback for non-success status
         completeOnboarding();
       }
     } catch (error) {
       console.error('Error during activation:', error);
       // Fallback: Proceed anyway
-      setHandoverComplete(true);
       completeOnboarding();
     }
-  }, [data, setActiveEmpireId, completeOnboarding, setHandoverComplete]);
+  }, [data, setActiveEmpireId, completeOnboarding]);
 
   const handleActivate = async () => {
     setIsActivating(true);
-    if (data.automationMode === 'co-pilot') {
-       await finalizeActivation();
-    }
+    await finalizeActivation();
   };
 
   const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
@@ -312,7 +331,7 @@ export default function Onboarding() {
                   setIsPWADismissed(true);
                   handleActivate();
                 }}
-                className="w-full py-4 bg-slate-900 border border-primary/40 text-primary font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-primary hover:text-slate-900 transition-all"
+                className="w-full py-5 bg-white text-slate-950 border-2 border-white font-black text-sm uppercase tracking-[0.2em] rounded-2xl hover:bg-primary hover:border-primary transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] active:scale-95"
               >
                 Already Installed / Skip
               </button>
@@ -374,7 +393,7 @@ export default function Onboarding() {
                     initial={{ width: 0 }}
                     animate={{ width: (isOnboarded || isPWADismissed) ? "100%" : "70%" }}
                     transition={{ duration: 4, ease: "easeInOut" }}
-                    className="h-full bg-primary shadow-[0_0_15px_rgba(251,191,36,0.5)]"
+                    className="h-full bg-primary shadow-[0_0_15px_rgba(0,229,255,0.4)]"
                   />
                 </div>
 
@@ -659,7 +678,10 @@ export default function Onboarding() {
               >
                 <ConsultantToolkit 
                   businessAngle={data.angle} 
-                  onToolkitComplete={() => setShowDownloadScreen(true)}
+                  onToolkitComplete={() => {
+                    localStorage.setItem('onboarding_show_popup', 'true');
+                    setShowDownloadScreen(true);
+                  }}
                 />
               </motion.div>
             )}

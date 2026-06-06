@@ -45,7 +45,12 @@ export function DetailedRevenue() {
 
   const totalRevenue = (transactions || []).reduce((acc, t) => acc + (t?.amount || 0), 0);
   const activeMilestone = (milestones || []).find(m => m && !m.isCompleted) || (milestones && milestones.length > 0 ? milestones[milestones.length - 1] : null);
-  const progressPercent = activeMilestone ? ((activeMilestone.current || 0) / (activeMilestone.target || 1)) * 100 : 0;
+  
+  // Safe progress calculation
+  const currentVal = activeMilestone?.current || 0;
+  const targetVal = activeMilestone?.target || 1000;
+  const rawProgress = (currentVal / (targetVal || 1)) * 100;
+  const progressPercent = Math.min(100, Math.max(0, isNaN(rawProgress) ? 0 : rawProgress));
 
   if (loading) {
     return <div className="h-40 flex items-center justify-center">
