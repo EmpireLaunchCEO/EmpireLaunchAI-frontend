@@ -14,6 +14,7 @@ import {
   Info
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface PWAInstallPromptProps {
   onDismiss?: () => void;
@@ -71,8 +72,11 @@ export function PWAInstallPrompt({ onDismiss }: PWAInstallPromptProps) {
               </button>
 
               <div className="flex flex-col items-center text-center space-y-6">
-                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center border border-primary/20 shadow-lg shadow-amber-900/20">
-                  <Download className="w-8 h-8 text-primary" />
+                <div className="relative">
+                  <BrandedGlobe size="lg" className="shadow-[0_0_40px_rgba(0,229,255,0.3)]" />
+                  <div className="absolute -bottom-2 -right-2 bg-primary text-slate-950 p-1.5 rounded-full shadow-lg">
+                    <Download className="w-3 h-3" />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
