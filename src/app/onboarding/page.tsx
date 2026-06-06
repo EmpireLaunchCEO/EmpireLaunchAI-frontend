@@ -18,7 +18,10 @@ import {
   ChevronDown,
   Shield,
   Scale,
-  AlertCircle
+  AlertCircle,
+  CreditCard,
+  Lock,
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ProgressConstellation } from '@/components/Onboarding/ProgressConstellation';
@@ -31,6 +34,11 @@ import { DiscoveryReview } from '@/components/Onboarding/DiscoveryReview';
 import { PWAInstallPrompt } from '@/components/Onboarding/PWAInstallPrompt';
 import { TermsModal } from '@/components/Legal/TermsModal';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
+import { useEmpire } from '@/lib/EmpireContext';
+import { API_URL } from '@/lib/config';
+
+// io is dynamically imported to avoid SSR issues
+let io: any;
 
 const steps = [
   { id: 1, title: 'Protocol' },
@@ -40,13 +48,6 @@ const steps = [
   { id: 5, title: 'Toolkit' },
 ];
 
-import { useEmpire } from '@/lib/EmpireContext';
-import { API_URL } from '@/lib/config';
-import { CreditCard, Lock, Sparkles } from 'lucide-react';
-
-import { io } from 'socket.io-client';
-
-// Transition Screen (Moved outside to avoid re-renders)
 const EstablishedScreen = () => (
   <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6 text-center p-6">
     <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
@@ -60,6 +61,7 @@ const EstablishedScreen = () => (
 );
 
 export default function Onboarding() {
+  const router = useRouter();
   const {
     completeOnboarding,
     setHandoverComplete,
@@ -73,52 +75,23 @@ export default function Onboarding() {
     currency,
     setCurrency,
     isProtocolAccepted,
-    acceptProtocols
+    acceptProtocols,
+    isHandoverComplete
   } = useEmpire();
   
   const userId = '00000000-0000-0000-0000-000000000000'; 
-  const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return parseInt(localStorage.getItem('onboarding_step') || '1');
-    }
-    return 1;
-  });
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('onboarding_step', currentStep.toString());
-      // Ensure we scroll to top when changing main steps
-      window.scrollTo(0, 0);
-    }
-  }, [currentStep]);
-
+  
+  // State Initialization - NO LOCALSTORAGE IN INITIALIZER TO PREVENT HYDRATION MISMATCH
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isMounted, setIsMounted] = useState(false);
   const [accessKey, setAccessKey] = useState('');
-  const [data, setData] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('onboarding_data');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.error('Failed to parse onboarding data', e);
-        }
-      }
-    }
-    return {
-      name: '',
-      niche: '',
-      angle: '',
-      connectedPlatforms: [] as string[],
-      automationMode: 'co-pilot' as 'co-pilot' | 'empire',
-    };
+  const [data, setData] = useState({
+    name: '',
+    niche: '',
+    angle: '',
+    connectedPlatforms: [] as string[],
+    automationMode: 'co-pilot' as 'co-pilot' | 'empire',
   });
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('onboarding_data', JSON.stringify(data));
-    }
-  }, [data]);
 
   const [showDownloadScreen, setShowDownloadScreen] = useState(false);
   const [isActivating, setIsActivating] = useState(false);
@@ -139,60 +112,66 @@ export default function Onboarding() {
     "Neural Discovery Complete."
   ];
 
-  // Effect to handle redirection when onboarded - DISABLED FOR VISION TESTING
-  /*
+  // Load state from localStorage on mount
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    if (typeof window !== 'undefined' && isInitialized && isOnboarded && isHandoverComplete) {
-      // Allow redirect in both Standalone AND Browser now to prevent being stuck
-      // ONLY if handover is actually complete for this session
-      timeoutId = setTimeout(() => {
-        router.replace('/dashboard');
-      }, 1500);
+    setIsMounted(true);
+    if (typeof window !== 'undefined') {
+      const savedStep = localStorage.getItem('onboarding_step');
+      if (savedStep) setCurrentStep(parseInt(savedStep));
+      
+      const savedData = localStorage.getItem('onboarding_data');
+      if (savedData) {
+        try {
+          setData(JSON.parse(savedData));
+        } catch (e) {}
+      }
     }
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [isInitialized, isOnboarded, isHandoverComplete, router]);
-  */
+  }, []);
+
+  // Save state to localStorage on change
+  useEffect(() => {
+    if (isMounted && typeof window !== 'undefined') {
+      localStorage.setItem('onboarding_step', currentStep.toString());
+      window.scrollTo(0, 0);
+    }
+  }, [currentStep, isMounted]);
 
   useEffect(() => {
-    if (isActivating && data.automationMode === 'empire' && !showDiscoveryReview) {
-      const interval = setInterval(() => {
-        setDiscoveryLogIndex((prev) => {
-          const next = Math.min(prev + 1, discoveryLogs.length - 1);
-          if (next === discoveryLogs.length - 1) {
-            clearInterval(interval);
-            setTimeout(() => {
-              setShowDiscoveryReview(true);
-            }, 1000);
-          }
-          return next;
-        });
-      }, 800);
-      return () => clearInterval(interval);
+    if (isMounted && typeof window !== 'undefined') {
+      localStorage.setItem('onboarding_data', JSON.stringify(data));
     }
-  }, [isActivating, data.automationMode, showDiscoveryReview, discoveryLogs.length]);
+  }, [data, isMounted]);
 
   // WebSocket for real-time progress
   useEffect(() => {
-    if (isActivating) {
-      const socket = io(API_URL);
-      socket.on('connect', () => {
-        socket.emit('subscribe', userId);
-      });
+    if (isActivating && isMounted) {
+      const initSocket = async () => {
+        if (!io) {
+          const socketIo = await import('socket.io-client');
+          io = socketIo.io;
+        }
+        
+        const socket = io(API_URL);
+        socket.on('connect', () => {
+          socket.emit('subscribe', userId);
+        });
 
-      socket.on('ai-log', (data: { message: string }) => {
-        setRealLogs(prev => [...prev, data.message]);
-      });
+        socket.on('ai-log', (msgData: { message: string }) => {
+          setRealLogs(prev => [...prev, msgData.message]);
+        });
 
-      socket.on('empire-initialized', (data) => {
-        setTimeout(() => {
-          setHandoverComplete(true);
-          completeOnboarding();
-        }, 1500);
-      });
+        socket.on('empire-initialized', () => {
+          setTimeout(() => {
+            setHandoverComplete(true);
+            completeOnboarding();
+          }, 1500);
+        });
 
+        return socket;
+      };
+
+      const socketPromise = initSocket();
+      
       // Polling fallback
       const pollInterval = setInterval(async () => {
         try {
@@ -208,32 +187,31 @@ export default function Onboarding() {
       }, 3000);
 
       return () => {
-        socket.disconnect();
+        socketPromise.then(s => s && s.disconnect());
         clearInterval(pollInterval);
       };
     }
-  }, [isActivating, completeOnboarding]);
-
-  // PWA Standalone Redirect: If the user opens from home screen, 
-  // they expect to land in the dashboard (Success Hub) immediately.
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
-      if (isStandalone && (!isOnboarded || !isPaid)) {
-        // Automatically authorize and complete onboarding for PWA users
-        setIsPaid(true);
-        completeOnboarding();
-        router.replace('/dashboard');
-      }
-    }
-  }, [router, isOnboarded, isPaid, completeOnboarding, setIsPaid]);
+  }, [isActivating, isMounted, completeOnboarding, setHandoverComplete]);
 
   // ENFORCEMENT
   useEffect(() => {
-    if (isInitialized && currentStep > 2 && !isPaid) {
+    if (isMounted && isInitialized && currentStep > 2 && !isPaid) {
       setCurrentStep(2);
     }
-  }, [currentStep, isPaid, isInitialized]);
+  }, [currentStep, isPaid, isInitialized, isMounted]);
+
+  // REDIRECT LOGIC MOVED TO USEEFFECT
+  useEffect(() => {
+    if (isMounted && isInitialized && isHandoverComplete && (isOnboarded || currentStep > 5)) {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+      if (!isStandalone) {
+        const timer = setTimeout(() => {
+          router.replace('/dashboard');
+        }, 1000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [isInitialized, isHandoverComplete, isOnboarded, currentStep, isMounted, router]);
 
   const finalizeActivation = useCallback(async () => {
     try {
@@ -271,14 +249,9 @@ export default function Onboarding() {
 
   const handleActivate = async () => {
     setIsActivating(true);
-    
     if (data.automationMode === 'co-pilot') {
        await finalizeActivation();
     }
-  };
-
-  const handlePWADismiss = () => {
-    setIsPWADismissed(true);
   };
 
   const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
@@ -313,18 +286,26 @@ export default function Onboarding() {
     setIsTermsOpen(true);
   };
 
-  // Bypass enforcement for initial setup stability
-  if (isInitialized && isHandoverComplete && (isOnboarded || currentStep > 5) && typeof window !== 'undefined') {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
-    if (!isStandalone) {
-       // Auto-redirect to dashboard if handover is complete
-       setTimeout(() => {
-         router.replace('/dashboard');
-       }, 500);
+  // Discovery Log Sequence
+  useEffect(() => {
+    if (isActivating && data.automationMode === 'empire' && !showDiscoveryReview && isMounted) {
+      const interval = setInterval(() => {
+        setDiscoveryLogIndex((prev) => {
+          const next = Math.min(prev + 1, discoveryLogs.length - 1);
+          if (next === discoveryLogs.length - 1) {
+            clearInterval(interval);
+            setTimeout(() => {
+              setShowDiscoveryReview(true);
+            }, 1000);
+          }
+          return next;
+        });
+      }, 800);
+      return () => clearInterval(interval);
     }
-  }
+  }, [isActivating, data.automationMode, showDiscoveryReview, isMounted, discoveryLogs.length]);
 
-  if (!isInitialized) {
+  if (!isMounted || !isInitialized) {
     return (
       <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
         <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
@@ -436,7 +417,7 @@ export default function Onboarding() {
                       <p className="text-primary font-black tracking-widest text-xs uppercase">
                         {isPWADismissed 
                           ? "Close out the browser version, then reopen app from Home Screen." 
-                          : (realLogs.length > 0 ? realLogs[realLogs.length - 1] : discoveryLogs[discoveryLogIndex])}
+                          : (realLogs.length > 0 ? (realLogs[realLogs.length - 1] || "Syncing...") : discoveryLogs[discoveryLogIndex])}
                       </p>
                     </motion.div>
                   </AnimatePresence>
