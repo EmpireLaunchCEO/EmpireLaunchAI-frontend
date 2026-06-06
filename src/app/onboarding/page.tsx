@@ -37,9 +37,6 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 
-// io is dynamically imported to avoid SSR issues
-let io: any;
-
 const steps = [
   { id: 1, title: 'Protocol' },
   { id: 2, title: 'Authorization' },
@@ -62,26 +59,28 @@ const EstablishedScreen = () => (
 
 export default function Onboarding() {
   const router = useRouter();
+  const empire = useEmpire();
+  
+  // Safe destructuring to prevent crashes if empire is undefined
   const {
-    completeOnboarding,
-    setHandoverComplete,
-    setActiveEmpireId,
-    isOnboarded,
-    isInitialized,
-    isPaid,
-    setIsPaid,
-    language,
-    setLanguage,
-    currency,
-    setCurrency,
-    isProtocolAccepted,
-    acceptProtocols,
-    isHandoverComplete
-  } = useEmpire();
+    completeOnboarding = () => {},
+    setHandoverComplete = () => {},
+    setActiveEmpireId = () => {},
+    isOnboarded = false,
+    isInitialized = false,
+    isPaid = false,
+    setIsPaid = () => {},
+    language = 'en-US',
+    setLanguage = () => {},
+    currency = 'USD',
+    setCurrency = () => {},
+    isProtocolAccepted = false,
+    acceptProtocols = () => {},
+    isHandoverComplete = false
+  } = empire || {};
   
   const userId = '00000000-0000-0000-0000-000000000000'; 
   
-  // State Initialization - NO LOCALSTORAGE IN INITIALIZER TO PREVENT HYDRATION MISMATCH
   const [currentStep, setCurrentStep] = useState(1);
   const [isMounted, setIsMounted] = useState(false);
   const [accessKey, setAccessKey] = useState('');
@@ -112,7 +111,6 @@ export default function Onboarding() {
     "Neural Discovery Complete."
   ];
 
-  // Load state from localStorage on mount
   useEffect(() => {
     setIsMounted(true);
     if (typeof window !== 'undefined') {
@@ -128,7 +126,6 @@ export default function Onboarding() {
     }
   }, []);
 
-  // Save state to localStorage on change
   useEffect(() => {
     if (isMounted && typeof window !== 'undefined') {
       localStorage.setItem('onboarding_step', currentStep.toString());
@@ -142,74 +139,13 @@ export default function Onboarding() {
     }
   }, [data, isMounted]);
 
-  // WebSocket for real-time progress
-  useEffect(() => {
-    if (isActivating && isMounted) {
-      const initSocket = async () => {
-        if (!io) {
-          const socketIo = await import('socket.io-client');
-          io = socketIo.io;
-        }
-        
-        const socket = io(API_URL);
-        socket.on('connect', () => {
-          socket.emit('subscribe', userId);
-        });
-
-        socket.on('ai-log', (msgData: { message: string }) => {
-          setRealLogs(prev => [...prev, msgData.message]);
-        });
-
-        socket.on('empire-initialized', () => {
-          setTimeout(() => {
-            setHandoverComplete(true);
-            completeOnboarding();
-          }, 1500);
-        });
-
-        return socket;
-      };
-
-      const socketPromise = initSocket();
-      
-      // Polling fallback
-      const pollInterval = setInterval(async () => {
-        try {
-          const res = await fetch(`${API_URL}/api/agent/goal/latest`, {
-             headers: { 'Authorization': 'Bearer mock-mobile-token' }
-          });
-          const goal = await res.json();
-          if (goal && goal.status === 'active') {
-             setHandoverComplete(true);
-             completeOnboarding();
-          }
-        } catch (e) {}
-      }, 3000);
-
-      return () => {
-        socketPromise.then(s => s && s.disconnect());
-        clearInterval(pollInterval);
-      };
-    }
-  }, [isActivating, isMounted, completeOnboarding, setHandoverComplete]);
-
-  // ENFORCEMENT
-  useEffect(() => {
-    if (isMounted && isInitialized && currentStep > 2 && !isPaid) {
-      setCurrentStep(2);
-    }
-  }, [currentStep, isPaid, isInitialized, isMounted]);
-
-  // REDIRECT LOGIC MOVED TO USEEFFECT
+  // Handle Redirection
   useEffect(() => {
     if (isMounted && isInitialized && isHandoverComplete && (isOnboarded || currentStep > 5)) {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
-      if (!isStandalone) {
-        const timer = setTimeout(() => {
-          router.replace('/dashboard');
-        }, 1000);
-        return () => clearTimeout(timer);
-      }
+      const timer = setTimeout(() => {
+        router.replace('/dashboard');
+      }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [isInitialized, isHandoverComplete, isOnboarded, currentStep, isMounted, router]);
 
@@ -285,25 +221,6 @@ export default function Onboarding() {
     setIsPaying(false);
     setIsTermsOpen(true);
   };
-
-  // Discovery Log Sequence
-  useEffect(() => {
-    if (isActivating && data.automationMode === 'empire' && !showDiscoveryReview && isMounted) {
-      const interval = setInterval(() => {
-        setDiscoveryLogIndex((prev) => {
-          const next = Math.min(prev + 1, discoveryLogs.length - 1);
-          if (next === discoveryLogs.length - 1) {
-            clearInterval(interval);
-            setTimeout(() => {
-              setShowDiscoveryReview(true);
-            }, 1000);
-          }
-          return next;
-        });
-      }, 800);
-      return () => clearInterval(interval);
-    }
-  }, [isActivating, data.automationMode, showDiscoveryReview, isMounted, discoveryLogs.length]);
 
   if (!isMounted || !isInitialized) {
     return (
@@ -405,22 +322,14 @@ export default function Onboarding() {
                   {isPWADismissed ? "Download to Home Screen to Continue." : "Establishing Neural Sync."}
                 </h2>
                 <div className="flex items-center justify-center gap-3 min-h-6">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={isPWADismissed ? 'pwa-wait' : (realLogs.length > 0 ? 'real-' + realLogs.length : 'discovery-' + discoveryLogIndex)}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="flex items-center gap-4"
-                    >
-                      <BrandedGlobe size="sm" animate={true} />
-                      <p className="text-primary font-black tracking-widest text-xs uppercase">
-                        {isPWADismissed 
-                          ? "Close out the browser version, then reopen app from Home Screen." 
-                          : (realLogs.length > 0 ? (realLogs[realLogs.length - 1] || "Syncing...") : discoveryLogs[discoveryLogIndex])}
-                      </p>
-                    </motion.div>
-                  </AnimatePresence>
+                  <div className="flex items-center gap-4">
+                    <BrandedGlobe size="sm" animate={true} />
+                    <p className="text-primary font-black tracking-widest text-xs uppercase">
+                      {isPWADismissed 
+                        ? "Close out the browser version, then reopen app from Home Screen." 
+                        : (realLogs.length > 0 ? (realLogs[realLogs.length - 1] || "Syncing...") : discoveryLogs[discoveryLogIndex])}
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -612,7 +521,6 @@ export default function Onboarding() {
                          </div>
                        </div>
 
-                       {/* Path 1: Public Users - Credit Card */}
                        <button
                          onClick={handleSecurePayment}
                          disabled={isActivating || isPaying}
@@ -632,7 +540,6 @@ export default function Onboarding() {
                         </div>
                       </div>
 
-                       {/* Path 2: Admin/Owner Bypass */}
                        <div className="space-y-3">
                          <div className="relative group">
                             <input
@@ -662,7 +569,6 @@ export default function Onboarding() {
                          )}
                        </div>
 
-                       {/* Feature List */}
                        <div className="grid grid-cols-2 gap-3 p-5 bg-slate-950 rounded-2xl border border-slate-800 shadow-inner">
                          {[
                            'Autonomous Execution',
