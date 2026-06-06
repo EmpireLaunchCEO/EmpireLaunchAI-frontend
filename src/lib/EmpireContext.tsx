@@ -387,18 +387,21 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         }).catch(() => null);
 
         if (settingsRes && settingsRes.ok) {
-          const settings = await settingsRes.json();
-          if (settings.protocolAccepted !== undefined) {
-            setIsProtocolAccepted(settings.protocolAccepted);
-            localStorage.setItem('isProtocolAccepted', settings.protocolAccepted ? 'true' : 'false');
-          }
-          if (settings.onboardingComplete) {
-            setIsOnboarded(true);
-            localStorage.setItem('isOnboarded', 'true');
-          }
-          if (settings.isPaid !== undefined) {
-            setIsPaidState(settings.isPaid);
-            localStorage.setItem('isPaid', settings.isPaid ? 'true' : 'false');
+          const contentType = settingsRes.headers.get("content-type");
+          if (contentType && contentType.indexOf("application/json") !== -1) {
+            const settings = await settingsRes.json();
+            if (settings.protocolAccepted !== undefined) {
+              setIsProtocolAccepted(settings.protocolAccepted);
+              localStorage.setItem('isProtocolAccepted', settings.protocolAccepted ? 'true' : 'false');
+            }
+            if (settings.onboardingComplete) {
+              setIsOnboarded(true);
+              localStorage.setItem('isOnboarded', 'true');
+            }
+            if (settings.isPaid !== undefined) {
+              setIsPaidState(settings.isPaid);
+              localStorage.setItem('isPaid', settings.isPaid ? 'true' : 'false');
+            }
           }
         }
 

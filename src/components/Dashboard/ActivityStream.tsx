@@ -25,6 +25,11 @@ export function ActivityStream() {
   const { connectedPlatforms } = useEmpire();
   const [activities, setActivities] = useState<ActivityEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const loadData = useCallback(async () => {
     const data = await analyticsService.getActivityStream();
@@ -111,7 +116,9 @@ export function ActivityStream() {
             <div className="space-y-1 flex-1">
                <div className="flex items-center justify-between">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{activity.platform}</span>
-                  <span className="text-[10px] font-bold text-slate-400">{activity.timestamp}</span>
+                  {mounted && (
+                    <span className="text-[10px] font-bold text-slate-400">{activity.timestamp}</span>
+                  )}
                </div>
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-2 flex-1">

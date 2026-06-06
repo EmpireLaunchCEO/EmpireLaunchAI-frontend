@@ -8,19 +8,19 @@
   "theme_color": "#0a0519",
   "icons": [
     {
-      "src": "/apple-v10.png",
+      "src": "/apple-v11.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-v10.png",
+      "src": "/icon-v11.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-v10.png",
+      "src": "/icon-v11.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

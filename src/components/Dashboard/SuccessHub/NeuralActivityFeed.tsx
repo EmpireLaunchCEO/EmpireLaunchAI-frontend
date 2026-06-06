@@ -21,7 +21,12 @@ const MOCK_THOUGHTS = [
 
 export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }: { logs?: string[], status?: string }) => {
   const [logs, setLogs] = useState<{ id: number; text: string; status: 'processing' | 'done' }[]>([]);
+  const [mounted, setMounted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     // Connect to WebSocket
@@ -133,7 +138,9 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
                 )}
               </div>
               <div className="flex-1">
-                <span className="text-muted-foreground mr-2">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
+                {mounted && (
+                  <span className="text-muted-foreground mr-2">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
+                )}
                 <span className={log.status === 'processing' ? "text-blue-100" : "text-slate-400"}>
                   {log.text}
                 </span>

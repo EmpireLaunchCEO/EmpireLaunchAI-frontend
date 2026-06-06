@@ -24,6 +24,12 @@ export function DetailedRevenue() {
   const [milestones, setMilestones] = useState<RevenueMilestone[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     async function loadData() {
       const [tData, mData] = await Promise.all([
@@ -155,13 +161,13 @@ export function DetailedRevenue() {
               <div className="flex items-center gap-6">
                 <div className="flex flex-col items-center">
                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">
-                     {new Date(t.date).toLocaleDateString('en-US', { month: 'short' })}
+                     {mounted && t?.date ? new Date(t.date).toLocaleDateString('en-US', { month: 'short' }) : '---'}
                    </span>
                    <span className="text-lg font-black text-foreground">
-                     {new Date(t.date).getDate()}
+                     {mounted && t?.date ? new Date(t.date).getDate() : '--'}
                    </span>
                 </div>
-                <div className="space-y-1">
+
                    <h4 className="font-bold text-foreground">{t.customer}</h4>
                    <div className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.platform}</span>
@@ -176,8 +182,8 @@ export function DetailedRevenue() {
 
               <div className="flex items-center gap-6">
                  <div className="text-right">
-                    <p className="text-lg font-black text-foreground">+${t.amount.toFixed(2)}</p>
-                    <p className="text-[10px] font-bold text-slate-400">Net: ${(t.amount * 0.94).toFixed(2)}</p>
+                    <p className="text-lg font-black text-foreground">+${(t?.amount || 0).toFixed(2)}</p>
+                    <p className="text-[10px] font-bold text-slate-400">Net: ${((t?.amount || 0) * 0.94).toFixed(2)}</p>
                  </div>
                  <button className="p-3 bg-theme-surface border border-theme rounded-xl opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
                     <ArrowUpRight className="w-4 h-4 text-slate-400" />
