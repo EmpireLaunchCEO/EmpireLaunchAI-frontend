@@ -42,24 +42,33 @@ export default function LandingPage() {
   }, [isInitialized, isHandoverComplete, isOnboarded, isPaid, router]);
   */
 
-  if (!isMounted || !isInitialized) {
+  if (!isMounted) {
     return (
       <div className="fixed inset-0 z-[100] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
         <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
-            {isInitialized ? "Neural Path Authorized" : "Initializing Intelligence"}
-          </h2>
-          <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">
-            {isInitialized ? "Transferring to Command Center..." : "Synchronizing Neural Path..."}
-          </p>
-        </div>
       </div>
     );
   }
 
+  // Only show the sync overlay if we are initialized AND determined the user should be fast-tracked
+  // For the Owner, this might flicker, but for Customers, they will land on Step 1 immediately.
+  const isFastTrack = isInitialized && isHandoverComplete && (isOnboarded || isPaid);
+  
   return (
     <div className="min-h-screen bg-[#0a0519] selection:bg-blue-500/30 overflow-x-hidden">
+      {isFastTrack && (
+        <div className="fixed inset-0 z-[100] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
+          <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+          <div className="flex flex-col items-center gap-2">
+            <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+              Neural Path Authorized
+            </h2>
+            <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">
+              Transferring to Command Center...
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* High-Intelligence Background */}
       <div className="fixed inset-0 z-0">
