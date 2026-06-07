@@ -28,7 +28,7 @@ import { LockedSlotView } from '@/components/Dashboard/LockedSlotView';
 
 export default function Dashboard() {
   const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, unlockSlot } = useEmpire();
-  const [activeBusinessIndex, setActiveBusinessIndex] = useState(0);
+  const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
@@ -38,11 +38,6 @@ export default function Dashboard() {
   const [executingInsight, setExecutingInsight] = useState<string | null>(null);
   const [isCelebrating, setIsCelebrating] = useState(false);
   const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const index = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
-    setActiveBusinessIndex(index);
-  }, [activeEmpireId]);
 
   useEffect(() => {
     setMounted(true);
@@ -70,9 +65,9 @@ export default function Dashboard() {
 
       const fetchPromise = Promise.all([
         empireService.getEmpire(activeEmpireId).catch(err => { console.error('Empire Fetch:', err); return null; }),
-        analyticsService.getGrowthPulse().catch(() => ({ score: 85, trend: 'stable' })),
+        analyticsService.getEmpirePulse().catch(() => ({ score: 85, trend: 'stable' })),
         analyticsService.getEmpireHealth().catch(() => ({ score: 92, status: 'Optimal' })),
-        analyticsService.getRecentTransactions().catch(() => [])
+        analyticsService.getRevenueTransactions().catch(() => [])
       ]);
 
       // Race the fetch against a timeout to prevent hanging UI
@@ -139,7 +134,6 @@ export default function Dashboard() {
                   key={idx}
                   onClick={() => {
                     if (activeBusinessIndex === idx) return;
-                    setActiveBusinessIndex(idx);
                     setActiveEmpireId(empireId);
                   }}
                   className={cn(
@@ -158,8 +152,7 @@ export default function Dashboard() {
 
           {!slotStatus[activeBusinessIndex] && !isAdmin ? (
             <LockedSlotView 
-              index={activeBusinessIndex} 
-              onUnlock={() => unlockSlot(activeBusinessIndex)} 
+              slotIndex={activeBusinessIndex} 
             />
           ) : (
             <div className="space-y-8 md:space-y-16 animate-in fade-in duration-700">
@@ -201,8 +194,9 @@ export default function Dashboard() {
                     <>
                       <SuccessHubOverview 
                         empireData={empireData}
-                        pulse={pulseData}
-                        health={healthData}
+                        pulseData={pulseData}
+                        healthData={healthData}
+                        transactions={transactions}
                       />
                       <MissionBriefing 
                         empireId={activeEmpireId} 

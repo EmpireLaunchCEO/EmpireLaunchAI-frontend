@@ -135,6 +135,7 @@ const BusinessSlot = ({ name, niche, status, growthScore, onHypeClick, onClick }
 
 export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
   const [isStudioOpen, setIsStudioOpen] = useState(false);
+  const { slotStatus, isAdmin, unlockSlot } = useEmpire();
 
   const handleSlotClick = () => {
     const description = currentEmpire?.description || '';
@@ -174,8 +175,24 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
           status="hype"
           onHypeClick={() => setIsStudioOpen(true)}
         />
-        <BusinessSlot id="2" name="Empty" niche="Empty" status="locked" />
-        <BusinessSlot id="3" name="Empty" niche="Empty" status="locked" />
+        <BusinessSlot 
+          id="2" 
+          name="Empty" 
+          niche="Empty" 
+          status={slotStatus[1] || isAdmin ? 'active' : 'locked'} 
+          onClick={() => {
+            if (slotStatus[1] || isAdmin) window.location.href = '/dashboard?slot=2';
+          }}
+        />
+        <BusinessSlot 
+          id="3" 
+          name="Empty" 
+          niche="Empty" 
+          status={slotStatus[2] || isAdmin ? 'active' : 'locked'} 
+          onClick={() => {
+            if (slotStatus[2] || isAdmin) window.location.href = '/dashboard?slot=3';
+          }}
+        />
       </div>
 
       <StudioTeaserModal 

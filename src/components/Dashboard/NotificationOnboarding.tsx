@@ -18,7 +18,11 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
   const [status, setStatus] = useState<'idle' | 'subscribing' | 'success' | 'error'>('idle');
 
   useEffect(() => {
-    // Check if permission is already granted or denied
+    // DISABLING AUTO-POPUP to prevent "stuck" UI issues
+    // Only show if explicitly triggered (future implementation)
+    return;
+    
+    /*
     if (typeof window !== 'undefined' && 'Notification' in window) {
       if (Notification.permission === 'default' && !isNotificationModalDismissed) {
         const timer = setTimeout(() => {
@@ -29,6 +33,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
         return () => clearTimeout(timer);
       }
     }
+    */
   }, [isNotificationModalDismissed]);
 
   const urlBase64ToUint8Array = (base64String: string) => {

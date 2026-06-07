@@ -117,9 +117,10 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [userEmpires, setUserEmpires] = useState<any[]>([]);
   const [activeEmpire, setActiveEmpire] = useState<any | null>(null);
   const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: false, 2: false });
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false); // Default to FALSE for security
 
-  // System UI State
+  // Owner Identity Protection
+  const OWNER_EMAIL = 'stacipeabody@gmail.com';
   const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notificationSettings, setNotificationSettings] = useState({ sales: true, approvals: true });
@@ -367,14 +368,17 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       const savedActiveEmpireId = localStorage.getItem('activeEmpireId');
       if (savedActiveEmpireId) {
         setActiveEmpireId(savedActiveEmpireId);
-        // Fast-path initialization if we have local data
-        setIsInitialized(true);
       }
       
-      // ... rest of hydration logic ...
+      const savedSlotStatus = localStorage.getItem('slotStatus');
+      if (savedSlotStatus) {
+        setSlotStatus(JSON.parse(savedSlotStatus));
+      }
       
       try {
-        // Wrap backend calls in a timeout race if possible, or just rely on the global initTimeout
+        // ... (existing hydration code)
+        
+        // Auto-detect Owner Admin Status
         const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
           headers: { 
             'Authorization': 'Bearer mock-mobile-token',
@@ -383,7 +387,24 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         }).catch(() => null);
 
         if (settingsRes && settingsRes.ok) {
-           // ... logic ...
+           const data = await settingsRes.json();
+           
+           // Apply standard settings from backend
+           if (data.isPaid) setIsPaidState(true);
+           if (data.theme) setTheme(data.theme);
+           if (data.aiMode) setAiModeState(data.aiMode);
+
+           // If the email matches the owner, grant full slot access automatically
+           if (data.email === OWNER_EMAIL) {
+             console.log('[Security] Owner Identity Verified. Unlocking all business nodes.');
+             setIsAdmin(true);
+             setIsPaidState(true);
+             setSlotStatus({ 0: true, 1: true, 2: true });
+             
+             // Persist locally to avoid flickers on refresh
+             localStorage.setItem('isPaid', 'true');
+             localStorage.setItem('slotStatus', JSON.stringify({ 0: true, 1: true, 2: true }));
+           }
         }
 
         const goal = await empireService.getLatestEmpire().catch(() => null);

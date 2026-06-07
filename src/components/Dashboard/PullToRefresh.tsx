@@ -17,12 +17,12 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   const controls = useAnimation();
   const y = useMotionValue(0);
 
-  const THRESHOLD = 100;
+  const THRESHOLD = 80;
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      setIsAtTop(scrollY <= 10);
+      setIsAtTop(scrollY <= 5); // More sensitive top detection
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -36,7 +36,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
     
     // Only pull down (positive y offset)
     if (info.offset.y > 0) {
-      const dampenedY = info.offset.y * 0.4;
+      const dampenedY = info.offset.y * 0.6;
       y.set(dampenedY);
       setPullProgress(Math.min(dampenedY / THRESHOLD, 1));
     } else {

@@ -332,16 +332,37 @@ export const approvalService = {
 
 export const retentionService = {
   async getTrustPulse(): Promise<TrustScore> {
+    try {
+      const res = await fetch(`${API_URL}/api/reviews/pulse`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) {}
     return { score: 88, velocity: 92, sentiment: 85, agility: 82 };
   },
   async getSentimentMap(): Promise<SentimentPoint[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/reviews/sentiment`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) {}
     return [];
   },
   async getInboxDrafts(): Promise<InboxDraft[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/retention/drafts`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) {}
     return [];
   },
   async respondToDraft(id: string, status: 'approved' | 'rejected'): Promise<boolean> {
-    return true;
+    try {
+      const res = await fetch(`${API_URL}/api/retention/respond`, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify({ id, status })
+      });
+      return res.ok;
+    } catch (e) {
+      return false;
+    }
   }
 };
 
