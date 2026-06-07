@@ -2,25 +2,25 @@
   "name": "EmpireLaunch AI",
   "short_name": "Empire AI",
   "description": "High-Intelligence AI Business Partner",
-  "start_url": "/dashboard?pwa=true&v=1013",
+  "start_url": "/dashboard?pwa=true&v=1014",
   "display": "standalone",
   "background_color": "#0a0519",
   "theme_color": "#0a0519",
   "icons": [
     {
-      "src": "/apple-v13.png",
+      "src": "/apple-v14.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-v13.png",
+      "src": "/icon-v14.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-v13.png",
+      "src": "/icon-v14.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
