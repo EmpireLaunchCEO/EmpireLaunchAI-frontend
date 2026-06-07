@@ -96,7 +96,7 @@ export default function Dashboard() {
     setTimeout(() => setIsCelebrating(false), 5000);
   };
 
-  if (!mounted || !isInitialized || !isDashboardLoaded) {
+  if (!mounted || !isInitialized) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
         <BrandedGlobe size="sm" spinning={true} className="shadow-[0_0_30px_rgba(0,229,255,0.4)]" />
@@ -112,7 +112,7 @@ export default function Dashboard() {
       <PullToRefresh onRefresh={fetchData}>
         <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-20 overflow-x-hidden">
           
-          {/* 1. Centered Visuals & Business Navigation (Absolute Top) */}
+          {/* 1. Centered Visuals & Business Navigation (Absolute Top - Always Visible) */}
           <div className="flex flex-col items-center pt-8">
             <div className="pointer-events-none flex flex-col items-center">
               <BrandedGlobe 
@@ -126,14 +126,12 @@ export default function Dashboard() {
               </h2>
             </div>
 
-            {/* 2. Centered Business Navigation */}
+            {/* 2. Centered Business Navigation (Persistent) */}
             <div className="mt-12 flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-full overflow-x-auto scrollbar-hide gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
               {[0, 1, 2].map((idx) => {
                 const empireId = (idx + 1).toString();
                 const isActive = activeBusinessIndex === idx;
 
-                // Labeling logic: Show "EmpireLaunch AI" for slot 1 on owner account
-                // otherwise use the actual business name if active, or default labels.
                 let label = `Business ${idx + 1}`;
                 if (idx === 0) {
                   if (isAdmin) {
@@ -156,13 +154,13 @@ export default function Dashboard() {
                       "px-5 md:px-10 py-3 md:py-4 rounded-[18px] font-black text-[10px] md:text-[11px] uppercase tracking-tighter transition-all flex items-center gap-2.5 whitespace-nowrap min-w-fit",
                       isActive
                         ? "bg-theme-surface text-foreground shadow-lg border border-theme scale-105"
-                        : "text-slate-400/80 hover:text-foreground hover:bg-theme-surface/40"
+                        : "text-slate-200/60 hover:text-foreground hover:bg-theme-surface/40"
                     )}
                   >
                     {isActive ? (
                       <Globe className="w-3.5 h-3.5 text-primary animate-pulse" />
                     ) : (
-                      <Briefcase className="w-3.5 h-3.5 opacity-40" />
+                      <Briefcase className="w-3.5 h-3.5 opacity-60" />
                     )}
                     {label}
                   </button>
@@ -171,68 +169,79 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {!slotStatus[activeBusinessIndex] && !isAdmin ? (
-            <LockedSlotView slotIndex={activeBusinessIndex} />
-          ) : (
-            <div className="space-y-12 md:space-y-20 animate-in fade-in duration-1000">
-              
-              {/* 3. Selected Business Identity */}
-              <div className="text-center space-y-4">
-                <div className="flex items-center justify-center gap-2">
-                  <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
-                </div>
-                <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-                  {empireData?.name || empireData?.title || "Empire Launch"}.
-                </h1>
-              </div>
-
-              {/* 4. Intelligence & Operations Grid (Teacher First) */}
-              <div className="max-w-6xl mx-auto space-y-12 md:space-y-20">
-                {!isLinkingComplete && <GuidedLinking currentEmpire={empireData} onRefresh={fetchData} />}
-                
-                <SuccessHubOverview 
-                  empireData={empireData}
-                  pulseData={pulseData}
-                  healthData={healthData}
-                />
-
-                <NicheCalibrationBox 
-                  niche={empireData?.niche || empireData?.description?.match(/Empire Niche: (.*?)\./)?.[1]} 
-                  angle={empireData?.description?.match(/Angle: (.*?)\./)?.[1]}
-                />
-
-                <FinancialCommand growthScore={healthData?.score} />
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pt-8 relative z-0">
-                  <div className="lg:col-span-8 space-y-12">
-                    <MissionBriefing 
-                      empireData={empireData} 
-                      onExecute={handleInsightExecute} 
-                      isExecuting={!!executingInsight}
-                    />
-                    <DetailedRevenue transactions={transactions} />
-                  </div>
-                  <aside className="lg:col-span-4 space-y-12">
-                    <AIOptimizationHub />
-                    <AutonomousCyclesStatus />
-                    <SocialProofApproval />
-                    <EmpireConstellation />
-                  </aside>
-                </div>
-              </div>
-
-              {/* 7. Neural Notes Section (The Bottom) */}
-              <div className="max-w-6xl mx-auto pb-8">
-                <NeuralNotes />
-              </div>
-
-              {/* Version Verification */}
-              <div className="flex justify-center pb-20">
-                <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
-                  Command Center v3.0.1 (Neural Sync Active)
-                </span>
-              </div>
+          {!isDashboardLoaded ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-6">
+              <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin" />
+              <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
+                Syncing Neural Node {activeEmpireId}
+              </h2>
             </div>
+          ) : (
+            <>
+              {!slotStatus[activeBusinessIndex] && !isAdmin ? (
+                <LockedSlotView slotIndex={activeBusinessIndex} />
+              ) : (
+                <div className="space-y-12 md:space-y-20 animate-in fade-in duration-1000">
+                  
+                  {/* 3. Selected Business Identity */}
+                  <div className="text-center space-y-4">
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
+                    </div>
+                    <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
+                      {empireData?.name || empireData?.title || "Empire Launch"}.
+                    </h1>
+                  </div>
+
+                  {/* 4. Intelligence & Operations Grid (Teacher First) */}
+                  <div className="max-w-6xl mx-auto space-y-12 md:space-y-20">
+                    {!isLinkingComplete && <GuidedLinking currentEmpire={empireData} onRefresh={fetchData} />}
+                    
+                    <SuccessHubOverview 
+                      empireData={empireData}
+                      pulseData={pulseData}
+                      healthData={healthData}
+                    />
+
+                    <NicheCalibrationBox 
+                      niche={empireData?.niche || empireData?.description?.match(/Empire Niche: (.*?)\./)?.[1]} 
+                      angle={empireData?.description?.match(/Angle: (.*?)\./)?.[1]}
+                    />
+
+                    <FinancialCommand growthScore={healthData?.score} />
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pt-8 relative z-0">
+                      <div className="lg:col-span-8 space-y-12">
+                        <MissionBriefing 
+                          empireData={empireData} 
+                          onExecute={handleInsightExecute} 
+                          isExecuting={!!executingInsight}
+                        />
+                        <DetailedRevenue transactions={transactions} />
+                      </div>
+                      <aside className="lg:col-span-4 space-y-12">
+                        <AIOptimizationHub />
+                        <AutonomousCyclesStatus />
+                        <SocialProofApproval />
+                        <EmpireConstellation />
+                      </aside>
+                    </div>
+                  </div>
+
+                  {/* 7. Neural Notes Section (The Bottom) */}
+                  <div className="max-w-6xl mx-auto pb-8">
+                    <NeuralNotes />
+                  </div>
+
+                  {/* Version Verification */}
+                  <div className="flex justify-center pb-20">
+                    <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
+                      Command Center v3.0.1 (Neural Sync Active)
+                    </span>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
 
