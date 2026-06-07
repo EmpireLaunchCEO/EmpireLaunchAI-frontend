@@ -155,7 +155,7 @@ export default function Dashboard() {
   if (!mounted || !isInitialized || !isDashboardLoaded) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
         <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
           Initializing Neural Sync
         </h2>
@@ -218,7 +218,7 @@ export default function Dashboard() {
             </div>
 
             <div className="h-96 bg-theme-surface rounded-[48px] border-2 border-theme flex flex-col items-center justify-center gap-6 animate-pulse">
-              <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(176,38,255,0.2)]" />
+              <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgba(176,38,255,0.2)]" />
               <h2 className="text-blue-200 font-black uppercase tracking-[0.3em] text-sm italic">
                 Neural Syncing...
               </h2>

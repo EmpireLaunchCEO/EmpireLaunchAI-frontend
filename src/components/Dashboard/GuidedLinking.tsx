@@ -305,12 +305,12 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="bg-theme-background rounded-[40px] p-10 text-foreground border border-theme relative overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)]"
+            className="bg-white rounded-[40px] p-10 text-slate-900 border border-slate-100 relative overflow-hidden shadow-2xl"
           >
             <div className="relative z-10 flex flex-col md:flex-row gap-8">
               <div className="shrink-0">
-                <div className="w-20 h-20 rounded-[28px] bg-primary flex items-center justify-center shadow-2xl shadow-primary/40 relative">
-                  <Stars className="w-10 h-10 text-foreground" />
+                <div className="w-20 h-20 rounded-[28px] bg-blue-600 flex items-center justify-center shadow-2xl shadow-blue-500/20 relative">
+                  <Stars className="w-10 h-10 text-white" />
                   {isTyping && (
                     <div className="absolute -top-2 -right-2 bg-amber-400 rounded-full p-1.5 animate-bounce shadow-lg">
                       <div className="flex gap-1">

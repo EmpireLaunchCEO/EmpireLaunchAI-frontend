@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  /* ELECTRIC EMPIRE DEFAULT - Neon Cyan to Deep Violet */
-  --primary-rgb: 0, 229, 255; /* Neon Cyan */
-  --secondary-rgb: 124, 58, 237; /* Deep Violet */
+  /* DEFAULT SHIMMER THEME - Deep Violet to Electric Blue */
+  --primary-rgb: 124, 58, 237; /* Deep Violet (#7c3aed) */
+  --secondary-rgb: 59, 130, 246; /* Electric Blue (#3b82f6) */
   --background-rgb: 10, 5, 25; /* Near Black Violet */
   --foreground-rgb: 255, 255, 255; /* Pure White */
   --surface-rgb: 12, 8, 30; /* Deeper Violet Surface */
-  --surface-border-rgb: 0, 229, 255; /* Neon Cyan Outlines */
+  --surface-border-rgb: 124, 58, 237; /* Violet Border Shimmer */
   
   --background: rgb(var(--background-rgb));
   --foreground: rgb(var(--foreground-rgb));
@@ -19,40 +19,49 @@
   --surface-border: rgb(var(--surface-border-rgb));
 }
 
-[data-theme='emerald'] {
-  --primary-rgb: 16, 185, 129; /* Growth Green */
-  --secondary-rgb: 5, 150, 105;
+[data-theme='neon-cyan'] {
+  --primary-rgb: 0, 229, 255; /* Neon Cyan */
+  --secondary-rgb: 124, 58, 237; /* Deep Violet */
   --background-rgb: 10, 5, 25;
   --foreground-rgb: 255, 255, 255;
-  --surface-rgb: 20, 10, 45;
-  --surface-border-rgb: 16, 185, 129;
+  --surface-rgb: 12, 8, 30;
+  --surface-border-rgb: 0, 229, 255;
+}
+
+[data-theme='emerald'] {
+  --primary-rgb: 22, 163, 74;
+  --secondary-rgb: 21, 128, 61;
+  --background-rgb: 255, 255, 255;
+  --foreground-rgb: 15, 23, 42;
+  --surface-rgb: 240, 253, 244;
+  --surface-border-rgb: 187, 247, 208;
 }
 
 [data-theme='pink'] {
-  --primary-rgb: 255, 0, 153; /* Electric Pink */
+  --primary-rgb: 219, 39, 119;
   --secondary-rgb: 190, 24, 93;
-  --background-rgb: 10, 5, 25;
-  --foreground-rgb: 255, 255, 255;
-  --surface-rgb: 20, 10, 45;
-  --surface-border-rgb: 255, 0, 153;
+  --background-rgb: 255, 255, 255;
+  --foreground-rgb: 15, 23, 42;
+  --surface-rgb: 253, 242, 248;
+  --surface-border-rgb: 252, 231, 243;
 }
 
 [data-theme='vibrant-cyan'] {
-  --primary-rgb: 0, 255, 255; /* Vibrant Cyan */
-  --secondary-rgb: 8, 145, 178;
-  --background-rgb: 10, 5, 25;
-  --foreground-rgb: 255, 255, 255;
-  --surface-rgb: 20, 10, 45;
-  --surface-border-rgb: 0, 255, 255;
+  --primary-rgb: 8, 145, 178;
+  --secondary-rgb: 21, 94, 117;
+  --background-rgb: 255, 255, 255;
+  --foreground-rgb: 15, 23, 42;
+  --surface-rgb: 236, 254, 255;
+  --surface-border-rgb: 207, 250, 254;
 }
 
 [data-theme='electric-blue'] {
-  --primary-rgb: 0, 162, 255; /* Neon Blue */
-  --secondary-rgb: 3, 105, 161;
-  --background-rgb: 10, 5, 25;
-  --foreground-rgb: 255, 255, 255;
-  --surface-rgb: 20, 10, 45;
-  --surface-border-rgb: 0, 162, 255;
+  --primary-rgb: 37, 99, 235;
+  --secondary-rgb: 29, 78, 216;
+  --background-rgb: 255, 255, 255;
+  --foreground-rgb: 15, 23, 42;
+  --surface-rgb: 239, 246, 255;
+  --surface-border-rgb: 219, 234, 254;
 }
 
 /* 
@@ -160,31 +169,31 @@ p, span, label, div, li, td, th, a {
 
 /* VIBRANT BOX SHADOW - Add subtle glow to theme surfaces */
 .bg-theme-surface, .bg-theme-background {
-  box-shadow: inset 0 0 0 1px rgba(var(--surface-border-rgb), 0.15);
+  box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.1), inset 0 0 0 1px rgba(var(--primary-rgb), 0.2);
 }
 
-/* VIBRANT ACCENT for interactive elements */
-button:not(.no-vibrant):hover, 
-a:hover,
-input:focus, 
-select:focus, 
-textarea:focus {
-  outline: 2px solid rgba(var(--surface-border-rgb), 0.4);
-  outline-offset: 2px;
+/* SHIMMER ANIMATION */
+@keyframes shimmer {
+  0% { border-color: rgba(var(--primary-rgb), 0.3); box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1); }
+  50% { border-color: rgba(var(--secondary-rgb), 0.5); box-shadow: 0 0 25px rgba(var(--secondary-rgb), 0.2); }
+  100% { border-color: rgba(var(--primary-rgb), 0.3); box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1); }
 }
 
-/* Ensure inputs and selects are readable and solid */
-input, textarea, select {
-  -webkit-text-fill-color: white !important;
-  color: white !important;
-  background-clip: border-box !important;
-  font-size: 16px !important;
+/* Apply shimmer to themed borders */
+.border-theme, .border-2, .border {
+  border-color: rgba(var(--primary-rgb), 0.3) !important;
+  animation: shimmer 4s infinite ease-in-out;
+  transition: all 0.3s ease;
 }
 
-option {
-  background-color: #0f172a; /* Slate 900 */
-  color: white !important;
-  -webkit-text-fill-color: white !important;
+.border-theme:hover {
+  border-color: rgba(var(--secondary-rgb), 0.6) !important;
+  box-shadow: 0 0 30px rgba(var(--secondary-rgb), 0.3);
+}
+
+/* GLOWING TEXT EFFECT */
+.text-glow {
+  text-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
 }
 
 /* EXCEPT for text inside elements that have a primary background */

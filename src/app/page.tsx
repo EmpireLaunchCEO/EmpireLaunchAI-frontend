@@ -48,7 +48,7 @@ function LandingPageContent() {
   if (!isMounted) {
     return (
       <div className="fixed inset-0 z-[100] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <BrandedGlobe size="xl" spinning={true} />
       </div>
     );
   }
@@ -58,10 +58,10 @@ function LandingPageContent() {
   const isFastTrack = isInitialized && isHandoverComplete && isOnboarded && isPaid;
   
   return (
-    <div className="min-h-screen bg-[#0a0519] selection:bg-blue-500/30 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0519] selection:bg-primary/30 overflow-x-hidden text-white">
       {isFastTrack && (
         <div className="fixed inset-0 z-[100] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-          <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+          <BrandedGlobe size="xl" spinning={true} />
           <div className="flex flex-col items-center gap-2">
             <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
               Neural Path Authorized
@@ -76,13 +76,13 @@ function LandingPageContent() {
       {/* High-Intelligence Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-surface-border/10 blur-[120px] rounded-full animate-pulse delay-700" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 blur-[120px] rounded-full animate-pulse delay-700" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
       </div>
 
       <nav className="relative z-10 p-6 flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-3">
-          <BrandedGlobe size="md" className="shadow-[0_0_20px_rgba(0,229,255,0.2)]" />
+          <BrandedGlobe size="md" />
           <span className="font-black text-2xl tracking-tighter uppercase italic text-theme-gradient pr-2">EmpireLaunch AI</span>
         </div>
         <div className="hidden md:flex items-center gap-2 bg-theme-surface/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
@@ -100,19 +100,19 @@ function LandingPageContent() {
           {/* Tagline */}
           <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-md px-5 py-2 rounded-full border border-primary/20 font-bold text-[10px] uppercase tracking-[0.2em]">
             <Stars className="w-4 h-4 text-primary" />
-            <span className="bg-gradient-to-r from-[#00e5ff] to-[#7c3aed] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Autonomous Business Engineering
             </span>
           </div>
 
           {/* Hero Heading */}
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.8] uppercase italic">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.8] uppercase italic text-slate-900">
             <span className="">
               Your Empire Awaits
             </span>
           </h1>
 
-          <p className="text-sm md:text-base text-slate-400 max-w-[280px] mx-auto leading-relaxed font-medium uppercase tracking-tight">
+          <p className="text-sm md:text-base text-slate-500 max-w-[280px] mx-auto leading-relaxed font-medium uppercase tracking-tight">
             The high-intelligence AI partner that builds, markets, and scales your business while you sleep.
           </p>
 
@@ -126,7 +126,7 @@ function LandingPageContent() {
                 sessionStorage.clear();
                 window.location.href = '/onboarding?preview=true';
               }}
-              className="group relative bg-primary text-slate-950 px-10 py-5 rounded-[24px] font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_40px_rgba(0,229,255,0.3)] flex items-center justify-center gap-3 w-full uppercase tracking-tighter italic"
+              className="group relative bg-primary text-white px-10 py-5 rounded-[24px] font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 w-full uppercase tracking-tighter italic"
             >
               Authorize Engine
               <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
@@ -134,7 +134,7 @@ function LandingPageContent() {
             </button>
           </div>
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none">
-            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.7.0-ELECTRIC-EMPIRE</span>
+            <span className="text-[8px] font-black uppercase tracking-[0.5em] text-white">System Build: v4.7.0 (Shimmer)</span>
           </div>
         </motion.div>
 

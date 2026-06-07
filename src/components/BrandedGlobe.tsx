@@ -8,9 +8,10 @@ interface BrandedGlobeProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   animate?: boolean;
+  spinning?: boolean;
 }
 
-export function BrandedGlobe({ className, size = 'md', animate = true }: BrandedGlobeProps) {
+export function BrandedGlobe({ className, size = 'md', animate = true, spinning = false }: BrandedGlobeProps) {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const sizeClasses = {
     sm: 'w-6 h-6',
@@ -19,33 +20,46 @@ export function BrandedGlobe({ className, size = 'md', animate = true }: Branded
     xl: 'w-28 h-28',
   };
 
-  return (
-    <motion.div
-      className={cn(
-        "rounded-full overflow-hidden flex items-center justify-center bg-theme-background border border-theme relative shrink-0",
-        sizeClasses[size],
-        className
-      )}
-      animate={animate ? {
-        scale: [1, 1.05, 1],
-        rotate: [0, 5, 0, -5, 0],
-      } : {}}
-      transition={{
+  const animationProps = spinning 
+    ? { rotate: 360 }
+    : animate 
+      ? {
+          scale: [1, 1.05, 1],
+          rotate: [0, 5, 0, -5, 0],
+        }
+      : {};
+
+  const transitionProps = spinning
+    ? {
+        duration: 3,
+        repeat: Infinity,
+        ease: "linear"
+      }
+    : {
         duration: 4,
         repeat: Infinity,
         ease: "easeInOut"
-      }}
+      };
+
+  return (
+    <motion.div
+      className={cn(
+        "rounded-full overflow-hidden flex items-center justify-center bg-transparent relative shrink-0",
+        sizeClasses[size],
+        className
+      )}
+      animate={animationProps}
+      transition={transitionProps}
     >
+      {/* Background Glow */}
+      <div className="absolute inset-1 bg-primary/20 blur-xl rounded-full animate-pulse" />
+      
       {/* CSS Globe Fallback structure */}
       <div className={cn(
         "absolute inset-0 flex items-center justify-center fallback-globe rounded-full transition-opacity duration-700",
-        isLoaded ? "opacity-0" : "opacity-40"
+        isLoaded ? "opacity-0" : "opacity-30"
       )}>
-        <div className="w-full h-full rounded-full border border-primary/30" />
-        <div className="absolute w-[1px] h-full bg-primary/20" />
-        <div className="absolute w-full h-[1px] bg-primary/20" />
-        <div className="absolute w-full h-full rounded-full border-x border-primary/20 scale-x-50" />
-        <div className="absolute w-full h-full rounded-full border-y border-primary/20 scale-y-50" />
+        <div className="w-full h-full rounded-full border border-primary/20 bg-primary/5" />
       </div>
 
       <img

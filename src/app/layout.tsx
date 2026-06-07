@@ -17,7 +17,7 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#00e5ff',
+  themeColor: '#0a0519',
 };
 
 export default function RootLayout({
@@ -37,7 +37,7 @@ export default function RootLayout({
         <link rel="icon" href="/apple-v10.png" />
         <link rel="apple-touch-startup-image" href="/apple-v10.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="Empire AI" />
         <meta name="theme-color" content="#0a0519" />
