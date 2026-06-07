@@ -1,0 +1,10 @@
+{
+  "version": "4.9.5",
+  "buildId": "launch-v4-8-3",
+  "changelog": [
+    "Integrated theme engine into Landing Page (bg-theme-background)",
+    "Enforced theme colors on 'YOUR EMPIRE AWAITS' and all hero text",
+    "Balanced global text logic to prevent accidental white-outs",
+    "Restored neon visibility across all authentication and entry routes"
+  ]
+}

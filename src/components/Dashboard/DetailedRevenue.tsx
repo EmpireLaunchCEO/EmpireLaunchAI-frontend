@@ -59,9 +59,11 @@ export function DetailedRevenue() {
   const progressPercent = Math.min(100, Math.max(0, isNaN(rawProgress) ? 0 : rawProgress));
 
   if (loading) {
-    return <div className="h-40 flex items-center justify-center">
-      <BrandedGlobe size="sm" animate={true} />
-    </div>;
+    return (
+      <div className="h-40 flex items-center justify-center">
+        <BrandedGlobe size="sm" animate={true} />
+      </div>
+    );
   }
 
   return (
@@ -156,7 +158,7 @@ export function DetailedRevenue() {
         </div>
 
         <div className="divide-y divide-theme">
-          {transactions.map((t) => (
+          {(transactions || []).map((t) => (
             <div key={t.id} className="p-6 hover:bg-theme-background transition-colors flex items-center justify-between group">
               <div className="flex items-center gap-6">
                 <div className="flex flex-col items-center">
@@ -168,6 +170,7 @@ export function DetailedRevenue() {
                    </span>
                 </div>
 
+                <div className="space-y-1">
                    <h4 className="font-bold text-foreground">{t.customer}</h4>
                    <div className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.platform}</span>

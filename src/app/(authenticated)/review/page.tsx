@@ -138,7 +138,7 @@ export default function ReviewQueue() {
           <div className="flex items-center gap-4 mt-2">
             {isLoading ? (
               <>
-                <BrandedGlobe size="sm" animate={true} />
+                <BrandedGlobe size="sm" spinning={true} />
                 <p className="text-muted-foreground font-medium text-sm md:text-base animate-pulse">
                   AI is preparing your strategy items...
                 </p>

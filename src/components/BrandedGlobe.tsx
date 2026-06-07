@@ -51,9 +51,12 @@ export function BrandedGlobe({ className, size = 'md', animate = true, spinning 
       animate={animationProps}
       transition={transitionProps}
     >
-      {/* 3D Effects Wrapper */}
-      <div className="absolute inset-0 rounded-full shadow-[inset_0_2px_12px_rgba(255,255,255,0.4),inset_0_-4px_24px_rgba(0,0,0,0.6),0_15px_35px_rgba(0,0,0,0.5)] z-20 pointer-events-none border border-white/5" />
+      {/* 3D Effects Wrapper - Enhanced for depth */}
+      <div className="absolute inset-0 rounded-full shadow-[inset_0_4px_16px_rgba(255,255,255,0.5),inset_0_-12px_32px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.6)] z-20 pointer-events-none border border-white/10" />
       
+      {/* Sphere Highlight Overlay */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-transparent to-white/20 z-15 pointer-events-none" />
+
       {/* Dynamic Glow Layer */}
       <div className={cn(
         "absolute inset-0 bg-primary/20 blur-2xl rounded-full transition-opacity duration-1000",

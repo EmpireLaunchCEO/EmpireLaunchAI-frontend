@@ -29,8 +29,8 @@
 }
 
 [data-theme='emerald'] {
-  --primary-rgb: 22, 163, 74;
-  --secondary-rgb: 21, 128, 61;
+  --primary-rgb: 22 163 74;
+  --secondary-rgb: 21 128 61;
   --background-rgb: 255, 255, 255;
   --foreground-rgb: 15, 23, 42;
   --surface-rgb: 240, 253, 244;
@@ -38,8 +38,8 @@
 }
 
 [data-theme='pink'] {
-  --primary-rgb: 219, 39, 119;
-  --secondary-rgb: 190, 24, 93;
+  --primary-rgb: 219 39 119;
+  --secondary-rgb: 190 24 93;
   --background-rgb: 255, 255, 255;
   --foreground-rgb: 15, 23, 42;
   --surface-rgb: 253, 242, 248;
@@ -56,8 +56,8 @@
 }
 
 [data-theme='electric-blue'] {
-  --primary-rgb: 37, 99, 235;
-  --secondary-rgb: 29, 78, 216;
+  --primary-rgb: 37 99 235;
+  --secondary-rgb: 29 78 216;
   --background-rgb: 255, 255, 255;
   --foreground-rgb: 15, 23, 42;
   --surface-rgb: 239, 246, 255;
