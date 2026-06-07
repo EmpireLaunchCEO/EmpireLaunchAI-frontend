@@ -53,6 +53,8 @@ interface EmpireContextType {
   setUserEmpires: (empires: any[]) => void;
   activeEmpire: any | null;
   setActiveEmpire: (empire: any) => void;
+  slotStatus: Record<number, boolean>;
+  unlockSlot: (index: number) => void;
 
   // Notifications
   notifications: Notification[];
@@ -84,6 +86,10 @@ const EmpireContext = createContext<EmpireContextType | undefined>(undefined);
 
 export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [activeEmpireId, setActiveEmpireId] = useState('1');
+  const [platformsByEmpire, setPlatformsByEmpire] = useState<Record<string, string[]>>({});
+  const [notesByEmpire, setNotesByEmpire] = useState<Record<string, string>>({});
+  const [linkingCompleteByEmpire, setLinkingCompleteByEmpire] = useState<Record<string, boolean>>({});
+  const [onboardedByEmpire, setOnboardedByEmpire] = useState<Record<string, boolean>>({});
   const [isPaid, setIsPaidState] = useState(false);
   const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>('co-pilot');
   const [platformPermissions, setPlatformPermissions] = useState<Record<string, 'co-pilot' | 'empire'>>({});
@@ -101,6 +107,20 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [isDashboardLoaded, setDashboardLoaded] = useState(false);
   const [userEmpires, setUserEmpires] = useState<any[]>([]);
   const [activeEmpire, setActiveEmpire] = useState<any | null>(null);
+
+  const connectedPlatforms = platformsByEmpire[activeEmpireId] || [];
+  const empireNotes = notesByEmpire[activeEmpireId] || '';
+  const isLinkingComplete = linkingCompleteByEmpire[activeEmpireId] || false;
+  const isOnboarded = onboardedByEmpire[activeEmpireId] || false;
+
+  const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: false, 2: false });
+
+  const unlockSlot = (index: number) => {
+    setSlotStatus(prev => ({ ...prev, [index]: true }));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('slotStatus', JSON.stringify({ ...slotStatus, [index]: true }));
+    }
+  };
   const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);
   const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -195,9 +215,15 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   };
 
   const completeOnboarding = () => {
-    setIsOnboarded(true);
+    setOnboardedByEmpire(prev => {
+      const next = { ...prev, [activeEmpireId]: true };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('onboardedByEmpire', JSON.stringify(next));
+      }
+      return next;
+    });
+    
     if (typeof window !== 'undefined') {
-      localStorage.setItem('isOnboarded', 'true');
       localStorage.removeItem('onboarding_step');
 
       // Sync to backend
@@ -214,9 +240,15 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   };
 
   const completeLinkingPhase = () => {
-    setIsLinkingComplete(true);
+    setLinkingCompleteByEmpire(prev => {
+      const next = { ...prev, [activeEmpireId]: true };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(next));
+      }
+      return next;
+    });
+
     if (typeof window !== 'undefined') {
-      localStorage.setItem('isLinkingComplete', 'true');
 
       // Sync to backend
       fetch(`${API_URL}/api/settings/linkingComplete`, {
@@ -247,21 +279,25 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
   const connectPlatform = (platform: string) => {
     if (!platform) return;
-    setConnectedPlatforms(prev => {
-      if (prev.includes(platform)) return prev;
-      const next = [...new Set([...prev, platform])];
+    setPlatformsByEmpire(prev => {
+      const current = prev[activeEmpireId] || [];
+      if (current.includes(platform)) return prev;
+      const next = { ...prev, [activeEmpireId]: [...current, platform] };
       if (typeof window !== 'undefined') {
-        localStorage.setItem('connectedPlatforms', JSON.stringify(next));
+        localStorage.setItem('platformsByEmpire', JSON.stringify(next));
       }
       return next;
     });
   };
 
   const setEmpireNotes = (notes: string) => {
-    setEmpireNotesState(notes);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('empireNotes', notes);
-    }
+    setNotesByEmpire(prev => {
+      const next = { ...prev, [activeEmpireId]: notes };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('notesByEmpire', JSON.stringify(next));
+      }
+      return next;
+    });
   };
 
   const addNote = (note: string) => {
@@ -371,8 +407,35 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       const savedProtocol = localStorage.getItem('isProtocolAccepted') === 'true';
       if (savedProtocol) setIsProtocolAccepted(true);
 
+      const savedSlots = localStorage.getItem('slotStatus');
+      if (savedSlots) {
+        try {
+          setSlotStatus(JSON.parse(savedSlots));
+        } catch {}
+      }
+
       try {
-        const rawPlatforms = localStorage.getItem('connectedPlatforms');
+        const rawPlatforms = localStorage.getItem('platformsByEmpire');
+        if (rawPlatforms) setPlatformsByEmpire(JSON.parse(rawPlatforms));
+      } catch {}
+
+      try {
+        const rawNotes = localStorage.getItem('notesByEmpire');
+        if (rawNotes) setNotesByEmpire(JSON.parse(rawNotes));
+      } catch {}
+
+      try {
+        const rawOnboarded = localStorage.getItem('onboardedByEmpire');
+        if (rawOnboarded) setOnboardedByEmpire(JSON.parse(rawOnboarded));
+      } catch {}
+
+      try {
+        const rawLinking = localStorage.getItem('linkingCompleteByEmpire');
+        if (rawLinking) setLinkingCompleteByEmpire(JSON.parse(rawLinking));
+      } catch {}
+
+      try {
+        const rawPlatformsOld = localStorage.getItem('connectedPlatforms');
         const savedPlatforms = rawPlatforms ? JSON.parse(rawPlatforms) : [];
         setConnectedPlatforms(Array.isArray(savedPlatforms) ? savedPlatforms : []);
       } catch {
@@ -506,6 +569,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       setUserEmpires,
       activeEmpire,
       setActiveEmpire,
+      slotStatus,
+      unlockSlot,
       notifications,
       unreadCount,
       markAsRead,

@@ -24,9 +24,10 @@ import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboa
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
+import { LockedSlotView } from '@/components/Dashboard/LockedSlotView';
 
 export default function Dashboard() {
-  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire } = useEmpire();
+  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus } = useEmpire();
   const [activeBusinessIndex, setActiveBusinessIndex] = useState(0);
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
@@ -37,6 +38,11 @@ export default function Dashboard() {
   const [executingInsight, setExecutingInsight] = useState<string | null>(null);
   const [isCelebrating, setIsCelebrating] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const index = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
+    setActiveBusinessIndex(index);
+  }, [activeEmpireId]);
 
   useEffect(() => {
     setMounted(true);
@@ -227,9 +233,8 @@ export default function Dashboard() {
                 key={idx}
                 onClick={() => {
                   setActiveBusinessIndex(idx);
-                  if (idx === 0) setActiveEmpireId('1');
-                  // In a real scenario with paid slots:
-                  // if (idx === 1 && empire2) setActiveEmpireId(empire2.id);
+                  const newId = idx === 0 ? '1' : (idx === 1 ? '2' : '3');
+                  setActiveEmpireId(newId);
                 }}
                 className={cn(
                   "flex-1 flex items-center justify-center gap-2 px-3 py-3 rounded-[20px] font-black text-[9px] md:text-xs uppercase tracking-tighter transition-all",
@@ -244,8 +249,11 @@ export default function Dashboard() {
             );
           })}
         </div>
-
-        {isLoading && !empireData ? (
+        
+        {/* Conditional Content: Dashboard OR Locked View */}
+        {!slotStatus[activeBusinessIndex] ? (
+          <LockedSlotView slotIndex={activeBusinessIndex} />
+        ) : isLoading && !empireData ? (
           /* Inline Loading State (No longer full page blocking) */
           <div className="space-y-12">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
