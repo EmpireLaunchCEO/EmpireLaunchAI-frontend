@@ -152,7 +152,7 @@ export default function Dashboard() {
 
                     <FinancialCommand growthScore={healthData?.score} />
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pt-8 relative z-0">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 relative z-0">
                       <div className="lg:col-span-8 space-y-12">
                         <MissionBriefing 
                           empireData={empireData} 

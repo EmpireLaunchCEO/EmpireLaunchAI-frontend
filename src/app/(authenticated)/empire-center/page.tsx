@@ -181,7 +181,7 @@ export default function EmpireCenterPage() {
                 {/* Approvals Section */}
                 <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-black text-foreground">Pending Approvals</h3>
+                    <h3 className="text-xl font-black text-foreground pr-2">Pending Approvals</h3>
                     {filteredDuties.filter(d => d.type === 'approval').length > 0 && (
                       <span className="bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full text-[10px] font-black uppercase">
                         {filteredDuties.filter(d => d.type === 'approval').length} Action Required
@@ -238,7 +238,7 @@ export default function EmpireCenterPage() {
                 {/* AI Work/Research Feed */}
                 <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6">
                    <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-black text-foreground">AI Active Research</h3>
+                    <h3 className="text-xl font-black text-foreground pr-2">AI Active Research</h3>
                     <button className="text-xs font-black text-blue-600 uppercase tracking-widest">New Request +</button>
                   </div>
 
@@ -467,7 +467,7 @@ export default function EmpireCenterPage() {
                   <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
                     <StickyNote className="w-5 h-5" />
                   </div>
-                  <h4 className="font-black text-foreground text-sm">Empire Notes</h4>
+                  <h4 className="font-black text-foreground text-sm pr-2">Empire Notes</h4>
                 </div>
                 <button
                   onClick={() => setEmpireNotes('')}

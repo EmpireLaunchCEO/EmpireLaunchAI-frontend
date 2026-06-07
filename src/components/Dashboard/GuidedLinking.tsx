@@ -302,7 +302,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   }, [handleInterception]);
 
   return (
-    <div className="space-y-12 pt-10 pb-20">
+    <div className="space-y-12">
       {/* Connected Platforms Quick View (Always visible) */}
       {connectedPlatforms.length > 0 && (
         <motion.div
