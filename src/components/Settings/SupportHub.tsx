@@ -10,6 +10,16 @@ const supportTickets = [
 ];
 
 export function SupportHub() {
+  const handlePrioritySupport = () => {
+    const message = prompt("Direct line to Technical Assistants. Describe your issue:");
+    if (message) {
+      window.dispatchEvent(new CustomEvent('empire:new-user-feedback', { 
+        detail: { rating: 'PRIORITY', review: message, userName: 'User_' + Math.floor(Math.random()*1000) } 
+      }));
+      alert("Ticket transmitted. An assistant will investigate the logic sync immediately.");
+    }
+  };
+
   return (
     <div className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* 1. Rate the App */}
@@ -28,7 +38,10 @@ export function SupportHub() {
             </div>
           </div>
 
-          <button className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white px-8 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 group">
+          <button 
+            onClick={handlePrioritySupport}
+            className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white px-8 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 group"
+          >
             Priority Support Line <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
           </button>
 

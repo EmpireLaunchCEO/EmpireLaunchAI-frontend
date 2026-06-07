@@ -39,39 +39,43 @@
 }
 
 [data-theme='emerald'] {
-  --primary-rgb: 22 163 74;
-  --secondary-rgb: 21 128 61;
-  --background-rgb: 255, 255, 255;
-  --foreground-rgb: 15, 23, 42;
-  --surface-rgb: 240, 253, 244;
-  --surface-border-rgb: 187, 247, 208;
+  --primary-rgb: 0 255 127; /* Bright Spring Green */
+  --secondary-rgb: 50 205 50; /* Lime Green */
+  --background-rgb: 10 5 25;
+  --foreground-rgb: 255 255 255;
+  --surface-rgb: 12 8 30;
+  --surface-border-rgb: 0 255 127;
+  --theme-gradient: linear-gradient(135deg, #00FF7F 0%, #32CD32 100%);
 }
 
 [data-theme='pink'] {
-  --primary-rgb: 219 39 119;
-  --secondary-rgb: 190 24 93;
-  --background-rgb: 255, 255, 255;
-  --foreground-rgb: 15, 23, 42;
-  --surface-rgb: 253, 242, 248;
-  --surface-border-rgb: 252, 231, 243;
+  --primary-rgb: 255 20 147; /* Deep Pink (Hot Pink) */
+  --secondary-rgb: 255 105 180; /* Hot Pink */
+  --background-rgb: 10 5 25;
+  --foreground-rgb: 255 255 255;
+  --surface-rgb: 12 8 30;
+  --surface-border-rgb: 255 20 147;
+  --theme-gradient: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%);
 }
 
 [data-theme='vibrant-cyan'] {
-  --primary-rgb: 8, 145, 178;
-  --secondary-rgb: 21, 94, 117;
-  --background-rgb: 255, 255, 255;
-  --foreground-rgb: 15, 23, 42;
-  --surface-rgb: 236, 254, 255;
-  --surface-border-rgb: 207, 250, 254;
+  --primary-rgb: 0 255 255; /* Bright Cyan */
+  --secondary-rgb: 0 206 209; /* Dark Turquoise */
+  --background-rgb: 10 5 25;
+  --foreground-rgb: 255 255 255;
+  --surface-rgb: 12 8 30;
+  --surface-border-rgb: 0 255 255;
+  --theme-gradient: linear-gradient(135deg, #00FFFF 0%, #00CED1 100%);
 }
 
 [data-theme='electric-blue'] {
-  --primary-rgb: 37 99 235;
-  --secondary-rgb: 29 78 216;
-  --background-rgb: 255, 255, 255;
-  --foreground-rgb: 15, 23, 42;
-  --surface-rgb: 239, 246, 255;
-  --surface-border-rgb: 219, 234, 254;
+  --primary-rgb: 0 191 255; /* Deep Sky Blue */
+  --secondary-rgb: 30 144 255; /* Dodger Blue */
+  --background-rgb: 10 5 25;
+  --foreground-rgb: 255 255 255;
+  --surface-rgb: 12 8 30;
+  --surface-border-rgb: 0 191 255;
+  --theme-gradient: linear-gradient(135deg, #00BFFF 0%, #1E90FF 100%);
 }
 
 /* 
@@ -115,7 +119,7 @@
 }
 
 html, body {
-  background-color: #0a0519 !important;
+  background-color: rgb(var(--background-rgb)) !important;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -161,6 +165,7 @@ h1, h2, h3, h4, .text-theme-gradient {
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
+  filter: saturate(1.5) brightness(1.2); /* Enhance vibrancy for all themes */
 }
 
 /* VIBRANT TEXT - Apply accent color to all text elements */

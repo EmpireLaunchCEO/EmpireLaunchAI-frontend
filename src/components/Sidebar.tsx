@@ -37,10 +37,10 @@ export function Sidebar() {
     <>
       <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-0 top-0 border-r border-theme shadow-sm transition-all duration-300">
         <div className="p-6 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg">
+          <div className="w-8 h-8 rounded-xl bg-theme-gradient flex items-center justify-center text-white shadow-lg">
              <Stars className="w-5 h-5" />
           </div>
-          <span className="text-lg font-black tracking-tight text-foreground uppercase italic truncate">
+          <span className="text-lg font-black tracking-tight text-theme-gradient uppercase italic truncate">
             {activeEmpire?.name || "Empire"}.
           </span>
         </div>
@@ -55,11 +55,11 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm",
                   isActive
-                  ? "bg-primary text-white shadow-xl shadow-primary/10"
-                  : "text-slate-400 hover:text-foreground hover:bg-theme-background"
+                  ? "bg-primary text-white shadow-xl shadow-primary/20"
+                  : "text-white/40 hover:text-white hover:bg-theme-background"
                 )}
               >
-                <item.icon className="w-5 h-5" />
+                <item.icon className={cn("w-5 h-5", isActive ? "text-white" : "text-primary/60")} />
                 <span>{item.name}</span>
               </Link>
             );
@@ -80,13 +80,13 @@ export function Sidebar() {
 
         <div className="p-6 border-t border-theme">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-slate-900 border border-theme flex items-center justify-center shadow-lg overflow-hidden">
-               <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-black text-[10px]">
+            <div className="w-10 h-10 rounded-2xl bg-slate-900 border border-theme flex items-center justify-center shadow-lg overflow-hidden group hover:border-primary/50 transition-colors">
+               <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-black text-[10px] group-hover:bg-primary group-hover:text-white transition-all">
                  {String(activeEmpire?.name || 'E').substring(0, 1).toUpperCase()}
                </div>
             </div>
             <div className="flex flex-col truncate">
-              <span className="text-sm font-black text-foreground truncate">Founder</span>
+              <span className="text-sm font-black text-white truncate">Founder</span>
               <span className="text-[10px] font-black text-primary uppercase tracking-widest truncate">
                 {activeEmpire?.name || "Empire Owner"}
               </span>

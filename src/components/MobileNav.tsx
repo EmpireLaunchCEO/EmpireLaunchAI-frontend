@@ -31,14 +31,14 @@ export function MobileNav() {
           <div className={cn(
             "p-2 rounded-xl transition-all shadow-2xl",
             pathname === '/dashboard' 
-              ? "bg-white text-slate-900 shadow-white/20" 
-              : "bg-transparent text-slate-400"
+              ? "bg-primary text-white shadow-primary/20" 
+              : "bg-transparent text-white/40"
           )}>
             <Home className="w-6 h-6" />
           </div>
           <span className={cn(
             "text-[10px] font-black uppercase tracking-tighter",
-            pathname === '/dashboard' ? "text-white" : "text-slate-500"
+            pathname === '/dashboard' ? "text-white" : "text-white/40"
           )}>Home</span>
         </Link>
 
@@ -54,14 +54,14 @@ export function MobileNav() {
           <div className={cn(
             "p-2 rounded-xl transition-all shadow-2xl",
             pathname === '/empire-center' 
-              ? "bg-white text-slate-900 shadow-white/20" 
-              : "bg-transparent text-slate-400"
+              ? "bg-primary text-white shadow-primary/20" 
+              : "bg-transparent text-white/40"
           )}>
             <ClipboardList className="w-6 h-6" />
           </div>
           <span className={cn(
             "text-[10px] font-black uppercase tracking-tighter",
-            pathname === '/empire-center' ? "text-white" : "text-slate-500"
+            pathname === '/empire-center' ? "text-white" : "text-white/40"
           )}>EC</span>
         </Link>
 
@@ -77,8 +77,8 @@ export function MobileNav() {
           <div className={cn(
             "p-2 rounded-xl transition-all shadow-2xl",
             pathname === '/studio'
-              ? "bg-white text-slate-900 shadow-white/20"
-              : "bg-blue-500 text-white shadow-xl shadow-blue-500/40 lg:bg-blue-900/30"
+              ? "bg-primary text-white shadow-primary/20"
+              : "bg-blue-900/30 text-blue-400 shadow-xl shadow-blue-500/10"
           )}>
             <Video className="w-6 h-6" />
           </div>
@@ -103,14 +103,14 @@ export function MobileNav() {
           <div className={cn(
             "p-2 rounded-xl transition-all shadow-2xl",
             pathname === '/link-center' 
-              ? "bg-white text-slate-900 shadow-white/20" 
-              : "bg-transparent text-slate-400"
+              ? "bg-primary text-white shadow-primary/20" 
+              : "bg-transparent text-white/40"
           )}>
             <PlusCircle className="w-6 h-6" />
           </div>
           <span className={cn(
             "text-[10px] font-black uppercase tracking-tighter",
-            pathname === '/link-center' ? "text-white" : "text-slate-500"
+            pathname === '/link-center' ? "text-white" : "text-white/40"
           )}>LC</span>
         </Link>
 
@@ -126,14 +126,14 @@ export function MobileNav() {
           <div className={cn(
             "p-2 rounded-xl transition-all shadow-2xl",
             pathname === '/settings' 
-              ? "bg-white text-slate-900 shadow-white/20" 
-              : "bg-transparent text-slate-400"
+              ? "bg-primary text-white shadow-primary/20" 
+              : "bg-transparent text-white/40"
           )}>
             <Settings className="w-6 h-6" />
           </div>
           <span className={cn(
             "text-[10px] font-black uppercase tracking-tighter",
-            pathname === '/settings' ? "text-white" : "text-slate-500"
+            pathname === '/settings' ? "text-white" : "text-white/40"
           )}>Settings</span>
         </Link>
       </div>

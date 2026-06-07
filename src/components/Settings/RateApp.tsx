@@ -21,6 +21,10 @@ export function RateApp() {
       const success = await socialProofService.submitRating(rating, review);
       if (success) {
         setIsSubmitted(true);
+        // Trigger a global event so the lead's notifications can catch this
+        window.dispatchEvent(new CustomEvent('empire:new-user-feedback', { 
+          detail: { rating, review, userName: 'User_' + Math.floor(Math.random()*1000) } 
+        }));
       }
     } catch (error) {
       console.error('Failed to submit rating:', error);

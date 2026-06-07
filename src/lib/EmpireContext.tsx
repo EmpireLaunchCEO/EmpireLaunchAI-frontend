@@ -473,6 +473,30 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isLinkingComplete, isInitialized]);
 
+  useEffect(() => {
+    const handleNewFeedback = (e: any) => {
+      const { rating, review, userName } = e.detail;
+      const newNotification: Notification = {
+        id: Math.random().toString(36).substring(2, 9),
+        title: `Feedback from ${userName}`,
+        message: `[${rating} Stars] ${review}`,
+        type: 'approval', // Using approval type so it catches the lead's eye
+        timestamp: new Date(),
+        read: false
+      };
+      setNotifications(prev => [newNotification, ...prev]);
+      
+      addToast({
+        title: "New User Feedback",
+        message: `${userName} sent a ${rating}-star review.`,
+        type: 'system'
+      });
+    };
+
+    window.addEventListener('empire:new-user-feedback', handleNewFeedback);
+    return () => window.removeEventListener('empire:new-user-feedback', handleNewFeedback);
+  }, []);
+
   return (
     <EmpireContext.Provider value={{
       activeEmpireId,

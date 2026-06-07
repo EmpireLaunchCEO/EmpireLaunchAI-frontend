@@ -322,21 +322,22 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                 <motion.div
                   key={id}
                   layoutId={id}
-                  className="p-6 bg-theme-surface border border-theme rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
+                  className="p-6 bg-theme-surface border border-theme rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow group hover:border-primary/50"
                 >
-                  <div className={cn("p-3 rounded-xl", platform.bg)}>
-                    <platform.icon className={cn("w-5 h-5", platform.color)} />
+                  <div className={cn("p-3 rounded-xl transition-colors", platform.bg, "group-hover:bg-primary/20")}>
+                    <platform.icon className={cn("w-5 h-5", platform.color, "group-hover:text-primary")} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-bold text-foreground text-xs">{platform.name}</span>
+                    <span className="font-bold text-foreground text-xs group-hover:text-white transition-colors">{platform.name}</span>
                     <span className={cn(
-                      "text-[7px] font-black uppercase tracking-widest",
-                      platformPermissions[id] === 'empire' ? "text-amber-500" : "text-primary"
+                      "text-[7px] font-black uppercase tracking-widest transition-colors",
+                      platformPermissions[id] === 'empire' ? "text-amber-500" : "text-primary",
+                      "group-hover:text-white"
                     )}>
                       {platformPermissions[id] === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
                     </span>
                   </div>
-                  <CheckCircle2 className="w-4 h-4 text-green-500 ml-auto" />
+                  <CheckCircle2 className="w-4 h-4 text-green-500 ml-auto group-hover:text-white" />
                 </motion.div>
               );
             })}
@@ -356,7 +357,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
           >
             <div className="relative z-10 flex flex-col md:flex-row gap-8">
               <div className="shrink-0">
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-[24px] md:rounded-[28px] bg-blue-600 flex items-center justify-center shadow-2xl shadow-blue-500/20 relative">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-[24px] md:rounded-[28px] bg-theme-gradient flex items-center justify-center shadow-2xl shadow-primary/20 relative">
                   <Stars className="w-8 h-8 md:w-10 md:h-10 text-white" />
                   {isTyping && (
                     <div className="absolute -top-2 -right-2 bg-primary rounded-full p-2 animate-bounce shadow-lg">

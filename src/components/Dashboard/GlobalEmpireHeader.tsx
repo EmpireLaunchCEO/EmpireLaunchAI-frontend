@@ -35,7 +35,7 @@ export function GlobalEmpireHeader() {
           animate={false}
           className="shadow-[0_0_60px_rgba(0,229,255,0.2)]"
         />
-        <h2 className="mt-6 text-xl md:text-4xl lg:text-5xl font-black tracking-tight md:tracking-[0.15em] lg:tracking-[0.2em] uppercase italic text-theme-gradient leading-none text-center px-4 max-w-full">
+        <h2 className="mt-6 text-xl md:text-4xl lg:text-5xl font-black tracking-tight md:tracking-[0.15em] lg:tracking-[0.2em] uppercase italic text-theme-gradient leading-none text-center px-4 max-w-full drop-shadow-[0_2px_10px_rgba(var(--primary-rgb),0.3)]">
           {getPageTitle()}
         </h2>
       </div>
@@ -60,10 +60,10 @@ export function GlobalEmpireHeader() {
                 setActiveEmpireId(empireId);
               }}
               className={cn(
-                "px-5 md:px-10 py-3 md:py-4 rounded-[18px] font-black text-[10px] md:text-[11px] uppercase tracking-tighter transition-all flex items-center gap-2.5 whitespace-nowrap min-w-fit",
+                "px-5 md:px-10 py-3 md:py-4 rounded-[18px] font-black text-[10px] md:text-[11px] uppercase tracking-tighter transition-all flex items-center gap-2.5 whitespace-nowrap min-w-fit border",
                 isActive
-                  ? "bg-theme-surface text-foreground shadow-lg border border-theme scale-105"
-                  : "text-slate-400 hover:text-foreground hover:bg-theme-surface/40"
+                  ? "bg-primary text-white shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] border-white/20 scale-105"
+                  : "text-white/40 border-transparent hover:text-white hover:bg-theme-surface/40 hover:border-theme/30"
               )}
             >
               {isActive ? (

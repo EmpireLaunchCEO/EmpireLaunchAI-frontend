@@ -40,22 +40,22 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
               <ShieldCheck className="w-6 h-6 text-emerald-600" /> Connecting Stripe Gateway
             </h3>
-            <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-              <X className="w-6 h-6 text-slate-400" />
+            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+              <X className="w-6 h-6 text-white/40" />
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-slate-400">Publishable Key</label>
-              <input id="stripe-pub-key" type="text" placeholder="pk_live_..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-emerald-600 outline-none transition-all font-bold text-lg" />
+              <label className="text-xs font-black uppercase tracking-widest text-white/40">Publishable Key</label>
+              <input id="stripe-pub-key" type="text" placeholder="pk_live_..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-emerald-600 outline-none transition-all font-bold text-lg text-white" />
             </div>
             <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-slate-400">Secret Key</label>
-              <input id="stripe-sec-key" type="password" placeholder="sk_live_..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-emerald-600 outline-none transition-all font-bold text-lg" />
+              <label className="text-xs font-black uppercase tracking-widest text-white/40">Secret Key</label>
+              <input id="stripe-sec-key" type="password" placeholder="sk_live_..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-emerald-600 outline-none transition-all font-bold text-lg text-white" />
             </div>
           </div>
           <div className="flex justify-end gap-4 pt-4">
-            <button onClick={onClose} className="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
+            <button onClick={onClose} className="px-8 py-4 bg-white/5 text-white/60 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
             <button 
               onClick={() => {
                 const pub = (document.getElementById('stripe-pub-key') as HTMLInputElement)?.value;
@@ -66,7 +66,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
                   onClose();
                 }
               }}
-              className="px-10 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200"
+              className="px-10 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-900/20"
             >
               Link Stripe Account
             </button>
@@ -85,23 +85,23 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
               <Bot className="w-6 h-6 text-blue-600" /> Connecting Etsy Marketplace
             </h3>
-            <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-              <X className="w-6 h-6 text-slate-400" />
+            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+              <X className="w-6 h-6 text-white/40" />
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-slate-400">Etsy API Key (Keystring)</label>
-              <input id="etsy-api-key" type="password" placeholder="Paste your Keystring..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg" />
+              <label className="text-xs font-black uppercase tracking-widest text-white/40">Etsy API Key (Keystring)</label>
+              <input id="etsy-api-key" type="password" placeholder="Paste your Keystring..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg text-white" />
             </div>
             <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-slate-400">Shared Secret</label>
-              <input id="etsy-shared-secret" type="password" placeholder="Paste your Shared Secret..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg" />
+              <label className="text-xs font-black uppercase tracking-widest text-white/40">Shared Secret</label>
+              <input id="etsy-shared-secret" type="password" placeholder="Paste your Shared Secret..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg text-white" />
             </div>
           </div>
           <div className="flex justify-end gap-4 pt-4">
-            <button onClick={onClose} className="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
-            <button className="px-10 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-200">Save Connection</button>
+            <button onClick={onClose} className="px-8 py-4 bg-white/5 text-white/60 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
+            <button className="px-10 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20">Save Connection</button>
           </div>
         </div>
       </div>
@@ -116,26 +116,26 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
               <Share2 className="w-6 h-6 text-blue-600" /> Connecting TikTok Marketing
             </h3>
-            <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-              <X className="w-6 h-6 text-slate-400" />
+            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+              <X className="w-6 h-6 text-white/40" />
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-slate-400">App Type</label>
-              <select className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold appearance-none text-lg">
+              <label className="text-xs font-black uppercase tracking-widest text-white/40">App Type</label>
+              <select className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold appearance-none text-lg text-white">
                 <option>Marketing API</option>
                 <option>Display API</option>
               </select>
             </div>
             <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-slate-400">Redirect URI</label>
-              <input type="text" readOnly value="https://empire-launch-ai-frontend.vercel.app/api/auth/callback/tiktok" className="w-full p-5 rounded-3xl bg-slate-100 border-2 border-theme outline-none transition-all font-bold text-lg text-muted-foreground cursor-not-allowed" />
+              <label className="text-xs font-black uppercase tracking-widest text-white/40">Redirect URI</label>
+              <input type="text" readOnly value="https://empire-launch-ai-frontend.vercel.app/api/auth/callback/tiktok" className="w-full p-5 rounded-3xl bg-white/5 border-2 border-theme outline-none transition-all font-bold text-lg text-white/40 cursor-not-allowed" />
             </div>
           </div>
           <div className="flex justify-end gap-4 pt-4">
-            <button onClick={onClose} className="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
-            <button className="px-10 py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">Sync TikTok</button>
+            <button onClick={onClose} className="px-8 py-4 bg-white/5 text-white/60 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
+            <button className="px-10 py-4 bg-slate-950 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-slate-900/40">Sync TikTok</button>
           </div>
         </div>
       </div>
@@ -220,11 +220,11 @@ export default function SettingsPage() {
                   className={cn(
                     "flex-none lg:flex-none flex items-center justify-center lg:justify-start gap-2 px-4 lg:px-6 py-3 lg:py-4 rounded-[18px] lg:rounded-[24px] font-black text-[9px] lg:text-[10px] uppercase tracking-tighter transition-all whitespace-nowrap lg:whitespace-normal",
                     activeTab === tab.id
-                      ? "bg-theme-surface text-foreground shadow-sm border border-theme"
-                      : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
+                      ? "bg-primary text-white shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] border-white/20"
+                      : "text-white/40 hover:text-white hover:bg-theme-surface/50"
                   )}
                 >
-                  <tab.icon className={cn("w-3.5 h-3.5 lg:w-4 h-4", activeTab === tab.id ? "text-primary" : "")} />
+                  <tab.icon className={cn("w-3.5 h-3.5 lg:w-4 h-4", activeTab === tab.id ? "text-white" : "text-white/40")} />
                   <span className="truncate">{tab.name}</span>
                   {activeTab === tab.id && <ChevronRight className="hidden lg:block w-3 h-3 ml-auto text-primary" />}
                 </button>
@@ -329,21 +329,21 @@ export default function SettingsPage() {
                         onClick={() => setActivePlatform(p)} 
                         className={cn(
                           "p-6 rounded-[32px] border-2 transition-all flex flex-col items-center gap-3 group",
-                          p === 'Stripe' && isStripeLinked ? "border-emerald-600 bg-emerald-50/50" : "border-theme bg-theme-background hover:border-blue-600"
+                          p === 'Stripe' && isStripeLinked ? "border-emerald-600 bg-emerald-900/20" : "border-theme bg-theme-background hover:border-primary/50"
                         )}
                       >
                         <div className={cn(
                           "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors",
-                          p === 'Stripe' && isStripeLinked ? "bg-emerald-100" : "bg-theme-surface group-hover:bg-blue-50"
+                          p === 'Stripe' && isStripeLinked ? "bg-emerald-900/40" : "bg-theme-surface group-hover:bg-primary/20"
                         )}>
                           {p === 'Stripe' && isStripeLinked 
-                            ? <ShieldCheck className="w-6 h-6 text-emerald-600" />
-                            : <Bot className={cn("w-6 h-6 transition-colors", p === 'Stripe' && isStripeLinked ? "text-emerald-600" : "text-slate-400 group-hover:text-blue-600")} />
+                            ? <ShieldCheck className="w-6 h-6 text-emerald-500" />
+                            : <Bot className={cn("w-6 h-6 transition-colors", p === 'Stripe' && isStripeLinked ? "text-emerald-500" : "text-white/40 group-hover:text-primary")} />
                           }
                         </div>
                         <span className={cn(
                           "font-black text-[10px] uppercase tracking-widest",
-                          p === 'Stripe' && isStripeLinked ? "text-emerald-700" : "text-slate-600"
+                          p === 'Stripe' && isStripeLinked ? "text-emerald-500" : "text-white/60 group-hover:text-white"
                         )}>{p}</span>
                       </button>
                     ))}
@@ -449,12 +449,12 @@ export default function SettingsPage() {
                       { id: 'content', name: 'Content Ready for Review', desc: 'Alert when a high-converting video is drafted and ready.' },
                       { id: 'trends', name: 'Market Pivot Detected', desc: 'AI found a new trend your empire should capitalize on.' }
                     ].map((n) => (
-                      <div key={n.id} className="flex items-center justify-between p-6 bg-theme-background border-2 border-theme rounded-3xl group hover:border-blue-100 transition-all">
+                      <div key={n.id} className="flex items-center justify-between p-6 bg-theme-background border-2 border-theme rounded-3xl group hover:border-primary/50 transition-all">
                         <div className="space-y-1">
-                          <h4 className="font-bold text-foreground">{n.name}</h4>
-                          <p className="text-xs text-muted-foreground">{n.desc}</p>
+                          <h4 className="font-bold text-white">{n.name}</h4>
+                          <p className="text-xs text-white/40">{n.desc}</p>
                         </div>
-                        <div className="w-14 h-8 bg-blue-600 rounded-full flex items-center px-1 shadow-inner relative">
+                        <div className="w-14 h-8 bg-primary/20 rounded-full flex items-center px-1 shadow-inner relative border border-primary/30">
                            <div className="w-6 h-6 bg-white rounded-full shadow-lg absolute right-1" />
                         </div>
                       </div>
@@ -483,7 +483,7 @@ export default function SettingsPage() {
                         onClick={() => setTheme(scheme.id)} 
                         className={cn(
                           "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 group", 
-                          theme === scheme.id ? "border-primary bg-primary/5" : "border-theme bg-theme-background hover:border-primary/10"
+                          theme === scheme.id ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" : "border-theme bg-theme-background hover:border-primary/30"
                         )}
                       >
                         <div className="flex items-center justify-between">
