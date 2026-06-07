@@ -141,16 +141,12 @@ h3 {
   line-height: 1.3;
 }
 
-h1, h2, .text-theme-gradient {
-  background: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
-h3 {
-  color: rgb(var(--primary-rgb));
+h1, h2, h3, .text-theme-gradient {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: rgb(var(--primary-rgb)) !important;
+  color: rgb(var(--primary-rgb)) !important;
 }
 
 /* VIBRANT TEXT - Apply accent color to all text elements */
