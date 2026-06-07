@@ -75,6 +75,14 @@ export default function Dashboard() {
       ]);
 
       if (eData) {
+        // Parse niche from description if not present
+        if (!eData.niche && eData.description) {
+          const match = eData.description.match(/Empire Niche: (.*?)\./);
+          if (match && match[1] && match[1] !== '.') {
+            eData.niche = match[1];
+          }
+        }
+        
         setEmpireData(eData);
         setPulseData(pulse || { status: 'Optimizing', progress: 0, logs: [] });
         setHealthData(health || { revenue: 0, growthScore: 80 });
@@ -274,8 +282,6 @@ export default function Dashboard() {
           /* Full Content Area */
           <>
             <BusinessSlots currentEmpire={empireData} />
-
-            <MissionBriefing empireData={empireData} />
 
             {!isLinkingComplete ? (
               <div className="bg-theme-surface border-2 border-theme rounded-[48px] p-8">

@@ -105,7 +105,7 @@ export function IntelligenceAuditor() {
   };
 
   const initialMessage = isCriticalMissing 
-    ? `System Alert: Empire identity incomplete. I cannot execute autonomous strategies without a Name and Niche. Shall we synchronize your vision now?`
+    ? `System Alert: Empire identity incomplete. I need your Name and Niche to establish tactical awareness. Shall we synchronize your vision now?`
     : `Analyzing neural pathways... I've detected a critical data gap. Your Empire ${missingFields.join(', ')} is currently undefined. Shall we calibrate your identity now?`;
 
   const currentMessage = isInteractive ? getQuestion(missingFields[currentFieldIdx]) : initialMessage;
@@ -146,7 +146,10 @@ export function IntelligenceAuditor() {
         const niche = newData['Niche'] || empire.description?.match(/Empire Niche: (.*?)\./)?.[1] || '';
         const angle = newData['Angle'] || empire.description?.match(/Angle: (.*?)\./)?.[1] || '';
 
-        const description = `Empire Niche: ${niche}. Angle: ${angle}. Mode: co-pilot`;
+        // Ensure proper formatting for parsing later
+        const formattedNiche = niche.endsWith('.') ? niche : `${niche}.`;
+        const formattedAngle = angle.endsWith('.') ? angle : `${angle}.`;
+        const description = `Empire Niche: ${formattedNiche} Angle: ${formattedAngle} Mode: co-pilot`;
 
         await empireService.updateEmpire(activeEmpireId, {
           title,
