@@ -135,7 +135,7 @@ export function ConsultantToolkit({ businessAngle, onToolkitComplete }: Consulta
       </div>
 
       <div className="space-y-6">
-        <div className="p-8 rounded-[40px] bg-slate-900 border border-primary/20 text-white relative overflow-hidden">
+        <div className="p-8 rounded-[40px] bg-slate-950 border border-primary/20 text-white relative overflow-hidden">
           <div className="relative z-10 flex items-start gap-6">
             <div className="w-16 h-16 rounded-3xl bg-primary/20 border border-primary/40 flex items-center justify-center shrink-0">
               <Zap className="w-8 h-8 text-primary" />
