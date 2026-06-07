@@ -5,6 +5,7 @@ import { SubscriptionGuard } from "@/components/SubscriptionGuard";
 import { OnboardingTour } from "@/components/Dashboard/OnboardingTour";
 import { IntelligenceAuditor } from "@/components/Dashboard/IntelligenceAuditor";
 import { NotificationBell } from "@/components/Dashboard/NotificationBell";
+import { GlobalRefresh } from "@/components/Dashboard/GlobalRefresh";
 import { Suspense } from "react";
 
 export default function AuthenticatedLayout({
@@ -22,14 +23,16 @@ export default function AuthenticatedLayout({
         </Suspense>
         <IntelligenceAuditor />
         <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[332px] overflow-x-hidden">
-          <div className="absolute top-8 right-8 z-[60] hidden lg:block">
+          <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
+            <GlobalRefresh />
             <NotificationBell id="notification-bell-desktop" />
           </div>
           <div className="min-h-[calc(100vh-80px)] overflow-x-hidden">
             {children}
           </div>
         </main>
-        <div className="fixed top-4 right-4 z-[100] lg:hidden">
+        <div className="fixed top-4 right-4 z-[100] lg:hidden flex items-center gap-2">
+          <GlobalRefresh />
           <NotificationBell id="notification-bell-mobile" />
         </div>
         <MobileNav />
