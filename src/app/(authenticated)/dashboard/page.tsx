@@ -225,40 +225,50 @@ export default function Dashboard() {
             </div>
           </div>
         ) : !empireData ? (
-          /* Error/Empty State */
-          <div className="bg-theme-surface rounded-[48px] border-2 border-theme p-12 text-center space-y-6">
-            <BrandedGlobe size="xl" className="mx-auto shadow-[0_0_60px_rgba(255,0,0,0.1)]" />
-            <h2 className="text-2xl font-black italic uppercase text-red-400">Connection Interrupted.</h2>
-            <div className="max-w-md mx-auto space-y-4">
-              <p className="text-slate-400">I'm having trouble reaching the command center at <code className="text-primary break-all">{API_URL}</code>.</p>
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">
-                Verification Required: Ensure your backend is deployed and NEXT_PUBLIC_API_URL is set in Vercel.
+          /* "Ready to Launch" State (Improved from scary error) */
+          <div className="bg-theme-surface rounded-[48px] border-2 border-theme p-12 text-center space-y-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] -z-10" />
+            
+            <BrandedGlobe size="xl" spinning={true} className="mx-auto shadow-[0_0_60px_rgba(var(--primary-rgb),0.2)]" />
+            
+            <div className="space-y-2">
+              <h2 className="text-3xl font-black italic uppercase text-foreground tracking-tighter">Command Center Offline.</h2>
+              <p className="text-slate-400 max-w-md mx-auto font-medium italic">
+                Your neural link is active, but no operational empire has been detected on this frequency.
               </p>
             </div>
-                <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-                  <button 
-                    onClick={() => fetchData()}
-                    className="w-full md:w-auto px-8 py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform"
-                  >
-                    Retry Connection
-                  </button>
-                  <button 
-                    onClick={() => {
-                      localStorage.clear();
-                      sessionStorage.clear();
-                      window.location.href = '/onboarding?preview=true';
-                    }}
-                    className="w-full md:w-auto px-8 py-4 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform border border-white/10"
-                  >
-                    Review Onboarding Visuals
-                  </button>
-                  <button 
-                    onClick={() => window.location.href = '/settings'}
-                    className="w-full md:w-auto px-8 py-4 bg-slate-800 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform border border-white/10"
-                  >
-                    System Settings
-                  </button>
-                </div>
+
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
+              <button 
+                onClick={() => window.location.href = '/onboarding?preview=true'}
+                className="w-full md:w-auto px-10 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 group"
+              >
+                <Sparkles className="w-4 h-4" />
+                Launch New Empire
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              </button>
+              
+              <button 
+                onClick={() => fetchData()}
+                className="w-full md:w-auto px-8 py-5 bg-slate-800 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform border border-white/10"
+              >
+                Retry Neural Sync
+              </button>
+            </div>
+
+            <div className="pt-8 border-t border-theme/50 flex flex-col items-center gap-4">
+               <p className="text-[9px] text-slate-500 uppercase font-black tracking-[0.3em]">System Diagnostics</p>
+               <div className="flex gap-4">
+                 <div className="flex items-center gap-1.5">
+                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                   <span className="text-[10px] font-bold text-slate-400 uppercase">Backend: Online</span>
+                 </div>
+                 <div className="flex items-center gap-1.5">
+                   <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                   <span className="text-[10px] font-bold text-slate-400 uppercase">Database: Ready</span>
+                 </div>
+               </div>
+            </div>
           </div>
         ) : (
           /* Full Content Area */

@@ -21,11 +21,12 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
 
   useEffect(() => {
     const handleScroll = (e: Event) => {
-      const target = e.target as HTMLElement;
-      if (target && target.scrollTop !== undefined) {
-        setIsAtTop(target.scrollTop <= 0);
+      const target = e.target;
+      if (target instanceof HTMLElement) {
+        setIsAtTop(target.scrollTop <= 5);
       } else {
-        setIsAtTop(window.scrollY <= 0);
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        setIsAtTop(scrollY <= 5);
       }
     };
 
@@ -51,74 +52,74 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       setPullProgress(1);
 
       // Snap to refreshing position
-      await controls.start({ y: 70, transition: { type: "spring", stiffness: 300, damping: 20 } });
+      await controls.start({ y: 80, transition: { type: "spring", stiffness: 300, damping: 20 } });
 
       try {
+        if (typeof window !== 'undefined' && window.navigator.vibrate) {
+          window.navigator.vibrate(10);
+        }
         await onRefresh();
       } finally {
-        // Go still for a moment
         setIsRefreshing(false);
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise(resolve => setTimeout(resolve, 600));
         setPullProgress(0);
         await controls.start({ y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } });
       }
     } else {
+      setPullProgress(0);
       await controls.start({ y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } });
     }
   };
 
   return (
-    <div className="relative min-h-screen bg-theme-background">
+    <div className="relative min-h-screen bg-transparent">
       {/* Pull indicator */}
       <motion.div
-        className="fixed top-8 left-0 right-0 flex justify-center z-[11000] pointer-events-none"
+        className="fixed top-20 left-0 right-0 flex flex-col items-center justify-center z-[11000] pointer-events-none"
         style={{
           opacity: isRefreshing ? 1 : pullProgress,
-          scale: isRefreshing ? 1 : Math.max(0.5, pullProgress)
+          y: isRefreshing ? 0 : (pullProgress * 40) - 20
         }}
       >
-        <div className="bg-theme-surface rounded-full p-1.5 shadow-[0_0_20px_rgba(0,0,0,0.5)] border-2 border-primary/40 flex items-center justify-center overflow-hidden">
-          <motion.div
-            animate={isRefreshing ? {
-              scale: [1, 1.15, 1],
-              rotate: [0, 10, 0, -10, 0]
-            } : {
-              scale: pullProgress,
-              rotate: pullProgress * 180
-            }}
-            transition={isRefreshing ? {
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            } : {
-              duration: 0.1
-            }}
-          >
-            <BrandedGlobe
-              size="sm"
-              animate={isRefreshing}
-              className={cn(
-                "transition-colors",
-                isRefreshing ? "opacity-100 ring-1 ring-primary/20" : "opacity-80"
-              )}
-            />
-          </motion.div>
+        <div className={cn(
+          "bg-slate-900 rounded-full p-2 shadow-2xl border-2 transition-all duration-300",
+          isRefreshing ? "border-primary scale-110 shadow-primary/20" : "border-white/10"
+        )}>
+          <BrandedGlobe
+            size="md"
+            animate={true}
+            spinning={isRefreshing}
+          />
         </div>
+        
+        {isRefreshing && (
+          <motion.span 
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-[8px] font-black text-primary uppercase tracking-[0.3em] mt-3 drop-shadow-md"
+          >
+            Neural Syncing
+          </motion.span>
+        )}
       </motion.div>
 
       <motion.div
         onPan={(e, info) => {
-          // Only pull down if at the very top and moving down
+          // Detect if we are scrolling or pulling
+          const isHorizontalSwipe = Math.abs(info.offset.x) > Math.abs(info.offset.y);
+          if (isHorizontalSwipe) return;
+
           if (isAtTop && info.offset.y > 0) {
-            y.set(info.offset.y * 0.4);
+            // Apply resistance
+            const pullY = Math.pow(info.offset.y, 0.85);
+            y.set(pullY);
           } else if (info.offset.y < 0 && y.get() > 0) {
-            const newVal = Math.max(0, y.get() + info.delta.y);
-            y.set(newVal);
+            y.set(0);
           }
         }}
         onPanEnd={handleDragEnd}
         animate={controls}
-        style={{ y, touchAction: "pan-y" }}
+        style={{ y }}
         className="relative z-10 w-full"
       >
         {children}

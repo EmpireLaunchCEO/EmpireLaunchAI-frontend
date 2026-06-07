@@ -211,12 +211,17 @@ export function OnboardingTour() {
   if (!Icon) return null;
 
   return (
-    <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-4 md:p-6 bg-slate-900/60 pointer-events-none overflow-hidden max-w-full">
+    <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-4 md:p-6 bg-slate-900/60 pointer-events-auto overflow-hidden max-w-full">
+      <div className="absolute inset-0 cursor-pointer" onClick={handleComplete} title="Click to skip tour" />
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
+          animate={{ 
+            opacity: 1, 
+            scale: 1, 
+            y: step.target?.startsWith('nav-') ? -120 : 0 
+          }}
           exit={{ opacity: 0, scale: 0.9, y: -20 }}
           className="bg-slate-900 rounded-[32px] md:rounded-[40px] shadow-2xl max-w-[calc(100vw-32px)] sm:max-w-sm w-full overflow-hidden border-4 border-white/10 relative pointer-events-auto mx-auto"
         >
@@ -227,8 +232,8 @@ export function OnboardingTour() {
               <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-primary flex items-center justify-center text-white shadow-lg">
                 <Icon className="w-5 h-5 md:w-8 md:h-8" />
               </div>
-              <button onClick={handleComplete} className="p-1.5 hover:bg-white/10 rounded-full transition-colors text-white/70">
-                <X className="w-5 h-5 md:w-6 md:h-6" />
+              <button onClick={handleComplete} className="flex items-center gap-1.5 px-3 py-1.5 hover:bg-white/10 rounded-full transition-colors text-white/50 font-black text-[9px] uppercase tracking-widest">
+                Skip <X className="w-4 h-4" />
               </button>
             </div>
 
