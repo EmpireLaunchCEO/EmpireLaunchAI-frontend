@@ -14,9 +14,9 @@ export default function RootLoading() {
 
       <div className="flex flex-col items-center gap-2">
         <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
-          Synchronizing Nodes
+          Calibrating Neural Core
         </h2>
-        <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">Launching Your Empire...</p>
+        <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2 italic">Optimizing Engine Parameters...</p>
       </div>
 
       <div className="absolute bottom-10 flex items-center gap-2 opacity-20">

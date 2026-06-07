@@ -31,7 +31,7 @@ export function BrandedGlobe({ className, size = 'md', animate = true, spinning 
 
   const transitionProps = spinning
     ? {
-        duration: 3,
+        duration: 8,
         repeat: Infinity,
         ease: "linear"
       }
@@ -66,9 +66,9 @@ export function BrandedGlobe({ className, size = 'md', animate = true, spinning 
       {/* CSS Globe Fallback structure */}
       <div className={cn(
         "absolute inset-0 flex items-center justify-center fallback-globe rounded-full transition-opacity duration-700",
-        <div className="absolute w-1/3 h-1/3 bg-primary/40 rounded-full blur-sm animate-pulse" />
         isLoaded ? "opacity-0" : "opacity-70"
       )}>
+        <div className="absolute w-1/3 h-1/3 bg-primary/40 rounded-full blur-sm animate-pulse" />
         <div className="w-full h-full rounded-full border-2 border-primary/40 bg-primary/20 animate-pulse" />
       </div>
 

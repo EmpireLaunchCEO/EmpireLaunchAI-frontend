@@ -26,7 +26,7 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 
 export default function Dashboard() {
-  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, setDashboardLoaded } = useEmpire();
+  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
