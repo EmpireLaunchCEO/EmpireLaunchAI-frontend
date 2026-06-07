@@ -199,7 +199,7 @@ export default function Dashboard() {
                         transactions={transactions}
                       />
                       <MissionBriefing 
-                        empireId={activeEmpireId} 
+                        empireData={empireData}
                         onExecute={handleInsightExecute} 
                         isExecuting={!!executingInsight}
                       />

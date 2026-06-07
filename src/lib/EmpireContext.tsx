@@ -57,6 +57,7 @@ interface EmpireContextType {
   unlockSlot: (index: number) => void;
   isAdmin: boolean;
   setIsAdmin: (admin: boolean) => void;
+  userEmail: string | null;
 
   // Notifications
   notifications: Notification[];
@@ -118,6 +119,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [activeEmpire, setActiveEmpire] = useState<any | null>(null);
   const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: false, 2: false });
   const [isAdmin, setIsAdmin] = useState(false); // Default to FALSE for security
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   // Owner Identity Protection
   const OWNER_EMAIL = 'stacipeabody@gmail.com';
@@ -393,6 +395,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
            if (data.isPaid) setIsPaidState(true);
            if (data.theme) setTheme(data.theme);
            if (data.aiMode) setAiModeState(data.aiMode);
+           if (data.email) setUserEmail(data.email);
 
            // If the email matches the owner, grant full slot access automatically
            if (data.email === OWNER_EMAIL) {
@@ -502,6 +505,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       unlockSlot,
       isAdmin,
       setIsAdmin,
+      userEmail,
       notifications,
       unreadCount,
       markAsRead,

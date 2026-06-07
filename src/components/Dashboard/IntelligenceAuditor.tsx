@@ -9,7 +9,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 export function IntelligenceAuditor() {
-  const { activeEmpireId, isInitialized } = useEmpire();
+  const { activeEmpireId, isInitialized, isAdmin, isPaid, userEmail, slotStatus } = useEmpire();
   const [isVisible, setIsVisible] = useState(false);
   const [missingFields, setMissingFields] = useState<string[]>([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -35,6 +35,17 @@ export function IntelligenceAuditor() {
     }
 
     if (!activeEmpireId) return;
+
+    // SECURITY & UX GATE: 
+    // 1. Never show for non-admins (customers) as per owner request
+    // 2. Never show for locked slots
+    const slotIdx = parseInt(activeEmpireId) - 1;
+    const isLocked = !slotStatus[slotIdx];
+
+    if (!isAdmin || isLocked) {
+      setIsVisible(false);
+      return;
+    }
     
     // Check if dismissed recently (last 4 hours)
     const lastDismissed = localStorage.getItem('intel_audit_dismissed');
@@ -65,10 +76,36 @@ export function IntelligenceAuditor() {
         if (missing.length > 0) {
           setMissingFields(missing);
           setIntelLevel(Math.max(0, 3 - missing.length));
+          
+          // OWNER BYPASS: If owner, don't auto-popup for Slot 1
+          const isSlot1 = activeEmpireId === '1';
+          if ((isAdmin || isPaid) && isSlot1 && !isInteractive) {
+             setIsVisible(false);
+             return;
+          }
+
           if (!isInteractive) {
-            // Immediate popup for missing data
-            const delay = criticalMissing ? 500 : 2000;
-            setTimeout(() => setIsVisible(true), delay);
+            // Re-verify after a short delay to ensure hydration is complete and prevent flashing
+            setTimeout(async () => {
+              const currentEmpire = await empireService.getEmpire(activeEmpireId);
+              const currentMissing = [];
+              const isDefault = !currentEmpire.title || defaultNames.includes(currentEmpire.title) || currentEmpire.title === '';
+              if (isDefault) currentMissing.push('Name');
+              
+              const currentDesc = currentEmpire.description || '';
+              const hasN = currentDesc.includes('Empire Niche:') && !currentDesc.includes('Empire Niche: .');
+              const hasA = currentDesc.includes('Angle:') && !currentDesc.includes('Angle: .');
+              
+              if (!hasN) currentMissing.push('Niche');
+              if (!hasA) currentMissing.push('Angle');
+
+              if (currentMissing.length > 0) {
+                // One final check: if we are Slot 1 and Owner, still stay hidden
+                if (!((isAdmin || isPaid) && isSlot1)) {
+                  setIsVisible(true);
+                }
+              }
+            }, 1500);
           }
         } else {
           setIsVisible(false);
@@ -78,7 +115,7 @@ export function IntelligenceAuditor() {
     } catch (err) {
       console.error('Audit failed', err);
     }
-  }, [activeEmpireId, pathname, isInteractive]);
+  }, [activeEmpireId, pathname, isInteractive, isAdmin, isPaid]);
 
   useEffect(() => {
     const handleForceSync = () => {
@@ -96,18 +133,21 @@ export function IntelligenceAuditor() {
     if (isInitialized) {
       auditIntelligence();
     }
-  }, [isInitialized, auditIntelligence, pathname]);
+  }, [isInitialized, activeEmpireId, pathname]); // Added activeEmpireId to triggers
 
   const getQuestion = (field: string) => {
-    if (field === 'Name') return "Establishing secure identity... What shall we name your Empire?";
-    if (field === 'Niche') return "Defining operational parameters... What is your primary business Niche? (e.g. Digital Planners, Vintage Jewelry)";
-    if (field === 'Angle') return "Calibrating unique value proposition... What is your Brand Angle? (e.g. Eco-friendly, Minimalist, Luxury)";
+    const greeting = (isAdmin || isPaid) ? "Owner, I'm " : "";
+    if (field === 'Name') return `${greeting}Establishing secure identity... What shall we name your Empire?`;
+    if (field === 'Niche') return `${greeting}Defining operational parameters... What is your primary business Niche?`;
+    if (field === 'Angle') return `${greeting}Calibrating unique value proposition... What is your Brand Angle?`;
     return "";
   };
 
-  const initialMessage = isCriticalMissing 
-    ? `System Alert: Empire identity incomplete. I need your Name, Niche, and Brand Angle to establish tactical awareness. Shall we synchronize your vision now?`
-    : `Analyzing neural pathways... I've detected a data gap. Your Empire ${missingFields.join(', ')} is currently undefined. Shall we calibrate your identity now?`;
+  const initialMessage = (isAdmin || isPaid)
+    ? `Owner, I've detected a synchronization gap in this node's identity. Shall we calibrate your vision for this Empire now?`
+    : isCriticalMissing 
+      ? `System Alert: Empire identity incomplete. I need your Name, Niche, and Brand Angle to establish tactical awareness. Shall we synchronize your vision now?`
+      : `Analyzing neural pathways... I've detected a data gap. Your Empire ${missingFields.join(', ')} is currently undefined. Shall we calibrate your identity now?`;
 
   const currentMessage = isInteractive ? getQuestion(missingFields[currentFieldIdx]) : initialMessage;
 
