@@ -137,8 +137,13 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
   const [isStudioOpen, setIsStudioOpen] = useState(false);
 
   const handleSlotClick = () => {
-    // Navigate to Empire Center regardless of niche status to avoid onboarding redirect loops
-    window.location.href = '/empire-center';
+    // If niche is missing or pending, trigger the global Intelligence Sync UI
+    if (!currentEmpire?.niche || currentEmpire.niche === 'Niche Pending' || currentEmpire.title === 'The First Empire') {
+      window.dispatchEvent(new CustomEvent('empire:force-intel-sync'));
+    } else {
+      // Otherwise navigate to Empire Center for operations
+      window.location.href = '/empire-center';
+    }
   };
 
   return (
