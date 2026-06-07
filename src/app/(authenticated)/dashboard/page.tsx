@@ -112,7 +112,20 @@ export default function Dashboard() {
       <PullToRefresh onRefresh={fetchData}>
         <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-20 overflow-x-hidden">
           
-          {/* 1. Centered Business Navigation (Absolute Top) */}
+          {/* 1. Centered Visuals (Absolute Top) */}
+          <div className="flex flex-col items-center pt-8 pointer-events-none">
+            <BrandedGlobe 
+              size="xl" 
+              animate={isLoading || partnerStatus !== 'idle'} 
+              spinning={isLoading || partnerStatus !== 'idle'}
+              className="shadow-[0_0_60px_rgba(0,229,255,0.2)]"
+            />
+            <h2 className="mt-8 text-2xl md:text-5xl font-black tracking-[0.2em] uppercase italic text-theme-gradient leading-none">
+              Success Hub
+            </h2>
+          </div>
+
+          {/* 2. Centered Business Navigation */}
           <div className="flex bg-theme-background p-1.5 rounded-[24px] border border-theme w-fit max-w-full overflow-x-auto scrollbar-hide gap-1.5 mx-auto shadow-xl backdrop-blur-md px-1.5 flex-nowrap sticky top-4 z-50">
             {[0, 1, 2].map((idx) => {
               const empireId = (idx + 1).toString();
@@ -150,19 +163,6 @@ export default function Dashboard() {
                 </button>
               );
             })}
-          </div>
-
-          {/* 2. Centered Visuals */}
-          <div className="flex flex-col items-center pointer-events-none">
-            <BrandedGlobe 
-              size="xl" 
-              animate={isLoading || partnerStatus !== 'idle'} 
-              spinning={isLoading || partnerStatus !== 'idle'}
-              className="shadow-[0_0_60px_rgba(0,229,255,0.2)]"
-            />
-            <h2 className="mt-8 text-2xl md:text-5xl font-black tracking-[0.2em] uppercase italic text-theme-gradient leading-none">
-              Success Hub
-            </h2>
           </div>
 
           {!slotStatus[activeBusinessIndex] && !isAdmin ? (
