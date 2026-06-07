@@ -44,15 +44,21 @@ export function BrandedGlobe({ className, size = 'md', animate = true, spinning 
   return (
     <motion.div
       className={cn(
-        "rounded-full overflow-hidden flex items-center justify-center bg-transparent relative shrink-0",
+        "rounded-full flex items-center justify-center bg-transparent relative shrink-0",
         sizeClasses[size],
         className
       )}
       animate={animationProps}
       transition={transitionProps}
     >
-      {/* Background Glow */}
-      <div className="absolute inset-1 bg-primary/20 blur-xl rounded-full animate-pulse" />
+      {/* 3D Effects Wrapper */}
+      <div className="absolute inset-0 rounded-full shadow-[inset_0_2px_12px_rgba(255,255,255,0.4),inset_0_-4px_24px_rgba(0,0,0,0.6),0_15px_35px_rgba(0,0,0,0.5)] z-20 pointer-events-none border border-white/5" />
+      
+      {/* Dynamic Glow Layer */}
+      <div className={cn(
+        "absolute inset-0 bg-primary/20 blur-2xl rounded-full transition-opacity duration-1000",
+        (spinning || animate) ? "opacity-60" : "opacity-20"
+      )} />
       
       {/* CSS Globe Fallback structure */}
       <div className={cn(
@@ -66,7 +72,7 @@ export function BrandedGlobe({ className, size = 'md', animate = true, spinning 
         src="/branded-globe.png"
         alt="Empire Globe"
         className={cn(
-          "w-full h-full object-cover scale-110 relative z-10 transition-opacity duration-1000",
+          "w-full h-full object-contain scale-100 relative z-10 transition-opacity duration-1000",
           isLoaded ? "opacity-100" : "opacity-0"
         )}
         style={{ imageRendering: 'auto' }}

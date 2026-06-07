@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ReviewCard } from '@/components/Review/ReviewCard';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { FinancialGate } from '@/components/Financial/FinancialGate';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { Stars, Filter, CheckCircle2 } from 'lucide-react';
 import { API_URL } from '@/lib/config';
 import { cn } from '@/lib/utils';
@@ -134,9 +135,20 @@ export default function ReviewQueue() {
           <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-3">
             Review Queue
           </h1>
-          <p className="text-muted-foreground mt-2 font-medium text-sm md:text-base">
-            {isLoading ? 'Loading items...' : `AI has prepared ${tasks.length} items for your review.`}
-          </p>
+          <div className="flex items-center gap-4 mt-2">
+            {isLoading ? (
+              <>
+                <BrandedGlobe size="sm" animate={true} />
+                <p className="text-muted-foreground font-medium text-sm md:text-base animate-pulse">
+                  AI is preparing your strategy items...
+                </p>
+              </>
+            ) : (
+              <p className="text-muted-foreground font-medium text-sm md:text-base">
+                AI has prepared {tasks.length} items for your review.
+              </p>
+            )}
+          </div>
         </div>
         <div className="flex gap-2 w-full md:w-auto">
           <button className="flex-1 md:flex-none bg-theme-surface border border-slate-200 text-slate-600 px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 font-bold hover:bg-theme-background transition-colors text-sm">
@@ -168,9 +180,12 @@ export default function ReviewQueue() {
             />
           ))
         ) : !isLoading && (
-          <div className="bg-theme-surface rounded-3xl border border-theme p-12 text-center">
-            <p className="text-muted-foreground italic text-lg">Your review queue is currently empty.</p>
-            <p className="text-slate-400 text-sm mt-2">The AI is working on new suggestions based on your goals.</p>
+          <div className="bg-theme-surface rounded-[48px] border-2 border-theme p-12 text-center space-y-6">
+            <BrandedGlobe size="xl" className="mx-auto opacity-20 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700" />
+            <div className="space-y-2">
+              <p className="text-muted-foreground italic text-lg font-bold">Your review queue is currently empty.</p>
+              <p className="text-slate-500 text-xs uppercase font-black tracking-widest">The AI is working on new suggestions based on your goals.</p>
+            </div>
           </div>
         )}
 
