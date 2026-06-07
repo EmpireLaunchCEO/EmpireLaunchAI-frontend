@@ -219,14 +219,7 @@ export default function SettingsPage() {
 
   return (
     <PullToRefresh onRefresh={async () => { await new Promise(r => setTimeout(r, 1000)); }}>
-      <div className="p-3 md:p-8 max-w-6xl mx-auto space-y-6 md:space-y-12 pb-24">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-6 bg-theme-surface/30 p-5 md:p-0 rounded-[24px] md:rounded-none border border-theme md:border-none">
-          <div className="space-y-1">
-            <h1 className="text-xl md:text-5xl font-black text-foreground tracking-tighter italic">Settings</h1>
-            <p className="text-muted-foreground font-medium text-[10px] md:text-lg italic">Configure your Global Empire parameters.</p>
-          </div>
-        </header>
-
+      <div className="p-4 md:p-8 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12 pb-24 overflow-x-hidden">
         <div className="flex flex-col lg:flex-row gap-8 md:gap-12 relative">
           {/* Sidebar Navigation - Long Rounded Box down the side */}
           <aside className="lg:w-72 shrink-0">

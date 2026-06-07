@@ -5,12 +5,27 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { Globe, Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
+import { usePathname } from 'next/navigation';
 
 export function GlobalEmpireHeader() {
+  const pathname = usePathname();
   const { activeEmpireId, setActiveEmpireId, isAdmin, activeEmpire, isInitialized } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
 
   if (!isInitialized) return null;
+
+  const getPageTitle = () => {
+    switch (pathname) {
+      case '/dashboard': return 'Success Hub';
+      case '/empire-center': return 'Operations Hub.';
+      case '/studio': return 'Empire Studio.';
+      case '/link-center': return 'Neural Sync.';
+      case '/review': return 'Control Gates.';
+      case '/analytics': return 'Empire Ledger.';
+      case '/settings': return 'Settings.';
+      default: return 'Empire Launch.';
+    }
+  };
 
   return (
     <div className="flex flex-col items-center pt-8 pb-4">
@@ -21,7 +36,7 @@ export function GlobalEmpireHeader() {
           className="shadow-[0_0_60px_rgba(0,229,255,0.2)]"
         />
         <h2 className="mt-6 text-2xl md:text-5xl font-black tracking-[0.2em] uppercase italic text-theme-gradient leading-none">
-          Success Hub
+          {getPageTitle()}
         </h2>
       </div>
 
