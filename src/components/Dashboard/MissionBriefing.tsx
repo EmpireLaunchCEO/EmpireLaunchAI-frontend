@@ -44,7 +44,7 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
     return [
       {
         id: 1,
-        title: "Empire Identity",
+        title: "NICHE",
         description: isIdentityComplete ? "Identity Synchronized." : "Define your niche and business angle.",
         status: isIdentityComplete ? 'complete' : 'current',
         icon: Flag,

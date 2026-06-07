@@ -17,7 +17,7 @@ export const NicheCalibrationBox = ({ niche, angle }: NicheBoxProps) => {
               <Target className="w-6 h-6 text-primary" />
            </div>
            <div>
-              <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight">Empire Identity</h3>
+              <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight">NICHE</h3>
               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Neural Calibration Status</p>
            </div>
         </div>
