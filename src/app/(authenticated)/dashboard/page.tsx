@@ -169,7 +169,7 @@ export default function Dashboard() {
               </div>
 
               {/* 4. The Success Hub Box */}
-              <div className="max-w-5xl mx-auto">
+              <div className="max-w-6xl mx-auto">
                 <SuccessHubOverview 
                   empireData={empireData}
                   pulseData={pulseData}
@@ -178,7 +178,7 @@ export default function Dashboard() {
               </div>
 
               {/* 5. The Niche Box */}
-              <div className="max-w-3xl mx-auto">
+              <div className="max-w-6xl mx-auto">
                 <NicheCalibrationBox niche={empireData?.niche} />
               </div>
 
@@ -188,7 +188,7 @@ export default function Dashboard() {
               </div>
 
               {/* Operational Grid (Rest of the items) */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 border-t border-theme pt-20">
+              <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 pt-8 relative z-0">
                 <div className="lg:col-span-8 space-y-12">
                   {!isLinkingComplete && <GuidedLinking currentEmpire={empireData} />}
                   <MissionBriefing 
@@ -207,7 +207,7 @@ export default function Dashboard() {
               </div>
 
               {/* 7. Neural Notes Section (The Bottom) */}
-              <div className="max-w-5xl mx-auto pb-8">
+              <div className="max-w-6xl mx-auto pb-8">
                 <NeuralNotes />
               </div>
 

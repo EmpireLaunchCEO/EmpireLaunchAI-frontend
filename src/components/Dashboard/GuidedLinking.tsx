@@ -259,7 +259,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   }, [handleInterception]);
 
   return (
-    <div className="space-y-12 max-w-4xl mx-auto pt-10 pb-20">
+    <div className="space-y-12 pt-10 pb-20">
       {/* Connected Platforms Quick View (Always visible) */}
       {connectedPlatforms.length > 0 && (
         <motion.div
@@ -309,7 +309,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="bg-slate-900 rounded-[40px] p-8 md:p-10 text-white border border-white/10 relative overflow-hidden shadow-2xl"
+            className="bg-theme-surface rounded-[40px] p-8 md:p-10 text-white border border-white/10 relative overflow-hidden shadow-2xl"
           >
             <div className="relative z-10 flex flex-col md:flex-row gap-8">
               <div className="shrink-0">

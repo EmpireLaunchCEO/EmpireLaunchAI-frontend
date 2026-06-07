@@ -97,8 +97,8 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
   return (
     <div className="bg-theme-surface rounded-[32px] md:rounded-[48px] p-6 lg:p-12 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
       {/* Background Glows */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-10 -mr-48 -mt-48" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/40 rounded-full blur-[100px] opacity-10 -ml-32 -mb-32" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-10 -mr-48 -mt-48 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/40 rounded-full blur-[100px] opacity-10 -ml-32 -mb-32 pointer-events-none" />
 
       <div className="relative z-10 flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
         <div className="flex-1 space-y-6 lg:space-y-8 w-full">
@@ -191,7 +191,7 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
 
         <div className="w-full lg:w-80 space-y-6">
           <div className="p-8 rounded-[40px] bg-theme-background/50 border border-theme flex flex-col gap-6 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-[40px]" />
             <div className="flex items-center gap-3 relative z-10">
               <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
                 <Stars className="w-6 h-6 text-white" />
