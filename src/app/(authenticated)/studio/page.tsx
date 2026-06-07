@@ -43,22 +43,32 @@ export default function StudioPage() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
-      <div className="p-4 md:p-8 pb-40 max-w-full md:max-w-7xl mx-auto space-y-8 md:space-y-12 overflow-x-hidden">
+      <div className="px-4 py-6 md:p-8 pb-40 w-full max-w-7xl mx-auto space-y-6 md:space-y-12 overflow-x-hidden relative">
+        <style jsx global>{`
+          @media (max-width: 768px) {
+            html, body {
+              width: 100% !important;
+              max-width: 100% !important;
+              overflow-x: hidden !important;
+              position: relative !important;
+            }
+          }
+        `}</style>
         {/* Tab Navigation */}
-        <div className="flex bg-theme-background p-1 rounded-[20px] w-full max-w-full overflow-x-auto no-scrollbar border-2 border-theme">
+        <div className="flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-[calc(100%-2rem)] overflow-x-auto no-scrollbar gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
           {[
             { id: 'gallery', label: 'Universal Studio', icon: Palette },
             { id: 'cinema', label: 'Cinema Hub', icon: Video },
-            { id: 'activity', label: 'DNA Harvest Feed', icon: Database },
+            { id: 'activity', label: 'DNA Feed', icon: Database },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 px-3 py-3 rounded-[16px] font-black text-[10px] sm:text-[11px] uppercase tracking-tighter transition-all shrink-0 min-w-fit",
+                "px-5 py-3 rounded-[18px] font-black text-[10px] uppercase tracking-tighter transition-all flex items-center gap-2 whitespace-nowrap min-w-fit",
                 activeTab === tab.id
-                  ? "bg-theme-surface text-foreground shadow-sm border border-theme"
-                  : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
+                  ? "bg-theme-surface text-foreground shadow-lg border border-theme scale-105"
+                  : "text-slate-400 hover:text-foreground hover:bg-theme-surface/40"
               )}
             >
               <tab.icon className={cn("w-3.5 h-3.5", activeTab === tab.id ? "text-primary" : "")} />
@@ -77,7 +87,7 @@ export default function StudioPage() {
               className="space-y-8"
             >
               {/* AI Consultant Message */}
-              <div className="flex items-start gap-4 p-5 bg-theme-surface border-2 border-primary/20 rounded-[28px]">
+              <div className="flex items-start gap-4 p-4 md:p-5 bg-theme-surface border-2 border-primary/20 rounded-[24px] md:rounded-[28px]">
                 <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
                   <Bot className="w-5 h-5 text-primary" />
                 </div>
@@ -111,14 +121,14 @@ export default function StudioPage() {
             >
               {/* Cinema Engine Intro */}
               <div className="flex flex-col md:flex-row gap-8 items-stretch">
-                <div className="flex-1 p-8 bg-theme-surface border-2 border-primary/20 rounded-[40px] space-y-6">
+                <div className="flex-1 p-6 md:p-8 bg-theme-surface border-2 border-primary/20 rounded-[32px] md:rounded-[40px] space-y-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">
-                      <Stars className="w-6 h-6 text-purple-400" />
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">
+                      <Stars className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-black text-white italic">Neural Twin.</h3>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
+                      <h3 className="text-xl md:text-2xl font-black text-white italic">Neural Twin.</h3>
+                      <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
                     </div>
                   </div>
 
@@ -140,7 +150,7 @@ export default function StudioPage() {
                   </div>
                 </div>
 
-                <div className="flex-1 p-8 bg-slate-900 border border-theme rounded-[40px] flex flex-col items-center justify-center text-center space-y-4">
+                <div className="flex-1 p-6 md:p-8 bg-slate-900 border border-theme rounded-[32px] md:rounded-[40px] flex flex-col items-center justify-center text-center space-y-4">
                   <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-2">
                     <Video className="w-10 h-10 text-primary" />
                   </div>
@@ -152,7 +162,7 @@ export default function StudioPage() {
               </div>
 
               {/* Cinema Gallery Placeholder */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {[1, 2, 3, 4].map(i => (
                   <div key={i} className="aspect-[9/16] bg-theme-surface border-2 border-theme rounded-[24px] relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
@@ -181,7 +191,7 @@ export default function StudioPage() {
               className="space-y-6"
             >
               {/* Harvest Activity Feed */}
-              <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6">
+              <div className="bg-theme-surface border-2 border-theme rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
@@ -199,7 +209,7 @@ export default function StudioPage() {
 
                 <div className="space-y-3">
                   {harvestActivity.map((item) => (
-                    <div key={item.id} className="p-5 bg-theme-background rounded-[24px] border border-theme hover:border-primary/30 transition-all group">
+                    <div key={item.id} className="p-4 md:p-5 bg-theme-background rounded-[24px] border border-theme hover:border-primary/30 transition-all group">
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                           <div className={cn(
@@ -238,7 +248,7 @@ export default function StudioPage() {
                 </div>
 
                 {/* AI Harvest Summary */}
-                <div className="p-5 bg-slate-900 rounded-[28px] text-white space-y-3">
+                <div className="p-4 md:p-5 bg-slate-900 rounded-[24px] md:rounded-[28px] text-white space-y-3">
                   <div className="flex items-center gap-2">
                     <Bot className="w-4 h-4 text-primary" />
                     <span className="text-[9px] font-black uppercase tracking-widest text-primary">Harvest Intelligence</span>

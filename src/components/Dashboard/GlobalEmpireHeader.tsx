@@ -35,12 +35,12 @@ export function GlobalEmpireHeader() {
           animate={false}
           className="shadow-[0_0_60px_rgba(0,229,255,0.2)]"
         />
-        <h2 className="mt-6 text-2xl md:text-5xl font-black tracking-[0.2em] uppercase italic text-theme-gradient leading-none">
+        <h2 className="mt-6 text-xl md:text-4xl lg:text-5xl font-black tracking-tight md:tracking-[0.15em] lg:tracking-[0.2em] uppercase italic text-theme-gradient leading-none text-center px-4 max-w-full">
           {getPageTitle()}
         </h2>
       </div>
 
-      <div className="mt-10 flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-[calc(100vw-2rem)] overflow-x-auto scrollbar-hide gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
+      <div className="mt-10 flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-[calc(100%-2rem)] overflow-x-auto scrollbar-hide gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
         {[0, 1, 2].map((idx) => {
           const empireId = (idx + 1).toString();
           const isActive = activeBusinessIndex === idx;

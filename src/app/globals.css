@@ -239,11 +239,16 @@ main, .scroll-container, [role="main"] {
     position: relative;
     height: auto;
     min-height: 100vh;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    touch-action: pan-y !important;
   }
   
   /* Prevent elastic overscroll on iOS */
   body {
-    overscroll-behavior-y: none;
+    overscroll-behavior-x: none !important;
+    overscroll-behavior-y: auto !important;
   }
   
   /* Ensure mobile nav doesn't block content */

@@ -33,7 +33,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
   if (platform.toLowerCase() === 'stripe') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-emerald-600 shadow-2xl space-y-8 relative overflow-hidden">
+        <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-4 border-emerald-600 shadow-2xl space-y-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/5 blur-[80px] -z-10" />
           <div className="flex items-center justify-between border-b border-theme pb-6">
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
@@ -78,7 +78,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
   if (platform.toLowerCase() === 'etsy') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-blue-600 shadow-2xl space-y-8 relative overflow-hidden">
+        <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-4 border-blue-600 shadow-2xl space-y-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[80px] -z-10" />
           <div className="flex items-center justify-between border-b border-theme pb-6">
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
@@ -110,7 +110,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
   if (platform.toLowerCase() === 'tiktok') {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-8 rounded-[40px] bg-theme-surface border-4 border-slate-900 shadow-2xl space-y-8 relative overflow-hidden">
+        <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-4 border-slate-900 shadow-2xl space-y-8 relative overflow-hidden">
           <div className="flex items-center justify-between border-b border-theme pb-6">
             <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
               <Share2 className="w-6 h-6 text-blue-600" /> Connecting TikTok Marketing
@@ -146,7 +146,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
 
 const SupportHub = () => (
   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-    <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-6">
+    <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-6">
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
           <LifeBuoy className="w-6 h-6" />
@@ -156,7 +156,7 @@ const SupportHub = () => (
           <p className="text-sm font-medium text-muted-foreground">Get help with your Empire dashboard.</p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <button className="p-6 rounded-3xl border border-theme bg-theme-background hover:border-blue-600 transition-all text-left">
           <h4 className="font-bold mb-1">Knowledge Base</h4>
           <p className="text-xs text-muted-foreground">Self-serve tutorials and documentation.</p>
@@ -219,10 +219,21 @@ export default function SettingsPage() {
 
   return (
     <PullToRefresh onRefresh={async () => { await new Promise(r => setTimeout(r, 1000)); }}>
-      <div className="p-4 md:p-8 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12 pb-24 overflow-x-hidden">
-        <div className="flex flex-col lg:flex-row gap-8 md:gap-12 relative">
+      <div className="px-4 py-6 md:p-8 w-full max-w-7xl mx-auto space-y-6 md:space-y-12 pb-24 overflow-x-hidden relative">
+        <style jsx global>{`
+          @media (max-width: 768px) {
+            html, body {
+              width: 100% !important;
+              max-width: 100% !important;
+              overflow-x: hidden !important;
+              position: relative !important;
+              height: auto !important;
+            }
+          }
+        `}</style>
+        <div className="flex flex-col lg:flex-row gap-8 md:gap-12 relative items-start">
           {/* Sidebar Navigation - Long Rounded Box down the side */}
-          <aside className="lg:w-72 shrink-0">
+          <aside className="lg:w-64 shrink-0">
             <div className="flex flex-row lg:flex-col bg-theme-background p-1.5 rounded-[24px] lg:rounded-[32px] w-full border-2 border-theme sticky top-0 lg:top-8 z-20 gap-1.5 overflow-x-auto no-scrollbar lg:overflow-visible">
               {tabs.map((tab) => (
                 <button
@@ -272,7 +283,7 @@ export default function SettingsPage() {
           <main className="flex-1">
             {activeTab === 'financials' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                       <CreditCard className="w-6 h-6" />
@@ -283,7 +294,7 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                     <div className="space-y-3">
                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-300">Bank Account Nickname</label>
                       <input type="text" placeholder="e.g. Empire Main Operating" className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold text-lg" />
@@ -349,7 +360,7 @@ export default function SettingsPage() {
             {activeTab === 'link-center' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {activePlatform && <IntegrationForm platform={activePlatform} onClose={() => setActivePlatform(null)} />}
-                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                       <Share2 className="w-6 h-6" />
@@ -359,7 +370,7 @@ export default function SettingsPage() {
                       <p className="text-sm font-medium text-muted-foreground">Manage connections for automated marketing and fulfillment.</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {['Etsy', 'TikTok', 'Instagram', 'YouTube', 'Facebook', 'Gmail', 'Fiverr', 'Stripe'].map((p) => (
                       <button 
                         key={p} 
@@ -391,7 +402,7 @@ export default function SettingsPage() {
 
             {activeTab === 'ai-intelligence' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                       <Zap className="w-6 h-6" />
@@ -402,7 +413,7 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                     <button 
                       id="mode-copilot"
                       onClick={() => setAiMode('co-pilot')}
@@ -469,7 +480,7 @@ export default function SettingsPage() {
 
             {activeTab === 'notifications' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                       <Bell className="w-6 h-6" />
@@ -503,7 +514,7 @@ export default function SettingsPage() {
 
             {activeTab === 'theme-style' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                       <Palette className="w-6 h-6" />
@@ -513,7 +524,7 @@ export default function SettingsPage() {
                       <p className="text-sm font-medium text-muted-foreground">Personalize your Command Center aesthetics.</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                     {colorSchemes.map((scheme) => (
                       <button 
                         key={scheme.id} 
@@ -551,7 +562,7 @@ export default function SettingsPage() {
 
             {activeTab === 'subscription' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-8 rounded-[40px] bg-slate-900 text-white space-y-8">
+                <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-slate-900 text-white space-y-8">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-6">
                       <div className="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center">
@@ -568,7 +579,7 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 pt-4 border-t border-white/10">
                     <div className="p-6 rounded-[32px] bg-white/5 border border-white/10 space-y-2">
                       <h4 className="text-xs font-black uppercase tracking-widest text-blue-400">Empire Expansion</h4>
                       <p className="text-lg font-bold">$40 Unlock + $40/mo</p>

@@ -19,7 +19,7 @@ export default function AuthenticatedLayout({
         <Suspense fallback={null}>
           <OnboardingTour />
         </Suspense>
-        <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[256px]">
+        <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[256px] overflow-x-hidden max-w-full">
           <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
             <NotificationBell id="notification-bell-desktop" />
           </div>

@@ -184,54 +184,45 @@ function VisualStyleCard({
   return (
     <motion.button
       onClick={() => onSelect?.(vibe)}
-      whileHover={{ y: -4, scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
       className={cn(
-        "relative w-full text-left rounded-[28px] overflow-hidden border-2 transition-all group",
+        "relative w-full text-left rounded-[24px] overflow-hidden border-2 transition-all flex items-stretch gap-4 p-3 bg-theme-surface",
         selected 
-          ? "border-primary shadow-[0_0_20px_rgba(0,229,255,0.25)]" 
+          ? "border-primary shadow-lg" 
           : "border-theme hover:border-primary/40"
       )}
     >
-      {/* Gradient Preview */}
-      <div className="h-32 sm:h-40 relative overflow-hidden" style={{ background: vibe.previewCss.backgroundGradient }}>
+      {/* Small Preview Image */}
+      <div 
+        className="w-24 h-24 rounded-xl shrink-0 overflow-hidden relative" 
+        style={{ background: vibe.previewCss.backgroundGradient }}
+      >
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-        <div className="absolute bottom-4 left-4">
-          <span className="text-[9px] font-black uppercase tracking-widest text-white/70 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
-            AI-Synthesized
-          </span>
-        </div>
-        {/* Accent dot */}
-        <div className="absolute top-4 right-4 w-3 h-3 rounded-full shadow-lg" style={{ backgroundColor: vibe.previewCss.accentColor }} />
+        <div className="absolute top-2 right-2 w-2 h-2 rounded-full" style={{ backgroundColor: vibe.previewCss.accentColor }} />
       </div>
 
       {/* Content */}
-      <div className="p-4 sm:p-5 space-y-3 bg-theme-surface">
-        <div className="flex items-center justify-between">
-          <h3 className="font-black text-foreground text-base uppercase tracking-tight">{vibe.primaryVibe}</h3>
-          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: vibe.previewCss.accentColor }} />
+      <div className="flex-1 flex flex-col justify-center min-w-0 py-1">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="font-black text-foreground text-sm uppercase tracking-tight truncate">{vibe.primaryVibe}</h3>
         </div>
 
-        <p className="text-[10px] text-muted-foreground font-medium leading-relaxed line-clamp-2">
+        <p className="text-[10px] text-muted-foreground font-medium leading-tight line-clamp-2 mb-2">
           {vibe.designPersonality}
         </p>
 
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1">
           {vibe.bestFor.slice(0, 2).map((use, i) => (
-            <span key={i} className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-theme-background border border-theme text-muted-foreground">
+            <span key={i} className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-theme-background border border-theme text-muted-foreground">
               {use}
             </span>
           ))}
         </div>
 
-        <div className="flex items-center gap-2 pt-2 border-t border-theme">
-          <Palette className="w-3 h-3 text-muted-foreground" />
-          <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">{vibe.colorScheme.substring(0, 30)}...</span>
-        </div>
-
         {selected && (
-          <div className="absolute top-3 left-3 bg-primary rounded-full p-1.5 shadow-lg">
-            <CheckCircle2 className="w-4 h-4 text-slate-950" />
+          <div className="absolute top-2 left-2 bg-primary rounded-full p-1 shadow-lg z-20">
+            <CheckCircle2 className="w-3 h-3 text-slate-950" />
           </div>
         )}
       </div>
@@ -308,11 +299,11 @@ export function InspirationGallery({ onSelectVibe }: InspirationGalleryProps) {
 
       {/* Loading State */}
       {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-          {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="rounded-[28px] overflow-hidden border-2 border-theme animate-pulse">
-              <div className="h-32 bg-slate-800" />
-              <div className="p-5 space-y-3 bg-theme-surface">
+        <div className="flex flex-col gap-4">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="w-full flex gap-4 p-4 rounded-[24px] border-2 border-theme animate-pulse bg-theme-surface">
+              <div className="w-24 h-24 bg-slate-800 rounded-xl shrink-0" />
+              <div className="flex-1 space-y-3">
                 <div className="h-4 bg-slate-800 rounded w-2/3" />
                 <div className="h-3 bg-slate-800 rounded w-full" />
                 <div className="h-3 bg-slate-800 rounded w-1/2" />
@@ -321,15 +312,16 @@ export function InspirationGallery({ onSelectVibe }: InspirationGalleryProps) {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+        <div className="flex flex-col gap-4">
           <AnimatePresence mode="popLayout">
             {filtered.map((vibe) => (
               <motion.div
                 key={vibe.snapshotId}
                 layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="w-full"
               >
                 <VisualStyleCard
                   vibe={vibe}
@@ -519,7 +511,7 @@ interface SuggestionBubblesProps {
 
 export function SuggestionBubbles({ onSelect }: SuggestionBubblesProps) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-nowrap overflow-x-auto no-scrollbar gap-2 pb-2">
       {suggestionBubbles.map((s, i) => (
         <motion.button
           key={i}
@@ -527,12 +519,12 @@ export function SuggestionBubbles({ onSelect }: SuggestionBubblesProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.1 }}
           onClick={() => onSelect(s.label)}
-          className="px-4 py-2.5 bg-theme-surface border border-theme rounded-2xl font-bold text-[10px] text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all whitespace-nowrap flex items-center gap-2"
+          className="px-4 py-2.5 bg-theme-surface border border-theme rounded-2xl font-bold text-[10px] text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all whitespace-nowrap flex items-center gap-2 shrink-0"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           <span className="text-xs">{s.label.split(' ')[0]}</span>
-          <span>{s.label.split(' ').slice(1).join(' ')}</span>
+          <span className="max-w-[120px] truncate">{s.label.split(' ').slice(1).join(' ')}</span>
           <ArrowRight className="w-3 h-3 text-primary ml-1" />
         </motion.button>
       ))}
