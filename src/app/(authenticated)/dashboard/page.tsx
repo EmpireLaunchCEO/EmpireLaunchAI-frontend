@@ -112,57 +112,63 @@ export default function Dashboard() {
       <PullToRefresh onRefresh={fetchData}>
         <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-20 overflow-x-hidden">
           
-          {/* 1. Centered Visuals (Absolute Top) */}
-          <div className="flex flex-col items-center pt-8 pointer-events-none">
-            <BrandedGlobe 
-              size="xl" 
-              animate={isLoading || partnerStatus !== 'idle'} 
-              spinning={isLoading || partnerStatus !== 'idle'}
-              className="shadow-[0_0_60px_rgba(0,229,255,0.2)]"
-            />
-            <h2 className="mt-8 text-2xl md:text-5xl font-black tracking-[0.2em] uppercase italic text-theme-gradient leading-none">
-              Success Hub
-            </h2>
-          </div>
+          {/* 1. Centered Visuals & Business Navigation (Absolute Top) */}
+          <div className="flex flex-col items-center pt-8">
+            <div className="pointer-events-none flex flex-col items-center">
+              <BrandedGlobe 
+                size="xl" 
+                animate={isLoading || partnerStatus !== 'idle'} 
+                spinning={isLoading || partnerStatus !== 'idle'}
+                className="shadow-[0_0_60px_rgba(0,229,255,0.2)]"
+              />
+              <h2 className="mt-8 text-2xl md:text-5xl font-black tracking-[0.2em] uppercase italic text-theme-gradient leading-none">
+                Success Hub
+              </h2>
+            </div>
 
-          {/* 2. Centered Business Navigation */}
-          <div className="flex bg-theme-background p-1.5 rounded-[24px] border border-theme w-fit max-w-full overflow-x-auto scrollbar-hide gap-1.5 mx-auto shadow-xl backdrop-blur-md px-1.5 flex-nowrap sticky top-4 z-50">
-            {[0, 1, 2].map((idx) => {
-              const empireId = (idx + 1).toString();
-              const isActive = activeBusinessIndex === idx;
+            {/* 2. Centered Business Navigation */}
+            <div className="mt-12 flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-full overflow-x-auto scrollbar-hide gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
+              {[0, 1, 2].map((idx) => {
+                const empireId = (idx + 1).toString();
+                const isActive = activeBusinessIndex === idx;
 
-              // Labeling logic: Show "EmpireLaunch AI" for slot 1 on owner account
-              // otherwise use the actual business name if active, or default labels.
-              let label = `Business ${idx + 1}`;
-              if (idx === 0) {
-                if (isAdmin) {
-                  label = "EmpireLaunch AI";
-                } else {
-                  label = (isActive ? (empireData?.name || empireData?.title) : null) || "Primary Empire";
+                // Labeling logic: Show "EmpireLaunch AI" for slot 1 on owner account
+                // otherwise use the actual business name if active, or default labels.
+                let label = `Business ${idx + 1}`;
+                if (idx === 0) {
+                  if (isAdmin) {
+                    label = "EmpireLaunch AI";
+                  } else {
+                    label = (isActive ? (empireData?.name || empireData?.title) : null) || "Primary Empire";
+                  }
+                } else if (isActive && (empireData?.name || empireData?.title)) {
+                  label = empireData.name || empireData.title;
                 }
-              } else if (isActive && (empireData?.name || empireData?.title)) {
-                label = empireData.name || empireData.title;
-              }
 
-              return (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    if (activeBusinessIndex === idx) return;
-                    setActiveEmpireId(empireId);
-                  }}
-                  className={cn(
-                    "px-4 md:px-8 py-2.5 md:py-3.5 rounded-[18px] font-black text-[9px] md:text-xs uppercase tracking-tighter transition-all flex items-center gap-2 whitespace-nowrap min-w-fit",
-                    isActive
-                      ? "bg-theme-surface text-foreground shadow-sm border border-theme"
-                      : "text-slate-400 hover:text-foreground hover:bg-theme-surface/30"
-                  )}
-                >
-                  {isActive ? <Globe className="w-3 h-3 text-primary animate-pulse" /> : <Briefcase className="w-3 h-3 opacity-50" />}
-                  {label}
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      if (activeBusinessIndex === idx) return;
+                      setActiveEmpireId(empireId);
+                    }}
+                    className={cn(
+                      "px-5 md:px-10 py-3 md:py-4 rounded-[18px] font-black text-[10px] md:text-[11px] uppercase tracking-tighter transition-all flex items-center gap-2.5 whitespace-nowrap min-w-fit",
+                      isActive
+                        ? "bg-theme-surface text-foreground shadow-lg border border-theme scale-105"
+                        : "text-slate-400/80 hover:text-foreground hover:bg-theme-surface/40"
+                    )}
+                  >
+                    {isActive ? (
+                      <Globe className="w-3.5 h-3.5 text-primary animate-pulse" />
+                    ) : (
+                      <Briefcase className="w-3.5 h-3.5 opacity-40" />
+                    )}
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {!slotStatus[activeBusinessIndex] && !isAdmin ? (
