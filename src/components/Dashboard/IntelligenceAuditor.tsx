@@ -35,9 +35,6 @@ export function IntelligenceAuditor() {
 
     if (!activeEmpireId) return;
     
-    const hasSeenTour = localStorage.getItem('empire_tour_v419') === 'true';
-    if (!hasSeenTour) return;
-
     // Check if dismissed recently (last 4 hours)
     const lastDismissed = localStorage.getItem('intel_audit_dismissed');
     if (lastDismissed && Date.now() - parseInt(lastDismissed) < 1000 * 60 * 60 * 4) {
@@ -48,7 +45,8 @@ export function IntelligenceAuditor() {
       const empire = await empireService.getEmpire(activeEmpireId);
       if (empire) {
         const missing = [];
-        if (!empire.title || empire.title === 'The First Empire' || empire.title === '') missing.push('Name');
+        const isDefaultName = !empire.title || empire.title === 'The First Empire' || empire.title === '';
+        if (isDefaultName) missing.push('Name');
         
         const description = empire.description || '';
         const hasNiche = description.includes('Empire Niche:') && !description.includes('Empire Niche: .') && !description.includes('Niche: Niche Pending');
@@ -57,11 +55,17 @@ export function IntelligenceAuditor() {
         if (!hasNiche) missing.push('Niche');
         if (!hasAngle) missing.push('Angle');
 
-        if (missing.length > 0) {
+        // Force visibility if critical data is missing, even if tour isn't finished
+        const isCriticalMissing = isDefaultName || !hasNiche;
+        const hasSeenTour = localStorage.getItem('empire_tour_v419') === 'true';
+        
+        if (missing.length > 0 && (hasSeenTour || isCriticalMissing)) {
           setMissingFields(missing);
           setIntelLevel(Math.max(0, 3 - missing.length));
           if (!isInteractive) {
-            setTimeout(() => setIsVisible(true), 2000);
+            // Immediate popup for critical, short delay for others
+            const delay = isCriticalMissing ? 500 : 3000;
+            setTimeout(() => setIsVisible(true), delay);
           }
         } else {
           setIsVisible(false);
@@ -72,6 +76,18 @@ export function IntelligenceAuditor() {
       console.error('Audit failed', err);
     }
   }, [activeEmpireId, pathname, isInteractive]);
+
+  useEffect(() => {
+    const handleForceSync = () => {
+      setIsInteractive(true);
+      setIsVisible(true);
+      // Reset current field to start from the beginning of missing fields
+      setCurrentFieldIdx(0);
+    };
+
+    window.addEventListener('empire:force-intel-sync', handleForceSync);
+    return () => window.removeEventListener('empire:force-intel-sync', handleForceSync);
+  }, []);
 
   useEffect(() => {
     if (isInitialized) {
@@ -86,7 +102,9 @@ export function IntelligenceAuditor() {
     return "";
   };
 
-  const initialMessage = `Analyzing neural pathways... I've detected a critical data gap. Your Empire ${missingFields.join(', ')} is currently undefined. Without this intelligence, my autonomous execution units are running on default parameters. Shall we calibrate your identity now?`;
+  const initialMessage = isCriticalMissing 
+    ? `System Alert: Empire identity incomplete. I cannot execute autonomous strategies without a Name and Niche. Shall we synchronize your vision now?`
+    : `Analyzing neural pathways... I've detected a critical data gap. Your Empire ${missingFields.join(', ')} is currently undefined. Shall we calibrate your identity now?`;
 
   const currentMessage = isInteractive ? getQuestion(missingFields[currentFieldIdx]) : initialMessage;
 

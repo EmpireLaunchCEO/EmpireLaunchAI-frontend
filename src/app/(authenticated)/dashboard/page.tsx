@@ -275,6 +275,8 @@ export default function Dashboard() {
           <>
             <BusinessSlots currentEmpire={empireData} />
 
+            <MissionBriefing empireData={empireData} />
+
             {!isLinkingComplete ? (
               <div className="bg-theme-surface border-2 border-theme rounded-[48px] p-8">
                  <GuidedLinking currentEmpire={empireData} onRefresh={fetchData} />

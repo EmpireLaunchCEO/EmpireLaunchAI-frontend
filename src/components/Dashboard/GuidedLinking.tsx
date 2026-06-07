@@ -65,6 +65,15 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   const router = useRouter();
 
   const isNichePending = !currentEmpire?.niche || currentEmpire.niche === 'Niche Pending';
+  const isNamePending = !currentEmpire?.title || currentEmpire.title === 'The First Empire' || currentEmpire.title === '';
+
+  useEffect(() => {
+    if (isNichePending || isNamePending) {
+       // Auto-trigger the high-intel auditor for a better "Pop Up" experience
+       window.dispatchEvent(new CustomEvent('empire:force-intel-sync'));
+    }
+  }, [isNichePending, isNamePending]);
+
   const [nicheInput, setNicheInput] = useState('');
   const [isUpdatingNiche, setIsUpdatingNiche] = useState(false);
 
@@ -324,23 +333,21 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                 {/* Integrated Search Bar or Niche Setup */}
                 <div className="relative group max-w-xl">
                   {isNichePending ? (
-                    <div className="flex gap-3">
-                       <input
-                        type="text"
-                        placeholder="e.g. Digital Planners, Fitness Coaching, Etsy Print on Demand..."
-                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-[10px] font-bold focus:border-primary focus:ring-0 transition-all placeholder:text-white/20 text-white"
-                        value={nicheInput}
-                        onChange={(e) => setNicheInput(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleUpdateNiche()}
-                      />
-                      <button 
-                        onClick={handleUpdateNiche}
-                        disabled={isUpdatingNiche || !nicheInput.trim()}
-                        className="px-6 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest disabled:opacity-50 transition-all shrink-0"
-                      >
-                        {isUpdatingNiche ? 'Saving...' : 'Set Niche'}
-                      </button>
-                    </div>
+                    <button 
+                      onClick={() => window.dispatchEvent(new CustomEvent('empire:force-intel-sync'))}
+                      className="w-full bg-primary/10 border-2 border-primary/40 rounded-2xl p-6 flex items-center justify-between group hover:bg-primary/20 transition-all shadow-[0_0_40px_rgba(0,229,255,0.1)]"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-slate-950 shadow-lg shadow-primary/20">
+                          <BrainCircuit className="w-6 h-6" />
+                        </div>
+                        <div className="text-left">
+                          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Critical Intelligence Required</p>
+                          <p className="text-lg font-black text-white italic">Synchronize Empire Niche & Name</p>
+                        </div>
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+                    </button>
                   ) : (
                     <>
                       <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">

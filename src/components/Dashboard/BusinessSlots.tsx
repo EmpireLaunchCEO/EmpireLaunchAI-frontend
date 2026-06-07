@@ -137,8 +137,13 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
   const [isStudioOpen, setIsStudioOpen] = useState(false);
 
   const handleSlotClick = () => {
-    // If niche is missing or pending, trigger the global Intelligence Sync UI
-    if (!currentEmpire?.niche || currentEmpire.niche === 'Niche Pending' || currentEmpire.title === 'The First Empire') {
+    const description = currentEmpire?.description || '';
+    const isNamePending = !currentEmpire?.title || currentEmpire.title === 'The First Empire' || currentEmpire.title === '';
+    const isNichePending = !description.includes('Empire Niche:') || description.includes('Empire Niche: .');
+    const isAnglePending = !description.includes('Angle:') || description.includes('Angle: .');
+
+    // If any core intel is missing, trigger the global Intelligence Sync UI
+    if (isNamePending || isNichePending || isAnglePending) {
       window.dispatchEvent(new CustomEvent('empire:force-intel-sync'));
     } else {
       // Otherwise navigate to Empire Center for operations
