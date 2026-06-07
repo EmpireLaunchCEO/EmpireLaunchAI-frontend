@@ -522,7 +522,7 @@ function OnboardingContent() {
                     acceptProtocols();
                     nextStep();
                   }}
-                  className="w-full bg-primary text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group"
+                  className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none"
                 >
                   Accept Protocols
                   <CheckCircle2 className="w-4 h-4" />

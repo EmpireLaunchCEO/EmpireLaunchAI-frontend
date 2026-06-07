@@ -106,13 +106,13 @@ function LandingPageContent() {
           {/* Tagline */}
           <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-md px-5 py-2 rounded-full border border-primary/20 font-bold text-[10px] uppercase tracking-[0.2em]">
             <Stars className="w-4 h-4 text-primary" />
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="text-theme-gradient">
               Autonomous Business Engineering
             </span>
           </div>
 
           {/* Hero Heading */}
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.8] uppercase italic text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-secondary">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.8] uppercase italic">
             YOUR EMPIRE AWAITS
           </h1>
 
@@ -130,7 +130,7 @@ function LandingPageContent() {
                 sessionStorage.clear();
                 window.location.href = '/onboarding?preview=true';
               }}
-              className="group relative bg-primary text-white px-10 py-5 rounded-[24px] font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 w-full uppercase tracking-tighter italic"
+              className="group relative bg-theme-gradient text-white px-10 py-5 rounded-[24px] font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 w-full uppercase tracking-tighter italic border-none"
             >
               Authorize Engine
               <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />

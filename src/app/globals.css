@@ -141,19 +141,22 @@ h3 {
   line-height: 1.3;
 }
 
-h1, h2, h3, .text-theme-gradient {
-  background: none !important;
-  -webkit-background-clip: initial !important;
-  background-clip: initial !important;
-  -webkit-text-fill-color: rgb(var(--primary-rgb)) !important;
-  color: rgb(var(--primary-rgb)) !important;
+/* THEME GRADIENT UTILITY */
+.bg-theme-gradient {
+  background: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%) !important;
+}
+
+h1, h2, h3, h4, .text-theme-gradient {
+  background-image: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
 }
 
 /* VIBRANT TEXT - Apply accent color to all text elements */
 p, span, label, div, li, td, th, a {
   color: inherit;
-  -webkit-text-fill-color: currentcolor; /* CRITICAL FIX: Prevent transparency inheritance */
-  background-clip: border-box;
 }
 
 .text-muted-foreground, .text-slate-400, .text-slate-500 {
@@ -198,38 +201,8 @@ p, span, label, div, li, td, th, a {
   text-shadow: 0 0 15px rgb(var(--primary-rgb) / 0.4);
 }
 
-/* EXCEPT for text inside elements that have a primary background */
-.bg-primary, .bg-primary *:not(h1, h2, h3, button),
-[class*="bg-primary/"], [class*="bg-primary/"] *:not(h1, h2, h3, button),
-.bg-blue-600, .bg-blue-600 *:not(h1, h2, h3, button),
-.bg-emerald-600, .bg-emerald-600 *:not(h1, h2, h3, button),
-.bg-electric-blue, .bg-electric-blue *:not(h1, h2, h3, button),
-.bg-slate-900, .bg-slate-900 *:not(h1, h2, h3, button),
-[class*="bg-slate-900/"], [class*="bg-slate-900/"] *:not(h1, h2, h3, button),
-.text-white-force {
-  -webkit-text-fill-color: var(--foreground) !important;
-  color: var(--foreground) !important;
-  background-clip: border-box !important;
-}
-
-/* Ensure headers inside dark boxes keep their gradient and don't show the "strip" */
-.bg-slate-900 h1, .bg-slate-900 h2, .bg-slate-900 h3,
-.bg-primary h1, .bg-primary h2, .bg-primary h3,
-[class*="bg-slate-900/"] h1, [class*="bg-slate-900/"] h2, [class*="bg-slate-900/"] h3 {
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-  background-image: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%) !important;
-  color: transparent !important;
-}
-
-/* Ensure buttons inside dark boxes keep their intended text color */
-.bg-slate-900 button, .bg-primary button, [class*="bg-slate-900/"] button {
-  -webkit-text-fill-color: inherit !important;
-  color: inherit !important;
-}
-
 /* Re-applying core styles */
-h1, h2, h3 {
+h1, h2, h3, h4 {
   letter-spacing: -0.05em;
   text-transform: uppercase;
   font-style: italic;
