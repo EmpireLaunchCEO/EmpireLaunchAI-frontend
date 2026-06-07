@@ -76,15 +76,32 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   }, [isNichePending, isNamePending]);
 
   const [nicheInput, setNicheInput] = useState('');
+  const [nameInput, setNameInput] = useState('');
+  const [chatInput, setChatInput] = useState('');
   const [isUpdatingNiche, setIsUpdatingNiche] = useState(false);
+  const [setupStep, setSetupStep] = useState<'name' | 'niche' | 'done'>(
+    isNamePending ? 'name' : (isNichePending ? 'niche' : 'done')
+  );
 
-  const handleUpdateNiche = async () => {
-    if (!nicheInput.trim()) return;
+  const handleChatSubmit = async () => {
+    if (!chatInput.trim()) return;
+    
     setIsUpdatingNiche(true);
     try {
-      await empireService.updateEmpire(currentEmpire?.id || '1', { niche: nicheInput });
+      if (setupStep === 'name') {
+        await empireService.updateEmpire(currentEmpire?.id || '1', { title: chatInput });
+        setNameInput(chatInput);
+        setSetupStep('niche');
+        setTeacherMessage(`"${chatInput}"—a powerful choice. Now, to calibrate my deep research protocols: What is your business niche? What exactly are we selling or growing?`);
+      } else if (setupStep === 'niche') {
+        await empireService.updateEmpire(currentEmpire?.id || '1', { niche: chatInput });
+        setNicheInput(chatInput);
+        setSetupStep('done');
+        setTeacherMessage(`Excellent. I have synchronized "${chatInput}" into our neural network. I am now scanning for high-velocity profit opportunities in this sector. Let's link your first platform to begin the automation.`);
+      }
+      
       if (onRefresh) onRefresh();
-      setTeacherMessage("Excellent. Now that your niche is established, let's start linking your platforms to begin the automation.");
+      setChatInput('');
       setConversationTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
@@ -117,8 +134,10 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   // Multi-stage message logic
   useEffect(() => {
     let msg = "";
-    if (isNichePending) {
-      msg = "Before we link your apps, I need to know your empire's niche. What are you planning to sell or grow? This helps me calibrate your strategy.";
+    if (isNamePending) {
+      msg = "Welcome. I am the Empire Teacher. Before we begin, I need to know: What shall we call your new business empire? Give me a name that represents your vision.";
+    } else if (isNichePending) {
+      msg = `"${currentEmpire?.title}"—a powerful choice. Now, to calibrate my deep research protocols: What is your business niche? What exactly are we selling or growing?`;
     } else if (isReturning) {
       msg = "Back for more? Let's expand your footprint. What are we linking today?";
     } else if (hasNoPlatforms) {
@@ -331,24 +350,35 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                   </p>
                 </div>
 
-                {/* Integrated Search Bar or Niche Setup */}
+                {/* Interactive AI Chat Input for Setup */}
                 <div className="relative group max-w-xl">
-                  {isNichePending ? (
-                    <button 
-                      onClick={() => window.dispatchEvent(new CustomEvent('empire:force-intel-sync'))}
-                      className="w-full bg-primary/10 border-2 border-primary/40 rounded-2xl p-6 flex items-center justify-between group hover:bg-primary/20 transition-all shadow-[0_0_40px_rgba(0,229,255,0.1)]"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-slate-950 shadow-lg shadow-primary/20">
-                          <BrainCircuit className="w-6 h-6" />
-                        </div>
-                        <div className="text-left">
-                          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Critical Intelligence Required</p>
-                          <p className="text-lg font-black text-white italic">Synchronize Empire Niche & Name</p>
-                        </div>
+                  {setupStep !== 'done' ? (
+                    <div className="space-y-4">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder={setupStep === 'name' ? "Enter Empire Name..." : "Describe your Niche..."}
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-6 pr-16 text-[11px] font-black focus:border-primary focus:ring-0 transition-all placeholder:text-white/20 text-white shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]"
+                          value={chatInput}
+                          onChange={(e) => setChatInput(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && handleChatSubmit()}
+                          disabled={isUpdatingNiche}
+                        />
+                        <button 
+                          onClick={handleChatSubmit}
+                          disabled={isUpdatingNiche || !chatInput.trim()}
+                          className="absolute right-3 top-3 bottom-3 px-5 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest disabled:opacity-50 hover:scale-105 transition-transform shadow-lg shadow-primary/20"
+                        >
+                          {isUpdatingNiche ? <Stars className="w-4 h-4 animate-spin" /> : "Send"}
+                        </button>
                       </div>
-                      <ArrowRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
-                    </button>
+                      <div className="flex items-center gap-2 ml-3">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                        <p className="text-[9px] text-primary/60 font-black uppercase tracking-widest">
+                          AI is waiting for your response...
+                        </p>
+                      </div>
+                    </div>
                   ) : (
                     <>
                       <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">

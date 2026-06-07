@@ -48,7 +48,9 @@ const steps = [
 
 const EstablishedScreen = () => (
   <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6 text-center p-6">
-    <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgb(var(--primary-rgb)/0.4)]" />
+    <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white animate-pulse">
+       <Stars className="w-8 h-8" />
+    </div>
     <div className="flex flex-col items-center gap-2">
       <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
         Neural Sync Established
@@ -295,7 +297,9 @@ function OnboardingContent() {
   if (!isMounted || !isInitialized) {
     return (
       <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgb(var(--primary-rgb)/0.4)]" />
+        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white animate-pulse">
+           <Stars className="w-8 h-8" />
+        </div>
         <div className="flex flex-col items-center gap-2">
           <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
             Synchronizing Nodes
@@ -334,7 +338,9 @@ function OnboardingContent() {
         >
           <div className="text-center space-y-12">
             <div className="relative inline-block mb-8">
-              <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+              <div className="w-20 h-20 bg-primary/10 rounded-3xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_30px_rgba(0,229,255,0.2)]">
+                <Stars className="w-10 h-10 text-primary" />
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -389,7 +395,9 @@ function OnboardingContent() {
           {!showDiscoveryReview ? (
             <div className="text-center space-y-12">
               <div className="relative inline-block mb-8">
-                <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgb(var(--primary-rgb)/0.4)]" />
+                <div className="w-20 h-20 bg-primary/10 rounded-3xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_30px_rgba(0,229,255,0.2)]">
+                  <Stars className="w-10 h-10 text-primary animate-spin" />
+                </div>
               </div>
 
               <div className="space-y-4">
@@ -398,7 +406,7 @@ function OnboardingContent() {
                 </h2>
                 <div className="flex items-center justify-center gap-3 min-h-6">
                   <div className="flex items-center gap-4">
-                    <BrandedGlobe size="sm" animate={true} />
+                    <Zap className="w-5 h-5 text-primary animate-pulse" />
                     <p className="text-primary font-black tracking-widest text-xs uppercase">
                       {isPWADismissed 
                         ? "Close out the browser version, then reopen app from Home Screen." 
@@ -471,7 +479,7 @@ function OnboardingContent() {
               >
                 <div className="text-center space-y-4">
                   <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
-                    <BrandedGlobe size="md" animate={true} />
+                    <Stars className="w-8 h-8 text-primary" />
                   </div>
                   <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Neural Agreement.</h2>
                   <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
@@ -532,7 +540,7 @@ function OnboardingContent() {
               >
                 <div className="text-center space-y-4">
                   <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
-                    <BrandedGlobe size="md" animate={true} />
+                    <Stars className="w-8 h-8 text-primary" />
                   </div>
                   <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Authorize Engine.</h2>
                   <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
@@ -770,7 +778,9 @@ export default function Onboarding() {
   return (
     <Suspense fallback={
       <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgb(var(--primary-rgb)/0.4)]" />
+        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white animate-pulse">
+           <Stars className="w-8 h-8" />
+        </div>
         <div className="flex flex-col items-center gap-2">
           <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
             Neural Sync Initializing

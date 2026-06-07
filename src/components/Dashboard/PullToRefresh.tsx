@@ -98,7 +98,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
               isRefreshing ? "border-primary shadow-[0_0_40px_rgba(0,229,255,0.4)]" : "border-white/10"
             )}>
               <BrandedGlobe
-                size="md"
+                size="lg"
                 animate={true}
                 spinning={isRefreshing}
               />

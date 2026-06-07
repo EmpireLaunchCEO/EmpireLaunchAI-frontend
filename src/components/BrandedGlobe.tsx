@@ -16,8 +16,8 @@ export function BrandedGlobe({ className, size = 'md', animate = true, spinning 
   const sizeClasses = {
     sm: 'w-5 h-5',
     md: 'w-8 h-8',
-    lg: 'w-16 h-16',
-    xl: 'w-24 h-24',
+    lg: 'w-12 h-12',
+    xl: 'w-16 h-16',
   };
 
   const animationProps = spinning 

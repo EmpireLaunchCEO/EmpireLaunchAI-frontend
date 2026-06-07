@@ -37,7 +37,9 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
         className="text-center space-y-4 max-w-xl"
       >
         <div className="w-20 h-20 bg-theme-surface border-2 border-theme rounded-[32px] mx-auto flex items-center justify-center shadow-xl mb-6">
-           <BrandedGlobe size="lg" spinning={isPaying} />
+           <div className={cn("w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white", isPaying && "animate-spin")}>
+              <Zap className="w-6 h-6" />
+           </div>
         </div>
         <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-foreground">
           Expand Your Empire.

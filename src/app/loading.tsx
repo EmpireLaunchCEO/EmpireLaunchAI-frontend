@@ -7,12 +7,12 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 export default function RootLoading() {
   return (
     <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-      <div className="relative">
-        <div className="absolute inset-0 bg-primary/20 blur-[60px] animate-pulse" />
-        <BrandedGlobe size="xl" spinning={true} className="relative z-10 shadow-[0_0_60px_rgb(var(--primary-rgb)/0.3)]" />
-      </div>
-
       <div className="flex flex-col items-center gap-2">
+        <div className="flex items-center gap-2 mb-4">
+           <div className="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:-0.3s]" />
+           <div className="w-2 h-2 rounded-full bg-primary animate-bounce [animation-delay:-0.15s]" />
+           <div className="w-2 h-2 rounded-full bg-primary animate-bounce" />
+        </div>
         <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
           Calibrating Neural Core
         </h2>

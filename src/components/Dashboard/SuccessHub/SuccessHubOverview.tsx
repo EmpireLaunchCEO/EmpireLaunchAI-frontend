@@ -9,8 +9,9 @@ import { EmpireLedger } from './EmpireLedger';
 import { EmpireGrowthBreakdown } from './EmpireGrowthBreakdown';
 import { TrustPulse } from './TrustPulse';
 import { InboxAssistant } from './InboxAssistant';
+import { EmpireIdentityHeader } from './EmpireIdentityHeader';
+import { PerformanceIntelligence } from './PerformanceIntelligence';
 import { Stars, Brain, Zap } from 'lucide-react';
-import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { ActivityStream } from '../ActivityStream';
 
 interface SuccessHubOverviewProps {
@@ -25,8 +26,13 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-12 md:space-y-20 pb-20"
+      className="space-y-8 md:space-y-12 pb-20"
     >
+      <EmpireIdentityHeader empireData={empireData} />
+
+      {/* High-Level Performance Box (The "GROWTH BOX" requested) */}
+      <PerformanceIntelligence health={healthData} />
+
       {/* Primary Intelligence Row */}
       <section className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
         <div className="lg:col-span-3">
@@ -41,6 +47,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
           <NeuralActivityFeed logs={pulseData?.logs} status={pulseData?.status} />
         </div>
       </section>
+
 
       {/* Growth & Trust Section */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -79,9 +86,6 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
           <div className="bg-theme-surface rounded-[40px] p-8 border border-theme">
              <div className="flex items-center justify-between mb-8">
                <div className="flex items-center gap-3">
-                 <div className="w-10 h-10 rounded-xl bg-theme-background flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
-                   <BrandedGlobe size="sm" />
-                 </div>
                  <h3 className="text-lg md:text-xl font-black text-foreground uppercase italic tracking-tight">Unified Activity Feed</h3>
                </div>
                <span className="hidden md:block text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Real-time Sync</span>

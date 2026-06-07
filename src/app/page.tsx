@@ -48,7 +48,9 @@ function LandingPageContent() {
   if (!isMounted) {
     return (
       <div className="fixed inset-0 z-[100] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" spinning={true} />
+        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white animate-pulse">
+           <Stars className="w-8 h-8" />
+        </div>
       </div>
     );
   }
@@ -61,7 +63,9 @@ function LandingPageContent() {
     <div className="min-h-screen bg-[#0a0519] selection:bg-primary/30 overflow-x-hidden text-white">
       {isFastTrack && (
         <div className="fixed inset-0 z-[100] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-          <BrandedGlobe size="xl" spinning={true} />
+          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white animate-pulse">
+             <Stars className="w-8 h-8" />
+          </div>
           <div className="flex flex-col items-center gap-2">
             <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
               Neural Path Authorized
@@ -82,7 +86,9 @@ function LandingPageContent() {
 
       <nav className="relative z-10 p-6 flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-3">
-          <BrandedGlobe size="md" />
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg">
+             <Stars className="w-5 h-5" />
+          </div>
           <span className="font-black text-2xl tracking-tighter uppercase italic text-theme-gradient pr-2">EmpireLaunch AI</span>
         </div>
         <div className="hidden md:flex items-center gap-2 bg-theme-surface/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
@@ -163,7 +169,9 @@ export default function LandingPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white animate-pulse">
+           <Stars className="w-8 h-8" />
+        </div>
       </div>
     }>
       <LandingPageContent />

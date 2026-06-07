@@ -13,7 +13,7 @@ import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesS
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { SuccessHubOverview } from '@/components/Dashboard/SuccessHub/SuccessHubOverview';
-import { Stars, Home, ArrowUpRight, Plus, X, LayoutDashboard, Globe, Sparkles, RefreshCcw, Briefcase } from 'lucide-react';
+import { Stars, Home, ArrowUpRight, Plus, X, LayoutDashboard, Globe, Sparkles, Briefcase } from 'lucide-react';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
@@ -21,7 +21,6 @@ import { analyticsService, empireService } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
-import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 import { LockedSlotView } from '@/components/Dashboard/LockedSlotView';
@@ -108,12 +107,31 @@ export default function Dashboard() {
   // If after initialization it's still "loading", only show loading if it's been very brief
   if (!mounted || !isInitialized || !isDashboardLoaded) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="sm" spinning={true} className="shadow-[0_0_30px_rgba(0,229,255,0.4)]" />
-        <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[8px] animate-pulse text-center px-6">
-          Initializing Neural Sync<br/>
-          <span className="opacity-40 text-[6px]">Connecting to Global Brain...</span>
-        </h2>
+      <div className="min-h-screen bg-slate-950 p-3 md:p-8">
+        <div className="max-w-full md:max-w-7xl mx-auto">
+          <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-theme/30 pb-8 md:pb-12 opacity-40">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary drop-shadow-sm animate-pulse">
+                  Neural Syncing...
+                </span>
+              </div>
+              <h1 className="text-3xl md:text-6xl font-black tracking-tighter leading-none italic uppercase text-foreground drop-shadow-sm">
+                Synchronizing.
+              </h1>
+            </div>
+          </header>
+          <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10">
+             <div className="lg:col-span-8 space-y-12">
+                <div className="h-64 bg-theme-surface/30 rounded-[40px] border border-theme/20 animate-pulse" />
+                <div className="h-96 bg-theme-surface/30 rounded-[40px] border border-theme/20 animate-pulse" />
+             </div>
+             <div className="lg:col-span-4 space-y-12">
+                <div className="h-48 bg-theme-surface/30 rounded-[40px] border border-theme/20 animate-pulse" />
+                <div className="h-48 bg-theme-surface/30 rounded-[40px] border border-theme/20 animate-pulse" />
+             </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -123,42 +141,10 @@ export default function Dashboard() {
       <PullToRefresh onRefresh={fetchData}>
         <div className="p-3 md:p-8 pb-24 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12 overflow-x-hidden">
           
-          <div className="flex bg-theme-background p-1.5 rounded-[24px] border border-theme w-fit gap-1.5 mb-8 md:mb-12 mx-auto sticky top-4 z-[50] shadow-xl backdrop-blur-md">
-            {[0, 1, 2].map((idx) => {
-              const empireId = idx === 0 ? '1' : (idx === 1 ? '2' : '3');
-              const isActive = activeBusinessIndex === idx;
-              const label = idx === 0 ? (empireData?.name || "Empire 1") : `Empire ${idx + 1}`;
-              
-              return (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    if (activeBusinessIndex === idx) return;
-                    setActiveEmpireId(empireId);
-                  }}
-                  className={cn(
-                    "px-4 md:px-8 py-2.5 md:py-3.5 rounded-[18px] font-black text-[9px] md:text-xs uppercase tracking-tighter transition-all flex items-center gap-2",
-                    isActive
-                      ? "bg-theme-surface text-foreground shadow-sm border border-theme"
-                      : "text-slate-500 hover:text-foreground"
-                  )}
-                >
-                  {isActive ? <Globe className="w-3 h-3 text-primary animate-pulse" /> : <Briefcase className="w-3 h-3 opacity-50" />}
-                  {isActive && activeEmpireId === empireId ? (empireData?.name || label) : `Slot ${idx + 1}`}
-                </button>
-              );
-            })}
-          </div>
-
           <div className="space-y-8 md:space-y-16 animate-in fade-in duration-700">
             <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-theme/30 pb-8 md:pb-12">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <BrandedGlobe 
-                      size="sm" 
-                      animate={isLoading || partnerStatus !== 'idle'} 
-                      spinning={isLoading || partnerStatus !== 'idle'} 
-                    />
                     <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary drop-shadow-sm">
                       {isLoading ? 'Neural Syncing...' : (partnerStatus === 'idle' ? 'Neural Link Active' : 'AI Processing...')}
                     </span>
@@ -197,6 +183,36 @@ export default function Dashboard() {
                         healthData={healthData}
                         transactions={transactions}
                       />
+
+                      <div className="flex bg-theme-background p-1.5 rounded-[24px] border border-theme w-fit gap-1.5 mx-auto shadow-xl backdrop-blur-md">
+                        {[0, 1, 2].map((idx) => {
+                          const empireId = idx === 0 ? '1' : (idx === 1 ? '2' : '3');
+                          const isActive = activeBusinessIndex === idx;
+                          const label = idx === 0 ? (empireData?.name || "Empire 1") : `Empire ${idx + 1}`;
+                          
+                          return (
+                            <button
+                              key={idx}
+                              onClick={() => {
+                                if (activeBusinessIndex === idx) return;
+                                setActiveEmpireId(empireId);
+                              }}
+                              className={cn(
+                                "px-4 md:px-8 py-2.5 md:py-3.5 rounded-[18px] font-black text-[9px] md:text-xs uppercase tracking-tighter transition-all flex items-center gap-2",
+                                isActive
+                                  ? "bg-theme-surface text-foreground shadow-sm border border-theme"
+                                  : "text-slate-500 hover:text-foreground"
+                              )}
+                            >
+                              {isActive ? <Globe className="w-3 h-3 text-primary animate-pulse" /> : <Briefcase className="w-3 h-3 opacity-50" />}
+                              {isActive && activeEmpireId === empireId ? (empireData?.name || label) : `Slot ${idx + 1}`}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <BusinessSlots currentEmpire={empireData} />
+                      
                       <MissionBriefing 
                         empireData={empireData}
                         onExecute={handleInsightExecute} 
@@ -204,7 +220,6 @@ export default function Dashboard() {
                       />
                       <ApprovalQueue aiMode={aiMode} />
                       <DetailedRevenue transactions={transactions} />
-                      <BusinessSlots currentEmpire={empireData} />
                     </>
                   )}
                 </div>
