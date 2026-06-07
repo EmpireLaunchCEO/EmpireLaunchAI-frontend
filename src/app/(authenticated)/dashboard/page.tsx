@@ -206,7 +206,7 @@ export default function Dashboard() {
 
             <div className="flex flex-col items-end">
               <div className="flex items-center gap-2 bg-primary/10 text-primary px-3 md:px-4 py-1.5 md:py-2 rounded-2xl border border-primary/20 font-bold text-[10px] md:text-sm shadow-sm">
-                <Stars className="w-3 h-3 md:w-4 md:h-4" />
+                <BrandedGlobe size="sm" animate={true} className="w-3 h-3 md:w-4 md:h-4" />
                 {aiMode === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
               </div>
               <span className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 md:mt-2">
