@@ -4,130 +4,63 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { GrowthTracker } from './GrowthTracker';
 import { NeuralActivityFeed } from './NeuralActivityFeed';
-import { VideoPerformance } from './VideoPerformance';
-import { EmpireLedger } from './EmpireLedger';
-import { EmpireGrowthBreakdown } from './EmpireGrowthBreakdown';
-import { TrustPulse } from './TrustPulse';
-import { InboxAssistant } from './InboxAssistant';
-import { Stars, Brain, Zap } from 'lucide-react';
-import { ActivityStream } from '../ActivityStream';
+import { Brain, Zap, Stars } from 'lucide-react';
 
 interface SuccessHubOverviewProps {
   empireData: any;
   pulseData: any;
   healthData: any;
-  transactions: any[];
 }
 
-export const SuccessHubOverview = ({ empireData, pulseData, healthData, transactions }: SuccessHubOverviewProps) => {
+export const SuccessHubOverview = ({ empireData, pulseData, healthData }: SuccessHubOverviewProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-8 md:space-y-12"
+      className="bg-theme-surface border-2 border-theme rounded-[48px] overflow-hidden shadow-2xl"
     >
-      {/* Primary Intelligence Row (The "Success Hub Box") */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <div className="lg:col-span-1">
-          <GrowthTracker
-            goalTitle={empireData?.activeGoal || "$1,000 Monthly Revenue"}
-            currentValue={healthData?.revenue || 0}
-            targetValue={1000}
-            progress={pulseData?.progress}
-          />
+      <div className="p-6 md:p-10 space-y-8">
+        {/* Header of the unified hub */}
+        <div className="flex items-center justify-between border-b border-theme/30 pb-6">
+           <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                 <Brain className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                 <h3 className="text-xl font-black text-foreground uppercase italic tracking-tight">Primary Intelligence</h3>
+                 <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Autonomous Control Hub</p>
+              </div>
+           </div>
+           <div className="flex items-center gap-2 bg-primary/5 px-3 py-1.5 rounded-full border border-primary/10">
+              <Stars className="w-3 h-3 text-primary animate-pulse" />
+              <span className="text-[9px] font-black text-primary uppercase">Neural Sync Active</span>
+           </div>
         </div>
-        <div className="lg:col-span-1">
-          <NeuralActivityFeed logs={pulseData?.logs} status={pulseData?.status} />
-        </div>
-      </section>
 
-      {/* Growth & Trust Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <EmpireGrowthBreakdown growthScore={healthData?.growthScore || 84} healthData={healthData} />
-        <TrustPulse />
-      </section>
-
-      <section className="space-y-12">
-         <VideoPerformance />
-      </section>
-
-      {/* Insight Banner */}
-      <motion.div
-        whileHover={{ scale: 1.01 }}
-        className="bg-gradient-to-r from-primary to-amber-600 rounded-[32px] p-1 shadow-xl shadow-primary/20"
-      >
-        <div className="bg-theme-background/10 backdrop-blur-md rounded-[30px] p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4 text-white">
-            <div className="w-12 h-12 rounded-2xl bg-theme-surface/20 flex items-center justify-center shrink-0">
-              <Brain className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-bold text-base md:text-lg leading-tight uppercase italic">Scaling Opportunity Identified</h4>
-              <p className="text-white/70 text-[10px] md:text-sm font-medium">TikTok engagement velocity suggests a 15% higher conversion for 'Digital Planners'.</p>
-            </div>
+        {/* Side-by-Side Content: Swapped Order */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
+          <div className="lg:col-span-1 bg-theme-background/50 rounded-[32px] p-2 border border-theme/20">
+            <NeuralActivityFeed logs={pulseData?.logs} status={pulseData?.status} />
           </div>
-          <button className="w-full md:w-auto bg-theme-surface text-foreground px-8 py-3 rounded-2xl font-black text-[10px] md:text-sm uppercase tracking-widest hover:bg-theme-surface/90 transition-colors shadow-lg shadow-black/20">
-            Execute Pivot
-          </button>
-        </div>
-      </motion.div>
-
-      {/* Mid Section: Social & Financial */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pb-20">
-        <div className="lg:col-span-7 space-y-12">
-          <div className="bg-theme-surface rounded-[40px] p-8 border border-theme">
-             <div className="flex items-center justify-between mb-8">
-               <div className="flex items-center gap-3">
-                 <h3 className="text-lg md:text-xl font-black text-foreground uppercase italic tracking-tight">Unified Activity Feed</h3>
-               </div>
-               <span className="hidden md:block text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Real-time Sync</span>
-             </div>
-             <ActivityStream />
+          <div className="lg:col-span-1 bg-theme-background/50 rounded-[32px] p-2 border border-theme/20">
+            <GrowthTracker
+              goalTitle={empireData?.activeGoal || "$1,000 Monthly Revenue"}
+              currentValue={healthData?.revenue || 0}
+              targetValue={1000}
+              progress={pulseData?.progress || 0}
+            />
           </div>
         </div>
-
-        <div className="lg:col-span-5 sticky top-8 space-y-10">
-          <EmpireLedger health={healthData} />
-          <InboxAssistant />
-
-          <div className="bg-theme-surface rounded-[40px] p-8 text-foreground border border-theme relative overflow-hidden">
-             <div className="relative z-10 space-y-6">
-                <div className="flex items-center gap-3">
-                  <Zap className="w-6 h-6 text-primary fill-current" />
-                  <h4 className="text-xl font-bold">Autonomous Cycle</h4>
-                </div>
-                <p className="text-muted-foreground text-sm leading-relaxed font-medium">
-                  The AI is currently in <span className="text-primary font-bold">Optimization Phase</span>. Next batch of Etsy listings scheduled for 04:00 AM.
-                </p>
-                <div className="flex items-center gap-4">
-                   <div className="flex-1 h-2 bg-theme-background rounded-full overflow-hidden">
-                      <motion.div
-                        animate={{ width: ['20%', '85%', '85%'] }}
-                        transition={{ duration: 10, repeat: Infinity }}
-                        className="h-full bg-primary rounded-full"
-                      />
-                   </div>
-                   <span className="text-[10px] font-mono text-muted-foreground italic">85% Complete</span>
-                </div>
-             </div>
-             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[80px] rounded-full" />
-          </div>
-        </div>
-      </section>
-
-      {/* Global Success Constellation Footer */}
-      <footer className="pt-20 border-t border-theme">
-        <div className="flex flex-col items-center text-center space-y-4">
-          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-[0.4em]">
-            <Stars className="w-3 h-3" />
-            Empire Performance Sync
-          </div>
-          <p className="text-muted-foreground text-sm font-medium max-w-lg">
-            Your empire is currently operating at <span className="text-foreground font-bold">98.4% efficiency</span>.
-            All linked systems are synchronized and data-flows are secured.
-          </p>
-        </div>
-      </footer>
+      </div>
+      
+      {/* Footer bar for the unified hub */}
+      <div className="bg-primary/5 py-4 px-10 border-t border-theme/30 flex items-center justify-between">
+         <div className="flex items-center gap-2">
+            <Zap className="w-3 h-3 text-primary" />
+            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Processing Velocity: 98.4 TFLOPS</span>
+         </div>
+         <span className="text-[8px] font-black text-primary uppercase tracking-widest">Global Link Verified</span>
+      </div>
     </motion.div>
   );
 };

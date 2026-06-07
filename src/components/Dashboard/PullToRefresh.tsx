@@ -16,29 +16,35 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   const [isAtTop, setIsAtTop] = useState(true);
   const controls = useAnimation();
   const y = useMotionValue(0);
-
-  const THRESHOLD = 80;
+  
+  // Lower threshold for easier triggering (50px instead of 80px)
+  const THRESHOLD = 50;
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY || document.documentElement.scrollTop;
-      setIsAtTop(scrollY <= 5); // More sensitive top detection
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop || window.scrollY || 0;
+      setIsAtTop(scrollY <= 10);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Frequent checks during load to ensure sync
+    const interval = setInterval(handleScroll, 1000);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearInterval(interval);
+    };
   }, []);
 
   const handlePan = (e: any, info: any) => {
     if (!isAtTop || isRefreshing) return;
     
-    // Only pull down (positive y offset)
+    // Only respond to downward pulls
     if (info.offset.y > 0) {
-      const dampenedY = info.offset.y * 0.6;
-      y.set(dampenedY);
-      setPullProgress(Math.min(dampenedY / THRESHOLD, 1));
+      // Apply linear resistance for a "snappy" feel
+      const pullY = info.offset.y * 0.4;
+      y.set(pullY);
+      setPullProgress(Math.min(pullY / THRESHOLD, 1));
     } else {
       y.set(0);
       setPullProgress(0);
@@ -53,15 +59,16 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       setIsRefreshing(true);
       setPullProgress(1);
 
-      // Snap to refreshing position
+      // Snap to active refresh position
       await controls.start({ 
-        y: 80, 
+        y: 60, 
         transition: { type: "spring", stiffness: 400, damping: 25 } 
       });
 
       try {
+        // Trigger haptic if available (Android)
         if (typeof window !== 'undefined' && window.navigator.vibrate) {
-          window.navigator.vibrate(15);
+          window.navigator.vibrate(10);
         }
         await onRefresh();
       } finally {
@@ -84,26 +91,26 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
 
   return (
     <div className="relative min-h-screen bg-transparent">
-      {/* Background Globe Area (hidden behind content) */}
-      <div className="fixed top-0 left-0 right-0 flex flex-col items-center justify-center z-0 pointer-events-none overflow-hidden" style={{ height: 180 }}>
+      {/* Neural Sync Indicator (Centered background layer) */}
+      <div className="fixed top-0 left-0 right-0 flex flex-col items-center justify-center z-0 pointer-events-none" style={{ height: 140 }}>
          <motion.div
            style={{
              opacity: isRefreshing ? 1 : pullProgress,
-             scale: isRefreshing ? 1 : 0.7 + (pullProgress * 0.3),
+             scale: isRefreshing ? 1 : 0.8 + (pullProgress * 0.2),
            }}
            className="flex flex-col items-center"
          >
             <div className={cn(
-              "bg-slate-950 rounded-full p-2 border-2 transition-all duration-300",
-              isRefreshing ? "border-primary shadow-[0_0_40px_rgba(0,229,255,0.4)]" : "border-white/10"
+              "p-2 rounded-full border-2 transition-all duration-300 bg-slate-900",
+              isRefreshing ? "border-primary shadow-[0_0_30px_rgba(0,229,255,0.3)]" : "border-white/5"
             )}>
               <BrandedGlobe
-                size="lg"
+                size="md"
                 animate={true}
                 spinning={isRefreshing}
               />
             </div>
-            <span className="mt-2 text-[8px] font-black text-primary uppercase tracking-[0.4em]">
+            <span className="mt-2 text-[8px] font-black text-primary uppercase tracking-[0.4em] drop-shadow-md">
               {isRefreshing ? "Neural Syncing" : "Pull to Sync"}
             </span>
          </motion.div>
@@ -113,8 +120,8 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
         onPan={handlePan}
         onPanEnd={handlePanEnd}
         animate={controls}
-        style={{ y }}
-        className="relative z-10 w-full bg-theme-surface shadow-[0_-20px_50px_rgba(0,0,0,0.3)] min-h-screen will-change-transform"
+        style={{ y, touchAction: isAtTop ? 'none' : 'auto' }}
+        className="relative z-10 w-full min-h-screen bg-transparent"
       >
         {children}
       </motion.div>
