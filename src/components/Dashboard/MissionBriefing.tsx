@@ -190,6 +190,17 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
         </div>
 
         <div className="w-full lg:w-80 space-y-6">
+          <div className="flex justify-end pr-4">
+             <div className={cn(
+               "px-3 py-1 rounded-full border text-[8px] font-black uppercase tracking-widest flex items-center gap-1.5",
+               aiMode === 'empire' 
+                 ? "bg-amber-500/10 border-amber-500/20 text-amber-500" 
+                 : "bg-primary/10 border-primary/20 text-primary"
+             )}>
+                <div className={cn("w-1 h-1 rounded-full animate-pulse", aiMode === 'empire' ? "bg-amber-500" : "bg-primary")} />
+                {aiMode === 'empire' ? 'Auto-Pilot Mode' : 'Co-Pilot Mode'}
+             </div>
+          </div>
           <div className="p-8 rounded-[40px] bg-theme-background/50 border border-theme flex flex-col gap-6 relative overflow-hidden group">
             <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-[40px]" />
             <div className="flex items-center gap-3 relative z-10">
