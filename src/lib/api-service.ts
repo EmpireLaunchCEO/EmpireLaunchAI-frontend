@@ -210,6 +210,54 @@ export const discoveryService = {
   async rejectResult(id: string): Promise<boolean> { return true; }
 };
 
+export interface DesignTask {
+  id: string;
+  title: string;
+  platform: string;
+  status: 'blueprint_ready' | 'producing' | 'editing' | 'drafting' | 'completed';
+  dueDate: string;
+}
+
+export interface CreativeBlueprintData {
+  id: string;
+  title: string;
+  intelligence: string;
+  palette: string[];
+  fonts: { platform: string; pairing: string }[];
+  script: string[];
+  compositionUrl: string;
+  variations: any[];
+  platformLink?: string;
+}
+
+export interface ApprovalRequest {
+  id: string;
+  type: 'blueprint' | 'dna' | 'content' | 'golive';
+  payload: any;
+}
+
+export interface TrustScore {
+  score: number;
+  velocity: number;
+  sentiment: number;
+  agility: number;
+}
+
+export interface SentimentPoint {
+  x: number;
+  y: number;
+  sentiment: number;
+  label: string;
+}
+
+export interface InboxDraft {
+  id: string;
+  subject: string;
+  to: string;
+  body: string;
+  status: 'pending' | 'sent' | 'rejected';
+}
+
 export const creativeService = {
   async getDesignTasks(): Promise<DesignTask[]> {
     return [

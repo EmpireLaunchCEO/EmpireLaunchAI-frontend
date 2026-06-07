@@ -209,7 +209,7 @@ export default function SettingsPage() {
   ];
 
   const colorSchemes = [
-    { id: 'blue', name: 'Electric Empire', primary: '#00e5ff', secondary: '#7c3aed', description: 'Neon Cyan-to-Deep Violet standard.' },
+    { id: 'blue', name: 'Electric Empire', primary: '#7c3aed', secondary: '#3b82f6', description: 'Deep Violet-to-Electric Blue shimmer.' },
     { id: 'emerald', name: 'Growth Green', primary: '#10b981', secondary: '#059669', description: 'Focused on clarity and profitability.' },
     { id: 'pink', name: 'Electric Pink', primary: '#ff0099', secondary: '#be185d', description: 'High-energy vibrant neon aesthetic.' },
     { id: 'vibrant-cyan', name: 'Vibrant Cyan', primary: '#00ffff', secondary: '#0891b2', description: 'Cybernetic and fresh digital appearance.' },

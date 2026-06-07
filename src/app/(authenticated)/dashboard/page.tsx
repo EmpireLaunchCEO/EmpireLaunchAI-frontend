@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from 'react';
+import { cn } from "@/lib/utils";
 import { MissionBriefing } from '@/components/Dashboard/MissionBriefing';
 import { ApprovalQueue } from '@/components/EmpireMode/ApprovalQueue';
 import { DetailedRevenue } from '@/components/Dashboard/DetailedRevenue';

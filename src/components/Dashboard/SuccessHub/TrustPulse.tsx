@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import { cn } from "@/lib/utils";
 import { motion } from 'framer-motion';
 import { ShieldCheck, Heart, Zap, History, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
