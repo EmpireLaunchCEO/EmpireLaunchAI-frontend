@@ -61,7 +61,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
     finishSetup,
     completeLinkingPhase,
     updatePlatformPermission,
-    platformPermissions
+    platformPermissions,
+    aiMode
   } = useEmpire();
   const router = useRouter();
 
