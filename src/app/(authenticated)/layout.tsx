@@ -3,6 +3,7 @@ import { MobileNav } from "@/components/MobileNav";
 import { SubscriptionGuard } from "@/components/SubscriptionGuard";
 import { OnboardingTour } from "@/components/Dashboard/OnboardingTour";
 import { NotificationBell } from "@/components/Dashboard/NotificationBell";
+import { GlobalEmpireHeader } from "@/components/Dashboard/GlobalEmpireHeader";
 import { SlotGuard } from "@/components/SlotGuard";
 import { Suspense } from "react";
 
@@ -23,6 +24,7 @@ export default function AuthenticatedLayout({
             <NotificationBell id="notification-bell-desktop" />
           </div>
           <div className="min-h-[calc(100vh-80px)]">
+            <GlobalEmpireHeader />
             <SlotGuard>
               {children}
             </SlotGuard>

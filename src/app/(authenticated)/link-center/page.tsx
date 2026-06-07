@@ -25,16 +25,14 @@ export default function LinkCenterPage() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
       <div className="p-3 md:p-8 pb-40 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 bg-theme-surface/30 p-5 md:p-0 rounded-[24px] md:rounded-none border border-theme md:border-none">
+      {/* Page Context Header */}
+      <div className="bg-theme-surface/30 p-5 rounded-[24px] border border-theme flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em]">
             <Share2 className="w-3 h-3" />
             Link Center
           </div>
-          <h1 className="text-xl md:text-5xl font-black text-foreground tracking-tighter italic">
-            Neural Sync.
-          </h1>
-          <p className="text-[10px] md:text-lg text-muted-foreground font-medium italic">
+          <p className="text-[10px] md:text-sm text-muted-foreground font-medium italic">
             Connect and manage your empire's high-velocity channels.
           </p>
         </div>
@@ -42,13 +40,13 @@ export default function LinkCenterPage() {
         {isLinkingComplete && (
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 bg-theme-surface text-foreground px-6 py-3 rounded-2xl border-2 border-theme font-bold text-sm shadow-sm hover:bg-theme-background transition-all group"
+            className="flex items-center gap-2 bg-theme-surface text-foreground px-5 py-2 rounded-xl border border-theme font-bold text-[10px] uppercase shadow-sm hover:bg-theme-background transition-all group"
           >
-            <LayoutDashboard className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
-            Return to Dashboard
+            <LayoutDashboard className="w-3 h-3 text-slate-400 group-hover:text-blue-600 transition-colors" />
+            Dashboard
           </Link>
         )}
-      </header>
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}

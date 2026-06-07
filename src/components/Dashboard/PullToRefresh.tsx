@@ -120,7 +120,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
         onPan={handlePan}
         onPanEnd={handlePanEnd}
         animate={controls}
-        style={{ y, touchAction: isAtTop ? 'none' : 'auto' }}
+        style={{ y, touchAction: 'auto' }}
         className="relative z-10 w-full min-h-screen bg-transparent"
       >
         {children}
