@@ -241,6 +241,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
       setTeacherMessage("Excellent! Choose your intelligence tier for Gmail. Co-Pilot for tracking, or Empire Mode for automated responses.");
     } else if (platformId === 'imap') {
       setTeacherMessage("Establish your neural link via IMAP. Will you lead with Co-Pilot or grant full Empire control?");
+    } else if (platformId === 'etsy') {
+      setTeacherMessage("Etsy OAuth selected! Choose your intelligence tier, then I'll open a secure popup for you to authorize via Etsy's official login. No API keys needed.");
     } else {
       setTeacherMessage(`Initializing protocols for ${platformId.toUpperCase()}. Choose your access level to begin.`);
     }
@@ -248,7 +250,65 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   };
 
   const handleAuth = () => {
-    // Simulate auth success
+    // Etsy OAuth via popup window
+    if (activeSetupPlatform === 'etsy') {
+      // Fetch auth URL from backend and open popup
+      fetch(`${API_URL}/api/auth/etsy/url`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: '00000000-0000-0000-0000-000000000000',
+          redirectUri: `${window.location.origin}/auth/callback/etsy`
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.url) {
+          // Save state for callback verification
+          if (data.state) {
+            localStorage.setItem('etsy_auth_state', data.state);
+          }
+          if (data.codeVerifier) {
+            localStorage.setItem('etsy_code_verifier', data.codeVerifier);
+          }
+          // Open popup centered on screen
+          const width = 600;
+          const height = 700;
+          const left = window.screenX + (window.innerWidth - width) / 2;
+          const top = window.screenY + (window.innerHeight - height) / 2;
+          const popup = window.open(
+            data.url,
+            'etsy-oauth',
+            `width=${width},height=${height},left=${left},top=${top},popup=1`
+          );
+          // Poll popup for completion
+          const pollTimer = setInterval(() => {
+            if (popup?.closed) {
+              clearInterval(pollTimer);
+              // Check if we got connected
+              const stored = localStorage.getItem('empire_vault_etsy');
+              if (stored) {
+                connectPlatform('etsy');
+                updatePlatformPermission('etsy', selectedTier);
+                finishSetup();
+                setTeacherMessage("Etsy linked successfully! Your store data is now flowing into the intelligence network.");
+                setConversationTrigger(prev => prev + 1);
+              }
+            }
+          }, 500);
+        } else {
+          setTeacherMessage("I'm having trouble reaching Etsy's authorization server. Let's try again in a moment.");
+          setConversationTrigger(prev => prev + 1);
+        }
+      })
+      .catch(() => {
+        setTeacherMessage("Connection error. Please make sure the backend is running and try again.");
+        setConversationTrigger(prev => prev + 1);
+      });
+      return;
+    }
+    
+    // Simulate auth success for other platforms
     setLinkingStep('keys');
   };
 
