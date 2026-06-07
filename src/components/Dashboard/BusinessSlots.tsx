@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Lock, Stars, TrendingUp, ChevronRight, Briefcase, Video, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StudioTeaserModal } from '../Studio/StudioTeaserModal';
+import { useEmpire } from '@/lib/EmpireContext';
 
 interface BusinessSlotProps {
   id: string;

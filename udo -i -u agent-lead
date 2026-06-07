@@ -10,6 +10,7 @@ import { EmpireGrowthBreakdown } from './EmpireGrowthBreakdown';
 import { TrustPulse } from './TrustPulse';
 import { InboxAssistant } from './InboxAssistant';
 import { Stars, Brain, Zap } from 'lucide-react';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { ActivityStream } from '../ActivityStream';
 
 interface SuccessHubOverviewProps {
@@ -24,11 +25,11 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-8 md:space-y-12"
+      className="space-y-12 md:space-y-20 pb-20"
     >
-      {/* Primary Intelligence Row (The "Success Hub Box") */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <div className="lg:col-span-1">
+      {/* Primary Intelligence Row */}
+      <section className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <div className="lg:col-span-3">
           <GrowthTracker
             goalTitle={empireData?.activeGoal || "$1,000 Monthly Revenue"}
             currentValue={healthData?.revenue || 0}
@@ -36,7 +37,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
             progress={pulseData?.progress}
           />
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-2">
           <NeuralActivityFeed logs={pulseData?.logs} status={pulseData?.status} />
         </div>
       </section>
@@ -73,11 +74,14 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
       </motion.div>
 
       {/* Mid Section: Social & Financial */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pb-20">
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         <div className="lg:col-span-7 space-y-12">
           <div className="bg-theme-surface rounded-[40px] p-8 border border-theme">
              <div className="flex items-center justify-between mb-8">
                <div className="flex items-center gap-3">
+                 <div className="w-10 h-10 rounded-xl bg-theme-background flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
+                   <BrandedGlobe size="sm" />
+                 </div>
                  <h3 className="text-lg md:text-xl font-black text-foreground uppercase italic tracking-tight">Unified Activity Feed</h3>
                </div>
                <span className="hidden md:block text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Real-time Sync</span>
