@@ -606,7 +606,7 @@ function OnboardingContent() {
                        <button
                          onClick={handleSecurePayment}
                          disabled={isActivating || isPaying}
-                         className="w-full bg-primary text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 group shadow-[0_0_30px_rgba(251,191,36,0.2)]"
+                         className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 group shadow-[0_0_30px_rgba(251,191,36,0.2)] border-none"
                        >
                          <CreditCard className="w-5 h-5" />
                          {isPaying ? "Processing..." : "Pay with Credit Card"}

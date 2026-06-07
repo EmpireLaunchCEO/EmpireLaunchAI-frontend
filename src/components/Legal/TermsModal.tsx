@@ -39,7 +39,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                    <Scale className="w-6 h-6" />
                  </div>
                  <div>
-                   <h2 className="text-2xl font-black text-white tracking-tight">Neural Agreement.</h2>
+                   <h2 className="text-2xl font-black text-theme-gradient tracking-tight uppercase italic">Neural Agreement.</h2>
                    <p className="text-xs font-black uppercase tracking-widest text-primary">Terms & Conditions v1.1</p>
                  </div>
                </div>
@@ -105,7 +105,7 @@ export function TermsModal({ isOpen, onAccept, onClose }: TermsModalProps) {
                 </button>
                 <button
                   onClick={onAccept}
-                  className="flex-1 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl bg-primary text-slate-900 hover:bg-white shadow-cyan-900/20"
+                  className="flex-1 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl bg-theme-gradient text-slate-900 hover:bg-white shadow-cyan-900/20 border-none"
                 >
                   ACCEPT AND SYNCHRONIZE
                 </button>
