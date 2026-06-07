@@ -47,7 +47,7 @@ const steps = [
 
 const EstablishedScreen = () => (
   <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6 text-center p-6">
-    <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+    <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgb(var(--primary-rgb)/0.4)]" />
     <div className="flex flex-col items-center gap-2">
       <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
         Neural Sync Established
@@ -270,7 +270,7 @@ function OnboardingContent() {
   if (!isMounted || !isInitialized) {
     return (
       <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgb(var(--primary-rgb)/0.4)]" />
         <div className="flex flex-col items-center gap-2">
           <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
             Synchronizing Nodes
@@ -364,7 +364,7 @@ function OnboardingContent() {
           {!showDiscoveryReview ? (
             <div className="text-center space-y-12">
               <div className="relative inline-block mb-8">
-                <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+                <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgb(var(--primary-rgb)/0.4)]" />
               </div>
 
               <div className="space-y-4">
@@ -745,7 +745,7 @@ export default function Onboarding() {
   return (
     <Suspense fallback={
       <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+        <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_60px_rgb(var(--primary-rgb)/0.4)]" />
         <div className="flex flex-col items-center gap-2">
           <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
             Neural Sync Initializing

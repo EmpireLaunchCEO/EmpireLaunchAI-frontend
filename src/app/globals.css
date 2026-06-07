@@ -4,12 +4,12 @@
 
 :root {
   /* DEFAULT SHIMMER THEME - Deep Violet to Electric Blue */
-  --primary-rgb: 124, 58, 237; /* Deep Violet (#7c3aed) */
-  --secondary-rgb: 59, 130, 246; /* Electric Blue (#3b82f6) */
-  --background-rgb: 10, 5, 25; /* Near Black Violet */
-  --foreground-rgb: 255, 255, 255; /* Pure White */
-  --surface-rgb: 12, 8, 30; /* Deeper Violet Surface */
-  --surface-border-rgb: 124, 58, 237; /* Violet Border Shimmer */
+  --primary-rgb: 124 58 237; /* Deep Violet (#7c3aed) */
+  --secondary-rgb: 59 130 246; /* Electric Blue (#3b82f6) */
+  --background-rgb: 10 5 25; /* Near Black Violet */
+  --foreground-rgb: 255 255 255; /* Pure White */
+  --surface-rgb: 12 8 30; /* Deeper Violet Surface */
+  --surface-border-rgb: 124 58 237; /* Violet Border Shimmer */
   
   --background: rgb(var(--background-rgb));
   --foreground: rgb(var(--foreground-rgb));
@@ -20,12 +20,12 @@
 }
 
 [data-theme='neon-cyan'] {
-  --primary-rgb: 0, 229, 255; /* Neon Cyan */
-  --secondary-rgb: 124, 58, 237; /* Deep Violet */
-  --background-rgb: 10, 5, 25;
-  --foreground-rgb: 255, 255, 255;
-  --surface-rgb: 12, 8, 30;
-  --surface-border-rgb: 0, 229, 255;
+  --primary-rgb: 0 229 255; /* Neon Cyan */
+  --secondary-rgb: 124 58 237; /* Deep Violet */
+  --background-rgb: 10 5 25;
+  --foreground-rgb: 255 255 255;
+  --surface-rgb: 12 8 30;
+  --surface-border-rgb: 0 229 255;
 }
 
 [data-theme='emerald'] {
@@ -169,31 +169,31 @@ p, span, label, div, li, td, th, a {
 
 /* VIBRANT BOX SHADOW - Add subtle glow to theme surfaces */
 .bg-theme-surface, .bg-theme-background {
-  box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.1), inset 0 0 0 1px rgba(var(--primary-rgb), 0.2);
+  box-shadow: 0 0 20px rgb(var(--primary-rgb) / 0.1), inset 0 0 0 1px rgb(var(--primary-rgb) / 0.2);
 }
 
 /* SHIMMER ANIMATION */
 @keyframes shimmer {
-  0% { border-color: rgba(var(--primary-rgb), 0.3); box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1); }
-  50% { border-color: rgba(var(--secondary-rgb), 0.5); box-shadow: 0 0 25px rgba(var(--secondary-rgb), 0.2); }
-  100% { border-color: rgba(var(--primary-rgb), 0.3); box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1); }
+  0% { border-color: rgb(var(--primary-rgb) / 0.3); box-shadow: 0 0 10px rgb(var(--primary-rgb) / 0.1); }
+  50% { border-color: rgb(var(--secondary-rgb) / 0.5); box-shadow: 0 0 25px rgb(var(--secondary-rgb) / 0.2); }
+  100% { border-color: rgb(var(--primary-rgb) / 0.3); box-shadow: 0 0 10px rgb(var(--primary-rgb) / 0.1); }
 }
 
 /* Apply shimmer to themed borders */
 .border-theme, .border-2, .border {
-  border-color: rgba(var(--primary-rgb), 0.3) !important;
+  border-color: rgb(var(--primary-rgb) / 0.3) !important;
   animation: shimmer 4s infinite ease-in-out;
   transition: all 0.3s ease;
 }
 
 .border-theme:hover {
-  border-color: rgba(var(--secondary-rgb), 0.6) !important;
-  box-shadow: 0 0 30px rgba(var(--secondary-rgb), 0.3);
+  border-color: rgb(var(--secondary-rgb) / 0.6) !important;
+  box-shadow: 0 0 30px rgb(var(--secondary-rgb) / 0.3);
 }
 
 /* GLOWING TEXT EFFECT */
 .text-glow {
-  text-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
+  text-shadow: 0 0 15px rgb(var(--primary-rgb) / 0.4);
 }
 
 /* EXCEPT for text inside elements that have a primary background */

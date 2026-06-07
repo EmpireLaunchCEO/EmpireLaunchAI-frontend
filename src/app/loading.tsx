@@ -9,7 +9,7 @@ export default function RootLoading() {
     <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
       <div className="relative">
         <div className="absolute inset-0 bg-primary/20 blur-[60px] animate-pulse" />
-        <BrandedGlobe size="xl" spinning={true} className="relative z-10 shadow-[0_0_60px_rgba(var(--primary-rgb),0.3)]" />
+        <BrandedGlobe size="xl" spinning={true} className="relative z-10 shadow-[0_0_60px_rgb(var(--primary-rgb)/0.3)]" />
       </div>
 
       <div className="flex flex-col items-center gap-2">
