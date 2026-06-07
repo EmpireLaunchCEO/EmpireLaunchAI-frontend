@@ -95,6 +95,14 @@ export const empireService = {
     try {
       if (!id || id === 'undefined') return this.getLatestEmpire();
       
+      // Mock data for Business 2 and 3 if they don't exist yet
+      if (id === '2') {
+        return { id: '2', title: 'Empire Two', description: 'Empire Niche: . Angle: . Mode: co-pilot' };
+      }
+      if (id === '3') {
+        return { id: '3', title: 'Empire Three', description: 'Empire Niche: . Angle: . Mode: co-pilot' };
+      }
+
       const res = await fetch(`${API_URL}/api/agent/empire/${id}`, { headers: HEADERS });
       if (res.ok) return await res.json();
       

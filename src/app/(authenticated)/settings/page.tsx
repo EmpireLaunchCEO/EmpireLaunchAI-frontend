@@ -171,10 +171,11 @@ const SupportHub = () => (
 );
 
 export default function SettingsPage() {
+  const { theme, setTheme, aiMode, setAiMode, isAdmin, setIsAdmin } = useEmpire();
+  const { isLinked: isStripeLinked } = useStripeStatus();
+
   const [activeTab, setActiveTab] = useState('link-center');
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
-  const { theme, setTheme, aiMode, setAiMode } = useEmpire();
-  const { isLinked: isStripeLinked } = useStripeStatus();
 
   useEffect(() => {
     const handleSwitchTab = (e: any) => {
@@ -248,6 +249,31 @@ export default function SettingsPage() {
                   {activeTab === tab.id && <ChevronRight className="hidden lg:block w-3 h-3 ml-auto text-primary" />}
                 </button>
               ))}
+            </div>
+
+            {/* Developer Mode Section */}
+            <div className="mt-8 p-6 bg-slate-900 border border-slate-800 rounded-[32px] space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Bot className="w-4 h-4 text-primary" />
+                  <span className="text-[10px] font-black text-white uppercase tracking-widest">Dev Mode</span>
+                </div>
+                <button 
+                  onClick={() => setIsAdmin(!isAdmin)}
+                  className={cn(
+                    "w-12 h-6 rounded-full transition-all relative flex items-center px-1",
+                    isAdmin ? "bg-primary" : "bg-slate-700"
+                  )}
+                >
+                  <div className={cn(
+                    "w-4 h-4 bg-white rounded-full transition-transform",
+                    isAdmin ? "translate-x-6" : "translate-x-0"
+                  )} />
+                </button>
+              </div>
+              <p className="text-[9px] text-slate-500 font-bold uppercase tracking-tight leading-relaxed">
+                Unlock all business slots without paying. (Currently: {isAdmin ? 'ADMIN' : 'CUSTOMER VIEW'})
+              </p>
             </div>
           </aside>
 
@@ -570,7 +596,7 @@ export default function SettingsPage() {
           </main>
         </div>
       </div>
-    </div>
-  </PullToRefresh>
+      </div>
+    </PullToRefresh>
   );
 }

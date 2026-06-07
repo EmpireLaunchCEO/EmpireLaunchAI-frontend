@@ -27,7 +27,7 @@ import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 import { LockedSlotView } from '@/components/Dashboard/LockedSlotView';
 
 export default function Dashboard() {
-  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus } = useEmpire();
+  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin } = useEmpire();
   const [activeBusinessIndex, setActiveBusinessIndex] = useState(0);
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
@@ -251,7 +251,7 @@ export default function Dashboard() {
         </div>
         
         {/* Conditional Content: Dashboard OR Locked View */}
-        {!slotStatus[activeBusinessIndex] ? (
+        {(!slotStatus[activeBusinessIndex] && !isAdmin) ? (
           <LockedSlotView slotIndex={activeBusinessIndex} />
         ) : isLoading && !empireData ? (
           /* Inline Loading State (No longer full page blocking) */

@@ -55,6 +55,8 @@ interface EmpireContextType {
   setActiveEmpire: (empire: any) => void;
   slotStatus: Record<number, boolean>;
   unlockSlot: (index: number) => void;
+  isAdmin: boolean;
+  setIsAdmin: (admin: boolean) => void;
 
   // Notifications
   notifications: Notification[];
@@ -114,6 +116,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const isOnboarded = onboardedByEmpire[activeEmpireId] || false;
 
   const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: false, 2: false });
+  const [isAdmin, setIsAdmin] = useState(true); // Defaulting to true for "ME" (the owner)
 
   const unlockSlot = (index: number) => {
     setSlotStatus(prev => ({ ...prev, [index]: true }));
@@ -571,6 +574,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       setActiveEmpire,
       slotStatus,
       unlockSlot,
+      isAdmin,
+      setIsAdmin,
       notifications,
       unreadCount,
       markAsRead,
