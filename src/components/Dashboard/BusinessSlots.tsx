@@ -137,13 +137,8 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
   const [isStudioOpen, setIsStudioOpen] = useState(false);
 
   const handleSlotClick = () => {
-    // If niche is pending or missing, redirect to onboarding preview to fill it in
-    if (!currentEmpire?.niche || currentEmpire.niche === 'Niche Pending') {
-      window.location.href = '/onboarding?preview=true';
-    } else {
-      // Otherwise go to Empire Center for details
-      window.location.href = '/empire-center';
-    }
+    // Navigate to Empire Center regardless of niche status to avoid onboarding redirect loops
+    window.location.href = '/empire-center';
   };
 
   return (

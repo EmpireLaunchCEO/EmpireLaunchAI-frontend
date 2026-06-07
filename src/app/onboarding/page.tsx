@@ -128,6 +128,28 @@ function OnboardingContent() {
           setData(JSON.parse(savedData));
         } catch (e) {}
       }
+
+      // If in preview mode, try to fetch current empire data to pre-fill
+      const fetchCurrentEmpire = async () => {
+        if (searchParams.get('preview') === 'true') {
+          try {
+            const empireData = await empireService.getLatestEmpire();
+            if (empireData) {
+              setData(prev => ({
+                ...prev,
+                name: empireData.title || prev.name,
+                niche: empireData.description?.match(/Empire Niche: (.*?)\./)?.[1] || prev.niche,
+                angle: empireData.description?.match(/Angle: (.*?)\./)?.[1] || prev.angle,
+              }));
+              // Jump to Identity step for previewing
+              setCurrentStep(3);
+            }
+          } catch (err) {
+            console.error('Failed to pre-fill preview data', err);
+          }
+        }
+      };
+      fetchCurrentEmpire();
     }
   }, []);
 
@@ -151,18 +173,20 @@ function OnboardingContent() {
   useEffect(() => {
     let active = true;
     
-    const isStandalone = typeof window !== 'undefined' && (
-      window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone
-    );
-
-    // If they open the PWA and were already at the end, just go to dashboard
-    if (isStandalone && isMounted && isInitialized && (isOnboarded || currentStep >= 5) && isPaid) {
-       console.log('[PWA] Standalone detected at end-state, fast-tracking...');
-       router.replace('/dashboard');
-       return;
-    }
-
     if (!isPreview && isMounted && isInitialized && isOnboarded && isPaid) {
+      // If we are already onboarded, we should only redirect if NOT in preview mode
+      const isStandalone = typeof window !== 'undefined' && (
+        window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone
+      );
+
+      // If they open the PWA and were already at the end, just go to dashboard
+      // BUT even in PWA, respect the preview flag
+      if (isStandalone && isMounted && isInitialized && (isOnboarded || currentStep >= 5) && isPaid) {
+         console.log('[PWA] Standalone detected at end-state, fast-tracking...');
+         router.replace('/dashboard');
+         return;
+      }
+
       // Small delay to allow state to settle
       const timer = setTimeout(() => {
         if (active) {

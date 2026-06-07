@@ -106,7 +106,7 @@ function LandingPageContent() {
           </div>
 
           {/* Hero Heading */}
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.8] uppercase italic text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.8] uppercase italic text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-secondary">
             YOUR EMPIRE AWAITS
           </h1>
 

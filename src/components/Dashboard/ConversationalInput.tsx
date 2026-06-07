@@ -130,8 +130,10 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
+                className="flex flex-col"
               >
-                <Stars className="w-5 h-5 text-slate-400" />
+                <span className="text-[7px] font-black text-primary uppercase tracking-[0.2em] leading-none mb-0.5">Empire</span>
+                <span className="text-[7px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Teacher</span>
               </motion.div>
             )}
           </AnimatePresence>
@@ -141,9 +143,9 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder={isListening ? "Listening..." : "Ask AI to research trends, create listings, or schedule posts..."}
+          placeholder={isListening ? "Listening..." : "Neural query or task execution..."}
           className={cn(
-            "flex-1 py-3 px-2 outline-none bg-transparent text-foreground placeholder:text-slate-400 font-medium transition-all",
+            "flex-1 py-2 px-2 outline-none bg-transparent text-foreground placeholder:text-slate-500 font-medium text-[8px] transition-all",
             isListening ? "placeholder:text-primary animate-pulse" : ""
           )}
           disabled={isProcessing}

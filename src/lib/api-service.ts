@@ -114,6 +114,21 @@ export const empireService = {
       console.error('Latest Empire Fetch Error:', e);
       return null;
     }
+  },
+
+  async updateEmpire(id: string, data: { name?: string; niche?: string }): Promise<any> {
+    try {
+      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
+        method: 'PATCH',
+        headers: HEADERS,
+        body: JSON.stringify(data)
+      });
+      if (res.ok) return await res.json();
+      return null;
+    } catch (e) {
+      console.error('Empire Update Error:', e);
+      return null;
+    }
   }
 };
 

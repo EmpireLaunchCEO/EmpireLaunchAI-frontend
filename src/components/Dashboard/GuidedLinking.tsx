@@ -24,6 +24,8 @@ import {
 import { useEmpire } from '@/lib/EmpireContext';
 import { useRouter } from 'next/navigation';
 
+import { analyticsService, empireService } from '@/lib/api-service';
+
 import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 
 const availablePlatforms = [
@@ -45,9 +47,11 @@ const availablePlatforms = [
 interface GuidedLinkingProps {
   isReturning?: boolean;
   onClose?: () => void;
+  currentEmpire?: any;
+  onRefresh?: () => void;
 }
 
-export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
+export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }: GuidedLinkingProps) {
   const {
     connectedPlatforms,
     connectPlatform,
@@ -59,6 +63,25 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
     platformPermissions
   } = useEmpire();
   const router = useRouter();
+
+  const isNichePending = !currentEmpire?.niche || currentEmpire.niche === 'Niche Pending';
+  const [nicheInput, setNicheInput] = useState('');
+  const [isUpdatingNiche, setIsUpdatingNiche] = useState(false);
+
+  const handleUpdateNiche = async () => {
+    if (!nicheInput.trim()) return;
+    setIsUpdatingNiche(true);
+    try {
+      await empireService.updateEmpire(currentEmpire?.id || '1', { niche: nicheInput });
+      if (onRefresh) onRefresh();
+      setTeacherMessage("Excellent. Now that your niche is established, let's start linking your platforms to begin the automation.");
+      setConversationTrigger(prev => prev + 1);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsUpdatingNiche(false);
+    }
+  };
 
   const handleComplete = () => {
     if (onClose) {
@@ -84,7 +107,9 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
   // Multi-stage message logic
   useEffect(() => {
     let msg = "";
-    if (isReturning) {
+    if (isNichePending) {
+      msg = "Before we link your apps, I need to know your empire's niche. What are you planning to sell or grow? This helps me calibrate your strategy.";
+    } else if (isReturning) {
       msg = "Back for more? Let's expand your footprint. What are we linking today?";
     } else if (hasNoPlatforms) {
       msg = "This is where you search for any app you want to link. I will personally walk you through what needs to be done! Let's start with your email, that way I can get some codes that will be required and you won't have to go back and forth.";
@@ -96,7 +121,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
       msg = "We're building momentum. I'm already scanning your linked accounts for trends. Do you want to link more, or are you ready to see your initial strategy?";
     }
     setTeacherMessage(msg);
-  }, [connectedPlatforms.length, hasNoPlatforms, isGmailLinked, isReturning]);
+  }, [connectedPlatforms.length, hasNoPlatforms, isGmailLinked, isReturning, isNichePending]);
 
   // Typing effect
   useEffect(() => {
@@ -206,57 +231,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
 
   return (
     <div className="space-y-12 max-w-4xl mx-auto pt-10 pb-20">
-      {/* Search Bar */}
-      <div className="relative group">
-        <div className="absolute inset-y-0 left-8 flex items-center pointer-events-none">
-          <Search className="h-6 w-6 text-muted-foreground group-focus-within:text-primary transition-colors" />
-        </div>
-        <input
-          type="text"
-          placeholder="Search for an app to link (e.g. Gmail, Etsy...)"
-          className="w-full bg-theme-surface border-4 border-theme rounded-[32px] py-8 pl-20 pr-8 text-2xl font-bold focus:border-primary focus:ring-0 transition-all shadow-2xl shadow-black/20 placeholder:text-muted-foreground/30"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-
-        {/* Animated Ring on focus */}
-        <div className="absolute inset-0 -z-10 bg-primary/5 blur-2xl rounded-[32px] opacity-0 group-focus-within:opacity-100 transition-opacity" />
-
-        {/* Search Results Dropdown */}
-        <AnimatePresence>
-          {searchQuery && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="absolute top-full left-0 right-0 mt-2 bg-theme-surface border-2 border-theme rounded-[24px] shadow-2xl z-50 overflow-hidden"
-            >
-              {filteredPlatforms.length > 0 ? (
-                <div className="p-2">
-                  {filteredPlatforms.map(platform => (
-                    <button
-                      key={platform.id}
-                      onClick={() => handleSelectPlatform(platform.id)}
-                      className="w-full flex items-center gap-4 p-4 hover:bg-theme-background rounded-xl transition-colors text-left"
-                    >
-                      <div className={cn("p-2 rounded-lg", platform.bg)}>
-                        <platform.icon className={cn("w-5 h-5", platform.color)} />
-                      </div>
-                      <span className="font-bold text-foreground">{platform.name}</span>
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="p-8 text-center text-muted-foreground font-medium">
-                  No platforms found matching "{searchQuery}"
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Connected Platforms Quick View (Always visible below search) */}
+      {/* Connected Platforms Quick View (Always visible) */}
       {connectedPlatforms.length > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -264,8 +239,8 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
           className="space-y-6"
         >
           <div className="flex items-center justify-between px-2">
-            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground">Established Links</h4>
-            <span className="text-[10px] font-black text-primary bg-primary/10 px-2 py-1 rounded-full">{connectedPlatforms.length} Neural Syncs</span>
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Established Links</h4>
+            <span className="text-[8px] font-black text-primary bg-primary/10 px-2 py-1 rounded-full">{connectedPlatforms.length} Neural Syncs</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {connectedPlatforms.map(id => {
@@ -275,15 +250,15 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                 <motion.div
                   key={id}
                   layoutId={id}
-                  className="p-6 bg-theme-surface border-2 border-theme rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
+                  className="p-6 bg-theme-surface border border-theme rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className={cn("p-3 rounded-xl", platform.bg)}>
                     <platform.icon className={cn("w-5 h-5", platform.color)} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-bold text-foreground">{platform.name}</span>
+                    <span className="font-bold text-foreground text-xs">{platform.name}</span>
                     <span className={cn(
-                      "text-[8px] font-black uppercase tracking-widest",
+                      "text-[7px] font-black uppercase tracking-widest",
                       platformPermissions[id] === 'empire' ? "text-amber-500" : "text-primary"
                     )}>
                       {platformPermissions[id] === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
@@ -297,7 +272,7 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
         </motion.div>
       )}
 
-      {/* Empire Teacher Popup (Conversational Overhaul) */}
+      {/* Empire Teacher Popup (Search Integrated) */}
       <AnimatePresence mode="wait">
         {showTeacher && !activeSetupPlatform && (
           <motion.div
@@ -305,18 +280,18 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="bg-white rounded-[40px] p-10 text-slate-900 border border-slate-100 relative overflow-hidden shadow-2xl"
+            className="bg-slate-900 rounded-[40px] p-8 md:p-10 text-white border border-white/10 relative overflow-hidden shadow-2xl"
           >
             <div className="relative z-10 flex flex-col md:flex-row gap-8">
               <div className="shrink-0">
-                <div className="w-20 h-20 rounded-[28px] bg-blue-600 flex items-center justify-center shadow-2xl shadow-blue-500/20 relative">
-                  <Stars className="w-10 h-10 text-white" />
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-[24px] md:rounded-[28px] bg-blue-600 flex items-center justify-center shadow-2xl shadow-blue-500/20 relative">
+                  <Stars className="w-8 h-8 md:w-10 md:h-10 text-white" />
                   {isTyping && (
-                    <div className="absolute -top-2 -right-2 bg-amber-400 rounded-full p-1.5 animate-bounce shadow-lg">
+                    <div className="absolute -top-2 -right-2 bg-primary rounded-full p-2 animate-bounce shadow-lg">
                       <div className="flex gap-1">
-                        <div className="w-1 h-1 bg-theme-surface rounded-full" />
-                        <div className="w-1 h-1 bg-theme-surface rounded-full animate-pulse" />
-                        <div className="w-1 h-1 bg-theme-surface rounded-full" />
+                        <div className="w-1 h-1 bg-slate-950 rounded-full" />
+                        <div className="w-1 h-1 bg-slate-950 rounded-full animate-pulse" />
+                        <div className="w-1 h-1 bg-slate-950 rounded-full" />
                       </div>
                     </div>
                   )}
@@ -326,41 +301,112 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
               <div className="space-y-6 flex-1">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <h3 className="text-sm font-black uppercase tracking-[0.3em] text-primary">Empire Teacher</h3>
-                    <div className="px-2 py-1 bg-primary/10 rounded-full border border-primary/20">
-                      <span className="text-[10px] font-black text-primary/80 uppercase tracking-widest">Active</span>
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Empire Teacher</h3>
+                    <div className="px-2 py-0.5 bg-primary/20 rounded-full border border-primary/30">
+                      <span className="text-[8px] font-black text-primary uppercase tracking-widest">Active</span>
                     </div>
                   </div>
-                  <button onClick={() => setShowTeacher(false)} className="text-muted-foreground hover:text-foreground transition-colors">
-                    <X className="w-6 h-6" />
+                  <button 
+                    onClick={() => setShowTeacher(false)} 
+                    className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
 
-                <div className="relative min-h-[80px]">
-                  <p className="text-2xl font-bold leading-snug tracking-tight text-foreground">
+                <div className="relative min-h-[60px]">
+                  <p className="text-xl md:text-2xl font-black leading-snug tracking-tight text-white italic">
                     {displayedMessage}
                     {isTyping && <span className="inline-block w-2 h-6 bg-primary ml-1 animate-pulse" />}
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-4 pt-4">
-                  {hasNoPlatforms ? (
+                {/* Integrated Search Bar or Niche Setup */}
+                <div className="relative group max-w-xl">
+                  {isNichePending ? (
+                    <div className="flex gap-3">
+                       <input
+                        type="text"
+                        placeholder="e.g. Digital Planners, Fitness Coaching, Etsy Print on Demand..."
+                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-[10px] font-bold focus:border-primary focus:ring-0 transition-all placeholder:text-white/20 text-white"
+                        value={nicheInput}
+                        onChange={(e) => setNicheInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleUpdateNiche()}
+                      />
+                      <button 
+                        onClick={handleUpdateNiche}
+                        disabled={isUpdatingNiche || !nicheInput.trim()}
+                        className="px-6 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest disabled:opacity-50 transition-all shrink-0"
+                      >
+                        {isUpdatingNiche ? 'Saving...' : 'Set Niche'}
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                        <Search className="h-3.5 w-3.5 text-white/40 group-focus-within:text-primary transition-colors" />
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Search for an app to link..."
+                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-[8px] font-bold focus:border-primary focus:ring-0 transition-all placeholder:text-white/20 text-white"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      
+                      <AnimatePresence>
+                        {searchQuery && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            className="absolute top-full left-0 right-0 mt-2 bg-slate-800 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden"
+                          >
+                            {filteredPlatforms.length > 0 ? (
+                              <div className="p-1">
+                                {filteredPlatforms.map(platform => (
+                                  <button
+                                    key={platform.id}
+                                    onClick={() => handleSelectPlatform(platform.id)}
+                                    className="w-full flex items-center gap-3 p-3 hover:bg-white/5 rounded-lg transition-colors text-left"
+                                  >
+                                    <div className={cn("p-1.5 rounded-md", platform.bg)}>
+                                      <platform.icon className={cn("w-3.5 h-3.5", platform.color)} />
+                                    </div>
+                                    <span className="font-bold text-[10px] text-white">{platform.name}</span>
+                                  </button>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="p-4 text-center text-white/40 text-[10px] font-medium">
+                                No platforms found matching "{searchQuery}"
+                              </div>
+                            )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap gap-3 pt-2">
+                  {!isNichePending && hasNoPlatforms ? (
                     <>
                       <button
                         onClick={() => handleSelectPlatform('gmail')}
-                        className="px-8 py-4 bg-primary hover:opacity-90 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 shadow-lg shadow-primary/20 group text-foreground"
+                        className="px-6 py-3 bg-primary hover:bg-primary/90 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all flex items-center gap-2 shadow-lg shadow-primary/20 group text-slate-950"
                       >
-                        Start with Gmail <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        Start with Gmail <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                       </button>
                       <button
                         onClick={handleImapStart}
-                        className="px-8 py-4 bg-theme-surface hover:opacity-90 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3"
+                        className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all flex items-center gap-2 text-white"
                       >
                         Other Email (IMAP)
                       </button>
                       <button
                         onClick={handleManualPreFill}
-                        className="px-8 py-4 bg-transparent border-2 border-theme hover:bg-theme-surface rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 text-muted-foreground hover:text-foreground"
+                        className="px-6 py-3 bg-transparent border border-white/10 hover:bg-white/5 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all flex items-center gap-2 text-white/40 hover:text-white"
                       >
                         Manual Pre-fill
                       </button>
@@ -368,13 +414,13 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
                   ) : connectedPlatforms.length >= 2 ? (
                     <button
                       onClick={handleComplete}
-                      className="px-10 py-5 bg-gradient-to-r from-primary to-amber-600 hover:opacity-90 rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all flex items-center gap-3 shadow-2xl shadow-primary/40 group animate-pulse text-foreground"
+                      className="px-8 py-4 bg-gradient-to-r from-primary to-amber-600 hover:opacity-90 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center gap-3 shadow-2xl shadow-primary/40 group animate-pulse text-slate-950"
                     >
-                      Neural Sync Complete: Ready to move on <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      Ready to move on <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
                   ) : (
-                    <div className="flex items-center gap-2 text-muted-foreground italic text-sm font-medium">
-                      <Stars className="w-4 h-4" /> I'm waiting for your next platform choice...
+                    <div className="flex items-center gap-2 text-white/40 italic text-[10px] font-medium">
+                      <Stars className="w-3 h-3" /> I'm waiting for your next choice...
                     </div>
                   )}
                 </div>
@@ -382,8 +428,8 @@ export function GuidedLinking({ isReturning, onClose }: GuidedLinkingProps) {
             </div>
 
             {/* Background elements for premium feel */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-10 -mr-48 -mt-48" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-600 rounded-full blur-[100px] opacity-10 -ml-32 -mb-32" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-5 -mr-48 -mt-48" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600 rounded-full blur-[100px] opacity-5 -ml-32 -mb-32" />
           </motion.div>
         )}
       </AnimatePresence>

@@ -277,7 +277,7 @@ export default function Dashboard() {
 
             {!isLinkingComplete ? (
               <div className="bg-theme-surface border-2 border-theme rounded-[48px] p-8">
-                 <GuidedLinking />
+                 <GuidedLinking currentEmpire={empireData} onRefresh={fetchData} />
               </div>
             ) : (
               <motion.div

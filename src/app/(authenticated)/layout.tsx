@@ -3,6 +3,7 @@ import { EmpireSwitcher } from "@/components/EmpireSwitcher";
 import { MobileNav } from "@/components/MobileNav";
 import { SubscriptionGuard } from "@/components/SubscriptionGuard";
 import { OnboardingTour } from "@/components/Dashboard/OnboardingTour";
+import { IntelligenceAuditor } from "@/components/Dashboard/IntelligenceAuditor";
 import { NotificationBell } from "@/components/Dashboard/NotificationBell";
 import { Suspense } from "react";
 
@@ -19,6 +20,7 @@ export default function AuthenticatedLayout({
         <Suspense fallback={null}>
           <OnboardingTour />
         </Suspense>
+        <IntelligenceAuditor />
         <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[332px] overflow-x-hidden">
           <div className="absolute top-8 right-8 z-[60] hidden lg:block">
             <NotificationBell id="notification-bell-desktop" />
