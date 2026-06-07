@@ -32,10 +32,10 @@ export default function RootLayout({
           html, body { background-color: #0a0519 !important; }
         `}</style>
         <link rel="canonical" href="https://empire-launch-ai-frontend.vercel.app" />
-        <link rel="manifest" href="/manifest.json?v=1014" />
-        <link rel="apple-touch-icon" href="/apple-v14.png" />
-        <link rel="icon" href="/apple-v14.png" />
-        <link rel="apple-touch-startup-image" href="/apple-v14.png" />
+        <link rel="manifest" href="/manifest.json?v=1015" />
+        <link rel="apple-touch-icon" href="/apple-v15.png?v=15" />
+        <link rel="icon" href="/favicon.ico?v=15" />
+        <link rel="apple-touch-startup-image" href="/apple-v15.png?v=15" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
