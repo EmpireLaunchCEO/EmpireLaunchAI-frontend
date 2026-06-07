@@ -375,8 +375,21 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Empire Teacher</h3>
-                    <div className="px-2 py-0.5 bg-primary/20 rounded-full border border-primary/30">
-                      <span className="text-[8px] font-black text-primary uppercase tracking-widest">Active</span>
+                    <div className="flex items-center gap-2">
+                      <div className="px-2 py-0.5 bg-primary/20 rounded-full border border-primary/30">
+                        <span className="text-[8px] font-black text-primary uppercase tracking-widest">Active</span>
+                      </div>
+                      <div className={cn(
+                        "px-2 py-0.5 rounded-full border",
+                        aiMode === 'empire' ? "bg-amber-500/20 border-amber-500/30" : "bg-primary/20 border-primary/30"
+                      )}>
+                        <span className={cn(
+                          "text-[8px] font-black uppercase tracking-widest",
+                          aiMode === 'empire' ? "text-amber-500" : "text-primary"
+                        )}>
+                          {aiMode === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <button 

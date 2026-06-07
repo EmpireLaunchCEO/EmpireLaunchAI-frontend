@@ -137,7 +137,34 @@ export default function Dashboard() {
 
                   {/* 4. Intelligence & Operations Grid (Teacher First) */}
                   <div className="max-w-6xl mx-auto space-y-12 md:space-y-20">
-                    {!isLinkingComplete && <GuidedLinking currentEmpire={empireData} onRefresh={fetchData} />}
+                    {!isLinkingComplete && (
+                      <div className="space-y-6">
+                        <div className="flex justify-center">
+                          <motion.div 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className={cn(
+                              "px-4 py-1.5 rounded-full border flex items-center gap-2 shadow-sm",
+                              aiMode === 'empire' 
+                                ? "bg-amber-500/10 border-amber-500/30" 
+                                : "bg-primary/10 border-primary/30"
+                            )}
+                          >
+                            <div className={cn(
+                              "w-1.5 h-1.5 rounded-full animate-pulse",
+                              aiMode === 'empire' ? "bg-amber-500" : "bg-primary"
+                            )} />
+                            <span className={cn(
+                              "text-[8px] font-black uppercase tracking-[0.2em]",
+                              aiMode === 'empire' ? "text-amber-500" : "text-primary"
+                            )}>
+                              {aiMode === 'empire' ? 'Auto-Pilot Mode Active' : 'Co-Pilot Mode Active'}
+                            </span>
+                          </motion.div>
+                        </div>
+                        <GuidedLinking currentEmpire={empireData} onRefresh={fetchData} />
+                      </div>
+                    )}
                     
                     <SuccessHubOverview 
                       empireData={empireData}

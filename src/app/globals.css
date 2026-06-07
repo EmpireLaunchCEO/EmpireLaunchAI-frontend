@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+  !!! HARD LOCK: THEME ARCHITECTURE !!!
+  Do NOT modify the background-rgb or the core theme-gradient logic.
+  All themes must remain high-fidelity dark (bg-slate-950 equivalent).
+  Reference AGENTS.md for full lock details.
+*/
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;

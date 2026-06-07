@@ -1,5 +1,10 @@
 import type { Config } from "tailwindcss";
 
+/** 
+ * !!! HARD LOCK: THEME ARCHITECTURE !!!
+ * The mapping of tailwind colors to CSS variables is critical for theme switching.
+ * Do NOT modify the 'background', 'foreground', 'primary', or 'secondary' mappings.
+ */
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
