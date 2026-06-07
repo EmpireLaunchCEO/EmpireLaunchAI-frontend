@@ -73,33 +73,35 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
 
   return (
     <div className="relative min-h-screen bg-transparent">
-      {/* Pull indicator */}
+      {/* Pull indicator - Hidden behind/above content until pull */}
       <motion.div
-        className="fixed top-20 left-0 right-0 flex flex-col items-center justify-center z-[11000] pointer-events-none"
+        className="absolute top-0 left-0 right-0 flex flex-col items-center justify-center z-[5] pointer-events-none"
         style={{
+          height: isRefreshing ? 120 : pullProgress * 150,
           opacity: isRefreshing ? 1 : pullProgress,
-          y: isRefreshing ? 0 : (pullProgress * 40) - 20
         }}
       >
         <div className={cn(
-          "bg-slate-900 rounded-full p-2 shadow-2xl border-2 transition-all duration-300",
-          isRefreshing ? "border-primary scale-110 shadow-primary/20" : "border-white/10"
+          "bg-slate-950 rounded-full p-2.5 shadow-[0_0_40px_rgba(0,229,255,0.15)] border-2 transition-all duration-300",
+          isRefreshing ? "border-primary scale-110 shadow-primary/30" : "border-white/10"
         )}>
           <BrandedGlobe
-            size="md"
+            size="lg"
             animate={true}
             spinning={isRefreshing}
           />
         </div>
         
         {isRefreshing && (
-          <motion.span 
+          <motion.div 
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-[8px] font-black text-primary uppercase tracking-[0.3em] mt-3 drop-shadow-md"
+            className="mt-3"
           >
-            Neural Syncing
-          </motion.span>
+            <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] drop-shadow-md">
+              Neural Sync
+            </span>
+          </motion.div>
         )}
       </motion.div>
 
@@ -111,7 +113,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
 
           if (isAtTop && info.offset.y > 0) {
             // Apply resistance
-            const pullY = Math.pow(info.offset.y, 0.85);
+            const pullY = Math.pow(info.offset.y, 0.8);
             y.set(pullY);
           } else if (info.offset.y < 0 && y.get() > 0) {
             y.set(0);
@@ -120,7 +122,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
         onPanEnd={handleDragEnd}
         animate={controls}
         style={{ y }}
-        className="relative z-10 w-full"
+        className="relative z-10 w-full bg-theme-surface shadow-2xl"
       >
         {children}
       </motion.div>

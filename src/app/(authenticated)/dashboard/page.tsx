@@ -13,7 +13,7 @@ import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesS
 import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { SuccessHubOverview } from '@/components/Dashboard/SuccessHub/SuccessHubOverview';
-import { Stars, Home, ArrowUpRight, Plus, X, LayoutDashboard, Globe, Sparkles } from 'lucide-react';
+import { Stars, Home, ArrowUpRight, Plus, X, LayoutDashboard, Globe, Sparkles, RefreshCcw, Briefcase } from 'lucide-react';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
@@ -27,6 +27,7 @@ import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 
 export default function Dashboard() {
   const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded } = useEmpire();
+  const [activeBusinessIndex, setActiveBusinessIndex] = useState(0);
   const [empireData, setEmpireData] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
@@ -197,11 +198,7 @@ export default function Dashboard() {
               disabled={isLoading}
               className="w-10 h-10 rounded-xl bg-theme-surface border border-theme flex items-center justify-center text-slate-400 hover:text-primary transition-all group relative"
             >
-              <BrandedGlobe 
-                size="md" 
-                animate={isLoading} 
-                className={cn(isLoading ? "opacity-100" : "opacity-40 group-hover:opacity-100")} 
-              />
+              <RefreshCcw className={cn("w-5 h-5", isLoading ? "animate-spin text-primary" : "opacity-40 group-hover:opacity-100")} />
             </button>
 
             <div className="flex flex-col items-end">
@@ -215,6 +212,29 @@ export default function Dashboard() {
             </div>
           </div>
         </header>
+
+        {/* Business Selector Tabs - Bar Tab Style */}
+        <div className="flex bg-theme-background p-1 rounded-[24px] w-full border-2 border-theme gap-1">
+          {[0, 1, 2].map((idx) => {
+            const isActive = activeBusinessIndex === idx;
+            const label = idx === 0 ? (empireData?.name || "Business 1") : `Business ${idx + 1}`;
+            return (
+              <button
+                key={idx}
+                onClick={() => setActiveBusinessIndex(idx)}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 px-3 py-3 rounded-[20px] font-black text-[9px] md:text-xs uppercase tracking-tighter transition-all",
+                  isActive 
+                    ? "bg-theme-surface text-foreground shadow-sm border border-theme" 
+                    : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
+                )}
+              >
+                <Briefcase className={cn("w-3 h-3 md:w-3.5 md:h-3.5", isActive ? "text-primary" : "opacity-40")} />
+                <span className="truncate">{label}</span>
+              </button>
+            );
+          })}
+        </div>
 
         {isLoading && !empireData ? (
           /* Inline Loading State (No longer full page blocking) */
