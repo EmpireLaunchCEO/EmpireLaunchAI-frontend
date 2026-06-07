@@ -233,15 +233,15 @@ export default function SettingsPage() {
         `}</style>
         <div className="flex flex-col lg:flex-row gap-8 md:gap-12 relative items-start">
           {/* Sidebar Navigation - Long Rounded Box down the side */}
-          <aside className="lg:w-64 shrink-0">
-            <div className="flex flex-row lg:flex-col bg-theme-background p-1.5 rounded-[24px] lg:rounded-[32px] w-full border-2 border-theme sticky top-0 lg:top-8 z-20 gap-1.5 overflow-x-auto no-scrollbar lg:overflow-visible">
+          <aside className="lg:w-64 w-full shrink-0">
+            <div className="flex flex-row lg:flex-col bg-theme-background p-1.5 rounded-[24px] lg:rounded-[32px] w-full border-2 border-theme sticky top-0 lg:top-8 z-20 gap-1.5 overflow-x-auto scrollbar-hide lg:overflow-visible touch-pan-x">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   id={`tab-${tab.id}`}
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "flex-1 lg:flex-none flex items-center justify-center lg:justify-start gap-2 px-4 lg:px-6 py-3 lg:py-4 rounded-[18px] lg:rounded-[24px] font-black text-[9px] lg:text-[10px] uppercase tracking-tighter transition-all whitespace-nowrap lg:whitespace-normal",
+                    "flex-none lg:flex-none flex items-center justify-center lg:justify-start gap-2 px-4 lg:px-6 py-3 lg:py-4 rounded-[18px] lg:rounded-[24px] font-black text-[9px] lg:text-[10px] uppercase tracking-tighter transition-all whitespace-nowrap lg:whitespace-normal",
                     activeTab === tab.id
                       ? "bg-theme-surface text-foreground shadow-sm border border-theme"
                       : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"

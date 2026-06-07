@@ -103,8 +103,10 @@ export default function StudioPage() {
                 </div>
               </div>
 
-              {/* Suggestion Bubbles */}
-              <SuggestionBubbles onSelect={handleSuggestion} />
+              {/* Suggestion Bubbles - FORCED VERTICAL */}
+              <div className="flex flex-col gap-2">
+                <SuggestionBubbles onSelect={handleSuggestion} />
+              </div>
 
               {/* Inspiration Gallery */}
               <InspirationGallery />
