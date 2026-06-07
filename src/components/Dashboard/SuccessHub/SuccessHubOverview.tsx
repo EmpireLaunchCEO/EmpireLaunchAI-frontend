@@ -26,10 +26,10 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-8 md:space-y-16 pb-12"
+      className="space-y-12 md:space-y-20 pb-20"
     >
       {/* Primary Intelligence Row */}
-      <section className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8 items-start">
+      <section className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
         <div className="lg:col-span-3">
           <GrowthTracker
             goalTitle={empireData?.activeGoal || "$1,000 Monthly Revenue"}
@@ -44,21 +44,21 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
       </section>
 
       {/* Growth & Trust Section */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <EmpireGrowthBreakdown growthScore={healthData?.growthScore || 84} healthData={healthData} />
         <TrustPulse />
       </section>
 
-      <section className="space-y-8">
+      <section className="space-y-12">
          <VideoPerformance />
       </section>
 
       {/* Insight Banner */}
       <motion.div
         whileHover={{ scale: 1.01 }}
-        className="bg-gradient-to-r from-primary to-amber-600 rounded-[24px] md:rounded-[32px] p-0.5 md:p-1 shadow-xl shadow-primary/20"
+        className="bg-gradient-to-r from-primary to-amber-600 rounded-[32px] p-1 shadow-xl shadow-primary/20"
       >
-        <div className="bg-theme-background/10 backdrop-blur-md rounded-[23px] md:rounded-[30px] p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="bg-theme-background/10 backdrop-blur-md rounded-[30px] p-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4 text-white">
             <div className="w-12 h-12 rounded-2xl bg-theme-surface/20 flex items-center justify-center shrink-0">
               <Brain className="w-6 h-6" />
@@ -75,10 +75,10 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
       </motion.div>
 
       {/* Mid Section: Social & Financial */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-        <div className="lg:col-span-7 space-y-8 lg:space-y-12">
-          <div className="bg-theme-surface rounded-[32px] md:rounded-[40px] p-6 md:p-8 border border-theme">
-             <div className="flex items-center justify-between mb-6 md:mb-8">
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="lg:col-span-7 space-y-12">
+          <div className="bg-theme-surface rounded-[40px] p-8 border border-theme">
+             <div className="flex items-center justify-between mb-8">
                <div className="flex items-center gap-3">
                  <div className="w-10 h-10 rounded-xl bg-theme-background flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
                    <BrandedGlobe size="sm" />
@@ -91,11 +91,11 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData, transact
           </div>
         </div>
 
-        <div className="lg:col-span-5 sticky top-8 space-y-8 lg:space-y-10">
+        <div className="lg:col-span-5 sticky top-8 space-y-10">
           <EmpireLedger health={healthData} />
           <InboxAssistant />
 
-          <div className="bg-theme-surface rounded-[32px] md:rounded-[40px] p-6 md:p-8 text-foreground border border-theme relative overflow-hidden">
+          <div className="bg-theme-surface rounded-[40px] p-8 text-foreground border border-theme relative overflow-hidden">
              <div className="relative z-10 space-y-6">
                 <div className="flex items-center gap-3">
                   <Zap className="w-6 h-6 text-primary fill-current" />

@@ -39,10 +39,11 @@ export function IntelligenceAuditor() {
     // SECURITY & UX GATE: 
     // 1. Never show for non-admins (customers) as per owner request
     // 2. Never show for locked slots
+    // 3. Never show for Owner on Slot 1 (Success Hub)
     const slotIdx = parseInt(activeEmpireId) - 1;
     const isLocked = !slotStatus[slotIdx];
 
-    if (!isAdmin || isLocked) {
+    if (!isAdmin || isLocked || (isAdmin && activeEmpireId === '1')) {
       setIsVisible(false);
       return;
     }
