@@ -46,20 +46,38 @@ export default function Dashboard() {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    
+    // Safety Valve: Force show dashboard after 4 seconds even if loading hangs
+    const timer = setTimeout(() => {
+      if (mounted && !isDashboardLoaded) {
+        console.warn("Neural Sync took too long. Forcing dashboard visibility.");
+        setDashboardLoaded(true);
+      }
+    }, 4000);
+    
+    return () => clearTimeout(timer);
+  }, [mounted, isDashboardLoaded, setDashboardLoaded]);
 
   const fetchData = useCallback(async (retryCount = 0) => {
     if (isLoading && retryCount === 0) return;
     setIsLoading(true);
-    setEmpireDataState(null); // Clear old data to force re-evaluation
     
     try {
-      const [eData, pulse, health, txs] = await Promise.all([
+      // Create a timeout promise
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Fetch timeout')), 3500)
+      );
+
+      const fetchPromise = Promise.all([
         empireService.getEmpire(activeEmpireId).catch(err => { console.error('Empire Fetch:', err); return null; }),
         analyticsService.getGrowthPulse().catch(() => ({ score: 85, trend: 'stable' })),
         analyticsService.getEmpireHealth().catch(() => ({ score: 92, status: 'Optimal' })),
         analyticsService.getRecentTransactions().catch(() => [])
       ]);
+
+      // Race the fetch against a timeout to prevent hanging UI
+      const results = await Promise.race([fetchPromise, timeoutPromise]) as any[];
+      const [eData, pulse, health, txs] = results;
 
       if (eData) {
         setEmpireDataState(eData);
@@ -69,7 +87,7 @@ export default function Dashboard() {
         setTransactions(txs);
       }
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      console.error('Error fetching dashboard data or timeout reached:', error);
     } finally {
       setIsLoading(false);
       setDashboardLoaded(true);
@@ -80,7 +98,7 @@ export default function Dashboard() {
     if (mounted && isInitialized) {
       fetchData();
     }
-  }, [activeEmpireId, mounted, isInitialized]); // Trigger on ID change or mount
+  }, [activeEmpireId, mounted, isInitialized]);
 
   const handleInsightExecute = async (id: string) => {
     setExecutingInsight(id);
@@ -92,12 +110,14 @@ export default function Dashboard() {
     setTimeout(() => setIsCelebrating(false), 5000);
   };
 
+  // If after initialization it's still "loading", only show loading if it's been very brief
   if (!mounted || !isInitialized || !isDashboardLoaded) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
         <BrandedGlobe size="sm" spinning={true} className="shadow-[0_0_30px_rgba(0,229,255,0.4)]" />
-        <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[8px] animate-pulse">
-          Initializing Neural Sync
+        <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[8px] animate-pulse text-center px-6">
+          Initializing Neural Sync<br/>
+          <span className="opacity-40 text-[6px]">Connecting to Global Brain...</span>
         </h2>
       </div>
     );
@@ -106,10 +126,8 @@ export default function Dashboard() {
   return (
     <DashboardErrorBoundary>
       <PullToRefresh onRefresh={fetchData}>
-        {/* Success Hub Wrapper */}
         <div className="p-3 md:p-8 pb-24 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12 overflow-x-hidden">
           
-          {/* Business Tabs (Multi-Empire Command) */}
           <div className="flex bg-theme-background p-1.5 rounded-[24px] border border-theme w-fit gap-1.5 mb-8 md:mb-12 mx-auto sticky top-4 z-[50] shadow-xl backdrop-blur-md">
             {[0, 1, 2].map((idx) => {
               const empireId = idx === 0 ? '1' : (idx === 1 ? '2' : '3');
@@ -145,7 +163,6 @@ export default function Dashboard() {
             />
           ) : (
             <div className="space-y-8 md:space-y-16 animate-in fade-in duration-700">
-              {/* Header Section */}
               <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-theme/30 pb-8 md:pb-12">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
@@ -176,9 +193,7 @@ export default function Dashboard() {
                 </div>
               </header>
 
-              {/* Main Dashboard Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10">
-                {/* Primary Column */}
                 <div className="lg:col-span-8 space-y-8 md:space-y-12">
                   {!isLinkingComplete ? (
                     <GuidedLinking />
@@ -201,7 +216,6 @@ export default function Dashboard() {
                   )}
                 </div>
 
-                {/* Sidebar Column */}
                 <aside className="lg:col-span-4 space-y-8 md:space-y-12">
                   <ProfitBucket />
                   <AIOptimizationHub />
@@ -214,10 +228,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Global Floating Action Component */}
         <ConversationalInput />
-        
-        {/* Notifications & Overlays */}
         <NotificationOnboarding />
       </PullToRefresh>
     </DashboardErrorBoundary>
