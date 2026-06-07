@@ -213,7 +213,6 @@ export default function Dashboard() {
                   <EmpireConstellation />
                 </aside>
               </div>
-            </div>
           </div>
         </div>
 
