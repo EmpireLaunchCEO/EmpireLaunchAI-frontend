@@ -26,7 +26,7 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
   };
 
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center p-6 space-y-12 relative overflow-hidden">
+    <div className="flex flex-col items-center justify-center p-6 space-y-12 relative overflow-hidden pt-12">
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 blur-[120px] -z-10" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 blur-[120px] -z-10" />
@@ -36,15 +36,10 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
         animate={{ opacity: 1, y: 0 }}
         className="text-center space-y-4 max-w-xl"
       >
-        <div className="w-20 h-20 bg-theme-surface border-2 border-theme rounded-[32px] mx-auto flex items-center justify-center shadow-xl mb-6">
-           <div className={cn("w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white", isPaying && "animate-spin")}>
-              <Zap className="w-6 h-6" />
-           </div>
-        </div>
-        <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-foreground">
+        <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-foreground">
           Expand Your Empire.
         </h2>
-        <p className="text-muted-foreground font-medium italic text-lg">
+        <p className="text-muted-foreground font-medium italic text-lg px-4">
           Initialize a new operational node in slot #{slotIndex + 1}. Run multiple businesses autonomously from one command center.
         </p>
       </motion.div>

@@ -114,31 +114,28 @@ export default function Dashboard() {
           
           {/* 1. Centered Visuals & Business Navigation (Absolute Top - Always Visible) */}
           <div className="flex flex-col items-center pt-8">
-            <div className="pointer-events-none flex flex-col items-center">
+            <div className="flex flex-col items-center">
               <BrandedGlobe 
                 size="xl" 
                 animate={isLoading || partnerStatus !== 'idle'} 
                 spinning={isLoading || partnerStatus !== 'idle'}
                 className="shadow-[0_0_60px_rgba(0,229,255,0.2)]"
               />
-              <h2 className="mt-8 text-2xl md:text-5xl font-black tracking-[0.2em] uppercase italic text-theme-gradient leading-none">
+              <h2 className="mt-6 text-2xl md:text-5xl font-black tracking-[0.2em] uppercase italic text-theme-gradient leading-none">
                 Success Hub
               </h2>
             </div>
 
             {/* 2. Centered Business Navigation (Persistent) */}
-            <div className="mt-12 flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-full overflow-x-auto scrollbar-hide gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
+            <div className="mt-10 flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-full overflow-x-auto scrollbar-hide gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
               {[0, 1, 2].map((idx) => {
                 const empireId = (idx + 1).toString();
                 const isActive = activeBusinessIndex === idx;
 
+                // Consistent labels: Slot 1 is always EmpireLaunch AI for owner
                 let label = `Business ${idx + 1}`;
-                if (idx === 0) {
-                  if (isAdmin) {
-                    label = "EmpireLaunch AI";
-                  } else {
-                    label = (isActive ? (empireData?.name || empireData?.title) : null) || "Primary Empire";
-                  }
+                if (idx === 0 && isAdmin) {
+                  label = "EmpireLaunch AI";
                 } else if (isActive && (empireData?.name || empireData?.title)) {
                   label = empireData.name || empireData.title;
                 }
@@ -154,13 +151,13 @@ export default function Dashboard() {
                       "px-5 md:px-10 py-3 md:py-4 rounded-[18px] font-black text-[10px] md:text-[11px] uppercase tracking-tighter transition-all flex items-center gap-2.5 whitespace-nowrap min-w-fit",
                       isActive
                         ? "bg-theme-surface text-foreground shadow-lg border border-theme scale-105"
-                        : "text-slate-200/60 hover:text-foreground hover:bg-theme-surface/40"
+                        : "text-slate-400 hover:text-foreground hover:bg-theme-surface/40"
                     )}
                   >
                     {isActive ? (
                       <Globe className="w-3.5 h-3.5 text-primary animate-pulse" />
                     ) : (
-                      <Briefcase className="w-3.5 h-3.5 opacity-60" />
+                      <Briefcase className="w-3.5 h-3.5 opacity-40" />
                     )}
                     {label}
                   </button>
