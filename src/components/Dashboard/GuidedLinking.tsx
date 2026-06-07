@@ -268,8 +268,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
           if (data.state) {
             localStorage.setItem('etsy_auth_state', data.state);
           }
-          if (data.codeVerifier) {
-            localStorage.setItem('etsy_code_verifier', data.codeVerifier);
+          if (data.sessionId) {
+            localStorage.setItem('etsy_oauth_session_id', data.sessionId);
           }
           // Open popup centered on screen
           const width = 600;

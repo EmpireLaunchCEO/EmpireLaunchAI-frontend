@@ -30,9 +30,9 @@ function AuthCallbackContent() {
 
     const completeConnection = async () => {
       try {
-        // Retrieve codeVerifier and saved state from localStorage
+        // Retrieve sessionId and saved state from localStorage
         const savedState = localStorage.getItem(`${platform}_auth_state`);
-        const codeVerifier = localStorage.getItem(`${platform}_code_verifier`);
+        const sessionId = localStorage.getItem(`${platform}_oauth_session_id`);
 
         if (state !== savedState) {
           throw new Error('Invalid state parameter.');
@@ -45,7 +45,8 @@ function AuthCallbackContent() {
           },
           body: JSON.stringify({
             code,
-            codeVerifier,
+            state,
+            sessionId,
             userId: '00000000-0000-0000-0000-000000000000', // Mock user ID for now
           }),
         });
@@ -63,7 +64,7 @@ function AuthCallbackContent() {
 
           // Clear storage
           localStorage.removeItem(`${platform}_auth_state`);
-          localStorage.removeItem(`${platform}_code_verifier`);
+          localStorage.removeItem(`${platform}_oauth_session_id`);
 
           // Redirect back after a short delay
           setTimeout(() => {
