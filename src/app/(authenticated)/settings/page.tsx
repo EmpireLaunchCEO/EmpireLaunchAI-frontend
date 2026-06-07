@@ -394,11 +394,11 @@ export default function SettingsPage() {
                       onClick={() => setAiMode('co-pilot')}
                       className={cn(
                         "p-8 rounded-[32px] border-4 text-left space-y-4 group relative overflow-hidden transition-all",
-                        aiMode === 'co-pilot' ? "border-primary bg-primary/5" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
+                        aiMode === 'co-pilot' ? "border-primary bg-primary/5 shadow-2xl" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
                       )}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-lg">
+                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-lg border border-theme">
                           <Bot className="w-6 h-6" />
                         </div>
                         {aiMode === 'co-pilot' && <CheckCircle2 className="w-6 h-6 text-primary" />}
@@ -417,14 +417,14 @@ export default function SettingsPage() {
                       onClick={() => setAiMode('empire')}
                       className={cn(
                         "p-8 rounded-[32px] border-4 text-left space-y-4 group relative overflow-hidden transition-all",
-                        aiMode === 'empire' ? "border-primary bg-primary/5" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
+                        aiMode === 'empire' ? "border-amber-500 bg-amber-500/5 shadow-2xl" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
                       )}
                     >
                       <div className="flex items-center justify-between">
-                        <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white">
+                        <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-amber-500 border border-amber-500/30">
                           <Zap className="w-6 h-6" />
                         </div>
-                        {aiMode === 'empire' && <CheckCircle2 className="w-6 h-6 text-primary" />}
+                        {aiMode === 'empire' && <CheckCircle2 className="w-6 h-6 text-amber-500" />}
                       </div>
                       <div>
                         <h4 className="text-xl font-black text-foreground uppercase italic">Auto-Pilot Mode</h4>
@@ -433,7 +433,7 @@ export default function SettingsPage() {
                       <p className="text-sm text-slate-500 leading-relaxed">
                         I'll autonomously manage daily operations 24/7. You only intervene for major financial pivots.
                       </p>
-                      <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                      <div className="inline-flex items-center gap-2 bg-amber-500/10 text-amber-500 px-3 py-1 rounded-full text-[10px] font-black uppercase border border-amber-500/20">
                          <Stars size={10} />
                          Recommended for Growth
                       </div>
