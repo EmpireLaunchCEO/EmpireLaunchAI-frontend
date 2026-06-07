@@ -33,7 +33,7 @@ export default function Dashboard() {
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [partnerStatus, setPartnerStatus] = useState<'idle' | 'researching' | 'creating'>('idle');
   const [executingInsight, setExecutingInsight] = useState<string | null>(null);
   const [isCelebrating, setIsCelebrating] = useState(false);
