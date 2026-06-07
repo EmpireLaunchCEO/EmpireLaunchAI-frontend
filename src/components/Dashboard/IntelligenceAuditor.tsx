@@ -15,6 +15,7 @@ export function IntelligenceAuditor() {
   const [isTyping, setIsTyping] = useState(false);
   const [displayedMessage, setDisplayedMessage] = useState('');
   const [intelLevel, setIntelLevel] = useState(0);
+  const [isCriticalMissing, setIsCriticalMissing] = useState(false);
   
   // Interactive State
   const [isInteractive, setIsInteractive] = useState(false);
@@ -56,15 +57,16 @@ export function IntelligenceAuditor() {
         if (!hasAngle) missing.push('Angle');
 
         // Force visibility if critical data is missing, even if tour isn't finished
-        const isCriticalMissing = isDefaultName || !hasNiche;
+        const criticalMissing = isDefaultName || !hasNiche;
+        setIsCriticalMissing(criticalMissing);
         const hasSeenTour = localStorage.getItem('empire_tour_v419') === 'true';
         
-        if (missing.length > 0 && (hasSeenTour || isCriticalMissing)) {
+        if (missing.length > 0 && (hasSeenTour || criticalMissing)) {
           setMissingFields(missing);
           setIntelLevel(Math.max(0, 3 - missing.length));
           if (!isInteractive) {
             // Immediate popup for critical, short delay for others
-            const delay = isCriticalMissing ? 500 : 3000;
+            const delay = criticalMissing ? 500 : 3000;
             setTimeout(() => setIsVisible(true), delay);
           }
         } else {

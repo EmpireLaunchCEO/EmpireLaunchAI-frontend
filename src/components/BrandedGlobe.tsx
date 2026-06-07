@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, Transition } from 'framer-motion';
 
 interface BrandedGlobeProps {
   className?: string;
@@ -29,7 +29,7 @@ export function BrandedGlobe({ className, size = 'md', animate = true, spinning 
         }
       : {};
 
-  const transitionProps = spinning
+  const transitionProps: Transition = spinning
     ? {
         duration: 1.2,
         repeat: Infinity,

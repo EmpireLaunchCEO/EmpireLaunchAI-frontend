@@ -36,6 +36,7 @@ import { TermsModal } from '@/components/Legal/TermsModal';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
+import { empireService } from '@/lib/api-service';
 
 const steps = [
   { id: 1, title: 'Protocol' },

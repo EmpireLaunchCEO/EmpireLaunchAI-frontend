@@ -116,9 +116,9 @@ export const empireService = {
     }
   },
 
-  async updateEmpire(id: string, data: { name?: string; niche?: string }): Promise<any> {
+  async updateEmpire(id: string, data: { title?: string; description?: string; name?: string; niche?: string }): Promise<any> {
     try {
-      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
+      const res = await fetch(`${API_URL}/api/agent/goal/${id}`, {
         method: 'PATCH',
         headers: HEADERS,
         body: JSON.stringify(data)
@@ -229,7 +229,7 @@ export interface DesignTask {
   id: string;
   title: string;
   platform: string;
-  status: 'blueprint_ready' | 'producing' | 'editing' | 'drafting' | 'completed';
+  status: 'blueprint_ready' | 'producing' | 'editing' | 'drafting' | 'completed' | 'review_required';
   dueDate: string;
 }
 
@@ -262,6 +262,8 @@ export interface SentimentPoint {
   x: number;
   y: number;
   sentiment: number;
+  score: number;
+  date: string;
   label: string;
 }
 
@@ -270,6 +272,10 @@ export interface InboxDraft {
   subject: string;
   to: string;
   body: string;
+  type: string;
+  customer: string;
+  platform: string;
+  reasoning?: string;
   status: 'pending' | 'sent' | 'rejected';
 }
 
