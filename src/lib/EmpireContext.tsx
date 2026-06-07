@@ -383,8 +383,16 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       }
       
       try {
-        // ... (existing hydration code)
-        
+        // Fallback hydration for when backend is slow
+        const localAiMode = localStorage.getItem('empireAiMode');
+        if (localAiMode) setAiModeState(localAiMode as any);
+
+        const localTheme = localStorage.getItem('empireTheme');
+        if (localTheme) setThemeState(localTheme);
+
+        const localIsPaid = localStorage.getItem('isPaid');
+        if (localIsPaid === 'true') setIsPaidState(true);
+
         // Auto-detect Owner Admin Status
         const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
           headers: { 
