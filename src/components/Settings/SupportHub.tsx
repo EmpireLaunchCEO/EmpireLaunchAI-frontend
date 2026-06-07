@@ -29,7 +29,7 @@ export function SupportHub() {
           </div>
 
           <button className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white px-8 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 group">
-            Contact Support Hub <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            Priority Support Line <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
           </button>
 
           <div className="pt-4 border-t border-white/10 space-y-4">

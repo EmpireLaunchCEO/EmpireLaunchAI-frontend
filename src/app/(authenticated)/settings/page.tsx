@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
+import { SupportHub } from '@/components/Settings/SupportHub';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
   if (platform.toLowerCase() === 'stripe') {
@@ -144,31 +145,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
   return null;
 };
 
-const SupportHub = () => (
-  <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-    <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-6">
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
-          <LifeBuoy className="w-6 h-6" />
-        </div>
-        <div>
-          <h3 className="text-xl font-black text-foreground">Support & Guides</h3>
-          <p className="text-sm font-medium text-muted-foreground">Get help with your Empire dashboard.</p>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <button className="p-6 rounded-3xl border border-theme bg-theme-background hover:border-blue-600 transition-all text-left">
-          <h4 className="font-bold mb-1">Knowledge Base</h4>
-          <p className="text-xs text-muted-foreground">Self-serve tutorials and documentation.</p>
-        </button>
-        <button className="p-6 rounded-3xl border border-theme bg-theme-background hover:border-blue-600 transition-all text-left">
-          <h4 className="font-bold mb-1">Priority Support</h4>
-          <p className="text-xs text-muted-foreground">Direct line to our technical assistants.</p>
-        </button>
-      </div>
-    </div>
-  </div>
-);
+  /* Unified Support Hub is now imported from @/components/Settings/SupportHub */
 
 export default function SettingsPage() {
   const { theme, setTheme, aiMode, setAiMode, isAdmin, setIsAdmin } = useEmpire();
