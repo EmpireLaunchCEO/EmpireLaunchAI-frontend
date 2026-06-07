@@ -60,12 +60,12 @@
 
 [data-theme='vibrant-cyan'] {
   --primary-rgb: 0 255 255; /* Bright Cyan */
-  --secondary-rgb: 0 206 209; /* Dark Turquoise */
+  --secondary-rgb: 0 128 128; /* Teal */
   --background-rgb: 10 5 25;
   --foreground-rgb: 255 255 255;
   --surface-rgb: 12 8 30;
   --surface-border-rgb: 0 255 255;
-  --theme-gradient: linear-gradient(135deg, #00FFFF 0%, #00CED1 100%);
+  --theme-gradient: linear-gradient(135deg, #00FFFF 0%, #008080 100%);
 }
 
 [data-theme='electric-blue'] {

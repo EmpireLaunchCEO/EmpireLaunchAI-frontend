@@ -12,7 +12,7 @@ const config: Config = {
         background: "rgb(var(--background-rgb) / <alpha-value>)",
         foreground: "rgb(var(--foreground-rgb) / <alpha-value>)",
         primary: "rgb(var(--primary-rgb) / <alpha-value>)",
-        secondary: "var(--secondary)",
+        secondary: "rgb(var(--secondary-rgb) / <alpha-value>)",
         accent: "var(--accent)",
         muted: "var(--muted)",
         surface: "rgb(var(--surface-rgb) / <alpha-value>)",
