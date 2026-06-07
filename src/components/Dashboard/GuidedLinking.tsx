@@ -35,10 +35,21 @@ const availablePlatforms = [
   { id: 'etsy', name: 'Etsy', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
   { id: 'tiktok', name: 'TikTok', icon: Video, color: 'text-pink-600', bg: 'bg-pink-50' },
   { id: 'shopify', name: 'Shopify', icon: Globe, color: 'text-green-600', bg: 'bg-green-50' },
+  { id: 'woocommerce', name: 'WooCommerce', icon: ShoppingBag, color: 'text-purple-700', bg: 'bg-purple-50' },
   { id: 'instagram', name: 'Instagram', icon: Camera, color: 'text-purple-600', bg: 'bg-purple-50' },
   { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-blue-600', bg: 'bg-blue-50' },
   { id: 'youtube', name: 'YouTube', icon: Video, color: 'text-red-600', bg: 'bg-red-50' },
   { id: 'fiverr', name: 'Fiverr', icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  { id: 'pinterest', name: 'Pinterest', icon: Share2, color: 'text-red-600', bg: 'bg-red-50' },
+  { id: 'tiktok_shop', name: 'TikTok Shop', icon: ShoppingBag, color: 'text-pink-600', bg: 'bg-pink-50' },
+  { id: 'shipstation', name: 'ShipStation', icon: ShoppingBag, color: 'text-blue-700', bg: 'bg-blue-50' },
+  { id: 'dsers', name: 'DSers', icon: ShoppingBag, color: 'text-orange-500', bg: 'bg-orange-50' },
+  { id: 'zendrop', name: 'Zendrop', icon: ShoppingBag, color: 'text-blue-400', bg: 'bg-blue-50' },
+  { id: 'spocket', name: 'Spocket', icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { id: 'printful', name: 'Printful', icon: Palette, color: 'text-red-500', bg: 'bg-red-50' },
+  { id: 'printify', name: 'Printify', icon: Palette, color: 'text-green-500', bg: 'bg-green-50' },
+  { id: 'cj_dropshipping', name: 'CJ Dropshipping', icon: ShoppingBag, color: 'text-red-700', bg: 'bg-red-50' },
+  { id: 'autods', name: 'AutoDS', icon: ShoppingBag, color: 'text-blue-800', bg: 'bg-blue-50' },
   { id: 'kittl', name: 'Kittl', icon: Palette, color: 'text-indigo-600', bg: 'bg-indigo-50' },
   { id: 'capcut', name: 'CapCut', icon: Video, color: 'text-blue-500', bg: 'bg-blue-50' },
   { id: 'canva', name: 'Canva', icon: Stars, color: 'text-cyan-500', bg: 'bg-cyan-50' },
@@ -250,65 +261,73 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   };
 
   const handleAuth = () => {
-    // Etsy OAuth via popup window
-    if (activeSetupPlatform === 'etsy') {
-      // Fetch auth URL from backend and open popup
-      fetch(`${API_URL}/api/auth/etsy/url`, {
+    // Universal OAuth via popup — backend provides auth URL for each platform
+    const oauthPlatforms: Record<string, { endpoint: string; sessionKey: string; vaultKey: string; label: string }> = {
+      etsy: { endpoint: 'etsy', sessionKey: 'etsy_oauth_session_id', vaultKey: 'empire_vault_etsy', label: 'Etsy' },
+      tiktok: { endpoint: 'tiktok', sessionKey: 'tiktok_oauth_session_id', vaultKey: 'empire_vault_tiktok', label: 'TikTok' },
+      tiktok_shop: { endpoint: 'tiktok_shop', sessionKey: 'tiktok_shop_oauth_session_id', vaultKey: 'empire_vault_tiktok_shop', label: 'TikTok Shop' },
+      meta: { endpoint: 'meta', sessionKey: 'meta_oauth_session_id', vaultKey: 'empire_vault_meta', label: 'Meta' },
+      pinterest: { endpoint: 'pinterest', sessionKey: 'pinterest_oauth_session_id', vaultKey: 'empire_vault_pinterest', label: 'Pinterest' },
+      shopify: { endpoint: 'shopify', sessionKey: 'shopify_oauth_session_id', vaultKey: 'empire_vault_shopify', label: 'Shopify' },
+      woocommerce: { endpoint: 'woocommerce', sessionKey: 'woocommerce_oauth_session_id', vaultKey: 'empire_vault_woocommerce', label: 'WooCommerce' },
+      shipstation: { endpoint: 'shipstation', sessionKey: 'shipstation_oauth_session_id', vaultKey: 'empire_vault_shipstation', label: 'ShipStation' },
+      fiverr: { endpoint: 'fiverr', sessionKey: 'fiverr_oauth_session_id', vaultKey: 'empire_vault_fiverr', label: 'Fiverr' },
+      youtube: { endpoint: 'youtube', sessionKey: 'youtube_oauth_session_id', vaultKey: 'empire_vault_youtube', label: 'YouTube' },
+      gmail: { endpoint: 'gmail', sessionKey: 'gmail_oauth_session_id', vaultKey: 'empire_vault_gmail', label: 'Gmail' },
+      outlook: { endpoint: 'outlook', sessionKey: 'outlook_oauth_session_id', vaultKey: 'empire_vault_outlook', label: 'Outlook' },
+      dsers: { endpoint: 'dsers', sessionKey: 'dsers_oauth_session_id', vaultKey: 'empire_vault_dsers', label: 'DSers' },
+      zendrop: { endpoint: 'zendrop', sessionKey: 'zendrop_oauth_session_id', vaultKey: 'empire_vault_zendrop', label: 'Zendrop' },
+      spocket: { endpoint: 'spocket', sessionKey: 'spocket_oauth_session_id', vaultKey: 'empire_vault_spocket', label: 'Spocket' },
+      printful: { endpoint: 'printful', sessionKey: 'printful_oauth_session_id', vaultKey: 'empire_vault_printful', label: 'Printful' },
+      printify: { endpoint: 'printify', sessionKey: 'printify_oauth_session_id', vaultKey: 'empire_vault_printify', label: 'Printify' },
+      cj_dropshipping: { endpoint: 'cj_dropshipping', sessionKey: 'cj_dropshipping_oauth_session_id', vaultKey: 'empire_vault_cj_dropshipping', label: 'CJ Dropshipping' },
+      autods: { endpoint: 'autods', sessionKey: 'autods_oauth_session_id', vaultKey: 'empire_vault_autods', label: 'AutoDS' },
+    };
+
+    const oauth = oauthPlatforms[activeSetupPlatform || ''];
+    
+    if (oauth) {
+      fetch(`${API_URL}/api/auth/${oauth.endpoint}/url`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: '00000000-0000-0000-0000-000000000000',
-          redirectUri: `${window.location.origin}/auth/callback/etsy`
+          redirectUri: `${window.location.origin}/auth/callback/${oauth.endpoint}`
         })
       })
       .then(res => res.json())
       .then(data => {
         if (data.url) {
-          // Save state for callback verification
-          if (data.state) {
-            localStorage.setItem('etsy_auth_state', data.state);
-          }
-          if (data.sessionId) {
-            localStorage.setItem('etsy_oauth_session_id', data.sessionId);
-          }
-          // Open popup centered on screen
-          const width = 600;
-          const height = 700;
+          if (data.state) localStorage.setItem(oauth.sessionKey, data.state);
+          const width = 600, height = 700;
           const left = window.screenX + (window.innerWidth - width) / 2;
           const top = window.screenY + (window.innerHeight - height) / 2;
-          const popup = window.open(
-            data.url,
-            'etsy-oauth',
-            `width=${width},height=${height},left=${left},top=${top},popup=1`
-          );
-          // Poll popup for completion
+          const popup = window.open(data.url, `${oauth.endpoint}-oauth`, `width=${width},height=${height},left=${left},top=${top},popup=1`);
           const pollTimer = setInterval(() => {
             if (popup?.closed) {
               clearInterval(pollTimer);
-              // Check if we got connected
-              const stored = localStorage.getItem('empire_vault_etsy');
+              const stored = localStorage.getItem(oauth.vaultKey);
               if (stored) {
-                connectPlatform('etsy');
-                updatePlatformPermission('etsy', selectedTier);
+                connectPlatform(activeSetupPlatform!);
+                updatePlatformPermission(activeSetupPlatform!, selectedTier);
                 finishSetup();
-                setTeacherMessage("Etsy linked successfully! Your store data is now flowing into the intelligence network.");
+                setTeacherMessage(`${oauth.label} linked successfully! Your data is now flowing into the intelligence network.`);
                 setConversationTrigger(prev => prev + 1);
               }
             }
           }, 500);
         } else {
-          setTeacherMessage("I'm having trouble reaching Etsy's authorization server. Let's try again in a moment.");
+          setTeacherMessage(`I'm having trouble reaching ${oauth.label}'s authorization server.`);
           setConversationTrigger(prev => prev + 1);
         }
       })
       .catch(() => {
-        setTeacherMessage("Connection error. Please make sure the backend is running and try again.");
+        setTeacherMessage(`Connection error for ${oauth.label}. Please make sure the backend is running.`);
         setConversationTrigger(prev => prev + 1);
       });
       return;
     }
     
-    // Simulate auth success for other platforms
     setLinkingStep('keys');
   };
 

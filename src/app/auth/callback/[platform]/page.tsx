@@ -58,9 +58,8 @@ function AuthCallbackContent() {
           setMessage(`${platform.charAt(0).toUpperCase() + platform.slice(1)} connected successfully!`);
 
           // Store connection token for popup detection
-          if (platform === 'etsy') {
-            localStorage.setItem('empire_vault_etsy', JSON.stringify({ connected: true, timestamp: Date.now() }));
-          }
+          const vaultKey = `empire_vault_${platform}`;
+          localStorage.setItem(vaultKey, JSON.stringify({ connected: true, timestamp: Date.now() }));
 
           // Clear storage
           localStorage.removeItem(`${platform}_auth_state`);
