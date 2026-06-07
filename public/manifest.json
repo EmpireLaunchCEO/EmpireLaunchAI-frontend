@@ -8,25 +8,19 @@
   "theme_color": "#0a0519",
   "icons": [
     {
-      "src": "/apple-v12.png",
+      "src": "/apple-v10.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-v12.png",
+      "src": "/icon-v10.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-v12.png",
+      "src": "/icon-v10.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
