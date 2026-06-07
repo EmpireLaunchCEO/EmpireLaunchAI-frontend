@@ -154,9 +154,13 @@ export default function Dashboard() {
             <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-theme/30 pb-8 md:pb-12">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <BrandedGlobe size="sm" animate={partnerStatus !== 'idle'} spinning={partnerStatus !== 'idle'} />
+                    <BrandedGlobe 
+                      size="sm" 
+                      animate={isLoading || partnerStatus !== 'idle'} 
+                      spinning={isLoading || partnerStatus !== 'idle'} 
+                    />
                     <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary drop-shadow-sm">
-                      {partnerStatus === 'idle' ? 'Neural Link Active' : 'AI Processing...'}
+                      {isLoading ? 'Neural Syncing...' : (partnerStatus === 'idle' ? 'Neural Link Active' : 'AI Processing...')}
                     </span>
                   </div>
                   <h1 className="text-3xl md:text-6xl font-black tracking-tighter leading-none italic uppercase text-foreground drop-shadow-sm">
