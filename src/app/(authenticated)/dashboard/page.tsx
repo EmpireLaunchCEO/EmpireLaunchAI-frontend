@@ -168,42 +168,36 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              {/* 4. The Success Hub Box */}
-              <div className="max-w-6xl mx-auto">
+              {/* 4. Intelligence & Operations Grid (Teacher First) */}
+              <div className="max-w-6xl mx-auto space-y-12 md:space-y-20">
+                {!isLinkingComplete && <GuidedLinking currentEmpire={empireData} onRefresh={fetchData} />}
+                
                 <SuccessHubOverview 
                   empireData={empireData}
                   pulseData={pulseData}
                   healthData={healthData}
                 />
-              </div>
 
-              {/* 5. The Niche Box */}
-              <div className="max-w-6xl mx-auto">
                 <NicheCalibrationBox niche={empireData?.niche} />
-              </div>
 
-              {/* 6. Financial Command (Subscriptions & Dues) */}
-              <div className="max-w-6xl mx-auto">
                 <FinancialCommand growthScore={healthData?.score} />
-              </div>
 
-              {/* Operational Grid (Rest of the items) */}
-              <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 pt-8 relative z-0">
-                <div className="lg:col-span-8 space-y-12">
-                  {!isLinkingComplete && <GuidedLinking currentEmpire={empireData} />}
-                  <MissionBriefing 
-                    empireData={empireData} 
-                    onExecute={handleInsightExecute} 
-                    isExecuting={!!executingInsight}
-                  />
-                  <DetailedRevenue transactions={transactions} />
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pt-8 relative z-0">
+                  <div className="lg:col-span-8 space-y-12">
+                    <MissionBriefing 
+                      empireData={empireData} 
+                      onExecute={handleInsightExecute} 
+                      isExecuting={!!executingInsight}
+                    />
+                    <DetailedRevenue transactions={transactions} />
+                  </div>
+                  <aside className="lg:col-span-4 space-y-12">
+                    <AIOptimizationHub />
+                    <AutonomousCyclesStatus />
+                    <SocialProofApproval />
+                    <EmpireConstellation />
+                  </aside>
                 </div>
-                <aside className="lg:col-span-4 space-y-12">
-                  <AIOptimizationHub />
-                  <AutonomousCyclesStatus />
-                  <SocialProofApproval />
-                  <EmpireConstellation />
-                </aside>
               </div>
 
               {/* 7. Neural Notes Section (The Bottom) */}
