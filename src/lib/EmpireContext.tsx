@@ -49,6 +49,8 @@ interface EmpireContextType {
   acceptProtocols: () => void;
   isDashboardLoaded: boolean;
   setDashboardLoaded: (loaded: boolean) => void;
+  userEmpires: any[];
+  setUserEmpires: (empires: any[]) => void;
 
   // Notifications
   notifications: Notification[];
@@ -95,6 +97,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [isProtocolAccepted, setIsProtocolAccepted] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isDashboardLoaded, setDashboardLoaded] = useState(false);
+  const [userEmpires, setUserEmpires] = useState<any[]>([]);
   const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);
   const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -173,8 +176,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  const handleSetActiveEmpireId = (id: string) => {
+    const handleSetActiveEmpireId = (id: string) => {
     setActiveEmpireId(id);
+    setDashboardLoaded(false); // Trigger dashboard reload
     if (typeof window !== 'undefined') {
       localStorage.setItem('activeEmpireId', id);
     }

@@ -46,7 +46,9 @@ export function IntelligenceAuditor() {
       const empire = await empireService.getEmpire(activeEmpireId);
       if (empire) {
         const missing = [];
-        const isDefaultName = !empire.title || empire.title === 'The First Empire' || empire.title === '';
+        const defaultNames = ['The First Empire', 'Empire One', 'Initial Empire', 'New Empire', 'My Empire'];
+        const isDefaultName = !empire.title || defaultNames.includes(empire.title) || empire.title === '';
+        
         if (isDefaultName) missing.push('Name');
         
         const description = empire.description || '';
@@ -56,17 +58,16 @@ export function IntelligenceAuditor() {
         if (!hasNiche) missing.push('Niche');
         if (!hasAngle) missing.push('Angle');
 
-        // Force visibility if critical data is missing, even if tour isn't finished
-        const criticalMissing = isDefaultName || !hasNiche;
+        // Force visibility if critical data is missing
+        const criticalMissing = isDefaultName || !hasNiche || !hasAngle;
         setIsCriticalMissing(criticalMissing);
-        const hasSeenTour = localStorage.getItem('empire_tour_v419') === 'true';
         
-        if (missing.length > 0 && (hasSeenTour || criticalMissing)) {
+        if (missing.length > 0) {
           setMissingFields(missing);
           setIntelLevel(Math.max(0, 3 - missing.length));
           if (!isInteractive) {
-            // Immediate popup for critical, short delay for others
-            const delay = criticalMissing ? 500 : 3000;
+            // Immediate popup for missing data
+            const delay = criticalMissing ? 500 : 2000;
             setTimeout(() => setIsVisible(true), delay);
           }
         } else {
@@ -99,14 +100,14 @@ export function IntelligenceAuditor() {
 
   const getQuestion = (field: string) => {
     if (field === 'Name') return "Establishing secure identity... What shall we name your Empire?";
-    if (field === 'Niche') return "Defining operational parameters... What is your primary business Niche? (e.g. Digital Planners)";
-    if (field === 'Angle') return "Calibrating unique value proposition... What is your Brand Angle? (What makes you unique?)";
+    if (field === 'Niche') return "Defining operational parameters... What is your primary business Niche? (e.g. Digital Planners, Vintage Jewelry)";
+    if (field === 'Angle') return "Calibrating unique value proposition... What is your Brand Angle? (e.g. Eco-friendly, Minimalist, Luxury)";
     return "";
   };
 
   const initialMessage = isCriticalMissing 
-    ? `System Alert: Empire identity incomplete. I need your Name and Niche to establish tactical awareness. Shall we synchronize your vision now?`
-    : `Analyzing neural pathways... I've detected a critical data gap. Your Empire ${missingFields.join(', ')} is currently undefined. Shall we calibrate your identity now?`;
+    ? `System Alert: Empire identity incomplete. I need your Name, Niche, and Brand Angle to establish tactical awareness. Shall we synchronize your vision now?`
+    : `Analyzing neural pathways... I've detected a data gap. Your Empire ${missingFields.join(', ')} is currently undefined. Shall we calibrate your identity now?`;
 
   const currentMessage = isInteractive ? getQuestion(missingFields[currentFieldIdx]) : initialMessage;
 

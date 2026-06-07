@@ -76,6 +76,9 @@ export default function Dashboard() {
       ]);
 
       if (eData) {
+        // Map backend 'title' to 'name' if necessary
+        eData.name = eData.title || eData.name;
+        
         // Parse niche from description if not present
         if (!eData.niche && eData.description) {
           const match = eData.description.match(/Empire Niche: (.*?)\./);
@@ -221,7 +224,12 @@ export default function Dashboard() {
             return (
               <button
                 key={idx}
-                onClick={() => setActiveBusinessIndex(idx)}
+                onClick={() => {
+                  setActiveBusinessIndex(idx);
+                  if (idx === 0) setActiveEmpireId('1');
+                  // In a real scenario with paid slots:
+                  // if (idx === 1 && empire2) setActiveEmpireId(empire2.id);
+                }}
                 className={cn(
                   "flex-1 flex items-center justify-center gap-2 px-3 py-3 rounded-[20px] font-black text-[9px] md:text-xs uppercase tracking-tighter transition-all",
                   isActive 
