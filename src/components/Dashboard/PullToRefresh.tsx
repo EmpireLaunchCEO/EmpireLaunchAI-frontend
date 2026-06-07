@@ -17,25 +17,18 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   const controls = useAnimation();
   const y = useMotionValue(0);
 
-  const THRESHOLD = 60;
+  const THRESHOLD = 100;
 
   useEffect(() => {
-    const handleScroll = (e: Event) => {
-      const target = e.target;
-      if (target instanceof HTMLElement) {
-        setIsAtTop(target.scrollTop <= 5);
-      } else {
-        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-        setIsAtTop(scrollY <= 5);
-      }
+    const handleScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      setIsAtTop(scrollY <= 10);
     };
 
-    // Listen on capture phase to catch scrolls from any parent
-    window.addEventListener('scroll', handleScroll, true);
-    // Also check on mount
-    handleScroll({ target: document.querySelector('main') } as any);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll, true);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
@@ -47,43 +40,53 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   }, [y, isRefreshing]);
 
   const handleDragEnd = async () => {
-    if (y.get() >= THRESHOLD && !isRefreshing && isAtTop) {
+    const currentY = y.get();
+    if (currentY >= THRESHOLD && !isRefreshing && isAtTop) {
       setIsRefreshing(true);
       setPullProgress(1);
 
-      // Snap to refreshing position
-      await controls.start({ y: 80, transition: { type: "spring", stiffness: 300, damping: 20 } });
+      await controls.start({ 
+        y: 80, 
+        transition: { type: "spring", stiffness: 400, damping: 25 } 
+      });
 
       try {
         if (typeof window !== 'undefined' && window.navigator.vibrate) {
-          window.navigator.vibrate(10);
+          window.navigator.vibrate(15);
         }
         await onRefresh();
       } finally {
+        await new Promise(resolve => setTimeout(resolve, 800));
         setIsRefreshing(false);
-        await new Promise(resolve => setTimeout(resolve, 600));
         setPullProgress(0);
-        await controls.start({ y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } });
+        await controls.start({ 
+          y: 0, 
+          transition: { type: "spring", stiffness: 300, damping: 30 } 
+        });
       }
     } else {
       setPullProgress(0);
-      await controls.start({ y: 0, transition: { type: "spring", stiffness: 300, damping: 30 } });
+      await controls.start({ 
+        y: 0, 
+        transition: { type: "spring", stiffness: 300, damping: 30 } 
+      });
     }
   };
 
   return (
     <div className="relative min-h-screen bg-transparent">
-      {/* Pull indicator - Hidden behind/above content until pull */}
+      {/* Pull indicator */}
       <motion.div
-        className="absolute top-0 left-0 right-0 flex flex-col items-center justify-center z-[5] pointer-events-none"
+        className="fixed top-0 left-0 right-0 flex flex-col items-center justify-center z-0 pointer-events-none"
         style={{
-          height: isRefreshing ? 120 : pullProgress * 150,
+          height: 160,
           opacity: isRefreshing ? 1 : pullProgress,
+          scale: isRefreshing ? 1 : 0.8 + (pullProgress * 0.2),
         }}
       >
         <div className={cn(
-          "bg-slate-950 rounded-full p-2.5 shadow-[0_0_40px_rgba(0,229,255,0.15)] border-2 transition-all duration-300",
-          isRefreshing ? "border-primary scale-110 shadow-primary/30" : "border-white/10"
+          "bg-slate-950 rounded-full p-3 shadow-[0_0_50px_rgba(0,229,255,0.2)] border-2 transition-all duration-300",
+          isRefreshing ? "border-primary scale-110 shadow-primary/40" : "border-white/10"
         )}>
           <BrandedGlobe
             size="lg"
@@ -92,37 +95,33 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
           />
         </div>
         
-        {isRefreshing && (
-          <motion.div 
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-3"
-          >
-            <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] drop-shadow-md">
-              Neural Sync
-            </span>
-          </motion.div>
-        )}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: (isRefreshing || pullProgress > 0.8) ? 1 : 0 }}
+          className="mt-4 flex flex-col items-center gap-1"
+        >
+          <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] drop-shadow-lg">
+            {isRefreshing ? "Neural Syncing" : "Pull to Sync"}
+          </span>
+        </motion.div>
       </motion.div>
 
       <motion.div
-        onPan={(e, info) => {
-          // Detect if we are scrolling or pulling
-          const isHorizontalSwipe = Math.abs(info.offset.x) > Math.abs(info.offset.y);
-          if (isHorizontalSwipe) return;
-
-          if (isAtTop && info.offset.y > 0) {
-            // Apply resistance
-            const pullY = Math.pow(info.offset.y, 0.8);
-            y.set(pullY);
-          } else if (info.offset.y < 0 && y.get() > 0) {
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 500 }}
+        dragElastic={0.15}
+        onDrag={(e, info) => {
+          if (!isAtTop || isRefreshing) return;
+          if (info.offset.y > 0) {
+            y.set(info.offset.y * 0.5);
+          } else {
             y.set(0);
           }
         }}
-        onPanEnd={handleDragEnd}
+        onDragEnd={handleDragEnd}
         animate={controls}
         style={{ y }}
-        className="relative z-10 w-full bg-theme-surface shadow-2xl"
+        className="relative z-10 w-full bg-theme-surface shadow-[0_-20px_50px_rgba(0,0,0,0.3)] min-h-screen"
       >
         {children}
       </motion.div>

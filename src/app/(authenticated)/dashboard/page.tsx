@@ -26,9 +26,9 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 
 export default function Dashboard() {
-  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded } = useEmpire();
+  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire } = useEmpire();
   const [activeBusinessIndex, setActiveBusinessIndex] = useState(0);
-  const [empireData, setEmpireData] = useState<any>(null);
+  const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
@@ -87,7 +87,8 @@ export default function Dashboard() {
           }
         }
         
-        setEmpireData(eData);
+        setEmpireDataState(eData);
+        setActiveEmpire(eData);
         setPulseData(pulse || { status: 'Optimizing', progress: 0, logs: [] });
         setHealthData(health || { revenue: 0, growthScore: 80 });
         setTransactions(txs || []);
@@ -183,15 +184,15 @@ export default function Dashboard() {
         {/* Persistent Header */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 bg-theme-surface/30 p-5 md:p-0 rounded-[24px] md:rounded-none border border-theme md:border-none">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-primary font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em]">
-              <LayoutDashboard className="w-3 h-3" />
-              Success Hub
+            <div className="flex items-center gap-2 text-primary font-black text-[9px] md:text-[10px] uppercase tracking-[0.3em] mb-1">
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              Empire Command Center
             </div>
-            <h1 className="text-xl md:text-4xl font-black tracking-tight leading-tight italic">
-              {empireData?.name || "Success Hub"}.
+            <h1 className="text-3xl md:text-6xl font-black tracking-tighter leading-none italic uppercase text-foreground drop-shadow-sm">
+              {empireData?.name || "Operational Empire"}.
             </h1>
-            <p className="text-[10px] md:text-base text-muted-foreground font-medium italic">
-              Monitoring your {empireData?.niche || "business"} growth and autonomous operations.
+            <p className="text-[11px] md:text-lg text-muted-foreground font-medium italic mt-2">
+              Driving velocity for your <span className="text-primary font-black">{empireData?.niche || "business"}</span> across all neural links.
             </p>
           </div>
 

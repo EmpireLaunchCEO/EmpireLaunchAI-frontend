@@ -51,6 +51,8 @@ interface EmpireContextType {
   setDashboardLoaded: (loaded: boolean) => void;
   userEmpires: any[];
   setUserEmpires: (empires: any[]) => void;
+  activeEmpire: any | null;
+  setActiveEmpire: (empire: any) => void;
 
   // Notifications
   notifications: Notification[];
@@ -98,6 +100,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isDashboardLoaded, setDashboardLoaded] = useState(false);
   const [userEmpires, setUserEmpires] = useState<any[]>([]);
+  const [activeEmpire, setActiveEmpire] = useState<any | null>(null);
   const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);
   const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -499,6 +502,10 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       acceptProtocols,
       isDashboardLoaded,
       setDashboardLoaded,
+      userEmpires,
+      setUserEmpires,
+      activeEmpire,
+      setActiveEmpire,
       notifications,
       unreadCount,
       markAsRead,

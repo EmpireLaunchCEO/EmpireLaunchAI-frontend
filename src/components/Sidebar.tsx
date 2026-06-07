@@ -16,6 +16,9 @@ import {
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 
+import { useEmpire } from '@/lib/EmpireContext';
+import { analyticsService, empireService } from '@/lib/api-service';
+
 const navItems = [
   { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Empire Center', href: '/empire-center', icon: ClipboardCheck },
@@ -28,13 +31,16 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { activeEmpire } = useEmpire();
 
   return (
     <>
       <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-0 lg:left-[72px] top-0 border-r border-theme shadow-sm transition-all duration-300">
         <div className="p-6 flex items-center gap-3">
           <BrandedGlobe size="md" />
-          <span className="text-lg font-black tracking-tight text-foreground uppercase italic">Empire.</span>
+          <span className="text-lg font-black tracking-tight text-foreground uppercase italic truncate">
+            {activeEmpire?.name || "Empire"}.
+          </span>
         </div>
 
         <nav className="flex-1 px-4 py-4 space-y-1">
@@ -72,12 +78,14 @@ export function Sidebar() {
 
         <div className="p-6 border-t border-theme">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center shadow-lg">
-              <span className="text-xs font-black text-white">JD</span>
+            <div className="w-10 h-10 rounded-2xl bg-slate-900 border border-theme flex items-center justify-center shadow-lg overflow-hidden">
+               <BrandedGlobe size="sm" animate={true} />
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-black text-foreground">John Doe</span>
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">Founder</span>
+            <div className="flex flex-col truncate">
+              <span className="text-sm font-black text-foreground truncate">Founder</span>
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest truncate">
+                {activeEmpire?.name || "Empire Owner"}
+              </span>
             </div>
           </div>
         </div>
