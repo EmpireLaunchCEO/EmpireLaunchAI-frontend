@@ -21,11 +21,11 @@ export default function AuthenticatedLayout({
           <OnboardingTour />
         </Suspense>
         <IntelligenceAuditor />
-        <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[332px] overflow-x-hidden">
+        <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[332px]">
           <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
             <NotificationBell id="notification-bell-desktop" />
           </div>
-          <div className="min-h-[calc(100vh-80px)] overflow-x-hidden">
+          <div className="min-h-[calc(100vh-80px)]">
             {children}
           </div>
         </main>

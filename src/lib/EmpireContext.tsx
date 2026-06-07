@@ -88,18 +88,25 @@ const EmpireContext = createContext<EmpireContextType | undefined>(undefined);
 
 export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [activeEmpireId, setActiveEmpireId] = useState('1');
+  
+  // Scoped Data Maps
   const [platformsByEmpire, setPlatformsByEmpire] = useState<Record<string, string[]>>({});
   const [notesByEmpire, setNotesByEmpire] = useState<Record<string, string>>({});
   const [linkingCompleteByEmpire, setLinkingCompleteByEmpire] = useState<Record<string, boolean>>({});
   const [onboardedByEmpire, setOnboardedByEmpire] = useState<Record<string, boolean>>({});
+  
+  // Scoped Computed Values
+  const connectedPlatforms = platformsByEmpire[activeEmpireId] || [];
+  const empireNotes = notesByEmpire[activeEmpireId] || '';
+  const isLinkingComplete = linkingCompleteByEmpire[activeEmpireId] || false;
+  const isOnboarded = onboardedByEmpire[activeEmpireId] || false;
+
+  // Global Settings (Shared across empires for now)
   const [isPaid, setIsPaidState] = useState(false);
   const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>('co-pilot');
   const [platformPermissions, setPlatformPermissions] = useState<Record<string, 'co-pilot' | 'empire'>>({});
-  const [isOnboarded, setIsOnboarded] = useState(false);
   const [isHandoverComplete, setIsHandoverComplete] = useState(false);
-  const [isLinkingComplete, setIsLinkingComplete] = useState(false);
   const [isNotificationModalDismissed, setIsNotificationModalDismissed] = useState(false);
-  const [empireNotes, setEmpireNotesState] = useState('');
   const [theme, setThemeState] = useState('blue');
   const [language, setLanguageState] = useState('en-US');
   const [currency, setCurrencyState] = useState('USD');
@@ -109,14 +116,14 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [isDashboardLoaded, setDashboardLoaded] = useState(false);
   const [userEmpires, setUserEmpires] = useState<any[]>([]);
   const [activeEmpire, setActiveEmpire] = useState<any | null>(null);
-
-  const connectedPlatforms = platformsByEmpire[activeEmpireId] || [];
-  const empireNotes = notesByEmpire[activeEmpireId] || '';
-  const isLinkingComplete = linkingCompleteByEmpire[activeEmpireId] || false;
-  const isOnboarded = onboardedByEmpire[activeEmpireId] || false;
-
   const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: false, 2: false });
-  const [isAdmin, setIsAdmin] = useState(true); // Defaulting to true for "ME" (the owner)
+  const [isAdmin, setIsAdmin] = useState(true);
+
+  // System UI State
+  const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notificationSettings, setNotificationSettings] = useState({ sales: true, approvals: true });
+  const [toasts, setToasts] = useState<Toast[]>([]);
 
   const unlockSlot = (index: number) => {
     setSlotStatus(prev => ({ ...prev, [index]: true }));
@@ -124,11 +131,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('slotStatus', JSON.stringify({ ...slotStatus, [index]: true }));
     }
   };
-  const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);
-  const [connectedPlatforms, setConnectedPlatforms] = useState<string[]>([]);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [notificationSettings, setNotificationSettings] = useState({ sales: true, approvals: true });
-  const [toasts, setToasts] = useState<Toast[]>([]);
 
   const removeToast = (id: string) => {
     setToasts(prev => prev.filter(t => t.id !== id));
@@ -163,8 +165,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     setIsPaidState(paid);
     if (typeof window !== 'undefined') {
       localStorage.setItem('isPaid', paid ? 'true' : 'false');
-      
-      // Sync to backend
       fetch(`${API_URL}/api/settings/isPaid`, {
         method: 'PATCH',
         headers: {
@@ -202,9 +202,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
-    const handleSetActiveEmpireId = (id: string) => {
+  const handleSetActiveEmpireId = (id: string) => {
     setActiveEmpireId(id);
-    setDashboardLoaded(false); // Trigger dashboard reload
+    setDashboardLoaded(false);
     if (typeof window !== 'undefined') {
       localStorage.setItem('activeEmpireId', id);
     }
@@ -225,11 +225,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       }
       return next;
     });
-    
     if (typeof window !== 'undefined') {
       localStorage.removeItem('onboarding_step');
-
-      // Sync to backend
       fetch(`${API_URL}/api/settings/onboardingComplete`, {
         method: 'PATCH',
         headers: {
@@ -250,10 +247,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       }
       return next;
     });
-
     if (typeof window !== 'undefined') {
-
-      // Sync to backend
       fetch(`${API_URL}/api/settings/linkingComplete`, {
         method: 'PATCH',
         headers: {
@@ -304,7 +298,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addNote = (note: string) => {
-    const newNotes = empireNotes ? `${empireNotes}\n\n• ${note}` : `• ${note}`;
+    const currentNotes = notesByEmpire[activeEmpireId] || '';
+    const newNotes = currentNotes ? `${currentNotes}\n\n• ${note}` : `• ${note}`;
     setEmpireNotes(newNotes);
   };
 
@@ -312,7 +307,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     setThemeState(newTheme);
     if (typeof window !== 'undefined') {
       localStorage.setItem('empireTheme', newTheme);
-      // Clean up previous themes
       document.body.classList.forEach(cls => {
         if (cls.startsWith('theme-')) document.body.classList.remove(cls);
       });
@@ -346,8 +340,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     setIsProtocolAccepted(true);
     if (typeof window !== 'undefined') {
       localStorage.setItem('isProtocolAccepted', 'true');
-      
-      // Notify backend to track acceptance
       fetch(`${API_URL}/api/settings/protocolAccepted`, {
         method: 'PATCH',
         headers: {
@@ -360,12 +352,10 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Sync state from localStorage and backend after mount
   useEffect(() => {
     const hydrateAndSync = async () => {
       if (typeof window === 'undefined') return;
 
-      // 1. Initial Hydration from LocalStorage
       const savedActiveEmpireId = localStorage.getItem('activeEmpireId');
       if (savedActiveEmpireId) setActiveEmpireId(savedActiveEmpireId);
 
@@ -380,20 +370,11 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         setPlatformPermissions(savedPermissions);
       } catch {}
 
-      const savedIsOnboarded = localStorage.getItem('isOnboarded') === 'true';
-      if (savedIsOnboarded) setIsOnboarded(true);
-
       const savedIsHandoverComplete = localStorage.getItem('isHandoverComplete') === 'true';
       if (savedIsHandoverComplete) setIsHandoverComplete(true);
 
-      const savedIsLinkingComplete = localStorage.getItem('isLinkingComplete') === 'true';
-      if (savedIsLinkingComplete) setIsLinkingComplete(true);
-
       const savedIsNotificationModalDismissed = localStorage.getItem('isNotificationModalDismissed') === 'true';
       if (savedIsNotificationModalDismissed) setIsNotificationModalDismissed(true);
-
-      const savedNotes = localStorage.getItem('empireNotes');
-      if (savedNotes) setEmpireNotesState(savedNotes);
 
       const savedTheme = localStorage.getItem('empireTheme');
       if (savedTheme) setThemeState(savedTheme);
@@ -438,19 +419,10 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       } catch {}
 
       try {
-        const rawPlatformsOld = localStorage.getItem('connectedPlatforms');
-        const savedPlatforms = rawPlatforms ? JSON.parse(rawPlatforms) : [];
-        setConnectedPlatforms(Array.isArray(savedPlatforms) ? savedPlatforms : []);
-      } catch {
-        setConnectedPlatforms([]);
-      }
-
-      try {
         const savedNotificationSettings = JSON.parse(localStorage.getItem('empireNotificationSettings') || '{"sales":true,"approvals":true}');
         setNotificationSettings(savedNotificationSettings);
       } catch {}
 
-      // 2. Sync with Backend
       try {
         const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
           headers: { 
@@ -467,10 +439,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
               setIsProtocolAccepted(settings.protocolAccepted);
               localStorage.setItem('isProtocolAccepted', settings.protocolAccepted ? 'true' : 'false');
             }
-            if (settings.onboardingComplete) {
-              setIsOnboarded(true);
-              localStorage.setItem('isOnboarded', 'true');
-            }
             if (settings.isPaid !== undefined) {
               setIsPaidState(settings.isPaid);
               localStorage.setItem('isPaid', settings.isPaid ? 'true' : 'false');
@@ -482,8 +450,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         if (goal && goal.id) {
           setActiveEmpireId(goal.id);
           localStorage.setItem('activeEmpireId', goal.id);
-          setIsOnboarded(true);
-          localStorage.setItem('isOnboarded', 'true');
         }
       } catch (e) {
         console.error('Initial backend sync failed', e);
@@ -495,7 +461,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     hydrateAndSync();
   }, []);
 
-  // Sync theme class
   useEffect(() => {
     if (typeof window !== 'undefined') {
       document.body.classList.forEach(cls => {
@@ -506,7 +471,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
   }, [theme]);
 
-  // Demo Notifications
   useEffect(() => {
     if (isLinkingComplete && isInitialized) {
       const demoNotifications: Notification[] = [

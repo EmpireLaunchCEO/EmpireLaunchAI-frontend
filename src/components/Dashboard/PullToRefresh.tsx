@@ -31,20 +31,29 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    return y.on("change", (latest) => {
-      if (!isRefreshing) {
-        setPullProgress(Math.min(latest / THRESHOLD, 1));
-      }
-    });
-  }, [y, isRefreshing]);
+  const handlePan = (e: any, info: any) => {
+    if (!isAtTop || isRefreshing) return;
+    
+    // Only pull down (positive y offset)
+    if (info.offset.y > 0) {
+      const dampenedY = info.offset.y * 0.4;
+      y.set(dampenedY);
+      setPullProgress(Math.min(dampenedY / THRESHOLD, 1));
+    } else {
+      y.set(0);
+      setPullProgress(0);
+    }
+  };
 
-  const handleDragEnd = async () => {
+  const handlePanEnd = async (e: any, info: any) => {
+    if (isRefreshing) return;
+    
     const currentY = y.get();
-    if (currentY >= THRESHOLD && !isRefreshing && isAtTop) {
+    if (currentY >= THRESHOLD && isAtTop) {
       setIsRefreshing(true);
       setPullProgress(1);
 
+      // Snap to refreshing position
       await controls.start({ 
         y: 80, 
         transition: { type: "spring", stiffness: 400, damping: 25 } 
@@ -56,7 +65,6 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
         }
         await onRefresh();
       } finally {
-        await new Promise(resolve => setTimeout(resolve, 800));
         setIsRefreshing(false);
         setPullProgress(0);
         await controls.start({ 
@@ -66,6 +74,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       }
     } else {
       setPullProgress(0);
+      y.set(0);
       await controls.start({ 
         y: 0, 
         transition: { type: "spring", stiffness: 300, damping: 30 } 
@@ -75,53 +84,37 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
 
   return (
     <div className="relative min-h-screen bg-transparent">
-      {/* Pull indicator */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 flex flex-col items-center justify-center z-0 pointer-events-none"
-        style={{
-          height: 160,
-          opacity: isRefreshing ? 1 : pullProgress,
-          scale: isRefreshing ? 1 : 0.8 + (pullProgress * 0.2),
-        }}
-      >
-        <div className={cn(
-          "bg-slate-950 rounded-full p-3 shadow-[0_0_50px_rgba(0,229,255,0.2)] border-2 transition-all duration-300",
-          isRefreshing ? "border-primary scale-110 shadow-primary/40" : "border-white/10"
-        )}>
-          <BrandedGlobe
-            size="lg"
-            animate={true}
-            spinning={isRefreshing}
-          />
-        </div>
-        
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: (isRefreshing || pullProgress > 0.8) ? 1 : 0 }}
-          className="mt-4 flex flex-col items-center gap-1"
-        >
-          <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] drop-shadow-lg">
-            {isRefreshing ? "Neural Syncing" : "Pull to Sync"}
-          </span>
-        </motion.div>
-      </motion.div>
+      {/* Background Globe Area (hidden behind content) */}
+      <div className="fixed top-0 left-0 right-0 flex flex-col items-center justify-center z-0 pointer-events-none overflow-hidden" style={{ height: 180 }}>
+         <motion.div
+           style={{
+             opacity: isRefreshing ? 1 : pullProgress,
+             scale: isRefreshing ? 1 : 0.7 + (pullProgress * 0.3),
+           }}
+           className="flex flex-col items-center"
+         >
+            <div className={cn(
+              "bg-slate-950 rounded-full p-2 border-2 transition-all duration-300",
+              isRefreshing ? "border-primary shadow-[0_0_40px_rgba(0,229,255,0.4)]" : "border-white/10"
+            )}>
+              <BrandedGlobe
+                size="lg"
+                animate={true}
+                spinning={isRefreshing}
+              />
+            </div>
+            <span className="mt-2 text-[8px] font-black text-primary uppercase tracking-[0.4em]">
+              {isRefreshing ? "Neural Syncing" : "Pull to Sync"}
+            </span>
+         </motion.div>
+      </div>
 
       <motion.div
-        drag="y"
-        dragConstraints={{ top: 0, bottom: 500 }}
-        dragElastic={0.15}
-        onDrag={(e, info) => {
-          if (!isAtTop || isRefreshing) return;
-          if (info.offset.y > 0) {
-            y.set(info.offset.y * 0.5);
-          } else {
-            y.set(0);
-          }
-        }}
-        onDragEnd={handleDragEnd}
+        onPan={handlePan}
+        onPanEnd={handlePanEnd}
         animate={controls}
         style={{ y }}
-        className="relative z-10 w-full bg-theme-surface shadow-[0_-20px_50px_rgba(0,0,0,0.3)] min-h-screen"
+        className="relative z-10 w-full bg-theme-surface shadow-[0_-20px_50px_rgba(0,0,0,0.3)] min-h-screen will-change-transform"
       >
         {children}
       </motion.div>

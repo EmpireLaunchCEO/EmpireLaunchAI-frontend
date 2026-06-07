@@ -14,10 +14,10 @@ interface BrandedGlobeProps {
 export function BrandedGlobe({ className, size = 'md', animate = true, spinning = false }: BrandedGlobeProps) {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const sizeClasses = {
-    sm: 'w-6 h-6',
+    sm: 'w-5 h-5',
     md: 'w-8 h-8',
     lg: 'w-16 h-16',
-    xl: 'w-28 h-28',
+    xl: 'w-24 h-24',
   };
 
   const animationProps = spinning 
