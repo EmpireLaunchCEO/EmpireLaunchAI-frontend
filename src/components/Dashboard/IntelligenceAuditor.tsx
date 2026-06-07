@@ -28,6 +28,13 @@ export function IntelligenceAuditor() {
   const router = useRouter();
 
   const auditIntelligence = useCallback(async () => {
+    // 🔒 DEFINITIVE EXCLUSION: Never show for Owner/Admin on Slot 1 (Success Hub)
+    // This guard runs FIRST, before any async operations, to eliminate all race conditions
+    if ((isAdmin || isPaid) && activeEmpireId === '1') {
+      setIsVisible(false);
+      return;
+    }
+
     // Only audit if we're not on onboarding
     if (pathname.includes('onboarding')) {
       setIsVisible(false);
@@ -43,7 +50,7 @@ export function IntelligenceAuditor() {
     const slotIdx = parseInt(activeEmpireId) - 1;
     const isLocked = !slotStatus[slotIdx];
 
-    if (!isAdmin || isLocked || (isAdmin && activeEmpireId === '1')) {
+    if (!isAdmin || isLocked) {
       setIsVisible(false);
       return;
     }
@@ -78,16 +85,15 @@ export function IntelligenceAuditor() {
           setMissingFields(missing);
           setIntelLevel(Math.max(0, 3 - missing.length));
           
-          // OWNER BYPASS: If owner, don't auto-popup for Slot 1
-          const isSlot1 = activeEmpireId === '1';
-          if ((isAdmin || isPaid) && isSlot1 && !isInteractive) {
-             setIsVisible(false);
-             return;
-          }
-
           if (!isInteractive) {
             // Re-verify after a short delay to ensure hydration is complete and prevent flashing
             setTimeout(async () => {
+              // 🔒 DEFINITIVE BYPASS: Never show for Owner/Admin on Slot 1
+              if ((isAdmin || isPaid) && activeEmpireId === '1') {
+                setIsVisible(false);
+                return;
+              }
+
               const currentEmpire = await empireService.getEmpire(activeEmpireId);
               const currentMissing = [];
               const isDefault = !currentEmpire.title || defaultNames.includes(currentEmpire.title) || currentEmpire.title === '';
@@ -101,8 +107,10 @@ export function IntelligenceAuditor() {
               if (!hasA) currentMissing.push('Angle');
 
               if (currentMissing.length > 0) {
-                // One final check: if we are Slot 1 and Owner, still stay hidden
-                if (!((isAdmin || isPaid) && isSlot1)) {
+                // 🔒 FINAL GUARD: Check Slot 1 again before showing
+                if ((isAdmin || isPaid) && activeEmpireId === '1') {
+                  setIsVisible(false);
+                } else {
                   setIsVisible(true);
                 }
               }

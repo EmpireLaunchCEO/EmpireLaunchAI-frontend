@@ -165,7 +165,7 @@ export default function Dashboard() {
                     </span>
                   </div>
                   <h1 className="text-3xl md:text-6xl font-black tracking-tighter leading-none italic uppercase text-foreground drop-shadow-sm">
-                    {empireData?.name || "Operational Empire"}.
+                    {empireData?.name || "Success Hub"}.
                   </h1>
                   <p className="text-sm md:text-xl font-medium text-muted-foreground italic max-w-xl">
                     {activeBusinessIndex === 0 

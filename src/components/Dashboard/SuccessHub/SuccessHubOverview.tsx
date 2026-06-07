@@ -9,10 +9,9 @@ import { EmpireLedger } from './EmpireLedger';
 import { EmpireGrowthBreakdown } from './EmpireGrowthBreakdown';
 import { TrustPulse } from './TrustPulse';
 import { InboxAssistant } from './InboxAssistant';
-import { SocialProofApproval } from '../SocialProofApproval';
-import { ActivityStream } from '../ActivityStream';
-import { Stars, Brain, Zap, Globe } from 'lucide-react';
+import { Stars, Brain, Zap } from 'lucide-react';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
+import { ActivityStream } from '../ActivityStream';
 
 interface SuccessHubOverviewProps {
   empireData: any;
