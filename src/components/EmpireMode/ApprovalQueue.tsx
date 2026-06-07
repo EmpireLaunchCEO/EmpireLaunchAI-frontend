@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 
 import React, { useEffect, useState } from 'react';
-import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bot,
@@ -13,7 +13,6 @@ import {
   X,
   ChevronLeft
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { approvalService, ApprovalRequest } from '@/lib/api-service';
 import { VaultInjected } from '@/components/VaultInjected';
 import { BlueprintGate } from './Gates/BlueprintGate';

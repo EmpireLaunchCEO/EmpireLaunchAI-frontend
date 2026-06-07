@@ -1,10 +1,9 @@
 "use client";
+import { cn } from "@/lib/utils";
 
 import React, { useEffect, useState } from 'react';
-import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Copy, Check, ExternalLink, Bot, User, Zap, Trash2, Info, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { retentionService, InboxDraft } from '@/lib/api-service';
 
 import { useEmpire } from '@/lib/EmpireContext';

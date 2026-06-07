@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 
 import React, { useState, useEffect } from 'react';
-import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search,
@@ -21,7 +21,6 @@ import {
   ShieldCheck,
   Cpu
   } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useRouter } from 'next/navigation';
 

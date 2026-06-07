@@ -1,7 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { cn } from "@/lib/utils";
 import { MissionBriefing } from '@/components/Dashboard/MissionBriefing';
 import { ApprovalQueue } from '@/components/EmpireMode/ApprovalQueue';
 import { DetailedRevenue } from '@/components/Dashboard/DetailedRevenue';
@@ -14,7 +14,6 @@ import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation'
 import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { SuccessHubOverview } from '@/components/Dashboard/SuccessHub/SuccessHubOverview';
 import { Stars, Home, ArrowUpRight, Plus, X, LayoutDashboard, Globe, Sparkles } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';

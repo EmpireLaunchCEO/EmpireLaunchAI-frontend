@@ -66,9 +66,9 @@ export function BrandedGlobe({ className, size = 'md', animate = true, spinning 
       {/* CSS Globe Fallback structure */}
       <div className={cn(
         "absolute inset-0 flex items-center justify-center fallback-globe rounded-full transition-opacity duration-700",
-        isLoaded ? "opacity-0" : "opacity-30"
+        isLoaded ? "opacity-0" : "opacity-70"
       )}>
-        <div className="w-full h-full rounded-full border border-primary/20 bg-primary/5" />
+        <div className="w-full h-full rounded-full border-2 border-primary/40 bg-primary/10 animate-pulse" />
       </div>
 
       <img

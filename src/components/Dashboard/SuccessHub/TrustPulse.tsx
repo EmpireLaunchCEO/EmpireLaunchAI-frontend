@@ -1,10 +1,9 @@
 "use client";
+import { cn } from "@/lib/utils";
 
 import React, { useEffect, useState } from 'react';
-import { cn } from "@/lib/utils";
 import { motion } from 'framer-motion';
 import { ShieldCheck, Heart, Zap, History, Info } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { retentionService, TrustScore, SentimentPoint } from '@/lib/api-service';
 
 export const TrustPulse = () => {
