@@ -113,13 +113,16 @@ export default function Dashboard() {
         <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-20 overflow-x-hidden">
           
           {/* 1. Centered Visuals (Absolute Top) */}
-          <div className="flex justify-center pt-8 pointer-events-none">
+          <div className="flex flex-col items-center pt-8 pointer-events-none">
             <BrandedGlobe 
               size="xl" 
               animate={isLoading || partnerStatus !== 'idle'} 
               spinning={isLoading || partnerStatus !== 'idle'}
               className="shadow-[0_0_60px_rgba(0,229,255,0.2)]"
             />
+            <h2 className="mt-8 text-2xl md:text-5xl font-black tracking-[0.2em] uppercase italic text-theme-gradient leading-none">
+              Success Hub
+            </h2>
           </div>
 
           {/* 2. Centered Business Navigation */}
@@ -127,7 +130,8 @@ export default function Dashboard() {
             {[0, 1, 2].map((idx) => {
               const empireId = idx === 0 ? '1' : (idx === 1 ? '2' : '3');
               const isActive = activeBusinessIndex === idx;
-              const label = idx === 0 ? (empireData?.name || "Empire 1") : `Business ${idx + 1}`;
+              const displayName = empireData?.name || empireData?.title || "Empire Launch";
+              const label = idx === 0 ? displayName : `Business ${idx + 1}`;
               
               return (
                 <button
@@ -144,7 +148,7 @@ export default function Dashboard() {
                   )}
                 >
                   {isActive ? <Globe className="w-3 h-3 text-primary" /> : <Briefcase className="w-3 h-3 opacity-50" />}
-                  {isActive ? (empireData?.name || label) : `Business ${idx + 1}`}
+                  {isActive ? label : `Business ${idx + 1}`}
                 </button>
               );
             })}
@@ -160,12 +164,9 @@ export default function Dashboard() {
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
                 </div>
-                <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-foreground">
-                  {empireData?.name || "The First Empire"}.
+                <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
+                  {empireData?.name || empireData?.title || "Empire Launch"}.
                 </h1>
-                <p className="text-sm md:text-xl font-medium text-muted-foreground italic">
-                  Command Center for {empireData?.name || "unnamed empire"}.
-                </p>
               </div>
 
               {/* 4. Intelligence & Operations Grid (Teacher First) */}
@@ -178,7 +179,10 @@ export default function Dashboard() {
                   healthData={healthData}
                 />
 
-                <NicheCalibrationBox niche={empireData?.niche} />
+                <NicheCalibrationBox 
+                  niche={empireData?.niche || empireData?.description?.match(/Empire Niche: (.*?)\./)?.[1]} 
+                  angle={empireData?.description?.match(/Angle: (.*?)\./)?.[1]}
+                />
 
                 <FinancialCommand growthScore={healthData?.score} />
 

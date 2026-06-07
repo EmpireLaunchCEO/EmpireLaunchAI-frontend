@@ -65,43 +65,86 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   } = useEmpire();
   const router = useRouter();
 
-  const isNichePending = !currentEmpire?.niche || currentEmpire.niche === 'Niche Pending';
-  const isNamePending = !currentEmpire?.title || currentEmpire.title === 'The First Empire' || currentEmpire.title === '';
+  // Robust check for name/niche status
+  const checkNamePending = (empire: any) => {
+    const name = empire?.name || empire?.title || '';
+    const placeholders = ['', 'The First Empire', 'unnamed empire', 'Unnamed Empire'];
+    return !name || placeholders.includes(name);
+  };
+
+  const checkNichePending = (empire: any) => {
+    const niche = empire?.niche || '';
+    const placeholders = ['', 'Niche Pending', 'CALIBRATION PENDING'];
+    return !niche || placeholders.includes(niche);
+  };
+
+  const checkAnglePending = (empire: any) => {
+    const desc = empire?.description || '';
+    return !desc.includes('Angle:') || desc.includes('Angle: .') || desc.includes('Angle:  .');
+  };
+
+  const isNamePending = checkNamePending(currentEmpire);
+  const isNichePending = checkNichePending(currentEmpire);
+  const isAnglePending = checkAnglePending(currentEmpire);
 
   useEffect(() => {
-    if (isNichePending || isNamePending) {
+    if (isNichePending || isNamePending || isAnglePending) {
        // Auto-trigger the high-intel auditor for a better "Pop Up" experience
        window.dispatchEvent(new CustomEvent('empire:force-intel-sync'));
     }
-  }, [isNichePending, isNamePending]);
+    
+    // Synchronize setup step when empire data updates
+    if (checkNamePending(currentEmpire)) {
+      setSetupStep('name');
+    } else if (checkNichePending(currentEmpire)) {
+      setSetupStep('niche');
+    } else if (checkAnglePending(currentEmpire)) {
+      setSetupStep('angle');
+    } else {
+      setSetupStep('done');
+    }
+  }, [currentEmpire, isNichePending, isNamePending, isAnglePending]);
 
   const [nicheInput, setNicheInput] = useState('');
   const [nameInput, setNameInput] = useState('');
+  const [angleInput, setAngleInput] = useState('');
   const [chatInput, setChatInput] = useState('');
   const [isUpdatingNiche, setIsUpdatingNiche] = useState(false);
-  const [setupStep, setSetupStep] = useState<'name' | 'niche' | 'done'>(
-    isNamePending ? 'name' : (isNichePending ? 'niche' : 'done')
-  );
+  const [setupStep, setSetupStep] = useState<'name' | 'niche' | 'angle' | 'done'>('done');
 
   const handleChatSubmit = async () => {
-    if (!chatInput.trim()) return;
+    const input = chatInput.trim() || searchQuery.trim();
+    if (!input) return;
     
     setIsUpdatingNiche(true);
     try {
-      if (setupStep === 'name') {
-        await empireService.updateEmpire(currentEmpire?.id || '1', { title: chatInput });
-        setNameInput(chatInput);
+      if (setupStep === 'name' || input.toLowerCase().includes('name is')) {
+        const cleanName = input.replace(/my business name is:?/i, '').trim();
+        await empireService.updateEmpire(currentEmpire?.id || '1', { 
+          title: cleanName,
+          name: cleanName 
+        });
+        setNameInput(cleanName);
         setSetupStep('niche');
-        setTeacherMessage(`"${chatInput}"—a powerful choice. Now, to calibrate my deep research protocols: What is your business niche? What exactly are we selling or growing?`);
+        setTeacherMessage(`"${cleanName}"—a powerful choice. Now, to calibrate my deep research protocols: What is your business niche? What exactly are we selling or growing?`);
       } else if (setupStep === 'niche') {
-        await empireService.updateEmpire(currentEmpire?.id || '1', { niche: chatInput });
-        setNicheInput(chatInput);
+        await empireService.updateEmpire(currentEmpire?.id || '1', { niche: input });
+        setNicheInput(input);
+        setSetupStep('angle');
+        setTeacherMessage(`Excellent. A "${input}" focus is high-potential. Now, what is our "Angle"? What makes your brand unique or different from competitors?`);
+      } else if (setupStep === 'angle') {
+        await empireService.updateEmpire(currentEmpire?.id || '1', { angle: input });
+        setAngleInput(input);
         setSetupStep('done');
-        setTeacherMessage(`Excellent. I have synchronized "${chatInput}" into our neural network. I am now scanning for high-velocity profit opportunities in this sector. Let's link your first platform to begin the automation.`);
+        setTeacherMessage(`Protocols fully calibrated. I have synchronized your unique angle into our neural network. I am now scanning for high-velocity profit opportunities. Let's link your first platform to begin the automation.`);
+      } else {
+        // Natural language handling even in "done" state
+        handleInterception(input);
       }
       
       if (onRefresh) onRefresh();
       setChatInput('');
+      setSearchQuery('');
       setConversationTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
@@ -137,7 +180,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
     if (isNamePending) {
       msg = "Welcome. I am the Empire Teacher. Before we begin, I need to know: What shall we call your new business empire? Give me a name that represents your vision.";
     } else if (isNichePending) {
-      msg = `"${currentEmpire?.title}"—a powerful choice. Now, to calibrate my deep research protocols: What is your business niche? What exactly are we selling or growing?`;
+      msg = `"${currentEmpire?.name || currentEmpire?.title}"—a powerful choice. Now, to calibrate my deep research protocols: What is your business niche? What exactly are we selling or growing?`;
     } else if (isReturning) {
       msg = "Back for more? Let's expand your footprint. What are we linking today?";
     } else if (hasNoPlatforms) {
@@ -386,11 +429,18 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                       </div>
                       <input
                         type="text"
-                        placeholder="Search for an app to link..."
-                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-[8px] font-bold focus:border-primary focus:ring-0 transition-all placeholder:text-white/20 text-white"
+                        placeholder="Search for an app or talk to Teacher..."
+                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-20 text-[8px] font-bold focus:border-primary focus:ring-0 transition-all placeholder:text-white/20 text-white"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleChatSubmit()}
                       />
+                      <button 
+                        onClick={handleChatSubmit}
+                        className="absolute right-2 top-2 bottom-2 px-3 bg-white/5 hover:bg-white/10 text-white/40 hover:text-white rounded-lg text-[7px] font-black uppercase tracking-widest transition-all"
+                      >
+                        Send
+                      </button>
                       
                       <AnimatePresence>
                         {searchQuery && (
