@@ -1,9 +1,7 @@
 import { Sidebar } from "@/components/Sidebar";
-import { EmpireSwitcher } from "@/components/EmpireSwitcher";
 import { MobileNav } from "@/components/MobileNav";
 import { SubscriptionGuard } from "@/components/SubscriptionGuard";
 import { OnboardingTour } from "@/components/Dashboard/OnboardingTour";
-import { IntelligenceAuditor } from "@/components/Dashboard/IntelligenceAuditor";
 import { NotificationBell } from "@/components/Dashboard/NotificationBell";
 import { SlotGuard } from "@/components/SlotGuard";
 import { Suspense } from "react";
@@ -16,13 +14,11 @@ export default function AuthenticatedLayout({
   return (
     <SubscriptionGuard>
       <div className="flex bg-theme-background min-h-screen relative overflow-x-hidden max-w-full">
-        <EmpireSwitcher />
         <Sidebar />
         <Suspense fallback={null}>
           <OnboardingTour />
         </Suspense>
-        <IntelligenceAuditor />
-        <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[332px]">
+        <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[256px]">
           <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
             <NotificationBell id="notification-bell-desktop" />
           </div>
