@@ -197,7 +197,6 @@ export default function Dashboard() {
                     isExecuting={!!executingInsight}
                   />
                   <DetailedRevenue transactions={transactions} />
-                  <BusinessSlots currentEmpire={empireData} />
                 </div>
                 <aside className="lg:col-span-4 space-y-12">
                   <AIOptimizationHub />
