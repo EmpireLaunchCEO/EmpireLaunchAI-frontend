@@ -28,103 +28,11 @@ export function IntelligenceAuditor() {
   const router = useRouter();
 
   const auditIntelligence = useCallback(async () => {
-    // 🔒 DEFINITIVE EXCLUSION: Never show for Owner/Admin on Slot 1 (Success Hub)
-    // This guard runs FIRST, before any async operations, to eliminate all race conditions
-    if ((isAdmin || isPaid) && activeEmpireId === '1') {
-      setIsVisible(false);
-      return;
-    }
-
-    // Only audit if we're not on onboarding
-    if (pathname.includes('onboarding')) {
-      setIsVisible(false);
-      return;
-    }
-
-    if (!activeEmpireId) return;
-
-    // SECURITY & UX GATE: 
-    // 1. Never show for non-admins (customers) as per owner request
-    // 2. Never show for locked slots
-    // 3. Never show for Owner on Slot 1 (Success Hub)
-    const slotIdx = parseInt(activeEmpireId) - 1;
-    const isLocked = !slotStatus[slotIdx];
-
-    if (!isAdmin || isLocked) {
-      setIsVisible(false);
-      return;
-    }
-    
-    // Check if dismissed recently (last 4 hours)
-    const lastDismissed = localStorage.getItem('intel_audit_dismissed');
-    if (lastDismissed && Date.now() - parseInt(lastDismissed) < 1000 * 60 * 60 * 4) {
-      return;
-    }
-
-    try {
-      const empire = await empireService.getEmpire(activeEmpireId);
-      if (empire) {
-        const missing = [];
-        const defaultNames = ['The First Empire', 'Empire One', 'Initial Empire', 'New Empire', 'My Empire'];
-        const isDefaultName = !empire.title || defaultNames.includes(empire.title) || empire.title === '';
-        
-        if (isDefaultName) missing.push('Name');
-        
-        const description = empire.description || '';
-        const hasNiche = description.includes('Empire Niche:') && !description.includes('Empire Niche: .') && !description.includes('Niche: Niche Pending');
-        const hasAngle = description.includes('Angle:') && !description.includes('Angle: .') && !description.includes('Angle: Strategy Pending');
-
-        if (!hasNiche) missing.push('Niche');
-        if (!hasAngle) missing.push('Angle');
-
-        // Force visibility if critical data is missing
-        const criticalMissing = isDefaultName || !hasNiche || !hasAngle;
-        setIsCriticalMissing(criticalMissing);
-        
-        if (missing.length > 0) {
-          setMissingFields(missing);
-          setIntelLevel(Math.max(0, 3 - missing.length));
-          
-          if (!isInteractive) {
-            // Re-verify after a short delay to ensure hydration is complete and prevent flashing
-            setTimeout(async () => {
-              // 🔒 DEFINITIVE BYPASS: Never show for Owner/Admin on Slot 1
-              if ((isAdmin || isPaid) && activeEmpireId === '1') {
-                setIsVisible(false);
-                return;
-              }
-
-              const currentEmpire = await empireService.getEmpire(activeEmpireId);
-              const currentMissing = [];
-              const isDefault = !currentEmpire.title || defaultNames.includes(currentEmpire.title) || currentEmpire.title === '';
-              if (isDefault) currentMissing.push('Name');
-              
-              const currentDesc = currentEmpire.description || '';
-              const hasN = currentDesc.includes('Empire Niche:') && !currentDesc.includes('Empire Niche: .');
-              const hasA = currentDesc.includes('Angle:') && !currentDesc.includes('Angle: .');
-              
-              if (!hasN) currentMissing.push('Niche');
-              if (!hasA) currentMissing.push('Angle');
-
-              if (currentMissing.length > 0) {
-                // 🔒 FINAL GUARD: Check Slot 1 again before showing
-                if ((isAdmin || isPaid) && activeEmpireId === '1') {
-                  setIsVisible(false);
-                } else {
-                  setIsVisible(true);
-                }
-              }
-            }, 1500);
-          }
-        } else {
-          setIsVisible(false);
-          setIsInteractive(false);
-        }
-      }
-    } catch (err) {
-      console.error('Audit failed', err);
-    }
-  }, [activeEmpireId, pathname, isInteractive, isAdmin, isPaid]);
+    // 🔒 PERMANENT DISABLE: As per owner request, the Intel Integrity popup is retired.
+    // Customers only see payment gates, and Owners see the hub.
+    setIsVisible(false);
+    return;
+  }, []);
 
   useEffect(() => {
     const handleForceSync = () => {

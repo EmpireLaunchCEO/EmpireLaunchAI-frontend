@@ -5,6 +5,7 @@ import { SubscriptionGuard } from "@/components/SubscriptionGuard";
 import { OnboardingTour } from "@/components/Dashboard/OnboardingTour";
 import { IntelligenceAuditor } from "@/components/Dashboard/IntelligenceAuditor";
 import { NotificationBell } from "@/components/Dashboard/NotificationBell";
+import { SlotGuard } from "@/components/SlotGuard";
 import { Suspense } from "react";
 
 export default function AuthenticatedLayout({
@@ -26,7 +27,9 @@ export default function AuthenticatedLayout({
             <NotificationBell id="notification-bell-desktop" />
           </div>
           <div className="min-h-[calc(100vh-80px)]">
-            {children}
+            <SlotGuard>
+              {children}
+            </SlotGuard>
           </div>
         </main>
         <div className="fixed top-4 right-4 z-[100] lg:hidden flex items-center gap-2">

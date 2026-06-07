@@ -150,13 +150,8 @@ export default function Dashboard() {
             })}
           </div>
 
-          {!slotStatus[activeBusinessIndex] && !isAdmin ? (
-            <LockedSlotView 
-              slotIndex={activeBusinessIndex} 
-            />
-          ) : (
-            <div className="space-y-8 md:space-y-16 animate-in fade-in duration-700">
-              <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-theme/30 pb-8 md:pb-12">
+          <div className="space-y-8 md:space-y-16 animate-in fade-in duration-700">
+            <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-theme/30 pb-8 md:pb-12">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <BrandedGlobe size="sm" animate={partnerStatus !== 'idle'} spinning={partnerStatus !== 'idle'} />
@@ -219,7 +214,7 @@ export default function Dashboard() {
                 </aside>
               </div>
             </div>
-          )}
+          </div>
         </div>
 
         <ConversationalInput />
