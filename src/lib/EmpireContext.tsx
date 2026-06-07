@@ -365,7 +365,11 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       }, 6000);
 
       const savedActiveEmpireId = localStorage.getItem('activeEmpireId');
-      if (savedActiveEmpireId) setActiveEmpireId(savedActiveEmpireId);
+      if (savedActiveEmpireId) {
+        setActiveEmpireId(savedActiveEmpireId);
+        // Fast-path initialization if we have local data
+        setIsInitialized(true);
+      }
       
       // ... rest of hydration logic ...
       
