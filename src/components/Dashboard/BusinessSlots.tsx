@@ -13,14 +13,20 @@ interface BusinessSlotProps {
   status: 'active' | 'locked' | 'hype';
   growthScore?: number;
   onHypeClick?: () => void;
+  onClick?: () => void;
 }
 
-const BusinessSlot = ({ name, niche, status, growthScore, onHypeClick }: BusinessSlotProps) => {
+const BusinessSlot = ({ name, niche, status, growthScore, onHypeClick, onClick }: BusinessSlotProps) => {
   const isLocked = status === 'locked';
   const isHype = status === 'hype';
 
+  const handleClick = () => {
+    if (isHype && onHypeClick) onHypeClick();
+    else if (!isLocked && onClick) onClick();
+  };
+
   return (
-    <div className="relative group cursor-pointer" onClick={isHype ? onHypeClick : undefined}>
+    <div className="relative group cursor-pointer" onClick={handleClick}>
       <div className={cn(
         "relative overflow-hidden rounded-[24px] md:rounded-[32px] p-5 md:p-6 h-40 md:h-48 transition-all duration-500",
         isLocked
@@ -130,6 +136,16 @@ const BusinessSlot = ({ name, niche, status, growthScore, onHypeClick }: Busines
 export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
   const [isStudioOpen, setIsStudioOpen] = useState(false);
 
+  const handleSlotClick = () => {
+    // If niche is pending or missing, redirect to onboarding preview to fill it in
+    if (!currentEmpire?.niche || currentEmpire.niche === 'Niche Pending') {
+      window.location.href = '/onboarding?preview=true';
+    } else {
+      // Otherwise go to Empire Center for details
+      window.location.href = '/empire-center';
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between px-2">
@@ -144,6 +160,7 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
           niche={currentEmpire?.niche || "Niche Pending"}
           status="active"
           growthScore={92}
+          onClick={handleSlotClick}
         />
         <BusinessSlot
           id="studio"
