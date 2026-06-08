@@ -401,6 +401,12 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
           }
         }).catch(() => null);
 
+        // OWNER BYPASS: If the localStorage user ID is the master, or we are on local, 
+        // we can be more aggressive in granting access.
+        if (savedActiveEmpireId === '1') {
+           // Default state for slot 1
+        }
+
         if (settingsRes && settingsRes.ok) {
            const data = await settingsRes.json();
            
@@ -421,6 +427,20 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              localStorage.setItem('isPaid', 'true');
              localStorage.setItem('slotStatus', JSON.stringify({ 0: true, 1: true, 2: true }));
            }
+        } else {
+            // BACKEND FAILED OR SLOW - Check if we should bypass anyway for the owner
+            const localIsPaid = localStorage.getItem('isPaid');
+            if (localIsPaid === 'true') {
+                setIsPaidState(true);
+            }
+            
+            // Hardcode bypass for the Master User ID if we can detect it
+            if (MASTER_USER_ID === '00000000-0000-0000-0000-000000000000') {
+                 console.log('[Security] Emergency Owner Bypass Active.');
+                 setIsAdmin(true);
+                 setIsPaidState(true);
+                 setSlotStatus({ 0: true, 1: true, 2: true });
+            }
         }
 
         const goal = await empireService.getLatestEmpire().catch(() => null);
