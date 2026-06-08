@@ -124,7 +124,7 @@ export const empireService = {
     }
   },
 
-  async updateEmpire(id: string, data: { title?: string; description?: string; name?: string; niche?: string }): Promise<any> {
+  async updateEmpire(id: string, data: { title?: string; description?: string; name?: string; niche?: string; angle?: string }): Promise<any> {
     try {
       const res = await fetch(`${API_URL}/api/agent/goal/${id}`, {
         method: 'PATCH',

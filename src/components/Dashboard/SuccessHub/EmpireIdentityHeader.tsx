@@ -176,10 +176,10 @@ export default function Dashboard() {
               Success Hub
             </div>
             <h1 className="text-xl md:text-4xl font-black tracking-tight leading-tight italic">
-              {empireData?.name || "Success Hub"}.
+              {empireData?.name || empireData?.title || "Success Hub"}.
             </h1>
             <p className="text-[10px] md:text-base text-muted-foreground font-medium italic">
-              Monitoring your {empireData?.niche || "business"} growth and autonomous operations.
+              Monitoring your {empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || "business"} growth and autonomous operations.
             </p>
           </div>
 

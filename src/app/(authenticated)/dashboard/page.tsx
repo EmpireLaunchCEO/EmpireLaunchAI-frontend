@@ -175,8 +175,8 @@ export default function Dashboard() {
                     />
 
                     <NicheCalibrationBox 
-                      niche={empireData?.niche || empireData?.description?.match(/Empire Niche: (.*?)\./)?.[1]} 
-                      angle={empireData?.description?.match(/Angle: (.*?)\./)?.[1]}
+                      niche={empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1]} 
+                      angle={empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1]}
                     />
 
                     <FinancialCommand growthScore={healthData?.score} />

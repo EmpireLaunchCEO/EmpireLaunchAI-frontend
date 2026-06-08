@@ -426,6 +426,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         const goal = await empireService.getLatestEmpire().catch(() => null);
         if (goal && goal.id) {
           setActiveEmpireId(goal.id);
+          setActiveEmpire(goal);
           localStorage.setItem('activeEmpireId', goal.id);
         }
       } catch (e) {

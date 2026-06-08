@@ -19,8 +19,7 @@ import {
   X,
   Palette,
   ShieldCheck,
-  Cpu,
-  BrainCircuit
+  Cpu
   } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useRouter } from 'next/navigation';

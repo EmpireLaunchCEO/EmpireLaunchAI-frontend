@@ -15,8 +15,10 @@ export function GlobalEmpireHeader() {
   if (!isInitialized) return null;
 
   const getPageTitle = () => {
+    if (pathname === '/dashboard') {
+      return activeEmpire?.name || activeEmpire?.title || 'Success Hub';
+    }
     switch (pathname) {
-      case '/dashboard': return 'Success Hub';
       case '/empire-center': return 'Operations Hub.';
       case '/studio': return 'Empire Studio.';
       case '/link-center': return 'Neural Sync.';

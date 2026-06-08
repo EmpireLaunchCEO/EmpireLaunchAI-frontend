@@ -153,8 +153,8 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <BusinessSlot
           id="1"
-          name={currentEmpire?.name || "The First Empire"}
-          niche={currentEmpire?.niche || "Niche Pending"}
+          name={currentEmpire?.name || currentEmpire?.title || "The First Empire"}
+          niche={currentEmpire?.niche || currentEmpire?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || "Niche Pending"}
           status="active"
           growthScore={92}
           onClick={handleSlotClick}
