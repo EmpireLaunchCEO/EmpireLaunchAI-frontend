@@ -99,7 +99,7 @@ export function BrandedGlobe({
           src="/branded-globe.png"
           alt="Empire Globe"
           className={cn(
-            "w-full h-full object-contain relative z-10 transition-all duration-1000",
+            "w-full h-full object-contain p-2.5 relative z-10 transition-all duration-1000",
             isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-90",
             spinning && "brightness-110 contrast-105"
           )}
