@@ -32,10 +32,14 @@ export function FinancialCommand({
     return `$${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
   };
 
+  // Calculate dynamic "Dues" based on earnings: $40 per $1,000 earned
+  const platformDuesAmount = Math.floor(withholdableEarnings / 100000) * 4000;
+
   const subscriptions = isLinkingComplete ? [
     { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },
     { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
-    { name: "EmpireLaunch AI Platform", amount: 4000, date: getPlatformDueDate(), type: "app" },
+    { name: "EmpireLaunch AI Subscription", amount: 4000, date: getPlatformDueDate(), type: "app" },
+    { name: "EmpireLaunch AI Dues ($40/$1k)", amount: platformDuesAmount, date: "Calculated from Earnings", type: "app" },
   ] : [];
 
   const dues = isLinkingComplete ? [
