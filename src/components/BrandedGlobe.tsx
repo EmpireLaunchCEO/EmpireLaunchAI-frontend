@@ -51,7 +51,7 @@ export function BrandedGlobe({ className, size = 'md', animate = true, spinning 
   return (
     <motion.div
       className={cn(
-        "rounded-full flex items-center justify-center bg-white border border-slate-200 relative shrink-0 overflow-hidden shadow-sm",
+        "rounded-full flex items-center justify-center bg-transparent relative shrink-0 overflow-hidden",
         sizeClasses[size],
         className
       )}

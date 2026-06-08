@@ -80,19 +80,20 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   // Robust check for name/niche status
   const checkNamePending = (empire: any) => {
     const name = empire?.name || empire?.title || '';
-    const placeholders = ['', 'The First Empire', 'unnamed empire', 'Unnamed Empire'];
+    const placeholders = ['', 'The First Empire', 'unnamed empire', 'Unnamed Empire', 'Empire One'];
     return !name || placeholders.includes(name);
   };
 
   const checkNichePending = (empire: any) => {
-    const niche = empire?.niche || '';
+    const niche = empire?.niche || empire?.businessNiche || empire?.description?.match(/Empire Niche: (.*?)\./)?.[1] || '';
     const placeholders = ['', 'Niche Pending', 'CALIBRATION PENDING'];
     return !niche || placeholders.includes(niche);
   };
 
   const checkAnglePending = (empire: any) => {
-    const desc = empire?.description || '';
-    return !desc.includes('Angle:') || desc.includes('Angle: .') || desc.includes('Angle:  .');
+    const angle = empire?.angle || empire?.businessAngle || empire?.description?.match(/Angle: (.*?)\./)?.[1] || '';
+    const placeholders = ['', 'Angle Pending', 'CALIBRATION PENDING'];
+    return !angle || placeholders.includes(angle);
   };
 
   const isNamePending = checkNamePending(currentEmpire);
