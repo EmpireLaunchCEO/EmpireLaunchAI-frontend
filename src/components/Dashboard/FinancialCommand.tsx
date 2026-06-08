@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow } from 'lucide-react';
+import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useEmpire } from '@/lib/EmpireContext';
 
 interface FinancialCommandProps {
   withholdableEarnings?: number;
@@ -13,25 +14,34 @@ interface FinancialCommandProps {
 }
 
 export function FinancialCommand({ 
-  withholdableEarnings = 125050, 
-  securedDues = 18000, 
-  growthScore = 92,
+  withholdableEarnings = 0, 
+  securedDues = 0, 
+  growthScore = 0,
   businessId = "1"
 }: Partial<FinancialCommandProps>) {
+  const { isLinkingComplete } = useEmpire();
+  
+  // Calculate dynamic "Due in 30 days" date for Platform Fee
+  const getPlatformDueDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 30);
+    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  };
+
   const formatCurrency = (cents: number) => {
     return `$${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
   };
 
-  const subscriptions = [
+  const subscriptions = isLinkingComplete ? [
     { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },
     { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
-    { name: "EmpireLaunch AI Platform", amount: 4900, date: "June 20, 2024", type: "app" },
-  ];
+    { name: "EmpireLaunch AI Platform", amount: 4000, date: getPlatformDueDate(), type: "app" },
+  ] : [];
 
-  const dues = [
-    { name: "Etsy Listing Fees", amount: 420, date: "June 30, 2024" },
-    { name: "Fiverr Commission", amount: 1250, date: "June 30, 2024" },
-  ];
+  const dues = isLinkingComplete ? [
+    { name: "Etsy Listing Fees", amount: 0, date: "Syncing" },
+    { name: "Fiverr Commission", amount: 0, date: "Syncing" },
+  ] : [];
 
   return (
     <div className="bg-theme-surface rounded-[40px] p-8 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
@@ -70,8 +80,21 @@ export function FinancialCommand({
 
         {/* Breakdown Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          
-          {/* Subscriptions Section */}
+          {!isLinkingComplete ? (
+            <div className="md:col-span-2 py-20 bg-theme-background/50 rounded-[32px] border-2 border-dashed border-theme flex flex-col items-center justify-center text-center space-y-4">
+               <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center">
+                  <Shield className="w-8 h-8 text-slate-600" />
+               </div>
+               <div>
+                  <h4 className="text-lg font-black uppercase tracking-tight italic">Financial Vault Locked</h4>
+                  <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto mt-1">
+                    Connect your Etsy, Fiverr, or Bank account to synchronize transaction history and active subscriptions.
+                  </p>
+               </div>
+            </div>
+          ) : (
+            <>
+              {/* Subscriptions Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
               <CreditCard className="w-3 h-3" />
@@ -133,9 +156,8 @@ export function FinancialCommand({
                 </button>
               </div>
             </div>
-          </div>
-
-        </div>
+          </>
+        )}
 
       </div>
       

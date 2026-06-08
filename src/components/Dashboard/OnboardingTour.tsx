@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   ClipboardList,
   PlusCircle,
+  Video,
   Settings as SettingsIcon,
   Zap,
   Bell
@@ -56,6 +57,13 @@ export function OnboardingTour() {
       target: "nav-ec",
       icon: ClipboardList,
       page: "/empire-center"
+    },
+    {
+      title: "Empire Studio",
+      description: "This is our production powerhouse. Here I generate original videos, PDFs, and marketing assets for your brand using my native rendering engine.",
+      target: "nav-studio",
+      icon: Video,
+      page: "/studio"
     },
     {
       title: "Link Center (LC)",

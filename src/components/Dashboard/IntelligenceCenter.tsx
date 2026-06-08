@@ -130,7 +130,7 @@ function SignalCard({ signal }: { signal: typeof marketSignals[0] }) {
 import { useEmpire } from '@/lib/EmpireContext';
 
 export function IntelligenceCenter() {
-  const { activeEmpire, isAdmin } = useEmpire();
+  const { activeEmpire, isAdmin, isLinkingComplete } = useEmpire();
   const displayNiche = (isAdmin && (!activeEmpire?.niche || activeEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (activeEmpire?.niche || 'business');
 
   const [thoughts, setThoughts] = useState(aiThoughtStream);
@@ -139,14 +139,20 @@ export function IntelligenceCenter() {
 
   // Simulate AI thinking pulse
   useEffect(() => {
+    if (!isLinkingComplete) {
+      setIsThinking(false);
+      return;
+    }
     const timer = setInterval(() => {
       setIsThinking(prev => !prev);
     }, 3000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isLinkingComplete]);
 
   // Simulate new thought arriving
   useEffect(() => {
+    if (!isLinkingComplete) return;
+    
     const timer = setInterval(() => {
       const newThought = {
         id: Date.now(),
@@ -164,7 +170,7 @@ export function IntelligenceCenter() {
       setThoughts(prev => [newThought, ...prev.slice(0, 20)]);
     }, 12000);
     return () => clearInterval(timer);
-  }, [displayNiche]);
+  }, [displayNiche, isLinkingComplete]);
 
   const panels = [
     { id: 'stream' as const, label: 'Thought Stream', icon: MessageSquare },
@@ -248,9 +254,23 @@ export function IntelligenceCenter() {
 
             {/* Thought Stream */}
             <div className="space-y-2">
-              {thoughts.map((thought, i) => (
-                <ThoughtItem key={thought.id} item={thought} index={i} />
-              ))}
+              {!isLinkingComplete ? (
+                <div className="p-8 bg-theme-surface/50 rounded-[32px] border-2 border-dashed border-theme flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center">
+                    <Signal className="w-8 h-8 text-slate-600 animate-pulse" />
+                  </div>
+                  <div>
+                    <h4 className="font-black text-foreground uppercase tracking-tight italic">Waiting for Neural Link</h4>
+                    <p className="text-xs text-muted-foreground font-medium max-w-[240px] mx-auto mt-1">
+                      Link your platforms (Etsy, TikTok, etc.) to activate real-time intelligence and market scanning.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                thoughts.map((thought, i) => (
+                  <ThoughtItem key={thought.id} item={thought} index={i} />
+                ))
+              )}
             </div>
           </motion.div>
         )}
@@ -270,16 +290,30 @@ export function IntelligenceCenter() {
                 </div>
                 <RefreshCw className="w-3.5 h-3.5 text-muted-foreground animate-spin-slow" />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {marketSignals.map(signal => (
-                  <SignalCard key={signal.id} signal={signal} />
-                ))}
-              </div>
-              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800">
-                <p className="text-xs text-slate-300 font-medium italic">
-                  "Based on these signals, I recommend pivoting your Etsy thumbnails to 'Sage Green' aesthetics and creating an 'ADHD Planner' listing variant."
-                </p>
-              </div>
+              
+              {!isLinkingComplete ? (
+                <div className="py-12 flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center">
+                    <Globe className="w-6 h-6 text-slate-600" />
+                  </div>
+                  <p className="text-xs text-muted-foreground font-medium max-w-[200px]">
+                    Market signals are locked until your first platform link is verified.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {marketSignals.map(signal => (
+                      <SignalCard key={signal.id} signal={signal} />
+                    ))}
+                  </div>
+                  <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800">
+                    <p className="text-xs text-slate-300 font-medium italic">
+                      "Based on these signals, I recommend pivoting your Etsy thumbnails to 'Sage Green' aesthetics and creating an 'ADHD Planner' listing variant."
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         )}
@@ -298,17 +332,21 @@ export function IntelligenceCenter() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="p-5 bg-theme-surface border-2 border-theme rounded-[24px] space-y-3 hover:border-primary/30 transition-all"
+                className="p-5 bg-theme-surface border-2 border-theme rounded-[24px] space-y-3 hover:border-primary/30 transition-all group"
               >
                 <div className="flex items-center justify-between">
                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                     <metric.icon className="w-5 h-5 text-primary" />
                   </div>
-                  <span className="text-2xl font-black text-foreground">{metric.value}</span>
+                  <span className="text-2xl font-black text-foreground group-hover:text-primary transition-colors">
+                    {isLinkingComplete ? metric.value : '0%'}
+                  </span>
                 </div>
                 <div>
                   <p className="text-xs font-black text-foreground uppercase tracking-tight">{metric.label}</p>
-                  <p className="text-[9px] font-medium text-muted-foreground mt-0.5">{metric.detail}</p>
+                  <p className="text-[9px] font-medium text-muted-foreground mt-0.5">
+                    {isLinkingComplete ? metric.detail : 'Awaiting data link'}
+                  </p>
                 </div>
               </motion.div>
             ))}

@@ -61,9 +61,6 @@ export const GrowthTracker = ({
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Status</span>
             <span className="text-3xl md:text-4xl font-black text-foreground tracking-tighter">{percentage}%</span>
-            <span className="text-[8px] md:text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full mt-1.5 tracking-wide">
-              Level 04
-            </span>
           </div>
 
           {/* Glowing particles effect */}
@@ -95,7 +92,16 @@ export const GrowthTracker = ({
             </div>
           </div>
 
-          <button className="w-full bg-primary text-foreground rounded-2xl py-4 font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all group/btn shadow-lg shadow-primary/20">
+          <button 
+            onClick={() => {
+              const newGoal = prompt("What is your Monthly Revenue Goal?");
+              if (newGoal) {
+                alert(`Setting new Monthly Revenue Goal to ${newGoal}. Strategy is being recalculated...`);
+                // In a real app, we would call an API here
+              }
+            }}
+            className="w-full bg-primary text-foreground rounded-2xl py-4 font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all group/btn shadow-lg shadow-primary/20"
+          >
             Strategic Expansion
             <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </button>
