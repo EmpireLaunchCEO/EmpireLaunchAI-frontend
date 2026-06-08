@@ -24,6 +24,7 @@ import {
   } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useRouter } from 'next/navigation';
+import { API_URL } from '@/lib/config';
 
 import { analyticsService, empireService } from '@/lib/api-service';
 
