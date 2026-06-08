@@ -31,7 +31,8 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { activeEmpire } = useEmpire();
+  const { activeEmpire, isAdmin } = useEmpire();
+  const displayNiche = (isAdmin && (!activeEmpire?.niche || activeEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (activeEmpire?.niche || "your niche");
 
   return (
     <>
@@ -39,7 +40,7 @@ export function Sidebar() {
         <div className="p-6 flex items-center gap-3">
           <BrandedGlobe size="md" spinning />
           <span className="text-lg font-black tracking-tight text-theme-gradient uppercase italic truncate">
-            {activeEmpire?.name || "Empire"}.
+            {(isAdmin && (!activeEmpire?.name || activeEmpire?.name === 'EMPIRELAUNCH' || activeEmpire?.name === 'The First Empire')) ? "EmpireLaunch AI" : (activeEmpire?.name || "EmpireLaunch AI")}.
           </span>
         </div>
 
@@ -70,7 +71,7 @@ export function Sidebar() {
           </div>
           <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
              <p className="text-[11px] font-bold text-primary leading-relaxed italic">
-               "Analyzing TikTok market trends for 'Boho Luxe'... I'll suggest new content soon."
+               "Analyzing market trends for '{displayNiche}'... I'll suggest new content soon."
              </p>
           </div>
         </div>

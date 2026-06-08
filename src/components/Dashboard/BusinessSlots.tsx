@@ -143,6 +143,9 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
     window.location.href = '/empire-center';
   };
 
+  const slot1Name = (isAdmin && (!currentEmpire?.name || currentEmpire?.name === 'EMPIRELAUNCH' || currentEmpire?.name === 'The First Empire')) ? "EmpireLaunch AI" : (currentEmpire?.name || "The First Empire");
+  const slot1Niche = (isAdmin && (!currentEmpire?.niche || currentEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (currentEmpire?.niche || currentEmpire?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || "Niche Pending");
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between px-2">
@@ -153,8 +156,8 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <BusinessSlot
           id="1"
-          name={currentEmpire?.name || currentEmpire?.title || "The First Empire"}
-          niche={currentEmpire?.niche || currentEmpire?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || "Niche Pending"}
+          name={slot1Name}
+          niche={slot1Niche}
           status="active"
           growthScore={92}
           onClick={handleSlotClick}

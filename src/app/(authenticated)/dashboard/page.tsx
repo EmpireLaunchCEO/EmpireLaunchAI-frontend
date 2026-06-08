@@ -68,8 +68,20 @@ export default function Dashboard() {
       const [eData, pulse, health, txs] = results;
 
       if (eData) {
-        setEmpireDataState(eData);
-        setActiveEmpire(eData);
+        // ADMIN BYPASS: If we are admin and backend is default, we FORCE the hardcoded branding
+        let finalData = eData;
+        if (isAdmin && (activeEmpireId === '1' || !eData.title || eData.title === 'The First Empire' || eData.title === 'EMPIRELAUNCH')) {
+          finalData = {
+            ...eData,
+            title: 'EmpireLaunch AI',
+            name: 'EmpireLaunch AI',
+            niche: 'AI Business Automation',
+            description: 'Empire Niche: AI Business Automation.'
+          };
+        }
+
+        setEmpireDataState(finalData);
+        setActiveEmpire(finalData);
         setPulseData(pulse);
         setHealthData(health);
         setTransactions(txs);
@@ -133,7 +145,7 @@ export default function Dashboard() {
                       <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
                     </div>
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-                      {empireData?.name || empireData?.title || "Empire Launch"}.
+                      {empireData?.name || empireData?.title || "EmpireLaunch AI"}.
                     </h1>
                   </div>
 
@@ -175,8 +187,8 @@ export default function Dashboard() {
                     />
 
                     <NicheCalibrationBox 
-                      niche={empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1]} 
-                      angle={empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1]}
+                      niche={isAdmin ? "Done For You Business" : (empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
+                      angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
                     />
 
                     <FinancialCommand growthScore={healthData?.score} />

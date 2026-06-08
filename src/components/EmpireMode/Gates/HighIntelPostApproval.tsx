@@ -150,18 +150,31 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
               </div>
 
               {/* Real Content Preview */}
-              <img
-                src={payload.previewUrl}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]"
-                alt="Post Preview"
-              />
+              {payload.previewUrl.match(/\.(mp4|mov|webm)$/i) ? (
+                <video
+                  src={payload.previewUrl}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={payload.previewUrl}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms]"
+                  alt="Post Preview"
+                />
+              )}
 
               {/* Video Play Overlay */}
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                 <div className="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/20 shadow-2xl">
-                    <Zap className="w-9 h-9 text-white fill-primary" />
-                 </div>
-              </div>
+              {!payload.previewUrl.match(/\.(mp4|mov|webm)$/i) && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="w-20 h-20 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/20 shadow-2xl">
+                      <Zap className="w-9 h-9 text-white fill-primary" />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Impact Projection */}

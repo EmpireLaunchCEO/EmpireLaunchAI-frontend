@@ -20,6 +20,7 @@ import {
   Activity
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useEmpire } from '@/lib/EmpireContext';
 
 interface PlatformMetric {
   platform: string;
@@ -94,6 +95,8 @@ const conversionData = [
 ];
 
 export function SocialMediaRadar() {
+  const { activeEmpire, isAdmin } = useEmpire();
+  const displayNiche = (isAdmin && (!activeEmpire?.niche || activeEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (activeEmpire?.niche || 'business');
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
 
   return (
@@ -205,7 +208,7 @@ export function SocialMediaRadar() {
             >
               <h4 className={cn("font-black text-sm uppercase tracking-tight", data.color)}>{data.platform} — Deep Dive</h4>
               <p className="text-sm text-slate-300 italic">
-                "Engagement velocity is {data.metrics[0].direction === 'up' ? 'accelerating' : 'decelerating'}. I recommend {data.platform === 'TikTok' ? 'posting 2x daily during peak hours (6-9 PM)' : data.platform === 'Instagram' ? 'focusing on Reels content for higher reach' : data.platform === 'YouTube' ? 'optimizing video titles for search discovery' : 'refreshing Etsy keywords and checking seasonal best-sellers'}."
+                "Engagement velocity for your {displayNiche} is {data.metrics[0].direction === 'up' ? 'accelerating' : 'decelerating'}. I recommend {data.platform === 'TikTok' ? 'posting 2x daily during peak hours (6-9 PM)' : data.platform === 'Instagram' ? 'focusing on Reels content for higher reach' : data.platform === 'YouTube' ? 'optimizing video titles for search discovery' : 'refreshing Etsy keywords and checking seasonal best-sellers'}."
               </p>
               <div className="flex gap-2">
                 <button className="px-4 py-2 bg-primary/10 text-primary rounded-xl font-black text-[8px] uppercase tracking-widest border border-primary/20 hover:bg-primary/20 transition-all">

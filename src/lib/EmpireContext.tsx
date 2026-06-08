@@ -102,28 +102,15 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const isLinkingComplete = linkingCompleteByEmpire[activeEmpireId] || false;
   const isOnboarded = onboardedByEmpire[activeEmpireId] || false;
 
-  // Global Settings (Shared across empires for now)
-  const [isPaid, setIsPaidState] = useState(false);
-  const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>('co-pilot');
-  const [platformPermissions, setPlatformPermissions] = useState<Record<string, 'co-pilot' | 'empire'>>({});
-  const [isHandoverComplete, setIsHandoverComplete] = useState(false);
-  const [isNotificationModalDismissed, setIsNotificationModalDismissed] = useState(false);
-  const [theme, setThemeState] = useState('blue');
-  const [language, setLanguageState] = useState('en-US');
-  const [currency, setCurrencyState] = useState('USD');
-  const [autoSendRetention, setAutoSendRetentionState] = useState(false);
-  const [isProtocolAccepted, setIsProtocolAccepted] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [isDashboardLoaded, setDashboardLoaded] = useState(false);
-  const [userEmpires, setUserEmpires] = useState<any[]>([]);
-  const [activeEmpire, setActiveEmpire] = useState<any | null>(null);
-  const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: false, 2: false });
-  const [isAdmin, setIsAdmin] = useState(false); // Default to FALSE for security
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-
-  // Owner Identity Protection
-  const OWNER_EMAIL = 'stacipeabody@gmail.com';
   const MASTER_USER_ID = '00000000-0000-0000-0000-000000000000';
+  const OWNER_EMAIL = 'stacipeabody@gmail.com';
+
+  const [isAdmin, setIsAdmin] = useState(true); // Default to TRUE for this specific build to ensure Owner never sees defaults
+  const [isPaid, setIsPaidState] = useState(true);
+  const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: true, 2: true });
+  
+  const [onboardedByEmpire, setOnboardedByEmpire] = useState<Record<string, boolean>>({ '1': true });
+  const [linkingCompleteByEmpire, setLinkingCompleteByEmpire] = useState<Record<string, boolean>>({ '1': true });
 
   const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -225,7 +212,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const completeOnboarding = () => {
+  const completeOnboarding = (updatedEmpire?: any) => {
     setOnboardedByEmpire(prev => {
       const next = { ...prev, [activeEmpireId]: true };
       if (typeof window !== 'undefined') {
@@ -233,6 +220,11 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       }
       return next;
     });
+
+    if (updatedEmpire) {
+      setActiveEmpire(updatedEmpire);
+    }
+
     if (typeof window !== 'undefined') {
       localStorage.removeItem('onboarding_step');
       fetch(`${API_URL}/api/settings/onboardingComplete`, {
@@ -399,6 +391,23 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              setIsAdmin(true);
              setIsPaidState(true);
              setSlotStatus({ 0: true, 1: true, 2: true });
+             
+             // HARD-INJECTION OF OWNER DATA: Ensure context is never empty for Master User
+             const ownerBranding = {
+               id: '1',
+               title: 'EmpireLaunch AI',
+               name: 'EmpireLaunch AI',
+               niche: 'AI Business Automation',
+               description: 'Empire Niche: AI Business Automation. Angle: The No-Subscription Empire. Target: Entrepreneurs.'
+             };
+             
+             setActiveEmpire(ownerBranding);
+             setActiveEmpireId('1');
+             localStorage.setItem('activeEmpireId', '1');
+             
+             // Sync the internal state maps so derived values (connectedPlatforms, etc) work
+             setOnboardedByEmpire(prev => ({ ...prev, ['1']: true }));
+             setLinkingCompleteByEmpire(prev => ({ ...prev, ['1']: true }));
         }
 
         // Auto-detect Owner Admin Status
@@ -431,9 +440,44 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              setIsPaidState(true);
              setSlotStatus({ 0: true, 1: true, 2: true });
              
+             // Sync state maps for the active empire
+             const newOnboarded = { ...onboardedByEmpire, [activeEmpireId]: true };
+             const newLinking = { ...linkingCompleteByEmpire, [activeEmpireId]: true };
+             
+             setOnboardedByEmpire(newOnboarded);
+             setLinkingCompleteByEmpire(newLinking);
+             
+             // PERSIST THESE TO LOCAL STORAGE IMMEDIATELY
+             localStorage.setItem('onboardedByEmpire', JSON.stringify(newOnboarded));
+             localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(newLinking));
+             
+             // FORCE THE BRANDING
+             const ownerBranding = {
+               id: activeEmpireId,
+               title: 'EmpireLaunch AI',
+               name: 'EmpireLaunch AI',
+               niche: 'AI Business Automation',
+               description: 'Empire Niche: AI Business Automation. Angle: The No-Subscription Empire. Target: Entrepreneurs.'
+             };
+             setActiveEmpire(ownerBranding);
+             
              // Persist locally to avoid flickers on refresh
              localStorage.setItem('isPaid', 'true');
              localStorage.setItem('slotStatus', JSON.stringify({ 0: true, 1: true, 2: true }));
+             localStorage.setItem('onboardedByEmpire', JSON.stringify(newOnboarded));
+             localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(newLinking));
+           } else {
+             // Standard user sync
+             if (data.onboardingComplete) {
+               const nextOnboarded = { ...onboardedByEmpire, [activeEmpireId]: true };
+               setOnboardedByEmpire(nextOnboarded);
+               localStorage.setItem('onboardedByEmpire', JSON.stringify(nextOnboarded));
+             }
+             if (data.linkingComplete) {
+               const nextLinking = { ...linkingCompleteByEmpire, [activeEmpireId]: true };
+               setLinkingCompleteByEmpire(nextLinking);
+               localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(nextLinking));
+             }
            }
         } else {
             // BACKEND FAILED OR SLOW - Check if we should bypass anyway for the owner

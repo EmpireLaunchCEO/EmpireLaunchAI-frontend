@@ -27,12 +27,12 @@ interface Step {
 }
 
 export function MissionBriefing({ empireData }: { empireData: any }) {
-  const { connectedPlatforms, isPaid, aiMode } = useEmpire();
+  const { connectedPlatforms, isPaid, aiMode, isAdmin } = useEmpire();
 
   const steps = useMemo<Step[]>(() => {
     const description = empireData?.description || '';
-    const hasName = (empireData?.title && empireData.title !== 'The First Empire' && empireData.title !== '') || isPaid;
-    const hasNiche = (description.includes('Empire Niche:') && !description.includes('Empire Niche: .')) || isPaid;
+    const hasName = (empireData?.title && empireData.title !== 'The First Empire' && empireData.title !== '') || (isAdmin);
+    const hasNiche = (description.includes('Empire Niche:') && !description.includes('Empire Niche: .')) || (isAdmin);
     const isIdentityComplete = hasName && hasNiche;
     
     // Step 2: Treasury (For this prototype, we use isPaid as the proxy)
@@ -87,12 +87,15 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
   const currentStep = steps.find(s => s.status === 'current') || steps[0];
 
   const consultantMessage = useMemo(() => {
-    const greeting = (isPaid) ? "Owner, I'm " : "\"I'm ";
-    if (currentStep.id === 1) return `${greeting}currently running on default parameters. To activate my tactical thinking, I need you to synchronize your Empire Identity—Name and Niche. This calibrates my entire neural network.\"`;
+    const greeting = "Owner, I'm ";
+    const displayNiche = (isAdmin) ? "AI Business Automation" : (empireData?.niche || 'business');
+    const isIdentityComplete = true; // Always complete for Master/Admin
+
+    if (currentStep.id === 1) return `${greeting}currently scanning for high-velocity trends in your ${displayNiche} sector. I've identified a scaling opportunity. Ready to review the research?\"`;
     if (currentStep.id === 2) return `${greeting}identity is secure. Now, we must bridge your Treasury. Linking your bank info ensures that the moment I generate a sale, the funds flow directly to you with total encryption.\"`;
-    if (currentStep.id === 3) return `${greeting}excellent. Your ${empireData?.niche || 'business'} foundation is ready. Now, pick your first battlefield—Etsy, TikTok, or Gmail. Once linked, I can start executing autonomous growth cycles.\"`;
-    return `${greeting}currently scanning ${connectedPlatforms.length} platforms for high-velocity trends. I've identified a scaling opportunity in your niche. Ready to review the research?\"`;
-  }, [currentStep.id, empireData?.niche, connectedPlatforms.length, isPaid]);
+    if (currentStep.id === 3) return `${greeting}excellent. Your ${displayNiche} foundation is ready. Now, pick your first battlefield—Etsy, TikTok, or Gmail. Once linked, I can start executing autonomous growth cycles.\"`;
+    return `${greeting}currently scanning platforms for high-velocity trends in your ${displayNiche} sector. I've identified a scaling opportunity. Ready to review the research?\"`;
+  }, [currentStep.id, empireData?.niche, empireData?.name, connectedPlatforms.length, isPaid, isAdmin]);
 
   return (
     <div className="bg-theme-surface rounded-[32px] md:rounded-[48px] p-6 lg:p-12 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">

@@ -287,6 +287,24 @@ export interface InboxDraft {
   status: 'pending' | 'sent' | 'rejected';
 }
 
+export const userSettingsService = {
+  async getSettings(userId: string): Promise<any> {
+    try {
+      const res = await fetch(`${API_URL}/api/settings/hydrate`, {
+        headers: { 
+          'Authorization': 'Bearer mock-mobile-token',
+          'x-user-id': userId
+        }
+      });
+      if (res.ok) return await res.json();
+      return null;
+    } catch (e) {
+      console.error('Settings Fetch Error:', e);
+      return null;
+    }
+  }
+};
+
 export const creativeService = {
   async getDesignTasks(): Promise<DesignTask[]> {
     return [

@@ -16,7 +16,11 @@ export function GlobalEmpireHeader() {
 
   const getPageTitle = () => {
     if (pathname === '/dashboard') {
-      return activeEmpire?.name || activeEmpire?.title || 'Success Hub';
+      const name = activeEmpire?.name || activeEmpire?.title;
+      if (isAdmin && (!name || name === 'EMPIRELAUNCH' || name === 'The First Empire')) {
+        return 'EmpireLaunch AI';
+      }
+      return name || 'Success Hub';
     }
     switch (pathname) {
       case '/empire-center': return 'Operations Hub.';
@@ -25,7 +29,7 @@ export function GlobalEmpireHeader() {
       case '/review': return 'Control Gates.';
       case '/analytics': return 'Empire Ledger.';
       case '/settings': return 'Settings.';
-      default: return 'Empire Launch.';
+      default: return 'EmpireLaunch AI.';
     }
   };
 

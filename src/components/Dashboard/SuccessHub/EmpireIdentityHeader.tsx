@@ -74,8 +74,25 @@ export default function Dashboard() {
         analyticsService.getRevenueTransactions().catch(err => { console.error('TX Fetch:', err); return null; })
       ]);
 
-      if (eData) {
-        setEmpireData(eData);
+      // ADMIN BYPASS: If we are admin and backend is empty or default, we FORCE the hardcoded branding
+      let finalEmpireData = eData;
+      if (isAdmin && activeEmpireId === '1') {
+        const name = eData?.name || eData?.title;
+        if (!name || name === 'EMPIRELAUNCH' || name === 'The First Empire') {
+          console.log('[Security] Admin detected on default slot. Overriding with hardcoded branding.');
+          finalEmpireData = {
+            ...eData,
+            id: '1',
+            title: 'EmpireLaunch AI',
+            name: 'EmpireLaunch AI',
+            niche: 'Done For You Business',
+            description: 'Empire Niche: Done For You Business.'
+          };
+        }
+      }
+
+      if (finalEmpireData) {
+        setEmpireData(finalEmpireData);
         setPulseData(pulse || { status: 'Optimizing', progress: 0, logs: [] });
         setHealthData(health || { revenue: 0, growthScore: 80 });
         setTransactions(txs || []);
@@ -176,10 +193,10 @@ export default function Dashboard() {
               Success Hub
             </div>
             <h1 className="text-xl md:text-4xl font-black tracking-tight leading-tight italic">
-              {empireData?.name || empireData?.title || "Success Hub"}.
+              {(isAdmin && (!empireData?.name || empireData?.name === 'EMPIRELAUNCH' || empireData?.name === 'The First Empire')) ? "EmpireLaunch AI" : (empireData?.name || "EmpireLaunch AI")}.
             </h1>
             <p className="text-[10px] md:text-base text-muted-foreground font-medium italic">
-              Monitoring your {empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || "business"} growth and autonomous operations.
+              Monitoring your {(isAdmin && (!empireData?.niche || empireData?.niche === 'Niche Pending')) ? "Done For You Business" : (empireData?.niche || "business")} growth and autonomous operations.
             </p>
           </div>
 

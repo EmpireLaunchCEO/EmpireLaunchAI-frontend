@@ -132,7 +132,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
                 exit={{ opacity: 0, scale: 0.8 }}
                 className="flex flex-col"
               >
-                <span className="text-[7px] font-black text-primary uppercase tracking-[0.2em] leading-none mb-0.5">Empire</span>
+                <span className="text-[7px] font-black text-primary uppercase tracking-[0.2em] leading-none mb-0.5">EmpireLaunch AI</span>
                 <span className="text-[7px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Teacher</span>
               </motion.div>
             )}

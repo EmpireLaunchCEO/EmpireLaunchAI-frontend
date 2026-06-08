@@ -127,8 +127,12 @@ function SignalCard({ signal }: { signal: typeof marketSignals[0] }) {
 }
 
 // ─── Main Intelligence Center Component ────────────────────────────────────
+import { useEmpire } from '@/lib/EmpireContext';
 
 export function IntelligenceCenter() {
+  const { activeEmpire, isAdmin } = useEmpire();
+  const displayNiche = (isAdmin && (!activeEmpire?.niche || activeEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (activeEmpire?.niche || 'business');
+
   const [thoughts, setThoughts] = useState(aiThoughtStream);
   const [isThinking, setIsThinking] = useState(false);
   const [activePanel, setActivePanel] = useState<'stream' | 'signals' | 'metrics'>('stream');
@@ -148,11 +152,11 @@ export function IntelligenceCenter() {
         id: Date.now(),
         type: ['scan', 'analyze', 'reason', 'insight', 'action', 'vault', 'monitor', 'strategy'][Math.floor(Math.random() * 8)] as any,
         message: [
-          'Cross-referencing Etsy reviews for "digital journal" sentiment...',
-          'Analyzing TikTok comment velocity for "morning routine"...',
-          'Detected shift in Pinterest color trends toward "earthy neutrals"...',
-          'Optimizing Etsy listing tags for Q3 search volume...',
-          'Synthesizing new color palette from vault DNA strands...',
+          `Cross-referencing Etsy reviews for "${displayNiche}" sentiment...`,
+          `Analyzing TikTok comment velocity for "${displayNiche}" products...`,
+          `Detected shift in Pinterest color trends toward "${displayNiche}" aesthetics...`,
+          `Optimizing Etsy listing tags for "${displayNiche}" search volume...`,
+          'Synthesizing new design variants from vault DNA strands...',
         ][Math.floor(Math.random() * 5)],
         time: 'Just now',
         icon: BrainCircuit,
@@ -160,7 +164,7 @@ export function IntelligenceCenter() {
       setThoughts(prev => [newThought, ...prev.slice(0, 20)]);
     }, 12000);
     return () => clearInterval(timer);
-  }, []);
+  }, [displayNiche]);
 
   const panels = [
     { id: 'stream' as const, label: 'Thought Stream', icon: MessageSquare },
@@ -237,7 +241,7 @@ export function IntelligenceCenter() {
               </div>
               <div className="flex-1">
                 <p className="text-sm font-bold text-white italic leading-relaxed">
-                  "I'm continuously monitoring your 18 linked platforms. Every thought below represents a real analysis — synthesizing market data, identifying trends, and preparing assets. You're seeing the raw intelligence layer."
+                  "I'm continuously monitoring your linked platforms. Every thought below represents a real analysis for your {displayNiche} — synthesizing market data, identifying trends, and preparing assets. You're seeing the raw intelligence layer."
                 </p>
               </div>
             </div>

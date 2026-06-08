@@ -36,7 +36,7 @@ import { TermsModal } from '@/components/Legal/TermsModal';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
-import { empireService } from '@/lib/api-service';
+import { empireService, userSettingsService } from '@/lib/api-service';
 
 const steps = [
   { id: 1, title: 'Protocol' },
@@ -132,23 +132,41 @@ function OnboardingContent() {
         } catch (e) {}
       }
 
-      // If in preview mode, try to fetch current empire data to pre-fill
+      // If localStorage is empty OR in preview mode, fetch from backend to ensure data persistence
       const fetchCurrentEmpire = async () => {
-        if (searchParams.get('preview') === 'true') {
+        if (!savedData || searchParams.get('preview') === 'true') {
           try {
-            const empireData = await empireService.getLatestEmpire();
-            if (empireData) {
+            const [empireData, settingsData] = await Promise.all([
+              empireService.getLatestEmpire(),
+              userSettingsService.getSettings(userId)
+            ]);
+
+            if (empireData || settingsData) {
+              console.log('[Onboarding] Synchronizing data from backend memory...');
+              
+              const backendNiche = settingsData?.businessNiche || empireData?.description?.match(/Empire Niche: (.*?)\./)?.[1];
+              const backendAngle = settingsData?.businessAngle || empireData?.description?.match(/Angle: (.*?)\./)?.[1];
+
               setData(prev => ({
                 ...prev,
-                name: empireData.title || prev.name,
-                niche: empireData.description?.match(/Empire Niche: (.*?)\./)?.[1] || prev.niche,
-                angle: empireData.description?.match(/Angle: (.*?)\./)?.[1] || prev.angle,
+                name: empireData?.title || prev.name,
+                niche: backendNiche || prev.niche,
+                angle: backendAngle || prev.angle,
               }));
-              // Jump to Identity step for previewing
-              setCurrentStep(3);
+              
+              // IF THE OWNER HAS DATA, SKIP TO THE END OR REDIRECT
+              if (userId === '00000000-0000-0000-0000-000000000000' && empireData?.title && backendNiche) {
+                  console.log('[Onboarding] Master Identity detected. Fast-tracking to dashboard.');
+                  router.replace('/dashboard');
+                  return;
+              }
+
+              if (searchParams.get('preview') === 'true') {
+                setCurrentStep(3);
+              }
             }
           } catch (err) {
-            console.error('Failed to pre-fill preview data', err);
+            console.error('Failed to pre-fill data from backend', err);
           }
         }
       };
@@ -226,7 +244,7 @@ function OnboardingContent() {
         if (result.empire?.id) {
           setActiveEmpireId(result.empire.id);
         }
-        completeOnboarding();
+        completeOnboarding(result.empire);
       } else {
         // Fallback for non-success status
         completeOnboarding();
