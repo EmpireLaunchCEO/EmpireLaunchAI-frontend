@@ -17,7 +17,7 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#0a0519',
+  themeColor: '#ffffff',
 };
 
 export default function RootLayout({
@@ -29,20 +29,20 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <style>{`
-          html, body { background-color: #0a0519 !important; }
+          html, body { background-color: #ffffff !important; }
         `}</style>
         <link rel="canonical" href="https://empire-launch-ai-frontend.vercel.app" />
-        <link rel="manifest" href="/manifest.json?v=1023" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=23" />
-        <link rel="icon" href="/favicon.ico?v=23" />
-        <link rel="apple-touch-startup-image" href="/apple-touch-icon.png?v=23" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=23" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png?v=23" />
+        <link rel="manifest" href="/manifest.json?v=1024" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon-v1024.png" />
+        <link rel="icon" href="/favicon.ico?v=1024" />
+        <link rel="apple-touch-startup-image" href="/apple-touch-icon-v1024.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192-v1024.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512-v1024.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="EmpireLaunch AI" />
-        <meta name="theme-color" content="#0a0519" />
+        <meta name="theme-color" content="#ffffff" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
