@@ -19,6 +19,8 @@ import { analyticsService, empireService } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
+import { IntelligenceCenter } from '@/components/Dashboard/IntelligenceCenter';
+import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
@@ -200,6 +202,16 @@ export default function Dashboard() {
                   {/* 7. Neural Notes Section (The Bottom) */}
                   <div className="max-w-6xl mx-auto pb-8">
                     <NeuralNotes />
+                  </div>
+
+                  {/* AI Intelligence Center */}
+                  <div className="max-w-6xl mx-auto pb-12">
+                    <IntelligenceCenter />
+                  </div>
+
+                  {/* Social Media Radar */}
+                  <div className="max-w-6xl mx-auto pb-12">
+                    <SocialMediaRadar />
                   </div>
 
                   {/* Version Verification */}
