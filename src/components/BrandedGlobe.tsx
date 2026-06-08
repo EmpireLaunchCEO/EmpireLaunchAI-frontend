@@ -69,27 +69,18 @@ export function BrandedGlobe({
       
       <motion.div
         className={cn(
-          "rounded-full flex items-center justify-center relative overflow-hidden",
-          "shadow-[0_10px_40px_rgba(0,0,0,0.4)]",
+          "flex items-center justify-center relative overflow-hidden",
           sizeClasses[size]
         )}
         animate={animationProps}
         transition={transitionProps}
       >
-        {/* Sphere Volume Overlays */}
-        {/* 1. Primary Highlight (top-left) */}
-        <div className="absolute inset-0 rounded-full z-30 pointer-events-none bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.4)_0%,transparent_50%)]" />
+        {/* Sphere Volume Overlays - Removed to avoid "ball in ball" effect on high-fidelity image */}
         
-        {/* 2. Deep Shadow (bottom-right) */}
-        <div className="absolute inset-0 rounded-full z-20 pointer-events-none shadow-[inset_-10px_-10px_30px_rgba(0,0,0,0.6)]" />
-        
-        {/* 3. Subtle Inset Light (rim light) */}
-        <div className="absolute inset-0 rounded-full z-20 pointer-events-none shadow-[inset_0_0_15px_rgba(255,255,255,0.1)]" />
-
         {/* CSS Globe Fallback structure */}
         <div className={cn(
           "absolute inset-0 flex items-center justify-center fallback-globe rounded-full transition-opacity duration-700",
-          isLoaded ? "opacity-0" : "opacity-100 bg-[#0f0a25]"
+          isLoaded ? "opacity-0" : "opacity-100 bg-white"
         )}>
           <div className="absolute w-1/2 h-1/2 bg-primary/40 rounded-full blur-md animate-pulse" />
           <div className="w-full h-full rounded-full border-2 border-primary/20 bg-primary/5" />
@@ -99,7 +90,7 @@ export function BrandedGlobe({
           src="/branded-globe.png"
           alt="Empire Globe"
           className={cn(
-            "w-full h-full object-contain p-2.5 relative z-10 transition-all duration-1000",
+            "w-full h-full object-contain p-0 relative z-10 transition-all duration-1000",
             isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-90",
             spinning && "brightness-110 contrast-105"
           )}
