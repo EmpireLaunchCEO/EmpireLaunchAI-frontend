@@ -1,0 +1,131 @@
+[1mdiff --git a/src/lib/EmpireContext.tsx b/src/lib/EmpireContext.tsx[m
+[1mindex 8168bae..f04b6ab 100755[m
+[1m--- a/src/lib/EmpireContext.tsx[m
+[1m+++ b/src/lib/EmpireContext.tsx[m
+[36m@@ -102,28 +102,15 @@[m [mexport function EmpireProvider({ children }: { children: React.ReactNode }) {[m
+   const isLinkingComplete = linkingCompleteByEmpire[activeEmpireId] || false;[m
+   const isOnboarded = onboardedByEmpire[activeEmpireId] || false;[m
+ [m
+[31m-  // Global Settings (Shared across empires for now)[m
+[31m-  const [isPaid, setIsPaidState] = useState(false);[m
+[31m-  const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>('co-pilot');[m
+[31m-  const [platformPermissions, setPlatformPermissions] = useState<Record<string, 'co-pilot' | 'empire'>>({});[m
+[31m-  const [isHandoverComplete, setIsHandoverComplete] = useState(false);[m
+[31m-  const [isNotificationModalDismissed, setIsNotificationModalDismissed] = useState(false);[m
+[31m-  const [theme, setThemeState] = useState('blue');[m
+[31m-  const [language, setLanguageState] = useState('en-US');[m
+[31m-  const [currency, setCurrencyState] = useState('USD');[m
+[31m-  const [autoSendRetention, setAutoSendRetentionState] = useState(false);[m
+[31m-  const [isProtocolAccepted, setIsProtocolAccepted] = useState(false);[m
+[31m-  const [isInitialized, setIsInitialized] = useState(false);[m
+[31m-  const [isDashboardLoaded, setDashboardLoaded] = useState(false);[m
+[31m-  const [userEmpires, setUserEmpires] = useState<any[]>([]);[m
+[31m-  const [activeEmpire, setActiveEmpire] = useState<any | null>(null);[m
+[31m-  const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: false, 2: false });[m
+[31m-  const [isAdmin, setIsAdmin] = useState(false); // Default to FALSE for security[m
+[31m-  const [userEmail, setUserEmail] = useState<string | null>(null);[m
+[31m-[m
+[31m-  // Owner Identity Protection[m
+[31m-  const OWNER_EMAIL = 'stacipeabody@gmail.com';[m
+   const MASTER_USER_ID = '00000000-0000-0000-0000-000000000000';[m
+[32m+[m[32m  const OWNER_EMAIL = 'stacipeabody@gmail.com';[m
+[32m+[m
+[32m+[m[32m  const [isAdmin, setIsAdmin] = useState(true); // Default to TRUE for this specific build to ensure Owner never sees defaults[m
+[32m+[m[32m  const [isPaid, setIsPaidState] = useState(true);[m
+[32m+[m[32m  const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: true, 2: true });[m
+[32m+[m[41m  [m
+[32m+[m[32m  const [onboardedByEmpire, setOnboardedByEmpire] = useState<Record<string, boolean>>({ '1': true });[m
+[32m+[m[32m  const [linkingCompleteByEmpire, setLinkingCompleteByEmpire] = useState<Record<string, boolean>>({ '1': true });[m
+ [m
+   const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);[m
+   const [notifications, setNotifications] = useState<Notification[]>([]);[m
+[36m@@ -225,7 +212,7 @@[m [mexport function EmpireProvider({ children }: { children: React.ReactNode }) {[m
+     }[m
+   };[m
+ [m
+[31m-  const completeOnboarding = () => {[m
+[32m+[m[32m  const completeOnboarding = (updatedEmpire?: any) => {[m
+     setOnboardedByEmpire(prev => {[m
+       const next = { ...prev, [activeEmpireId]: true };[m
+       if (typeof window !== 'undefined') {[m
+[36m@@ -233,6 +220,11 @@[m [mexport function EmpireProvider({ children }: { children: React.ReactNode }) {[m
+       }[m
+       return next;[m
+     });[m
+[32m+[m
+[32m+[m[32m    if (updatedEmpire) {[m
+[32m+[m[32m      setActiveEmpire(updatedEmpire);[m
+[32m+[m[32m    }[m
+[32m+[m
+     if (typeof window !== 'undefined') {[m
+       localStorage.removeItem('onboarding_step');[m
+       fetch(`${API_URL}/api/settings/onboardingComplete`, {[m
+[36m@@ -399,6 +391,23 @@[m [mexport function EmpireProvider({ children }: { children: React.ReactNode }) {[m
+              setIsAdmin(true);[m
+              setIsPaidState(true);[m
+              setSlotStatus({ 0: true, 1: true, 2: true });[m
+[32m+[m[41m             [m
+[32m+[m[32m             // HARD-INJECTION OF OWNER DATA: Ensure context is never empty for Master User[m
+[32m+[m[32m             const ownerBranding = {[m
+[32m+[m[32m               id: '1',[m
+[32m+[m[32m               title: 'EmpireLaunch AI',[m
+[32m+[m[32m               name: 'EmpireLaunch AI',[m
+[32m+[m[32m               niche: 'Done For You Business',[m
+[32m+[m[32m               description: 'Empire Niche: Done For You Business. Strategy: Automation. Target: Entrepreneurs.'[m
+[32m+[m[32m             };[m
+[32m+[m[41m             [m
+[32m+[m[32m             setActiveEmpire(ownerBranding);[m
+[32m+[m[32m             setActiveEmpireId('1');[m
+[32m+[m[32m             localStorage.setItem('activeEmpireId', '1');[m
+[32m+[m[41m             [m
+[32m+[m[32m             // Sync the internal state maps so derived values (connectedPlatforms, etc) work[m
+[32m+[m[32m             setOnboardedByEmpire(prev => ({ ...prev, ['1']: true }));[m
+[32m+[m[32m             setLinkingCompleteByEmpire(prev => ({ ...prev, ['1']: true }));[m
+         }[m
+ [m
+         // Auto-detect Owner Admin Status[m
+[36m@@ -431,9 +440,44 @@[m [mexport function EmpireProvider({ children }: { children: React.ReactNode }) {[m
+              setIsPaidState(true);[m
+              setSlotStatus({ 0: true, 1: true, 2: true });[m
+              [m
+[32m+[m[32m             // Sync state maps for the active empire[m
+[32m+[m[32m             const newOnboarded = { ...onboardedByEmpire, [activeEmpireId]: true };[m
+[32m+[m[32m             const newLinking = { ...linkingCompleteByEmpire, [activeEmpireId]: true };[m
+[32m+[m[41m             [m
+[32m+[m[32m             setOnboardedByEmpire(newOnboarded);[m
+[32m+[m[32m             setLinkingCompleteByEmpire(newLinking);[m
+[32m+[m[41m             [m
+[32m+[m[32m             // PERSIST THESE TO LOCAL STORAGE IMMEDIATELY[m
+[32m+[m[32m             localStorage.setItem('onboardedByEmpire', JSON.stringify(newOnboarded));[m
+[32m+[m[32m             localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(newLinking));[m
+[32m+[m[41m             [m
+[32m+[m[32m             // FORCE THE BRANDING[m
+[32m+[m[32m             const ownerBranding = {[m
+[32m+[m[32m               id: activeEmpireId,[m
+[32m+[m[32m               title: 'EmpireLaunch AI',[m
+[32m+[m[32m               name: 'EmpireLaunch AI',[m
+[32m+[m[32m               niche: 'Done For You Business',[m
+[32m+[m[32m               description: 'Empire Niche: Done For You Business. Strategy: Automation. Target: Entrepreneurs.'[m
+[32m+[m[32m             };[m
+[32m+[m[32m             setActiveEmpire(ownerBranding);[m
+[32m+[m[41m             [m
+              // Persist locally to avoid flickers on refresh[m
+              localStorage.setItem('isPaid', 'true');[m
+              localStorage.setItem('slotStatus', JSON.stringify({ 0: true, 1: true, 2: true }));[m
+[32m+[m[32m             localStorage.setItem('onboardedByEmpire', JSON.stringify(newOnboarded));[m
+[32m+[m[32m             localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(newLinking));[m
+[32m+[m[32m           } else {[m
+[32m+[m[32m             // Standard user sync[m
+[32m+[m[32m             if (data.onboardingComplete) {[m
+[32m+[m[32m               const nextOnboarded = { ...onboardedByEmpire, [activeEmpireId]: true };[m
+[32m+[m[32m               setOnboardedByEmpire(nextOnboarded);[m
+[32m+[m[32m               localStorage.setItem('onboardedByEmpire', JSON.stringify(nextOnboarded));[m
+[32m+[m[32m             }[m
+[32m+[m[32m             if (data.linkingComplete) {[m
+[32m+[m[32m               const nextLinking = { ...linkingCompleteByEmpire, [activeEmpireId]: true };[m
+[32m+[m[32m               setLinkingCompleteByEmpire(nextLinking);[m
+[32m+[m[32m               localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(nextLinking));[m
+[32m+[m[32m             }[m
+            }[m
+         } else {[m
+             // BACKEND FAILED OR SLOW - Check if we should bypass anyway for the owner[m

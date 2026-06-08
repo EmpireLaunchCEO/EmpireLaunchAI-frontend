@@ -93,29 +93,42 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   // Scoped Data Maps
   const [platformsByEmpire, setPlatformsByEmpire] = useState<Record<string, string[]>>({});
   const [notesByEmpire, setNotesByEmpire] = useState<Record<string, string>>({});
-  const [linkingCompleteByEmpire, setLinkingCompleteByEmpire] = useState<Record<string, boolean>>({});
-  const [onboardedByEmpire, setOnboardedByEmpire] = useState<Record<string, boolean>>({});
-  
-  // Scoped Computed Values
-  const connectedPlatforms = platformsByEmpire[activeEmpireId] || [];
-  const empireNotes = notesByEmpire[activeEmpireId] || '';
-  const isLinkingComplete = linkingCompleteByEmpire[activeEmpireId] || false;
-  const isOnboarded = onboardedByEmpire[activeEmpireId] || false;
-
-  const MASTER_USER_ID = '00000000-0000-0000-0000-000000000000';
-  const OWNER_EMAIL = 'stacipeabody@gmail.com';
-
-  const [isAdmin, setIsAdmin] = useState(true); // Default to TRUE for this specific build to ensure Owner never sees defaults
-  const [isPaid, setIsPaidState] = useState(true);
-  const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: true, 2: true });
-  
   const [onboardedByEmpire, setOnboardedByEmpire] = useState<Record<string, boolean>>({ '1': true });
   const [linkingCompleteByEmpire, setLinkingCompleteByEmpire] = useState<Record<string, boolean>>({ '1': true });
+
+  // Shared States
+  const [isAdmin, setIsAdmin] = useState(true);
+  const [isPaid, setIsPaidState] = useState(true);
+  const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: true, 2: true });
+  const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>('co-pilot');
+  const [platformPermissions, setPlatformPermissions] = useState<Record<string, 'co-pilot' | 'empire'>>({});
+  const [isHandoverComplete, setIsHandoverComplete] = useState(false);
+  const [isNotificationModalDismissed, setIsNotificationModalDismissed] = useState(false);
+  const [theme, setThemeState] = useState('blue');
+  const [language, setLanguageState] = useState('en-US');
+  const [currency, setCurrencyState] = useState('USD');
+  const [autoSendRetention, setAutoSendRetentionState] = useState(false);
+  const [isProtocolAccepted, setIsProtocolAccepted] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isDashboardLoaded, setDashboardLoaded] = useState(false);
+  const [userEmpires, setUserEmpires] = useState<any[]>([]);
+  const [activeEmpire, setActiveEmpire] = useState<any | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const [activeSetupPlatform, setActiveSetupPlatform] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notificationSettings, setNotificationSettings] = useState({ sales: true, approvals: true });
   const [toasts, setToasts] = useState<Toast[]>([]);
+
+  // Constants
+  const MASTER_USER_ID = '00000000-0000-0000-0000-000000000000';
+  const OWNER_EMAIL = 'stacipeabody@gmail.com';
+
+  // Scoped Computed Values
+  const connectedPlatforms = platformsByEmpire[activeEmpireId] || [];
+  const empireNotes = notesByEmpire[activeEmpireId] || '';
+  const isLinkingComplete = linkingCompleteByEmpire[activeEmpireId] || false;
+  const isOnboarded = onboardedByEmpire[activeEmpireId] || false;
 
   const unlockSlot = (index: number) => {
     setSlotStatus(prev => {
@@ -417,12 +430,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
             'x-user-id': MASTER_USER_ID
           }
         }).catch(() => null);
-
-        // OWNER BYPASS: If the localStorage user ID is the master, or we are on local, 
-        // we can be more aggressive in granting access.
-        if (savedActiveEmpireId === '1') {
-           // Default state for slot 1
-        }
 
         if (settingsRes && settingsRes.ok) {
            const data = await settingsRes.json();
