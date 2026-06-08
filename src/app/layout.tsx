@@ -8,7 +8,7 @@ import { ToastContainer } from "@/components/Dashboard/ToastContainer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "EmpireLaunchAI - AI Business Partner",
+  title: "EmpireLaunch AI - AI Business Partner",
   description: "Automate your business with AI",
 };
 
@@ -32,12 +32,12 @@ export default function RootLayout({
           html, body { background-color: #0a0519 !important; }
         `}</style>
         <link rel="canonical" href="https://empire-launch-ai-frontend.vercel.app" />
-        <link rel="manifest" href="/manifest.json?v=1018" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=18" />
-        <link rel="icon" href="/favicon.ico?v=18" />
-        <link rel="apple-touch-startup-image" href="/apple-touch-icon.png?v=18" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=18" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png?v=18" />
+        <link rel="manifest" href="/manifest.json?v=1019" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=19" />
+        <link rel="icon" href="/favicon.ico?v=19" />
+        <link rel="apple-touch-startup-image" href="/apple-touch-icon.png?v=19" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=19" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png?v=19" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
