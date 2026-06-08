@@ -75,7 +75,7 @@ export function BrandedGlobe({ className, size = 'md', animate = true, spinning 
         src="/branded-globe.png"
         alt="Empire Globe"
         className={cn(
-          "w-full h-full object-contain scale-100 relative z-10 transition-all duration-1000",
+          "w-full h-full object-contain p-1 relative z-10 transition-all duration-1000",
           isLoaded ? "opacity-100" : "opacity-0",
           spinning && "brightness-125 contrast-110"
         )}
