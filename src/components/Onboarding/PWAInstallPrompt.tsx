@@ -73,9 +73,11 @@ export function PWAInstallPrompt({ onDismiss }: PWAInstallPromptProps) {
 
               <div className="flex flex-col items-center text-center space-y-6">
                 <div className="relative">
-                  <BrandedGlobe size="lg" className="shadow-[0_0_40px_rgba(0,229,255,0.3)]" />
-                  <div className="absolute -bottom-2 -right-2 bg-primary text-slate-950 p-1.5 rounded-full shadow-lg">
-                    <Download className="w-3 h-3" />
+                  <div className="w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center shadow-2xl overflow-hidden p-1">
+                    <BrandedGlobe size="xl" glow={false} animate={true} />
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 bg-primary text-slate-950 p-2 rounded-full shadow-lg z-20">
+                    <Download className="w-4 h-4" />
                   </div>
                 </div>
 

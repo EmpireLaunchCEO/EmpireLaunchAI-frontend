@@ -48,8 +48,8 @@ const steps = [
 
 const EstablishedScreen = () => (
   <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6 text-center p-6">
-    <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white animate-pulse">
-       <Stars className="w-8 h-8" />
+    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-2xl overflow-hidden">
+      <BrandedGlobe size="lg" glow={false} animate={true} />
     </div>
     <div className="flex flex-col items-center gap-2">
       <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
@@ -338,8 +338,8 @@ function OnboardingContent() {
         >
           <div className="text-center space-y-12">
             <div className="relative inline-block mb-8">
-              <div className="w-20 h-20 bg-primary/10 rounded-3xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_30px_rgba(0,229,255,0.2)]">
-                <Stars className="w-10 h-10 text-primary" />
+              <div className="w-24 h-24 bg-white rounded-[2rem] mx-auto flex items-center justify-center border border-white/20 shadow-[0_0_40px_rgba(255,255,255,0.2)] overflow-hidden">
+                <BrandedGlobe size="xl" glow={false} animate={true} />
               </div>
             </div>
 
