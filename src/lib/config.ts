@@ -1,6 +1,9 @@
 const getApiUrl = () => {
-  // EXTREME OVERRIDE: Force all production environments to use the Railway backend
-  return 'https://empirelaunchai-backend-production.up.railway.app';
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  // Fallback for local development
+  return 'http://localhost:3001';
 };
 
 export const API_URL = getApiUrl();
