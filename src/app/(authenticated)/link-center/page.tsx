@@ -6,10 +6,24 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { motion } from 'framer-motion';
 import { Share2, LayoutDashboard, ShieldCheck, Cpu, Stars, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
+
+const PLATFORM_LOGOS: Record<string, string> = {
+  tiktok: '/brands/tiktok_128.png',
+  instagram: '/brands/instagram_128.png',
+  youtube: '/brands/youtube_128.png',
+  etsy: '/brands/etsy_128.png',
+  fiverr: '/brands/fiverr_128.png',
+  gmail: '/brands/gmail_128.png',
+  facebook: '/brands/facebook_128.png',
+  canva: '/brands/canva_128.png',
+  kittl: '/brands/kittl_128.png',
+  capcut: '/brands/capcut_128.png',
+};
 
 export default function LinkCenterPage() {
   const { isLinkingComplete, connectedPlatforms, platformPermissions } = useEmpire();
@@ -91,8 +105,20 @@ export default function LinkCenterPage() {
                         {tier === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
                       </div>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-theme-background flex items-center justify-center border border-theme">
-                       <ShieldCheck className={cn("w-5 h-5", tier === 'empire' ? "text-cyan-400" : "text-primary")} />
+                    <div className="flex flex-col items-end gap-2">
+                      <div className="w-10 h-10 rounded-xl bg-white p-1 border border-theme flex items-center justify-center overflow-hidden">
+                        {PLATFORM_LOGOS[id] ? (
+                          <Image 
+                            src={PLATFORM_LOGOS[id]} 
+                            alt={id} 
+                            width={32} 
+                            height={32} 
+                            className="object-contain"
+                          />
+                        ) : (
+                          <ShieldCheck className={cn("w-5 h-5", tier === 'empire' ? "text-cyan-400" : "text-primary")} />
+                        )}
+                      </div>
                     </div>
                   </div>
 
