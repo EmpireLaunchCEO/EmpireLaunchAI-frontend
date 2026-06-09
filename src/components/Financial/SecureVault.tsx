@@ -182,6 +182,9 @@ export function SecureVault() {
     stripe: false,
     canva: false,
     tiktok: false,
+    railway: false,
+    openai: false,
+    gemini: false,
   });
 
   const handleSave = async (id: string, keys: any) => {
@@ -261,6 +264,45 @@ export function SecureVault() {
           fields={[
             { id: 'clientId', label: 'Client ID', type: 'text', placeholder: 'Enter Canva client ID' },
             { id: 'clientSecret', label: 'Client Secret', type: 'password', placeholder: 'Enter client secret' },
+          ]}
+        />
+
+        <VaultItem
+          id="railway"
+          name="Railway Infrastructure"
+          description="Monitors server usage and upcoming hosting costs."
+          icon={Lock}
+          isLocked={!integrations.railway}
+          onSave={(keys) => handleSave('railway', keys)}
+          helpUrl="https://docs.railway.app/reference/public-api"
+          fields={[
+            { id: 'apiToken', label: 'Railway API Token', type: 'password', placeholder: 'Enter your Railway API token' },
+          ]}
+        />
+
+        <VaultItem
+          id="openai"
+          name="OpenAI Intelligence"
+          description="Tracks API usage costs for GPT-4 and DALL-E 3."
+          icon={Lock}
+          isLocked={!integrations.openai}
+          onSave={(keys) => handleSave('openai', keys)}
+          helpUrl="https://platform.openai.com/api-keys"
+          fields={[
+            { id: 'apiKey', label: 'OpenAI API Key', type: 'password', placeholder: 'sk-...' },
+          ]}
+        />
+
+        <VaultItem
+          id="gemini"
+          name="Google AI (Gemini)"
+          description="Monitors multimodal model usage and credits."
+          icon={Lock}
+          isLocked={!integrations.gemini}
+          onSave={(keys) => handleSave('gemini', keys)}
+          helpUrl="https://aistudio.google.com/app/apikey"
+          fields={[
+            { id: 'apiKey', label: 'Gemini API Key', type: 'password', placeholder: 'Enter Gemini API key' },
           ]}
         />
       </div>

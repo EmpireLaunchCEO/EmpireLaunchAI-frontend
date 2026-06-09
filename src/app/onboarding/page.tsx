@@ -4,46 +4,41 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ChevronRight,
   ChevronLeft,
   CheckCircle2,
   Stars,
   ArrowRight,
   Zap,
-  Bot,
-  ShieldCheck,
-  Globe,
-  Coins,
+  CreditCard,
   Languages,
   ChevronDown,
   Shield,
   Scale,
   AlertCircle,
-  CreditCard,
-  Lock,
-  Sparkles
+  Coins
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ProgressConstellation } from '@/components/Onboarding/ProgressConstellation';
 import { EmpireIdentity } from '@/components/Onboarding/EmpireIdentity';
 import { PlatformMatrix } from '@/components/Onboarding/PlatformMatrix';
 import { ConsultantToolkit } from '@/components/Onboarding/ConsultantToolkit';
-import { AutomationCalibration } from '@/components/Onboarding/AutomationCalibration';
-import { ApprovalGate } from '@/components/Onboarding/ApprovalGate';
 import { DiscoveryReview } from '@/components/Onboarding/DiscoveryReview';
 import { PWAInstallPrompt } from '@/components/Onboarding/PWAInstallPrompt';
 import { TermsModal } from '@/components/Legal/TermsModal';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
+import { SignUpForm } from '@/components/Onboarding/SignUpForm';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { empireService, userSettingsService } from '@/lib/api-service';
+import { Suspense } from 'react';
 
 const steps = [
   { id: 1, title: 'Protocol' },
-  { id: 2, title: 'Authorization' },
-  { id: 3, title: 'Identity' },
-  { id: 4, title: 'Matrix' },
-  { id: 5, title: 'Toolkit' },
+  { id: 2, title: 'Neural Identity' },
+  { id: 3, title: 'Authorization' },
+  { id: 4, title: 'Business Identity' },
+  { id: 5, title: 'Matrix' },
+  { id: 6, title: 'Toolkit' },
 ];
 
 const EstablishedScreen = () => (
@@ -60,16 +55,13 @@ const EstablishedScreen = () => (
   </div>
 );
 
-import { Suspense } from 'react';
-
 function OnboardingContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const empire = useEmpire();
   
-  // Safe destructuring
   const {
     completeOnboarding = () => {},
-    setHandoverComplete = () => {},
     setActiveEmpireId = () => {},
     isOnboarded = false,
     isInitialized = false,
@@ -84,8 +76,7 @@ function OnboardingContent() {
     isHandoverComplete: handoverStatus = false
   } = empire || {};
   
-  const userId = '00000000-0000-0000-0000-000000000000'; 
-  
+  const [userId, setUserId] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [isMounted, setIsMounted] = useState(false);
   const [accessKey, setAccessKey] = useState('');
@@ -101,12 +92,9 @@ function OnboardingContent() {
   const [isActivating, setIsActivating] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
-  const [showApprovalGate, setShowApprovalGate] = useState(false);
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
   const [isPWADismissed, setIsPWADismissed] = useState(false);
-  const [gatePlatform, setGatePlatform] = useState('Etsy');
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
-  const [realLogs, setRealLogs] = useState<string[]>([]);
 
   const discoveryLogs = useMemo(() => [
     "Scanning linked email accounts...",
@@ -122,105 +110,46 @@ function OnboardingContent() {
       const savedStep = localStorage.getItem('onboarding_step');
       if (savedStep) setCurrentStep(parseInt(savedStep));
       
-      const savedPopup = localStorage.getItem('onboarding_show_popup');
-      if (savedPopup === 'true') setShowDownloadScreen(true);
-      
-      const savedData = localStorage.getItem('onboarding_data');
-      if (savedData) {
-        try {
-          setData(JSON.parse(savedData));
-        } catch (e) {}
+      const savedUserId = localStorage.getItem('empire_userId');
+      if (savedUserId) setUserId(savedUserId);
+
+      // Handle Stripe Return
+      const sessionId = searchParams.get('session_id');
+      if (sessionId && !isPaid) {
+        verifyPayment(sessionId);
       }
-
-      // If localStorage is empty OR in preview mode, fetch from backend to ensure data persistence
-      const fetchCurrentEmpire = async () => {
-        if (!savedData || searchParams.get('preview') === 'true') {
-          try {
-            const [empireData, settingsData] = await Promise.all([
-              empireService.getLatestEmpire(),
-              userSettingsService.getSettings(userId)
-            ]);
-
-            if (empireData || settingsData) {
-              console.log('[Onboarding] Synchronizing data from backend memory...');
-              
-              const backendNiche = settingsData?.businessNiche || empireData?.description?.match(/Empire Niche: (.*?)\./)?.[1];
-              const backendAngle = settingsData?.businessAngle || empireData?.description?.match(/Angle: (.*?)\./)?.[1];
-
-              setData(prev => ({
-                ...prev,
-                name: empireData?.title || prev.name,
-                niche: backendNiche || prev.niche,
-                angle: backendAngle || prev.angle,
-              }));
-              
-              // IF THE OWNER HAS DATA, SKIP TO THE END OR REDIRECT
-              if (userId === '00000000-0000-0000-0000-000000000000' && empireData?.title && backendNiche) {
-                  console.log('[Onboarding] Master Identity detected. Fast-tracking to dashboard.');
-                  router.replace('/dashboard');
-                  return;
-              }
-
-              if (searchParams.get('preview') === 'true') {
-                setCurrentStep(3);
-              }
-            }
-          } catch (err) {
-            console.error('Failed to pre-fill data from backend', err);
-          }
-        }
-      };
-      fetchCurrentEmpire();
     }
   }, []);
+
+  const verifyPayment = async (sessionId: string) => {
+    setIsPaying(true);
+    try {
+      const res = await fetch(`${API_URL}/api/stripe/verify/platform?sessionId=${sessionId}`, {
+        headers: {
+            'x-user-id': userId || ''
+        }
+      });
+      const result = await res.json();
+      if (result.status === 'paid') {
+        setIsPaid(true);
+        setCurrentStep(4);
+      }
+    } catch (err) {
+      console.error('Payment verification failed');
+    } finally {
+      setIsPaying(false);
+    }
+  };
 
   useEffect(() => {
     if (isMounted && typeof window !== 'undefined') {
       localStorage.setItem('onboarding_step', currentStep.toString());
+      if (userId) localStorage.setItem('empire_userId', userId);
       window.scrollTo(0, 0);
     }
-  }, [currentStep, isMounted]);
+  }, [currentStep, isMounted, userId]);
 
-  useEffect(() => {
-    if (isMounted && typeof window !== 'undefined') {
-      localStorage.setItem('onboarding_data', JSON.stringify(data));
-    }
-  }, [data, isMounted]);
-
-  const searchParams = useSearchParams();
   const isPreview = searchParams.get('preview') === 'true';
-
-  // Handle Redirection - Simplified for stability
-  useEffect(() => {
-    let active = true;
-    
-    if (!isPreview && isMounted && isInitialized && isOnboarded && isPaid) {
-      // If we are already onboarded, we should only redirect if NOT in preview mode
-      const isStandalone = typeof window !== 'undefined' && (
-        window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone
-      );
-
-      // If they open the PWA and were already at the end, just go to dashboard
-      // BUT even in PWA, respect the preview flag
-      if (isStandalone && isMounted && isInitialized && (isOnboarded || currentStep >= 5) && isPaid) {
-         console.log('[PWA] Standalone detected at end-state, fast-tracking...');
-         router.replace('/dashboard');
-         return;
-      }
-
-      // Small delay to allow state to settle
-      const timer = setTimeout(() => {
-        if (active) {
-          console.log('[Onboarding] Redirecting to Dashboard...');
-          router.replace('/dashboard');
-        }
-      }, 800);
-      return () => {
-        active = false;
-        clearTimeout(timer);
-      };
-    }
-  }, [isInitialized, isOnboarded, isMounted, router, isPreview, currentStep, isPaid]);
 
   const finalizeActivation = useCallback(async () => {
     try {
@@ -228,7 +157,7 @@ function OnboardingContent() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token'
+          'x-user-id': userId || ''
         },
         body: JSON.stringify({
           userId,
@@ -246,15 +175,12 @@ function OnboardingContent() {
         }
         completeOnboarding(result.empire);
       } else {
-        // Fallback for non-success status
         completeOnboarding();
       }
     } catch (error) {
-      console.error('Error during activation:', error);
-      // Fallback: Proceed anyway
       completeOnboarding();
     }
-  }, [data, setActiveEmpireId, completeOnboarding]);
+  }, [data, userId, setActiveEmpireId, completeOnboarding]);
 
   const handleActivate = async () => {
     setIsActivating(true);
@@ -264,7 +190,6 @@ function OnboardingContent() {
   const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
 
   const nextStep = () => {
-    if (currentStep === 2 && !isPaid) return;
     setCurrentStep((prev) => Math.min(prev + 1, steps.length));
   };
 
@@ -287,10 +212,24 @@ function OnboardingContent() {
 
   const handleSecurePayment = async () => {
     setIsPaying(true);
-    await new Promise(r => setTimeout(r, 2000));
-    setIsPaid(true);
-    setIsPaying(false);
-    setIsTermsOpen(true);
+    try {
+        const response = await fetch(`${API_URL}/api/stripe/checkout/platform`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-user-id': userId || ''
+            },
+            body: JSON.stringify({ returnUrl: window.location.href })
+        });
+        const result = await response.json();
+        if (result.url) {
+            window.location.href = result.url;
+        }
+    } catch (err) {
+        console.error('Checkout failed');
+    } finally {
+        setIsPaying(false);
+    }
   };
 
   // Discovery Log Sequence
@@ -328,7 +267,6 @@ function OnboardingContent() {
     );
   }
 
-  // If onboarded, show the transition screen while redirect finishes
   if (!isPreview && (isOnboarded || handoverStatus)) {
     return <EstablishedScreen />;
   }
@@ -348,44 +286,17 @@ function OnboardingContent() {
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative z-10 w-full max-w-4xl"
-        >
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="relative z-10 w-full max-w-4xl">
           <div className="text-center space-y-12">
-            <div className="relative inline-block mb-8">
-              <div className="w-24 h-24 bg-white rounded-[2rem] mx-auto flex items-center justify-center border border-white/20 shadow-[0_0_40px_rgba(255,255,255,0.2)] overflow-hidden">
-                <BrandedGlobe size="xl" glow={false} animate={true} />
-              </div>
+            <div className="w-24 h-24 bg-white rounded-[2rem] mx-auto flex items-center justify-center border border-white/20 shadow-[0_0_40px_rgba(255,255,255,0.2)] overflow-hidden">
+              <BrandedGlobe size="xl" glow={false} animate={true} />
             </div>
-
             <div className="space-y-4">
-              <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight uppercase italic">
-                Download the App to Finish.
-              </h2>
-              <div className="flex items-center justify-center gap-3 min-h-6">
-                <p className="text-primary font-black tracking-widest text-xs uppercase">
-                  Add "EmpireLaunch AI" to your Home Screen to unlock the Command Center.
-                </p>
-              </div>
+              <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight uppercase italic">Download the App to Finish.</h2>
+              <p className="text-primary font-black tracking-widest text-xs uppercase">Add "EmpireLaunch AI" to your Home Screen to unlock the Command Center.</p>
             </div>
-
             <div className="max-w-sm mx-auto space-y-6">
-              <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-4">
-                This ensures a secure, full-screen environment for your business operations.
-              </p>
-              
-              <button
-                onClick={() => {
-                  setIsPWADismissed(true);
-                  handleActivate();
-                }}
-                className="w-full py-5 bg-white text-slate-950 border-2 border-white font-black text-sm uppercase tracking-[0.2em] rounded-2xl hover:bg-primary hover:border-primary transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] active:scale-95"
-              >
-                Already Installed / Skip
-              </button>
+              <button onClick={() => { setIsPWADismissed(true); handleActivate(); }} className="w-full py-5 bg-white text-slate-950 border-2 border-white font-black text-sm uppercase tracking-[0.2em] rounded-2xl hover:bg-primary hover:border-primary transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] active:scale-95">Already Installed / Skip</button>
             </div>
           </div>
         </motion.div>
@@ -396,78 +307,15 @@ function OnboardingContent() {
   if (isActivating) {
     return (
       <div className="min-h-screen w-full bg-[#0a0519] flex flex-col items-center justify-center p-6 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <svg className="w-full h-full">
-            <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="white" strokeWidth="0.5" />
-            </pattern>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative z-10 w-full max-w-4xl"
-        >
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="relative z-10 w-full max-w-4xl text-center">
           {!showDiscoveryReview ? (
-            <div className="text-center space-y-12">
-              <div className="relative inline-block mb-8">
-                <div className="w-20 h-20 bg-primary/10 rounded-3xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_30px_rgba(0,229,255,0.2)]">
-                  <Stars className="w-10 h-10 text-primary animate-spin" />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight uppercase italic">
-                  {isPWADismissed ? "Download to Home Screen to Continue." : "Establishing Neural Sync."}
-                </h2>
-                <div className="flex items-center justify-center gap-3 min-h-6">
-                  <div className="flex items-center gap-4">
-                    <Zap className="w-5 h-5 text-primary animate-pulse" />
-                    <p className="text-primary font-black tracking-widest text-xs uppercase">
-                      {isPWADismissed 
-                        ? "Close out the browser version, then reopen app from Home Screen." 
-                        : (realLogs.length > 0 ? (realLogs[realLogs.length - 1] || "Syncing...") : discoveryLogs[discoveryLogIndex])}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="max-w-sm mx-auto space-y-6">
-                {isPWADismissed && (
-                   <p className="text-slate-400 text-[10px] uppercase font-black tracking-widest mb-4">
-                     Please follow the installation steps in your browser menu to unlock production access.
-                   </p>
-                )}
-
-                <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: (isOnboarded || isPWADismissed) ? "100%" : "70%" }}
-                    transition={{ duration: 4, ease: "easeInOut" }}
-                    className="h-full bg-primary shadow-[0_0_15px_rgba(0,229,255,0.4)]"
-                  />
-                </div>
-
-                <div className="pt-4">
-                  <button
-                    onClick={() => router.replace('/dashboard')}
-                    className="text-primary font-black text-[10px] uppercase tracking-widest hover:text-white transition-all underline underline-offset-4"
-                  >
-                    Enter Command Center Manually
-                  </button>
-                </div>
-              </div>
-            </div>
+             <div className="space-y-12">
+               <Stars className="w-20 h-20 text-primary animate-spin mx-auto" />
+               <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight uppercase italic">Establishing Neural Sync.</h2>
+               <p className="text-primary font-black tracking-widest text-xs uppercase">{discoveryLogs[discoveryLogIndex]}</p>
+             </div>
           ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-theme-surface rounded-[48px] p-8 md:p-12 shadow-2xl max-h-[85vh] overflow-y-auto"
-            >
-              <DiscoveryReview onComplete={finalizeActivation} />
-            </motion.div>
+            <DiscoveryReview onComplete={finalizeActivation} />
           )}
         </motion.div>
       </div>
@@ -476,337 +324,119 @@ function OnboardingContent() {
 
   return (
     <div className="min-h-screen bg-theme-surface flex flex-col items-center overflow-x-hidden relative">
-      <TermsModal
-        isOpen={isTermsOpen}
-        onClose={() => setIsTermsOpen(false)}
-        onAccept={handleAcceptTerms}
-      />
-
+      <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} onAccept={handleAcceptTerms} />
       <div className="w-full max-w-md px-6 py-8 md:py-16 flex flex-col mx-auto flex-grow">
         <ProgressConstellation currentStep={currentStep} totalSteps={steps.length} />
-
         <div className="flex-1">
           <AnimatePresence mode="wait">
             {currentStep === 1 && (
-              <motion.div
-                key="step1"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
-              >
+              <motion.div key="step1" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
                 <div className="text-center space-y-4">
                   <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
                     <Stars className="w-8 h-8 text-primary" />
                   </div>
                   <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Neural Agreement.</h2>
-                  <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
-                    "To begin autonomous operations, you must first authorize the synchronization protocols."
-                  </p>
+                  <p className="text-muted-foreground text-xs md:text-sm font-medium italic">"To begin autonomous operations, you must first authorize the synchronization protocols."</p>
                 </div>
-
-                <div className="bg-slate-900 border border-slate-800 rounded-[32px] p-8 space-y-6 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-800">
-                  <section className="space-y-2">
-                    <div className="flex items-center gap-2 text-white font-bold text-sm">
-                      <Shield className="w-4 h-4 text-primary" />
-                      <h3>1. Protection</h3>
-                    </div>
-                    <p className="text-[10px] text-slate-400 leading-relaxed uppercase tracking-tight">
-                      Your information is secured via AES-256-GCM encryption. We do not store raw banking credentials.
-                    </p>
-                  </section>
-                  <section className="space-y-2">
-                    <div className="flex items-center gap-2 text-white font-bold text-sm">
-                      <AlertCircle className="w-4 h-4 text-primary" />
-                      <h3>2. Security</h3>
-                    </div>
-                    <p className="text-[10px] text-slate-400 leading-relaxed uppercase tracking-tight">
-                      Any fraudulent activity detected will result in immediate account suspension without refund.
-                    </p>
-                  </section>
-                  <section className="space-y-2">
-                    <div className="flex items-center gap-2 text-white font-bold text-sm">
-                      <Scale className="w-4 h-4 text-primary" />
-                      <h3>3. Legal Waiver</h3>
-                    </div>
-                    <p className="text-[10px] text-slate-400 leading-relaxed uppercase tracking-tight italic">
-                      By proceeding, you waive rights to legal action and agree to binding arbitration.
-                    </p>
-                  </section>
+                <div className="bg-slate-900 border border-slate-800 rounded-[32px] p-8 space-y-6 max-h-[400px] overflow-y-auto">
+                   <section className="space-y-2">
+                     <h3 className="text-white font-bold text-sm flex items-center gap-2"><Shield className="w-4 h-4 text-primary" /> 1. Protection</h3>
+                     <p className="text-[10px] text-slate-400 leading-relaxed uppercase tracking-tight">Your information is secured via AES-256-GCM encryption. We do not store raw banking credentials.</p>
+                   </section>
+                   <section className="space-y-2">
+                     <h3 className="text-white font-bold text-sm flex items-center gap-2"><AlertCircle className="w-4 h-4 text-primary" /> 2. Security</h3>
+                     <p className="text-[10px] text-slate-400 leading-relaxed uppercase tracking-tight">Any fraudulent activity detected will result in immediate account suspension without refund.</p>
+                   </section>
                 </div>
-
-                <button
-                  onClick={() => {
-                    acceptProtocols();
-                    nextStep();
-                  }}
-                  className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none"
-                >
-                  Accept Protocols
-                  <CheckCircle2 className="w-4 h-4" />
-                </button>
+                <button onClick={() => { acceptProtocols(); nextStep(); }} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none">Accept Protocols <CheckCircle2 className="w-4 h-4" /></button>
               </motion.div>
             )}
 
             {currentStep === 2 && (
-              <motion.div
-                key="step2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="max-w-md mx-auto space-y-8"
-              >
-                <div className="text-center space-y-4">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
-                    <Stars className="w-8 h-8 text-primary" />
-                  </div>
-                  <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Authorize Engine.</h2>
-                  <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
-                    "Select your regional parameters and authorize the operational license."
-                  </p>
-                </div>
-
-                <div className="bg-slate-900 border border-slate-800 rounded-[32px] p-6 md:p-8 space-y-6 relative overflow-hidden">
-                   <div className="grid grid-cols-2 gap-4">
-                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
-                         <Languages className="w-3 h-3 text-primary" />
-                         Language
-                       </label>
-                       <div className="relative group">
-                         <select
-                           value={language}
-                           onChange={(e) => setLanguage(e.target.value)}
-                           className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-4 pr-10 text-[10px] font-black uppercase appearance-none hover:border-primary/40 transition-all cursor-pointer outline-none text-white"
-                         >
-                           <option value="en-US">English (US)</option>
-                           <option value="en-GB">English (UK)</option>
-                           <option value="es-ES">Español</option>
-                           <option value="fr-FR">Français</option>
-                           <option value="de-DE">Deutsch</option>
-                         </select>
-                         <ChevronDown className="absolute inset-y-0 right-3 my-auto w-4 h-4 text-slate-600 pointer-events-none" />
-                       </div>
-                     </div>
-
-                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
-                         <Coins className="w-3 h-3 text-primary" />
-                         Currency
-                       </label>
-                       <div className="relative group">
-                         <select
-                           value={currency}
-                           onChange={(e) => setCurrency(e.target.value)}
-                           className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-4 pr-10 text-[10px] font-black uppercase appearance-none hover:border-primary/40 transition-all cursor-pointer outline-none text-white"
-                         >
-                           <option value="USD">USD ($)</option>
-                           <option value="EUR">EUR (€)</option>
-                           <option value="GBP">GBP (£)</option>
-                         </select>
-                         <ChevronDown className="absolute inset-y-0 right-3 my-auto w-4 h-4 text-slate-600 pointer-events-none" />
-                       </div>
-                     </div>
-                   </div>
-
-                   <div className="pt-6 border-t border-slate-800 space-y-6">
-                     <div className="space-y-4">
-                       <div className="flex justify-between items-start">
-                         <div>
-                           <h3 className="text-xl font-black text-white uppercase italic tracking-tighter pr-2">Empire Master</h3>
-                         </div>
-                         <div className="text-right">
-                           <span className="text-2xl font-black text-white">$40</span>
-                           <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">/Month</span>
-                         </div>
-                       </div>
-
-                       <button
-                         onClick={handleSecurePayment}
-                         disabled={isActivating || isPaying}
-                         className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 group shadow-[0_0_30px_rgba(251,191,36,0.2)] border-none"
-                       >
-                         <CreditCard className="w-5 h-5" />
-                         {isPaying ? "Processing..." : "Pay with Credit Card"}
-                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                       </button>
-
-                       <div className="relative">
-                        <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                          <div className="w-full border-t border-slate-800"></div>
-                        </div>
-                        <div className="relative flex justify-center text-[8px] uppercase font-black tracking-widest">
-                          <span className="bg-slate-900 px-3 text-slate-500 font-bold">or use access key</span>
-                        </div>
-                      </div>
-
-                       <div className="space-y-3">
-                         <div className="relative group">
-                            <input
-                              type="text"
-                              value={accessKey}
-                              onChange={(e) => setAccessKey(e.target.value)}
-                              placeholder="ENTER ADMIN OR OWNER KEY"
-                              autoComplete="off"
-                              className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white text-center"
-                            />
-                         </div>
-                         {accessKey.trim() && (
-                            <button
-                              onClick={async () => {
-                                const cleanKey = accessKey.trim().toUpperCase();
-                                if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
-                                    setIsPaid(true);
-                                    setIsTermsOpen(true);
-                                } else {
-                                    handleSecurePayment();
-                                }
-                              }}
-                              className="w-full py-3 bg-slate-800 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-700 transition-all"
-                            >
-                              Redeem Key
-                            </button>
-                         )}
-                       </div>
-
-                       <div className="grid grid-cols-2 gap-3 p-5 bg-slate-950 rounded-2xl border border-slate-800 shadow-inner">
-                         {[
-                           'Autonomous Execution',
-                           'Priority Discovery',
-                           'Secure Bank Bridge',
-                           'Verified Encryption'
-                         ].map(f => (
-                           <div key={f} className="flex items-center gap-2">
-                             <div className="w-1.5 h-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(0,229,255,0.6)] shrink-0" />
-                             <span className="text-xs font-black text-white uppercase tracking-tight leading-none">
-                               {f}
-                             </span>
-                           </div>
-                         ))}
-                       </div>
-                     </div>
-                   </div>
-                </div>
-
-                <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-start gap-3">
-                  <div className="w-2 h-2 bg-primary rounded-full mt-1 animate-pulse shadow-[0_0_8px_rgba(0,229,255,0.8)]" />
-                  <p className="text-[11px] text-slate-300 font-bold leading-relaxed italic uppercase tracking-tight">
-                    "Verification: This is a secure operational gateway. Your data remains protected via hardware-level encryption."
-                  </p>
-                </div>
+              <motion.div key="step2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                <SignUpForm onSuccess={(uid) => { setUserId(uid); nextStep(); }} />
               </motion.div>
             )}
 
             {currentStep === 3 && (
-              <motion.div
-                key="step3"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <EmpireIdentity data={data} updateData={updateData} />
+              <motion.div key="step3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
+                <div className="text-center space-y-4">
+                  <Stars className="w-16 h-16 text-primary mx-auto" />
+                  <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Authorize Engine.</h2>
+                  <p className="text-muted-foreground text-xs md:text-sm font-medium italic">"Authorize the operational license to activate the AI Core."</p>
+                </div>
+                <div className="bg-slate-900 border border-slate-800 rounded-[32px] p-8 space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2"><Languages className="w-3 h-3 text-primary" /> Language</label>
+                       <select value={language} onChange={(e) => setLanguage(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-[10px] font-black uppercase text-white appearance-none outline-none">
+                         <option value="en-US">English (US)</option>
+                         <option value="es-ES">Español</option>
+                       </select>
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2"><Coins className="w-3 h-3 text-primary" /> Currency</label>
+                       <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-[10px] font-black uppercase text-white appearance-none outline-none">
+                         <option value="USD">USD ($)</option>
+                         <option value="EUR">EUR (€)</option>
+                       </select>
+                    </div>
+                  </div>
+                  <div className="pt-6 border-t border-slate-800 space-y-6">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-xl font-black text-white uppercase italic">Empire Master</h3>
+                      <div className="text-right">
+                        <span className="text-2xl font-black text-white">0</span>
+                        <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">/Month</span>
+                      </div>
+                    </div>
+                    <button onClick={handleSecurePayment} disabled={isPaying} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 shadow-xl border-none">
+                      <CreditCard className="w-5 h-5" />
+                      {isPaying ? "Processing..." : "Pay with Credit Card"}
+                    </button>
+                  </div>
+                </div>
               </motion.div>
             )}
 
             {currentStep === 4 && (
-              <motion.div
-                key="step4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <PlatformMatrix
-                  connectedPlatforms={data.connectedPlatforms}
-                  onConnect={handleConnect}
-                />
+              <motion.div key="step4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                <EmpireIdentity data={data} updateData={updateData} />
               </motion.div>
             )}
 
             {currentStep === 5 && (
-              <motion.div
-                key="step5"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <ConsultantToolkit 
-                  businessAngle={data.angle} 
-                  onToolkitComplete={() => {
-                    localStorage.setItem('onboarding_show_popup', 'true');
-                    setShowDownloadScreen(true);
-                  }}
-                />
+              <motion.div key="step5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                <PlatformMatrix connectedPlatforms={data.connectedPlatforms} onConnect={handleConnect} />
+              </motion.div>
+            )}
+
+            {currentStep === 6 && (
+              <motion.div key="step6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                <ConsultantToolkit businessAngle={data.angle} onToolkitComplete={() => { localStorage.setItem('onboarding_show_popup', 'true'); setShowDownloadScreen(true); }} />
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        <div className="mt-12 md:mt-20 flex flex-col-reverse md:flex-row justify-between items-center max-w-md mx-auto w-full gap-8">
-          <button
-            onClick={prevStep}
-            disabled={currentStep === 1 || isActivating || isPaying || currentStep === steps.length}
-            className={cn(
-              "flex items-center gap-2 font-black text-[10px] md:text-xs uppercase tracking-widest text-slate-500 hover:text-foreground transition-colors disabled:opacity-0",
-            )}
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Previous
+        <div className="mt-12 flex flex-col md:flex-row justify-between items-center max-w-md mx-auto w-full gap-8">
+          <button onClick={prevStep} disabled={currentStep === 1 || isActivating || isPaying || currentStep === steps.length} className={cn("flex items-center gap-2 font-black text-[10px] uppercase tracking-widest text-slate-500 hover:text-foreground transition-colors disabled:opacity-0")}>
+            <ChevronLeft className="w-4 h-4" /> Previous
           </button>
-
-          {currentStep === 1 ? (
-            <div className="w-full md:w-auto" />
-          ) : currentStep < steps.length ? (
-            <AnimatePresence>
-              {!(currentStep === 2 && !isPaid) && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  onClick={nextStep}
-                  className={cn(
-                    "bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl shadow-slate-950 group w-full md:w-auto justify-center"
-                  )}
-                >
-                  Next Phase
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </motion.button>
-              )}
-            </AnimatePresence>
-          ) : (
-             <div className="w-full md:w-auto" />
+          {currentStep !== 2 && currentStep !== 3 && currentStep < steps.length && (
+            <button onClick={nextStep} className="bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl group w-full md:w-auto justify-center">
+              Next Phase <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
           )}
         </div>
       </div>
-
-      <ApprovalGate
-        isOpen={showApprovalGate}
-        onClose={() => setShowApprovalGate(false)}
-        platformName={gatePlatform}
-        onSuccess={() => {
-          setTimeout(() => {
-            setShowApprovalGate(false);
-          }, 2000);
-        }}
-      />
     </div>
   );
 }
 
 export default function Onboarding() {
   return (
-    <Suspense fallback={
-      <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white animate-pulse">
-           <Stars className="w-8 h-8" />
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
-            Neural Sync Initializing
-          </h2>
-          <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">Connecting to Command Center...</p>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<div className="fixed inset-0 z-[200] bg-[#0a0519] flex items-center justify-center"><Stars className="w-8 h-8 text-primary animate-pulse" /></div>}>
       <OnboardingContent />
     </Suspense>
   );

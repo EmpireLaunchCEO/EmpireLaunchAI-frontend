@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Shield } from 'lucide-react';
+import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Shield, Cpu, Activity, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 
@@ -40,6 +40,12 @@ export function FinancialCommand({
     { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
     { name: "EmpireLaunch AI Subscription", amount: 4000, date: getPlatformDueDate(), type: "app" },
     { name: "EmpireLaunch AI Dues ($40/$1k)", amount: platformDuesAmount, date: "Calculated from Earnings", type: "app" },
+  ] : [];
+
+  const infrastructure = isLinkingComplete ? [
+    { name: "Railway Hosting", amount: 540, status: "Live", icon: Activity },
+    { name: "OpenAI Usage", amount: 1250, status: "Live", icon: Cpu },
+    { name: "Gemini / Google AI", amount: 0, status: "Free Tier", icon: Zap },
   ] : [];
 
   const dues = isLinkingComplete ? [
@@ -124,6 +130,33 @@ export function FinancialCommand({
                       <div className="text-right">
                         <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>
                         {sub.type === 'app' && <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Infrastructure Section */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-2 text-cyan-500 font-black text-[10px] uppercase tracking-widest">
+                  <Activity className="w-3 h-3" />
+                  Infrastructure & Intelligence
+                </div>
+                <div className="space-y-3">
+                  {infrastructure.map((item, i) => (
+                    <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-cyan-500">
+                          <item.icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-black uppercase italic">{item.name}</p>
+                          <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">{item.status}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-black italic">{formatCurrency(item.amount)}</p>
+                        <span className="text-[8px] font-black text-cyan-500 uppercase">Usage Cost</span>
                       </div>
                     </div>
                   ))}
