@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 
+import { VerticalPlatformRadar } from '@/components/Dashboard/VerticalPlatformRadar';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 
 const PLATFORM_LOGOS: Record<string, string> = {
@@ -68,6 +69,8 @@ export default function LinkCenterPage() {
           </Link>
         )}
       </div>
+
+      <VerticalPlatformRadar />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}

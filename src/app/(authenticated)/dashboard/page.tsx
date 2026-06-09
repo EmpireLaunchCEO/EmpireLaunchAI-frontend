@@ -219,11 +219,6 @@ export default function Dashboard() {
                     <IntelligenceCenter />
                   </div>
 
-                  {/* Social Media Radar */}
-                  <div className="max-w-6xl mx-auto pb-12">
-                    <SocialMediaRadar />
-                  </div>
-
                   {/* Version Verification */}
                   <div className="flex justify-center pb-20">
                     <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">

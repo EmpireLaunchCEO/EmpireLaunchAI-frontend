@@ -51,6 +51,7 @@ interface HighIntelPostApprovalProps {
 export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, onBack }: HighIntelPostApprovalProps) {
   const [selectedTime, setSelectedTime] = useState(payload.goldenHour);
   const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState(false);
+  const [strategyMode, setStrategyMode] = useState<'golden' | 'even'>('golden');
   const [refineFeedback, setRefineFeedback] = useState('');
   const [isRefining, setIsRefining] = useState(false);
 
@@ -251,13 +252,61 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
               </div>
             </div>
 
-            {/* Golden Hour Section */}
-            <div className="space-y-6">
-               <div className="flex items-center gap-3">
-                 <div className="w-2 h-7 bg-blue-500 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.4)]" />
-                 <h2 className="text-3xl font-black text-white tracking-tight italic">Golden Hour</h2>
+            {/* Scheduling Intelligence Section */}
+            <div className="space-y-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-7 bg-blue-500 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.4)]" />
+                  <h2 className="text-3xl font-black text-white tracking-tight italic">Scheduling Strategy</h2>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-1.5 bg-blue-500/10 rounded-full border border-blue-500/20">
+                   <Clock className="w-3 h-3 text-blue-400" />
+                   <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Efficiency Optimized</span>
+                </div>
               </div>
 
+              {/* Strategy Selector */}
+              <div className="grid grid-cols-2 gap-4">
+                <button 
+                  onClick={() => setStrategyMode('golden')}
+                  className={cn(
+                    "p-6 rounded-[28px] border-2 transition-all text-left space-y-2 relative overflow-hidden",
+                    strategyMode === 'golden' ? "bg-primary/10 border-primary shadow-[0_0_20px_rgba(251,191,36,0.2)]" : "bg-slate-900/40 border-white/5 opacity-60 grayscale hover:opacity-100 hover:grayscale-0"
+                  )}
+                >
+                  <Sparkles className={cn("w-6 h-6", strategyMode === 'golden' ? "text-primary" : "text-slate-400")} />
+                  <div>
+                    <p className="font-black text-xs uppercase tracking-widest">Golden Hour</p>
+                    <p className="text-[10px] text-muted-foreground font-medium">Hero post at peak activity</p>
+                  </div>
+                  {strategyMode === 'golden' && (
+                    <div className="absolute top-0 right-0 p-3">
+                      <CheckCircle2 className="w-4 h-4 text-primary" />
+                    </div>
+                  )}
+                </button>
+
+                <button 
+                  onClick={() => setStrategyMode('even')}
+                  className={cn(
+                    "p-6 rounded-[28px] border-2 transition-all text-left space-y-2 relative overflow-hidden",
+                    strategyMode === 'even' ? "bg-blue-500/10 border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.2)]" : "bg-slate-900/40 border-white/5 opacity-60 grayscale hover:opacity-100 hover:grayscale-0"
+                  )}
+                >
+                  <TrendingUp className={cn("w-6 h-6", strategyMode === 'even' ? "text-blue-400" : "text-slate-400")} />
+                  <div>
+                    <p className="font-black text-xs uppercase tracking-widest">Even Spacing</p>
+                    <p className="text-[10px] text-muted-foreground font-medium">Steady momentum velocity</p>
+                  </div>
+                  {strategyMode === 'even' && (
+                    <div className="absolute top-0 right-0 p-3">
+                      <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                    </div>
+                  )}
+                </button>
+              </div>
+
+              {/* Time Selector Dropdown */}
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-primary/20 rounded-[28px] blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
                 <button
@@ -270,7 +319,9 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
                     </div>
                     <div className="text-left">
                        <span className="block text-2xl font-black text-white">{selectedTime}</span>
-                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Engagement Peak Projected</span>
+                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                         {strategyMode === 'golden' ? 'Neural Peak Recommended' : 'Manual Slot Selection'}
+                       </span>
                     </div>
                   </div>
                   <ChevronDown className={cn("w-6 h-6 text-slate-600 transition-transform duration-500", isTimeDropdownOpen && "rotate-180")} />
@@ -309,9 +360,15 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
                   )}
                 </AnimatePresence>
               </div>
-              <p className="text-xs text-muted-foreground font-bold px-3 leading-relaxed italic">
-                "Our neural engine identified this window based on 3 months of engagement heatmaps for your niche."
-              </p>
+              
+              <div className="p-6 bg-slate-900/60 rounded-[32px] border border-white/5 border-dashed">
+                <p className="text-xs text-slate-400 font-medium italic leading-relaxed">
+                  {strategyMode === 'golden' 
+                    ? `"I recommend posting '${payload.title}' at ${payload.goldenHour}. I've analyzed your niche velocity and this window provides a 22% higher probability of going viral. I will space the remaining posts every 4 hours to maintain engagement."`
+                    : `"I will space your pending posts evenly throughout the next 24 hours to ensure consistent visibility across all timezones. This strategy prioritizes long-term brand recall over immediate reach peaks."`
+                  }
+                </p>
+              </div>
             </div>
 
             {/* Conversational Edit Bar */}

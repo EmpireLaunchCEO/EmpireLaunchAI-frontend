@@ -148,10 +148,9 @@ export default function EmpireCenterPage() {
       <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
         {[
           { id: 'duties', label: 'Duties', icon: Zap },
-          { id: 'history', label: 'Posts', icon: History },
           { id: 'expenses', label: 'Costs', icon: CreditCard },
           { id: 'ai-config', label: 'Rules', icon: Stars },
-        ].map((tab) => (
+          ].map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
@@ -271,75 +270,6 @@ export default function EmpireCenterPage() {
                       </div>
                     )}
                   </div>
-                </div>
-              </motion.div>
-            )}
-
-            {activeTab === 'history' && (
-              <motion.div
-                key="history"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-8"
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-black text-foreground">Posting Tracker</h3>
-                  <div className="flex gap-2">
-                     <button className="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">All Platforms</button>
-                  </div>
-                </div>
-
-                <div className="overflow-hidden">
-                  {filteredHistory.length > 0 ? (
-                    <table className="w-full">
-                      <thead>
-                        <tr className="text-left text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-theme">
-                          <th className="pb-4">Site</th>
-                          <th className="pb-4">Asset</th>
-                          <th className="pb-4">Status</th>
-                          <th className="pb-4">Time</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-50">
-                        {filteredHistory.map((post) => (
-                          <tr key={post.id} className="group">
-                            <td className="py-6">
-                              <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 rounded-full overflow-hidden">
-                                  <img src="/branded-globe.png" alt="Platform" className="w-full h-full object-cover" />
-                                </div>
-                                <span className="font-black text-xs text-foreground uppercase tracking-tighter">{post.site}</span>
-                              </div>
-                            </td>
-                            <td className="py-6">
-                              <span className="font-bold text-slate-700">{post.title}</span>
-                            </td>
-                            <td className="py-6">
-                              <div className="flex items-center gap-1.5 text-green-600 text-[10px] font-black uppercase">
-                                <CheckCircle2 className="w-3 h-3" /> {post.status}
-                              </div>
-                            </td>
-                            <td className="py-6">
-                              <a 
-                                href={`/p/${post.id}`} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-1.5 text-slate-400 hover:text-blue-600 transition-colors text-[10px] font-black uppercase"
-                              >
-                                View Live <ExternalLink className="w-3 h-3" />
-                              </a>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <div className="p-12 text-center space-y-4">
-                      <History className="w-12 h-12 text-slate-200 mx-auto" />
-                      <p className="text-sm font-bold text-slate-400">No posts have been established yet.</p>
-                    </div>
-                  )}
                 </div>
               </motion.div>
             )}
