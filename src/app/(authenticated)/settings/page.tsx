@@ -29,7 +29,6 @@ import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 import { SupportHub } from '@/components/Settings/SupportHub';
-import { AutoPilotAgreementGate } from '@/components/Settings/AutoPilotAgreementGate';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
   if (platform.toLowerCase() === 'stripe') {
@@ -399,7 +398,7 @@ export default function SettingsPage() {
                         aiMode === 'empire' ? "border-amber-500 bg-amber-500/5 shadow-2xl" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
                       )}
                     >
-
+                        <div className="flex items-center justify-between">
                         <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-amber-500 border border-amber-500/30">
                           <Zap className="w-6 h-6" />
                         </div>
@@ -532,9 +531,9 @@ export default function SettingsPage() {
                         </div>
                       </div>
                       <p className="text-sm text-slate-400 font-medium italic leading-relaxed">
-                        "This app is designed to be affordable upfront. In exchange, you have agreed to a 4% Success-Share ($40 per $1,000) solely on revenue generated through AI-created videos, posts, and designs."
+                        "We wanted to make the Empire AI accessible to everyone from day one. To keep it affordable upfront, we decided to handle our partnership through a Success-Share model on the backend. A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, if you choose Auto-Pilot, you authorize the Empire AI to create and deploy content on your behalf either from high trends or your guidance, acting as your autonomous growth agent to ensure 24/7 expansion."
                       </p>
-                      <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 w-fit">
+
                          <DollarSign className="w-4 h-4 text-primary" />
                          <span className="text-[10px] font-black text-primary uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
                       </div>
