@@ -73,8 +73,8 @@ export default function Dashboard() {
         if (isAdmin && (activeEmpireId === '1' || !eData.title || eData.title === 'The First Empire' || eData.title === 'EMPIRELAUNCH')) {
           finalData = {
             ...eData,
-            title: 'EmpireLaunch AI',
-            name: 'EmpireLaunch AI',
+            title: 'HOME BASE',
+            name: 'HOME BASE',
             niche: 'AI Business Automation',
             description: 'Empire Niche: AI Business Automation.'
           };
@@ -145,7 +145,7 @@ export default function Dashboard() {
                       <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
                     </div>
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-                      {empireData?.name || empireData?.title || "EmpireLaunch AI"}.
+                      {empireData?.name || empireData?.title || "HOME BASE"}.
                     </h1>
                   </div>
 

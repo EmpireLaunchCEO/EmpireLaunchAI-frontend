@@ -193,7 +193,7 @@ export default function Dashboard() {
               Success Hub
             </div>
             <h1 className="text-xl md:text-4xl font-black tracking-tight leading-tight italic">
-              {(isAdmin && (!empireData?.name || empireData?.name === 'EMPIRELAUNCH' || empireData?.name === 'The First Empire')) ? "EmpireLaunch AI" : (empireData?.name || "EmpireLaunch AI")}.
+              {(isAdmin && (!empireData?.name || empireData?.name === 'EMPIRELAUNCH' || empireData?.name === 'The First Empire')) ? "HOME BASE" : (empireData?.name || "HOME BASE")}.
             </h1>
             <p className="text-[10px] md:text-base text-muted-foreground font-medium italic">
               Monitoring your {(isAdmin && (!empireData?.niche || empireData?.niche === 'Niche Pending')) ? "Done For You Business" : (empireData?.niche || "business")} growth and autonomous operations.

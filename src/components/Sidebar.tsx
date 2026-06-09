@@ -40,7 +40,7 @@ export function Sidebar() {
         <div className="p-6 flex items-center gap-3">
           <BrandedGlobe size="md" spinning />
           <span className="text-lg font-black tracking-tight text-theme-gradient uppercase italic truncate">
-            EmpireLaunch AI
+            HOME BASE
           </span>
         </div>
 
