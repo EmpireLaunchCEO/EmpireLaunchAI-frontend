@@ -91,7 +91,7 @@ export function FinancialCommand({
   return (
     <div className="bg-theme-surface rounded-[40px] p-8 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
       {/* Minimize Toggle */}
-      <div className="absolute top-8 right-8 z-20">
+      <div className="absolute top-5 right-5 z-20">
         <button 
           onClick={toggleMinimize}
           className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"

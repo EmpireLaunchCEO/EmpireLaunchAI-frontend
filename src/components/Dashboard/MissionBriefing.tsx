@@ -141,7 +141,7 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/40 rounded-full blur-[100px] opacity-10 -ml-32 -mb-32 pointer-events-none" />
 
       {/* Minimize Toggle */}
-      <div className="absolute top-8 right-8 z-20">
+      <div className="absolute top-5 right-5 z-20">
         <button 
           onClick={toggleMinimize}
           className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
