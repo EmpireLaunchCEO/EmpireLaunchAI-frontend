@@ -39,7 +39,7 @@ export function GlobalEmpireHeader() {
         <BrandedGlobe 
           size="xl" 
           animate={false}
-          className="shadow-[0_0_60px_rgba(0,229,255,0.2)]"
+          className="shadow-[0_0_50px_rgba(255,255,255,0.1)]"
         />
         <h2 className="mt-6 text-xl md:text-4xl lg:text-5xl font-black tracking-tight md:tracking-[0.15em] lg:tracking-[0.2em] uppercase italic text-theme-gradient leading-none text-center px-4 max-w-full drop-shadow-[0_2px_10px_rgba(var(--primary-rgb),0.3)]">
           {getPageTitle()}

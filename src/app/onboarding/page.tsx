@@ -39,9 +39,7 @@ const steps = [
 
 const EstablishedScreen = () => (
   <div className="fixed inset-0 z-[200] bg-[#0a0519] flex flex-col items-center justify-center gap-6 text-center p-6">
-    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-2xl overflow-hidden">
-      <BrandedGlobe size="lg" glow={false} animate={true} />
-    </div>
+    <BrandedGlobe size="lg" glow={false} animate={true} />
     <div className="flex flex-col items-center gap-2">
       <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
         Neural Sync Established
@@ -283,9 +281,7 @@ function OnboardingContent() {
         </div>
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="relative z-10 w-full max-w-4xl">
           <div className="text-center space-y-12">
-            <div className="w-24 h-24 bg-white rounded-[2rem] mx-auto flex items-center justify-center border border-white/20 shadow-[0_0_40px_rgba(255,255,255,0.2)] overflow-hidden">
-              <BrandedGlobe size="xl" glow={false} animate={true} />
-            </div>
+            <BrandedGlobe size="xl" glow={false} animate={true} className="mx-auto" />
             <div className="space-y-4">
               <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight uppercase italic">Download the App to Finish.</h2>
               <p className="text-primary font-black tracking-widest text-xs uppercase">Add "EmpireLaunch AI" to your Home Screen to unlock the Command Center.</p>
