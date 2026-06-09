@@ -17,8 +17,8 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#ffffff',
-};
+  themeColor: '#0a0519',
+  };
 
 export default function RootLayout({
   children,
@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <style>{`
-          html, body { background-color: #ffffff !important; }
+          html, body { background-color: #0a0519 !important; }
         `}</style>
         <link rel="canonical" href="https://empire-launch-ai-frontend.vercel.app" />
         <link rel="manifest" href="/manifest.json?v=1024" />
@@ -42,7 +42,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="EmpireLaunch AI" />
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#0a0519" />
         <script
           dangerouslySetInnerHTML={{
             __html: `

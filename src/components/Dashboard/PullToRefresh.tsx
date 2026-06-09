@@ -44,7 +44,8 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       // Apply linear resistance for a "snappy" feel
       const pullY = info.offset.y * 0.4;
       y.set(pullY);
-      setPullProgress(Math.min(pullY / THRESHOLD, 1));
+      const progress = Math.min(pullY / THRESHOLD, 1);
+      setPullProgress(progress);
     } else {
       y.set(0);
       setPullProgress(0);
@@ -61,7 +62,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
 
       // Snap to active refresh position
       await controls.start({ 
-        y: 60, 
+        y: 80, 
         transition: { type: "spring", stiffness: 400, damping: 25 } 
       });
 
@@ -101,13 +102,13 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
            className="flex flex-col items-center"
          >
             <div className={cn(
-              "p-2 rounded-full border-2 transition-all duration-300 bg-slate-900",
-              isRefreshing ? "border-primary shadow-[0_0_30px_rgba(0,229,255,0.3)]" : "border-white/5"
+              "p-2 rounded-full border-2 transition-all duration-300",
+              isRefreshing ? "bg-slate-900 border-primary shadow-[0_0_30px_rgba(0,229,255,0.3)]" : "bg-transparent border-white/10"
             )}>
               <BrandedGlobe
                 size="md"
                 animate={true}
-                spinning={isRefreshing}
+                spinning={isRefreshing || pullProgress > 0.5}
               />
             </div>
             <span className="mt-2 text-[8px] font-black text-primary uppercase tracking-[0.4em] drop-shadow-md">
