@@ -76,18 +76,16 @@ export function FinancialCommand({
     { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },
     { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
     { name: "EmpireLaunch AI Subscription", amount: 4000, date: getPlatformDueDate(), type: "app" },
-    { name: "Growth Share ($40/$1k)", amount: platformDuesAmount, date: "AI-Attributed", type: "app" },
   ] : [];
 
   const infrastructure = isLinkingComplete ? [
     { name: "Railway Hosting", amount: 540, status: "Live", icon: Activity },
     { name: "OpenAI Usage", amount: 1250, status: "Live", icon: Cpu },
-    { name: "Gemini / Google AI", amount: 0, status: "Free Tier", icon: Zap },
   ] : [];
 
   const dues = isLinkingComplete ? [
-    { name: "Etsy Listing Fees", amount: 0, date: "Syncing" },
-    { name: "Fiverr Commission", amount: 0, date: "Syncing" },
+    { name: "Universal Success-Shares (4%)", amount: platformDuesAmount, date: "Multi-Platform Sync (Stripe, PayPal, Venmo, etc.)", type: "success-share" },
+    { name: "Platform Listing Fees", amount: 0, date: "Etsy / Shopify Syncing" },
   ] : [];
 
   return (
@@ -214,14 +212,17 @@ export function FinancialCommand({
                 <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">
                   <ShieldCheck className="w-3 h-3" />
-                  Marketplace Dues
+                  Growth Success-Shares
                 </div>
-                <button
-                  onClick={() => onActivateGrowthProtocol?.('Existing Product Stack')}
-                  className="text-[8px] font-black text-primary uppercase tracking-widest bg-primary/5 px-2 py-1 rounded border border-primary/10 hover:bg-primary/10 transition-all"
-                >
-                  + Promote Existing
-                </button>
+                <div className="flex items-center gap-2">
+                  <span className="text-[7px] font-black text-green-500 uppercase animate-pulse">Auto-Sync Active</span>
+                  <button
+                    onClick={() => onActivateGrowthProtocol?.('Existing Product Stack')}
+                    className="text-[8px] font-black text-primary uppercase tracking-widest bg-primary/5 px-2 py-1 rounded border border-primary/10 hover:bg-primary/10 transition-all"
+                  >
+                    + Activate Protocol
+                  </button>
+                </div>
               </div>
                 <div className="space-y-3">
                   {dues.map((due, i) => (
@@ -243,7 +244,7 @@ export function FinancialCommand({
                   
                   <div className="mt-8 pt-4 border-t border-theme/30">
                     <button className="w-full py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
-                      Settle All Dues
+                      Settle All Success-Shares
                     </button>
                   </div>
                 </div>

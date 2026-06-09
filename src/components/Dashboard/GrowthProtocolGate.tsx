@@ -52,16 +52,14 @@ export function GrowthProtocolGate({ isOpen, onClose, onActivate, productName, p
               </h2>
             </div>
 
-            <div className="bg-theme-background/50 border border-theme rounded-[32px] p-6 space-y-4">
-              <p className="text-sm md:text-base text-slate-300 font-medium italic leading-relaxed text-center">
-                "I am ready to start aggressively scaling <span className="text-primary font-bold not-italic underline decoration-primary/30 underline-offset-4">{productName}</span> {platform ? `on ${platform}` : 'across your connected channels'}. 
-                By activating this protocol, I will begin tracking all future revenue for this specific item in our <span className="text-white font-bold">Growth Ledger</span>."
+            <div className="bg-theme-background/50 border border-theme rounded-[32px] p-6 space-y-4 text-center">
+              <p className="text-sm md:text-base text-slate-300 font-medium italic leading-relaxed">
+                "By activating this protocol, all revenue for this product will be subject to a <span className="text-primary font-bold">4% Success-Share</span>."
               </p>
-              
-              <div className="flex items-center gap-3 px-4 py-3 bg-blue-500/5 rounded-2xl border border-blue-500/10">
+              <div className="flex items-center gap-3 px-4 py-3 bg-blue-500/5 rounded-2xl border border-blue-500/10 text-left">
                 <Info className="w-4 h-4 text-blue-400 shrink-0" />
                 <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest leading-tight">
-                  This ensures my neural engine accurately calculates our 4% success-share ($40 per $1k) as we scale your empire together.
+                  I will automatically track sales and reach while our Neural Link remains active. You keep 96% of the revenue; 4% is calculated as our Success-Share.
                 </p>
               </div>
             </div>

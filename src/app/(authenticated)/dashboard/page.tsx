@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { MissionBriefing } from '@/components/Dashboard/MissionBriefing';
-import { DetailedRevenue } from '@/components/Dashboard/DetailedRevenue';
+import { EmpireLedger } from '@/components/Analytics/EmpireLedger';
 import { BusinessSlots } from '@/components/Dashboard/BusinessSlots';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
@@ -214,12 +214,12 @@ export default function Dashboard() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 relative z-0">
                       <div className="lg:col-span-8 space-y-12">
-                        <MissionBriefing 
-                          empireData={empireData} 
-                          onExecute={handleInsightExecute} 
+                        <MissionBriefing
+                          empireData={empireData}
+                          onExecute={handleInsightExecute}
                           isExecuting={!!executingInsight}
                         />
-                        <DetailedRevenue transactions={transactions} />
+                        <EmpireLedger />
                       </div>
                       <aside className="lg:col-span-4 space-y-12">
                         <SocialProofApproval />

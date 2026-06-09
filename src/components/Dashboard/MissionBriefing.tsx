@@ -113,6 +113,39 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
     return `${greeting}currently scanning platforms for high-velocity trends in your ${displayNiche} sector. I've identified a scaling opportunity. Ready to review the research?\"`;
   }, [currentStep.id, empireData?.niche, empireData?.name, connectedPlatforms.length, isPaid, isAdmin]);
 
+  const [isReasoning, setIsReasoning] = useState(false);
+  const [reasoningStep, setReasoningStep] = useState(0);
+
+  const reasoningSteps = [
+    { label: "CONTEXT", detail: "Analyzing market velocity & platform status..." },
+    { label: "INTENT", detail: "Aligning with primary revenue goals..." },
+    { label: "CONSTRAINTS", detail: "Checking copyright safety & API limits..." },
+    { label: "CAPABILITY", detail: "Evaluating design engine availability..." },
+    { label: "STRATEGY", detail: "Optimizing execution order for results..." },
+    { label: "OUTPUT", detail: "Ready for protocol deployment." }
+  ];
+
+  useEffect(() => {
+    if (isReasoning) {
+      const interval = setInterval(() => {
+        setReasoningStep(prev => {
+          if (prev >= reasoningSteps.length - 1) {
+            clearInterval(interval);
+            setTimeout(() => {
+              setIsReasoning(false);
+              setReasoningStep(0);
+              // Handle redirection or final action here
+              if (currentStep.href) window.location.href = currentStep.href;
+            }, 1000);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 800);
+      return () => clearInterval(interval);
+    }
+  }, [isReasoning, currentStep.href]);
+
   if (!mounted) return null;
 
   if (isMinimized) {
@@ -271,7 +304,7 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
               <button
                 onClick={() => {
                   if (currentStep.id === 1) window.dispatchEvent(new CustomEvent('empire:force-intel-sync'));
-                  else if (currentStep.href) window.location.href = currentStep.href;
+                  else setIsReasoning(true);
                 }}
                 className="block w-full py-4 bg-primary text-slate-950 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white transition-all text-center active:scale-[0.98] shadow-lg shadow-primary/20"
               >
@@ -279,6 +312,51 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
               </button>
             </div>
           </div>
+
+          <AnimatePresence>
+            {isReasoning && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="absolute inset-0 z-[100] bg-slate-950 rounded-[40px] p-8 flex flex-col justify-center gap-8 overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] -mr-32 -mt-32" />
+                
+                <div className="space-y-2 text-center relative z-10">
+                  <div className="flex justify-center gap-1 mb-4">
+                    {[0, 1, 2, 3, 4, 5].map((i) => (
+                      <motion.div
+                        key={i}
+                        animate={{ 
+                          scale: reasoningStep === i ? [1, 1.2, 1] : 1,
+                          opacity: reasoningStep === i ? 1 : 0.3
+                        }}
+                        className={cn(
+                          "w-2 h-2 rounded-full",
+                          reasoningStep >= i ? "bg-primary" : "bg-slate-700"
+                        )}
+                      />
+                    ))}
+                  </div>
+                  <h3 className="text-primary font-black text-[10px] uppercase tracking-[0.4em]">Reasoning Loop Active</h3>
+                  <p className="text-white text-xl font-black italic uppercase tracking-tight">
+                    {reasoningSteps[reasoningStep].label}
+                  </p>
+                </div>
+
+                <div className="bg-white/5 rounded-3xl p-6 border border-white/10 relative z-10">
+                  <p className="text-white/60 text-xs font-medium leading-relaxed italic text-center">
+                    "{reasoningSteps[reasoningStep].detail}"
+                  </p>
+                </div>
+
+                <div className="flex justify-center relative z-10">
+                  <div className="w-12 h-12 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="p-6 rounded-[32px] bg-primary/10 border border-primary/20 relative overflow-hidden">
              <div className="flex items-center gap-2 mb-2">

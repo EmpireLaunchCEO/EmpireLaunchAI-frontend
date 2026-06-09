@@ -173,7 +173,7 @@ export function DetailedRevenue() {
               <div className="flex items-center gap-6">
                  <div className="text-right">
                     <p className="text-lg font-black text-foreground">+${(t?.amount || 0).toFixed(2)}</p>
-                    <p className="text-[10px] font-bold text-slate-400">Net: ${((t?.amount || 0) * 0.94).toFixed(2)}</p>
+                    <p className="text-[10px] font-bold text-slate-400">Net: ${((t?.amount || 0) * 0.96).toFixed(2)}</p>
                  </div>
                  <button className="p-3 bg-theme-surface border border-theme rounded-xl opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
                     <ArrowUpRight className="w-4 h-4 text-slate-400" />
