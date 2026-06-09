@@ -1,7 +1,7 @@
 "use client";
 
-import React from 'react';
-import { Target, TrendingUp, ChevronRight, Award } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Target, TrendingUp, ChevronRight, Award, Minus, Maximize2, DollarSign } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { GrowthBurst } from './GrowthBurst';
 
@@ -14,16 +14,76 @@ interface GrowthTrackerProps {
 }
 
 export const GrowthTracker = ({
-  goalTitle = "$1,000 Monthly Revenue",
-  currentValue = 742,
+  goalTitle = "Monthly Revenue Goal",
+  currentValue = 0,
   targetValue = 1000,
   unit = "$",
   progress
 }: GrowthTrackerProps) => {
-  const percentage = Math.max(0, Math.min(100, progress !== undefined ? progress : Math.round(((currentValue || 0) / (targetValue || 1)) * 100))) || 0;
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [localTarget, setLocalTarget] = useState(targetValue);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem('minimized-growth-tracker');
+    if (saved === 'true') setIsMinimized(true);
+    
+    const savedGoal = localStorage.getItem('monthly-revenue-goal');
+    if (savedGoal) setLocalTarget(parseInt(savedGoal));
+  }, []);
+
+  const toggleMinimize = () => {
+    const newState = !isMinimized;
+    setIsMinimized(newState);
+    localStorage.setItem('minimized-growth-tracker', String(newState));
+  };
+
+  const handleSetGoal = () => {
+    const newGoal = prompt("What is your Monthly Revenue Goal?", localTarget.toString());
+    if (newGoal && !isNaN(parseInt(newGoal))) {
+      const val = parseInt(newGoal);
+      setLocalTarget(val);
+      localStorage.setItem('monthly-revenue-goal', val.toString());
+      alert(`Setting new Monthly Revenue Goal to ${val.toLocaleString()}. Strategy is being recalculated...`);
+    }
+  };
+
+  if (!mounted) return null;
+
+  if (isMinimized) {
+    return (
+      <div className="bg-theme-surface rounded-3xl p-4 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[64px] flex items-center justify-between group transition-all">
+        <div className="flex items-center gap-4">
+          <div className="w-8 h-8 rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/20">
+            <Target className="w-4 h-4" />
+          </div>
+          <h2 className="text-[10px] font-black uppercase tracking-widest text-foreground">Growth Tracker</h2>
+        </div>
+        <button 
+          onClick={toggleMinimize}
+          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Maximize2 className="w-3 h-3" />
+        </button>
+      </div>
+    );
+  }
+
+  const percentage = Math.max(0, Math.min(100, progress !== undefined ? progress : Math.round(((currentValue || 0) / (localTarget || 1)) * 100))) || 0;
 
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 border border-theme shadow-sm relative overflow-hidden group">
+    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme shadow-2xl relative overflow-hidden group">
+      {/* Minimize Toggle */}
+      <div className="absolute top-4 right-5 z-20">
+        <button 
+          onClick={toggleMinimize}
+          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Minus className="w-4 h-4" />
+        </button>
+      </div>
+
       <div className="flex flex-col md:flex-row gap-8 items-center">
         {/* Holographic Progress Ring */}
         <div className="relative w-48 h-48 shrink-0 flex items-center justify-center">
@@ -34,7 +94,7 @@ export const GrowthTracker = ({
               r="80"
               fill="none"
               stroke="currentColor"
-              className="text-slate-400 opacity-20"
+              className="text-slate-400 opacity-10"
               strokeWidth="12"
             />
             <motion.circle
@@ -59,71 +119,48 @@ export const GrowthTracker = ({
           </svg>
           <GrowthBurst active={percentage >= 100} />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Status</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Progress</span>
             <span className="text-3xl md:text-4xl font-black text-foreground tracking-tighter">{percentage}%</span>
-          </div>
-
-          {/* Glowing particles effect */}
-          <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
-             <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary rounded-full animate-ping" />
-             <div className="absolute bottom-1/3 right-1/4 w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping delay-700" />
           </div>
         </div>
 
         <div className="flex-1 space-y-6">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Award className="w-5 h-5 text-primary" />
-              <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">Success Goal</h3>
+              <Award className="w-5 h-5 text-amber-500" />
+              <h3 className="text-xl font-black uppercase tracking-[0.2em] text-amber-500 italic">Growth Tracker</h3>
             </div>
-            <h2 className="text-3xl font-black text-foreground tracking-tight leading-tight">
-              {goalTitle}.
-            </h2>
+            <p className="text-slate-400 text-xs font-medium italic">Monitor your path to financial dominance and strategic milestones.</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-theme-background rounded-2xl p-4 border border-theme">
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Current</span>
-              <span className="text-2xl font-black text-foreground">{unit}{(currentValue || 0).toLocaleString()}</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-theme-background/30 rounded-3xl p-6 border border-theme">
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Total Empire Earnings</span>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                  <DollarSign className="w-5 h-5 text-emerald-500" />
+                </div>
+                <span className="text-2xl font-black text-foreground">{unit}{(currentValue || 0).toLocaleString()}</span>
+              </div>
             </div>
-            <div className="bg-theme-background rounded-2xl p-4 border border-theme">
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-1">Target</span>
-              <span className="text-2xl font-black text-foreground">{unit}{(targetValue || 0).toLocaleString()}</span>
+            <div className="bg-theme-background/30 rounded-3xl p-6 border border-theme">
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Revenue Target</span>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                  <Target className="w-5 h-5 text-amber-500" />
+                </div>
+                <span className="text-2xl font-black text-foreground">{unit}{(localTarget || 0).toLocaleString()}</span>
+              </div>
             </div>
           </div>
 
           <button 
-            onClick={() => {
-              const newGoal = prompt("What is your Monthly Revenue Goal?");
-              if (newGoal) {
-                alert(`Setting new Monthly Revenue Goal to ${newGoal}. Strategy is being recalculated...`);
-                // In a real app, we would call an API here
-              }
-            }}
-            className="w-full bg-primary text-foreground rounded-2xl py-4 font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all group/btn shadow-lg shadow-primary/20"
+            onClick={handleSetGoal}
+            className="w-full bg-amber-500 text-slate-950 rounded-2xl py-4 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-all group/btn shadow-lg shadow-amber-500/20"
           >
-            Strategic Expansion
+            Set Monthly Revenue Goal
             <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </button>
-        </div>
-      </div>
-
-      <div className="mt-8 pt-6 border-t border-theme flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-theme-background flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-primary" />
-          </div>
-          <div>
-            <p className="text-xs font-bold text-foreground">+12.4% WoW Growth</p>
-            <p className="text-[10px] text-muted-foreground">AI projection: Target hit in 9 days</p>
-          </div>
-        </div>
-        <div className="flex -space-x-2">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="w-8 h-8 rounded-full border-2 border-theme-surface bg-theme-background flex items-center justify-center text-[10px] font-bold text-muted-foreground">
-              P{i}
-            </div>
-          ))}
         </div>
       </div>
     </div>

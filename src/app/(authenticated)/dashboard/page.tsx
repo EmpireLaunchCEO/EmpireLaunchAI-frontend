@@ -16,6 +16,7 @@ import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 import { LockedSlotView } from '@/components/Dashboard/LockedSlotView';
 import { NicheCalibrationBox } from '@/components/Dashboard/SuccessHub/NicheCalibrationBox';
 import { FinancialCommand } from '@/components/Dashboard/FinancialCommand';
+import { GrowthTracker } from '@/components/Dashboard/SuccessHub/GrowthTracker';
 import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 
@@ -168,6 +169,11 @@ export default function Dashboard() {
                     )}
                     
                     {/* Primary Results Section */}
+                    <GrowthTracker
+                      currentValue={(healthData?.revenue || 0) * 100}
+                      progress={healthData?.score}
+                    />
+
                     <FinancialCommand
                       withholdableEarnings={(healthData?.revenue || 0) * 100}
                       growthScore={healthData?.score}

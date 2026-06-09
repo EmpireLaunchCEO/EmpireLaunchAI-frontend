@@ -106,23 +106,6 @@ export function FinancialCommand({
       <div className="relative z-10 space-y-10">
         {/* Header Summary */}
         <div className="flex flex-col md:flex-row gap-8 items-center border-b border-theme/30 pb-8">
-          <div className="relative w-24 h-24 shrink-0">
-            <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-slate-100/10" strokeWidth="12" />
-              <motion.circle
-                cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-primary" strokeWidth="12"
-                strokeDasharray="251.2"
-                initial={{ strokeDashoffset: 251.2 }}
-                animate={{ strokeDashoffset: 251.2 * (1 - (growthScore / 100)) }}
-                strokeLinecap="round"
-                transition={{ duration: 1.5, ease: "easeOut" }}
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-[14px] font-black">{growthScore}%</span>
-            </div>
-          </div>
-
           <div className="flex-1 space-y-1">
             <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Finance Tracker</h3>
             <p className="text-slate-400 text-xs font-medium italic">Integrated platform dues and automated success-share monitoring.</p>
