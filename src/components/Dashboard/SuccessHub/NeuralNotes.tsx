@@ -1,10 +1,24 @@
 "use client";
 
-import React, { useState } from 'react';
-import { StickyNote, Plus, Trash2, Save } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { StickyNote, Plus, Trash2, Save, Minus, Maximize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function NeuralNotes() {
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem('minimized-neural-notes');
+    if (saved === 'true') setIsMinimized(true);
+  }, []);
+
+  const toggleMinimize = () => {
+    const newState = !isMinimized;
+    setIsMinimized(newState);
+    localStorage.setItem('minimized-neural-notes', String(newState));
+  };
   const [notes, setNotes] = useState<string[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('neural_notes');
@@ -29,8 +43,38 @@ export function NeuralNotes() {
     saveNotes(notes.filter((_, i) => i !== index));
   };
 
+  if (!mounted) return null;
+
+  if (isMinimized) {
+    return (
+      <div className="bg-theme-surface rounded-[40px] p-6 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[80px] flex items-center justify-between group transition-all">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
+            <StickyNote className="w-5 h-5" />
+          </div>
+          <h2 className="text-sm font-black uppercase tracking-widest text-foreground">Neural Notes</h2>
+        </div>
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <section className="bg-theme-surface rounded-[40px] p-8 border border-theme shadow-xl">
+    <section className="bg-theme-surface rounded-[40px] p-8 border border-theme shadow-xl relative">
+      {/* Minimize Toggle */}
+      <div className="absolute top-8 right-8 z-20">
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Minus className="w-5 h-5" />
+        </button>
+      </div>
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">

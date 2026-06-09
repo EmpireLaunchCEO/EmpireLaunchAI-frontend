@@ -203,8 +203,6 @@ export default function Dashboard() {
                         <DetailedRevenue transactions={transactions} />
                       </div>
                       <aside className="lg:col-span-4 space-y-12">
-                        <AIOptimizationHub />
-                        <AutonomousCyclesStatus />
                         <SocialProofApproval />
                         <EmpireConstellation />
                       </aside>

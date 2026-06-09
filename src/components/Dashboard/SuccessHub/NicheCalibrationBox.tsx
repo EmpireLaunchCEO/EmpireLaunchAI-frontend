@@ -1,6 +1,6 @@
 "use client";
-import React from 'react';
-import { Target } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Target, Minus, Maximize2 } from 'lucide-react';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface NicheBoxProps {
@@ -10,9 +10,53 @@ interface NicheBoxProps {
 
 export const NicheCalibrationBox = ({ niche, angle }: NicheBoxProps) => {
   const isPending = !niche;
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem('minimized-niche-calibration');
+    if (saved === 'true') setIsMinimized(true);
+  }, []);
+
+  const toggleMinimize = () => {
+    const newState = !isMinimized;
+    setIsMinimized(newState);
+    localStorage.setItem('minimized-niche-calibration', String(newState));
+  };
+
+  if (!mounted) return null;
+
+  if (isMinimized) {
+    return (
+      <div className="bg-theme-surface rounded-3xl p-6 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[80px] flex items-center justify-between group transition-all">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
+            <Target className="w-5 h-5" />
+          </div>
+          <h2 className="text-sm font-black uppercase tracking-widest text-foreground">Niche Calibration</h2>
+        </div>
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-theme-surface border border-theme rounded-[32px] p-8 shadow-lg space-y-6">
+    <div className="bg-theme-surface border border-theme rounded-[32px] p-8 shadow-lg space-y-6 relative">
+      {/* Minimize Toggle */}
+      <div className="absolute top-8 right-8 z-20">
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Minus className="w-5 h-5" />
+        </button>
+      </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">

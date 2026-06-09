@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   DollarSign,
   ArrowUpRight,
@@ -9,7 +9,9 @@ import {
   CheckCircle2,
   Clock,
   ArrowRight,
-  Target
+  Target,
+  Minus,
+  Maximize2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { analyticsService, RevenueTransaction, RevenueMilestone } from '@/lib/api-service';
@@ -21,21 +23,25 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 export function DetailedRevenue() {
   const { connectedPlatforms } = useEmpire();
   const [transactions, setTransactions] = useState<RevenueTransaction[]>([]);
-  const [milestones, setMilestones] = useState<RevenueMilestone[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const saved = localStorage.getItem('minimized-detailed-revenue');
+    if (saved === 'true') setIsMinimized(true);
   }, []);
+
+  const toggleMinimize = () => {
+    const newState = !isMinimized;
+    setIsMinimized(newState);
+    localStorage.setItem('minimized-detailed-revenue', String(newState));
+  };
 
   useEffect(() => {
     async function loadData() {
-      const [tData, mData] = await Promise.all([
-        analyticsService.getRevenueTransactions(),
-        analyticsService.getRevenueMilestones()
-      ]);
+      const tData = await analyticsService.getRevenueTransactions();
       
       // Filter transactions based on linked platforms
       const filteredT = (tData || []).filter(t => 
@@ -43,20 +49,14 @@ export function DetailedRevenue() {
       );
       
       setTransactions(filteredT || []);
-      setMilestones(mData || []);
       setLoading(false);
     }
     loadData();
   }, [connectedPlatforms]);
 
   const totalRevenue = (transactions || []).reduce((acc, t) => acc + (t?.amount || 0), 0);
-  const activeMilestone = (milestones || []).find(m => m && !m.isCompleted) || (milestones && milestones.length > 0 ? milestones[milestones.length - 1] : null);
   
-  // Safe progress calculation
-  const currentVal = activeMilestone?.current || 0;
-  const targetVal = activeMilestone?.target || 1000;
-  const rawProgress = (currentVal / (targetVal || 1)) * 100;
-  const progressPercent = Math.min(100, Math.max(0, isNaN(rawProgress) ? 0 : rawProgress));
+  if (!mounted) return null;
 
   if (loading) {
     return (
@@ -66,52 +66,39 @@ export function DetailedRevenue() {
     );
   }
 
-  return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Milestone Progress */}
-        <div className="bg-theme-surface rounded-[40px] p-8 text-foreground space-y-6 relative overflow-hidden shadow-2xl border-2 border-theme">
-          <div className="relative z-10 flex justify-between items-start">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
-                <Target className="w-3 h-3" />
-                Active Milestone
-              </div>
-              <h3 className="text-2xl font-black">{activeMilestone?.label}</h3>
-            </div>
-            <div className="bg-primary/10 backdrop-blur-md px-3 py-1 rounded-full border border-primary/20">
-               <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                 {progressPercent.toFixed(1)}% Complete
-               </span>
-            </div>
+  if (isMinimized) {
+    return (
+      <div className="bg-theme-surface rounded-3xl p-6 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[80px] flex items-center justify-between group transition-all">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 shadow-lg">
+            <DollarSign className="w-5 h-5" />
           </div>
-
-          <div className="relative z-10 space-y-4">
-             <div className="flex justify-between items-end">
-               <div className="flex items-end gap-2">
-                 <span className="text-4xl font-black text-foreground">${activeMilestone?.current?.toLocaleString() || '0'}</span>
-                 <span className="text-muted-foreground font-bold mb-1">/ ${activeMilestone?.target?.toLocaleString() || '1,000'}</span>
-               </div>
-               <span className="text-xs font-bold text-primary">+${((activeMilestone?.target || 0) - (activeMilestone?.current || 0)).toLocaleString()} remaining</span>
-             </div>
-
-             <div className="h-3 w-full bg-theme-background rounded-full overflow-hidden border border-theme">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progressPercent}%` }}
-                  transition={{ duration: 1.5, ease: "easeOut" }}
-                  className="h-full bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]"
-                />
-             </div>
-          </div>
-
-          <div className="absolute right-0 bottom-0 p-8 opacity-5">
-             <DollarSign className="w-48 h-48 -mr-12 -mb-12 rotate-12" />
-          </div>
+          <h2 className="text-sm font-black uppercase tracking-widest text-foreground">Revenue Command</h2>
         </div>
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
 
+  return (
+    <div className="space-y-8 relative">
+      <div className="absolute top-0 right-0 z-20">
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Minus className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-8">
         {/* Quick Stats Summary */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
            <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm">
               <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                  <TrendingUp className="w-5 h-5" />
@@ -130,7 +117,7 @@ export function DetailedRevenue() {
                  <h4 className="text-xl font-black text-foreground">99.2%</h4>
               </div>
            </div>
-           <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm col-span-2 flex items-center justify-between">
+           <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm lg:col-span-2 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-white shadow-lg">
                    <DollarSign className="w-6 h-6" />

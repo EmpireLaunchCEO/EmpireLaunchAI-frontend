@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
+import React, { useMemo, useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   CheckCircle2,
   Flag,
@@ -11,7 +11,9 @@ import {
   Share2,
   Rocket,
   CreditCard,
-  BrainCircuit
+  BrainCircuit,
+  Minus,
+  Maximize2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
@@ -28,6 +30,20 @@ interface Step {
 
 export function MissionBriefing({ empireData }: { empireData: any }) {
   const { connectedPlatforms, isPaid, aiMode, isAdmin } = useEmpire();
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem('minimized-mission-briefing');
+    if (saved === 'true') setIsMinimized(true);
+  }, []);
+
+  const toggleMinimize = () => {
+    const newState = !isMinimized;
+    setIsMinimized(newState);
+    localStorage.setItem('minimized-mission-briefing', String(newState));
+  };
 
   const steps = useMemo<Step[]>(() => {
     const description = empireData?.description || '';
@@ -97,11 +113,42 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
     return `${greeting}currently scanning platforms for high-velocity trends in your ${displayNiche} sector. I've identified a scaling opportunity. Ready to review the research?\"`;
   }, [currentStep.id, empireData?.niche, empireData?.name, connectedPlatforms.length, isPaid, isAdmin]);
 
+  if (!mounted) return null;
+
+  if (isMinimized) {
+    return (
+      <div className="bg-theme-surface rounded-3xl p-6 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[80px] flex items-center justify-between group transition-all">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
+            <Target className="w-5 h-5" />
+          </div>
+          <h2 className="text-sm font-black uppercase tracking-widest text-foreground">Mission Briefing</h2>
+        </div>
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-theme-surface rounded-[32px] md:rounded-[48px] p-6 lg:p-12 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
       {/* Background Glows */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-10 -mr-48 -mt-48 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/40 rounded-full blur-[100px] opacity-10 -ml-32 -mb-32 pointer-events-none" />
+
+      {/* Minimize Toggle */}
+      <div className="absolute top-8 right-8 z-20">
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Minus className="w-5 h-5" />
+        </button>
+      </div>
 
       <div className="relative z-10 flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
         <div className="flex-1 space-y-6 lg:space-y-8 w-full">

@@ -44,6 +44,8 @@ const expenses = [
 ];
 
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
+import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
+import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
 
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'duties' | 'history' | 'expenses' | 'ai-config'>('duties');
@@ -169,6 +171,8 @@ export default function EmpireCenterPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Main Feed */}
         <div className="lg:col-span-2 space-y-8">
+          <AIOptimizationHub />
+          <AutonomousCyclesStatus />
           <AnimatePresence mode="wait">
             {activeTab === 'duties' && (
               <motion.div

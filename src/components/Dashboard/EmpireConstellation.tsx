@@ -1,11 +1,46 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { CheckCircle2, TrendingUp, Users, Zap, DollarSign, Activity } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckCircle2, TrendingUp, Users, Zap, DollarSign, Activity, Minus, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function EmpireConstellation() {
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem('minimized-empire-constellation');
+    if (saved === 'true') setIsMinimized(true);
+  }, []);
+
+  const toggleMinimize = () => {
+    const newState = !isMinimized;
+    setIsMinimized(newState);
+    localStorage.setItem('minimized-empire-constellation', String(newState));
+  };
+
+  if (!mounted) return null;
+
+  if (isMinimized) {
+    return (
+      <div className="bg-theme-surface rounded-3xl p-6 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[80px] flex items-center justify-between group transition-all">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
+            <Activity className="w-5 h-5" />
+          </div>
+          <h2 className="text-sm font-black uppercase tracking-widest text-foreground">Empire Constellation</h2>
+        </div>
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
   // Constellation Node Definitions
   const nodes = [
     { id: 'revenue', label: 'Revenue', x: 50, y: 15, icon: DollarSign, color: 'text-blue-500', value: '$12.4K' },
@@ -28,6 +63,15 @@ export function EmpireConstellation() {
 
   return (
     <div className="bg-theme-surface p-8 rounded-[40px] border border-theme shadow-sm space-y-6 relative overflow-hidden">
+      {/* Minimize Toggle */}
+      <div className="absolute top-8 right-8 z-20">
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Minus className="w-5 h-5" />
+        </button>
+      </div>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-bold text-foreground">Empire Constellation</h3>
         <span className="text-[10px] font-black text-primary bg-primary/10 px-2 py-1 rounded-md uppercase tracking-widest">

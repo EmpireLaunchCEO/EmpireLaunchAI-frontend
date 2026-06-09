@@ -23,7 +23,9 @@ import {
   Clock,
   Layers,
   Network,
-  MessageSquare
+  MessageSquare,
+  Minus,
+  Maximize2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -136,6 +138,20 @@ export function IntelligenceCenter() {
   const [thoughts, setThoughts] = useState(aiThoughtStream);
   const [isThinking, setIsThinking] = useState(false);
   const [activePanel, setActivePanel] = useState<'stream' | 'signals' | 'metrics'>('stream');
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem('minimized-intelligence-center');
+    if (saved === 'true') setIsMinimized(true);
+  }, []);
+
+  const toggleMinimize = () => {
+    const newState = !isMinimized;
+    setIsMinimized(newState);
+    localStorage.setItem('minimized-intelligence-center', String(newState));
+  };
 
   // Simulate AI thinking pulse
   useEffect(() => {
@@ -172,6 +188,27 @@ export function IntelligenceCenter() {
     return () => clearInterval(timer);
   }, [displayNiche, isLinkingComplete]);
 
+  if (!mounted) return null;
+
+  if (isMinimized) {
+    return (
+      <div className="bg-theme-surface rounded-3xl p-6 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[80px] flex items-center justify-between group transition-all">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
+            <BrainCircuit className="w-5 h-5" />
+          </div>
+          <h2 className="text-sm font-black uppercase tracking-widest text-foreground">AI Intelligence Center</h2>
+        </div>
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
+
   const panels = [
     { id: 'stream' as const, label: 'Thought Stream', icon: MessageSquare },
     { id: 'signals' as const, label: 'Market Signals', icon: TrendingUp },
@@ -179,7 +216,15 @@ export function IntelligenceCenter() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      <div className="absolute top-0 right-0 z-20">
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Minus className="w-5 h-5" />
+        </button>
+      </div>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
