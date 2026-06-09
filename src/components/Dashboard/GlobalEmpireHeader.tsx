@@ -16,7 +16,7 @@ export function GlobalEmpireHeader() {
 
   const getPageTitle = () => {
     if (pathname === '/dashboard') {
-      return 'EmpireLaunch AI';
+      return 'HOME BASE';
     }
     switch (pathname) {
       case '/empire-center': return 'Approval Center.';
@@ -25,7 +25,7 @@ export function GlobalEmpireHeader() {
       case '/review': return 'Control Gates.';
       case '/analytics': return 'Empire Ledger.';
       case '/settings': return 'Settings.';
-      default: return 'EmpireLaunch AI.';
+      default: return 'HOME BASE';
     }
   };
 
