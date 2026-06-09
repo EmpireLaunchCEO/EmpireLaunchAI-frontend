@@ -99,70 +99,71 @@ export function FinancialCommand({
           ) : (
             <>
               {/* Subscriptions Section */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
-              <CreditCard className="w-3 h-3" />
-              Active Subscriptions
-            </div>
-            <div className="space-y-3">
-              {subscriptions.map((sub, i) => (
-                <div key={i} className={cn(
-                  "p-4 rounded-2xl border flex items-center justify-between transition-all",
-                  sub.type === 'app' ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"
-                )}>
-                  <div className="flex items-center gap-3">
-                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", sub.type === 'app' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
-                      {sub.type === 'app' ? <AppWindow className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
-                    </div>
-                    <div>
-                      <p className="text-xs font-black uppercase italic">{sub.name}</p>
-                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
-                        <Calendar className="w-2.5 h-2.5" /> {sub.date}
+              <div className="space-y-6">
+                <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
+                  <CreditCard className="w-3 h-3" />
+                  Active Subscriptions
+                </div>
+                <div className="space-y-3">
+                  {subscriptions.map((sub, i) => (
+                    <div key={i} className={cn(
+                      "p-4 rounded-2xl border flex items-center justify-between transition-all",
+                      sub.type === 'app' ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"
+                    )}>
+                      <div className="flex items-center gap-3">
+                        <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", sub.type === 'app' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
+                          {sub.type === 'app' ? <AppWindow className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
+                        </div>
+                        <div>
+                          <p className="text-xs font-black uppercase italic">{sub.name}</p>
+                          <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
+                            <Calendar className="w-2.5 h-2.5" /> {sub.date}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>
+                        {sub.type === 'app' && <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>}
                       </div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>
-                    {sub.type === 'app' && <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>}
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Dues Section */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">
-              <ShieldCheck className="w-3 h-3" />
-              Marketplace Dues
-            </div>
-            <div className="space-y-3">
-              {dues.map((due, i) => (
-                <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-500">
-                      <Bucket className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-black uppercase italic">{due.name}</p>
-                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
-                        <Calendar className="w-2.5 h-2.5" /> {due.date}
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-sm font-black italic text-amber-500">{formatCurrency(due.amount)}</p>
-                </div>
-              ))}
-              
-              <div className="mt-8 pt-4 border-t border-theme/30">
-                <button className="w-full py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
-                  Settle All Dues
-                </button>
               </div>
-            </div>
-          </>
-        )}
 
+              {/* Dues Section */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">
+                  <ShieldCheck className="w-3 h-3" />
+                  Marketplace Dues
+                </div>
+                <div className="space-y-3">
+                  {dues.map((due, i) => (
+                    <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-500">
+                          <Bucket className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-black uppercase italic">{due.name}</p>
+                          <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
+                            <Calendar className="w-2.5 h-2.5" /> {due.date}
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-sm font-black italic text-amber-500">{formatCurrency(due.amount)}</p>
+                    </div>
+                  ))}
+                  
+                  <div className="mt-8 pt-4 border-t border-theme/30">
+                    <button className="w-full py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
+                      Settle All Dues
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
       
       <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] rounded-full -mr-32 -mt-32" />

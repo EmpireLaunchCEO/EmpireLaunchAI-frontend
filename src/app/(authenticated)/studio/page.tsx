@@ -32,6 +32,17 @@ const vaultActivity = [
 export default function StudioPage() {
   const [activeTab, setActiveTab] = useState<'gallery' | 'cinema' | 'activity'>('gallery');
   const [harvestActivity, setHarvestActivity] = useState(vaultActivity);
+  const [isDemoMode, setIsDemoMode] = useState(false);
+
+  const startDemo = () => {
+    setIsDemoMode(true);
+    // Add demo items to harvest activity
+    const demoItems = [
+      { id: Date.now() + 1, action: 'Synthesized', source: 'DEMO', niche: 'Minimalist Tech Aesthetic', time: 'Just now', confidence: 99 },
+      { id: Date.now() + 2, action: 'Vaulted', source: 'DEMO', niche: 'Holographic Gradient Pack', time: 'Just now', confidence: 98 },
+    ];
+    setHarvestActivity([...demoItems, ...harvestActivity]);
+  };
 
   const handleRefresh = async () => {
     await new Promise(r => setTimeout(r, 1000));
@@ -100,6 +111,16 @@ export default function StudioPage() {
                     Universal Vault Injected — Infinite Synthesis Active
                     <Shield className="w-2.5 h-2.5" />
                   </div>
+                  
+                  {!isDemoMode && (
+                    <button 
+                      onClick={startDemo}
+                      className="mt-4 flex items-center gap-2 px-4 py-2 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      View Sample Rendering Campaign
+                    </button>
+                  )}
                 </div>
               </div>
 

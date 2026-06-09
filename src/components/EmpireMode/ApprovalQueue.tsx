@@ -95,7 +95,15 @@ export function ApprovalQueue() {
                </div>
                <div className="flex items-center gap-1.5">
                  {req.type === 'dna' && <VaultInjected />}
-                 <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">{req.type}</span>
+                 <div className="flex flex-col items-end gap-1">
+                    <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">{req.type}</span>
+                    {req.type === 'content' && (
+                      <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20">
+                        <ShieldCheck className="w-2 h-2 text-cyan-500" />
+                        <span className="text-[7px] font-black text-cyan-600 uppercase">99% Unique</span>
+                      </div>
+                    )}
+                 </div>
                </div>
             </div>
 

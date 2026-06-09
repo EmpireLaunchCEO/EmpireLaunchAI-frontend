@@ -85,7 +85,7 @@ export default function LinkCenterPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {connectedPlatforms.map(id => {
-              const tier = platformPermissions[id] || 'co-pilot';
+              const tier = platformPermissions[id] || 'read-only';
               const caps = PLATFORM_CAPABILITIES[id]?.capabilities?.find(c => c.tier === tier);
 
               return (
@@ -99,10 +99,16 @@ export default function LinkCenterPage() {
                       <h3 className="font-black text-lg capitalize text-foreground">{id}</h3>
                       <div className={cn(
                         "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                        tier === 'empire' ? "bg-cyan-500/10 text-cyan-400" : "bg-primary/10 text-primary"
+                        tier === 'empire' ? "bg-cyan-500/10 text-cyan-400" : 
+                        tier === 'co-pilot' ? "bg-primary/10 text-primary" :
+                        "bg-slate-500/10 text-slate-400"
                       )}>
-                        {tier === 'empire' ? <Stars className="w-3 h-3" /> : <Cpu className="w-3 h-3" />}
-                        {tier === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
+                        {tier === 'empire' ? <Stars className="w-3 h-3" /> : 
+                         tier === 'co-pilot' ? <Cpu className="w-3 h-3" /> :
+                         <Eye className="w-3 h-3" />}
+                        {tier === 'empire' ? 'Auto-Pilot' : 
+                         tier === 'co-pilot' ? 'Co-Pilot' :
+                         'Read-Only'}
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
@@ -124,8 +130,27 @@ export default function LinkCenterPage() {
 
                   <div className="space-y-4 relative z-10">
                     <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                      {caps?.description}
+                      {caps?.description || 'Establishing secure monitoring protocols.'}
                     </p>
+                    
+                    {/* Tier Selection Buttons */}
+                    <div className="grid grid-cols-3 gap-2 pt-2">
+                       {['read-only', 'co-pilot', 'empire'].map((t) => (
+                         <button
+                           key={t}
+                           onClick={() => updatePlatformPermission(id, t as any)}
+                           className={cn(
+                             "py-2 rounded-lg text-[8px] font-black uppercase tracking-tight border transition-all",
+                             tier === t 
+                               ? "bg-primary text-slate-950 border-primary" 
+                               : "bg-theme-background text-slate-500 border-theme hover:border-primary/30"
+                           )}
+                         >
+                           {t === 'read-only' ? 'Read' : t === 'co-pilot' ? 'Co-Pilot' : 'Auto'}
+                         </button>
+                       ))}
+                    </div>
+
                     <div className="pt-4 border-t border-theme flex items-center justify-between">
                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</span>
                        <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-green-500">

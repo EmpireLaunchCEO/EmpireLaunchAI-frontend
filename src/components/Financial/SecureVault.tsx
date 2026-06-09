@@ -30,6 +30,7 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
   const [showValues, setShowValues] = useState<Record<string, boolean>>({});
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [isSaving, setIsSaving] = useState(false);
+  const [aiPermitted, setAiPermitted] = useState(true);
 
   const toggleValueVisibility = (fieldId: string) => {
     setShowValues(prev => ({ ...prev, [fieldId]: !prev[fieldId] }));
@@ -122,17 +123,35 @@ function VaultItem({ id, name, description, icon: Icon, isLocked = true, onSave,
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-2 md:pt-4">
-            {helpUrl ? (
-              <a
-                href={helpUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[10px] md:text-xs font-bold text-slate-400 hover:text-blue-600 flex items-center gap-1.5 transition-colors"
-              >
-                Where do I find these keys?
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            ) : <div />}
+            <div className="flex items-center gap-4">
+               <div className="flex items-center gap-2">
+                 <button 
+                   onClick={() => setAiPermitted(!aiPermitted)}
+                   className={cn(
+                     "w-12 h-6 rounded-full transition-all relative",
+                     aiPermitted ? "bg-green-500" : "bg-slate-300"
+                   )}
+                 >
+                   <div className={cn(
+                     "w-4 h-4 bg-white rounded-full absolute top-1 transition-all",
+                     aiPermitted ? "right-1" : "left-1"
+                   )} />
+                 </button>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Allow AI Access</span>
+               </div>
+               
+               {helpUrl && (
+                 <a
+                   href={helpUrl}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="text-[10px] md:text-xs font-bold text-slate-400 hover:text-blue-600 flex items-center gap-1.5 transition-colors"
+                 >
+                   Where do I find these keys?
+                   <ExternalLink className="w-3 h-3" />
+                 </a>
+               )}
+            </div>
 
             <div className="flex gap-3 w-full md:w-auto">
               <button
@@ -219,15 +238,16 @@ export function SecureVault() {
 
         <VaultItem
           id="stripe"
-          name="Stripe Connect"
+          name="Bank Payouts & Stripe"
           description="Handles secure payments and direct payouts to your bank."
           icon={Lock}
           isLocked={!integrations.stripe}
           onSave={(keys) => handleSave('stripe', keys)}
           helpUrl="https://dashboard.stripe.com/apikeys"
           fields={[
-            { id: 'publishableKey', label: 'Publishable Key', type: 'text', placeholder: 'pk_live_...' },
-            { id: 'secretKey', label: 'Secret Key', type: 'password', placeholder: 'sk_live_...' },
+            { id: 'accountNumber', label: 'Bank Account Number', type: 'password', placeholder: 'Enter account number' },
+            { id: 'routingNumber', label: 'Routing Number', type: 'text', placeholder: 'Enter routing number' },
+            { id: 'secretKey', label: 'Stripe Secret Key (sk_live)', type: 'password', placeholder: 'sk_live_...' },
           ]}
         />
 
