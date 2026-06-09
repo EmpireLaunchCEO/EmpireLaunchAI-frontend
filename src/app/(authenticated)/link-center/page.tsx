@@ -4,7 +4,7 @@ import React from 'react';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { useEmpire } from '@/lib/EmpireContext';
 import { motion } from 'framer-motion';
-import { Share2, LayoutDashboard, ShieldCheck, Cpu, Stars, ShieldAlert } from 'lucide-react';
+import { Share2, LayoutDashboard, ShieldCheck, Cpu, Stars, ShieldAlert, Eye } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
