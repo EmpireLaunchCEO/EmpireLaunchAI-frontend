@@ -102,6 +102,18 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
                   )}
 
                   {status === 'success' && (
+                    <div className="bg-primary/5 rounded-3xl p-6 border border-primary/20 mb-4">
+                       <div className="flex items-center gap-2 mb-2">
+                          <CheckCircle2 className="w-4 h-4 text-primary" />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-primary">Revenue Tracking Active</span>
+                       </div>
+                       <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter leading-relaxed">
+                          By finalizing this asset, you authorize automated revenue tracking for its deployment. Subject to 4% Success-Share ($40 per $1k).
+                       </p>
+                    </div>
+                  )}
+
+                  {status === 'success' && (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}

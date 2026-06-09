@@ -128,8 +128,23 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
         </div>
       </div>
 
+      <div className="bg-emerald-500/10 rounded-[40px] p-8 border-2 border-emerald-500/20">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-lg">
+            <DollarSign className="w-5 h-5" />
+          </div>
+          <div>
+            <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Revenue Attribution Active</h4>
+            <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Growth Success-Share Protocol</span>
+          </div>
+        </div>
+        <p className="text-sm text-muted-foreground font-medium italic leading-relaxed">
+          "By launching this product, the Empire AI will begin autonomous tracking of all derived revenue. Verified sales are subject to the standard 4% Success-Share ($40 per $1,000 earned)."
+        </p>
+      </div>
+
       <div className="flex gap-4">
-        <button
+
           onClick={onReject}
           className="flex-1 py-5 border-2 border-theme rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
         >

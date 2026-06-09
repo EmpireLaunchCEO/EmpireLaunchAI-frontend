@@ -19,6 +19,7 @@ import { FinancialCommand } from '@/components/Dashboard/FinancialCommand';
 import { GrowthTracker } from '@/components/Dashboard/SuccessHub/GrowthTracker';
 import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
+import { DisclaimerAgreementBox } from '@/components/Dashboard/DisclaimerAgreementBox';
 
 export default function Dashboard() {
   const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin } = useEmpire();
@@ -169,8 +170,10 @@ export default function Dashboard() {
                     )}
                     
                     {/* Primary Results Section */}
+                    <DisclaimerAgreementBox />
+
                     <GrowthTracker
-                      monthlyEarnings={(healthData?.monthlyRevenue || 0) * 100}
+
                       allTimeEarnings={(healthData?.revenue || 0) * 100}
                       progress={healthData?.growthScore}
                     />

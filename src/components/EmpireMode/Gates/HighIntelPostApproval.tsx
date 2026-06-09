@@ -432,8 +432,23 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
                </div>
             </div>
 
+            {/* Revenue Attribution Notice */}
+            <div className="flex items-center gap-3 px-8 py-5 bg-emerald-500/5 rounded-[32px] border border-emerald-500/20">
+               <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                  <TrendingUp className="w-5 h-5" />
+               </div>
+               <div>
+                  <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest leading-relaxed">
+                    Revenue Tracking Active
+                  </p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter leading-relaxed">
+                    This post will be monitored for conversion. Verified earnings are subject to a 4% Success-Share ($40 per $1,000).
+                  </p>
+               </div>
+            </div>
+
             {/* Secure Vault Notice */}
-            <div className="flex items-center gap-3 px-8 py-5 bg-primary/5 rounded-[32px] border border-primary/10">
+
                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                   <ShieldCheck className="w-5 h-5" />
                </div>

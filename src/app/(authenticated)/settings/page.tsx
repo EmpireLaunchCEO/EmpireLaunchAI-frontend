@@ -29,6 +29,7 @@ import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 import { SupportHub } from '@/components/Settings/SupportHub';
+import { AutoPilotAgreementGate } from '@/components/Settings/AutoPilotAgreementGate';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
   if (platform.toLowerCase() === 'stripe') {
@@ -153,6 +154,7 @@ export default function SettingsPage() {
 
   const [activeTab, setActiveTab] = useState('link-center');
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
+  const [isAgreementOpen, setIsAgreementOpen] = useState(false);
 
   useEffect(() => {
     const handleSwitchTab = (e: any) => {
@@ -389,11 +391,17 @@ export default function SettingsPage() {
                       </p>
                     </button>
 
-                    <button 
+                    <button
                       id="mode-autopilot"
-                      onClick={() => setAiMode('empire')}
+                      onClick={() => {
+                        if (aiMode !== 'empire') {
+                          setIsAgreementOpen(true);
+                        } else {
+                          setAiMode('co-pilot');
+                        }
+                      }}
                       className={cn(
-                        "p-8 rounded-[32px] border-4 text-left space-y-4 group relative overflow-hidden transition-all",
+
                         aiMode === 'empire' ? "border-amber-500 bg-amber-500/5 shadow-2xl" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
                       )}
                     >
@@ -514,8 +522,34 @@ export default function SettingsPage() {
 
             {activeTab === 'subscription' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {/* Subscription Agreement Box (Moves here after acceptance) */}
+              <div className="p-8 md:p-12 bg-slate-900 border-2 border-primary/30 rounded-[48px] overflow-hidden shadow-2xl relative">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
+                <div className="flex items-start gap-6 relative z-10">
+                   <div className="w-16 h-16 bg-primary/10 rounded-3xl flex items-center justify-center border border-primary/20 shrink-0">
+                      <ShieldCheck className="w-8 h-8 text-primary" />
+                   </div>
+                   <div className="space-y-4">
+                      <div>
+                        <h3 className="text-2xl font-black text-white italic uppercase tracking-tight">Subscription Agreement.</h3>
+                        <div className="flex items-center gap-2 text-emerald-500 mt-1">
+                           <CheckCircle2 className="w-3.5 h-3.5" />
+                           <span className="text-[10px] font-black uppercase tracking-widest">Protocol Accepted & Active</span>
+                        </div>
+                      </div>
+                      <p className="text-sm text-slate-400 font-medium italic leading-relaxed">
+                        "This app is designed to be affordable upfront. In exchange, you have agreed to a 4% Success-Share ($40 per $1,000) solely on revenue generated through AI-created videos, posts, and designs."
+                      </p>
+                      <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 w-fit">
+                         <DollarSign className="w-4 h-4 text-primary" />
+                         <span className="text-[10px] font-black text-primary uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
+                      </div>
+                   </div>
+                </div>
+              </div>
+
                 <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-slate-900 text-white space-y-8">
-                  <div className="flex justify-between items-center">
+
                     <div className="flex items-center gap-6">
                       <div className="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center">
                         <Diamond className="w-8 h-8 text-blue-400" />
@@ -550,7 +584,15 @@ export default function SettingsPage() {
             )}
           </main>
         </div>
+      <AutoPilotAgreementGate
+        isOpen={isAgreementOpen}
+        onClose={() => setIsAgreementOpen(false)}
+        onConfirm={() => {
+          setAiMode('empire');
+          setIsAgreementOpen(false);
+        }}
+      />
       </div>
-    </PullToRefresh>
-  );
+      </PullToRefresh>
+
 }

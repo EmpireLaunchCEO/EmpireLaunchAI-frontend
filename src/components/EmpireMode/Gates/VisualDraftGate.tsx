@@ -129,8 +129,18 @@ export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }
               )}
            </div>
 
+           <div className="bg-emerald-500/5 rounded-3xl p-6 border border-emerald-500/20 mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                 <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Revenue Tracking Authorized</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter leading-relaxed">
+                 By approving this creation, you agree that earnings resulting from its use will be tracked for a 4% Success-Share ($40 per $1,000).
+              </p>
+           </div>
+
            <div className="flex flex-col gap-3">
-              <button
+
                 onClick={() => onApprove()}
                 className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl flex items-center justify-center gap-3 group"
               >
