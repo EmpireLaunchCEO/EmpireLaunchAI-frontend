@@ -84,6 +84,13 @@ export interface DiscoveryResult {
   confidence: number;
 }
 
+export interface InfrastructureBalance {
+  platform: string;
+  balance: number;
+  currency: string;
+  status: 'active' | 'low' | 'depleted' | 'unknown';
+}
+
 const HEADERS = {
   'Authorization': 'Bearer mock-mobile-token',
   'x-user-id': '00000000-0000-0000-0000-000000000000',
@@ -233,59 +240,17 @@ export const discoveryService = {
   async rejectResult(id: string): Promise<boolean> { return true; }
 };
 
-export interface DesignTask {
-  id: string;
-  title: string;
-  platform: string;
-  status: 'blueprint_ready' | 'producing' | 'editing' | 'drafting' | 'completed' | 'review_required';
-  dueDate: string;
-}
-
-export interface CreativeBlueprintData {
-  id: string;
-  title: string;
-  intelligence: string;
-  palette: string[];
-  fonts: { platform: string; pairing: string }[];
-  script: string[];
-  compositionUrl: string;
-  variations: any[];
-  platformLink?: string;
-}
-
-export interface ApprovalRequest {
-  id: string;
-  type: 'blueprint' | 'dna' | 'content' | 'golive';
-  payload: any;
-}
-
-export interface TrustScore {
-  score: number;
-  velocity: number;
-  sentiment: number;
-  agility: number;
-}
-
-export interface SentimentPoint {
-  x: number;
-  y: number;
-  sentiment: number;
-  score: number;
-  date: string;
-  label: string;
-}
-
-export interface InboxDraft {
-  id: string;
-  subject: string;
-  to: string;
-  body: string;
-  type: string;
-  customer: string;
-  platform: string;
-  reasoning?: string;
-  status: 'pending' | 'sent' | 'rejected';
-}
+export const infrastructureService = {
+  async getBalances(): Promise<InfrastructureBalance[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/revenue/infrastructure`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      console.error('Failed to fetch infrastructure balances', e);
+    }
+    return [];
+  }
+};
 
 export const userSettingsService = {
   async getSettings(userId: string): Promise<any> {
@@ -479,3 +444,57 @@ export const analyticsService = {
     return [];
   }
 };
+
+export interface DesignTask {
+  id: string;
+  title: string;
+  platform: string;
+  status: 'blueprint_ready' | 'producing' | 'editing' | 'drafting' | 'completed' | 'review_required';
+  dueDate: string;
+}
+
+export interface CreativeBlueprintData {
+  id: string;
+  title: string;
+  intelligence: string;
+  palette: string[];
+  fonts: { platform: string; pairing: string }[];
+  script: string[];
+  compositionUrl: string;
+  variations: any[];
+  platformLink?: string;
+}
+
+export interface ApprovalRequest {
+  id: string;
+  type: 'blueprint' | 'dna' | 'content' | 'golive';
+  payload: any;
+}
+
+export interface TrustScore {
+  score: number;
+  velocity: number;
+  sentiment: number;
+  agility: number;
+}
+
+export interface SentimentPoint {
+  x: number;
+  y: number;
+  sentiment: number;
+  score: number;
+  date: string;
+  label: string;
+}
+
+export interface InboxDraft {
+  id: string;
+  subject: string;
+  to: string;
+  body: string;
+  type: string;
+  customer: string;
+  platform: string;
+  reasoning?: string;
+  status: 'pending' | 'sent' | 'rejected';
+}

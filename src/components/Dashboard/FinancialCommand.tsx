@@ -6,6 +6,8 @@ import { ShieldCheck, TrendingUp, CreditCard, Activity, Minus, Maximize2, FileTe
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 
+import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
+
 interface FinancialCommandProps {
   withholdableEarnings?: number;
   securedDues?: number;
@@ -23,12 +25,24 @@ export function FinancialCommand({
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [infraBalances, setInfraBalances] = useState<InfrastructureBalance[]>([]);
 
   useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem('minimized-financial-tracker');
     if (saved === 'true') setIsMinimized(true);
-  }, []);
+
+    const fetchInfra = async () => {
+      const balances = await infrastructureService.getBalances();
+      setInfraBalances(balances);
+    };
+
+    if (isLinkingComplete) {
+      fetchInfra();
+      const interval = setInterval(fetchInfra, 60000); // Update every minute
+      return () => clearInterval(interval);
+    }
+  }, [isLinkingComplete]);
 
   const toggleMinimize = () => {
     const newState = !isMinimized;
@@ -70,13 +84,11 @@ export function FinancialCommand({
 
   const successShareAmount = Math.floor(withholdableEarnings / 100000) * 4000;
   const appSubscription = isLinkingComplete ? 4000 : 0; // App Monthly Sub $40.00
-  const intelligenceCost = isLinkingComplete ? 1790 : 0; // Neural/Infrastructure
 
   const SUBSCRIPTIONS = [
     { name: 'Etsy Seller Tool', cost: 1500, active: isLinkingComplete },
     { name: 'TikTok Shop Plus', cost: 1200, active: isLinkingComplete },
-    { name: 'Meta Business Suite', cost: 900, active: isLinkingComplete },
-    { name: 'Intelligence Infrastructure', cost: intelligenceCost, active: isLinkingComplete }
+    { name: 'Meta Business Suite', cost: 900, active: isLinkingComplete }
   ];
 
   return (
@@ -122,15 +134,15 @@ export function FinancialCommand({
           </div>
         </div>
 
-        {/* Two Main Sections */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Three Main Sections */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Section 1: Platform Subscriptions */}
           <div className="bg-theme-background/30 border border-theme rounded-[32px] p-6 space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <CreditCard className="w-4 h-4 text-primary" />
-                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Platform Subscriptions</h4>
+                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Fixed Dues</h4>
               </div>
               <span className="text-xs font-black italic">{formatCurrency(SUBSCRIPTIONS.reduce((acc, s) => acc + (s.active ? s.cost : 0), 0))} / mo</span>
             </div>
@@ -148,7 +160,41 @@ export function FinancialCommand({
             </div>
           </div>
 
-          {/* Section 2: Empire Success Model */}
+          {/* Section 2: Real-time Infrastructure */}
+          <div className="bg-theme-background/30 border border-theme rounded-[32px] p-6 space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Activity className="w-4 h-4 text-emerald-500" />
+                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Neural Infrastructure</h4>
+              </div>
+              <span className="text-[8px] font-black uppercase text-emerald-500 px-2 py-0.5 bg-emerald-500/10 rounded-full">Real-time</span>
+            </div>
+
+            <div className="space-y-3">
+              {infraBalances.length > 0 ? infraBalances.map((infra, idx) => (
+                <div key={idx} className="flex items-center justify-between p-3 rounded-2xl bg-theme-surface/50 border border-theme/30">
+                  <div className="flex items-center gap-3">
+                    <div className={cn("w-1.5 h-1.5 rounded-full", 
+                      infra.status === 'active' ? "bg-emerald-500" : 
+                      infra.status === 'low' ? "bg-amber-500" : "bg-red-500"
+                    )} />
+                    <span className="text-[10px] font-bold text-slate-300">{infra.platform}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] font-black text-foreground">${infra.balance.toFixed(2)}</span>
+                    <p className="text-[8px] text-slate-500 font-medium uppercase">{infra.currency} Credits</p>
+                  </div>
+                </div>
+              )) : (
+                <div className="flex flex-col items-center justify-center py-4 text-center">
+                  <Loader2 className="w-4 h-4 text-primary animate-spin mb-2" />
+                  <p className="text-[10px] text-slate-500 font-medium italic">Syncing with linked nodes...</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Section 3: Empire Success Model */}
           <div className="bg-primary/5 border border-primary/20 rounded-[32px] p-6 space-y-6 relative overflow-hidden">
             <div className="flex items-center justify-between relative z-10">
               <div className="flex items-center gap-2">
