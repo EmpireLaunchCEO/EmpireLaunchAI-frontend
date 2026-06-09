@@ -41,8 +41,10 @@ interface EmpireContextType {
   setIsPaid: (paid: boolean) => void;
   aiMode: 'co-pilot' | 'empire';
   setAiMode: (mode: 'co-pilot' | 'empire') => void;
-  platformPermissions: Record<string, 'co-pilot' | 'empire'>;
-  updatePlatformPermission: (platform: string, level: 'co-pilot' | 'empire') => void;
+  platformPermissions: Record<string, 'read-only' | 'co-pilot' | 'empire'>;
+  updatePlatformPermission: (platform: string, level: 'read-only' | 'co-pilot' | 'empire') => void;
+  spendingPermissions: Record<string, boolean>;
+  updateSpendingPermission: (platform: string, allowed: boolean) => void;
   autoSendRetention: boolean;
   setAutoSendRetention: (enabled: boolean) => void;
   isProtocolAccepted: boolean;
@@ -101,7 +103,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [isPaid, setIsPaidState] = useState(true);
   const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: true, 2: true });
   const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>('co-pilot');
-  const [platformPermissions, setPlatformPermissions] = useState<Record<string, 'co-pilot' | 'empire'>>({});
+  const [platformPermissions, setPlatformPermissions] = useState<Record<string, 'read-only' | 'co-pilot' | 'empire'>>({});
+  const [spendingPermissions, setSpendingPermissions] = useState<Record<string, boolean>>({});
   const [isHandoverComplete, setIsHandoverComplete] = useState(false);
   const [isNotificationModalDismissed, setIsNotificationModalDismissed] = useState(false);
   const [theme, setThemeState] = useState('blue');
@@ -152,11 +155,21 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }, 5000);
   };
 
-  const updatePlatformPermission = (platform: string, level: 'co-pilot' | 'empire') => {
+  const updatePlatformPermission = (platform: string, level: 'read-only' | 'co-pilot' | 'empire') => {
     setPlatformPermissions(prev => {
       const next = { ...prev, [platform]: level };
       if (typeof window !== 'undefined') {
         localStorage.setItem('platformPermissions', JSON.stringify(next));
+      }
+      return next;
+    });
+  };
+
+  const updateSpendingPermission = (platform: string, allowed: boolean) => {
+    setSpendingPermissions(prev => {
+      const next = { ...prev, [platform]: allowed };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('spendingPermissions', JSON.stringify(next));
       }
       return next;
     });
@@ -434,11 +447,17 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         if (settingsRes && settingsRes.ok) {
            const data = await settingsRes.json();
            
-           // Apply standard settings from backend
-           if (data.isPaid) setIsPaidState(true);
-           if (data.theme) setTheme(data.theme);
-           if (data.aiMode) setAiModeState(data.aiMode);
-           if (data.email) setUserEmail(data.email);
+        // Apply standard settings from backend
+        if (data.isPaid) setIsPaidState(true);
+        if (data.theme) setTheme(data.theme);
+        if (data.aiMode) setAiModeState(data.aiMode);
+        if (data.email) setUserEmail(data.email);
+
+        const localSpending = localStorage.getItem('spendingPermissions');
+        if (localSpending) setSpendingPermissions(JSON.parse(localSpending));
+        
+        const localPlatformPerms = localStorage.getItem('platformPermissions');
+        if (localPlatformPerms) setPlatformPermissions(JSON.parse(localPlatformPerms));
 
            // If the email matches the owner, grant full slot access automatically
            if (data.email === OWNER_EMAIL || data.userId === MASTER_USER_ID) {
@@ -625,7 +644,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       dismissNotificationModal,
       toasts,
       addToast,
-      removeToast
+      removeToast,
+      spendingPermissions,
+      updateSpendingPermission
     }}>
       {children}
     </EmpireContext.Provider>

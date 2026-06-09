@@ -26,7 +26,14 @@ const PLATFORM_LOGOS: Record<string, string> = {
 };
 
 export default function LinkCenterPage() {
-  const { isLinkingComplete, connectedPlatforms, platformPermissions } = useEmpire();
+  const { 
+    isLinkingComplete, 
+    connectedPlatforms, 
+    platformPermissions, 
+    updatePlatformPermission,
+    spendingPermissions,
+    updateSpendingPermission
+  } = useEmpire();
 
   // Define platform icons/colors locally or import them
   // For now I'll just use a simple list
@@ -151,12 +158,33 @@ export default function LinkCenterPage() {
                        ))}
                     </div>
 
-                    <div className="pt-4 border-t border-theme flex items-center justify-between">
-                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</span>
-                       <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-green-500">
-                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                          Encrypted
-                       </span>
+                    <div className="pt-4 border-t border-theme flex flex-col gap-4">
+                       <div className="flex items-center justify-between">
+                         <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</span>
+                         <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-green-500">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                            Encrypted
+                         </span>
+                       </div>
+
+                       <div className="flex items-center justify-between bg-theme-background p-3 rounded-2xl border border-theme">
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-black uppercase tracking-tight text-foreground">AI Spending</span>
+                            <span className="text-[8px] font-bold text-slate-500">Autonomous purchasing power</span>
+                          </div>
+                          <button
+                            onClick={() => updateSpendingPermission(id, !spendingPermissions[id])}
+                            className={cn(
+                              "w-10 h-5 rounded-full relative transition-all",
+                              spendingPermissions[id] ? "bg-primary" : "bg-slate-700"
+                            )}
+                          >
+                            <div className={cn(
+                              "w-3 h-3 bg-slate-950 rounded-full absolute top-1 transition-all",
+                              spendingPermissions[id] ? "right-1" : "left-1"
+                            )} />
+                          </button>
+                       </div>
                     </div>
                   </div>
 
