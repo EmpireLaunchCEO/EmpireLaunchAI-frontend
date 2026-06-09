@@ -36,18 +36,19 @@ export function BrandedGlobe({
 }: BrandedGlobeProps) {
   const [isLoaded, setIsLoaded] = React.useState(false);
 
-  // Container sizes - revert to compact professional sizes
+  // Container sizes - reduced to shrink the "white" footprint
   const sizeClasses = {
-    sm: 'w-5 h-5 rounded-md',
-    md: 'w-8 h-8 rounded-lg',
-    lg: 'w-12 h-12 rounded-xl',
-    xl: 'w-20 h-20 rounded-2xl',
-    '2xl': 'w-28 h-28 rounded-[2rem]',
-    '3xl': 'w-40 h-40 rounded-[2.5rem]',
+    sm: 'w-4.5 h-4.5 rounded-sm',
+    md: 'w-7 h-7 rounded-md',
+    lg: 'w-10 h-10 rounded-lg',
+    xl: 'w-18 h-18 rounded-xl',
+    '2xl': 'w-24 h-24 rounded-[1.5rem]',
+    '3xl': 'w-36 h-36 rounded-[2rem]',
   };
 
-  // Image scaling - increased to 84% to reduce the white margin "by half"
-  const imageScale = isLoaded ? "scale-[0.84]" : "scale-0";
+  // Image scaling - increased to ~94% to keep the globe the same absolute size 
+  // while the surrounding white container is now smaller.
+  const imageScale = isLoaded ? "scale-[0.94]" : "scale-0";
 
   const animationProps = spinning
     ? { rotate: [0, 360] }
