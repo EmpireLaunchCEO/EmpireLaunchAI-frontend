@@ -28,6 +28,7 @@ import { LockedSlotView } from '@/components/Dashboard/LockedSlotView';
 import { NicheCalibrationBox } from '@/components/Dashboard/SuccessHub/NicheCalibrationBox';
 import { FinancialCommand } from '@/components/Dashboard/FinancialCommand';
 import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
+import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 
 export default function Dashboard() {
   const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin } = useEmpire();
@@ -41,6 +42,8 @@ export default function Dashboard() {
   const [executingInsight, setExecutingInsight] = useState<string | null>(null);
   const [isCelebrating, setIsCelebrating] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isGrowthGateOpen, setIsGrowthProtocolGateOpen] = useState(false);
+  const [growthGateProduct, setGrowthProtocolGateProduct] = useState('');
 
   useEffect(() => {
     setMounted(true);
@@ -125,7 +128,17 @@ export default function Dashboard() {
     <DashboardErrorBoundary>
       <PullToRefresh onRefresh={fetchData}>
         <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-20 overflow-x-hidden">
-          {!isDashboardLoaded ? (
+          <GrowthProtocolGate
+          isOpen={isGrowthGateOpen}
+          onClose={() => setIsGrowthProtocolGateOpen(false)}
+          onActivate={() => {
+            setIsGrowthProtocolGateOpen(false);
+            setIsCelebrating(true);
+            setTimeout(() => setIsCelebrating(false), 3000);
+          }}
+          productName={growthGateProduct}
+        />
+        {!isDashboardLoaded ? (
             <div className="flex flex-col items-center justify-center py-20 gap-6">
               <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin" />
               <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
@@ -191,7 +204,13 @@ export default function Dashboard() {
                       angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
                     />
 
-                    <FinancialCommand growthScore={healthData?.score} />
+                    <FinancialCommand
+                    growthScore={healthData?.score}
+                    onActivateGrowthProtocol={(name) => {
+                      setGrowthProtocolGateProduct(name);
+                      setIsGrowthProtocolGateOpen(true);
+                    }}
+                    />
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 relative z-0">
                       <div className="lg:col-span-8 space-y-12">

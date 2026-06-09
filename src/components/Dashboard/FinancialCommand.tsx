@@ -11,13 +11,15 @@ interface FinancialCommandProps {
   securedDues?: number;
   growthScore?: number;
   businessId?: string;
+  onActivateGrowthProtocol?: (productName: string) => void;
 }
 
 export function FinancialCommand({ 
   withholdableEarnings = 0, 
   securedDues = 0, 
   growthScore = 0,
-  businessId = "1"
+  businessId = "1",
+  onActivateGrowthProtocol
 }: Partial<FinancialCommandProps>) {
   const { isLinkingComplete } = useEmpire();
   const [isMinimized, setIsMinimized] = useState(false);
@@ -74,7 +76,7 @@ export function FinancialCommand({
     { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },
     { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
     { name: "EmpireLaunch AI Subscription", amount: 4000, date: getPlatformDueDate(), type: "app" },
-    { name: "EmpireLaunch AI Dues ($40/$1k)", amount: platformDuesAmount, date: "Calculated from Earnings", type: "app" },
+    { name: "Growth Share ($40/$1k)", amount: platformDuesAmount, date: "AI-Attributed", type: "app" },
   ] : [];
 
   const infrastructure = isLinkingComplete ? [
@@ -209,10 +211,18 @@ export function FinancialCommand({
 
               {/* Dues Section */}
               <div className="space-y-6">
+                <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">
                   <ShieldCheck className="w-3 h-3" />
                   Marketplace Dues
                 </div>
+                <button
+                  onClick={() => onActivateGrowthProtocol?.('Existing Product Stack')}
+                  className="text-[8px] font-black text-primary uppercase tracking-widest bg-primary/5 px-2 py-1 rounded border border-primary/10 hover:bg-primary/10 transition-all"
+                >
+                  + Promote Existing
+                </button>
+              </div>
                 <div className="space-y-3">
                   {dues.map((due, i) => (
                     <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">
