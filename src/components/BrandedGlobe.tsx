@@ -52,19 +52,21 @@ export function BrandedGlobe({
   const imageScale = isLoaded ? "scale-[0.94]" : "scale-0";
 
   const animationProps = spinning
-    ? { rotate: [0, 360] }
+    ? { rotate: 360 }
     : animate
       ? {
           scale: [1, 1.03, 1],
-          rotate: [0, 360],
+          rotate: 360,
         }
       : {};
 
   const transitionProps: Transition = spinning
     ? {
-        duration: 3,
-        repeat: Infinity,
-        ease: "linear"
+        rotate: {
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "linear"
+        }
       }
     : {
         rotate: {
@@ -99,6 +101,7 @@ export function BrandedGlobe({
       )}
       
       <motion.div
+        key={spinning ? 'spinning' : 'static'}
         className="flex items-center justify-center relative z-10"
         style={{ width: '100%', height: '100%' }}
         animate={animationProps}
