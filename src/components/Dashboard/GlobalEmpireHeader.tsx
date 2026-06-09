@@ -19,12 +19,12 @@ export function GlobalEmpireHeader() {
       return 'HOME BASE';
     }
     switch (pathname) {
-      case '/empire-center': return 'Approval Center.';
-      case '/studio': return 'Empire Studio.';
-      case '/link-center': return 'Neural Sync.';
-      case '/review': return 'Control Gates.';
-      case '/analytics': return 'Empire Ledger.';
-      case '/settings': return 'Settings.';
+      case '/empire-center': return 'Approval Center';
+      case '/studio': return 'Empire Studio';
+      case '/link-center': return 'Neural Sync';
+      case '/review': return 'Control Gates';
+      case '/analytics': return 'Empire Ledger';
+      case '/settings': return 'Settings';
       default: return 'HOME BASE';
     }
   };

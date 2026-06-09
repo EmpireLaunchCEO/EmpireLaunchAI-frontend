@@ -83,7 +83,7 @@ export function PWAInstallPrompt({ onDismiss }: PWAInstallPromptProps) {
 
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black text-white italic tracking-tight uppercase">
-                    Install EmpireLaunch AI.
+                    Install EmpireLaunch AI
                   </h3>
                   <p className="text-slate-400 font-medium text-sm">
                     Add EmpireLaunch AI to your home screen for the full high-intelligence experience.
