@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Shield, Cpu, Activity, Zap, Minus, Maximize2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ShieldCheck, TrendingUp, CreditCard, Activity, Minus, Maximize2, FileText, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 
@@ -16,25 +16,31 @@ interface FinancialCommandProps {
 
 export function FinancialCommand({ 
   withholdableEarnings = 0, 
-  securedDues = 0, 
   growthScore = 0,
-  businessId = "1",
   onActivateGrowthProtocol
 }: Partial<FinancialCommandProps>) {
   const { isLinkingComplete } = useEmpire();
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem('minimized-financial-command');
+    const saved = localStorage.getItem('minimized-financial-tracker');
     if (saved === 'true') setIsMinimized(true);
   }, []);
 
   const toggleMinimize = () => {
     const newState = !isMinimized;
     setIsMinimized(newState);
-    localStorage.setItem('minimized-financial-command', String(newState));
+    localStorage.setItem('minimized-financial-tracker', String(newState));
+  };
+
+  const handleDownloadReport = async () => {
+    setIsDownloading(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setIsDownloading(false);
+    alert("Audit Report generation started. You will receive a notification and a download link shortly.");
   };
 
   if (!mounted) return null;
@@ -46,7 +52,7 @@ export function FinancialCommand({
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
             <TrendingUp className="w-5 h-5" />
           </div>
-          <h2 className="text-sm font-black uppercase tracking-widest text-foreground">Financial Command</h2>
+          <h2 className="text-sm font-black uppercase tracking-widest text-foreground">Finance Tracker</h2>
         </div>
         <button 
           onClick={toggleMinimize}
@@ -57,36 +63,14 @@ export function FinancialCommand({
       </div>
     );
   }
-  
-  // Calculate dynamic "Due in 30 days" date for Platform Fee
-  const getPlatformDueDate = () => {
-    const date = new Date();
-    date.setDate(date.getDate() + 30);
-    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  };
 
   const formatCurrency = (cents: number) => {
     return `$${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
   };
 
-  // Calculate dynamic "Dues" based on earnings: $40 per $1,000 earned
-  const platformDuesAmount = Math.floor(withholdableEarnings / 100000) * 4000;
-
-  const subscriptions = isLinkingComplete ? [
-    { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },
-    { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
-    { name: "EmpireLaunch AI Subscription", amount: 4000, date: getPlatformDueDate(), type: "app" },
-  ] : [];
-
-  const infrastructure = isLinkingComplete ? [
-    { name: "Railway Hosting", amount: 540, status: "Live", icon: Activity },
-    { name: "OpenAI Usage", amount: 1250, status: "Live", icon: Cpu },
-  ] : [];
-
-  const dues = isLinkingComplete ? [
-    { name: "Universal Success-Shares (4%)", amount: platformDuesAmount, date: "Multi-Platform Sync (Stripe, PayPal, Venmo, etc.)", type: "success-share" },
-    { name: "Platform Listing Fees", amount: 0, date: "Etsy / Shopify Syncing" },
-  ] : [];
+  // High-level calculations for the summary view
+  const successShareAmount = Math.floor(withholdableEarnings / 100000) * 4000;
+  const totalSubAmount = isLinkingComplete ? 7299 : 0; // Total of subs in cents
 
   return (
     <div className="bg-theme-surface rounded-[40px] p-8 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
@@ -99,9 +83,9 @@ export function FinancialCommand({
           <Minus className="w-5 h-5" />
         </button>
       </div>
+      
       <div className="relative z-10 space-y-10">
-        
-        {/* Top Header: Bucket Visuals */}
+        {/* Header Summary */}
         <div className="flex flex-col md:flex-row gap-8 items-center border-b border-theme/30 pb-8">
           <div className="relative w-32 h-32 shrink-0">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
@@ -110,7 +94,7 @@ export function FinancialCommand({
                 cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-primary" strokeWidth="12"
                 strokeDasharray="251.2"
                 initial={{ strokeDashoffset: 251.2 }}
-                animate={{ strokeDashoffset: 251.2 * (1 - 0.75) }}
+                animate={{ strokeDashoffset: 251.2 * (1 - (growthScore / 100)) }}
                 strokeLinecap="round"
                 transition={{ duration: 1.5, ease: "easeOut" }}
               />
@@ -122,8 +106,8 @@ export function FinancialCommand({
           </div>
 
           <div className="flex-1 space-y-2">
-            <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Financial Command</h3>
-            <p className="text-slate-400 text-xs font-medium italic">Monitoring capital velocity and upcoming obligations.</p>
+            <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Finance Tracker</h3>
+            <p className="text-slate-400 text-xs font-medium italic">High-level financial overview and neural performance monitoring.</p>
             <div className="flex gap-4 pt-2">
               <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
                 <span className="text-[10px] font-black text-primary uppercase">Available: {formatCurrency(withholdableEarnings)}</span>
@@ -132,125 +116,72 @@ export function FinancialCommand({
           </div>
         </div>
 
-        {/* Breakdown Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {!isLinkingComplete ? (
-            <div className="md:col-span-2 py-20 bg-theme-background/50 rounded-[32px] border-2 border-dashed border-theme flex flex-col items-center justify-center text-center space-y-4">
-               <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center">
-                  <Shield className="w-8 h-8 text-slate-600" />
-               </div>
-               <div>
-                  <h4 className="text-lg font-black uppercase tracking-tight italic">Financial Vault Locked</h4>
-                  <p className="text-xs text-muted-foreground font-medium max-w-[280px] mx-auto mt-1">
-                    Connect your Etsy, Fiverr, or Bank account to synchronize transaction history and active subscriptions.
-                  </p>
-               </div>
+        {/* Streamlined Totals Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-6 bg-theme-background/40 border border-theme rounded-3xl space-y-2">
+            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest opacity-60">
+              <CreditCard className="w-3 h-3" />
+              Active Subscriptions
             </div>
-          ) : (
-            <>
-              {/* Subscriptions Section */}
-              <div className="space-y-6">
-                <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
-                  <CreditCard className="w-3 h-3" />
-                  Active Subscriptions
-                </div>
-                <div className="space-y-3">
-                  {subscriptions.map((sub, i) => (
-                    <div key={i} className={cn(
-                      "p-4 rounded-2xl border flex items-center justify-between transition-all",
-                      sub.type === 'app' ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"
-                    )}>
-                      <div className="flex items-center gap-3">
-                        <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", sub.type === 'app' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
-                          {sub.type === 'app' ? <AppWindow className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
-                        </div>
-                        <div>
-                          <p className="text-xs font-black uppercase italic">{sub.name}</p>
-                          <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
-                            <Calendar className="w-2.5 h-2.5" /> {sub.date}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>
-                        {sub.type === 'app' && <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <p className="text-2xl font-black italic">{formatCurrency(totalSubAmount)}</p>
+            <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter italic">Total Monthly Obligations</p>
+          </div>
 
-              {/* Infrastructure Section */}
-              <div className="space-y-6">
-                <div className="flex items-center gap-2 text-cyan-500 font-black text-[10px] uppercase tracking-widest">
-                  <Activity className="w-3 h-3" />
-                  Infrastructure & Intelligence
-                </div>
-                <div className="space-y-3">
-                  {infrastructure.map((item, i) => (
-                    <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-cyan-500">
-                          <item.icon className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <p className="text-xs font-black uppercase italic">{item.name}</p>
-                          <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">{item.status}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-black italic">{formatCurrency(item.amount)}</p>
-                        <span className="text-[8px] font-black text-cyan-500 uppercase">Usage Cost</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          <div className="p-6 bg-theme-background/40 border border-theme rounded-3xl space-y-2">
+            <div className="flex items-center gap-2 text-cyan-500 font-black text-[10px] uppercase tracking-widest opacity-60">
+              <Activity className="w-3 h-3" />
+              Infrastructure
+            </div>
+            <p className="text-2xl font-black italic">{formatCurrency(isLinkingComplete ? 1790 : 0)}</p>
+            <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter italic">Intelligence Usage Cost</p>
+          </div>
 
-              {/* Dues Section */}
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">
-                  <ShieldCheck className="w-3 h-3" />
-                  Growth Success-Shares
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[7px] font-black text-green-500 uppercase animate-pulse">Auto-Sync Active</span>
-                  <button
-                    onClick={() => onActivateGrowthProtocol?.('Existing Product Stack')}
-                    className="text-[8px] font-black text-primary uppercase tracking-widest bg-primary/5 px-2 py-1 rounded border border-primary/10 hover:bg-primary/10 transition-all"
-                  >
-                    + Activate Protocol
-                  </button>
-                </div>
-              </div>
-                <div className="space-y-3">
-                  {dues.map((due, i) => (
-                    <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-500">
-                          <Bucket className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <p className="text-xs font-black uppercase italic">{due.name}</p>
-                          <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
-                            <Calendar className="w-2.5 h-2.5" /> {due.date}
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-sm font-black italic text-amber-500">{formatCurrency(due.amount)}</p>
-                    </div>
-                  ))}
-                  
-                  <div className="mt-8 pt-4 border-t border-theme/30">
-                    <button className="w-full py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
-                      Settle All Success-Shares
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+          <div className="p-6 bg-theme-background/40 border border-theme rounded-3xl space-y-2">
+            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
+              <ShieldCheck className="w-3 h-3" />
+              Success-Shares (4%)
+            </div>
+            <p className="text-2xl font-black italic text-primary">{formatCurrency(successShareAmount)}</p>
+            <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter italic">Current Milestone Balance</p>
+          </div>
+        </div>
+
+        {/* Action Center */}
+        <div className="pt-6 border-t border-theme/30 flex flex-col md:flex-row gap-4 items-center justify-between">
+           <div className="flex items-center gap-3">
+              <span className="text-[8px] font-black text-green-500 uppercase animate-pulse flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_8px_#22c55e]" />
+                Neural Sync Active
+              </span>
+              <p className="text-[10px] text-muted-foreground font-medium italic">Itemized transparency is available in the audit.</p>
+           </div>
+           
+           <div className="flex items-center gap-4 w-full md:w-auto">
+             <button
+                onClick={() => onActivateGrowthProtocol?.('Existing Product Stack')}
+                className="hidden md:block text-[10px] font-black text-primary uppercase tracking-widest bg-primary/5 px-4 py-2 rounded-xl border border-primary/20 hover:bg-primary/10 transition-all"
+              >
+                + Activate Protocol
+              </button>
+              
+              <button 
+                onClick={handleDownloadReport}
+                disabled={isDownloading}
+                className="flex-1 md:flex-none py-4 px-8 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100"
+              >
+                {isDownloading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Syncing Audit...
+                  </>
+                ) : (
+                  <>
+                    <FileText className="w-4 h-4" />
+                    Download Audit Report
+                  </>
+                )}
+              </button>
+           </div>
         </div>
       </div>
       

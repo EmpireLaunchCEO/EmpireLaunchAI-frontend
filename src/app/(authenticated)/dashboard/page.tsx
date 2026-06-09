@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { MissionBriefing } from '@/components/Dashboard/MissionBriefing';
-import { EmpireLedger } from '@/components/Analytics/EmpireLedger';
 import { BusinessSlots } from '@/components/Dashboard/BusinessSlots';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
@@ -219,7 +218,6 @@ export default function Dashboard() {
                           onExecute={handleInsightExecute}
                           isExecuting={!!executingInsight}
                         />
-                        <EmpireLedger />
                       </div>
                       <aside className="lg:col-span-4 space-y-12">
                         <SocialProofApproval />
