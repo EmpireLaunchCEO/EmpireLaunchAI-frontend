@@ -143,7 +143,7 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
     window.location.href = '/empire-center';
   };
 
-  const slot1Name = (isAdmin && (!currentEmpire?.name || currentEmpire?.name === 'EMPIRELAUNCH' || currentEmpire?.name === 'The First Empire')) ? "EmpireLaunch AI" : (currentEmpire?.name || "The First Empire");
+  const slot1Name = (isAdmin && (!currentEmpire?.name || currentEmpire?.name === 'EMPIRELAUNCH' || currentEmpire?.name === 'The First Empire' || currentEmpire?.name === 'HOME BASE')) ? "EmpireLaunch AI" : (currentEmpire?.name || "The First Empire");
   const slot1Niche = (isAdmin && (!currentEmpire?.niche || currentEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (currentEmpire?.niche || currentEmpire?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || "Niche Pending");
 
   return (

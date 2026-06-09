@@ -70,7 +70,7 @@ export default function Dashboard() {
       if (eData) {
         // ADMIN BYPASS: If we are admin and backend is default, we FORCE the hardcoded branding
         let finalData = eData;
-        if (isAdmin && (activeEmpireId === '1' || !eData.title || eData.title === 'The First Empire' || eData.title === 'EMPIRELAUNCH')) {
+        if (isAdmin && (activeEmpireId === '1' || !eData.title || eData.title === 'The First Empire' || eData.title === 'EMPIRELAUNCH' || eData.title === 'HOME BASE' || eData.name === 'HOME BASE')) {
           finalData = {
             ...eData,
             title: 'EmpireLaunch AI',
@@ -145,7 +145,7 @@ export default function Dashboard() {
                       <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
                     </div>
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-                      {empireData?.name || empireData?.title || "EmpireLaunch AI"}
+                      {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE') ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
                     </h1>
                   </div>
 
