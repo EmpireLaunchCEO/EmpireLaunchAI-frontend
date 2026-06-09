@@ -393,19 +393,13 @@ export default function SettingsPage() {
 
                     <button
                       id="mode-autopilot"
-                      onClick={() => {
-                        if (aiMode !== 'empire') {
-                          setIsAgreementOpen(true);
-                        } else {
-                          setAiMode('co-pilot');
-                        }
-                      }}
+                      onClick={() => setAiMode('empire')}
                       className={cn(
-
+                        "p-8 rounded-[32px] border-4 text-left space-y-4 group relative overflow-hidden transition-all",
                         aiMode === 'empire' ? "border-amber-500 bg-amber-500/5 shadow-2xl" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
                       )}
                     >
-                      <div className="flex items-center justify-between">
+
                         <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-amber-500 border border-amber-500/30">
                           <Zap className="w-6 h-6" />
                         </div>
@@ -584,14 +578,6 @@ export default function SettingsPage() {
             )}
           </main>
         </div>
-      <AutoPilotAgreementGate
-        isOpen={isAgreementOpen}
-        onClose={() => setIsAgreementOpen(false)}
-        onConfirm={() => {
-          setAiMode('empire');
-          setIsAgreementOpen(false);
-        }}
-      />
       </div>
       </PullToRefresh>
 
