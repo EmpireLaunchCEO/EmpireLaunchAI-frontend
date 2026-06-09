@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Stars, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Mail, Lock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import { API_URL } from '@/lib/config';
 
 interface SignUpFormProps {

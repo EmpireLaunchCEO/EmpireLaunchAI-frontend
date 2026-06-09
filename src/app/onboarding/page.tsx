@@ -8,12 +8,9 @@ import {
   CheckCircle2,
   Stars,
   ArrowRight,
-  Zap,
   CreditCard,
   Languages,
-  ChevronDown,
   Shield,
-  Scale,
   AlertCircle,
   Coins
 } from 'lucide-react';
@@ -29,7 +26,6 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { SignUpForm } from '@/components/Onboarding/SignUpForm';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
-import { empireService, userSettingsService } from '@/lib/api-service';
 import { Suspense } from 'react';
 
 const steps = [
@@ -71,7 +67,6 @@ function OnboardingContent() {
     setLanguage = () => {},
     currency = 'USD',
     setCurrency = () => {},
-    isProtocolAccepted = false,
     acceptProtocols = () => {},
     isHandoverComplete: handoverStatus = false
   } = empire || {};
@@ -79,7 +74,6 @@ function OnboardingContent() {
   const [userId, setUserId] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [isMounted, setIsMounted] = useState(false);
-  const [accessKey, setAccessKey] = useState('');
   const [data, setData] = useState({
     name: '',
     niche: '',
@@ -93,7 +87,6 @@ function OnboardingContent() {
   const [isPaying, setIsPaying] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
-  const [isPWADismissed, setIsPWADismissed] = useState(false);
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
 
   const discoveryLogs = useMemo(() => [
@@ -104,24 +97,7 @@ function OnboardingContent() {
     "Neural Discovery Complete."
   ], []);
 
-  useEffect(() => {
-    setIsMounted(true);
-    if (typeof window !== 'undefined') {
-      const savedStep = localStorage.getItem('onboarding_step');
-      if (savedStep) setCurrentStep(parseInt(savedStep));
-      
-      const savedUserId = localStorage.getItem('empire_userId');
-      if (savedUserId) setUserId(savedUserId);
-
-      // Handle Stripe Return
-      const sessionId = searchParams.get('session_id');
-      if (sessionId && !isPaid) {
-        verifyPayment(sessionId);
-      }
-    }
-  }, []);
-
-  const verifyPayment = async (sessionId: string) => {
+  const verifyPayment = useCallback(async (sessionId: string) => {
     setIsPaying(true);
     try {
       const res = await fetch(`${API_URL}/api/stripe/verify/platform?sessionId=${sessionId}`, {
@@ -139,7 +115,27 @@ function OnboardingContent() {
     } finally {
       setIsPaying(false);
     }
-  };
+  }, [userId, setIsPaid]);
+
+  useEffect(() => {
+    setIsMounted(true);
+    if (typeof window !== 'undefined') {
+      const savedStep = localStorage.getItem('onboarding_step');
+      if (savedStep) setCurrentStep(parseInt(savedStep));
+      
+      const savedUserId = localStorage.getItem('empire_userId');
+      if (savedUserId) setUserId(savedUserId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const sessionId = searchParams.get('session_id');
+      if (sessionId && !isPaid && userId) {
+        verifyPayment(sessionId);
+      }
+    }
+  }, [searchParams, isPaid, userId, verifyPayment]);
 
   useEffect(() => {
     if (isMounted && typeof window !== 'undefined') {
@@ -275,7 +271,6 @@ function OnboardingContent() {
     return (
       <div className="min-h-screen w-full bg-[#0a0519] flex flex-col items-center justify-center p-6 relative overflow-hidden">
         <PWAInstallPrompt onDismiss={() => {
-          setIsPWADismissed(true);
           handleActivate();
         }} />
         <div className="absolute inset-0 opacity-20">
@@ -296,7 +291,7 @@ function OnboardingContent() {
               <p className="text-primary font-black tracking-widest text-xs uppercase">Add "EmpireLaunch AI" to your Home Screen to unlock the Command Center.</p>
             </div>
             <div className="max-w-sm mx-auto space-y-6">
-              <button onClick={() => { setIsPWADismissed(true); handleActivate(); }} className="w-full py-5 bg-white text-slate-950 border-2 border-white font-black text-sm uppercase tracking-[0.2em] rounded-2xl hover:bg-primary hover:border-primary transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] active:scale-95">Already Installed / Skip</button>
+              <button onClick={() => { handleActivate(); }} className="w-full py-5 bg-white text-slate-950 border-2 border-white font-black text-sm uppercase tracking-[0.2em] rounded-2xl hover:bg-primary hover:border-primary transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] active:scale-95">Already Installed / Skip</button>
             </div>
           </div>
         </motion.div>
