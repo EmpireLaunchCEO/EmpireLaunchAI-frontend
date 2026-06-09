@@ -8,7 +8,7 @@ import { ToastContainer } from "@/components/Dashboard/ToastContainer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "HOME BASE - AI Business Partner",
+  title: "EmpireLaunch AI - AI Business Partner",
   description: "Automate your business with AI",
 };
 
@@ -41,7 +41,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="HOME BASE" />
+        <meta name="apple-mobile-web-app-title" content="EmpireLaunch AI" />
         <meta name="theme-color" content="#0a0519" />
         <script
           dangerouslySetInnerHTML={{

@@ -1,6 +1,6 @@
 {
-  "name": "HOME BASE",
-  "short_name": "HOME BASE",
+  "name": "EmpireLaunch AI",
+  "short_name": "EmpireLaunch AI",
   "description": "High-Intelligence AI Business Partner",
   "start_url": "/dashboard?pwa=true&v=1024",
   "display": "standalone",

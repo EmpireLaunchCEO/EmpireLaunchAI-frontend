@@ -95,7 +95,7 @@ function LandingPageContent() {
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white shadow-lg">
              <Stars className="w-5 h-5" />
           </div>
-          <span className="font-black text-2xl tracking-tighter uppercase italic text-theme-gradient pr-2">HOME BASE</span>
+          <span className="font-black text-2xl tracking-tighter uppercase italic text-theme-gradient pr-2">EmpireLaunch AI</span>
         </div>
         <div className="hidden md:flex items-center gap-2 bg-theme-surface/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
             <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
