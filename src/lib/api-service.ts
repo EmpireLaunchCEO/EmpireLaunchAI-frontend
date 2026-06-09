@@ -58,6 +58,7 @@ export interface EmpirePulseState {
 export interface EmpireHealth {
   growthScore: number;
   revenue: number;
+  monthlyRevenue: number;
   pendingDues: number;
   platformBreakdown: {
     platform: string;

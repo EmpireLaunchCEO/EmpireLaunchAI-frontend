@@ -7,7 +7,8 @@ import { GrowthBurst } from './GrowthBurst';
 
 interface GrowthTrackerProps {
   goalTitle?: string;
-  currentValue?: number;
+  monthlyEarnings?: number;
+  allTimeEarnings?: number;
   targetValue?: number;
   unit?: string;
   progress?: number;
@@ -15,7 +16,8 @@ interface GrowthTrackerProps {
 
 export const GrowthTracker = ({
   goalTitle = "Monthly Revenue Goal",
-  currentValue = 0,
+  monthlyEarnings = 0,
+  allTimeEarnings = 0,
   targetValue = 1000,
   unit = "$",
   progress
@@ -45,7 +47,7 @@ export const GrowthTracker = ({
       const val = parseInt(newGoal);
       setLocalTarget(val);
       localStorage.setItem('monthly-revenue-goal', val.toString());
-      alert(`Setting new Monthly Revenue Goal to ${val.toLocaleString()}. Strategy is being recalculated...`);
+      alert(`Setting new Monthly Revenue Goal to $${val.toLocaleString()}. Strategy is being recalculated...`);
     }
   };
 
@@ -70,7 +72,7 @@ export const GrowthTracker = ({
     );
   }
 
-  const percentage = Math.max(0, Math.min(100, progress !== undefined ? progress : Math.round(((currentValue || 0) / (localTarget || 1)) * 100))) || 0;
+  const percentage = Math.max(0, Math.min(100, progress !== undefined ? progress : Math.round(((monthlyEarnings || 0) / (localTarget || 1)) * 100))) || 0;
 
   return (
     <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme shadow-2xl relative overflow-hidden group">
@@ -119,7 +121,7 @@ export const GrowthTracker = ({
           </svg>
           <GrowthBurst active={percentage >= 100} />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Progress</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Monthly Progress</span>
             <span className="text-3xl md:text-4xl font-black text-foreground tracking-tighter">{percentage}%</span>
           </div>
         </div>
@@ -135,21 +137,31 @@ export const GrowthTracker = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-theme-background/30 rounded-3xl p-6 border border-theme">
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Total Empire Earnings</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Monthly Empire Earnings</span>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                   <DollarSign className="w-5 h-5 text-emerald-500" />
                 </div>
-                <span className="text-2xl font-black text-foreground">{unit}{(currentValue || 0).toLocaleString()}</span>
+                <span className="text-2xl font-black text-foreground">{unit}{(monthlyEarnings || 0).toLocaleString()}</span>
               </div>
             </div>
             <div className="bg-theme-background/30 rounded-3xl p-6 border border-theme">
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Revenue Target</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Monthly Revenue Target</span>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
                   <Target className="w-5 h-5 text-amber-500" />
                 </div>
                 <span className="text-2xl font-black text-foreground">{unit}{(localTarget || 0).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-emerald-500/5 rounded-3xl p-6 border border-emerald-500/20">
+            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/60 block mb-2">TOTAL ALL TIME EARNINGS</span>
+            <div className="flex items-center justify-between">
+              <span className="text-3xl font-black text-foreground tracking-tighter">{unit}{(allTimeEarnings || 0).toLocaleString()}</span>
+              <div className="px-3 py-1 bg-emerald-500/10 rounded-full">
+                <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">Lifetime Yield</span>
               </div>
             </div>
           </div>

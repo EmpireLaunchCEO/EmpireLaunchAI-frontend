@@ -170,13 +170,14 @@ export default function Dashboard() {
                     
                     {/* Primary Results Section */}
                     <GrowthTracker
-                      currentValue={(healthData?.revenue || 0) * 100}
-                      progress={healthData?.score}
+                      monthlyEarnings={(healthData?.monthlyRevenue || 0) * 100}
+                      allTimeEarnings={(healthData?.revenue || 0) * 100}
+                      progress={healthData?.growthScore}
                     />
 
                     <FinancialCommand
                       withholdableEarnings={(healthData?.revenue || 0) * 100}
-                      growthScore={healthData?.score}
+                      growthScore={healthData?.growthScore}
                       onActivateGrowthProtocol={(name) => {
                         setGrowthProtocolGateProduct(name);
                         setIsGrowthProtocolGateOpen(true);
