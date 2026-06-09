@@ -77,7 +77,7 @@ export function ConsultantToolkit({ businessAngle, onToolkitComplete }: Consulta
   return (
     <div className="space-y-10 max-w-md mx-auto">
       <div className="text-center space-y-4">
-        <h2 className="text-4xl font-black text-foreground tracking-tight italic uppercase">
+        <h2 className="text-4xl font-black text-theme-gradient tracking-tight italic uppercase">
           Empire Harvest.
         </h2>
         <p className="text-muted-foreground text-sm uppercase font-black tracking-widest">

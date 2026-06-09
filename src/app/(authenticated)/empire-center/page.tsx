@@ -77,7 +77,7 @@ export default function EmpireCenterPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em]">
             <ClipboardList className="w-3 h-3" />
-            Operations Hub
+            Approval Center
           </div>
           <p className="text-[10px] md:text-sm text-muted-foreground font-medium italic">
             Manage duties, approvals, and AI execution roadmap.

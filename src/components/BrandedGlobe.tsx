@@ -36,14 +36,14 @@ export function BrandedGlobe({
 }: BrandedGlobeProps) {
   const [isLoaded, setIsLoaded] = React.useState(false);
 
-  // Container sizes - reduced to shrink the "white" footprint
+  // Container sizes - using explicit pixel values to ensure validity and prevent "massive globe" expansion
   const sizeClasses = {
-    sm: 'w-4.5 h-4.5 rounded-sm',
-    md: 'w-7 h-7 rounded-md',
-    lg: 'w-10 h-10 rounded-lg',
-    xl: 'w-18 h-18 rounded-xl',
-    '2xl': 'w-24 h-24 rounded-[1.5rem]',
-    '3xl': 'w-36 h-36 rounded-[2rem]',
+    sm: 'w-[18px] h-[18px] rounded-sm',
+    md: 'w-[28px] h-[28px] rounded-md',
+    lg: 'w-[40px] h-[40px] rounded-lg',
+    xl: 'w-[72px] h-[72px] rounded-xl',
+    '2xl': 'w-[96px] h-[96px] rounded-[1.5rem]',
+    '3xl': 'w-[144px] h-[144px] rounded-[2rem]',
   };
 
   // Image scaling - increased to ~94% to keep the globe the same absolute size 

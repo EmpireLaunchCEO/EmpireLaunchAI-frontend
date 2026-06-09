@@ -16,14 +16,10 @@ export function GlobalEmpireHeader() {
 
   const getPageTitle = () => {
     if (pathname === '/dashboard') {
-      const name = activeEmpire?.name || activeEmpire?.title;
-      if (isAdmin && (!name || name === 'EMPIRELAUNCH' || name === 'The First Empire')) {
-        return 'EmpireLaunch AI';
-      }
-      return name || 'Success Hub';
+      return 'EmpireLaunch AI';
     }
     switch (pathname) {
-      case '/empire-center': return 'Operations Hub.';
+      case '/empire-center': return 'Approval Center.';
       case '/studio': return 'Empire Studio.';
       case '/link-center': return 'Neural Sync.';
       case '/review': return 'Control Gates.';
@@ -52,9 +48,7 @@ export function GlobalEmpireHeader() {
           const isActive = activeBusinessIndex === idx;
 
           let label = `Business ${idx + 1}`;
-          if (idx === 0 && isAdmin) {
-            label = "EmpireLaunch AI";
-          } else if (isActive && (activeEmpire?.name || activeEmpire?.title)) {
+          if (isActive && (activeEmpire?.name || activeEmpire?.title)) {
             label = activeEmpire.name || activeEmpire.title;
           }
 

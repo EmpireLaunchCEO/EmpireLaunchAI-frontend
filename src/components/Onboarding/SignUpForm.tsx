@@ -46,7 +46,7 @@ export const SignUpForm = ({ onSuccess }: SignUpFormProps) => {
         <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
           <ShieldCheck className="w-8 h-8 text-primary" />
         </div>
-        <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Neural Identity.</h2>
+        <h2 className="text-2xl md:text-3xl font-black text-theme-gradient tracking-tight uppercase italic">Neural Identity.</h2>
         <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
           "Create your secure access point to the Empire Matrix."
         </p>

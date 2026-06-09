@@ -326,7 +326,7 @@ function OnboardingContent() {
                   <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
                     <Stars className="w-8 h-8 text-primary" />
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Neural Agreement.</h2>
+                  <h2 className="text-2xl md:text-3xl font-black text-theme-gradient tracking-tight uppercase italic">Neural Agreement.</h2>
                   <p className="text-muted-foreground text-xs md:text-sm font-medium italic">"To begin autonomous operations, you must first authorize the synchronization protocols."</p>
                 </div>
                 <div className="bg-slate-900 border border-slate-800 rounded-[32px] p-8 space-y-6 max-h-[400px] overflow-y-auto">
@@ -353,7 +353,7 @@ function OnboardingContent() {
               <motion.div key="step3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
                 <div className="text-center space-y-4">
                   <Stars className="w-16 h-16 text-primary mx-auto" />
-                  <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight uppercase italic">Authorize Engine.</h2>
+                  <h2 className="text-2xl md:text-3xl font-black text-theme-gradient tracking-tight uppercase italic">Authorize Engine.</h2>
                   <p className="text-muted-foreground text-xs md:text-sm font-medium italic">"Authorize the operational license to activate the AI Core."</p>
                 </div>
                 <div className="bg-slate-900 border border-slate-800 rounded-[32px] p-8 space-y-6">

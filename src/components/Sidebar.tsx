@@ -21,7 +21,7 @@ import { analyticsService, empireService } from '@/lib/api-service';
 
 const navItems = [
   { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Empire Center', href: '/empire-center', icon: ClipboardCheck },
+  { name: 'Approval Center', href: '/empire-center', icon: ClipboardCheck },
   { name: 'Empire Studio', href: '/studio', icon: Video },
   { name: 'Neural Link', href: '/link-center', icon: Stars },
   { name: 'Control Gates', href: '/review', icon: ShieldCheck },
@@ -40,7 +40,7 @@ export function Sidebar() {
         <div className="p-6 flex items-center gap-3">
           <BrandedGlobe size="md" spinning />
           <span className="text-lg font-black tracking-tight text-theme-gradient uppercase italic truncate">
-            {(isAdmin && (!activeEmpire?.name || activeEmpire?.name === 'EMPIRELAUNCH' || activeEmpire?.name === 'The First Empire')) ? "EmpireLaunch AI" : (activeEmpire?.name || "EmpireLaunch AI")}.
+            EmpireLaunch AI
           </span>
         </div>
 

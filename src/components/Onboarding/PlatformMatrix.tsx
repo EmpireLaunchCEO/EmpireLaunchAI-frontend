@@ -50,7 +50,7 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
   return (
     <div className="space-y-10 max-w-md mx-auto pb-20">
       <div className="text-center space-y-4">
-        <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight uppercase italic">Platforms You Can Use.</h2>
+        <h2 className="text-3xl md:text-4xl font-black text-theme-gradient tracking-tight uppercase italic">Platforms You Can Use.</h2>
         <p className="text-muted-foreground text-sm md:text-lg font-medium italic">"Your AI partner is equipped to manage growth across these channels. You'll securely link your accounts in the Dashboard."</p>
       </div>
 

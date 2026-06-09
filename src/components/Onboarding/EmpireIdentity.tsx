@@ -33,7 +33,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
   return (
     <div className="space-y-10 max-w-md mx-auto">
       <div className="text-center space-y-4">
-        <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight uppercase italic">Name your Empire.</h2>
+        <h2 className="text-3xl md:text-4xl font-black text-theme-gradient tracking-tight uppercase italic">Name your Empire.</h2>
         <p className="text-muted-foreground text-sm md:text-lg font-medium italic">"Define the soul of your business. This is how the market will perceive your intelligence."</p>
       </div>
 
