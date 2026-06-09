@@ -69,7 +69,7 @@ export function FinancialCommand({
   };
 
   const successShareAmount = Math.floor(withholdableEarnings / 100000) * 4000;
-  const appSubscription = isLinkingComplete ? 4900 : 0; // App Monthly Sub
+  const appSubscription = isLinkingComplete ? 4000 : 0; // App Monthly Sub $40.00
   const intelligenceCost = isLinkingComplete ? 1790 : 0; // Neural/Infrastructure
 
   const SUBSCRIPTIONS = [

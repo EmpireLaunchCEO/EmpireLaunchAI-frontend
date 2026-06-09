@@ -2,24 +2,14 @@
 import { cn } from "@/lib/utils";
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { MissionBriefing } from '@/components/Dashboard/MissionBriefing';
-import { BusinessSlots } from '@/components/Dashboard/BusinessSlots';
-import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
-import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
-import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
-import { EmpireConstellation } from '@/components/Dashboard/EmpireConstellation';
-import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
-import { SuccessHubOverview } from '@/components/Dashboard/SuccessHub/SuccessHubOverview';
 import { Stars, LayoutDashboard, Globe, Briefcase, ChevronRight } from 'lucide-react';
-import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService, empireService } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
-import { IntelligenceCenter } from '@/components/Dashboard/IntelligenceCenter';
-import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
+import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
@@ -35,10 +25,7 @@ export default function Dashboard() {
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
-  const [transactions, setTransactions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [partnerStatus, setPartnerStatus] = useState<'idle' | 'researching' | 'creating'>('idle');
-  const [executingInsight, setExecutingInsight] = useState<string | null>(null);
   const [isCelebrating, setIsCelebrating] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isGrowthGateOpen, setIsGrowthProtocolGateOpen] = useState(false);
@@ -63,14 +50,12 @@ export default function Dashboard() {
         empireService.getEmpire(activeEmpireId).catch(() => null),
         analyticsService.getEmpirePulse().catch(() => ({ score: 85, logs: [] })),
         analyticsService.getEmpireHealth().catch(() => ({ score: 92, revenue: 0 })),
-        analyticsService.getRevenueTransactions().catch(() => [])
       ]);
 
       const results = await Promise.race([fetchPromise, timeoutPromise]) as any[];
-      const [eData, pulse, health, txs] = results;
+      const [eData, pulse, health] = results;
 
       if (eData) {
-        // ADMIN BYPASS: If we are admin and backend is default, we FORCE the hardcoded branding
         let finalData = eData;
         if (isAdmin && (activeEmpireId === '1' || !eData.title || eData.title === 'The First Empire' || eData.title === 'EMPIRELAUNCH' || eData.title === 'HOME BASE' || eData.name === 'HOME BASE')) {
           finalData = {
@@ -86,7 +71,6 @@ export default function Dashboard() {
         setActiveEmpire(finalData);
         setPulseData(pulse);
         setHealthData(health);
-        setTransactions(txs);
       }
     } catch (error) {
       console.error('Sync Error:', error);
@@ -94,23 +78,13 @@ export default function Dashboard() {
       setIsLoading(false);
       setDashboardLoaded(true);
     }
-  }, [activeEmpireId, isLoading, setDashboardLoaded, setActiveEmpire]);
+  }, [activeEmpireId, isLoading, setDashboardLoaded, setActiveEmpire, isAdmin]);
 
   useEffect(() => {
     if (mounted && isInitialized) {
       fetchData();
     }
-  }, [activeEmpireId, mounted, isInitialized]);
-
-  const handleInsightExecute = async (id: string) => {
-    setExecutingInsight(id);
-    setPartnerStatus('creating');
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    setPartnerStatus('idle');
-    setExecutingInsight(null);
-    setIsCelebrating(true);
-    setTimeout(() => setIsCelebrating(false), 5000);
-  };
+  }, [activeEmpireId, mounted, isInitialized, fetchData]);
 
   if (!mounted || !isInitialized) {
     return (
@@ -126,18 +100,19 @@ export default function Dashboard() {
   return (
     <DashboardErrorBoundary>
       <PullToRefresh onRefresh={fetchData}>
-        <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-20 overflow-x-hidden">
+        <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-16 overflow-x-hidden">
           <GrowthProtocolGate
-          isOpen={isGrowthGateOpen}
-          onClose={() => setIsGrowthProtocolGateOpen(false)}
-          onActivate={() => {
-            setIsGrowthProtocolGateOpen(false);
-            setIsCelebrating(true);
-            setTimeout(() => setIsCelebrating(false), 3000);
-          }}
-          productName={growthGateProduct}
-        />
-        {!isDashboardLoaded ? (
+            isOpen={isGrowthGateOpen}
+            onClose={() => setIsGrowthProtocolGateOpen(false)}
+            onActivate={() => {
+              setIsGrowthProtocolGateOpen(false);
+              setIsCelebrating(true);
+              setTimeout(() => setIsCelebrating(false), 3000);
+            }}
+            productName={growthGateProduct}
+          />
+          
+          {!isDashboardLoaded ? (
             <div className="flex flex-col items-center justify-center py-20 gap-6">
               <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin" />
               <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
@@ -149,9 +124,9 @@ export default function Dashboard() {
               {!slotStatus[activeBusinessIndex] && !isAdmin ? (
                 <LockedSlotView slotIndex={activeBusinessIndex} />
               ) : (
-                <div className="space-y-12 md:space-y-20 animate-in fade-in duration-1000">
+                <div className="space-y-12 md:space-y-16 animate-in fade-in duration-1000">
                   
-                  {/* 3. Selected Business Identity */}
+                  {/* 1. Identity Header */}
                   <div className="text-center space-y-4">
                     <div className="flex items-center justify-center gap-2">
                       <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
@@ -161,8 +136,8 @@ export default function Dashboard() {
                     </h1>
                   </div>
 
-                  {/* 4. Intelligence & Operations Grid (Teacher First) */}
-                  <div className="max-w-6xl mx-auto space-y-12 md:space-y-20">
+                  {/* 2. Operations Column */}
+                  <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
                     {!isLinkingComplete && (
                       <div className="space-y-6">
                         <div className="flex justify-center">
@@ -192,10 +167,14 @@ export default function Dashboard() {
                       </div>
                     )}
                     
-                    <SuccessHubOverview 
-                      empireData={empireData}
-                      pulseData={pulseData}
-                      healthData={healthData}
+                    {/* Primary Results Section */}
+                    <FinancialCommand
+                      withholdableEarnings={(healthData?.revenue || 0) * 100}
+                      growthScore={healthData?.score}
+                      onActivateGrowthProtocol={(name) => {
+                        setGrowthProtocolGateProduct(name);
+                        setIsGrowthProtocolGateOpen(true);
+                      }}
                     />
 
                     <NicheCalibrationBox 
@@ -203,34 +182,15 @@ export default function Dashboard() {
                       angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
                     />
 
-                    <FinancialCommand
-                    withholdableEarnings={(healthData?.revenue || 0) * 100}
-                    growthScore={healthData?.score}
-                    onActivateGrowthProtocol={(name) => {
-                      setGrowthProtocolGateProduct(name);
-                      setIsGrowthProtocolGateOpen(true);
-                    }}
-                    />
-
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 relative z-0">
-                      <div className="lg:col-span-8 space-y-12">
-                        <SocialProofApproval />
-                      </div>
-                      <aside className="lg:col-span-4 space-y-12">
-                        <NeuralNotes />
-                      </aside>
+                    <div className="pb-8">
+                      <NeuralNotes />
                     </div>
-                  </div>
-
-                  {/* AI Intelligence Center */}
-                  <div className="max-w-6xl mx-auto pb-12">
-                    <IntelligenceCenter />
                   </div>
 
                   {/* Version Verification */}
                   <div className="flex justify-center pb-20">
                     <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
-                      Command Center v3.0.1 (Neural Sync Active)
+                      Command Center v3.0.2 (Neural Sync Active)
                     </span>
                   </div>
                 </div>
