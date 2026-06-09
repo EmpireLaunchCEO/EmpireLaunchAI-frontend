@@ -118,13 +118,18 @@ function OnboardingContent() {
   useEffect(() => {
     setIsMounted(true);
     if (typeof window !== 'undefined') {
-      const savedStep = localStorage.getItem('onboarding_step');
-      if (savedStep) setCurrentStep(parseInt(savedStep));
+      const stepParam = searchParams.get('step');
+      if (stepParam) {
+        setCurrentStep(parseInt(stepParam));
+      } else {
+        const savedStep = localStorage.getItem('onboarding_step');
+        if (savedStep) setCurrentStep(parseInt(savedStep));
+      }
       
       const savedUserId = localStorage.getItem('empire_userId');
       if (savedUserId) setUserId(savedUserId);
     }
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -345,7 +350,10 @@ function OnboardingContent() {
 
             {currentStep === 2 && (
               <motion.div key="step2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                <SignUpForm onSuccess={(uid) => { setUserId(uid); nextStep(); }} />
+                <SignUpForm 
+                  initialMode={searchParams.get('mode') === 'login' ? 'login' : 'signup'}
+                  onSuccess={(uid) => { setUserId(uid); nextStep(); }} 
+                />
               </motion.div>
             )}
 

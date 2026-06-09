@@ -30,19 +30,19 @@ export function GlobalEmpireHeader() {
   };
 
   return (
-    <div className="flex flex-col items-center pt-8 pb-4">
+    <div className="flex flex-col items-center pt-6 pb-2">
       <div className="flex flex-col items-center">
         <BrandedGlobe 
           size="xl" 
           animate={false}
-          className="shadow-[0_0_50px_rgba(255,255,255,0.1)]"
+          className="shadow-[0_0_30px_rgba(255,255,255,0.05)]"
         />
-        <h2 className="mt-6 text-xl md:text-4xl lg:text-5xl font-black tracking-tight md:tracking-[0.15em] lg:tracking-[0.2em] uppercase italic text-theme-gradient leading-none text-center px-4 max-w-full drop-shadow-[0_2px_10px_rgba(var(--primary-rgb),0.3)]">
+        <h2 className="mt-4 text-xl md:text-3xl lg:text-4xl font-black tracking-tight md:tracking-[0.1em] lg:tracking-[0.15em] uppercase italic text-theme-gradient leading-none text-center px-4 max-w-full drop-shadow-[0_2px_10px_rgba(var(--primary-rgb),0.3)]">
           {getPageTitle()}
         </h2>
       </div>
 
-      <div className="mt-10 flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-[calc(100%-2rem)] overflow-x-auto scrollbar-hide gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
+      <div className="mt-6 flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-[calc(100%-2rem)] overflow-x-auto scrollbar-hide gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
         {[0, 1, 2].map((idx) => {
           const empireId = (idx + 1).toString();
           const isActive = activeBusinessIndex === idx;

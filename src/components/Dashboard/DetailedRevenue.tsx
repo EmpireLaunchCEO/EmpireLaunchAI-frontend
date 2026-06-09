@@ -61,7 +61,7 @@ export function DetailedRevenue() {
   if (loading) {
     return (
       <div className="h-40 flex items-center justify-center">
-        <BrandedGlobe size="sm" animate={true} />
+        <BrandedGlobe size="md" animate={true} />
       </div>
     );
   }

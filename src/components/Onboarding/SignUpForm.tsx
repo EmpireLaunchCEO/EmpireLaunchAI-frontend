@@ -7,13 +7,15 @@ import { API_URL } from '@/lib/config';
 
 interface SignUpFormProps {
   onSuccess: (userId: string, email: string) => void;
+  initialMode?: 'signup' | 'login';
 }
 
-export const SignUpForm = ({ onSuccess }: SignUpFormProps) => {
+export const SignUpForm = ({ onSuccess, initialMode = 'signup' }: SignUpFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLogin, setIsLogin] = useState(initialMode === 'login');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +23,8 @@ export const SignUpForm = ({ onSuccess }: SignUpFormProps) => {
     setError(null);
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
+      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -31,7 +34,7 @@ export const SignUpForm = ({ onSuccess }: SignUpFormProps) => {
       if (response.ok) {
         onSuccess(data.userId, email);
       } else {
-        setError(data.error || 'Failed to initialize identity.');
+        setError(data.error || `Failed to ${isLogin ? 'authenticate' : 'initialize'} identity.`);
       }
     } catch (err) {
       setError('Neural connection failed. Check your link.');
@@ -46,9 +49,14 @@ export const SignUpForm = ({ onSuccess }: SignUpFormProps) => {
         <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
           <ShieldCheck className="w-8 h-8 text-primary" />
         </div>
-        <h2 className="text-2xl md:text-3xl font-black text-theme-gradient tracking-tight uppercase italic">Neural Identity.</h2>
+        <h2 className="text-2xl md:text-3xl font-black text-theme-gradient tracking-tight uppercase italic">
+          {isLogin ? 'Neural Access.' : 'Neural Identity.'}
+        </h2>
         <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
-          "Create your secure access point to the Empire Matrix."
+          {isLogin 
+            ? '"Re-establish your connection to the Empire Matrix."'
+            : '"Create your secure access point to the Empire Matrix."'
+          }
         </p>
       </div>
 
@@ -94,14 +102,24 @@ export const SignUpForm = ({ onSuccess }: SignUpFormProps) => {
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none disabled:opacity-50"
-        >
-          {isLoading ? 'Synchronizing...' : 'Initialize Identity'}
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-        </button>
+        <div className="space-y-4">
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none disabled:opacity-50"
+          >
+            {isLoading ? 'Synchronizing...' : (isLogin ? 'Access Command Center' : 'Initialize Identity')}
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsLogin(!isLogin)}
+            className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2"
+          >
+            {isLogin ? "Need to create a new empire? Sign Up" : "Already have an empire? Log In"}
+          </button>
+        </div>
       </form>
     </div>
   );

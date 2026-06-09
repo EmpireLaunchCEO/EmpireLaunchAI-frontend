@@ -36,18 +36,19 @@ export function BrandedGlobe({
 }: BrandedGlobeProps) {
   const [isLoaded, setIsLoaded] = React.useState(false);
 
-  // Container sizes - using explicit pixel values to ensure validity and prevent "massive globe" expansion
-  const sizeClasses = {
-    sm: 'w-[18px] h-[18px] rounded-sm',
-    md: 'w-[28px] h-[28px] rounded-md',
-    lg: 'w-[40px] h-[40px] rounded-lg',
-    xl: 'w-[72px] h-[72px] rounded-xl',
-    '2xl': 'w-[96px] h-[96px] rounded-[1.5rem]',
-    '3xl': 'w-[144px] h-[144px] rounded-[2rem]',
+  // Container sizes - using explicit pixel values for absolute containment
+  const sizeMap = {
+    sm: 16,
+    md: 24,
+    lg: 32,
+    xl: 48,
+    '2xl': 64,
+    '3xl': 96,
   };
 
-  // Image scaling - increased to ~94% to keep the globe the same absolute size 
-  // while the surrounding white container is now smaller.
+  const pixelSize = sizeMap[size];
+
+  // Image scaling - kept at ~94% to allow for the white container padding
   const imageScale = isLoaded ? "scale-[0.94]" : "scale-0";
 
   const animationProps = spinning
@@ -79,18 +80,27 @@ export function BrandedGlobe({
       };
 
   return (
-    <div className={cn(
-      "relative flex items-center justify-center shrink-0 bg-white shadow-2xl overflow-hidden border border-white/20", 
-      sizeClasses[size],
-      className
-    )}>
+    <div 
+      className={cn(
+        "relative flex items-center justify-center shrink-0 bg-white shadow-2xl overflow-hidden border border-white/20", 
+        className
+      )}
+      style={{ 
+        width: `${pixelSize}px`, 
+        height: `${pixelSize}px`,
+        minWidth: `${pixelSize}px`,
+        minHeight: `${pixelSize}px`,
+        borderRadius: size === 'sm' ? '4px' : size === 'md' ? '6px' : '12px'
+      }}
+    >
       {/* Subtle depth glow for the white container */}
       {glow && (
         <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-slate-200/30 pointer-events-none" />
       )}
       
       <motion.div
-        className="w-full h-full flex items-center justify-center relative z-10"
+        className="flex items-center justify-center relative z-10"
+        style={{ width: '100%', height: '100%' }}
         animate={animationProps}
         transition={transitionProps}
       >
@@ -105,11 +115,15 @@ export function BrandedGlobe({
           src="/branded-globe.png"
           alt="EmpireLaunch AI"
           className={cn(
-            "w-full h-full object-contain relative z-10 transition-all duration-1000",
+            "object-contain relative z-10 transition-all duration-1000",
             imageScale,
             spinning && "brightness-105 contrast-110"
           )}
           style={{ 
+            width: '100%',
+            height: '100%',
+            maxWidth: '100%',
+            maxHeight: '100%',
             imageRendering: 'high-quality',
             filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))' 
           }}

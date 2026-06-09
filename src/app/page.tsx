@@ -57,15 +57,21 @@ function LandingPageContent() {
 
   // Only show the sync overlay if we are initialized AND determined the user should be fast-tracked
   // For the Owner, this might flicker, but for Customers, they will land on Step 1 immediately.
-  const isFastTrack = isInitialized && isHandoverComplete && isOnboarded && isPaid;
-  
+  const isFastTrack = isInitialized && (isOnboarded || handoverStatus) && isPaid;
+
+  const handleMainAction = () => {
+    if (isFastTrack) {
+      router.push('/dashboard');
+      return;
+    }
+    window.location.href = '/onboarding';
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0519] selection:bg-primary/30 overflow-x-hidden text-white">
       {isFastTrack && (
         <div className="fixed inset-0 z-[100] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white animate-pulse">
-             <Stars className="w-8 h-8" />
-          </div>
+          <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_50px_rgba(var(--primary-rgb),0.3)]" />
           <div className="flex flex-col items-center gap-2">
             <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
               Neural Path Authorized
@@ -112,7 +118,7 @@ function LandingPageContent() {
           </div>
 
           {/* Hero Heading */}
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.8] uppercase italic">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.8] uppercase italic text-theme-gradient drop-shadow-[0_2px_15px_rgba(var(--primary-rgb),0.4)]">
             YOUR EMPIRE AWAITS
           </h1>
 
@@ -120,21 +126,25 @@ function LandingPageContent() {
             The high-intelligence AI partner that builds, markets, and scales your business while you sleep.
           </p>
 
-          <div className="flex flex-col items-center gap-8 pt-6">
-            {/* Removed Selectors from Landing - Now in Authorization screen */}
-
+          <div className="flex flex-col items-center gap-6 pt-6 w-full">
             {/* Main Action */}
             <button
-              onClick={() => {
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.href = '/onboarding?preview=true';
-              }}
+              onClick={handleMainAction}
               className="group relative bg-theme-gradient text-white px-10 py-5 rounded-[24px] font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3 w-full uppercase tracking-tighter italic border-none"
             >
-              Authorize Engine
+              {isFastTrack ? "Access Command Center" : "Authorize Engine"}
               <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
               <div className="absolute inset-0 rounded-[24px] bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+            </button>
+
+            <button 
+              onClick={() => {
+                localStorage.clear();
+                window.location.href = '/onboarding?step=2&mode=login';
+              }}
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2"
+            >
+              Returning Owner? Neural Log In
             </button>
           </div>
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none">
