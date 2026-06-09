@@ -204,6 +204,7 @@ export default function Dashboard() {
                     />
 
                     <FinancialCommand
+                    withholdableEarnings={(healthData?.revenue || 0) * 100}
                     growthScore={healthData?.score}
                     onActivateGrowthProtocol={(name) => {
                       setGrowthProtocolGateProduct(name);
