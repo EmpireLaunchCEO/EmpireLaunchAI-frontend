@@ -36,19 +36,18 @@ export function BrandedGlobe({
 }: BrandedGlobeProps) {
   const [isLoaded, setIsLoaded] = React.useState(false);
 
-  // Container sizes - optimized for professional UI margins
+  // Container sizes - revert to compact professional sizes
   const sizeClasses = {
-    sm: 'w-6 h-6 rounded-lg',
-    md: 'w-10 h-10 rounded-xl',
-    lg: 'w-16 h-16 rounded-2xl',
-    xl: 'w-24 h-24 rounded-[2rem]',
-    '2xl': 'w-32 h-32 rounded-[2.5rem]',
-    '3xl': 'w-48 h-48 rounded-[4rem]',
+    sm: 'w-5 h-5 rounded-md',
+    md: 'w-8 h-8 rounded-lg',
+    lg: 'w-12 h-12 rounded-xl',
+    xl: 'w-20 h-20 rounded-2xl',
+    '2xl': 'w-28 h-28 rounded-[2rem]',
+    '3xl': 'w-40 h-40 rounded-[2.5rem]',
   };
 
-  // Image scaling - reduced to ensure the globe is "just a little smaller" inside the white square
-  // This provides proper breathing room/margins.
-  const imageScale = isLoaded ? "scale-[0.68]" : "scale-0";
+  // Image scaling - increased to 84% to reduce the white margin "by half"
+  const imageScale = isLoaded ? "scale-[0.84]" : "scale-0";
 
   const animationProps = spinning
     ? { rotate: [0, 360] }
