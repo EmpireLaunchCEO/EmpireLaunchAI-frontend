@@ -61,7 +61,7 @@ export const NicheCalibrationBox = ({ niche, angle }: NicheBoxProps) => {
         <div className="flex items-center gap-4">
            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
               {isPending ? (
-                <BrandedGlobe size="sm" spinning glow={false} />
+                <BrandedGlobe size="md" spinning glow={false} />
               ) : (
                 <Target className="w-6 h-6 text-primary" />
               )}

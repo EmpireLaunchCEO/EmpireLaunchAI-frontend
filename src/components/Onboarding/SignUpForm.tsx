@@ -109,7 +109,12 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup' }: SignUpFormProp
             disabled={isLoading}
             className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none disabled:opacity-50"
           >
-            {isLoading ? 'Synchronizing...' : (isLogin ? 'Access Command Center' : 'Initialize Identity')}
+            {isLoading ? (
+              <>
+                <BrandedGlobe size="sm" spinning className="bg-transparent shadow-none border-none" />
+                Synchronizing...
+              </>
+            ) : (isLogin ? 'Access Command Center' : 'Initialize Identity')}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
 
