@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { InspirationGallery, SuggestionBubbles } from '@/components/Dashboard/InspirationGallery';
+import { DNAVaultCounter } from '@/components/Dashboard/DNAVaultCounter';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 
@@ -67,6 +68,9 @@ export default function StudioPage() {
             {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE') ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
           </h1>
         </div>
+
+        {/* DNA Vault Counter — Live Harvest Intelligence */}
+        <DNAVaultCounter />
 
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000">
           {/* Tab Navigation */}
