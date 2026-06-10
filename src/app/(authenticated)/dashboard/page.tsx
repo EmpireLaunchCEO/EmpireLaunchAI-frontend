@@ -9,7 +9,6 @@ import { analyticsService, empireService } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
-import { ConversationalInput } from '@/components/Dashboard/ConversationalInput';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
@@ -20,9 +19,11 @@ import { GrowthTracker } from '@/components/Dashboard/SuccessHub/GrowthTracker';
 import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { DisclaimerAgreementBox } from '@/components/Dashboard/DisclaimerAgreementBox';
+import { IntelligenceCenter } from '@/components/Dashboard/IntelligenceCenter';
+import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 
 export default function Dashboard() {
-  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin } = useEmpire();
+  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
@@ -187,10 +188,39 @@ export default function Dashboard() {
                       }}
                     />
 
+                    {/* Active Subscribers - Moved here for Admin/Owner per request */}
+                    {isAdmin && (
+                      <div className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(var(--surface-border-rgb),0.15)] transition-all">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[60px] -z-10" />
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                            <Stars className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Active Subscribers</p>
+                            <p className="text-2xl sm:text-3xl font-black text-foreground bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                              {connectedPlatforms.length > 0 ? "342" : "—"}
+                            </p>
+                          </div>
+                        </div>
+                        <p className="text-[10px] text-muted-foreground font-medium">Recurring revenue subscribers</p>
+                      </div>
+                    )}
+
                     <NicheCalibrationBox 
                       niche={isAdmin ? "Done For You Business" : (empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
                       angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
                     />
+
+                    {/* AI Intelligence Center */}
+                    <div className="bg-theme-surface border-2 border-theme rounded-[32px] p-6 md:p-8 space-y-6">
+                      <IntelligenceCenter />
+                    </div>
+
+                    {/* Social Media Radar */}
+                    <div className="bg-theme-surface border-2 border-theme rounded-[32px] p-6 md:p-8 space-y-6">
+                      <SocialMediaRadar />
+                    </div>
 
                     <div className="pb-8">
                       <NeuralNotes />
@@ -209,7 +239,6 @@ export default function Dashboard() {
           )}
         </div>
 
-        <ConversationalInput />
         <NotificationOnboarding />
 
         <AnimatePresence>

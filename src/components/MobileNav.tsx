@@ -62,7 +62,7 @@ export function MobileNav() {
           <span className={cn(
             "text-[10px] font-black uppercase tracking-tighter",
             pathname === '/empire-center' ? "text-white" : "text-white/40"
-          )}>AC</span>
+          )}>OB</span>
         </Link>
 
         {/* Studio — Now Direct Link */}

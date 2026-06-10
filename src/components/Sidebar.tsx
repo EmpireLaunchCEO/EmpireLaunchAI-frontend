@@ -21,7 +21,7 @@ import { analyticsService, empireService } from '@/lib/api-service';
 
 const navItems = [
   { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Approval Center', href: '/empire-center', icon: ClipboardCheck },
+  { name: 'Operation Base', href: '/empire-center', icon: ClipboardCheck },
   { name: 'Empire Studio', href: '/studio', icon: Video },
   { name: 'Neural Link', href: '/link-center', icon: Stars },
   { name: 'Control Gates', href: '/review', icon: ShieldCheck },

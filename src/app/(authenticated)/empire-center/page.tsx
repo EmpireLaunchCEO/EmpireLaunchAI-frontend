@@ -36,13 +36,6 @@ const postHistory = [
   { id: 3, site: 'Instagram', title: 'New Product Teaser', date: '1 day ago', status: 'live' },
 ];
 
-const expenses = [
-  { id: 1, source: 'GoDaddy', item: 'Domain: YourEmpire.com', cost: 14.99, cycle: 'annual', nextPayment: 'June 12, 2024', status: 'ai-managed' },
-  { id: 2, source: 'Kittl', item: 'Pro Design Suite', cost: 0.00, cycle: 'monthly', nextPayment: 'N/A (Free Tier)', status: 'ai-managed' },
-  { id: 3, source: 'Canva', item: 'Content Creation', cost: 0.00, cycle: 'monthly', nextPayment: 'N/A (Free Tier)', status: 'ai-managed' },
-  { id: 4, source: 'Stripe', item: 'Payment Gateway', cost: 0.00, cycle: 'usage-based', nextPayment: 'Per Transaction', status: 'ai-managed' },
-];
-
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
 import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
@@ -50,8 +43,8 @@ import { IntelligenceCenter } from '@/components/Dashboard/IntelligenceCenter';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 
 export default function EmpireCenterPage() {
-  const [activeTab, setActiveTab] = useState<'duties' | 'history' | 'expenses' | 'ai-config'>('duties');
-  const { empireNotes, setEmpireNotes, connectedPlatforms } = useEmpire();
+  const [activeTab, setActiveTab] = useState<'duties' | 'history' | 'ai-config'>('duties');
+  const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin } = useEmpire();
 
   const isPlatformConnected = (platform: string) => {
     return connectedPlatforms.some(p => p.toLowerCase() === platform.toLowerCase());
@@ -60,14 +53,6 @@ export default function EmpireCenterPage() {
   const filteredDuties = duties.filter(d => isPlatformConnected(d.platform));
   const filteredHistory = postHistory.filter(h => isPlatformConnected(h.site));
   
-  const filteredExpenses = expenses.filter(e => {
-    if (e.source === 'Stripe') return isPlatformConnected('Stripe');
-    if (e.source === 'Canva' || e.source === 'Kittl' || e.source === 'GoDaddy') {
-       return connectedPlatforms.length > 0;
-    }
-    return isPlatformConnected(e.source);
-  });
-
   const handleRefresh = async () => {
     // Simulate refresh logic
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -75,82 +60,11 @@ export default function EmpireCenterPage() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
-      <div className="p-3 md:p-8 pb-40 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12">
-      {/* Page Context Header */}
-      <div className="bg-theme-surface/30 p-5 rounded-[24px] border border-theme flex items-center justify-between">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-primary font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em]">
-            <ClipboardList className="w-3 h-3" />
-            Approval Center
-          </div>
-          <p className="text-[10px] md:text-sm text-muted-foreground font-medium italic">
-            Manage duties, approvals, and AI execution roadmap.
-          </p>
-        </div>
-        <div className="hidden md:flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500">
-           <Stars className="w-3 h-3" />
-           Empire Mode Active
-        </div>
-      </div>
-
-      {/* Empire Reach Stats Card */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-        <div className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(var(--surface-border-rgb),0.15)] transition-all">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[60px] -z-10" />
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-              <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Customers</p>
-              <p className="text-2xl sm:text-3xl font-black text-foreground bg-gradient-to-r from-[rgb(var(--primary-rgb))] to-[rgb(var(--secondary-rgb))] bg-clip-text text-transparent">
-                {connectedPlatforms.length > 0 ? "847" : "—"}
-              </p>
-            </div>
-          </div>
-          <p className="text-[10px] text-muted-foreground font-medium">
-            {connectedPlatforms.length > 0 ? "Synced from Etsy & Stripe" : "Link platforms to populate"}
-          </p>
-        </div>
-
-        <div className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(var(--surface-border-rgb),0.15)] transition-all">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[60px] -z-10" />
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-              <Stars className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Active Subscribers</p>
-              <p className="text-2xl sm:text-3xl font-black text-foreground bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                {connectedPlatforms.length > 0 ? "342" : "—"}
-              </p>
-            </div>
-          </div>
-          <p className="text-[10px] text-muted-foreground font-medium">Recurring revenue subscribers</p>
-        </div>
-
-        <div className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(var(--surface-border-rgb),0.15)] transition-all">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-[60px] -z-10" />
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-              <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Reach</p>
-              <p className="text-2xl sm:text-3xl font-black text-foreground bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                {connectedPlatforms.length > 0 ? "12.4K" : "—"}
-              </p>
-            </div>
-          </div>
-          <p className="text-[10px] text-muted-foreground font-medium">TikTok & Instagram followers</p>
-        </div>
-      </div>
-
+      <div className="p-3 md:p-8 pt-0 md:pt-0 pb-40 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12">
       {/* Primary Tabs - Optimized for mobile visibility */}
-      <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
+      <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1 mt-4">
         {[
           { id: 'duties', label: 'Duties', icon: Zap },
-          { id: 'expenses', label: 'Costs', icon: CreditCard },
           { id: 'ai-config', label: 'Rules', icon: Stars },
           ].map((tab) => (
           <button
@@ -167,6 +81,23 @@ export default function EmpireCenterPage() {
             <span className="truncate">{tab.label}</span>
           </button>
         ))}
+      </div>
+
+      {/* Page Context Header */}
+      <div className="bg-theme-surface/30 p-5 rounded-[24px] border border-theme flex items-center justify-between">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-primary font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em]">
+            <ClipboardList className="w-3 h-3" />
+            Operation Base
+          </div>
+          <p className="text-[10px] md:text-sm text-muted-foreground font-medium italic">
+            Manage duties, approvals, and AI execution roadmap.
+          </p>
+        </div>
+        <div className="hidden md:flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500">
+           <Stars className="w-3 h-3" />
+           Empire Mode Active
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -274,80 +205,6 @@ export default function EmpireCenterPage() {
                       </div>
                     )}
                   </div>
-                </div>
-              </motion.div>
-            )}
-
-            {activeTab === 'expenses' && (
-              <motion.div
-                key="expenses"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-8"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-black text-foreground">Expense Ledger</h3>
-                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">AI Managed Subscriptions & Fees</p>
-                  </div>
-                  <div className="bg-primary/10 px-4 py-2 rounded-2xl border border-primary/20">
-                    <span className="text-primary font-black text-xs uppercase tracking-tighter">Automatic Mode: Active</span>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  {filteredExpenses.length > 0 ? (
-                    filteredExpenses.map((expense) => (
-                      <div key={expense.id} className="p-6 bg-theme-background rounded-[32px] border border-theme hover:border-primary/30 transition-all group">
-                        <div className="flex flex-col md:flex-row justify-between gap-6">
-                          <div className="flex items-center gap-5">
-                            <div className="w-14 h-14 rounded-2xl bg-theme-surface flex items-center justify-center border border-theme group-hover:border-primary/20">
-                              <Globe className="w-7 h-7 text-slate-400 group-hover:text-primary transition-colors" />
-                            </div>
-                            <div>
-                              <h4 className="text-lg font-black text-foreground uppercase tracking-tight">{expense.source}</h4>
-                              <p className="text-sm font-bold text-slate-500">{expense.item}</p>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 items-center">
-                            <div className="text-left md:text-right">
-                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Amount</p>
-                              <p className="text-lg font-black text-foreground">${expense.cost.toFixed(2)}</p>
-                            </div>
-                            <div className="text-left md:text-right">
-                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Next Payout</p>
-                              <p className="text-sm font-black text-slate-600 uppercase">{expense.nextPayment}</p>
-                            </div>
-                            <div className="col-span-2 md:col-span-1">
-                               <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full border border-green-100">
-                                 <ShieldCheck className="w-4 h-4" />
-                                 <span className="text-[10px] font-black uppercase tracking-widest">AI Secured</span>
-                               </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="p-12 text-center space-y-4 bg-theme-background rounded-3xl border-2 border-dashed border-theme">
-                      <CreditCard className="w-12 h-12 text-slate-200 mx-auto" />
-                      <p className="text-sm font-bold text-slate-400">No active operational costs detected.</p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-6 bg-slate-900 rounded-[32px] text-white flex flex-col md:flex-row items-center justify-between gap-6">
-                   <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center">
-                         <Stars className="w-6 h-6 text-primary" />
-                      </div>
-                      <p className="text-sm font-bold italic text-slate-300">"I am monitoring all monthly cycles to ensure zero service interruptions."</p>
-                   </div>
-                   <button className="px-8 py-4 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary transition-all shrink-0">
-                      Audit All Sources
-                   </button>
                 </div>
               </motion.div>
             )}

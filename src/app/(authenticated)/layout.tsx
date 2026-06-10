@@ -4,6 +4,7 @@ import { SubscriptionGuard } from "@/components/SubscriptionGuard";
 import { OnboardingTour } from "@/components/Dashboard/OnboardingTour";
 import { NotificationBell } from "@/components/Dashboard/NotificationBell";
 import { GlobalEmpireHeader } from "@/components/Dashboard/GlobalEmpireHeader";
+import { GeminiBrainOverlay } from "@/components/Dashboard/GeminiBrainOverlay";
 import { SlotGuard } from "@/components/SlotGuard";
 import { Suspense } from "react";
 
@@ -34,6 +35,7 @@ export default function AuthenticatedLayout({
           <NotificationBell id="notification-bell-mobile" />
         </div>
         <MobileNav />
+        <GeminiBrainOverlay />
       </div>
     </SubscriptionGuard>
   );
