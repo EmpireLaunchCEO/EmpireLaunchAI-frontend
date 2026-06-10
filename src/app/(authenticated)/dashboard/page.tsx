@@ -117,7 +117,7 @@ export default function Dashboard() {
           
           {!isDashboardLoaded ? (
             <div className="flex flex-col items-center justify-center py-20 gap-6">
-              <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin" />
+              <BrandedGlobe size="lg" spinning />
               <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
                 Syncing Neural Node {activeEmpireId}
               </h2>

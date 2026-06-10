@@ -129,10 +129,10 @@ export function FinancialCommand({
         <div className="flex flex-col md:flex-row gap-8 items-center border-b border-theme/30 pb-8">
           <div className="flex-1 space-y-1">
             <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Financial Command</h3>
-            <p className="text-slate-400 text-xs font-medium italic">Integrated marketplace monitoring & automated success-share tracking.</p>
+            <p className="text-slate-400 text-xs font-medium italic">Omni-channel revenue tracking & AI-driven growth metrics for your existing stores.</p>
             <div className="flex gap-4 pt-1">
               <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
-                <span className="text-[9px] font-black text-primary uppercase">Total External Revenue: {formatCurrency(withholdableEarnings)}</span>
+                <span className="text-[9px] font-black text-primary uppercase">Total Linked Platform Revenue: {formatCurrency(withholdableEarnings)}</span>
               </div>
             </div>
           </div>

@@ -100,6 +100,25 @@ export function BrandedGlobe({
         <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-slate-200/30 pointer-events-none" />
       )}
       
+      {/* 3D Sphere Volume Overlays (Static relative to light source) */}
+      <div 
+        className="absolute z-20 pointer-events-none rounded-full overflow-hidden"
+        style={{
+          width: '94%',
+          height: '94%',
+          boxShadow: 'inset -8px -8px 16px rgba(0,0,0,0.3), inset 6px 6px 12px rgba(255,255,255,0.4)'
+        }}
+      />
+
+      {/* Rim Light */}
+      <div 
+        className="absolute z-25 pointer-events-none rounded-full border border-white/20"
+        style={{
+          width: '94%',
+          height: '94%',
+        }}
+      />
+
       <motion.div
         key={spinning ? 'spinning' : 'static'}
         className="flex items-center justify-center relative z-10"

@@ -131,6 +131,8 @@ function SignalCard({ signal }: { signal: typeof marketSignals[0] }) {
 // ─── Main Intelligence Center Component ────────────────────────────────────
 import { useEmpire } from '@/lib/EmpireContext';
 
+import { BrandedGlobe } from '@/components/BrandedGlobe';
+
 export function IntelligenceCenter() {
   const { activeEmpire, isAdmin, isLinkingComplete } = useEmpire();
   const displayNiche = (isAdmin && (!activeEmpire?.niche || activeEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (activeEmpire?.niche || 'business');

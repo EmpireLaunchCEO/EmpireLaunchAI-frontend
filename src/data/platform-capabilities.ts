@@ -12,41 +12,41 @@ export const PLATFORM_CAPABILITIES: Record<string, PlatformCapabilities> = {
   etsy: {
     id: 'etsy',
     capabilities: [
-      { tier: 'read-only', description: 'View shop stats and analytics. Research best sellers. AI monitors your store performance without making changes.' },
-      { tier: 'co-pilot', description: 'AI drafts new listings and descriptions for your approval. Analyze order history and suggest keywords.' },
-      { tier: 'empire', description: 'Create/Edit/Delete listings autonomously. Update shop branding. Automate "Thank You" messages to customers.' }
+      { tier: 'read-only', description: 'Monitor existing shop sales and analytics. Track revenue from AI-generated listings.' },
+      { tier: 'co-pilot', description: 'AI drafts SEO-optimized listings for your existing shop. Suggests keyword improvements based on sales data.' },
+      { tier: 'empire', description: 'Auto-Pilot: AI autonomously manages listings and automates customer "Thank You" scripts in your store.' }
     ]
   },
   fiverr: {
     id: 'fiverr',
     capabilities: [
-      { tier: 'read-only', description: 'Monitor gig performance and track active orders. AI analyzes your ranking and provides growth insights.' },
-      { tier: 'co-pilot', description: 'AI generates optimized Gig titles, descriptions, and SEO tags for you to review and copy-paste.' },
-      { tier: 'empire', description: 'AI uses a browser agent to manage Gigs, update delivery status, or respond to messages autonomously.' }
+      { tier: 'read-only', description: 'Track Gig performance and revenue. Monitor conversion rates for AI-optimized services.' },
+      { tier: 'co-pilot', description: 'AI drafts optimized Gig descriptions and SEO tags to boost your existing ranking.' },
+      { tier: 'empire', description: 'Auto-Pilot: AI manages inquiry responses and Gig updates autonomously to maximize growth.' }
     ]
   },
   tiktok: {
     id: 'tiktok',
     capabilities: [
-      { tier: 'read-only', description: 'Track video performance, follower growth, and profile engagement. AI monitors trending sounds for your niche.' },
-      { tier: 'co-pilot', description: 'AI suggests video scripts and content ideas. Prepare drafts for your final look before publishing.' },
-      { tier: 'empire', description: 'Programmatically upload, publish, and schedule videos autonomously based on peak engagement times.' }
+      { tier: 'read-only', description: 'Track video performance and revenue growth for AI-promoted products. Monitor trends.' },
+      { tier: 'co-pilot', description: 'AI suggests video scripts and drafts promotional posts for your existing account.' },
+      { tier: 'empire', description: 'Auto-Pilot: AI programmatically uploads and schedules content to drive sales for your products.' }
     ]
   },
   instagram: {
     id: 'instagram',
     capabilities: [
-      { tier: 'read-only', description: 'View detailed insights, reach, and audience sentiment. AI tracks competitor trends in real-time.' },
-      { tier: 'co-pilot', description: 'AI drafts captions and suggests hashtags. Prepare Feed and Story posts for your approval.' },
-      { tier: 'empire', description: 'Auto-post to Feed/Stories. Tag products in posts. Moderate and respond to comments autonomously.' }
+      { tier: 'read-only', description: 'Monitor engagement and sales growth for AI-promoted products. Track competitor trends.' },
+      { tier: 'co-pilot', description: 'AI drafts captions and suggests hashtags for your existing account. Prepare Feed/Story drafts.' },
+      { tier: 'empire', description: 'Auto-Pilot: AI posts content and manages comments autonomously to drive traffic to your store.' }
     ]
   },
   facebook: {
     id: 'facebook',
     capabilities: [
-      { tier: 'read-only', description: 'Monitor page engagement and audience growth. AI analyzes post performance and reach.' },
-      { tier: 'co-pilot', description: 'AI drafts posts and community updates for your review. Suggest optimal times to share content.' },
-      { tier: 'empire', description: 'Auto-post to Feed/Stories. Manage group engagement. Moderate comments and respond to inquiries autonomously.' }
+      { tier: 'read-only', description: 'Track page engagement and audience growth. Monitor sales impact from Facebook posts.' },
+      { tier: 'co-pilot', description: 'AI drafts posts and community updates for your review. Suggest optimal sharing times.' },
+      { tier: 'empire', description: 'Auto-Pilot: AI manages page posting and group engagement autonomously to boost product visibility.' }
     ]
   },
   youtube: {
@@ -100,9 +100,9 @@ export const PLATFORM_CAPABILITIES: Record<string, PlatformCapabilities> = {
   shopify: {
     id: 'shopify',
     capabilities: [
-      { tier: 'read-only', description: 'View store analytics and customer behavior. AI monitors stock levels and sales trends.' },
-      { tier: 'co-pilot', description: 'AI suggests product improvements and drafts store updates for your approval.' },
-      { tier: 'empire', description: 'Auto-fulfill orders. Update inventory levels. Manage store themes and descriptions autonomously.' }
+      { tier: 'read-only', description: 'Track order volume and revenue growth for AI-promoted products in your existing store.' },
+      { tier: 'co-pilot', description: 'AI suggests product description optimizations and drafts social-ready promotional content.' },
+      { tier: 'empire', description: 'Auto-Pilot: AI synchronizes designs directly to your storefront and manages automated fulfillment tracking.' }
     ]
   },
   bannerbear: {

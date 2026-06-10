@@ -2,7 +2,9 @@
 import { cn } from "@/lib/utils";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import {
   Search,
   Stars,
@@ -61,6 +63,31 @@ interface GuidedLinkingProps {
   onClose?: () => void;
   currentEmpire?: any;
   onRefresh?: () => void;
+}
+
+const PLATFORM_3D_ICONS: Record<string, string> = {
+  tiktok: '/brands/tiktok_128.png',
+  instagram: '/brands/instagram_128.png',
+  youtube: '/brands/youtube_128.png',
+  etsy: '/brands/etsy_128.png',
+  fiverr: '/brands/fiverr_128.png',
+  gmail: '/brands/gmail_128.png',
+  facebook: '/brands/facebook_128.png',
+  canva: '/brands/canva_128.png',
+  kittl: '/brands/kittl_128.png',
+  capcut: '/brands/capcut_128.png',
+};
+
+function PlatformIcon({ id, icon: Icon, className, size = 20 }: { id: string, icon: any, className?: string, size?: number }) {
+  const icon3d = PLATFORM_3D_ICONS[id];
+  if (icon3d) {
+    return (
+      <div className={cn("relative flex items-center justify-center bg-white rounded-lg p-0.5 border border-theme/50", className)} style={{ width: size + 8, height: size + 8 }}>
+        <Image src={icon3d} alt={id} width={size} height={size} className="object-contain" />
+      </div>
+    );
+  }
+  return <Icon className={cn(className)} style={{ width: size, height: size }} />;
 }
 
 export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }: GuidedLinkingProps) {
@@ -202,9 +229,9 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
     } else if (isGmailLinked && connectedPlatforms.length === 1) {
       msg = "Now that your email is fully linked, pick another app you're wanting to link.";
     } else if (connectedPlatforms.length === 1) {
-      msg = "One down! What's next on your roadmap? Maybe your primary store like Etsy or Shopify?";
+      msg = "One down! What's next on your roadmap? Link your existing store like Etsy or Shopify so I can start tracking your revenue.";
     } else {
-      msg = "We're building momentum. I'm already scanning your linked accounts for trends. Do you want to link more, or are you ready to see your initial strategy?";
+      msg = "We're building momentum. I'm already scanning your linked stores for trends and sales. Do you want to link more platforms, or are you ready to see your initial strategy?";
     }
     setTeacherMessage(msg);
   }, [connectedPlatforms.length, hasNoPlatforms, isGmailLinked, isReturning, isNichePending]);
@@ -374,7 +401,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
       if (hasNoPlatforms) {
         setTeacherMessage("I recommend starting with your email (Gmail or Universal IMAP). It acts as the backbone for your empire's communications.");
       } else {
-        setTeacherMessage("You've got your email linked. Next, let's connect a sales channel like Etsy or Shopify to start tracking your revenue.");
+        setTeacherMessage("You've got your email linked. Next, let's connect your existing sales channels like Etsy or Shopify so I can start tracking your revenue.");
       }
     } else {
       setTeacherMessage("I'm processing your request... During this linking phase, I'm focused on getting your core apps connected. Ask me how to link a specific platform!");
@@ -412,7 +439,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                   className="p-6 bg-theme-surface border border-theme rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow group hover:border-primary/50"
                 >
                   <div className={cn("p-3 rounded-xl transition-colors", platform.bg, "group-hover:bg-primary/20")}>
-                    <platform.icon className={cn("w-5 h-5", platform.color, "group-hover:text-primary")} />
+                    <PlatformIcon id={id} icon={platform.icon} className={platform.color} size={20} />
                   </div>
                   <div className="flex flex-col">
                     <span className="font-bold text-foreground text-xs group-hover:text-white transition-colors">{platform.name}</span>
@@ -511,9 +538,9 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                         <button 
                           onClick={handleChatSubmit}
                           disabled={isUpdatingNiche || !chatInput.trim()}
-                          className="absolute right-3 top-3 bottom-3 px-5 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest disabled:opacity-50 hover:scale-105 transition-transform shadow-lg shadow-primary/20"
+                          className="absolute right-3 top-3 bottom-3 px-5 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest disabled:opacity-50 hover:scale-105 transition-transform shadow-lg shadow-primary/20 flex items-center justify-center"
                         >
-                          {isUpdatingNiche ? <Stars className="w-4 h-4 animate-spin" /> : "Send"}
+                          {isUpdatingNiche ? <BrandedGlobe size="sm" spinning /> : "Send"}
                         </button>
                       </div>
                       <div className="flex items-center gap-2 ml-3">
@@ -560,7 +587,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                                     className="w-full flex items-center gap-3 p-3 hover:bg-white/5 rounded-lg transition-colors text-left"
                                   >
                                     <div className={cn("p-1.5 rounded-md", platform.bg)}>
-                                      <platform.icon className={cn("w-3.5 h-3.5", platform.color)} />
+                                      <PlatformIcon id={platform.id} icon={platform.icon} className={cn("w-3.5 h-3.5", platform.color)} size={14} />
                                     </div>
                                     <span className="font-bold text-[10px] text-white">{platform.name}</span>
                                   </button>
@@ -635,8 +662,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
             {/* ... card content ... */}
             <div className="flex flex-col md:flex-row gap-10 md:items-center justify-between relative z-10">
               <div className="flex items-center gap-8">
-                <div className={cn("p-8 rounded-[36px] shadow-inner", currentPlatform?.bg ?? 'bg-theme-background')}>
-                  <currentPlatform.icon className={cn("w-12 h-12", currentPlatform?.color ?? 'text-muted-foreground')} />
+                <div className={cn("p-8 rounded-[36px] shadow-inner relative bg-white border border-theme")}>
+                  <PlatformIcon id={currentPlatform.id} icon={currentPlatform.icon} className={currentPlatform.color} size={48} />
                 </div>
                 <div>
                   <h2 className="text-4xl font-black text-foreground tracking-tighter">{currentPlatform?.name ?? 'Connecting...'}</h2>
