@@ -301,6 +301,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
       tiktok: { endpoint: 'tiktok', sessionKey: 'tiktok_oauth_session_id', vaultKey: 'empire_vault_tiktok', label: 'TikTok' },
       tiktok_shop: { endpoint: 'tiktok_shop', sessionKey: 'tiktok_shop_oauth_session_id', vaultKey: 'empire_vault_tiktok_shop', label: 'TikTok Shop' },
       meta: { endpoint: 'meta', sessionKey: 'meta_oauth_session_id', vaultKey: 'empire_vault_meta', label: 'Meta' },
+      instagram: { endpoint: 'meta', sessionKey: 'meta_oauth_session_id', vaultKey: 'empire_vault_meta', label: 'Instagram' },
+      facebook: { endpoint: 'meta', sessionKey: 'meta_oauth_session_id', vaultKey: 'empire_vault_meta', label: 'Facebook' },
       pinterest: { endpoint: 'pinterest', sessionKey: 'pinterest_oauth_session_id', vaultKey: 'empire_vault_pinterest', label: 'Pinterest' },
       shopify: { endpoint: 'shopify', sessionKey: 'shopify_oauth_session_id', vaultKey: 'empire_vault_shopify', label: 'Shopify' },
       woocommerce: { endpoint: 'woocommerce', sessionKey: 'woocommerce_oauth_session_id', vaultKey: 'empire_vault_woocommerce', label: 'WooCommerce' },
@@ -443,6 +445,9 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                   </div>
                   <div className="flex flex-col">
                     <span className="font-bold text-foreground text-xs group-hover:text-white transition-colors">{platform.name}</span>
+                    <span className="text-[9px] font-medium text-muted-foreground">
+                      {JSON.parse(localStorage.getItem(`empire_vault_${id}`) || '{}').handle || 'Syncing...'}
+                    </span>
                     <span className={cn(
                       "text-[7px] font-black uppercase tracking-widest transition-colors",
                       platformPermissions[id] === 'empire' ? "text-amber-500" : "text-primary",

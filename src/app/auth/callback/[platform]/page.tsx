@@ -55,11 +55,16 @@ function AuthCallbackContent() {
 
         if (response.ok) {
           setStatus('success');
-          setMessage(`${platform.charAt(0).toUpperCase() + platform.slice(1)} connected successfully!`);
+          const platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
+          setMessage(`${platformName} connected successfully${data.handle ? ` as ${data.handle}` : ''}!`);
 
           // Store connection token for popup detection
           const vaultKey = `empire_vault_${platform}`;
-          localStorage.setItem(vaultKey, JSON.stringify({ connected: true, timestamp: Date.now() }));
+          localStorage.setItem(vaultKey, JSON.stringify({ 
+            connected: true, 
+            handle: data.handle,
+            timestamp: Date.now() 
+          }));
 
           // Clear storage
           localStorage.removeItem(`${platform}_auth_state`);

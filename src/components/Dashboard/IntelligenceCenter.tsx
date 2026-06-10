@@ -29,31 +29,14 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// ─── Mock AI Intelligence Data ────────────────────────────────────────────
-
-const aiThoughtStream = [
-  { id: 1, type: 'scan', message: 'Scanning Etsy best-sellers in "Digital Planners"...', time: 'Now', icon: Activity },
-  { id: 2, type: 'analyze', message: 'Pattern detected: "Sage Green" + "Minimalist" (+24% WoW)', time: '1m ago', icon: TrendingUp },
-  { id: 3, type: 'reason', message: 'Correlating TikTok trending sounds with Etsy listing velocity...', time: '3m ago', icon: BrainCircuit },
-  { id: 4, type: 'insight', message: 'Identified 3 high-conversion hooks for morning routine content', time: '5m ago', icon: Sparkles },
-  { id: 5, type: 'action', message: 'Generated 2 draft listings for "Zen Morning Planner"', time: '8m ago', icon: Zap },
-  { id: 6, type: 'vault', message: 'Harvested "Boho Luxe" color palette from Pinterest trend', time: '12m ago', icon: Database },
-  { id: 7, type: 'monitor', message: 'Instagram engagement for @your_brand up 18% this hour', time: '15m ago', icon: Signal },
-  { id: 8, type: 'strategy', message: 'Calculating optimal posting time: 6:15 PM EST (+34% reach)', time: '20m ago', icon: Target },
-];
-
-const marketSignals = [
-  { id: 1, signal: 'Rising', metric: 'Sage Green searches', source: 'Etsy', change: '+24%', direction: 'up' as const },
-  { id: 2, signal: 'Spiking', metric: '"ADHD Planner" demand', source: 'TikTok', change: '+41%', direction: 'up' as const },
-  { id: 3, signal: 'Declining', metric: 'Neon color palettes', source: 'Pinterest', change: '-12%', direction: 'down' as const },
-  { id: 4, signal: 'Emerging', metric: 'AI-assisted journaling', source: 'Google Trends', change: '+67%', direction: 'up' as const },
-];
-
+// ─── AI Intelligence Data (Now Data-Driven) ──────────────────────────────────
+const aiThoughtStream: any[] = [];
+const marketSignals: any[] = [];
 const intelligenceMetrics = [
-  { label: 'Processing Speed', value: '98%', detail: '12 threads active', icon: Cpu },
-  { label: 'Prediction Accuracy', value: '94%', detail: 'Last 24h: 142/151 correct', icon: Target },
-  { label: 'Data Sources', value: '18', detail: 'Platforms monitored', icon: Network },
-  { label: 'Market Coverage', value: '92%', detail: 'Digital goods niche', icon: Globe },
+  { label: 'Processing Speed', value: '0%', detail: 'Awaiting data link', icon: Cpu },
+  { label: 'Prediction Accuracy', value: '0%', detail: 'Awaiting data link', icon: Target },
+  { label: 'Data Sources', value: '0', detail: 'Platforms monitored', icon: Network },
+  { label: 'Market Coverage', value: '0%', detail: 'Digital goods niche', icon: Globe },
 ];
 
 // ─── Intelligence Activity Item ────────────────────────────────────────────

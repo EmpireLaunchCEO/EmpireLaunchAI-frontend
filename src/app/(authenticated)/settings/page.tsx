@@ -179,7 +179,6 @@ export default function SettingsPage() {
   const tabs = [
     { id: 'link-center', name: 'Link Center', icon: Share2 },
     { id: 'financials', name: 'Financials', icon: CreditCard },
-    { id: 'ai-intelligence', name: 'AI Intelligence', icon: Zap },
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
     { id: 'theme-style', name: 'Theme & Style', icon: Palette },
@@ -371,84 +370,6 @@ export default function SettingsPage() {
                           )}>{p}</span>
                         </button>
                       ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'ai-intelligence' && (
-                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                        <Zap className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-black text-foreground tracking-tight uppercase italic">AI Intelligence Calibration</h3>
-                        <p className="text-sm font-medium text-muted-foreground">Define how much control you hand over to your Empire Engine.</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                      <button 
-                        id="mode-copilot"
-                        onClick={() => setAiMode('co-pilot')}
-                        className={cn(
-                          "p-8 rounded-[32px] border-4 text-left space-y-4 group relative overflow-hidden transition-all",
-                          aiMode === 'co-pilot' ? "border-primary bg-primary/5 shadow-2xl" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
-                        )}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-lg border border-theme">
-                            <Bot className="w-6 h-6" />
-                          </div>
-                          {aiMode === 'co-pilot' && <CheckCircle2 className="w-6 h-6 text-primary" />}
-                        </div>
-                        <div>
-                          <h4 className="text-xl font-black text-foreground uppercase italic">Co-Pilot Mode</h4>
-                          <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-tight italic">Manual Approval Required</p>
-                        </div>
-                        <p className="text-sm text-slate-500 leading-relaxed">
-                          I'll draft everything—posts, descriptions, and price syncs—but nothing goes live until you click 'Approve'.
-                        </p>
-                      </button>
-
-                      <button
-                        id="mode-autopilot"
-                        onClick={() => setAiMode('empire')}
-                        className={cn(
-                          "p-8 rounded-[32px] border-4 text-left space-y-4 group relative overflow-hidden transition-all",
-                          aiMode === 'empire' ? "border-amber-500 bg-amber-500/5 shadow-2xl" : "border-theme bg-theme-background grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
-                        )}
-                      >
-                          <div className="flex items-center justify-between">
-                          <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-amber-500 border border-amber-500/30">
-                            <Zap className="w-6 h-6" />
-                          </div>
-                          {aiMode === 'empire' && <CheckCircle2 className="w-6 h-6 text-amber-500" />}
-                        </div>
-                        <div>
-                          <h4 className="text-xl font-black text-foreground uppercase italic">Auto-Pilot Mode</h4>
-                          <p className="text-xs font-bold text-muted-foreground mt-1 uppercase tracking-tight italic">Full Autonomous Execution</p>
-                        </div>
-                        <p className="text-sm text-slate-500 leading-relaxed">
-                          I'll autonomously manage daily operations 24/7. You only intervene for major financial pivots.
-                        </p>
-                        <div className="inline-flex items-center gap-2 bg-amber-500/10 text-amber-500 px-3 py-1 rounded-full text-[10px] font-black uppercase border border-amber-500/20">
-                           <Stars size={10} />
-                           Recommended for Growth
-                        </div>
-                      </button>
-                    </div>
-
-                    <div className="p-6 bg-slate-900 rounded-[32px] border border-slate-800 flex items-start gap-4">
-                      <AlertCircle className="w-6 h-6 text-primary mt-1 shrink-0" />
-                      <div className="space-y-1">
-                        <h4 className="text-sm font-black text-white uppercase tracking-widest">Autonomous Safety</h4>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-relaxed">
-                          Even in Auto-Pilot, I will NEVER initiate new subscriptions or spend your money without a one-time approval for the specific transaction.
-                        </p>
-                      </div>
                     </div>
                   </div>
                 </div>

@@ -542,25 +542,18 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isLinkingComplete && isInitialized) {
-      const demoNotifications: Notification[] = [
-        {
-          id: '1',
-          title: 'New Sale!',
-          message: 'Someone just ordered your "Digital Zen Planner" on Etsy. +$24.99',
-          type: 'sale',
-          timestamp: new Date(),
-          read: false
-        },
-        {
-          id: '2',
-          title: 'Content Ready',
-          message: '3 TikTok marketing videos are ready for your approval in the Review Queue.',
-          type: 'approval',
-          timestamp: new Date(Date.now() - 1000 * 60 * 30),
-          read: false
+      // Fetch real notifications from backend
+      fetch(`${API_URL}/api/notifications`, {
+        headers: {
+          'Authorization': 'Bearer mock-mobile-token',
+          'x-user-id': MASTER_USER_ID
         }
-      ];
-      setNotifications(demoNotifications);
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setNotifications(data);
+      })
+      .catch(err => console.error('Failed to fetch notifications', err));
     }
   }, [isLinkingComplete, isInitialized]);
 

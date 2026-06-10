@@ -12,22 +12,23 @@ export function DNAVaultCounter() {
   const [isGlowing, setIsGlowing] = useState(false);
   const targetCount = 1000000; // 1M+ DNA codes
 
-  // Animate count on mount
+  // Fetch live count
   useEffect(() => {
-    const duration = 2000;
-    const steps = 60;
-    const increment = Math.floor(targetCount / steps);
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= targetCount) {
-        setCount(targetCount);
-        clearInterval(timer);
-        return;
+    const fetchStats = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vault/stats`);
+        const data = await response.json();
+        if (data.totalStrands !== undefined) {
+          setCount(data.totalStrands);
+        }
+      } catch (error) {
+        console.error('Failed to fetch DNA vault stats:', error);
       }
-      setCount(current);
-    }, duration / steps);
-    return () => clearInterval(timer);
+    };
+
+    fetchStats();
+    const interval = setInterval(fetchStats, 30000); // Update every 30s
+    return () => clearInterval(interval);
   }, []);
 
   // Pulsing glow effect

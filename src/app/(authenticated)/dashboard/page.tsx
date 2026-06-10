@@ -199,7 +199,7 @@ export default function Dashboard() {
                           <div>
                             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Active Subscribers</p>
                             <p className="text-2xl sm:text-3xl font-black text-foreground bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                              {connectedPlatforms.length > 0 ? "342" : "—"}
+                              {connectedPlatforms.length > 0 ? (healthData?.subscribers || 0) : "—"}
                             </p>
                           </div>
                         </div>
