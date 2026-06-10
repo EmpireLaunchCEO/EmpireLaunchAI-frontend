@@ -219,13 +219,6 @@ export default function Dashboard() {
                         <p className="text-[10px] text-muted-foreground font-medium">Recurring revenue subscribers</p>
                       </motion.div>
                     )}
-
-                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                      <NicheCalibrationBox 
-                        niche={isAdmin ? "Done For You Business" : (empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
-                        angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
-                      />
-                    </motion.div>
                   </div>
 
                   {/* Version Verification */}

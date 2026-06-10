@@ -42,8 +42,10 @@ import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 import { OmniApprovalHub as PendingApprovals } from '@/components/OmniApprovalHub';
 
+import { NicheCalibrationBox } from '@/components/Dashboard/SuccessHub/NicheCalibrationBox';
+
 export default function EmpireCenterPage() {
-  const [activeTab, setActiveTab] = useState<'pending-approvals' | 'social-media'>('pending-approvals');
+  const [activeTab, setActiveTab] = useState<'pending-approvals' | 'empire-intel'>('pending-approvals');
   const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData } = useEmpire();
 
   const isPlatformConnected = (platform: string) => {
@@ -80,7 +82,7 @@ export default function EmpireCenterPage() {
           <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
             {[
               { id: 'pending-approvals', label: 'Pending Approvals', icon: Zap },
-              { id: 'social-media', label: 'Social Media', icon: BarChart3 },
+              { id: 'empire-intel', label: 'Empire Intel', icon: BarChart3 },
               ].map((tab) => (
               <button
                 key={tab.id}
@@ -118,19 +120,26 @@ export default function EmpireCenterPage() {
               </motion.div>
             )}
 
-            {activeTab === 'social-media' && (
+            {activeTab === 'empire-intel' && (
               <motion.div
-                key="social-media"
+                key="empire-intel"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 className="grid grid-cols-1 lg:grid-cols-3 gap-10"
               >
-                {/* Main Feed - Social Media */}
+                {/* Main Feed - Empire Intel */}
                 <div className="lg:col-span-2 space-y-12">
+                  <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                    <NicheCalibrationBox 
+                      niche={isAdmin ? "Done For You Business" : (empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
+                      angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
+                    />
+                  </motion.div>
+
                   <SocialMediaRadar />
                   
-                  {/* Moved AI Active Research here */}
+                  {/* AI Active Research */}
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -170,7 +179,7 @@ export default function EmpireCenterPage() {
                   </motion.div>
                 </div>
 
-                {/* Sidebar Context - Only on Social Media Tab */}
+                {/* Sidebar Context */}
                 <div className="space-y-8">
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
