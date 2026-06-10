@@ -12,11 +12,15 @@ import {
   Bot,
   Stars,
   ChevronRight,
-  Palette
+  Palette,
+  Film,
+  CheckCircle2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { InspirationGallery, SuggestionBubbles } from '@/components/Dashboard/InspirationGallery';
 import { DNAVaultCounter } from '@/components/Dashboard/DNAVaultCounter';
+import { FileUploadDropZone, UploadState } from '@/components/Dashboard/FileUploadDropZone';
+import { AIRenderLog, generateMockRenderLogs, RenderLogEntry } from '@/components/Dashboard/AIRenderLog';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 
@@ -36,6 +40,77 @@ export default function StudioPage() {
   const [harvestActivity, setHarvestActivity] = useState(vaultActivity);
   const [isDemoMode, setIsDemoMode] = useState(false);
   const { activeEmpire: empireData } = useEmpire();
+
+  // Upload states
+  const [facialDnaUpload, setFacialDnaUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
+  const [rawVideoUpload, setRawVideoUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
+  const [renderLogs, setRenderLogs] = useState<RenderLogEntry[]>([]);
+  const [isRendering, setIsRendering] = useState(false);
+  const [activeRenderType, setActiveRenderType] = useState<'facial-dna' | 'raw-video'>('facial-dna');
+
+  // Handle Facial DNA file selection
+  const handleFacialDnaSelect = (file: File) => {
+    const preview = URL.createObjectURL(file);
+    setFacialDnaUpload({ file, preview, status: 'selected', progress: 0 });
+    // Simulate upload
+    setTimeout(() => {
+      setFacialDnaUpload(prev => ({ ...prev, status: 'uploading', progress: 30 }));
+      setTimeout(() => {
+        setFacialDnaUpload(prev => ({ ...prev, progress: 70 }));
+        setTimeout(() => {
+          setFacialDnaUpload(prev => ({ ...prev, status: 'complete', progress: 100 }));
+          // Trigger render logs
+          setActiveRenderType('facial-dna');
+          setRenderLogs(generateMockRenderLogs('facial-dna'));
+          setIsRendering(true);
+        }, 1500);
+      }, 1500);
+    }, 500);
+  };
+
+  // Handle Raw Video file selection
+  const handleRawVideoSelect = (file: File) => {
+    const preview = URL.createObjectURL(file);
+    setRawVideoUpload({ file, preview, status: 'selected', progress: 0 });
+    setTimeout(() => {
+      setRawVideoUpload(prev => ({ ...prev, status: 'uploading', progress: 25 }));
+      setTimeout(() => {
+        setRawVideoUpload(prev => ({ ...prev, progress: 60 }));
+        setTimeout(() => {
+          setRawVideoUpload(prev => ({ ...prev, status: 'complete', progress: 100 }));
+          setActiveRenderType('raw-video');
+          setRenderLogs(generateMockRenderLogs('raw-video'));
+          setIsRendering(true);
+        }, 2000);
+      }, 2000);
+    }, 500);
+  };
+
+  // Remove Facial DNA file
+  const handleFacialDnaRemove = () => {
+    if (facialDnaUpload.preview) URL.revokeObjectURL(facialDnaUpload.preview);
+    setFacialDnaUpload({ file: null, preview: null, status: 'idle', progress: 0 });
+  };
+
+  // Remove Raw Video file
+  const handleRawVideoRemove = () => {
+    if (rawVideoUpload.preview) URL.revokeObjectURL(rawVideoUpload.preview);
+    setRawVideoUpload({ file: null, preview: null, status: 'idle', progress: 0 });
+  };
+
+  // Synthesize Twin
+  const handleSynthesizeTwin = () => {
+    if (facialDnaUpload.status !== 'complete') return;
+    setRenderLogs(generateMockRenderLogs('facial-dna'));
+    setIsRendering(true);
+    setActiveRenderType('facial-dna');
+  };
+
+  // Clear logs
+  const handleClearLogs = () => {
+    setRenderLogs([]);
+    setIsRendering(false);
+  };
 
   const startDemo = () => {
     setIsDemoMode(true);
@@ -150,7 +225,7 @@ export default function StudioPage() {
                 exit={{ opacity: 0, y: -10 }}
                 className="space-y-8"
               >
-                {/* Cinema Engine Intro */}
+                {/* ─── Neural Twin Section ─── */}
                 <div className="flex flex-col md:flex-row gap-8 items-stretch">
                   <div className="flex-1 p-6 md:p-8 bg-theme-surface border-2 border-primary/20 rounded-[32px] md:rounded-[40px] space-y-6">
                     <div className="flex items-center gap-4">
@@ -167,16 +242,34 @@ export default function StudioPage() {
                       "Upload a clear photo of yourself, and I'll create your Neural Twin. I can then generate high-fidelity marketing videos with perfect lip-syncing for any script you provide. Your double, but autonomous."
                     </p>
 
+                    {/* Facial DNA Upload */}
                     <div className="space-y-4">
-                      <div className="p-6 border-2 border-dashed border-theme hover:border-primary/40 rounded-3xl transition-all group cursor-pointer text-center">
-                        <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/20">
-                          <Palette className="w-6 h-6 text-slate-500 group-hover:text-primary" />
-                        </div>
-                        <p className="text-xs font-black uppercase tracking-widest text-slate-500 group-hover:text-white">Upload Facial DNA (Photo)</p>
-                      </div>
+                      <FileUploadDropZone
+                        type="facial-dna"
+                        state={facialDnaUpload}
+                        onFileSelect={handleFacialDnaSelect}
+                        onRemove={handleFacialDnaRemove}
+                        disabled={facialDnaUpload.status === 'uploading' || facialDnaUpload.status === 'processing'}
+                      />
 
-                      <button className="w-full py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-primary transition-all">
-                        Synthesize Twin Double
+                      {/* Photo Preview */}
+                      {facialDnaUpload.preview && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 mx-auto"
+                        >
+                          <img src={facialDnaUpload.preview} alt="Uploaded facial photo" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
+                        </motion.div>
+                      )}
+
+                      <button
+                        onClick={handleSynthesizeTwin}
+                        disabled={facialDnaUpload.status !== 'complete'}
+                        className="w-full py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      >
+                        {facialDnaUpload.status === 'complete' ? 'Synthesize Twin Double' : 'Upload a photo first'}
                       </button>
                     </div>
                   </div>
@@ -189,26 +282,94 @@ export default function StudioPage() {
                     <p className="text-sm text-slate-400">
                       Once your Twin is synthesized, you can generate cinematic clips for TikTok, Instagram, and YouTube instantly.
                     </p>
+                    {isRendering && activeRenderType === 'facial-dna' && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20"
+                      >
+                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Twin Synthesis in Progress</span>
+                      </motion.div>
+                    )}
                   </div>
                 </div>
 
-                {/* Cinema Gallery Placeholder */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="aspect-[9/16] bg-theme-surface border-2 border-theme rounded-[24px] relative overflow-hidden group">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-                      <div className="absolute bottom-4 left-4">
-                        <div className="flex items-center gap-2 mb-1">
-                          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse" />
-                          <span className="text-[8px] font-black uppercase tracking-widest text-purple-400">Neural Ready</span>
-                        </div>
-                        <p className="text-[10px] font-bold text-white">Cinema Clip #{i}</p>
-                      </div>
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
-                         <Zap className="w-8 h-8 text-primary" />
-                      </div>
+                {/* ─── Raw Video Upload Section ─── */}
+                <div className="p-6 md:p-8 bg-theme-surface border-2 border-theme rounded-[32px] md:rounded-[40px] space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center">
+                      <Film className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
                     </div>
-                  ))}
+                    <div>
+                      <h3 className="text-xl md:text-2xl font-black text-white italic">Raw Material Upload.</h3>
+                      <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">AI-Powered Video Enhancement</p>
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-slate-400 leading-relaxed italic">
+                    "Upload your raw footage and I'll apply the Empire Style — color grading, smart captions, trending music, and professional cuts. Your content, empire-certified."
+                  </p>
+
+                  <FileUploadDropZone
+                    type="raw-video"
+                    state={rawVideoUpload}
+                    onFileSelect={handleRawVideoSelect}
+                    onRemove={handleRawVideoRemove}
+                    disabled={rawVideoUpload.status === 'uploading' || rawVideoUpload.status === 'processing'}
+                  />
+
+                  {rawVideoUpload.status === 'complete' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-3 p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20"
+                    >
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                      <div>
+                        <p className="text-xs font-bold text-emerald-400">Raw video received</p>
+                        <p className="text-[9px] text-emerald-400/70 font-medium">Queued for AI enhancement pipeline</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+
+                {/* ─── AI Render Log ─── */}
+                <AIRenderLog
+                  logs={renderLogs}
+                  isProcessing={isRendering}
+                  type={activeRenderType}
+                  onClear={handleClearLogs}
+                />
+
+                {/* ─── Cinema Gallery ─── */}
+                <div className="space-y-4">
+                  <h4 className="text-sm font-black text-foreground uppercase tracking-tight px-1">Generated Clips</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {[1, 2, 3, 4].map(i => (
+                      <div key={i} className="aspect-[9/16] bg-theme-surface border-2 border-theme rounded-[24px] relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                        <div className="absolute bottom-4 left-4">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className={cn(
+                              "w-1.5 h-1.5 rounded-full animate-pulse",
+                              i <= 2 ? "bg-emerald-500" : "bg-purple-500"
+                            )} />
+                            <span className={cn(
+                              "text-[8px] font-black uppercase tracking-widest",
+                              i <= 2 ? "text-emerald-400" : "text-purple-400"
+                            )}>
+                              {i <= 2 ? 'Ready' : 'Neural Ready'}
+                            </span>
+                          </div>
+                          <p className="text-[10px] font-bold text-white">Cinema Clip #{i}</p>
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
+                          <Zap className="w-8 h-8 text-primary" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             )}
