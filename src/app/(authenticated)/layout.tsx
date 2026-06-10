@@ -8,7 +8,7 @@ import { GeminiBrainOverlay } from "@/components/Dashboard/GeminiBrainOverlay";
 import { SlotGuard } from "@/components/SlotGuard";
 import { Suspense } from "react";
 
-import { FeedbackChannel } from "@/components/Dashboard/FeedbackChannel";
+import { FeedbackBox } from "@/components/Dashboard/FeedbackChannel";
 
 export default function AuthenticatedLayout({
   children,
@@ -26,11 +26,18 @@ export default function AuthenticatedLayout({
           <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
             <NotificationBell id="notification-bell-desktop" />
           </div>
-          <div className="min-h-[calc(100vh-80px)]">
+          <div className="min-h-[calc(100vh-80px)] flex flex-col">
             <GlobalEmpireHeader />
-            <SlotGuard>
-              {children}
-            </SlotGuard>
+            <div className="flex-1">
+              <SlotGuard>
+                {children}
+              </SlotGuard>
+            </div>
+            
+            {/* Global Feedback Footer */}
+            <div className="p-4 md:p-8 max-w-7xl mx-auto w-full mt-auto">
+              <FeedbackBox />
+            </div>
           </div>
         </main>
         <div className="fixed top-4 right-4 z-[100] lg:hidden flex items-center gap-2">
