@@ -40,6 +40,7 @@ const postHistory = [
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
+import { OmniApprovalHub as PendingApprovals } from '@/components/OmniApprovalHub';
 
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'duties' | 'social-media'>('duties');
@@ -103,9 +104,6 @@ export default function EmpireCenterPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Main Feed */}
             <div className="lg:col-span-2 space-y-8">
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-                <SocialProofApproval />
-              </motion.div>
               <AnimatePresence mode="wait">
                 {activeTab === 'duties' && (
                   <motion.div
@@ -113,69 +111,16 @@ export default function EmpireCenterPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="space-y-6"
+                    className="space-y-12"
                   >
-                    {/* Approvals Section */}
-                    <motion.div 
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6"
-                    >
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-black text-foreground pr-2">Pending Approvals</h3>
-                        {filteredDuties.filter(d => d.type === 'approval').length > 0 && (
-                          <span className="bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full text-[10px] font-black uppercase">
-                            {filteredDuties.filter(d => d.type === 'approval').length} Action Required
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="space-y-4">
-                        {filteredDuties.filter(d => d.type === 'approval').length > 0 ? (
-                          filteredDuties.filter(d => d.type === 'approval').map(duty => (
-                            <div key={duty.id} className="p-6 bg-theme-background rounded-3xl flex items-center justify-between gap-4 border border-transparent hover:border-blue-200 transition-all">
-                              <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-theme-surface rounded-2xl flex items-center justify-center shadow-sm">
-                                  <Clock className="w-6 h-6 text-cyan-400" />
-                                </div>
-                                <div>
-                                  <p className="font-bold text-foreground">{duty.title}</p>
-                                  <p className="text-xs text-muted-foreground uppercase font-black tracking-widest">{duty.platform}</p>
-                                </div>
-                              </div>
-                              <div className="flex gap-2">
-                                <button className="p-3 bg-theme-surface hover:bg-red-50 text-red-500 rounded-xl transition-colors shadow-sm">
-                                  <ThumbsDown className="w-4 h-4" />
-                                </button>
-                                <button className="p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors shadow-lg shadow-blue-200">
-                                  <ThumbsUp className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="p-12 text-center space-y-4 bg-theme-background rounded-3xl border-2 border-dashed border-theme">
-                            <div className="w-16 h-16 bg-theme-surface rounded-full flex items-center justify-center mx-auto">
-                              <ShieldCheck className="w-8 h-8 text-slate-300" />
-                            </div>
-                            <div className="space-y-1">
-                              <p className="font-black text-foreground uppercase italic">All Clear</p>
-                              <p className="text-xs text-muted-foreground font-medium">
-                                {connectedPlatforms.length === 0 
-                                  ? "Link your platforms to see pending duties." 
-                                  : "No actions required at this time."}
-                              </p>
-                            </div>
-                            {connectedPlatforms.length === 0 && (
-                              <Link href="/link-center" className="inline-block px-6 py-3 bg-slate-900 text-white rounded-xl font-black text-[10px] uppercase tracking-widest">
-                                Go to Link Center
-                              </Link>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
+                    {/* Pending Approvals */}
+                    <section className="space-y-6">
+                       <div className="flex items-center justify-between px-2">
+                          <h3 className="text-xl font-black text-foreground uppercase tracking-tight italic">Pending Approvals</h3>
+                          <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full">Neural Sync Active</span>
+                       </div>
+                       <PendingApprovals />
+                    </section>
 
                     {/* AI Work/Research Feed */}
                     <motion.div 

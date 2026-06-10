@@ -294,8 +294,7 @@ export function SocialMediaRadar() {
 
   const panels = [
     { id: 'overview' as const, label: 'Platform Overview', icon: BarChart3 },
-    { id: 'signals' as const, label: 'Market Signals', icon: TrendingUp },
-    { id: 'metrics' as const, label: 'AI Metrics', icon: Signal },
+    { id: 'intelligence' as const, label: 'Market Intelligence', icon: TrendingUp },
   ];
 
   const intelligenceMetrics = [
@@ -382,7 +381,7 @@ export function SocialMediaRadar() {
         {panels.map(panel => (
           <button
             key={panel.id}
-            onClick={() => setActivePanel(panel.id)}
+            onClick={() => setActivePanel(panel.id as any)}
             className={cn(
               "flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] font-black text-[10px] uppercase tracking-wider transition-all",
               activePanel === panel.id
@@ -422,13 +421,15 @@ export function SocialMediaRadar() {
           </motion.div>
         )}
 
-        {activePanel === 'signals' && (
+        {activePanel === 'intelligence' && (
           <motion.div
-            key="signals"
+            key="intelligence"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
+            className="space-y-6"
           >
+            {/* Live Signals */}
             <div className="p-5 bg-theme-surface border-2 border-theme rounded-[32px] space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -469,43 +470,41 @@ export function SocialMediaRadar() {
                 </>
               )}
             </div>
-          </motion.div>
-        )}
 
-        {activePanel === 'metrics' && (
-          <motion.div
-            key="metrics"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="grid grid-cols-2 gap-4"
-          >
-            {intelligenceMetrics.map((metric, i) => (
-              <motion.div
-                key={metric.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="p-5 bg-theme-surface border-2 border-theme rounded-[24px] space-y-3 hover:border-primary/30 transition-all group"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <metric.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <span className="text-2xl font-black text-foreground group-hover:text-primary transition-colors">
-                    {isLinkingComplete ? metric.value : '0%'}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-xs font-black text-foreground uppercase tracking-tight">{metric.label}</p>
-                  <p className="text-[9px] font-medium text-muted-foreground mt-0.5">
-                    {isLinkingComplete ? metric.detail : 'Awaiting data link'}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+            {/* Metrics Grid */}
+            <div className="grid grid-cols-2 gap-4">
+               {intelligenceMetrics.map((metric, i) => (
+                 <motion.div
+                   key={metric.label}
+                   initial={{ opacity: 0, y: 20 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ delay: i * 0.1 }}
+                   className="p-5 bg-theme-surface border-2 border-theme rounded-[24px] space-y-3 hover:border-primary/30 transition-all group"
+                 >
+                   <div className="flex items-center justify-between">
+                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                       <metric.icon className="w-5 h-5 text-primary" />
+                     </div>
+                     <span className="text-2xl font-black text-foreground group-hover:text-primary transition-colors">
+                       {isLinkingComplete ? metric.value : '0%'}
+                     </span>
+                   </div>
+                   <div>
+                     <p className="text-xs font-black text-foreground uppercase tracking-tight">{metric.label}</p>
+                     <p className="text-[9px] font-medium text-muted-foreground mt-0.5">
+                       {isLinkingComplete ? metric.detail : 'Awaiting data link'}
+                     </p>
+                   </div>
+                 </motion.div>
+               ))}
+            </div>
           </motion.div>
         )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
       </AnimatePresence>
     </div>
   );
