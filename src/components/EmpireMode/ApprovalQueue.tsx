@@ -11,7 +11,8 @@ import {
   Palette,
   AlertCircle,
   X,
-  ChevronLeft
+  ChevronLeft,
+  Lock
 } from 'lucide-react';
 import { approvalService, ApprovalRequest } from '@/lib/api-service';
 import { VaultInjected } from '@/components/VaultInjected';
@@ -25,7 +26,7 @@ import { CreativeBlueprint } from './CreativeBlueprint';
 import { useEmpire } from '@/lib/EmpireContext';
 
 export function ApprovalQueue() {
-  const { connectedPlatforms } = useEmpire();
+  const { connectedPlatforms, isProtocolAccepted } = useEmpire();
   const [requests, setRequests] = useState<ApprovalRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeRequest, setActiveRequest] = useState<ApprovalRequest | null>(null);
@@ -58,6 +59,23 @@ export function ApprovalQueue() {
   };
 
   if (loading) return null;
+
+  if (!isProtocolAccepted) {
+    return (
+      <div className="p-8 bg-slate-900/50 border-2 border-dashed border-theme rounded-[32px] flex flex-col items-center text-center space-y-4">
+        <div className="w-12 h-12 bg-theme-surface rounded-2xl flex items-center justify-center text-slate-500">
+           <Lock className="w-6 h-6" />
+        </div>
+        <div>
+           <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Approvals Locked</h3>
+           <p className="text-[10px] text-muted-foreground font-medium max-w-[200px] mx-auto mt-1">
+             Please accept the <span className="text-primary font-bold">Partner Protocol</span> disclaimer above to unlock content deployment.
+           </p>
+        </div>
+      </div>
+    );
+  }
+
   if (requests.length === 0) return null;
 
   return (

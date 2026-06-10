@@ -15,7 +15,7 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
   const [value, setValue] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const { addNote } = useEmpire();
+  const { addNote, isProtocolAccepted } = useEmpire();
 
   const handleVoiceCommand = useCallback((text: string) => {
     const query = text.toLowerCase().trim();
@@ -84,6 +84,11 @@ export function ConversationalInput({ onExecute, tip }: ConversationalInputProps
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!value.trim()) return;
+
+    if (!isProtocolAccepted) {
+      alert("AI Protocol Acceptance Required: Please accept the disclaimer on your Dashboard to unlock task execution and autonomous research.");
+      return;
+    }
 
     setIsProcessing(true);
     if (onExecute) {

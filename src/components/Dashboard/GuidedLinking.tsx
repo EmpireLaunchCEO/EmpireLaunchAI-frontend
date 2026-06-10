@@ -73,7 +73,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
     completeLinkingPhase,
     updatePlatformPermission,
     platformPermissions,
-    aiMode
+    aiMode,
+    isProtocolAccepted
   } = useEmpire();
   const router = useRouter();
 
@@ -245,6 +246,11 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   );
 
   const handleSelectPlatform = (platformId: string) => {
+    if (!isProtocolAccepted) {
+      setTeacherMessage("Protocol acceptance required. Please accept the Success-Share disclaimer above to unlock app linking and autonomous operations.");
+      setConversationTrigger(prev => prev + 1);
+      return;
+    }
     startSetup(platformId);
     setLinkingStep('tier');
     setSearchQuery('');

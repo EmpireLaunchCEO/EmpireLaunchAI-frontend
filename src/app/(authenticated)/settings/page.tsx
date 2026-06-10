@@ -237,7 +237,18 @@ export default function SettingsPage() {
           <main className="flex-1">
             {activeTab === 'financials' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                {!isProtocolAccepted && (
+                  <div className="p-6 bg-amber-500/10 border-2 border-amber-500/20 rounded-[32px] flex items-center gap-4">
+                    <Lock className="w-6 h-6 text-amber-500 shrink-0" />
+                    <p className="text-xs font-bold text-amber-600 uppercase tracking-tight">
+                      Financial configuration is locked until the <span className="text-slate-950">Partner Protocol</span> is accepted on the Dashboard.
+                    </p>
+                  </div>
+                )}
+                <div className={cn(
+                  "p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8 transition-all",
+                  !isProtocolAccepted && "opacity-50 pointer-events-none grayscale"
+                )}>
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                       <CreditCard className="w-6 h-6" />
@@ -313,8 +324,19 @@ export default function SettingsPage() {
 
             {activeTab === 'link-center' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {!isProtocolAccepted && (
+                  <div className="p-6 bg-blue-500/10 border-2 border-blue-500/20 rounded-[32px] flex items-center gap-4">
+                    <Lock className="w-6 h-6 text-blue-500 shrink-0" />
+                    <p className="text-xs font-bold text-blue-600 uppercase tracking-tight">
+                      Platform linking is locked until the <span className="text-slate-950">Partner Protocol</span> is accepted on the Dashboard.
+                    </p>
+                  </div>
+                )}
                 {activePlatform && <IntegrationForm platform={activePlatform} onClose={() => setActivePlatform(null)} />}
-                <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                <div className={cn(
+                  "p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8 transition-all",
+                  !isProtocolAccepted && "opacity-50 pointer-events-none grayscale"
+                )}>
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
                       <Share2 className="w-6 h-6" />
