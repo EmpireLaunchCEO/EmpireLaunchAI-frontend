@@ -211,11 +211,6 @@ export default function Dashboard() {
                       angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
                     />
 
-                    {/* AI Intelligence Center */}
-                    <div className="bg-theme-surface border-2 border-theme rounded-[32px] p-6 md:p-8 space-y-6">
-                      <IntelligenceCenter />
-                    </div>
-
                     <div className="pb-8">
                       <NeuralNotes />
                     </div>

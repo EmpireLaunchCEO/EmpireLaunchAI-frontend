@@ -40,7 +40,6 @@ const postHistory = [
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
 import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
-import { IntelligenceCenter } from '@/components/Dashboard/IntelligenceCenter';
 import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 
@@ -101,7 +100,6 @@ export default function EmpireCenterPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Main Feed */}
             <div className="lg:col-span-2 space-y-8">
-              <IntelligenceCenter />
               <SocialProofApproval />
               <AIOptimizationHub />
               <AnimatePresence mode="wait">
@@ -212,7 +210,7 @@ export default function EmpireCenterPage() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="bg-theme-surface border-2 border-theme rounded-[40px] p-6 md:p-8 space-y-6"
+                    className="space-y-8"
                   >
                     <SocialMediaRadar />
                   </motion.div>

@@ -2,72 +2,40 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEmpire } from '@/lib/EmpireContext';
 import {
+  BrainCircuit,
   TrendingUp,
-  TrendingDown,
-  Users,
-  Eye,
-  Heart,
-  MessageCircle,
-  Share2,
+  Target,
+  Globe,
+  Sparkles,
   BarChart3,
+  Signal,
+  Cpu,
   ArrowUpRight,
   Clock,
-  Sparkles,
-  Target,
-  Zap,
-  AlertCircle,
+  Network,
+  Minus,
+  Maximize2,
   ChevronDown,
   ChevronUp,
-  Play,
-  Youtube,
   Music2,
   Camera,
-  ExternalLink,
-  BrainCircuit,
-  ShoppingBag,
-  Mail,
+  Youtube,
   Facebook,
-  Palette
+  ShoppingBag,
+  Zap,
+  Mail,
+  Play,
+  Palette,
+  ExternalLink
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useEmpire } from '@/lib/EmpireContext';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
-// ─── Types ──────────────────────────────────────────────────────────────────
+// ─── Platform Data & Config ──────────────────────────────────────────────────
 
-interface PostPerformance {
-  id: string;
-  platform: string;
-  title: string;
-  thumbnail: string;
-  postedAt: string;
-  views: number;
-  likes: number;
-  comments: number;
-  shares: number;
-  engagementRate: number;
-  trend: 'up' | 'down' | 'stable';
-  trendChange: string;
-}
-
-interface PlatformSummary {
-  platform: string;
-  totalViews: number;
-  totalLikes: number;
-  totalComments: number;
-  totalShares: number;
-  avgEngagementRate: number;
-  followers: number;
-  followerChange: string;
-  postsThisWeek: number;
-  weeklyViewsChange: string;
-  weeklyViewsTrend: 'up' | 'down';
-  handle?: string;
-}
-
-// ─── Data State (Now Data-Driven) ───────────────────────────────────────────
-
-const MOCK_PLATFORM_DATA: Record<string, Partial<PlatformSummary>> = {
+const MOCK_PLATFORM_DATA: Record<string, any> = {
   tiktok: { totalViews: 125400, totalLikes: 12400, totalComments: 850, totalShares: 1200, avgEngagementRate: 11.2, followers: 42300, followerChange: '+12%', postsThisWeek: 12, weeklyViewsChange: '+24%', weeklyViewsTrend: 'up' },
   instagram: { totalViews: 85200, totalLikes: 8200, totalComments: 420, totalShares: 350, avgEngagementRate: 9.8, followers: 18500, followerChange: '+8%', postsThisWeek: 8, weeklyViewsChange: '-5%', weeklyViewsTrend: 'down' },
   youtube: { totalViews: 45000, totalLikes: 4200, totalComments: 310, totalShares: 150, avgEngagementRate: 16.3, followers: 8200, followerChange: '+15%', postsThisWeek: 2, weeklyViewsChange: '+31%', weeklyViewsTrend: 'up' },
@@ -80,25 +48,6 @@ const MOCK_PLATFORM_DATA: Record<string, Partial<PlatformSummary>> = {
   capcut: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 14, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
   bannerbear: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 42, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
 };
-
-// ─── Platform Icon ───────────────────────────────────────────────────────────
-
-function PlatformIcon({ platform, className }: { platform: string; className?: string }) {
-  const icons: Record<string, React.ReactNode> = {
-    tiktok: <Music2 className={className} />,
-    instagram: <Camera className={className} />,
-    youtube: <Youtube className={className} />,
-    facebook: <Facebook className={className} />,
-    etsy: <ShoppingBag className={className} />,
-    fiverr: <Zap className={className} />,
-    gmail: <Mail className={className} />,
-    canva: <Sparkles className={className} />,
-    kittl: <Palette className={className} />,
-    capcut: <Play className={className} />,
-    bannerbear: <Zap className={className} />,
-  };
-  return <>{icons[platform] || <ExternalLink className={className} />}</>;
-}
 
 const platformColors: Record<string, string> = {
   tiktok: 'text-pink-400 bg-pink-500/10 border-pink-500/20',
@@ -134,9 +83,26 @@ function formatNumber(n: number): string {
   return n.toString();
 }
 
+function PlatformIcon({ platform, className }: { platform: string; className?: string }) {
+  const icons: Record<string, React.ReactNode> = {
+    tiktok: <Music2 className={className} />,
+    instagram: <Camera className={className} />,
+    youtube: <Youtube className={className} />,
+    facebook: <Facebook className={className} />,
+    etsy: <ShoppingBag className={className} />,
+    fiverr: <Zap className={className} />,
+    gmail: <Mail className={className} />,
+    canva: <Sparkles className={className} />,
+    kittl: <Palette className={className} />,
+    capcut: <Play className={className} />,
+    bannerbear: <Zap className={className} />,
+  };
+  return <>{icons[platform] || <ExternalLink className={className} />}</>;
+}
+
 // ─── Platform Summary Card ───────────────────────────────────────────────────
 
-function PlatformSummaryCard({ summary }: { summary: PlatformSummary }) {
+function PlatformSummaryCard({ summary }: { summary: any }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -218,36 +184,6 @@ function PlatformSummaryCard({ summary }: { summary: PlatformSummary }) {
                     : 'YouTube growth is accelerating (+31%). Consider a weekly series to build subscriber velocity.'}
                 </p>
               </div>
-
-              {/* Recent Posts Mini-List */}
-              <div className="space-y-2">
-                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
-                  Recent Posts ({summary.postsThisWeek} this week)
-                </p>
-                {recentPosts
-                  .filter(p => p.platform === summary.platform)
-                  .slice(0, 2)
-                  .map(post => (
-                    <div key={post.id} className="flex items-center justify-between p-3 bg-theme-background rounded-xl border border-theme">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <p className="text-[10px] font-bold text-foreground truncate">{post.title}</p>
-                      </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <div className="flex items-center gap-1">
-                          <Eye className="w-3 h-3 text-muted-foreground" />
-                          <span className="text-[8px] font-black text-muted-foreground">{formatNumber(post.views)}</span>
-                        </div>
-                        <div className={cn(
-                          "flex items-center gap-1",
-                          post.trend === 'up' ? "text-emerald-400" : post.trend === 'down' ? "text-red-400" : "text-muted-foreground"
-                        )}>
-                          {post.trend === 'up' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                          <span className="text-[8px] font-black">{post.trendChange}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-              </div>
             </div>
           </motion.div>
         )}
@@ -256,320 +192,283 @@ function PlatformSummaryCard({ summary }: { summary: PlatformSummary }) {
   );
 }
 
-// ─── Post Performance Card ───────────────────────────────────────────────────
+// ─── Market Signal Card ────────────────────────────────────────────────────
 
-function PostCard({ post }: { post: PostPerformance }) {
+function SignalCard({ signal }: { signal: any }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="p-5 bg-theme-surface border border-theme rounded-[24px] space-y-4 hover:border-primary/20 transition-all group"
-    >
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center border shrink-0", platformColors[post.platform])}>
-            <PlatformIcon platform={post.platform} className="w-4 h-4" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-xs font-bold text-foreground truncate">{post.title}</p>
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
-                {platformLabels[post.platform]}
-              </span>
-              <span className="text-[8px] text-muted-foreground">·</span>
-              <Clock className="w-2.5 h-2.5 text-muted-foreground" />
-              <span className="text-[8px] text-muted-foreground">{post.postedAt}</span>
-            </div>
-          </div>
-        </div>
-        <div className={cn(
-          "flex items-center gap-1 px-2 py-1 rounded-full text-[8px] font-black",
-          post.trend === 'up' ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"
+    <div className="p-4 bg-theme-surface border border-theme rounded-2xl space-y-2 hover:border-primary/30 transition-all">
+      <div className="flex items-center justify-between">
+        <span className={cn(
+          "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded",
+          signal.direction === 'up' ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"
         )}>
-          {post.trend === 'up' ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
-          {post.trendChange}
-        </div>
+          {signal.signal}
+        </span>
+        <span className="text-[9px] font-black text-muted-foreground">{signal.source}</span>
       </div>
-
-      {/* Metrics */}
-      <div className="grid grid-cols-4 gap-2">
-        <div className="text-center p-2 bg-theme-background rounded-xl border border-theme">
-          <Eye className="w-3 h-3 text-primary mx-auto mb-1" />
-          <p className="text-xs font-black text-foreground">{formatNumber(post.views)}</p>
-          <p className="text-[6px] font-black text-muted-foreground uppercase tracking-wider">Views</p>
-        </div>
-        <div className="text-center p-2 bg-theme-background rounded-xl border border-theme">
-          <Heart className="w-3 h-3 text-red-400 mx-auto mb-1" />
-          <p className="text-xs font-black text-foreground">{formatNumber(post.likes)}</p>
-          <p className="text-[6px] font-black text-muted-foreground uppercase tracking-wider">Likes</p>
-        </div>
-        <div className="text-center p-2 bg-theme-background rounded-xl border border-theme">
-          <MessageCircle className="w-3 h-3 text-blue-400 mx-auto mb-1" />
-          <p className="text-xs font-black text-foreground">{formatNumber(post.comments)}</p>
-          <p className="text-[6px] font-black text-muted-foreground uppercase tracking-wider">Comments</p>
-        </div>
-        <div className="text-center p-2 bg-theme-background rounded-xl border border-theme">
-          <Share2 className="w-3 h-3 text-emerald-400 mx-auto mb-1" />
-          <p className="text-xs font-black text-foreground">{formatNumber(post.shares)}</p>
-          <p className="text-[6px] font-black text-muted-foreground uppercase tracking-wider">Shares</p>
-        </div>
+      <p className="text-sm font-bold text-foreground">{signal.metric}</p>
+      <div className="flex items-center gap-1">
+        {signal.direction === 'up' ? (
+          <ArrowUpRight className="w-3 h-3 text-emerald-400" />
+        ) : (
+          <ArrowUpRight className="w-3 h-3 text-red-400 rotate-180" />
+        )}
+        <span className={cn(
+          "text-[9px] font-black",
+          signal.direction === 'up' ? "text-emerald-400" : "text-red-400"
+        )}>
+          {signal.change}
+        </span>
       </div>
-
-      {/* Engagement Rate */}
-      <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-1.5">
-          <BarChart3 className="w-3 h-3 text-muted-foreground" />
-          <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">
-            Engagement Rate
-          </span>
-        </div>
-        <span className="text-xs font-black text-foreground">{post.engagementRate}%</span>
-      </div>
-    </motion.div>
+    </div>
   );
 }
 
 // ─── Main Social Media Radar Component ──────────────────────────────────────
 
 export function SocialMediaRadar() {
-  const { connectedPlatforms } = useEmpire();
-  const [activeView, setActiveView] = useState<'overview' | 'posts'>('overview');
-  const [selectedPlatform, setSelectedPlatform] = useState<string | 'all'>('all');
+  const { activeEmpire, isAdmin, isLinkingComplete, connectedPlatforms } = useEmpire();
+  const displayNiche = (isAdmin && (!activeEmpire?.niche || activeEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (activeEmpire?.niche || 'business');
 
-  // Filter and map summaries based on connected platforms
-  const platformSummaries: PlatformSummary[] = connectedPlatforms
+  const [isThinking, setIsThinking] = useState(false);
+  const [activePanel, setActivePanel] = useState<'overview' | 'signals' | 'metrics'>('overview');
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem('minimized-social-media-radar');
+    if (saved === 'true') setIsMinimized(true);
+  }, []);
+
+  const toggleMinimize = () => {
+    const newState = !isMinimized;
+    setIsMinimized(newState);
+    localStorage.setItem('minimized-social-media-radar', String(newState));
+  };
+
+  // Simulate AI thinking pulse
+  useEffect(() => {
+    if (!isLinkingComplete) {
+      setIsThinking(false);
+      return;
+    }
+    const timer = setInterval(() => {
+      setIsThinking(prev => !prev);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [isLinkingComplete]);
+
+  if (!mounted) return null;
+
+  if (isMinimized) {
+    return (
+      <div className="bg-theme-surface rounded-3xl p-6 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[80px] flex items-center justify-between group transition-all">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
+            <BarChart3 className="w-5 h-5" />
+          </div>
+          <h2 className="text-sm font-black uppercase tracking-widest text-foreground">Social Media Radar</h2>
+        </div>
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
+
+  const platformSummaries = connectedPlatforms
     .filter(id => MOCK_PLATFORM_DATA[id])
     .map(id => {
       const mock = MOCK_PLATFORM_DATA[id];
-      const vaultData = JSON.parse(localStorage.getItem(`empire_vault_${id}`) || '{}');
+      const vaultData = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem(`empire_vault_${id}`) || '{}') : {};
       const handle = vaultData.handle || `@EmpireLaunch_${id}`;
-      
-      return {
-        platform: id,
-        totalViews: mock.totalViews || 0,
-        totalLikes: mock.totalLikes || 0,
-        totalComments: mock.totalComments || 0,
-        totalShares: mock.totalShares || 0,
-        avgEngagementRate: mock.avgEngagementRate || 0,
-        followers: mock.followers || 0,
-        followerChange: mock.followerChange || '0%',
-        postsThisWeek: mock.postsThisWeek || 0,
-        weeklyViewsChange: mock.weeklyViewsChange || '0%',
-        weeklyViewsTrend: mock.weeklyViewsTrend || 'up',
-        handle // Extra field for the card
-      } as any;
+      return { platform: id, ...mock, handle };
     });
 
-  const recentPosts: PostPerformance[] = platformSummaries.flatMap(summary => {
-    const id = summary.platform;
-    return [
-      {
-        id: `${id}-1`,
-        platform: id,
-        title: `Empire Growth Strategy: ${platformLabels[id]} optimization`,
-        thumbnail: '',
-        postedAt: '2d ago',
-        views: Math.floor(summary.totalViews / 5),
-        likes: Math.floor(summary.totalLikes / 5),
-        comments: Math.floor(summary.totalComments / 5),
-        shares: Math.floor(summary.totalShares / 5),
-        engagementRate: summary.avgEngagementRate,
-        trend: 'up',
-        trendChange: '+12%'
-      },
-      {
-        id: `${id}-2`,
-        platform: id,
-        title: `${platformLabels[id]} Marketplace Intelligence Analysis`,
-        thumbnail: '',
-        postedAt: '4d ago',
-        views: Math.floor(summary.totalViews / 8),
-        likes: Math.floor(summary.totalLikes / 8),
-        comments: Math.floor(summary.totalComments / 8),
-        shares: Math.floor(summary.totalShares / 8),
-        engagementRate: summary.avgEngagementRate * 0.9,
-        trend: 'up',
-        trendChange: '+5%'
-      }
-    ];
-  });
+  const panels = [
+    { id: 'overview' as const, label: 'Platform Overview', icon: BarChart3 },
+    { id: 'signals' as const, label: 'Market Signals', icon: TrendingUp },
+    { id: 'metrics' as const, label: 'AI Metrics', icon: Signal },
+  ];
 
-  const filteredPosts = selectedPlatform === 'all'
-    ? recentPosts
-    : recentPosts.filter(p => p.platform === selectedPlatform);
+  const intelligenceMetrics = [
+    { label: 'Processing Speed', value: '0%', detail: 'Awaiting data link', icon: Cpu },
+    { label: 'Prediction Accuracy', value: '0%', detail: 'Awaiting data link', icon: Target },
+    { label: 'Data Sources', value: '0', detail: 'Platforms monitored', icon: Network },
+    { label: 'Market Coverage', value: '0%', detail: 'Digital goods niche', icon: Globe },
+  ];
 
-  const filterOptions = ['all', ...platformSummaries.map(s => s.platform)];
-
-  const totalViews = platformSummaries.reduce((sum, p) => sum + p.totalViews, 0);
-  const totalEngagement = platformSummaries.reduce((sum, p) => sum + p.totalLikes + p.totalComments + p.totalShares, 0);
-  const conversionRate = totalViews > 0 ? ((totalEngagement / totalViews) * 100).toFixed(1) : '0.0';
+  const marketSignals: any[] = [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      <div className="absolute top-0 right-0 z-20">
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Minus className="w-5 h-5" />
+        </button>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-            <BarChart3 className="w-6 h-6 text-primary" />
+          <div className="relative">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+              <BarChart3 className="w-6 h-6 text-primary" />
+            </div>
+            {isThinking && (
+              <motion.div
+                animate={{ scale: [1, 1.3, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full"
+              />
+            )}
           </div>
           <div>
-            <h3 className="font-black text-foreground text-lg uppercase tracking-tight italic">Social Media Radar</h3>
-            <p className="text-xs text-muted-foreground font-medium italic">
-              Real-time performance monitoring across {platformSummaries.length} active platforms
-            </p>
+            <h3 className="font-black text-foreground text-lg uppercase tracking-tight">Social Media Radar</h3>
+            <p className="text-xs text-muted-foreground font-medium italic">Real-time performance monitoring across active platforms</p>
           </div>
         </div>
-
-        {/* Aggregate KPIs */}
-        <div className="hidden sm:flex items-center gap-4">
-          <div className="text-right px-4 border-r border-theme">
-            <p className="text-lg font-black text-foreground">{formatNumber(totalViews)}</p>
-            <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Total Reach</p>
-          </div>
-          <div className="text-right">
-            <p className="text-lg font-black text-primary">{conversionRate}%</p>
-            <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Engage Rate</p>
+        <div className="flex items-center gap-2">
+          <div className={cn(
+            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest border transition-all",
+            isThinking ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-slate-500/10 text-slate-400 border-slate-500/20"
+          )}>
+            <div className={cn("w-1.5 h-1.5 rounded-full", isThinking ? "bg-emerald-400 animate-pulse" : "bg-slate-400")} />
+            {isThinking ? 'Syncing' : 'Idle'}
           </div>
         </div>
       </div>
 
-      {/* View Toggle */}
+      {/* Tab Navigation */}
       <div className="flex bg-theme-background p-1 rounded-[20px] border-2 border-theme">
-        {(['overview', 'posts'] as const).map(view => (
+        {panels.map(panel => (
           <button
-            key={view}
-            onClick={() => setActiveView(view)}
+            key={panel.id}
+            onClick={() => setActivePanel(panel.id)}
             className={cn(
               "flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-[16px] font-black text-[10px] uppercase tracking-wider transition-all",
-              activeView === view
+              activePanel === panel.id
                 ? "bg-theme-surface text-foreground shadow-sm border border-theme"
                 : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
             )}
           >
-            {view === 'overview' ? (
-              <BarChart3 className={cn("w-3.5 h-3.5", activeView === view ? "text-primary" : "")} />
-            ) : (
-              <Play className={cn("w-3.5 h-3.5", activeView === view ? "text-primary" : "")} />
-            )}
-            {view === 'overview' ? 'Platform Overview' : 'Post Performance'}
+            <panel.icon className={cn("w-3.5 h-3.5", activePanel === panel.id ? "text-primary" : "")} />
+            {panel.label}
           </button>
         ))}
       </div>
 
-      {/* Overview View */}
-      {activeView === 'overview' && (
-        <div className="space-y-4">
-          {platformSummaries.length > 0 ? (
-            platformSummaries.map((summary, i) => (
+      {/* Panels */}
+      <AnimatePresence mode="wait">
+        {activePanel === 'overview' && (
+          <motion.div
+            key="overview"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="space-y-4"
+          >
+            {platformSummaries.length > 0 ? (
+              platformSummaries.map((summary: any, i: number) => (
+                <PlatformSummaryCard key={summary.platform} summary={summary} />
+              ))
+            ) : (
+              <div className="p-12 text-center space-y-4 bg-theme-surface rounded-[32px] border-2 border-dashed border-theme opacity-50 grayscale">
+                <div className="w-16 h-16 bg-theme-background rounded-full flex items-center justify-center mx-auto">
+                  <Signal className="w-8 h-8 text-muted-foreground" />
+                </div>
+                <h4 className="font-black text-foreground uppercase italic">Radar Offline</h4>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">Link platforms to activate neural monitoring.</p>
+              </div>
+            )}
+          </motion.div>
+        )}
+
+        {activePanel === 'signals' && (
+          <motion.div
+            key="signals"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <div className="p-5 bg-theme-surface border-2 border-theme rounded-[32px] space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-primary" />
+                  <h4 className="font-black text-foreground text-sm uppercase tracking-wider italic">Live Market Signals</h4>
+                </div>
+                <BrandedGlobe size="sm" spinning />
+              </div>
+              
+              {!isLinkingComplete ? (
+                <div className="py-12 flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center">
+                    <Globe className="w-6 h-6 text-slate-600" />
+                  </div>
+                  <p className="text-xs text-muted-foreground font-medium max-w-[200px]">
+                    Market signals are locked until your first platform link is verified.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {marketSignals.map(signal => (
+                      <SignalCard key={signal.id} signal={signal} />
+                    ))}
+                  </div>
+                  <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800">
+                    <p className="text-xs text-slate-300 font-medium italic">
+                      "Based on these signals, I recommend pivoting your Etsy thumbnails to 'Sage Green' aesthetics and creating an 'ADHD Planner' listing variant."
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {activePanel === 'metrics' && (
+          <motion.div
+            key="metrics"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="grid grid-cols-2 gap-4"
+          >
+            {intelligenceMetrics.map((metric, i) => (
               <motion.div
-                key={summary.platform}
+                key={metric.label}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
+                className="p-5 bg-theme-surface border-2 border-theme rounded-[24px] space-y-3 hover:border-primary/30 transition-all group"
               >
-                <PlatformSummaryCard summary={summary} />
-              </motion.div>
-            ))
-          ) : (
-            <div className="p-12 text-center space-y-4 bg-theme-surface rounded-[32px] border-2 border-dashed border-theme opacity-50 grayscale">
-              <div className="w-16 h-16 bg-theme-background rounded-full flex items-center justify-center mx-auto">
-                <AlertCircle className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <h4 className="font-black text-foreground uppercase italic">Radar Offline</h4>
-              <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">Link platforms to activate neural monitoring.</p>
-            </div>
-          )}
-
-          {platformSummaries.length > 0 && (
-            <>
-              {/* Conversion Comparison */}
-              <div className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] space-y-4 shadow-xl">
-                <div className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-primary" />
-                  <h4 className="font-black text-foreground text-sm uppercase tracking-wider italic">Conversion Rate by Platform</h4>
-                </div>
-                <div className="space-y-3">
-                  {platformSummaries.filter(s => s.avgEngagementRate > 0).map(summary => (
-                    <div key={summary.platform} className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <PlatformIcon platform={summary.platform} className="w-3 h-3" />
-                          <span className="text-[10px] font-black text-foreground uppercase">{platformLabels[summary.platform]}</span>
-                        </div>
-                        <span className="text-xs font-black text-foreground">{summary.avgEngagementRate}%</span>
-                      </div>
-                      <div className="w-full h-2 bg-theme-background rounded-full overflow-hidden border border-theme">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${Math.min(summary.avgEngagementRate * 4, 100)}%` }}
-                          transition={{ duration: 1, delay: 0.3 }}
-                          className={cn(
-                            "h-full rounded-full",
-                            platformColors[summary.platform]?.split(' ')[1]?.replace('bg-', '') || "bg-primary"
-                          )}
-                          style={{ backgroundColor: platformColors[summary.platform]?.includes('text-') ? undefined : '' }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="p-3 bg-theme-background rounded-2xl border border-theme flex items-start gap-3">
-                  <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                  <p className="text-[10px] text-muted-foreground font-medium italic">
-                    "Deep Neural Analysis: Content engagement is peaking on {platformSummaries[0]?.platform.toUpperCase()}. Focus deployment on high-velocity hours to maximize ROI."
-                  </p>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-      )}
-
-      {/* Posts View */}
-      {activeView === 'posts' && (
-        <div className="space-y-4">
-          {/* Platform Filter */}
-          <div className="flex gap-2 flex-wrap">
-            {filterOptions.map(platform => (
-              <button
-                key={platform}
-                onClick={() => setSelectedPlatform(platform)}
-                className={cn(
-                  "px-3 py-2 rounded-xl font-black text-[9px] uppercase tracking-wider border transition-all",
-                  selectedPlatform === platform
-                    ? "bg-primary/10 text-primary border-primary/30"
-                    : "bg-theme-surface text-muted-foreground border-theme hover:text-foreground"
-                )}
-              >
-                {platform === 'all' ? 'All Platforms' : platformLabels[platform]}
-              </button>
-            ))}
-          </div>
-
-          {/* Posts Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {filteredPosts.length > 0 ? (
-              filteredPosts.map(post => (
-                <PostCard key={post.id} post={post} />
-              ))
-            ) : (
-              <div className="col-span-full p-12 text-center space-y-4 bg-theme-surface rounded-[32px] border-2 border-dashed border-theme">
-                <div className="w-16 h-16 bg-theme-background rounded-full flex items-center justify-center mx-auto">
-                  <AlertCircle className="w-8 h-8 text-muted-foreground" />
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <metric.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <span className="text-2xl font-black text-foreground group-hover:text-primary transition-colors">
+                    {isLinkingComplete ? metric.value : '0%'}
+                  </span>
                 </div>
                 <div>
-                  <h4 className="font-black text-foreground uppercase italic">No Posts Found</h4>
-                  <p className="text-xs text-muted-foreground font-medium mt-1">
-                    No recent posts detected. Deploy content via Cinema Hub to start tracking.
+                  <p className="text-xs font-black text-foreground uppercase tracking-tight">{metric.label}</p>
+                  <p className="text-[9px] font-medium text-muted-foreground mt-0.5">
+                    {isLinkingComplete ? metric.detail : 'Awaiting data link'}
                   </p>
                 </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
