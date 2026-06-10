@@ -211,6 +211,13 @@ export const socialProofService = {
   }
 };
 
+export interface InfrastructureBalance {
+  platform: string;
+  balance: number;
+  currency: string;
+  status: 'active' | 'low' | 'depleted' | 'unknown';
+}
+
 export const discoveryService = {
   async getPendingResults(): Promise<DiscoveryResult[]> {
     try {
@@ -231,6 +238,18 @@ export const discoveryService = {
   },
   async approveResult(id: string): Promise<boolean> { return true; },
   async rejectResult(id: string): Promise<boolean> { return true; }
+};
+
+export const infrastructureService = {
+  async getBalances(): Promise<InfrastructureBalance[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/revenue/infrastructure`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      console.error('Failed to fetch infrastructure balances', e);
+    }
+    return [];
+  }
 };
 
 export interface DesignTask {

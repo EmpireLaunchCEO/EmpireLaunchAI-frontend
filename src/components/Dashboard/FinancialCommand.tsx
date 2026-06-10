@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow } from 'lucide-react';
+import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
 
 interface FinancialCommandProps {
   withholdableEarnings?: number;
@@ -18,6 +19,16 @@ export function FinancialCommand({
   growthScore = 92,
   businessId = "1"
 }: Partial<FinancialCommandProps>) {
+  const [infraBalances, setInfraBalances] = React.useState<InfrastructureBalance[]>([]);
+  
+  React.useEffect(() => {
+    const loadInfra = async () => {
+      const bals = await infrastructureService.getBalances();
+      setInfraBalances(bals);
+    };
+    loadInfra();
+  }, []);
+
   const formatCurrency = (cents: number) => {
     return `$${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
   };
@@ -67,6 +78,38 @@ export function FinancialCommand({
             </div>
           </div>
         </div>
+
+        {/* Infrastructure Monitor */}
+        {infraBalances.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
+              <Cpu className="w-3 h-3" />
+              System Infrastructure Balances
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {infraBalances.map((item, i) => (
+                <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[8px] font-black uppercase text-muted-foreground">{item.platform}</span>
+                    {item.status === 'low' && <Zap className="w-3 h-3 text-amber-500 animate-pulse" />}
+                  </div>
+                  <p className={cn(
+                    "text-lg font-black tracking-tighter italic",
+                    item.status === 'low' ? "text-amber-500" : "text-foreground"
+                  )}>
+                    ${item.balance.toFixed(2)}
+                  </p>
+                  <div className="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                    <div 
+                      className={cn("h-full", item.status === 'low' ? "bg-amber-500" : "bg-primary")} 
+                      style={{ width: `${Math.min(100, (item.balance / 50) * 100)}%` }} 
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Breakdown Sections */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

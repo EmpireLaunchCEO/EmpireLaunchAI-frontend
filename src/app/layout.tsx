@@ -32,12 +32,12 @@ export default function RootLayout({
           html, body { background-color: #0a0519 !important; }
         `}</style>
         <link rel="canonical" href="https://empire-launch-ai-frontend.vercel.app" />
-        <link rel="manifest" href="/manifest.json?v=1016" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=16" />
-        <link rel="icon" href="/favicon.ico?v=16" />
-        <link rel="apple-touch-startup-image" href="/apple-touch-icon.png?v=16" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=16" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png?v=16" />
+        <link rel="manifest" href="/manifest.json?v=1017" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=17" />
+        <link rel="icon" href="/favicon.ico?v=17" />
+        <link rel="apple-touch-startup-image" href="/apple-touch-icon.png?v=17" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=17" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png?v=17" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
