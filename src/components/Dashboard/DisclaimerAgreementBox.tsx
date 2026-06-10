@@ -72,7 +72,7 @@ export function DisclaimerAgreementBox() {
                onClick={handleAccept}
                disabled={isProcessing}
                className={cn(
-                 "group relative w-full md:w-64 py-8 bg-primary text-slate-950 rounded-[32px] font-black text-xs uppercase tracking-[0.3em] shadow-2xl transition-all hover:scale-[1.02] active:scale-95 disabled:grayscale disabled:opacity-50",
+                 "group relative w-full md:w-64 py-8 bg-primary text-slate-950 rounded-[32px] font-black text-xs uppercase tracking-[0.3em] shadow-2xl transition-all hover:scale-[1.02] active:scale-95 disabled:grayscale disabled:opacity-50 overflow-hidden",
                  isProcessing && "animate-pulse"
                )}
              >

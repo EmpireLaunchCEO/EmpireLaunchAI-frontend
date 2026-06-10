@@ -411,6 +411,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         const localIsPaid = localStorage.getItem('isPaid');
         if (localIsPaid === 'true') setIsPaidState(true);
 
+        const localProtocol = localStorage.getItem('isProtocolAccepted');
+        if (localProtocol === 'true') setIsProtocolAccepted(true);
+
         // EMERGENCY BYPASS FOR OWNER (Runs before network calls)
         if (MASTER_USER_ID === '00000000-0000-0000-0000-000000000000') {
              console.log('[Security] Emergency Owner Bypass Active.');
@@ -469,6 +472,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         if (data.theme) setTheme(data.theme);
         if (data.aiMode) setAiModeState(data.aiMode);
         if (data.email) setUserEmail(data.email);
+        if (data.protocolAccepted) setIsProtocolAccepted(true);
 
         const localSpending = localStorage.getItem('spendingPermissions');
         if (localSpending) setSpendingPermissions(JSON.parse(localSpending));
