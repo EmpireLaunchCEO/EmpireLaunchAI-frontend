@@ -42,6 +42,7 @@ import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
 import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
 import { IntelligenceCenter } from '@/components/Dashboard/IntelligenceCenter';
 import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
+import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'duties' | 'social-media'>('duties');

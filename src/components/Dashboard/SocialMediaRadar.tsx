@@ -28,7 +28,8 @@ import {
   BrainCircuit,
   ShoppingBag,
   Mail,
-  Facebook
+  Facebook,
+  Palette
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
