@@ -107,7 +107,9 @@ function PlatformSummaryCard({ summary }: { summary: any }) {
 
   return (
     <motion.div
-      layout
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
       className="bg-theme-surface border-2 border-theme rounded-[28px] overflow-hidden hover:border-primary/30 transition-all"
     >
       <button

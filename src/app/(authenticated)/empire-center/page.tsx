@@ -64,16 +64,21 @@ export default function EmpireCenterPage() {
       <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-16 overflow-x-hidden">
         
         {/* 1. Identity Header */}
-        <div className="text-center space-y-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center space-y-4"
+        >
           <div className="flex items-center justify-center gap-2">
             <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
           </div>
           <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
             {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE') ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
           </h1>
-        </div>
+        </motion.div>
 
-        <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000">
+        <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000" style={{ contentVisibility: 'auto' }}>
           
           {/* Primary Tabs - Optimized for mobile visibility */}
           <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
@@ -100,8 +105,12 @@ export default function EmpireCenterPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Main Feed */}
             <div className="lg:col-span-2 space-y-8">
-              <SocialProofApproval />
-              <AIOptimizationHub />
+              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+                <SocialProofApproval />
+              </motion.div>
+              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+                <AIOptimizationHub />
+              </motion.div>
               <AnimatePresence mode="wait">
                 {activeTab === 'duties' && (
                   <motion.div
@@ -112,7 +121,12 @@ export default function EmpireCenterPage() {
                     className="space-y-6"
                   >
                     {/* Approvals Section */}
-                    <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6">
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6"
+                    >
                       <div className="flex items-center justify-between">
                         <h3 className="text-xl font-black text-foreground pr-2">Pending Approvals</h3>
                         {filteredDuties.filter(d => d.type === 'approval').length > 0 && (
@@ -166,10 +180,15 @@ export default function EmpireCenterPage() {
                           </div>
                         )}
                       </div>
-                    </div>
+                    </motion.div>
 
                     {/* AI Work/Research Feed */}
-                    <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6">
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6"
+                    >
                        <div className="flex items-center justify-between">
                         <h3 className="text-xl font-black text-foreground pr-2">AI Active Research</h3>
                         <button className="text-xs font-black text-blue-600 uppercase tracking-widest">New Request +</button>
@@ -200,7 +219,7 @@ export default function EmpireCenterPage() {
                           </div>
                         )}
                       </div>
-                    </div>
+                    </motion.div>
                   </motion.div>
                 )}
 
@@ -221,7 +240,12 @@ export default function EmpireCenterPage() {
             {/* Sidebar Context */}
             <div className="space-y-8">
                {/* Empire Notes Section */}
-               <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6 shadow-sm">
+               <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6 shadow-sm"
+               >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
@@ -248,9 +272,14 @@ export default function EmpireCenterPage() {
                     <Stars className="w-3 h-3" />
                     AI Sync: Real-time
                   </div>
-               </div>
+               </motion.div>
 
-               <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6">
+               <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6"
+               >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
                       <MessageSquare className="w-5 h-5" />
@@ -265,9 +294,14 @@ export default function EmpireCenterPage() {
                     placeholder="Type your feedback..."
                     className="w-full bg-theme-background border-2 border-transparent rounded-2xl p-4 text-xs font-bold focus:border-blue-600 transition-all outline-none"
                   />
-               </div>
+               </motion.div>
 
-               <div className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[40px] p-8 text-white space-y-4">
+               <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[40px] p-8 text-white space-y-4"
+               >
                   <h4 className="text-lg font-black leading-tight">Next 24 Hours.</h4>
                   {connectedPlatforms.length > 0 ? (
                     <ul className="space-y-4">
@@ -293,7 +327,7 @@ export default function EmpireCenterPage() {
                   ) : (
                     <p className="text-xs font-black uppercase tracking-widest text-blue-200">Waiting for platform linkage...</p>
                   )}
-               </div>
+               </motion.div>
             </div>
           </div>
 

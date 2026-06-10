@@ -198,23 +198,30 @@ p, span, label, div, li, td, th, a {
   box-shadow: 0 0 20px rgb(var(--primary-rgb) / 0.1), inset 0 0 0 1px rgb(var(--primary-rgb) / 0.2);
 }
 
+/* 
+   PERFORMANCE OPTIMIZED BORDERS
+   Previous: Global animation on all borders caused massive paint lag.
+   Now: Static borders by default, opt-in shimmer for key elements.
+*/
+.border-theme, .border-2, .border {
+  border-color: rgba(var(--primary-rgb), 0.2) !important;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.border-theme:hover {
+  border-color: rgb(var(--secondary-rgb) / 0.6) !important;
+  box-shadow: 0 0 30px rgb(var(--secondary-rgb) / 0.2);
+}
+
+.animate-shimmer-border {
+  animation: shimmer 4s infinite ease-in-out;
+}
+
 /* SHIMMER ANIMATION */
 @keyframes shimmer {
   0% { border-color: rgb(var(--primary-rgb) / 0.3); box-shadow: 0 0 10px rgb(var(--primary-rgb) / 0.1); }
   50% { border-color: rgb(var(--secondary-rgb) / 0.5); box-shadow: 0 0 25px rgb(var(--secondary-rgb) / 0.2); }
   100% { border-color: rgb(var(--primary-rgb) / 0.3); box-shadow: 0 0 10px rgb(var(--primary-rgb) / 0.1); }
-}
-
-/* Apply shimmer to themed borders */
-.border-theme, .border-2, .border {
-  border-color: rgb(var(--primary-rgb) / 0.3) !important;
-  animation: shimmer 4s infinite ease-in-out;
-  transition: all 0.3s ease;
-}
-
-.border-theme:hover {
-  border-color: rgb(var(--secondary-rgb) / 0.6) !important;
-  box-shadow: 0 0 30px rgb(var(--secondary-rgb) / 0.3);
 }
 
 /* GLOWING TEXT EFFECT */

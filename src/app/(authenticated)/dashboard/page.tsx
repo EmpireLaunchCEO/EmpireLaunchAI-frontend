@@ -129,17 +129,22 @@ export default function Dashboard() {
                 <div className="space-y-12 md:space-y-16 animate-in fade-in duration-1000">
                   
                   {/* 1. Identity Header */}
-                  <div className="text-center space-y-4">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center space-y-4"
+                  >
                     <div className="flex items-center justify-center gap-2">
                       <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
                     </div>
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
                       {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE') ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
                     </h1>
-                  </div>
+                  </motion.div>
 
                   {/* 2. Operations Column */}
-                  <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
+                  <div className="max-w-6xl mx-auto space-y-12 md:space-y-16" style={{ contentVisibility: 'auto' }}>
                     {!isLinkingComplete && (
                       <div className="space-y-6">
                         <div className="flex justify-center">
@@ -170,26 +175,36 @@ export default function Dashboard() {
                     )}
                     
                     {/* Primary Results Section */}
-                    <DisclaimerAgreementBox />
+                    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+                      <DisclaimerAgreementBox />
+                    </motion.div>
 
-                    <GrowthTracker
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                      <GrowthTracker
+                        allTimeEarnings={(healthData?.revenue || 0) * 100}
+                        progress={healthData?.growthScore}
+                      />
+                    </motion.div>
 
-                      allTimeEarnings={(healthData?.revenue || 0) * 100}
-                      progress={healthData?.growthScore}
-                    />
-
-                    <FinancialCommand
-                      withholdableEarnings={(healthData?.revenue || 0) * 100}
-                      growthScore={healthData?.growthScore}
-                      onActivateGrowthProtocol={(name) => {
-                        setGrowthProtocolGateProduct(name);
-                        setIsGrowthProtocolGateOpen(true);
-                      }}
-                    />
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                      <FinancialCommand
+                        withholdableEarnings={(healthData?.revenue || 0) * 100}
+                        growthScore={healthData?.growthScore}
+                        onActivateGrowthProtocol={(name) => {
+                          setGrowthProtocolGateProduct(name);
+                          setIsGrowthProtocolGateOpen(true);
+                        }}
+                      />
+                    </motion.div>
 
                     {/* Active Subscribers - Moved here for Admin/Owner per request */}
                     {isAdmin && (
-                      <div className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(var(--surface-border-rgb),0.15)] transition-all">
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }} 
+                        whileInView={{ opacity: 1, scale: 1 }} 
+                        viewport={{ once: true }}
+                        className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(var(--surface-border-rgb),0.15)] transition-all"
+                      >
                         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[60px] -z-10" />
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
@@ -203,17 +218,19 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <p className="text-[10px] text-muted-foreground font-medium">Recurring revenue subscribers</p>
-                      </div>
+                      </motion.div>
                     )}
 
-                    <NicheCalibrationBox 
-                      niche={isAdmin ? "Done For You Business" : (empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
-                      angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
-                    />
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                      <NicheCalibrationBox 
+                        niche={isAdmin ? "Done For You Business" : (empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
+                        angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
+                      />
+                    </motion.div>
 
-                    <div className="pb-8">
+                    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="pb-8">
                       <NeuralNotes />
-                    </div>
+                    </motion.div>
                   </div>
 
                   {/* Version Verification */}
