@@ -264,11 +264,12 @@ export default function SettingsPage() {
                         <input type="text" placeholder="e.g. Empire Main Operating" className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold text-lg" />
                       </div>
                       <div className="space-y-3">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-300">Settlement Method</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-300">Revenue Tracking & Success-Share Gateway</label>
+                        <p className="text-[10px] text-slate-500 italic">Select how the Empire AI monitors your sales on Etsy, TikTok, and Fiverr, and where direct-to-consumer payouts are routed.</p>
                         <select className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-primary outline-none transition-all font-bold appearance-none text-lg">
-                          <option>Stripe Connect (Incl. Cash App, Venmo, Cards)</option>
-                          <option>Direct Bank Transfer (ACH)</option>
-                          <option>PayPal Business</option>
+                          <option>Stripe Connect (Recommended for Direct Sales)</option>
+                          <option>External Marketplace Tracking (Etsy/Fiverr/TT Only)</option>
+                          <option>Direct Bank Transfer (Manual Audit Required)</option>
                         </select>
                       </div>
                     </div>

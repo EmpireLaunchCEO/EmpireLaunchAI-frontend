@@ -43,21 +43,25 @@ export function FinancialCommand({
     if (saved === 'true') setIsMinimized(true);
 
     const fetchInfra = async () => {
-      let balances = await infrastructureService.getBalances();
-      const requiredPlatforms = ['OpenAI', 'Google Studio', 'Railway'];
-      const existingPlatforms = balances.map(b => b.platform);
+      try {
+        let balances = await infrastructureService.getBalances();
+        const requiredPlatforms = ['OpenAI', 'Google Studio', 'Railway'];
+        const existingPlatforms = balances.map(b => b.platform);
 
-      requiredPlatforms.forEach(p => {
-        if (!existingPlatforms.includes(p)) {
-          balances.push({
-            platform: p,
-            balance: 0,
-            currency: 'USD',
-            status: 'unknown'
-          });
-        }
-      });
-      setInfraBalances(balances);
+        requiredPlatforms.forEach(p => {
+          if (!existingPlatforms.includes(p)) {
+            balances.push({
+              platform: p,
+              balance: 0,
+              currency: 'USD',
+              status: 'unknown'
+            });
+          }
+        });
+        setInfraBalances(balances);
+      } catch (e) {
+        console.error("Failed to fetch App Life balances", e);
+      }
     };
 
     if (isLinkingComplete) {
@@ -124,11 +128,11 @@ export function FinancialCommand({
         {/* Header Summary */}
         <div className="flex flex-col md:flex-row gap-8 items-center border-b border-theme/30 pb-8">
           <div className="flex-1 space-y-1">
-            <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Finance Tracker</h3>
-            <p className="text-slate-400 text-xs font-medium italic">Integrated automated success-share monitoring.</p>
+            <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Financial Command</h3>
+            <p className="text-slate-400 text-xs font-medium italic">Integrated marketplace monitoring & automated success-share tracking.</p>
             <div className="flex gap-4 pt-1">
               <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
-                <span className="text-[9px] font-black text-primary uppercase">Empire Revenue: {formatCurrency(withholdableEarnings)}</span>
+                <span className="text-[9px] font-black text-primary uppercase">Total External Revenue: {formatCurrency(withholdableEarnings)}</span>
               </div>
             </div>
           </div>
@@ -167,7 +171,7 @@ export function FinancialCommand({
                   <div className="absolute inset-0 bg-primary/90 opacity-0 group-hover/item:opacity-100 transition-all flex items-center justify-center translate-y-4 group-hover/item:translate-y-0 cursor-pointer">
                     <button className="text-[9px] font-black uppercase tracking-widest text-slate-950 flex items-center gap-2">
                       <Zap className="w-3 h-3" />
-                      Refuel ($10)
+                      Renew Node ($10)
                     </button>
                   </div>
                 </div>
@@ -178,6 +182,9 @@ export function FinancialCommand({
                 </div>
               )}
             </div>
+            <p className="text-[9px] text-slate-500 font-medium italic leading-tight">
+              Balances required to keep AI production, market scans, and hosting active.
+            </p>
           </div>
 
           {/* Section 2: Empire Success Model */}
@@ -185,14 +192,14 @@ export function FinancialCommand({
             <div className="flex items-center justify-between relative z-10">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-primary" />
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">Empire Success Model</h4>
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">Success Model</h4>
               </div>
               <Landmark className="w-4 h-4 text-primary opacity-20" />
             </div>
 
             <div className="space-y-4 relative z-10">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-medium text-slate-400">Monthly App Subscription</span>
+                <span className="text-[10px] font-medium text-slate-400">Monthly Base Subscription</span>
                 <span className="text-sm font-black text-foreground">{formatCurrency(appSubscription)}</span>
               </div>
               <div className="flex items-center justify-between p-4 rounded-3xl bg-primary/10 border border-primary/20">
@@ -218,7 +225,7 @@ export function FinancialCommand({
                 ) : (
                   <FileText className="w-3 h-3" />
                 )}
-                Audit for Success-Shares
+                Audit Success-Shares
               </button>
             </div>
 
@@ -236,7 +243,7 @@ export function FinancialCommand({
                 <p className="text-[10px] text-muted-foreground font-medium italic">Transparency protocols active across all linked nodes.</p>
              </div>
              <p className="text-xs text-slate-500 leading-relaxed italic">
-               "Our success is tied to yours. The Empire AI monitors your growth across all social platforms to ensure your revenue milestones are tracked with 100% accuracy. We only grow when you do."
+               "Our success is tied to yours. The Empire AI monitors your growth across Etsy, TikTok, and Fiverr to ensure your revenue milestones are tracked with 100% accuracy. We only grow when you do."
              </p>
           </div>
 
