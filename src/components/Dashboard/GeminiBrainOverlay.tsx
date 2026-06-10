@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Send, Mic, MicOff, Stars, Bot, Sparkles, ChevronRight, Zap, Brain } from 'lucide-react';
+import { MessageSquare, X, Send, Mic, MicOff, Stars, Bot, Sparkles, ChevronRight, Zap } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { cn } from '@/lib/utils';
 
@@ -104,8 +104,12 @@ export function GeminiBrainOverlay() {
           {isOpen ? (
             <X className="w-8 h-8 text-primary relative z-10" />
           ) : (
-            <div className="relative">
-              <Brain className="w-8 h-8 text-white relative z-10" />
+            <div className="relative w-10 h-10">
+              <img 
+                src="/neural-core.webp" 
+                alt="Neural Brain" 
+                className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_12px_rgba(255,255,255,0.5)]"
+              />
               <motion.div 
                 animate={{ opacity: [0.4, 1, 0.4], scale: [0.9, 1.1, 0.9] }}
                 transition={{ repeat: Infinity, duration: 2 }}
@@ -137,8 +141,12 @@ export function GeminiBrainOverlay() {
           >
             {/* Header */}
             <div className="p-6 border-b border-white/5 bg-gradient-to-r from-primary/10 to-transparent flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-white">
-                <Bot className="w-7 h-7" />
+              <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center p-2 overflow-hidden">
+                <img 
+                  src="/neural-core.webp" 
+                  alt="Neural Brain" 
+                  className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                />
               </div>
               <div>
                 <h3 className="text-sm font-black text-white uppercase tracking-widest italic">Neural Brain</h3>
