@@ -22,7 +22,8 @@ import {
   LifeBuoy,
   Mail,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  DollarSign
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';

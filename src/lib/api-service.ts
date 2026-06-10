@@ -373,13 +373,14 @@ export const analyticsService = {
          return {
            growthScore: data.progress || 84,
            revenue: data.health?.revenue || 0,
+           monthlyRevenue: data.health?.revenue || 0,
            pendingDues: data.health?.pendingDues || 0,
            platformBreakdown: data.health?.platformBreakdown || []
          };
       }
     } catch (e) {}
 
-    return { growthScore: 84, revenue: 0, pendingDues: 0, platformBreakdown: [] };
+    return { growthScore: 84, revenue: 0, monthlyRevenue: 0, pendingDues: 0, platformBreakdown: [] };
   },
 
   async getRevenueTransactions(): Promise<RevenueTransaction[]> {

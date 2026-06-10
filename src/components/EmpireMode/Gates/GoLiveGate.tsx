@@ -144,7 +144,7 @@ export function GoLiveGate({ payload, onApprove, onReject }: GoLiveGateProps) {
       </div>
 
       <div className="flex gap-4">
-
+        <button
           onClick={onReject}
           className="flex-1 py-5 border-2 border-theme rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
         >

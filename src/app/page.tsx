@@ -57,7 +57,7 @@ function LandingPageContent() {
 
   // Only show the sync overlay if we are initialized AND determined the user should be fast-tracked
   // For the Owner, this might flicker, but for Customers, they will land on Step 1 immediately.
-  const isFastTrack = isInitialized && (isOnboarded || handoverStatus) && isPaid;
+  const isFastTrack = isInitialized && (isOnboarded || isHandoverComplete) && isPaid;
 
   const handleMainAction = () => {
     if (isFastTrack) {

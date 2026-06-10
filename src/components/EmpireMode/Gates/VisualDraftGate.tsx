@@ -3,170 +3,219 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  CheckCircle2,
-  ChevronRight,
-  Scissors,
-  Star,
-  Download,
-  AlertTriangle,
-  Play,
-  FileText,
-  X,
   ChevronLeft,
-  Zap
+  Stars,
+  Sparkles,
+  Search,
+  Eye,
+  CheckCircle2,
+  X,
+  Star,
+  RefreshCw,
+  Zap,
+  TrendingUp,
+  Target,
+  Clock,
+  Layers,
+  ArrowRight,
+  Maximize2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface VisualDraftGateProps {
   payload: {
     title: string;
-    platform: string;
-    assets: Array<{ type: string; url: string; previewUrl: string }>;
-    caption: string;
-    isProTemplate: boolean;
-    proCost?: number;
+    description: string;
+    style: string;
+    variants: string[];
+    selectedVariant?: string;
   };
-  onApprove: () => void;
+  onApprove: (variantIndex?: number) => void;
   onReject: () => void;
   onManualAssist?: () => void;
+  onBack?: () => void;
 }
 
-export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist }: VisualDraftGateProps) {
-  const [activeIndex, setIndex] = useState(0);
-  const [rating, setRating] = useState(0);
+export function VisualDraftGate({ payload, onApprove, onReject, onManualAssist, onBack }: VisualDraftGateProps) {
+  const [selectedVariant, setSelectedVariant] = useState(0);
+  const [isZoomed, setIsZoomed] = useState<number | null>(null);
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center gap-4 bg-blue-600/5 p-6 rounded-[32px] border border-blue-600/10">
-        <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
-          <Scissors className="w-6 h-6" />
-        </div>
-        <div>
-          <h3 className="text-xl font-black text-foreground leading-tight">Visual Draft Review.</h3>
-          <p className="text-sm text-muted-foreground font-medium italic">"I've generated the first set of assets for {payload?.platform ?? 'your chosen platform'}. Do these meet your brand standards?"</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Preview Area */}
-        <div className="lg:col-span-2 space-y-6">
-           <div className="relative aspect-video bg-slate-900 rounded-[40px] overflow-hidden shadow-2xl group">
-              <img
-                src={(payload?.assets ?? [])[activeIndex]?.previewUrl ?? 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop'}
-                className="w-full h-full object-cover opacity-80"
-                alt="Draft Preview"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                 <div className="w-20 h-20 bg-theme-surface/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/30 cursor-pointer hover:scale-110 transition-transform">
-                    <Play className="w-8 h-8 fill-white text-white ml-1" />
-                 </div>
-              </div>
-              <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
-                 <div className="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl border border-white/10">
-                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">{payload?.platform ?? 'Platform'} Post</p>
-                    <h4 className="text-white font-bold">{payload?.title ?? 'Untitled Concept'}</h4>
-                 </div>
-                 <div className="flex gap-2">
-                    <button className="p-3 bg-theme-surface/10 backdrop-blur-md rounded-xl border border-white/10 text-white hover:bg-theme-surface/20 transition-colors">
-                       <Download className="w-5 h-5" />
-                    </button>
-                 </div>
-              </div>
-           </div>
-
-           <div className="flex justify-center gap-2">
-              {(payload?.assets ?? []).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setIndex(i)}
-                  className={cn(
-                    "w-3 h-3 rounded-full transition-all",
-                    activeIndex === i ? "bg-blue-600 w-8" : "bg-slate-200"
-                  )}
-                />
-              ))}
+    <div className="flex flex-col h-full bg-theme-background">
+      {/* Header */}
+      <header className="p-6 border-b border-theme flex items-center justify-between bg-theme-surface/50 backdrop-blur-md sticky top-0 z-50">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
+        >
+          <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <span className="font-bold text-[10px] uppercase tracking-widest">Asset Management</span>
+        </button>
+        <div className="flex items-center gap-4">
+           <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+              <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest italic">Neural Visual v4</span>
            </div>
         </div>
+      </header>
 
-        {/* Feedback & Actions */}
-        <div className="space-y-8">
-           <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-8 shadow-sm">
-              <div className="space-y-4">
-                 <h4 className="font-black text-foreground uppercase tracking-widest text-xs">AI Marketing Hook</h4>
-                 <p className="text-sm text-muted-foreground font-mono bg-theme-background p-4 rounded-2xl border border-theme italic">
-                   "{payload?.caption ?? 'Drafting the perfect hook for you...'}"
-                 </p>
-              </div>
+      <div className="flex-1 overflow-y-auto p-6 md:p-10">
+        <div className="max-w-7xl mx-auto space-y-12">
+           
+           {/* Visual Showcase */}
+           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+              {/* Main Variant Preview */}
+              <div className="lg:col-span-8 space-y-6">
+                <div className="relative aspect-square bg-slate-100 rounded-[56px] overflow-hidden border-8 border-theme shadow-2xl group">
+                   <img 
+                     src={payload.variants[selectedVariant]} 
+                     alt="Primary Asset Draft"
+                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                   />
+                   
+                   {/* Overlay info */}
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-10 flex flex-col justify-end">
+                      <div className="flex items-center justify-between">
+                         <div>
+                            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 block">Style DNA</span>
+                            <h4 className="text-xl font-bold text-white uppercase italic">{payload.style}</h4>
+                         </div>
+                         <button 
+                           onClick={() => setIsZoomed(selectedVariant)}
+                           className="w-14 h-14 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl flex items-center justify-center text-white hover:bg-white/20 transition-all"
+                         >
+                            <Maximize2 className="w-6 h-6" />
+                         </button>
+                      </div>
+                   </div>
+                </div>
 
-              <div className="space-y-4 pt-4 border-t border-theme">
-                 <h4 className="font-black text-foreground uppercase tracking-widest text-xs">Quality Rating</h4>
-                 <div className="flex gap-2">
-                    {[1,2,3,4,5].map((s) => (
-                      <button
-                        key={s}
-                        onClick={() => setRating(s)}
-                        className={cn(
-                          "p-2 rounded-xl transition-all",
-                          rating >= s ? "text-amber-500 bg-amber-50" : "text-slate-200 bg-theme-background hover:text-slate-300"
+                {/* Variant Selector */}
+                <div className="grid grid-cols-4 gap-4">
+                   {payload.variants.map((v, i) => (
+                     <button
+                       key={i}
+                       onClick={() => setSelectedVariant(i)}
+                       className={cn(
+                         "relative aspect-square rounded-3xl overflow-hidden border-4 transition-all hover:scale-105 active:scale-95",
+                         selectedVariant === i ? "border-primary shadow-lg shadow-primary/20" : "border-theme grayscale hover:grayscale-0 opacity-60 hover:opacity-100"
+                       )}
+                     >
+                        <img src={v} className="w-full h-full object-cover" />
+                        {selectedVariant === i && (
+                          <div className="absolute top-2 right-2 bg-primary rounded-full p-1 shadow-lg">
+                            <CheckCircle2 className="w-3 h-3 text-foreground" />
+                          </div>
                         )}
-                      >
-                        <Star className={cn("w-6 h-6", rating >= s && "fill-current")} />
-                      </button>
-                    ))}
-                 </div>
+                     </button>
+                   ))}
+                </div>
               </div>
 
-              {payload.isProTemplate && (
-                 <div className="bg-amber-50 border border-amber-100 p-4 rounded-2xl space-y-2">
-                    <div className="flex items-center gap-2 text-amber-600">
-                       <AlertTriangle className="w-4 h-4" />
-                       <span className="text-[10px] font-black uppercase tracking-widest text-amber-700">Cost Alert</span>
+              {/* Sidebar Controls & Reasoning */}
+              <div className="lg:col-span-4 space-y-8">
+                 <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme space-y-8 h-full">
+                    <div className="space-y-2">
+                       <h3 className="text-2xl font-black text-foreground tracking-tighter uppercase italic">{payload.title}</h3>
+                       <p className="text-sm text-muted-foreground font-medium italic leading-relaxed">
+                          {payload.description}
+                       </p>
                     </div>
-                    <p className="text-xs text-amber-700 leading-relaxed font-medium">
-                       This design uses a **Pro Template** ({payload.proCost ? `$${payload.proCost}` : 'Subscription Required'}). Use credits to proceed?
-                    </p>
+
+                    <div className="space-y-6">
+                       <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                             <Target className="w-4 h-4 text-primary" />
+                             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Market Psychology</span>
+                          </div>
+                          <div className="p-5 bg-theme-background/50 rounded-2xl border border-theme">
+                             <p className="text-xs text-foreground font-bold italic leading-relaxed">
+                                "This design utilizes {payload.style} aesthetics which currently shows a 34% higher 'add-to-cart' velocity in the digital planner space."
+                             </p>
+                          </div>
+                       </div>
+
+                       <div className="grid grid-cols-2 gap-3">
+                          <div className="bg-theme-background p-4 rounded-2xl border border-theme space-y-1">
+                             <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Complexity</span>
+                             <div className="text-lg font-black text-foreground">High</div>
+                          </div>
+                          <div className="bg-theme-background p-4 rounded-2xl border border-theme space-y-1">
+                             <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">SEO Optimized</span>
+                             <div className="text-lg font-black text-emerald-500 flex items-center gap-1.5">
+                                Yes <CheckCircle2 className="w-4 h-4" />
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+
+                    <div className="bg-emerald-500/5 rounded-3xl p-6 border border-emerald-500/20 mb-4">
+                       <div className="flex items-center gap-2 mb-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Revenue Tracking Authorized</span>
+                       </div>
+                       <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter leading-relaxed">
+                          By approving this creation, you agree that earnings resulting from its use will be tracked for a 4% Success-Share ($40 per $1,000).
+                       </p>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                       <button
+                         onClick={() => onApprove(selectedVariant)}
+                         className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl flex items-center justify-center gap-3 group"
+                       >
+                         Approve & Star
+                         <Star className="w-4 h-4 group-hover:fill-current transition-all" />
+                       </button>
+
+                       {onManualAssist && (
+                         <button
+                           onClick={onManualAssist}
+                           className="w-full py-4 bg-indigo-50 text-indigo-600 border-2 border-indigo-100 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-indigo-100 transition-all flex items-center justify-center gap-2 group"
+                         >
+                           <Zap className="w-4 h-4 group-hover:fill-current transition-all" />
+                           Manual AI Assist
+                         </button>
+                       )}
+                       <button
+                         onClick={onReject}
+                         className="w-full py-4 border-2 border-theme rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
+                       >
+                         <X className="w-4 h-4" />
+                         Redo Drafting
+                       </button>
+                    </div>
                  </div>
-              )}
-           </div>
-
-           <div className="bg-emerald-500/5 rounded-3xl p-6 border border-emerald-500/20 mb-4">
-              <div className="flex items-center gap-2 mb-2">
-                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                 <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Revenue Tracking Authorized</span>
               </div>
-              <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tighter leading-relaxed">
-                 By approving this creation, you agree that earnings resulting from its use will be tracked for a 4% Success-Share ($40 per $1,000).
-              </p>
-           </div>
-
-           <div className="flex flex-col gap-3">
-
-                onClick={() => onApprove()}
-                className="w-full py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 transition-all shadow-xl flex items-center justify-center gap-3 group"
-              >
-                Approve & Star
-                <Star className="w-4 h-4 group-hover:fill-current transition-all" />
-              </button>
-
-              {onManualAssist && (
-                <button
-                  onClick={onManualAssist}
-                  className="w-full py-4 bg-indigo-50 text-indigo-600 border-2 border-indigo-100 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-indigo-100 transition-all flex items-center justify-center gap-2 group"
-                >
-                  <Zap className="w-4 h-4 group-hover:fill-current transition-all" />
-                  Manual AI Assist
-                </button>
-              )}
-              <button
-                onClick={onReject}
-                className="w-full py-4 border-2 border-theme rounded-3xl font-black text-xs uppercase tracking-widest text-slate-400 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2"
-              >
-                <X className="w-4 h-4" />
-                Redo Drafting
-              </button>
            </div>
         </div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {isZoomed !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-xl p-10 flex items-center justify-center"
+          >
+            <button 
+              onClick={() => setIsZoomed(null)}
+              className="absolute top-10 right-10 w-16 h-16 bg-white/5 rounded-full flex items-center justify-center text-white hover:bg-white/10 transition-all border border-white/10"
+            >
+              <X className="w-8 h-8" />
+            </button>
+            <motion.img
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              src={payload.variants[isZoomed]}
+              className="max-w-full max-h-full rounded-[40px] shadow-[0_0_100px_rgba(var(--primary-rgb),0.3)] border-4 border-theme"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

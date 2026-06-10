@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { GrowthTracker } from './GrowthTracker';
 import { NeuralActivityFeed } from './NeuralActivityFeed';
 import { Brain, Zap, Stars, Minus, Maximize2 } from 'lucide-react';
@@ -90,7 +90,7 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData }: Succes
           <div className="lg:col-span-1 bg-theme-background/50 rounded-[32px] p-2 border border-theme/20">
             <GrowthTracker
               goalTitle={empireData?.activeGoal || "$1,000 Monthly Revenue"}
-              currentValue={healthData?.revenue || 0}
+              monthlyEarnings={healthData?.revenue || 0}
               targetValue={1000}
               progress={pulseData?.progress || 0}
             />

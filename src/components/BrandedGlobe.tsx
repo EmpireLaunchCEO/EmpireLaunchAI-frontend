@@ -127,7 +127,7 @@ export function BrandedGlobe({
             height: '100%',
             maxWidth: '100%',
             maxHeight: '100%',
-            imageRendering: 'high-quality',
+            imageRendering: 'auto',
             filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))' 
           }}
           onLoad={() => setIsLoaded(true)}

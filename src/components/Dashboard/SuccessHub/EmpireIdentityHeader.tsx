@@ -25,8 +25,8 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 
-export default function Dashboard() {
-  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, setDashboardLoaded } = useEmpire();
+export default function EmpireIdentityHeader() {
+  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, setDashboardLoaded, isAdmin, isDashboardLoaded } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
@@ -323,7 +323,6 @@ export default function Dashboard() {
                   empireData={empireData}
                   pulseData={pulseData}
                   healthData={healthData}
-                  transactions={transactions}
                 />
 
                 {/* Empire Control Gates */}

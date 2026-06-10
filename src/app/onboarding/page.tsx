@@ -172,7 +172,7 @@ function OnboardingContent() {
         if (result.empire?.id) {
           setActiveEmpireId(result.empire.id);
         }
-        completeOnboarding(result.empire);
+        completeOnboarding();
       } else {
         completeOnboarding();
       }

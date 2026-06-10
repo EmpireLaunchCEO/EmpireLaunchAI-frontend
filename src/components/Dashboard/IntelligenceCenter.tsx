@@ -59,7 +59,7 @@ const intelligenceMetrics = [
 // ─── Intelligence Activity Item ────────────────────────────────────────────
 
 function ThoughtItem({ item, index }: { item: typeof aiThoughtStream[0]; index: number }) {
-  const typeColors = {
+  const typeColors: Record<string, string> = {
     scan: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
     analyze: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
     reason: 'bg-purple-500/10 text-purple-400 border-purple-500/20',

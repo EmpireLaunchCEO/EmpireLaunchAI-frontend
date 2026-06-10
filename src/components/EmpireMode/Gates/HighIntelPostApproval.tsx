@@ -448,7 +448,7 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
             </div>
 
             {/* Secure Vault Notice */}
-
+            <div className="flex items-center gap-3 px-8 py-5 bg-primary/5 rounded-[32px] border border-primary/10">
                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                   <ShieldCheck className="w-5 h-5" />
                </div>
