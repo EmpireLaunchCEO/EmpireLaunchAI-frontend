@@ -38,8 +38,6 @@ const postHistory = [
 ];
 
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
-import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
-import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
 import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 
@@ -107,9 +105,6 @@ export default function EmpireCenterPage() {
             <div className="lg:col-span-2 space-y-8">
               <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
                 <SocialProofApproval />
-              </motion.div>
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
-                <AIOptimizationHub />
               </motion.div>
               <AnimatePresence mode="wait">
                 {activeTab === 'duties' && (
