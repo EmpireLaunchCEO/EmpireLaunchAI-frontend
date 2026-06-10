@@ -90,8 +90,8 @@ export function GeminiBrainOverlay() {
 
   return (
     <>
-      {/* Floating Action Button (Neural Brain) */}
-      <div className="fixed bottom-6 right-6 z-[9999]">
+      {/* Floating Action Button (Neural Brain) - Moved to Center Right to avoid blocking Bottom Nav */}
+      <div className="fixed top-1/2 -translate-y-1/2 right-6 z-[9999]">
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
