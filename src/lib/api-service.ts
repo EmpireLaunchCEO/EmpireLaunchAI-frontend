@@ -58,7 +58,6 @@ export interface EmpirePulseState {
 export interface EmpireHealth {
   growthScore: number;
   revenue: number;
-  monthlyRevenue: number;
   pendingDues: number;
   platformBreakdown: {
     platform: string;
@@ -83,13 +82,6 @@ export interface DiscoveryResult {
   maskedSnippet: string;
   maskedKey: string;
   confidence: number;
-}
-
-export interface InfrastructureBalance {
-  platform: string;
-  balance: number;
-  currency: string;
-  status: 'active' | 'low' | 'depleted' | 'unknown';
 }
 
 const HEADERS = {
@@ -219,6 +211,13 @@ export const socialProofService = {
   }
 };
 
+export interface InfrastructureBalance {
+  platform: string;
+  balance: number;
+  currency: string;
+  status: 'active' | 'low' | 'depleted' | 'unknown';
+}
+
 export const discoveryService = {
   async getPendingResults(): Promise<DiscoveryResult[]> {
     try {
@@ -253,23 +252,59 @@ export const infrastructureService = {
   }
 };
 
-export const userSettingsService = {
-  async getSettings(userId: string): Promise<any> {
-    try {
-      const res = await fetch(`${API_URL}/api/settings/hydrate`, {
-        headers: { 
-          'Authorization': 'Bearer mock-mobile-token',
-          'x-user-id': userId
-        }
-      });
-      if (res.ok) return await res.json();
-      return null;
-    } catch (e) {
-      console.error('Settings Fetch Error:', e);
-      return null;
-    }
-  }
-};
+export interface DesignTask {
+  id: string;
+  title: string;
+  platform: string;
+  status: 'blueprint_ready' | 'producing' | 'editing' | 'drafting' | 'completed' | 'review_required';
+  dueDate: string;
+}
+
+export interface CreativeBlueprintData {
+  id: string;
+  title: string;
+  intelligence: string;
+  palette: string[];
+  fonts: { platform: string; pairing: string }[];
+  script: string[];
+  compositionUrl: string;
+  variations: any[];
+  platformLink?: string;
+}
+
+export interface ApprovalRequest {
+  id: string;
+  type: 'blueprint' | 'dna' | 'content' | 'golive';
+  payload: any;
+}
+
+export interface TrustScore {
+  score: number;
+  velocity: number;
+  sentiment: number;
+  agility: number;
+}
+
+export interface SentimentPoint {
+  x: number;
+  y: number;
+  sentiment: number;
+  score: number;
+  date: string;
+  label: string;
+}
+
+export interface InboxDraft {
+  id: string;
+  subject: string;
+  to: string;
+  body: string;
+  type: string;
+  customer: string;
+  platform: string;
+  reasoning?: string;
+  status: 'pending' | 'sent' | 'rejected';
+}
 
 export const creativeService = {
   async getDesignTasks(): Promise<DesignTask[]> {
@@ -373,14 +408,13 @@ export const analyticsService = {
          return {
            growthScore: data.progress || 84,
            revenue: data.health?.revenue || 0,
-           monthlyRevenue: data.health?.revenue || 0,
            pendingDues: data.health?.pendingDues || 0,
            platformBreakdown: data.health?.platformBreakdown || []
          };
       }
     } catch (e) {}
 
-    return { growthScore: 84, revenue: 0, monthlyRevenue: 0, pendingDues: 0, platformBreakdown: [] };
+    return { growthScore: 84, revenue: 0, pendingDues: 0, platformBreakdown: [] };
   },
 
   async getRevenueTransactions(): Promise<RevenueTransaction[]> {
@@ -446,57 +480,3 @@ export const analyticsService = {
     return [];
   }
 };
-
-export interface DesignTask {
-  id: string;
-  title: string;
-  platform: string;
-  status: 'blueprint_ready' | 'producing' | 'editing' | 'drafting' | 'completed' | 'review_required';
-  dueDate: string;
-}
-
-export interface CreativeBlueprintData {
-  id: string;
-  title: string;
-  intelligence: string;
-  palette: string[];
-  fonts: { platform: string; pairing: string }[];
-  script: string[];
-  compositionUrl: string;
-  variations: any[];
-  platformLink?: string;
-}
-
-export interface ApprovalRequest {
-  id: string;
-  type: 'blueprint' | 'dna' | 'content' | 'golive';
-  payload: any;
-}
-
-export interface TrustScore {
-  score: number;
-  velocity: number;
-  sentiment: number;
-  agility: number;
-}
-
-export interface SentimentPoint {
-  x: number;
-  y: number;
-  sentiment: number;
-  score: number;
-  date: string;
-  label: string;
-}
-
-export interface InboxDraft {
-  id: string;
-  subject: string;
-  to: string;
-  body: string;
-  type: string;
-  customer: string;
-  platform: string;
-  reasoning?: string;
-  status: 'pending' | 'sent' | 'rejected';
-}
