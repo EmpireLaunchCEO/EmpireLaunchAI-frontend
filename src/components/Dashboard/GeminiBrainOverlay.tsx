@@ -15,6 +15,9 @@ export function GeminiBrainOverlay() {
   const [messages, setMessages] = useState<{ role: 'ai' | 'user'; content: string }[]>([
     { role: 'ai', content: "I am your Neural Brain. Ask me anything about your Empire, or give me a task to execute." }
   ]);
+  const [isDraggable, setIsDraggable] = useState(false);
+  const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
+  const holdTimerRef = useRef<NodeJS.Timeout | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,6 +25,30 @@ export function GeminiBrainOverlay() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isOpen]);
+
+  const handlePointerDown = () => {
+    // Start 2 second timer to unlock dragging
+    holdTimerRef.current = setTimeout(() => {
+      setIsDraggable(true);
+      if (window.navigator.vibrate) window.navigator.vibrate(50);
+    }, 2000);
+  };
+
+  const handlePointerUp = () => {
+    if (holdTimerRef.current) {
+      clearTimeout(holdTimerRef.current);
+      holdTimerRef.current = null;
+    }
+    // Note: We don't reset isDraggable here immediately to allow the drag to finish
+    // isDraggable will be reset on dragEnd
+  };
+
+  const toggleChat = () => {
+    // Only toggle if we weren't just dragging
+    if (!isDraggable) {
+      setIsOpen(!isOpen);
+    }
+  };
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -90,15 +117,30 @@ export function GeminiBrainOverlay() {
 
   return (
     <>
-      {/* Floating Action Button (Neural Brain) - Moved to Center Right to avoid blocking Bottom Nav */}
-      <div className="fixed top-1/2 -translate-y-1/2 right-6 z-[9999]">
+      {/* Floating Action Button (Neural Brain) - Movable on 2s Hold */}
+      <motion.div 
+        drag={isDraggable}
+        dragMomentum={false}
+        onDragEnd={() => {
+          setIsDraggable(false);
+        }}
+        className="fixed z-[9999]"
+        style={{ 
+          top: dragPosition.y || '50%', 
+          right: 24,
+          translateY: dragPosition.y ? 0 : '-50%'
+        }}
+      >
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => setIsOpen(!isOpen)}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          onClick={toggleChat}
           className={cn(
             "w-16 h-16 rounded-full shadow-2xl flex items-center justify-center relative overflow-hidden transition-all duration-500",
-            isOpen ? "bg-slate-900 border-2 border-primary" : "bg-primary border-4 border-white/20"
+            isOpen ? "bg-slate-900 border-2 border-primary" : "bg-primary border-4 border-white/20",
+            isDraggable && "ring-4 ring-white animate-pulse scale-110"
           )}
         >
           {isOpen ? (
@@ -128,7 +170,18 @@ export function GeminiBrainOverlay() {
             />
           )}
         </motion.button>
-      </div>
+        
+        {/* Unlock Hint */}
+        {holdTimerRef.current && !isDraggable && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="absolute -top-12 left-1/2 -translate-x-1/2 bg-white text-slate-950 text-[10px] font-black px-3 py-1 rounded-full whitespace-nowrap uppercase tracking-tighter"
+          >
+            Hold to Move
+          </motion.div>
+        )}
+      </motion.div>
 
       {/* Neural Chat Overlay */}
       <AnimatePresence>
