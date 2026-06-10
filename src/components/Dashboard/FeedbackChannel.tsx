@@ -47,7 +47,7 @@ export function FeedbackBox({ className }: FeedbackBoxProps) {
           <div>
             <h3 className="text-sm font-black text-foreground uppercase tracking-tight italic">Direct AI Counsel</h3>
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
-               Do you want to keep track of something we don't have yet?
+               Enjoying the app? Do you want to keep track of something we don't have yet? Send us feedback
             </p>
           </div>
         </div>
