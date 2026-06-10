@@ -504,8 +504,3 @@ export function SocialMediaRadar() {
     </div>
   );
 }
-
-      </AnimatePresence>
-    </div>
-  );
-}
