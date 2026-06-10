@@ -44,6 +44,8 @@ import { OmniApprovalHub as PendingApprovals } from '@/components/OmniApprovalHu
 
 import { NicheCalibrationBox } from '@/components/Dashboard/SuccessHub/NicheCalibrationBox';
 
+import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
+
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'pending-approvals' | 'empire-intel'>('pending-approvals');
   const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData } = useEmpire();
@@ -212,6 +214,14 @@ export default function EmpireCenterPage() {
                     ) : (
                       <p className="text-xs font-black uppercase tracking-widest text-blue-200">Waiting for platform linkage...</p>
                     )}
+                  </motion.div>
+
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                  >
+                    <FeedbackBox />
                   </motion.div>
                 </div>
               </motion.div>

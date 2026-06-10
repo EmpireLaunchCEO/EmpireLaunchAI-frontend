@@ -20,6 +20,8 @@ import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { DisclaimerAgreementBox } from '@/components/Dashboard/DisclaimerAgreementBox';
 
+import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
+
 export default function Dashboard() {
   const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
@@ -219,6 +221,10 @@ export default function Dashboard() {
                         <p className="text-[10px] text-muted-foreground font-medium">Recurring revenue subscribers</p>
                       </motion.div>
                     )}
+                    {/* Feedback Integration */}
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                      <FeedbackBox />
+                    </motion.div>
                   </div>
 
                   {/* Version Verification */}

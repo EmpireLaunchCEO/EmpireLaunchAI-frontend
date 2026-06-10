@@ -38,7 +38,6 @@ export default function AuthenticatedLayout({
         </div>
         <MobileNav />
         <GeminiBrainOverlay />
-        <FeedbackChannel />
       </div>
     </SubscriptionGuard>
   );
