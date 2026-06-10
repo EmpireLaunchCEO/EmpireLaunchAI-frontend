@@ -1,8 +1,8 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity, Minus, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
 
@@ -11,17 +11,25 @@ interface FinancialCommandProps {
   securedDues?: number;
   growthScore?: number;
   businessId?: string;
+  onActivateGrowthProtocol?: (name: string) => void;
 }
 
 export function FinancialCommand({ 
   withholdableEarnings = 125050, 
   securedDues = 18000, 
   growthScore = 92,
-  businessId = "1"
+  businessId = "1",
+  onActivateGrowthProtocol
 }: Partial<FinancialCommandProps>) {
-  const [infraBalances, setInfraBalances] = React.useState<InfrastructureBalance[]>([]);
+  const [infraBalances, setInfraBalances] = useState<InfrastructureBalance[]>([]);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [mounted, setMounted] = useState(false);
   
-  React.useEffect(() => {
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem('minimized-financial-command');
+    if (saved === 'true') setIsMinimized(true);
+
     const loadInfra = async () => {
       const bals = await infrastructureService.getBalances();
       setInfraBalances(bals);
@@ -29,8 +37,16 @@ export function FinancialCommand({
     loadInfra();
   }, []);
 
+  const toggleMinimize = () => {
+    const newState = !isMinimized;
+    setIsMinimized(newState);
+    localStorage.setItem('minimized-financial-command', String(newState));
+  };
+
+  if (!mounted) return null;
+
   const formatCurrency = (cents: number) => {
-    return `$${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    return `${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
   };
 
   const subscriptions = [
@@ -44,8 +60,39 @@ export function FinancialCommand({
     { name: "Fiverr Commission", amount: 1250, date: "June 30, 2024" },
   ];
 
+  if (isMinimized) {
+    return (
+      <div className="bg-theme-surface rounded-3xl p-6 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[80px] flex items-center justify-between group transition-all">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
+            <CreditCard className="w-5 h-5" />
+          </div>
+          <div className="flex flex-col">
+            <h2 className="text-sm font-black uppercase tracking-widest text-foreground leading-none">Empire Finances</h2>
+            <span className="text-[10px] font-black text-primary uppercase mt-1">Available: {formatCurrency(withholdableEarnings)}</span>
+          </div>
+        </div>
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-theme-surface rounded-[40px] p-8 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
+      <div className="absolute top-8 right-8 z-20">
+        <button 
+          onClick={toggleMinimize}
+          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+        >
+          <Minus className="w-5 h-5" />
+        </button>
+      </div>
+
       <div className="relative z-10 space-y-10">
         
         {/* Top Header: Bucket Visuals */}
@@ -68,8 +115,8 @@ export function FinancialCommand({
             </div>
           </div>
 
-          <div className="flex-1 space-y-2">
-            <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Financial Command</h3>
+          <div className="flex-1 space-y-2 pr-12">
+            <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Empire Finances</h3>
             <p className="text-slate-400 text-xs font-medium italic">Monitoring capital velocity and upcoming obligations.</p>
             <div className="flex gap-4 pt-2">
               <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
