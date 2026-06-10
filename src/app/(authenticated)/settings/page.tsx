@@ -533,10 +533,10 @@ export default function SettingsPage() {
                       <p className="text-sm text-slate-400 font-medium italic leading-relaxed">
                         "We wanted to make the Empire AI accessible to everyone from day one. To keep it affordable upfront, we decided to handle our partnership through a Success-Share model on the backend. A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, if you choose Auto-Pilot, you authorize the Empire AI to create and deploy content on your behalf either from high trends or your guidance, acting as your autonomous growth agent to ensure 24/7 expansion."
                       </p>
-
-                         <DollarSign className="w-4 h-4 text-primary" />
-                         <span className="text-[10px] font-black text-primary uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
-                      </div>
+                          <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 w-fit">
+                             <DollarSign className="w-4 h-4 text-primary" />
+                             <span className="text-[10px] font-black text-primary uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
+                          </div>
                    </div>
                 </div>
               </div>
@@ -572,12 +572,11 @@ export default function SettingsPage() {
                   </div>
 
                   <button className="w-full py-4 bg-white/5 hover:bg-red-500/10 text-slate-400 hover:text-red-400 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">Cancel Subscription</button>
-                </div>
               </div>
             )}
           </main>
         </div>
       </div>
-      </PullToRefresh>
-
+    </PullToRefresh>
+  );
 }
