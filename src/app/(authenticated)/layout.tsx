@@ -8,6 +8,8 @@ import { GeminiBrainOverlay } from "@/components/Dashboard/GeminiBrainOverlay";
 import { SlotGuard } from "@/components/SlotGuard";
 import { Suspense } from "react";
 
+import { FeedbackChannel } from "@/components/Dashboard/FeedbackChannel";
+
 export default function AuthenticatedLayout({
   children,
 }: Readonly<{
@@ -36,6 +38,7 @@ export default function AuthenticatedLayout({
         </div>
         <MobileNav />
         <GeminiBrainOverlay />
+        <FeedbackChannel />
       </div>
     </SubscriptionGuard>
   );

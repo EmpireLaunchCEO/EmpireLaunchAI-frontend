@@ -83,11 +83,17 @@ export const NicheCalibrationBox = ({ niche, angle }: NicheBoxProps) => {
         </div>
       </div>
       {angle && (
-        <div className="pt-6 border-t border-theme/20">
-          <p className="text-[8px] font-black text-primary uppercase tracking-[0.3em] mb-2">Strategic Angle</p>
-          <p className="text-xs font-medium text-muted-foreground italic leading-relaxed">
-            "{angle}"
-          </p>
+        <div className="pt-6 border-t border-theme/20 space-y-4">
+          <div>
+            <p className="text-[8px] font-black text-primary uppercase tracking-[0.3em] mb-2">Strategic Angle</p>
+            <p className="text-xs font-medium text-muted-foreground italic leading-relaxed">
+              "{angle}"
+            </p>
+          </div>
+          <div className="pt-4 border-t border-theme/10 flex items-center gap-2">
+             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+             <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Locked: Changes managed by AI via Feedback</p>
+          </div>
         </div>
       )}
     </div>
