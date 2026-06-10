@@ -199,8 +199,16 @@ export default function SettingsPage() {
         
         {/* 1. Identity Header */}
         <div className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-2">
-            <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
+          <div className="flex flex-col items-center justify-center gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
+              <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
+              <div className="flex items-center gap-1 bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                <Mail className="w-3 h-3 text-primary" />
+                <span className="text-[10px] font-bold text-white/60">stacipeabody@gmail.com</span>
+                <ShieldCheck className="w-3 h-3 text-emerald-500" />
+              </div>
+            </div>
           </div>
           <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
             {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE') ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
@@ -346,30 +354,46 @@ export default function SettingsPage() {
                       </div>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {['Etsy', 'TikTok', 'Instagram', 'YouTube', 'Facebook', 'Gmail', 'Fiverr', 'Stripe'].map((p) => (
-                        <button 
-                          key={p} 
-                          onClick={() => setActivePlatform(p)} 
-                          className={cn(
-                            "p-6 rounded-[32px] border-2 transition-all flex flex-col items-center gap-3 group",
-                            p === 'Stripe' && isStripeLinked ? "border-emerald-600 bg-emerald-900/20" : "border-theme bg-theme-background hover:border-primary/50"
-                          )}
-                        >
-                          <div className={cn(
-                            "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors",
-                            p === 'Stripe' && isStripeLinked ? "bg-emerald-900/40" : "bg-theme-surface group-hover:bg-primary/20"
-                          )}>
-                            {p === 'Stripe' && isStripeLinked 
-                              ? <ShieldCheck className="w-6 h-6 text-emerald-500" />
-                              : <Bot className={cn("w-6 h-6 transition-colors", p === 'Stripe' && isStripeLinked ? "text-emerald-500" : "text-white/40 group-hover:text-primary")} />
-                            }
-                          </div>
-                          <span className={cn(
-                            "font-black text-[10px] uppercase tracking-widest",
-                            p === 'Stripe' && isStripeLinked ? "text-emerald-500" : "text-white/60 group-hover:text-white"
-                          )}>{p}</span>
-                        </button>
-                      ))}
+                      {['Etsy', 'TikTok', 'Instagram', 'YouTube', 'Facebook', 'Gmail', 'Fiverr', 'Stripe', 'Canva', 'Kittl', 'CapCut', 'Bannerbear'].map((p) => {
+                        const id = p.toLowerCase().replace(' ', '_');
+                        const isConnected = connectedPlatforms.includes(id) || (id === 'stripe' && isStripeLinked);
+                        
+                        return (
+                          <button 
+                            key={p} 
+                            onClick={() => !isConnected && setActivePlatform(p)} 
+                            className={cn(
+                              "p-6 rounded-[32px] border-2 transition-all flex flex-col items-center gap-3 group relative overflow-hidden",
+                              isConnected ? "border-emerald-600 bg-emerald-900/20 cursor-default" : "border-theme bg-theme-background hover:border-primary/50"
+                            )}
+                          >
+                            <div className={cn(
+                              "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors",
+                              isConnected ? "bg-emerald-900/40" : "bg-theme-surface group-hover:bg-primary/20"
+                            )}>
+                              {isConnected 
+                                ? <ShieldCheck className="w-6 h-6 text-emerald-500" />
+                                : <Bot className={cn("w-6 h-6 transition-colors", "text-white/40 group-hover:text-primary")} />
+                              }
+                            </div>
+                            <div className="flex flex-col items-center">
+                              <span className={cn(
+                                "font-black text-[10px] uppercase tracking-widest",
+                                isConnected ? "text-emerald-500" : "text-white/60 group-hover:text-white"
+                              )}>{p}</span>
+                              {isConnected && (
+                                <span className="text-[7px] font-black text-emerald-500/60 uppercase tracking-tighter mt-1">Verified & Linked</span>
+                              )}
+                            </div>
+                            
+                            {isConnected && (
+                              <div className="absolute top-2 right-2">
+                                <Lock className="w-3 h-3 text-emerald-500/30" />
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -517,7 +541,19 @@ export default function SettingsPage() {
                       </div>
                     </div>
 
-                    <button className="w-full py-4 bg-white/5 hover:bg-red-500/10 text-slate-400 hover:text-red-400 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">Cancel Subscription</button>
+                    <div className="flex justify-center pt-8">
+                      <button 
+                        className="group relative px-12 py-6 bg-red-600 hover:bg-red-500 text-white rounded-[32px] font-black text-sm uppercase tracking-[0.2em] transition-all shadow-[0_0_40px_rgba(220,38,38,0.3)] hover:shadow-[0_0_60px_rgba(220,38,38,0.5)] active:scale-95 overflow-hidden"
+                        onClick={() => {
+                          if (confirm("Are you absolutely sure? Your Empire growth protocols will be terminated immediately.")) {
+                            alert("This is a master account. Deletion protocol suppressed.");
+                          }
+                        }}
+                      >
+                        <span className="relative z-10">I'm sure I want to lose my empire now</span>
+                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-[-25deg]" />
+                      </button>
+                    </div>
                 </div>
               )}
             </main>

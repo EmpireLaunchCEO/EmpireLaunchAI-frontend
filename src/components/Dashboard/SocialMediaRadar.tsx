@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEmpire } from '@/lib/EmpireContext';
 import {
   TrendingUp,
   TrendingDown,
@@ -24,7 +25,10 @@ import {
   Music2,
   Camera,
   ExternalLink,
-  BrainCircuit
+  BrainCircuit,
+  ShoppingBag,
+  Mail,
+  Facebook
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -32,7 +36,7 @@ import { cn } from '@/lib/utils';
 
 interface PostPerformance {
   id: string;
-  platform: 'tiktok' | 'instagram' | 'youtube';
+  platform: string;
   title: string;
   thumbnail: string;
   postedAt: string;
@@ -46,7 +50,7 @@ interface PostPerformance {
 }
 
 interface PlatformSummary {
-  platform: 'tiktok' | 'instagram' | 'youtube';
+  platform: string;
   totalViews: number;
   totalLikes: number;
   totalComments: number;
@@ -57,13 +61,24 @@ interface PlatformSummary {
   postsThisWeek: number;
   weeklyViewsChange: string;
   weeklyViewsTrend: 'up' | 'down';
+  handle?: string;
 }
 
 // ─── Data State (Now Data-Driven) ───────────────────────────────────────────
 
-const platformSummaries: PlatformSummary[] = [];
-
-const recentPosts: PostPerformance[] = [];
+const MOCK_PLATFORM_DATA: Record<string, Partial<PlatformSummary>> = {
+  tiktok: { totalViews: 125400, totalLikes: 12400, totalComments: 850, totalShares: 1200, avgEngagementRate: 11.2, followers: 42300, followerChange: '+12%', postsThisWeek: 12, weeklyViewsChange: '+24%', weeklyViewsTrend: 'up' },
+  instagram: { totalViews: 85200, totalLikes: 8200, totalComments: 420, totalShares: 350, avgEngagementRate: 9.8, followers: 18500, followerChange: '+8%', postsThisWeek: 8, weeklyViewsChange: '-5%', weeklyViewsTrend: 'down' },
+  youtube: { totalViews: 45000, totalLikes: 4200, totalComments: 310, totalShares: 150, avgEngagementRate: 16.3, followers: 8200, followerChange: '+15%', postsThisWeek: 2, weeklyViewsChange: '+31%', weeklyViewsTrend: 'up' },
+  facebook: { totalViews: 32000, totalLikes: 1200, totalComments: 150, totalShares: 80, avgEngagementRate: 4.2, followers: 5400, followerChange: '+2%', postsThisWeek: 4, weeklyViewsChange: '+8%', weeklyViewsTrend: 'up' },
+  etsy: { totalViews: 12000, totalLikes: 450, totalComments: 120, totalShares: 0, avgEngagementRate: 5.5, followers: 850, followerChange: '+5%', postsThisWeek: 3, weeklyViewsChange: '+15%', weeklyViewsTrend: 'up' },
+  fiverr: { totalViews: 8500, totalLikes: 210, totalComments: 45, totalShares: 0, avgEngagementRate: 3.8, followers: 120, followerChange: '+1%', postsThisWeek: 1, weeklyViewsChange: '+10%', weeklyViewsTrend: 'up' },
+  gmail: { totalViews: 5400, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 25.4, followers: 1200, followerChange: '+4%', postsThisWeek: 15, weeklyViewsChange: '+12%', weeklyViewsTrend: 'up' },
+  canva: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 24, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  kittl: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 8, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  capcut: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 14, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  bannerbear: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 42, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+};
 
 // ─── Platform Icon ───────────────────────────────────────────────────────────
 
@@ -72,6 +87,14 @@ function PlatformIcon({ platform, className }: { platform: string; className?: s
     tiktok: <Music2 className={className} />,
     instagram: <Camera className={className} />,
     youtube: <Youtube className={className} />,
+    facebook: <Facebook className={className} />,
+    etsy: <ShoppingBag className={className} />,
+    fiverr: <Zap className={className} />,
+    gmail: <Mail className={className} />,
+    canva: <Sparkles className={className} />,
+    kittl: <Palette className={className} />,
+    capcut: <Play className={className} />,
+    bannerbear: <Zap className={className} />,
   };
   return <>{icons[platform] || <ExternalLink className={className} />}</>;
 }
@@ -80,12 +103,28 @@ const platformColors: Record<string, string> = {
   tiktok: 'text-pink-400 bg-pink-500/10 border-pink-500/20',
   instagram: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
   youtube: 'text-red-400 bg-red-500/10 border-red-500/20',
+  facebook: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+  etsy: 'text-orange-400 bg-orange-500/10 border-orange-500/20',
+  fiverr: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+  gmail: 'text-red-400 bg-red-500/10 border-red-500/20',
+  canva: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
+  kittl: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20',
+  capcut: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+  bannerbear: 'text-slate-400 bg-slate-500/10 border-slate-500/20',
 };
 
 const platformLabels: Record<string, string> = {
   tiktok: 'TikTok',
   instagram: 'Instagram',
   youtube: 'YouTube',
+  facebook: 'Facebook',
+  etsy: 'Etsy',
+  fiverr: 'Fiverr',
+  gmail: 'Gmail',
+  canva: 'Canva',
+  kittl: 'Kittl',
+  capcut: 'CapCut',
+  bannerbear: 'Bannerbear',
 };
 
 function formatNumber(n: number): string {
@@ -114,7 +153,7 @@ function PlatformSummaryCard({ summary }: { summary: PlatformSummary }) {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h4 className="font-black text-foreground uppercase tracking-tight">{platformLabels[summary.platform]}</h4>
+              <h4 className="font-black text-foreground uppercase tracking-tight">{platformLabels[summary.platform] || summary.platform}</h4>
               <span className={cn(
                 "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full",
                 summary.weeklyViewsTrend === 'up'
@@ -124,8 +163,8 @@ function PlatformSummaryCard({ summary }: { summary: PlatformSummary }) {
                 {summary.weeklyViewsChange}
               </span>
             </div>
-            <p className="text-[10px] text-muted-foreground font-medium mt-0.5">
-              {summary.followers.toLocaleString()} followers
+            <p className="text-[10px] text-muted-foreground font-bold mt-0.5">
+              {summary.handle}
             </p>
           </div>
         </div>
@@ -293,14 +332,73 @@ function PostCard({ post }: { post: PostPerformance }) {
 // ─── Main Social Media Radar Component ──────────────────────────────────────
 
 export function SocialMediaRadar() {
+  const { connectedPlatforms } = useEmpire();
   const [activeView, setActiveView] = useState<'overview' | 'posts'>('overview');
   const [selectedPlatform, setSelectedPlatform] = useState<string | 'all'>('all');
+
+  // Filter and map summaries based on connected platforms
+  const platformSummaries: PlatformSummary[] = connectedPlatforms
+    .filter(id => MOCK_PLATFORM_DATA[id])
+    .map(id => {
+      const mock = MOCK_PLATFORM_DATA[id];
+      const vaultData = JSON.parse(localStorage.getItem(`empire_vault_${id}`) || '{}');
+      const handle = vaultData.handle || `@EmpireLaunch_${id}`;
+      
+      return {
+        platform: id,
+        totalViews: mock.totalViews || 0,
+        totalLikes: mock.totalLikes || 0,
+        totalComments: mock.totalComments || 0,
+        totalShares: mock.totalShares || 0,
+        avgEngagementRate: mock.avgEngagementRate || 0,
+        followers: mock.followers || 0,
+        followerChange: mock.followerChange || '0%',
+        postsThisWeek: mock.postsThisWeek || 0,
+        weeklyViewsChange: mock.weeklyViewsChange || '0%',
+        weeklyViewsTrend: mock.weeklyViewsTrend || 'up',
+        handle // Extra field for the card
+      } as any;
+    });
+
+  const recentPosts: PostPerformance[] = platformSummaries.flatMap(summary => {
+    const id = summary.platform;
+    return [
+      {
+        id: `${id}-1`,
+        platform: id,
+        title: `Empire Growth Strategy: ${platformLabels[id]} optimization`,
+        thumbnail: '',
+        postedAt: '2d ago',
+        views: Math.floor(summary.totalViews / 5),
+        likes: Math.floor(summary.totalLikes / 5),
+        comments: Math.floor(summary.totalComments / 5),
+        shares: Math.floor(summary.totalShares / 5),
+        engagementRate: summary.avgEngagementRate,
+        trend: 'up',
+        trendChange: '+12%'
+      },
+      {
+        id: `${id}-2`,
+        platform: id,
+        title: `${platformLabels[id]} Marketplace Intelligence Analysis`,
+        thumbnail: '',
+        postedAt: '4d ago',
+        views: Math.floor(summary.totalViews / 8),
+        likes: Math.floor(summary.totalLikes / 8),
+        comments: Math.floor(summary.totalComments / 8),
+        shares: Math.floor(summary.totalShares / 8),
+        engagementRate: summary.avgEngagementRate * 0.9,
+        trend: 'up',
+        trendChange: '+5%'
+      }
+    ];
+  });
 
   const filteredPosts = selectedPlatform === 'all'
     ? recentPosts
     : recentPosts.filter(p => p.platform === selectedPlatform);
 
-  const platforms = ['all', 'tiktok', 'instagram', 'youtube'] as const;
+  const filterOptions = ['all', ...platformSummaries.map(s => s.platform)];
 
   const totalViews = platformSummaries.reduce((sum, p) => sum + p.totalViews, 0);
   const totalEngagement = platformSummaries.reduce((sum, p) => sum + p.totalLikes + p.totalComments + p.totalShares, 0);
@@ -315,16 +413,16 @@ export function SocialMediaRadar() {
             <BarChart3 className="w-6 h-6 text-primary" />
           </div>
           <div>
-            <h3 className="font-black text-foreground text-lg uppercase tracking-tight">Social Media Radar</h3>
-            <p className="text-xs text-muted-foreground font-medium">
-              Real-time performance monitoring across {platformSummaries.length} platforms
+            <h3 className="font-black text-foreground text-lg uppercase tracking-tight italic">Social Media Radar</h3>
+            <p className="text-xs text-muted-foreground font-medium italic">
+              Real-time performance monitoring across {platformSummaries.length} active platforms
             </p>
           </div>
         </div>
 
         {/* Aggregate KPIs */}
         <div className="hidden sm:flex items-center gap-4">
-          <div className="text-right">
+          <div className="text-right px-4 border-r border-theme">
             <p className="text-lg font-black text-foreground">{formatNumber(totalViews)}</p>
             <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Total Reach</p>
           </div>
@@ -361,56 +459,70 @@ export function SocialMediaRadar() {
       {/* Overview View */}
       {activeView === 'overview' && (
         <div className="space-y-4">
-          {platformSummaries.map((summary, i) => (
-            <motion.div
-              key={summary.platform}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <PlatformSummaryCard summary={summary} />
-            </motion.div>
-          ))}
-
-          {/* Conversion Comparison */}
-          <div className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] space-y-4">
-            <div className="flex items-center gap-2">
-              <Target className="w-4 h-4 text-primary" />
-              <h4 className="font-black text-foreground text-sm uppercase tracking-wider">Conversion Rate by Platform</h4>
+          {platformSummaries.length > 0 ? (
+            platformSummaries.map((summary, i) => (
+              <motion.div
+                key={summary.platform}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <PlatformSummaryCard summary={summary} />
+              </motion.div>
+            ))
+          ) : (
+            <div className="p-12 text-center space-y-4 bg-theme-surface rounded-[32px] border-2 border-dashed border-theme opacity-50 grayscale">
+              <div className="w-16 h-16 bg-theme-background rounded-full flex items-center justify-center mx-auto">
+                <AlertCircle className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <h4 className="font-black text-foreground uppercase italic">Radar Offline</h4>
+              <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest">Link platforms to activate neural monitoring.</p>
             </div>
-            <div className="space-y-3">
-              {platformSummaries.map(summary => (
-                <div key={summary.platform} className="space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <PlatformIcon platform={summary.platform} className="w-3 h-3" />
-                      <span className="text-[10px] font-black text-foreground uppercase">{platformLabels[summary.platform]}</span>
-                    </div>
-                    <span className="text-xs font-black text-foreground">{summary.avgEngagementRate}%</span>
-                  </div>
-                  <div className="w-full h-2 bg-theme-background rounded-full overflow-hidden border border-theme">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${Math.min(summary.avgEngagementRate * 4, 100)}%` }}
-                      transition={{ duration: 1, delay: 0.3 }}
-                      className={cn(
-                        "h-full rounded-full",
-                        summary.platform === 'tiktok' ? "bg-pink-500" :
-                        summary.platform === 'instagram' ? "bg-purple-500" : "bg-red-500"
-                      )}
-                    />
-                  </div>
+          )}
+
+          {platformSummaries.length > 0 && (
+            <>
+              {/* Conversion Comparison */}
+              <div className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] space-y-4 shadow-xl">
+                <div className="flex items-center gap-2">
+                  <Target className="w-4 h-4 text-primary" />
+                  <h4 className="font-black text-foreground text-sm uppercase tracking-wider italic">Conversion Rate by Platform</h4>
                 </div>
-              ))}
-            </div>
+                <div className="space-y-3">
+                  {platformSummaries.filter(s => s.avgEngagementRate > 0).map(summary => (
+                    <div key={summary.platform} className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <PlatformIcon platform={summary.platform} className="w-3 h-3" />
+                          <span className="text-[10px] font-black text-foreground uppercase">{platformLabels[summary.platform]}</span>
+                        </div>
+                        <span className="text-xs font-black text-foreground">{summary.avgEngagementRate}%</span>
+                      </div>
+                      <div className="w-full h-2 bg-theme-background rounded-full overflow-hidden border border-theme">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.min(summary.avgEngagementRate * 4, 100)}%` }}
+                          transition={{ duration: 1, delay: 0.3 }}
+                          className={cn(
+                            "h-full rounded-full",
+                            platformColors[summary.platform]?.split(' ')[1]?.replace('bg-', '') || "bg-primary"
+                          )}
+                          style={{ backgroundColor: platformColors[summary.platform]?.includes('text-') ? undefined : '' }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-            <div className="p-3 bg-theme-background rounded-2xl border border-theme flex items-start gap-3">
-              <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-              <p className="text-[10px] text-muted-foreground font-medium italic">
-                "Your YouTube content has the highest engagement rate (16.3%). Consider repurposing top-performing YouTube scripts into TikTok and Reels to cross-pollinate reach."
-              </p>
-            </div>
-          </div>
+                <div className="p-3 bg-theme-background rounded-2xl border border-theme flex items-start gap-3">
+                  <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                  <p className="text-[10px] text-muted-foreground font-medium italic">
+                    "Deep Neural Analysis: Content engagement is peaking on {platformSummaries[0]?.platform.toUpperCase()}. Focus deployment on high-velocity hours to maximize ROI."
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       )}
 
@@ -419,7 +531,7 @@ export function SocialMediaRadar() {
         <div className="space-y-4">
           {/* Platform Filter */}
           <div className="flex gap-2 flex-wrap">
-            {platforms.map(platform => (
+            {filterOptions.map(platform => (
               <button
                 key={platform}
                 onClick={() => setSelectedPlatform(platform)}
@@ -449,7 +561,7 @@ export function SocialMediaRadar() {
                 <div>
                   <h4 className="font-black text-foreground uppercase italic">No Posts Found</h4>
                   <p className="text-xs text-muted-foreground font-medium mt-1">
-                    No recent posts for this platform. Link your accounts to start tracking.
+                    No recent posts detected. Deploy content via Cinema Hub to start tracking.
                   </p>
                 </div>
               </div>

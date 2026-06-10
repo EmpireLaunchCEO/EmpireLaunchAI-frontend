@@ -788,18 +788,25 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                     </h3>
                     <p className="text-base font-medium text-muted-foreground leading-relaxed mb-8">
                       {currentPlatform.id === 'imap'
-                        ? "Enter your email and App Password to allow IMAP access."
+                        ? "Enter your email and App Password (or account password) to allow IMAP access."
                         : `Connect your ${currentPlatform.name} account via our encrypted OAuth gateway.`
                       }
                     </p>
                     {linkingStep === 'auth' && (
                       <div className="space-y-4">
                         {currentPlatform.id === 'imap' && (
-                          <input
-                            type="email"
-                            placeholder="Email Address"
-                            className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors"
-                          />
+                          <>
+                            <input
+                              type="email"
+                              placeholder="Email Address"
+                              className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors text-white"
+                            />
+                            <input
+                              type="password"
+                              placeholder="App Password"
+                              className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors text-white"
+                            />
+                          </>
                         )}
                         <button
                           onClick={handleAuth}

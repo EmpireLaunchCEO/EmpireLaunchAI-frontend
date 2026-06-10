@@ -20,7 +20,6 @@ import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { DisclaimerAgreementBox } from '@/components/Dashboard/DisclaimerAgreementBox';
 import { IntelligenceCenter } from '@/components/Dashboard/IntelligenceCenter';
-import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 
 export default function Dashboard() {
   const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms } = useEmpire();
@@ -215,11 +214,6 @@ export default function Dashboard() {
                     {/* AI Intelligence Center */}
                     <div className="bg-theme-surface border-2 border-theme rounded-[32px] p-6 md:p-8 space-y-6">
                       <IntelligenceCenter />
-                    </div>
-
-                    {/* Social Media Radar */}
-                    <div className="bg-theme-surface border-2 border-theme rounded-[32px] p-6 md:p-8 space-y-6">
-                      <SocialMediaRadar />
                     </div>
 
                     <div className="pb-8">

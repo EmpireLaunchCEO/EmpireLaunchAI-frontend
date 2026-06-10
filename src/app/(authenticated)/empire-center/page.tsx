@@ -18,7 +18,8 @@ import {
   StickyNote,
   Trash2,
   CreditCard,
-  ShieldCheck
+  ShieldCheck,
+  BarChart3
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -40,10 +41,10 @@ import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { AIOptimizationHub } from '@/components/Dashboard/AIOptimizationHub';
 import { AutonomousCyclesStatus } from '@/components/Dashboard/AutonomousCyclesStatus';
 import { IntelligenceCenter } from '@/components/Dashboard/IntelligenceCenter';
-import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
+import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 
 export default function EmpireCenterPage() {
-  const [activeTab, setActiveTab] = useState<'duties' | 'history' | 'ai-config'>('duties');
+  const [activeTab, setActiveTab] = useState<'duties' | 'social-media'>('duties');
   const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData } = useEmpire();
 
   const isPlatformConnected = (platform: string) => {
@@ -78,7 +79,7 @@ export default function EmpireCenterPage() {
           <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
             {[
               { id: 'duties', label: 'Duties', icon: Zap },
-              { id: 'ai-config', label: 'Rules', icon: Stars },
+              { id: 'social-media', label: 'Social Media', icon: BarChart3 },
               ].map((tab) => (
               <button
                 key={tab.id}
@@ -102,7 +103,6 @@ export default function EmpireCenterPage() {
               <IntelligenceCenter />
               <SocialProofApproval />
               <AIOptimizationHub />
-              <AutonomousCyclesStatus />
               <AnimatePresence mode="wait">
                 {activeTab === 'duties' && (
                   <motion.div
@@ -205,45 +205,15 @@ export default function EmpireCenterPage() {
                   </motion.div>
                 )}
 
-                {activeTab === 'ai-config' && (
+                {activeTab === 'social-media' && (
                   <motion.div
-                    key="ai-config"
+                    key="social-media"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="bg-slate-900 rounded-[40px] p-10 text-white space-y-8"
+                    className="bg-theme-surface border-2 border-theme rounded-[40px] p-6 md:p-8 space-y-6"
                   >
-                    <div className="space-y-2">
-                      <h3 className="text-2xl font-black tracking-tight">AI Directives.</h3>
-                      <p className="text-slate-400 font-medium">Tell the Brain what to prioritize for your empire.</p>
-                    </div>
-
-                    <div className="space-y-6">
-                      <div className="space-y-3">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">Current Objective</label>
-                        <textarea
-                          placeholder="e.g. Focus on maximizing Etsy visibility for the new Summer Journal collection."
-                          className="w-full bg-theme-surface/5 border-2 border-white/10 rounded-3xl p-6 text-sm font-medium outline-none focus:border-blue-600 transition-all min-h-[120px]"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <button className="p-6 bg-theme-surface/5 border border-white/10 rounded-[32px] text-left hover:bg-theme-surface/10 transition-all">
-                          <Search className="w-6 h-6 text-blue-500 mb-4" />
-                          <p className="font-bold text-sm">Market Research</p>
-                          <p className="text-[10px] text-muted-foreground uppercase font-black mt-1">Status: {connectedPlatforms.length > 0 ? "Active" : "Waiting for Link"}</p>
-                        </button>
-                        <button className="p-6 bg-theme-surface/5 border border-white/10 rounded-[32px] text-left hover:bg-theme-surface/10 transition-all">
-                          <ExternalLink className="w-6 h-6 text-purple-500 mb-4" />
-                          <p className="font-bold text-sm">Auto-Posting</p>
-                          <p className="text-[10px] text-muted-foreground uppercase font-black mt-1">Status: Paused</p>
-                        </button>
-                      </div>
-
-                      <button className="w-full py-5 bg-blue-600 rounded-[24px] font-black text-xs uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/40">
-                        Update Directives
-                      </button>
-                    </div>
+                    <SocialMediaRadar />
                   </motion.div>
                 )}
               </AnimatePresence>

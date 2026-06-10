@@ -36,7 +36,7 @@ export function FinancialCommand({
   const subscriptions = [
     { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },
     { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
-    { name: "EmpireLaunch AI Platform", amount: 4900, date: "June 20, 2024", type: "app" },
+    { name: "EmpireLaunch AI Platform", amount: 4000, date: "June 20, 2024", type: "app" },
   ];
 
   const dues = [

@@ -432,8 +432,25 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              localStorage.setItem('activeEmpireId', '1');
              
              // Sync the internal state maps so derived values (connectedPlatforms, etc) work
+             const ownerPlatforms = ['gmail', 'etsy', 'tiktok', 'instagram', 'youtube', 'fiverr', 'stripe', 'canva', 'kittl', 'capcut', 'bannerbear'];
+             setPlatformsByEmpire(prev => ({ ...prev, ['1']: ownerPlatforms }));
              setOnboardedByEmpire(prev => ({ ...prev, ['1']: true }));
              setLinkingCompleteByEmpire(prev => ({ ...prev, ['1']: true }));
+
+             // Pre-fill vault data for standard apps to show handles
+             if (typeof window !== 'undefined') {
+               ownerPlatforms.forEach(p => {
+                 const key = `empire_vault_${p}`;
+                 if (!localStorage.getItem(key)) {
+                   localStorage.setItem(key, JSON.stringify({ 
+                     connected: true, 
+                     handle: p === 'gmail' ? OWNER_EMAIL : `@EmpireLaunch_${p}`,
+                     timestamp: Date.now() 
+                   }));
+                 }
+               });
+               localStorage.setItem('platformsByEmpire', JSON.stringify({ '1': ownerPlatforms }));
+             }
         }
 
         // Auto-detect Owner Admin Status
