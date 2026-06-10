@@ -149,7 +149,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
   /* Unified Support Hub is now imported from @/components/Settings/SupportHub */
 
 export default function SettingsPage() {
-  const { theme, setTheme, aiMode, setAiMode, isAdmin, setIsAdmin } = useEmpire();
+  const { theme, setTheme, aiMode, setAiMode, isAdmin, setIsAdmin, isProtocolAccepted } = useEmpire();
   const { isLinked: isStripeLinked } = useStripeStatus();
 
   const [activeTab, setActiveTab] = useState('link-center');
@@ -516,31 +516,33 @@ export default function SettingsPage() {
 
             {activeTab === 'subscription' && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              {/* Subscription Agreement Box (Moves here after acceptance) */}
-              <div className="p-8 md:p-12 bg-slate-900 border-2 border-primary/30 rounded-[48px] overflow-hidden shadow-2xl relative">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
-                <div className="flex items-start gap-6 relative z-10">
-                   <div className="w-16 h-16 bg-primary/10 rounded-3xl flex items-center justify-center border border-primary/20 shrink-0">
-                      <ShieldCheck className="w-8 h-8 text-primary" />
-                   </div>
-                   <div className="space-y-4">
-                      <div>
-                        <h3 className="text-2xl font-black text-white italic uppercase tracking-tight">Subscription Agreement.</h3>
-                        <div className="flex items-center gap-2 text-emerald-500 mt-1">
-                           <CheckCircle2 className="w-3.5 h-3.5" />
-                           <span className="text-[10px] font-black uppercase tracking-widest">Protocol Accepted & Active</span>
-                        </div>
-                      </div>
-                      <p className="text-sm text-slate-400 font-medium italic leading-relaxed">
-                        "We wanted to make the Empire AI accessible to everyone from day one. To keep it affordable upfront, we decided to handle our partnership through a Success-Share model on the backend. A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, if you choose Auto-Pilot, you authorize the Empire AI to create and deploy content on your behalf either from high trends or your guidance, acting as your autonomous growth agent to ensure 24/7 expansion."
-                      </p>
+                {/* Subscription Agreement Box (Moves here after acceptance) */}
+                {isProtocolAccepted && (
+                  <div className="p-8 md:p-12 bg-slate-900 border-2 border-primary/30 rounded-[48px] overflow-hidden shadow-2xl relative">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
+                    <div className="flex items-start gap-6 relative z-10">
+                       <div className="w-16 h-16 bg-primary/10 rounded-3xl flex items-center justify-center border border-primary/20 shrink-0">
+                          <ShieldCheck className="w-8 h-8 text-primary" />
+                       </div>
+                       <div className="space-y-4">
+                          <div>
+                            <h3 className="text-2xl font-black text-white italic uppercase tracking-tight">Subscription Agreement.</h3>
+                            <div className="flex items-center gap-2 text-emerald-500 mt-1">
+                               <CheckCircle2 className="w-3.5 h-3.5" />
+                               <span className="text-[10px] font-black uppercase tracking-widest">Protocol Accepted & Active</span>
+                            </div>
+                          </div>
+                          <p className="text-sm text-slate-400 font-medium italic leading-relaxed">
+                            "We wanted to make the Empire AI accessible to everyone from day one. To keep it affordable upfront, we decided to handle our partnership through a Success-Share model on the backend. A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, if you choose Auto-Pilot, you authorize the Empire AI to create and deploy content on your behalf either from high trends or your guidance, acting as your autonomous growth agent to ensure 24/7 expansion."
+                          </p>
                           <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 w-fit">
                              <DollarSign className="w-4 h-4 text-primary" />
                              <span className="text-[10px] font-black text-primary uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
                           </div>
-                   </div>
-                </div>
-              </div>
+                       </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-slate-900 text-white space-y-8">
 
