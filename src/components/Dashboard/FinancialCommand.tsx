@@ -2,9 +2,21 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, TrendingUp, Activity, Minus, Maximize2, FileText, Loader2, Landmark, CheckCircle2, DollarSign } from 'lucide-react';
+import { 
+  ShieldCheck, 
+  TrendingUp, 
+  Activity, 
+  Minus, 
+  Maximize2, 
+  FileText, 
+  Loader2, 
+  Landmark, 
+  Zap,
+  BatteryCharging
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
+import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
 
 interface FinancialCommandProps {
   withholdableEarnings?: number;
@@ -23,12 +35,37 @@ export function FinancialCommand({
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [infraBalances, setInfraBalances] = useState<InfrastructureBalance[]>([]);
 
   useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem('minimized-financial-tracker');
     if (saved === 'true') setIsMinimized(true);
-  }, []);
+
+    const fetchInfra = async () => {
+      let balances = await infrastructureService.getBalances();
+      const requiredPlatforms = ['OpenAI', 'Google Studio', 'Railway'];
+      const existingPlatforms = balances.map(b => b.platform);
+
+      requiredPlatforms.forEach(p => {
+        if (!existingPlatforms.includes(p)) {
+          balances.push({
+            platform: p,
+            balance: 0,
+            currency: 'USD',
+            status: 'unknown'
+          });
+        }
+      });
+      setInfraBalances(balances);
+    };
+
+    if (isLinkingComplete) {
+      fetchInfra();
+      const interval = setInterval(fetchInfra, 60000);
+      return () => clearInterval(interval);
+    }
+  }, [isLinkingComplete]);
 
   const toggleMinimize = () => {
     const newState = !isMinimized;
@@ -97,10 +134,53 @@ export function FinancialCommand({
           </div>
         </div>
 
-        {/* Unified Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Sections Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Section 1: Empire Success Model */}
+          {/* Section 1: App Life (Neural Infrastructure) */}
+          <div className="bg-theme-background/30 border border-theme rounded-[32px] p-6 space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BatteryCharging className="w-4 h-4 text-emerald-500" />
+                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">App Life</h4>
+              </div>
+              <span className="text-[8px] font-black uppercase text-emerald-500 px-2 py-0.5 bg-emerald-500/10 rounded-full">Active</span>
+            </div>
+
+            <div className="space-y-3">
+              {infraBalances.length > 0 ? infraBalances.map((infra, idx) => (
+                <div key={idx} className="flex items-center justify-between p-3 rounded-2xl bg-theme-surface/50 border border-theme/30 group/item relative overflow-hidden">
+                  <div className="flex items-center gap-3 relative z-10">
+                    <div className={cn("w-1.5 h-1.5 rounded-full", 
+                      infra.status === 'active' ? "bg-emerald-500" : 
+                      infra.status === 'low' ? "bg-amber-500" : "bg-red-500"
+                    )} />
+                    <span className="text-[10px] font-bold text-slate-300">{infra.platform}</span>
+                  </div>
+                  
+                  <div className="text-right relative z-10 group-hover/item:opacity-0 transition-opacity">
+                    <p className="text-[8px] text-slate-500 font-medium uppercase mb-0.5">Remaining</p>
+                    <span className="text-[10px] font-black text-foreground">${infra.balance.toFixed(2)}</span>
+                  </div>
+
+                  {/* Refuel Button Overlay */}
+                  <div className="absolute inset-0 bg-primary/90 opacity-0 group-hover/item:opacity-100 transition-all flex items-center justify-center translate-y-4 group-hover/item:translate-y-0 cursor-pointer">
+                    <button className="text-[9px] font-black uppercase tracking-widest text-slate-950 flex items-center gap-2">
+                      <Zap className="w-3 h-3" />
+                      Refuel ($10)
+                    </button>
+                  </div>
+                </div>
+              )) : (
+                <div className="flex flex-col items-center justify-center py-4 text-center">
+                  <Loader2 className="w-4 h-4 text-primary animate-spin mb-2" />
+                  <p className="text-[10px] text-slate-500 font-medium italic">Syncing App Life...</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Section 2: Empire Success Model */}
           <div className="bg-primary/5 border border-primary/20 rounded-[32px] p-6 space-y-6 relative overflow-hidden">
             <div className="flex items-center justify-between relative z-10">
               <div className="flex items-center gap-2">
@@ -138,7 +218,7 @@ export function FinancialCommand({
                 ) : (
                   <FileText className="w-3 h-3" />
                 )}
-                Download Audit report for Success-Shares
+                Audit for Success-Shares
               </button>
             </div>
 
@@ -146,7 +226,7 @@ export function FinancialCommand({
             <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/10 blur-3xl rounded-full" />
           </div>
 
-          {/* Section 2: Transparency & Verification */}
+          {/* Section 3: Transparency & Verification */}
           <div className="bg-theme-background/30 border border-theme rounded-[32px] p-6 space-y-6 flex flex-col justify-center">
              <div className="flex items-center gap-3">
                 <span className="text-[8px] font-black text-emerald-500 uppercase animate-pulse flex items-center gap-1.5">
