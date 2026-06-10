@@ -234,41 +234,6 @@ export default function EmpireCenterPage() {
 
             {/* Sidebar Context */}
             <div className="space-y-8">
-               {/* Empire Notes Section */}
-               <motion.div 
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6 shadow-sm"
-               >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
-                        <StickyNote className="w-5 h-5" />
-                      </div>
-                      <h4 className="font-black text-foreground text-sm pr-2">Empire Notes</h4>
-                    </div>
-                    <button
-                      onClick={() => setEmpireNotes('')}
-                      className="text-slate-300 hover:text-red-500 transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <textarea
-                    value={empireNotes}
-                    onChange={(e) => setEmpireNotes(e.target.value)}
-                    placeholder="Press the mic and say 'Notes...' to dictate your thoughts here."
-                    className="w-full bg-cyan-500/5 border-2 border-transparent rounded-3xl p-6 text-sm font-medium outline-none focus:border-cyan-400/30 transition-all min-h-[200px] text-slate-700 placeholder:text-cyan-400/30"
-                  />
-
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-cyan-400/50">
-                    <Stars className="w-3 h-3" />
-                    AI Sync: Real-time
-                  </div>
-               </motion.div>
-
                <motion.div 
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}

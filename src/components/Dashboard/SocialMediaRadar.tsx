@@ -209,6 +209,7 @@ function SignalCard({ signal }: { signal: any }) {
         <span className="text-[9px] font-black text-muted-foreground">{signal.source}</span>
       </div>
       <p className="text-sm font-bold text-foreground">{signal.metric}</p>
+      <p className="text-[10px] text-muted-foreground font-medium italic leading-tight">{signal.insight}</p>
       <div className="flex items-center gap-1">
         {signal.direction === 'up' ? (
           <ArrowUpRight className="w-3 h-3 text-emerald-400" />
@@ -304,7 +305,35 @@ export function SocialMediaRadar() {
     { label: 'Market Coverage', value: '0%', detail: 'Digital goods niche', icon: Globe },
   ];
 
-  const marketSignals: any[] = [];
+  const marketSignals = [
+    {
+      id: 'signal-1',
+      signal: 'TREND DETECTED',
+      metric: "Viral Hook: 'Boho Minimalist'",
+      source: 'Etsy Search Pulse',
+      change: '+114%',
+      direction: 'up',
+      insight: "Search volume for 'minimalist boho wall art' is up 114%. Suggest creating 3 new variants today.",
+    },
+    {
+      id: 'signal-2',
+      signal: 'GAP IDENTIFIED',
+      metric: 'Competitor Gap Analysis',
+      source: 'Amazon/Etsy Crawler',
+      change: 'Inventory Low',
+      direction: 'up',
+      insight: "Top 3 competitors are low on stock for 'Digital Wedding Planners'. Optimal time to boost ads.",
+    },
+    {
+      id: 'signal-3',
+      signal: 'PRICE OPTIMIZED',
+      metric: 'Profit Velocity Scan',
+      source: 'Financial Engine',
+      change: '+$2.50',
+      direction: 'up',
+      insight: "Your 'Luxe Bundle' is underpriced. Increasing by $2.50 will boost profit by 12% without affecting volume.",
+    }
+  ];
 
   return (
     <div className="space-y-6 relative">
@@ -425,10 +454,17 @@ export function SocialMediaRadar() {
                       <SignalCard key={signal.id} signal={signal} />
                     ))}
                   </div>
-                  <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800">
-                    <p className="text-xs text-slate-300 font-medium italic">
-                      "Based on these signals, I recommend pivoting your Etsy thumbnails to 'Sage Green' aesthetics and creating an 'ADHD Planner' listing variant."
+                  <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-primary" />
+                      <p className="text-[10px] font-black uppercase text-primary tracking-widest">AI Strategic Counsel</p>
+                    </div>
+                    <p className="text-xs text-slate-300 font-medium italic leading-relaxed">
+                      "Market velocity is favoring high-contrast 'Sage Green' aesthetics. I recommend creating an 'ADHD Planner' listing variant immediately to capture current search volume."
                     </p>
+                    <button className="w-full py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all">
+                      Execute All Optimizations
+                    </button>
                   </div>
                 </>
               )}

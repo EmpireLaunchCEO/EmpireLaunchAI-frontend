@@ -19,7 +19,6 @@ import { GrowthTracker } from '@/components/Dashboard/SuccessHub/GrowthTracker';
 import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { DisclaimerAgreementBox } from '@/components/Dashboard/DisclaimerAgreementBox';
-import { IntelligenceCenter } from '@/components/Dashboard/IntelligenceCenter';
 
 export default function Dashboard() {
   const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms } = useEmpire();
@@ -226,10 +225,6 @@ export default function Dashboard() {
                         niche={isAdmin ? "Done For You Business" : (empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
                         angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
                       />
-                    </motion.div>
-
-                    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="pb-8">
-                      <NeuralNotes />
                     </motion.div>
                   </div>
 
