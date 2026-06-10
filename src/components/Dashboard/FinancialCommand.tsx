@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, TrendingUp, CreditCard, Activity, Minus, Maximize2, FileText, Loader2, Landmark, CheckCircle2, Zap } from 'lucide-react';
+import { ShieldCheck, TrendingUp, Activity, Minus, Maximize2, FileText, Loader2, Landmark, CheckCircle2, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
-
-import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
 
 interface FinancialCommandProps {
   withholdableEarnings?: number;
@@ -25,40 +23,12 @@ export function FinancialCommand({
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [infraBalances, setInfraBalances] = useState<InfrastructureBalance[]>([]);
 
   useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem('minimized-financial-tracker');
     if (saved === 'true') setIsMinimized(true);
-
-    const fetchInfra = async () => {
-      let balances = await infrastructureService.getBalances();
-
-      // Ensure the requested platforms are always visible even if API returns nothing (initial state/fallback)
-      const requiredPlatforms = ['OpenAI', 'Google Studio', 'Railway'];
-      const existingPlatforms = balances.map(b => b.platform);
-
-      requiredPlatforms.forEach(p => {
-        if (!existingPlatforms.includes(p)) {
-          balances.push({
-            platform: p,
-            balance: 0,
-            currency: 'USD',
-            status: 'unknown'
-          });
-        }
-      });
-
-      setInfraBalances(balances);
-    };
-
-    if (isLinkingComplete) {
-      fetchInfra();
-      const interval = setInterval(fetchInfra, 60000); // Update every minute
-      return () => clearInterval(interval);
-    }
-  }, [isLinkingComplete]);
+  }, []);
 
   const toggleMinimize = () => {
     const newState = !isMinimized;
@@ -101,12 +71,6 @@ export function FinancialCommand({
   const successShareAmount = Math.floor(withholdableEarnings / 100000) * 4000;
   const appSubscription = isLinkingComplete ? 4000 : 0; // App Monthly Sub $40.00
 
-  const SUBSCRIPTIONS = [
-    { name: 'Etsy Seller Tool', cost: 1500, active: isLinkingComplete },
-    { name: 'TikTok Shop Plus', cost: 1200, active: isLinkingComplete },
-    { name: 'Meta Business Suite', cost: 900, active: isLinkingComplete }
-  ];
-
   return (
     <div className="bg-theme-surface rounded-[40px] p-8 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
       {/* Minimize Toggle */}
@@ -124,7 +88,7 @@ export function FinancialCommand({
         <div className="flex flex-col md:flex-row gap-8 items-center border-b border-theme/30 pb-8">
           <div className="flex-1 space-y-1">
             <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Finance Tracker</h3>
-            <p className="text-slate-400 text-xs font-medium italic">Integrated platform dues and automated success-share monitoring.</p>
+            <p className="text-slate-400 text-xs font-medium italic">Integrated automated success-share monitoring.</p>
             <div className="flex gap-4 pt-1">
               <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
                 <span className="text-[9px] font-black text-primary uppercase">Empire Revenue: {formatCurrency(withholdableEarnings)}</span>
@@ -133,76 +97,10 @@ export function FinancialCommand({
           </div>
         </div>
 
-        {/* Three Main Sections */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Unified Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
-          {/* Section 1: Platform Subscriptions */}
-          <div className="bg-theme-background/30 border border-theme rounded-[32px] p-6 space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-primary" />
-                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Fixed Dues</h4>
-              </div>
-              <span className="text-xs font-black italic">{formatCurrency(SUBSCRIPTIONS.reduce((acc, s) => acc + (s.active ? s.cost : 0), 0))} / mo</span>
-            </div>
-
-            <div className="space-y-3">
-              {SUBSCRIPTIONS.map((sub, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 rounded-2xl bg-theme-surface/50 border border-theme/30">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className={cn("w-3 h-3", sub.active ? "text-emerald-500" : "text-slate-600")} />
-                    <span className="text-[10px] font-bold text-slate-300">{sub.name}</span>
-                  </div>
-                  <span className="text-[10px] font-black text-foreground">{formatCurrency(sub.cost)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Section 2: Real-time Infrastructure */}
-          <div className="bg-theme-background/30 border border-theme rounded-[32px] p-6 space-y-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4 text-emerald-500" />
-                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Neural Infrastructure (Utility)</h4>
-              </div>
-              <span className="text-[8px] font-black uppercase text-emerald-500 px-2 py-0.5 bg-emerald-500/10 rounded-full">Real-time</span>
-            </div>
-
-            <div className="space-y-3">
-              {infraBalances.length > 0 ? infraBalances.map((infra, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 rounded-2xl bg-theme-surface/50 border border-theme/30 group/item relative overflow-hidden">
-                  <div className="flex items-center gap-3 relative z-10">
-                    <div className={cn("w-1.5 h-1.5 rounded-full", 
-                      infra.status === 'active' ? "bg-emerald-500" : 
-                      infra.status === 'low' ? "bg-amber-500" : "bg-red-500"
-                    )} />
-                    <span className="text-[10px] font-bold text-slate-300">{infra.platform}</span>
-                  </div>
-                  
-                  <div className="text-right relative z-10 group-hover/item:opacity-0 transition-opacity">
-                    <p className="text-[8px] text-slate-500 font-medium uppercase mb-0.5">Utility Balance</p>
-                    <span className="text-[10px] font-black text-foreground">Credits Left: ${infra.balance.toFixed(2)}</span>
-                  </div>
-
-                  {/* Refuel Button Overlay */}
-                  <div className="absolute inset-0 bg-primary/90 opacity-0 group-hover/item:opacity-100 transition-all flex items-center justify-center translate-y-4 group-hover/item:translate-y-0 cursor-pointer">
-                    <button className="text-[9px] font-black uppercase tracking-widest text-slate-950 flex items-center gap-2">
-                      <Zap className="w-3 h-3" />
-                      Refuel Neural Tank ($10)
-                    </button>
-                  </div>
-                </div>
-              )) : (
-                <div className="flex flex-col items-center justify-center py-4 text-center">
-                  <Loader2 className="w-4 h-4 text-primary animate-spin mb-2" />
-                  <p className="text-[10px] text-slate-500 font-medium italic">Syncing with linked nodes...</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Section 3: Empire Success Model */}
+          {/* Section 1: Empire Success Model */}
           <div className="bg-primary/5 border border-primary/20 rounded-[32px] p-6 space-y-6 relative overflow-hidden">
             <div className="flex items-center justify-between relative z-10">
               <div className="flex items-center gap-2">
@@ -248,16 +146,27 @@ export function FinancialCommand({
             <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/10 blur-3xl rounded-full" />
           </div>
 
+          {/* Section 2: Transparency & Verification */}
+          <div className="bg-theme-background/30 border border-theme rounded-[32px] p-6 space-y-6 flex flex-col justify-center">
+             <div className="flex items-center gap-3">
+                <span className="text-[8px] font-black text-emerald-500 uppercase animate-pulse flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]" />
+                  Neural Sync Verified
+                </span>
+                <p className="text-[10px] text-muted-foreground font-medium italic">Transparency protocols active across all linked nodes.</p>
+             </div>
+             <p className="text-xs text-slate-500 leading-relaxed italic">
+               "Our success is tied to yours. The Empire AI monitors your growth across all social platforms to ensure your revenue milestones are tracked with 100% accuracy. We only grow when you do."
+             </p>
+          </div>
+
         </div>
 
         {/* Footer Actions */}
         <div className="pt-6 border-t border-theme/30 flex flex-col md:flex-row gap-4 items-center justify-between">
            <div className="flex items-center gap-3">
-              <span className="text-[8px] font-black text-emerald-500 uppercase animate-pulse flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]" />
-                Neural Sync Verified
-              </span>
-              <p className="text-[10px] text-muted-foreground font-medium italic">Transparency protocols active across all linked nodes.</p>
+              <ShieldCheck className="w-4 h-4 text-slate-500" />
+              <p className="text-[10px] text-muted-foreground font-medium">All financial data is hardware-encrypted and never stored on local team nodes.</p>
            </div>
            
            <button
