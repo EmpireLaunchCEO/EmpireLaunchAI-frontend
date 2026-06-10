@@ -335,7 +335,7 @@ export function IntelligenceCenter() {
                   <Globe className="w-4 h-4 text-primary" />
                   <h4 className="font-black text-foreground text-sm uppercase tracking-wider">Live Market Signals</h4>
                 </div>
-                <RefreshCw className="w-3.5 h-3.5 text-muted-foreground animate-spin-slow" />
+                <BrandedGlobe size="sm" spinning />
               </div>
               
               {!isLinkingComplete ? (
