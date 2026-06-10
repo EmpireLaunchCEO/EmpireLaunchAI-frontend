@@ -43,16 +43,13 @@ import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval'
 import { OmniApprovalHub as PendingApprovals } from '@/components/OmniApprovalHub';
 
 export default function EmpireCenterPage() {
-  const [activeTab, setActiveTab] = useState<'duties' | 'social-media'>('duties');
+  const [activeTab, setActiveTab] = useState<'pending-approvals' | 'social-media'>('pending-approvals');
   const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData } = useEmpire();
 
   const isPlatformConnected = (platform: string) => {
     return connectedPlatforms.some(p => p.toLowerCase() === platform.toLowerCase());
   };
 
-  const filteredDuties = duties.filter(d => isPlatformConnected(d.platform));
-  const filteredHistory = postHistory.filter(h => isPlatformConnected(h.site));
-  
   const handleRefresh = async () => {
     // Simulate refresh logic
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -82,14 +79,14 @@ export default function EmpireCenterPage() {
           {/* Primary Tabs - Optimized for mobile visibility */}
           <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
             {[
-              { id: 'duties', label: 'Duties', icon: Zap },
+              { id: 'pending-approvals', label: 'Pending Approvals', icon: Zap },
               { id: 'social-media', label: 'Social Media', icon: BarChart3 },
               ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={cn(
-                  "flex-1 min-w-[80px] sm:min-w-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-[18px] font-black text-[9px] sm:text-[10px] uppercase tracking-tighter transition-all",
+                  "flex-1 min-w-[120px] sm:min-w-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-[18px] font-black text-[9px] sm:text-[10px] uppercase tracking-tighter transition-all",
                   activeTab === tab.id
                     ? "bg-theme-surface text-foreground shadow-sm border border-theme"
                     : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
@@ -101,141 +98,116 @@ export default function EmpireCenterPage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Main Feed */}
-            <div className="lg:col-span-2 space-y-8">
-              <AnimatePresence mode="wait">
-                {activeTab === 'duties' && (
-                  <motion.div
-                    key="duties"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="space-y-12"
-                  >
-                    {/* Pending Approvals */}
-                    <section className="space-y-6">
-                       <div className="flex items-center justify-between px-2">
-                          <h3 className="text-xl font-black text-foreground uppercase tracking-tight italic">Pending Approvals</h3>
-                          <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full">Neural Sync Active</span>
-                       </div>
-                       <PendingApprovals />
-                    </section>
-
-                    {/* AI Work/Research Feed */}
-                    <motion.div 
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6"
-                    >
-                       <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-black text-foreground pr-2">AI Active Research</h3>
-                        <button className="text-xs font-black text-blue-600 uppercase tracking-widest">New Request +</button>
-                      </div>
-
-                      <div className="space-y-4">
-                        {connectedPlatforms.length > 0 ? (
-                          <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4">
-                            <div className="flex items-center gap-3">
-                              <Stars className="w-5 h-5 text-primary" />
-                              <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
-                            </div>
-                            <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                              <motion.div
-                                initial={{ width: "0%" }}
-                                animate={{ width: "65%" }}
-                                className="bg-primary h-full shadow-[0_0_10px_rgba(251,191,36,0.5)]"
-                              />
-                            </div>
-                            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-                              <span>Phase: Data Synthesis</span>
-                              <span>65% Complete</span>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="p-8 text-center text-muted-foreground font-medium text-xs italic">
-                            Link a marketplace to initialize research protocols.
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                )}
-
-                {activeTab === 'social-media' && (
-                  <motion.div
-                    key="social-media"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="space-y-8"
-                  >
-                    <SocialMediaRadar />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Sidebar Context */}
-            <div className="space-y-8">
-               <motion.div 
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6"
-               >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-                      <MessageSquare className="w-5 h-5" />
+          <AnimatePresence mode="wait">
+            {activeTab === 'pending-approvals' && (
+              <motion.div
+                key="pending-approvals"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-12 w-full"
+              >
+                {/* Full Width Pending Approvals */}
+                <section className="space-y-6">
+                    <div className="flex items-center justify-between px-2">
+                      <h3 className="text-xl font-black text-foreground uppercase tracking-tight italic">Action Required</h3>
+                      <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full">Neural Sync Active</span>
                     </div>
-                    <h4 className="font-black text-foreground text-sm">Feedback Channel</h4>
-                  </div>
-                  <p className="text-xs text-muted-foreground font-medium leading-relaxed">
-                    Send feedback to the AI regarding past posts or research quality.
-                  </p>
-                  <input
-                    type="text"
-                    placeholder="Type your feedback..."
-                    className="w-full bg-theme-background border-2 border-transparent rounded-2xl p-4 text-xs font-bold focus:border-blue-600 transition-all outline-none"
-                  />
-               </motion.div>
+                    <PendingApprovals />
+                </section>
+              </motion.div>
+            )}
 
-               <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[40px] p-8 text-white space-y-4"
-               >
-                  <h4 className="text-lg font-black leading-tight">Next 24 Hours.</h4>
-                  {connectedPlatforms.length > 0 ? (
-                    <ul className="space-y-4">
-                      {isPlatformConnected('TikTok') && (
-                        <li className="flex items-start gap-3">
-                          <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
-                          <p className="text-xs font-medium text-indigo-100">Post 'Product Showcase' to TikTok (Pending Approval)</p>
-                        </li>
-                      )}
-                      {isPlatformConnected('Gmail') && (
-                        <li className="flex items-start gap-3">
-                          <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
-                          <p className="text-xs font-medium text-indigo-100">Finalize 'Email Sequence' for new subscribers</p>
-                        </li>
-                      )}
-                      {!isPlatformConnected('TikTok') && !isPlatformConnected('Gmail') && (
-                        <li className="flex items-start gap-3">
-                          <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
-                          <p className="text-xs font-medium text-indigo-100">Scanning connected platforms for growth opportunities...</p>
-                        </li>
-                      )}
-                    </ul>
-                  ) : (
-                    <p className="text-xs font-black uppercase tracking-widest text-blue-200">Waiting for platform linkage...</p>
-                  )}
-               </motion.div>
-            </div>
-          </div>
+            {activeTab === 'social-media' && (
+              <motion.div
+                key="social-media"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="grid grid-cols-1 lg:grid-cols-3 gap-10"
+              >
+                {/* Main Feed - Social Media */}
+                <div className="lg:col-span-2 space-y-12">
+                  <SocialMediaRadar />
+                  
+                  {/* Moved AI Active Research here */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xl font-black text-foreground pr-2">AI Active Research</h3>
+                      <button className="text-xs font-black text-blue-600 uppercase tracking-widest">New Request +</button>
+                    </div>
 
+                    <div className="space-y-4">
+                      {connectedPlatforms.length > 0 ? (
+                        <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4">
+                          <div className="flex items-center gap-3">
+                            <Stars className="w-5 h-5 text-primary" />
+                            <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
+                          </div>
+                          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                            <motion.div
+                              initial={{ width: "0%" }}
+                              animate={{ width: "65%" }}
+                              className="bg-primary h-full shadow-[0_0_10px_rgba(251,191,36,0.5)]"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            <span>Phase: Data Synthesis</span>
+                            <span>65% Complete</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="p-8 text-center text-muted-foreground font-medium text-xs italic">
+                          Link a marketplace to initialize research protocols.
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Sidebar Context - Only on Social Media Tab */}
+                <div className="space-y-8">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[40px] p-8 text-white space-y-4"
+                  >
+                    <h4 className="text-lg font-black leading-tight">Next 24 Hours.</h4>
+                    {connectedPlatforms.length > 0 ? (
+                      <ul className="space-y-4">
+                        {isPlatformConnected('TikTok') && (
+                          <li className="flex items-start gap-3">
+                            <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
+                            <p className="text-xs font-medium text-indigo-100">Post 'Product Showcase' to TikTok (Pending Approval)</p>
+                          </li>
+                        )}
+                        {isPlatformConnected('Gmail') && (
+                          <li className="flex items-start gap-3">
+                            <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
+                            <p className="text-xs font-medium text-indigo-100">Finalize 'Email Sequence' for new subscribers</p>
+                          </li>
+                        )}
+                        {!isPlatformConnected('TikTok') && !isPlatformConnected('Gmail') && (
+                          <li className="flex items-start gap-3">
+                            <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
+                            <p className="text-xs font-medium text-indigo-100">Scanning connected platforms for growth opportunities...</p>
+                          </li>
+                        )}
+                      </ul>
+                    ) : (
+                      <p className="text-xs font-black uppercase tracking-widest text-blue-200">Waiting for platform linkage...</p>
+                    )}
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           {/* Version Verification */}
           <div className="flex justify-center pb-20">
             <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
