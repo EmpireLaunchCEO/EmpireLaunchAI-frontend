@@ -62,16 +62,21 @@ export function GlobalEmpireHeader() {
               className={cn(
                 "px-5 md:px-10 py-3 md:py-4 rounded-[18px] font-black text-[10px] md:text-[11px] uppercase tracking-tighter transition-all flex items-center gap-2.5 whitespace-nowrap min-w-fit border",
                 isActive
-                  ? "bg-primary text-white shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] border-white/20 scale-105"
-                  : "text-white/40 border-transparent hover:text-white hover:bg-theme-surface/40 hover:border-theme/30"
+                  ? "bg-theme-surface border-theme shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] scale-105"
+                  : "bg-transparent border-transparent hover:bg-theme-surface/40 hover:border-theme/30"
               )}
             >
               {isActive ? (
-                <Globe className="w-3.5 h-3.5 text-primary animate-pulse" />
+                <Globe className="w-3.5 h-3.5 text-primary animate-pulse shrink-0" />
               ) : (
-                <Briefcase className="w-3.5 h-3.5 opacity-40" />
+                <Briefcase className="w-3.5 h-3.5 text-primary/40 shrink-0" />
               )}
-              {label}
+              <span className={cn(
+                "text-theme-gradient",
+                !isActive && "opacity-80"
+              )}>
+                {label}
+              </span>
             </button>
           );
         })}
