@@ -59,7 +59,7 @@ export function GrowthProtocolGate({ isOpen, onClose, onActivate, productName, p
               <div className="flex items-center gap-3 px-4 py-3 bg-blue-500/5 rounded-2xl border border-blue-500/10 text-left">
                 <Info className="w-4 h-4 text-blue-400 shrink-0" />
                 <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest leading-tight">
-                  I will automatically track sales and reach while our Neural Link remains active. You keep 96% of the revenue; 4% is calculated as our Success-Share.
+                  I will automatically track sales and reach while our Link Center remains active. You keep 96% of the revenue; 4% is calculated as our Success-Share.
                 </p>
               </div>
             </div>

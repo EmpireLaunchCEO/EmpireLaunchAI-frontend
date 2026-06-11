@@ -847,7 +847,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                           onClick={handleLink}
                           className="w-full py-5 bg-primary text-foreground rounded-[24px] font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl"
                         >
-                          Finalize Neural Link
+                          Finalize Link Center
                         </button>
                       </div>
                     ) : (

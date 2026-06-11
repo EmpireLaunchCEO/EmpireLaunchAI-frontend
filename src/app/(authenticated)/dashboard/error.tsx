@@ -27,7 +27,7 @@ export default function DashboardError({
         </div>
         
         <div className="space-y-4 relative z-10">
-          <h2 className="text-2xl font-black text-white uppercase italic tracking-tight">Neural Link Severed</h2>
+          <h2 className="text-2xl font-black text-white uppercase italic tracking-tight">Link Center Severed</h2>
           <p className="text-slate-400 text-sm leading-relaxed">
             Your connection to the Success Hub was interrupted by a critical runtime error. This can happen during high-velocity data synchronization.
           </p>

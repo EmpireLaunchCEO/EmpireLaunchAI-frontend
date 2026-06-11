@@ -72,7 +72,7 @@ export function ApprovalGate({
       setGateState('resumption');
       setThoughts(prev => [...prev, {
         id: 'resumption',
-        text: "Neural Link Stabilized. Resuming autonomous store calibration...",
+        text: "Link Center Stabilized. Resuming autonomous store calibration...",
         timestamp: Date.now()
       }]);
 
@@ -355,7 +355,7 @@ export function ApprovalGate({
                   >
                     <CheckCircle2 className="w-12 h-12 text-blue-600" />
                   </motion.div>
-                  <h3 className="text-4xl font-black italic tracking-tight mb-2 uppercase">Neural Link Established.</h3>
+                  <h3 className="text-4xl font-black italic tracking-tight mb-2 uppercase">Link Center Established.</h3>
                   <p className="text-blue-100 font-bold uppercase tracking-widest text-sm italic">{platformName} is now part of your empire!</p>
 
                   <button

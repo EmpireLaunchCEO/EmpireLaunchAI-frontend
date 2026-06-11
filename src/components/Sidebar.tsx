@@ -23,7 +23,7 @@ const navItems = [
   { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Operation Base', href: '/empire-center', icon: ClipboardCheck },
   { name: 'Empire Studio', href: '/studio', icon: Video },
-  { name: 'Neural Link', href: '/link-center', icon: Stars },
+  { name: 'Link Center', href: '/link-center', icon: Stars },
   { name: 'Control Gates', href: '/review', icon: ShieldCheck },
   { name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },

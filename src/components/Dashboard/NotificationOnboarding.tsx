@@ -266,7 +266,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
                       <ShieldCheck className="w-12 h-12 text-foreground" />
                    </motion.div>
                    <div className="space-y-2">
-                     <h2 className="text-2xl font-black text-white tracking-tight uppercase">Neural Link Established.</h2>
+                     <h2 className="text-2xl font-black text-white tracking-tight uppercase">Link Center Established.</h2>
                      <p className="text-amber-400 font-bold text-sm uppercase tracking-widest">Alerts Active.</p>
                    </div>
                 </motion.div>

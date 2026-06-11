@@ -35,7 +35,7 @@ export class DashboardErrorBoundary extends Component<Props, State> {
               <AlertTriangle className="w-10 h-10 text-red-500" />
             </div>
             <div className="space-y-4">
-              <h2 className="text-2xl font-black text-white uppercase italic">Neural Link Failure</h2>
+              <h2 className="text-2xl font-black text-white uppercase italic">Link Center Failure</h2>
               <p className="text-slate-400 text-sm leading-relaxed">
                 A temporary error occurred while rendering your Command Center. This is often caused by a sync timeout or a visual rendering mismatch.
               </p>

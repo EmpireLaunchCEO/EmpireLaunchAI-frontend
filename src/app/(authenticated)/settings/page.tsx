@@ -201,7 +201,7 @@ export default function SettingsPage() {
         <div className="text-center space-y-4">
           <div className="flex flex-col items-center justify-center gap-2">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Neural Link Active</span>
+              <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Link Center Active</span>
               <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
               <div className="flex items-center gap-1 bg-white/5 px-3 py-1 rounded-full border border-white/10">
                 <Mail className="w-3 h-3 text-primary" />

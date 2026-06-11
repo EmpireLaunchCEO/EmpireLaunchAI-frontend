@@ -54,7 +54,7 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
           <div className="flex justify-between items-start">
             <div className="space-y-1">
               <h3 className="text-2xl font-black italic uppercase tracking-tighter text-foreground">Slot Activation</h3>
-              <p className="text-[10px] font-black uppercase tracking-widest text-primary">Priority Neural Link</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-primary">Priority Link Center</p>
             </div>
             <div className="text-right">
               <span className="text-3xl font-black text-foreground">$40</span>
@@ -68,7 +68,7 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
             className="w-full bg-primary text-slate-950 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-white transition-all flex items-center justify-center gap-3 group shadow-xl active:scale-95"
           >
             <CreditCard className="w-5 h-5" />
-            {isPaying ? "Processing Neural Link..." : "Pay with Credit Card"}
+            {isPaying ? "Processing Link Center..." : "Pay with Credit Card"}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
 
