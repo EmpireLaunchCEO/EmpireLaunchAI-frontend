@@ -28,13 +28,12 @@ export default function AuthenticatedLayout({
         <Suspense fallback={null}>
           <OnboardingTour />
         </Suspense>
-        <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[256px] overflow-x-hidden max-w-full">
-          <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
-            <NotificationBell id="notification-bell-desktop" />
-          </div>
-          <div className="min-h-screen flex flex-col">
+        <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[256px] max-w-full flex flex-col">
+            <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
+              <NotificationBell id="notification-bell-desktop" />
+            </div>
             <PullToRefresh onRefresh={triggerRefresh}>
-              <div className="min-h-screen flex flex-col">
+              <div className="flex-1 flex flex-col">
                 <GlobalEmpireHeader />
                 <div className="flex-1">
                   <SlotGuard>
@@ -43,7 +42,6 @@ export default function AuthenticatedLayout({
                 </div>
               </div>
             </PullToRefresh>
-          </div>
         </main>
         <div className="fixed top-4 right-4 z-[100] lg:hidden flex items-center gap-2">
           <NotificationBell id="notification-bell-mobile" />

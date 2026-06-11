@@ -170,7 +170,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
       <motion.div
         animate={controls}
         style={{ y }}
-        className="relative z-10 w-full min-h-screen bg-theme-surface shadow-[0_-20px_50px_rgba(0,0,0,0.5)]"
+        className="relative z-10 w-full bg-theme-surface shadow-[0_-20px_50px_rgba(0,0,0,0.5)] flex flex-col flex-1"
       >
         {children}
       </motion.div>
