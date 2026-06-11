@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Target, TrendingUp, ChevronRight, Award, Minus, Maximize2, DollarSign } from 'lucide-react';
+import { Target, TrendingUp, ChevronRight, Award, Minus, Maximize2, DollarSign, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { GrowthBurst } from './GrowthBurst';
+import { useEmpire } from '@/lib/EmpireContext';
 
 interface GrowthTrackerProps {
   goalTitle?: string;
@@ -12,6 +13,7 @@ interface GrowthTrackerProps {
   targetValue?: number;
   unit?: string;
   progress?: number;
+  subscribers?: number;
 }
 
 export const GrowthTracker = ({
@@ -20,8 +22,10 @@ export const GrowthTracker = ({
   allTimeEarnings = 0,
   targetValue = 1000,
   unit = "$",
-  progress
+  progress,
+  subscribers = 0
 }: GrowthTrackerProps) => {
+  const { isAdmin } = useEmpire();
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [localTarget, setLocalTarget] = useState(targetValue);
@@ -133,35 +137,56 @@ export const GrowthTracker = ({
         </div>
 
         <div className="flex-1 space-y-6">
-          <p className="text-slate-400 text-xs font-medium italic">Monitor your path to financial dominance and strategic milestones.</p>
+          <p className="text-slate-400 text-xs font-medium italic">
+            {isAdmin 
+              ? "Platform dominance and global user acquisition metrics." 
+              : "Monitor your path to financial dominance and strategic milestones."
+            }
+          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-theme-background/30 rounded-3xl p-6 border border-theme">
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Monthly Empire Earnings</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">
+                {isAdmin ? "Platform Monthly Yield" : "Monthly Empire Earnings"}
+              </span>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                   <DollarSign className="w-5 h-5 text-emerald-500" />
                 </div>
-                <span className="text-2xl font-black text-foreground">{unit}{(monthlyEarnings || 0).toLocaleString()}</span>
+                <span className="text-2xl font-black text-foreground">
+                  {unit}{isAdmin 
+                    ? (subscribers * 40 + (allTimeEarnings * 0.04)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) 
+                    : (monthlyEarnings || 0).toLocaleString()}
+                </span>
               </div>
             </div>
             <div className="bg-theme-background/30 rounded-3xl p-6 border border-theme">
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Monthly Revenue Target</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">
+                {isAdmin ? "Active Global Users" : "Monthly Revenue Target"}
+              </span>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                  <Target className="w-5 h-5 text-amber-500" />
+                  {isAdmin ? <Users className="w-5 h-5 text-amber-500" /> : <Target className="w-5 h-5 text-amber-500" />}
                 </div>
-                <span className="text-2xl font-black text-foreground">{unit}{(localTarget || 0).toLocaleString()}</span>
+                <span className="text-2xl font-black text-foreground">
+                  {isAdmin ? (subscribers > 0 ? subscribers.toLocaleString() : "—") : `${unit}${(localTarget || 0).toLocaleString()}`}
+                </span>
               </div>
             </div>
           </div>
 
           <div className="bg-emerald-500/5 rounded-3xl p-6 border border-emerald-500/20">
-            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/60 block mb-2">TOTAL ALL TIME EARNINGS</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/60 block mb-2">
+              {isAdmin ? "TOTAL PLATFORM VOLUME" : "TOTAL ALL TIME EARNINGS"}
+            </span>
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-black text-foreground tracking-tighter">{unit}{(allTimeEarnings || 0).toLocaleString()}</span>
+              <span className="text-3xl font-black text-foreground tracking-tighter">
+                {unit}{isAdmin ? (allTimeEarnings || 0).toLocaleString() : (allTimeEarnings || 0).toLocaleString()}
+              </span>
               <div className="px-3 py-1 bg-emerald-500/10 rounded-full">
-                <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">Lifetime Yield</span>
+                <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">
+                  {isAdmin ? "Global GMV" : "Lifetime Yield"}
+                </span>
               </div>
             </div>
           </div>

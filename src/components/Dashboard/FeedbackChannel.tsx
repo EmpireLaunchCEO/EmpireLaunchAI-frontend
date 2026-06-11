@@ -22,15 +22,31 @@ export function FeedbackBox({ className }: FeedbackBoxProps) {
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log("FEEDBACK SUBMITTED:", { message, rating });
-    
-    setIsSubmitting(false);
-    setIsSent(true);
-    setMessage('');
-    setRating(0);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': 'system' // In a real scenario, this is handled by auth middleware
+        },
+        body: JSON.stringify({
+          userId: 'system', // Mock user for now, backend will identify
+          rating,
+          comment: message
+        }),
+      });
+
+      if (!response.ok) throw new Error('Feedback transmission failed');
+      
+      setIsSent(true);
+      setMessage('');
+      setRating(0);
+    } catch (err) {
+      console.error('Feedback error:', err);
+    } finally {
+      setIsSubmitting(true); // Keep spinner for a moment for "feel"
+      setTimeout(() => setIsSubmitting(false), 1000);
+    }
     
     setTimeout(() => {
       setIsSent(false);

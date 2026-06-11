@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity, Minus, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
+import { useEmpire } from '@/lib/EmpireContext';
 
 interface FinancialCommandProps {
   withholdableEarnings?: number;
@@ -15,12 +16,13 @@ interface FinancialCommandProps {
 }
 
 export function FinancialCommand({ 
-  withholdableEarnings = 125050, 
-  securedDues = 18000, 
-  growthScore = 92,
+  withholdableEarnings = 0, 
+  securedDues = 0, 
+  growthScore = 0,
   businessId = "1",
   onActivateGrowthProtocol
 }: Partial<FinancialCommandProps>) {
+  const { isAdmin } = useEmpire();
   const [infraBalances, setInfraBalances] = useState<InfrastructureBalance[]>([]);
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -31,7 +33,7 @@ export function FinancialCommand({
     if (saved === 'true') setIsMinimized(true);
 
     const loadInfra = async () => {
-      const bals = await infrastructureService.getBalances();
+      const bals = await infrastructureService.getBalances().catch(() => []);
       setInfraBalances(bals);
     };
     loadInfra();
@@ -49,16 +51,23 @@ export function FinancialCommand({
     return `${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
   };
 
-  const subscriptions = [
-    { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },
-    { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
-    { name: "EmpireLaunch AI Platform", amount: 4000, date: "June 20, 2024", type: "app" },
-  ];
+  // Logic: Owner sees Platform Revenue, Customer sees Business Revenue
+  const subscriptions = isAdmin ? [
+    { name: "Active User Subscriptions", amount: 1240 * 4000, date: "Real-time sync", type: "platform" },
+  ] : (withholdableEarnings > 0 ? [
+    { name: "EmpireLaunch AI Platform", amount: 4000, date: "Next: July 01, 2024", type: "app" },
+  ] : []);
 
-  const dues = [
-    { name: "Etsy Listing Fees", amount: 420, date: "June 30, 2024" },
-    { name: "Fiverr Commission", amount: 1250, date: "June 30, 2024" },
-  ];
+  const dues = isAdmin ? [
+    { name: "Total Success-Shares Collected", amount: 1542000, date: "Platform Total" },
+  ] : (withholdableEarnings >= 100000 ? [
+    { name: "Etsy Listing Fees", amount: 420, date: "Auto-Deduct Pending" },
+    { name: "Fiverr Commission", amount: 1250, date: "Auto-Deduct Pending" },
+  ] : []);
+
+  const successShareAmount = isAdmin ? 1542000 : (withholdableEarnings / 100) * 0.04;
+  const successShareLabel = isAdmin ? "Platform Success-Shares" : "Success-Share (Due)";
+  const successShareDesc = isAdmin ? "Total commission from all user sales" : "4% platform partner fee";
 
   if (isMinimized) {
     return (
@@ -172,17 +181,17 @@ export function FinancialCommand({
           <div className="space-y-6">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
               <CreditCard className="w-3 h-3" />
-              Active Subscriptions
+              {isAdmin ? "Platform Recurring Revenue" : "Active Subscriptions"}
             </div>
             <div className="space-y-3">
               {subscriptions.map((sub, i) => (
                 <div key={i} className={cn(
                   "p-4 rounded-2xl border flex items-center justify-between transition-all",
-                  sub.type === 'app' ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"
+                  (sub.type === 'app' || sub.type === 'platform') ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"
                 )}>
                   <div className="flex items-center gap-3">
-                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", sub.type === 'app' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
-                      {sub.type === 'app' ? <AppWindow className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
+                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", (sub.type === 'app' || sub.type === 'platform') ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
+                      {(sub.type === 'app' || sub.type === 'platform') ? <AppWindow className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
                     </div>
                     <div>
                       <p className="text-xs font-black uppercase italic">{sub.name}</p>
@@ -193,24 +202,29 @@ export function FinancialCommand({
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>
-                    {sub.type === 'app' && <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>}
+                    {(sub.type === 'app' || sub.type === 'platform') && <span className="text-[8px] font-black text-primary uppercase">{isAdmin ? "Total MRR" : "Platform Due"}</span>}
                   </div>
                 </div>
               ))}
+              {subscriptions.length === 0 && (
+                <div className="p-8 border-2 border-dashed border-theme rounded-3xl text-center">
+                  <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">No active obligations</p>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Dues Section */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">
+            <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest">
               <ShieldCheck className="w-3 h-3" />
-              Marketplace Dues
+              {successShareLabel}
             </div>
             <div className="space-y-3">
               {dues.map((due, i) => (
                 <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-500">
+                    <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-emerald-500">
                       <Bucket className="w-4 h-4" />
                     </div>
                     <div>
@@ -220,7 +234,7 @@ export function FinancialCommand({
                       </div>
                     </div>
                   </div>
-                  <p className="text-sm font-black italic text-amber-500">{formatCurrency(due.amount)}</p>
+                  <p className="text-sm font-black italic text-emerald-500">{formatCurrency(due.amount)}</p>
                 </div>
               ))}
 
@@ -232,13 +246,15 @@ export function FinancialCommand({
                       <TrendingUp className="w-5 h-5 text-emerald-400" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-black uppercase tracking-wider text-emerald-400">Success-Shares</h4>
-                      <p className="text-[9px] font-medium text-emerald-400/70">Your share of empire growth revenue</p>
+                      <h4 className="text-xs font-black uppercase tracking-wider text-emerald-400">{successShareLabel}</h4>
+                      <p className="text-[9px] font-medium text-emerald-400/70">{successShareDesc}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-black text-emerald-400 italic">$847.20</p>
-                    <span className="text-[8px] font-black text-emerald-400/70 uppercase tracking-widest">This Period</span>
+                    <p className="text-lg font-black text-emerald-400 italic">
+                      ${(successShareAmount / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </p>
+                    <span className="text-[8px] font-black text-emerald-400/70 uppercase tracking-widest">{isAdmin ? "Platform Total" : "4% Success-Share"}</span>
                   </div>
                 </div>
 
@@ -246,18 +262,20 @@ export function FinancialCommand({
                   <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: '0%' }}
-                      animate={{ width: '68%' }}
+                      animate={{ width: `${Math.min(100, ((withholdableEarnings / 100) % 1000) / 10)}%` }}
                       transition={{ duration: 1.5, ease: 'easeOut' }}
                       className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"
                     />
                   </div>
-                  <span className="text-[9px] font-black text-emerald-400 uppercase tracking-wider">68%</span>
+                  <span className="text-[9px] font-black text-emerald-400 uppercase tracking-wider">
+                    {Math.floor(((withholdableEarnings / 100) % 1000) / 10)}%
+                  </span>
                 </div>
 
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center gap-2 text-[8px] font-black text-muted-foreground uppercase tracking-widest">
                     <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                    Auto-allocated from platform revenue
+                    $40 fee per $1,000 revenue
                   </div>
                   <button className="flex items-center gap-1.5 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-[8px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all">
                     <ArrowUpRight className="w-3 h-3" />

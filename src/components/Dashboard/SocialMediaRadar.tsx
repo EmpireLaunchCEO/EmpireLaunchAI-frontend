@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import {
   BrainCircuit,
   TrendingUp,
@@ -84,7 +85,29 @@ function formatNumber(n: number): string {
   return n.toString();
 }
 
-function PlatformIcon({ platform, className }: { platform: string; className?: string }) {
+const PLATFORM_3D_ICONS: Record<string, string> = {
+  tiktok: '/brands/tiktok_128.png',
+  instagram: '/brands/instagram_128.png',
+  youtube: '/brands/youtube_128.png',
+  etsy: '/brands/etsy_128.png',
+  fiverr: '/brands/fiverr_128.png',
+  gmail: '/brands/gmail_128.png',
+  facebook: '/brands/facebook_128.png',
+  canva: '/brands/canva_128.png',
+  kittl: '/brands/kittl_128.png',
+  capcut: '/brands/capcut_128.png',
+};
+
+function PlatformIcon({ platform, className, size = 16 }: { platform: string; className?: string; size?: number }) {
+  const icon3d = PLATFORM_3D_ICONS[platform];
+  if (icon3d) {
+    return (
+      <div className="relative flex items-center justify-center bg-white rounded-lg p-0.5 border border-theme/50" style={{ width: size + 8, height: size + 8 }}>
+        <Image src={icon3d} alt={platform} width={size} height={size} className="object-contain" />
+      </div>
+    );
+  }
+
   const icons: Record<string, React.ReactNode> = {
     tiktok: <Music2 className={className} />,
     instagram: <Camera className={className} />,
@@ -509,7 +532,7 @@ export function SocialMediaRadar() {
                 {connectedPlatforms.length > 0 ? (
                   <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4 bg-theme-surface/50">
                     <div className="flex items-center gap-3">
-                      <Stars className="w-5 h-5 text-primary" />
+                      <BrandedGlobe size="sm" spinning />
                       <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
                     </div>
                     <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">

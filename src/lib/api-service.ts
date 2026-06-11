@@ -59,6 +59,7 @@ export interface EmpireHealth {
   growthScore: number;
   revenue: number;
   pendingDues: number;
+  subscribers: number;
   platformBreakdown: {
     platform: string;
     revenue: number;
@@ -406,15 +407,16 @@ export const analyticsService = {
       if (res.ok) {
          const data = await res.json();
          return {
-           growthScore: data.progress || 84,
+           growthScore: data.progress || 0,
            revenue: data.health?.revenue || 0,
            pendingDues: data.health?.pendingDues || 0,
+           subscribers: data.health?.subscribers || 0,
            platformBreakdown: data.health?.platformBreakdown || []
          };
       }
     } catch (e) {}
 
-    return { growthScore: 84, revenue: 0, pendingDues: 0, platformBreakdown: [] };
+    return { growthScore: 0, revenue: 0, pendingDues: 0, subscribers: 0, platformBreakdown: [] };
   },
 
   async getRevenueTransactions(): Promise<RevenueTransaction[]> {

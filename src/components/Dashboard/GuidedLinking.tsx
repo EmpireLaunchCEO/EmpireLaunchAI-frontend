@@ -476,8 +476,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
           >
             <div className="relative z-10 flex flex-col md:flex-row gap-8">
               <div className="shrink-0">
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-[24px] md:rounded-[28px] bg-theme-gradient flex items-center justify-center shadow-2xl shadow-primary/20 relative">
-                  <Stars className="w-8 h-8 md:w-10 md:h-10 text-white" />
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-[24px] md:rounded-[28px] bg-white flex items-center justify-center shadow-2xl relative overflow-hidden border border-theme">
+                  <BrandedGlobe size="lg" spinning={isTyping} />
                   {isTyping && (
                     <div className="absolute -top-2 -right-2 bg-primary rounded-full p-2 animate-bounce shadow-lg">
                       <div className="flex gap-1">

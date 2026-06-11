@@ -47,9 +47,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup' }: SignUpFormProp
   return (
     <div className="space-y-8">
       <div className="text-center space-y-4">
-        <div className="w-16 h-16 bg-primary/10 rounded-2xl mx-auto flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
-          <ShieldCheck className="w-8 h-8 text-primary" />
-        </div>
+        <BrandedGlobe size="2xl" className="mx-auto" />
         <h2 className="text-2xl md:text-3xl font-black text-theme-gradient tracking-tight uppercase italic">
           {isLogin ? 'Neural Access.' : 'Neural Identity.'}
         </h2>

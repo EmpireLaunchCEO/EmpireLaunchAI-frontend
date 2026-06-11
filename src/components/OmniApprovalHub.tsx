@@ -19,10 +19,13 @@ import {
   Zap,
   Mail,
   Send,
-  Sparkles
+  Sparkles,
+  ExternalLink
 } from 'lucide-react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 // --- Types ---
 type AssetType = 'video' | 'script' | 'design';
@@ -43,23 +46,40 @@ const MOCK_ASSETS: ApprovalAsset[] = [
   { id: 'd1', type: 'design', title: 'Etsy Listing Hero Image', previewUrl: '/placeholder-design.jpg', suggestedPlatforms: ['etsy'] },
 ];
 
-const platformIcons: Record<string, any> = {
-  tiktok: Music2,
-  instagram: Camera,
-  youtube: Youtube,
-  etsy: ShoppingBag,
-  fiverr: Zap,
-  gmail: Mail,
+const PLATFORM_3D_ICONS: Record<string, string> = {
+  tiktok: '/brands/tiktok_128.png',
+  instagram: '/brands/instagram_128.png',
+  youtube: '/brands/youtube_128.png',
+  etsy: '/brands/etsy_128.png',
+  fiverr: '/brands/fiverr_128.png',
+  gmail: '/brands/gmail_128.png',
+  facebook: '/brands/facebook_128.png',
+  canva: '/brands/canva_128.png',
+  kittl: '/brands/kittl_128.png',
+  capcut: '/brands/capcut_128.png',
 };
 
-const platformColors: Record<string, string> = {
-  tiktok: 'text-pink-400',
-  instagram: 'text-purple-400',
-  youtube: 'text-red-400',
-  etsy: 'text-orange-400',
-  fiverr: 'text-emerald-400',
-  gmail: 'text-red-400',
-};
+function PlatformIcon({ platform, className, size = 20 }: { platform: string; className?: string; size?: number }) {
+  const icon3d = PLATFORM_3D_ICONS[platform];
+  if (icon3d) {
+    return (
+      <div className="relative flex items-center justify-center bg-white rounded-lg p-0.5 border border-theme/50" style={{ width: size + 8, height: size + 8 }}>
+        <Image src={icon3d} alt={platform} width={size} height={size} className="object-contain" />
+      </div>
+    );
+  }
+
+  const icons: Record<string, any> = {
+    tiktok: Music2,
+    instagram: Camera,
+    youtube: Youtube,
+    etsy: ShoppingBag,
+    fiverr: Zap,
+    gmail: Mail,
+  };
+  const Icon = icons[platform] || ExternalLink;
+  return <Icon className={className} />;
+}
 
 // --- Components ---
 
@@ -231,29 +251,28 @@ export function OmniApprovalHub() {
                  <div className="grid grid-cols-2 gap-4">
                     {connectedPlatforms.map((platform) => {
                        const id = platform.toLowerCase();
-                       const Icon = platformIcons[id] || Zap;
                        const isSelected = selectedDestinations.includes(id);
-                       
+
                        return (
                           <button
                             key={id}
                             onClick={() => toggleDestination(id)}
                             className={cn(
                                "relative flex flex-col items-center justify-center p-6 rounded-[28px] border-2 transition-all group",
-                               isSelected 
-                                ? "bg-theme-surface border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]" 
+                               isSelected
+                                ? "bg-theme-surface border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]"
                                 : "bg-theme-background border-theme hover:border-slate-300"
                             )}
                           >
-                             <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-colors", isSelected ? platformColors[id] : "text-slate-400 group-hover:text-foreground")}>
-                                <Icon className="w-6 h-6" />
+                             <div className="mb-3">
+                                <PlatformIcon platform={id} size={24} />
                              </div>
                              <span className={cn("text-[10px] font-black uppercase tracking-widest", isSelected ? "text-foreground" : "text-slate-400")}>
                                 {platform}
                              </span>
 
                              {isSelected && (
-                                <motion.div 
+                                <motion.div
                                   initial={{ scale: 0 }}
                                   animate={{ scale: 1 }}
                                   className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center text-white border-2 border-theme-surface shadow-lg"
@@ -288,9 +307,7 @@ export function OmniApprovalHub() {
                  </div>
 
                  <div className="pt-6 border-t border-theme flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-theme-background flex items-center justify-center text-[10px] font-black text-primary border border-theme">
-                       AI
-                    </div>
+                 <BrandedGlobe size="sm" spinning />
                     <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest leading-relaxed">
                        Neural Suggestion: Deployment to {currentAsset.suggestedPlatforms.join(', ')} recommended for max ROI.
                     </p>
