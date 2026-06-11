@@ -41,11 +41,6 @@ export default function AuthenticatedLayout({
                 </div>
               </div>
             </PullToRefresh>
-            
-            {/* Global Feedback Footer */}
-            <div className="p-4 md:p-8 max-w-7xl mx-auto w-full mt-auto">
-              <FeedbackBox />
-            </div>
           </div>
         </main>
         <div className="fixed top-4 right-4 z-[100] lg:hidden flex items-center gap-2">

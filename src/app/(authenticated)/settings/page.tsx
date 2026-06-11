@@ -30,6 +30,7 @@ import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 import { SupportHub } from '@/components/Settings/SupportHub';
+import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
   if (platform.toLowerCase() === 'stripe') {
@@ -561,6 +562,10 @@ export default function SettingsPage() {
               )}
             </main>
           </div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <FeedbackBox />
+          </motion.div>
 
           {/* Version Verification */}
           <div className="flex justify-center pb-20">

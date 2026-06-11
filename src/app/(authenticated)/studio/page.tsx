@@ -19,6 +19,7 @@ import {
 import { cn } from '@/lib/utils';
 import { InspirationGallery, SuggestionBubbles } from '@/components/Dashboard/InspirationGallery';
 import { DNAVaultCounter } from '@/components/Dashboard/DNAVaultCounter';
+import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FileUploadDropZone, UploadState } from '@/components/Dashboard/FileUploadDropZone';
 import { AIRenderLog, generateMockRenderLogs, RenderLogEntry } from '@/components/Dashboard/AIRenderLog';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
@@ -558,8 +559,12 @@ export default function StudioPage() {
             )}
           </AnimatePresence>
 
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-12">
+            <FeedbackBox />
+          </motion.div>
+
           {/* Version Verification */}
-          <div className="flex justify-center pb-20">
+          <div className="flex justify-center pb-20 pt-12">
             <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
               Command Center v3.0.2 (Neural Sync Active)
             </span>

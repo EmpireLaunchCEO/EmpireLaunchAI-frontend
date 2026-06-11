@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 
 import { VerticalPlatformRadar } from '@/components/Dashboard/VerticalPlatformRadar';
+import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 
 const PLATFORM_LOGOS: Record<string, string> = {
@@ -208,6 +209,10 @@ export default function LinkCenterPage() {
               </div>
             </section>
           )}
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <FeedbackBox />
+          </motion.div>
 
           {/* Version Verification */}
           <div className="flex justify-center pb-20">

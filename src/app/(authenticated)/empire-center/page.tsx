@@ -41,6 +41,7 @@ import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 import { OmniApprovalHub as PendingApprovals } from '@/components/OmniApprovalHub';
+import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 
 import { NicheCalibrationBox } from '@/components/Dashboard/SuccessHub/NicheCalibrationBox';
 
@@ -118,7 +119,6 @@ export default function EmpireCenterPage() {
                       <h3 className="text-xl font-black text-foreground uppercase tracking-tight italic">Action Required</h3>
                       <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full">Neural Sync Active</span>
                     </div>
-                    <PendingApprovals />
                 </section>
               </motion.div>
             )}
@@ -183,6 +183,10 @@ export default function EmpireCenterPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <FeedbackBox />
+          </motion.div>
           {/* Version Verification */}
           <div className="flex justify-center pb-20">
             <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
