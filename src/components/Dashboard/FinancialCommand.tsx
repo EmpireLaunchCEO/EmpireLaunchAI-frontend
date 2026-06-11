@@ -92,12 +92,12 @@ export function FinancialCommand({
         <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Empire Finances</h3>
       </div>
 
-      <div className="absolute top-8 right-8 z-20">
+      <div className="absolute top-4 right-5 z-20">
         <button 
           onClick={toggleMinimize}
-          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
         >
-          <Minus className="w-5 h-5" />
+          <Minus className="w-4 h-4" />
         </button>
       </div>
 
