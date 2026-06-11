@@ -76,7 +76,8 @@ export const GrowthTracker = ({
     );
   }
 
-  const percentage = Math.max(0, Math.min(100, progress !== undefined ? progress : Math.round(((monthlyEarnings || 0) / (localTarget || 1)) * 100))) || 0;
+  // REALITY GROUNDING: Percentage is 0 until real earnings exist
+  const percentage = progress !== undefined ? progress : (monthlyEarnings > 0 ? Math.round(((monthlyEarnings || 0) / (localTarget || 1)) * 100) : 0);
 
   return (
     <div className="bg-theme-surface rounded-[40px] p-8 border-2 !border-white/20 shadow-2xl relative overflow-hidden group">
@@ -181,7 +182,7 @@ export const GrowthTracker = ({
             </span>
             <div className="flex items-center justify-between">
               <span className="text-3xl font-black text-foreground tracking-tighter">
-                {unit}{isAdmin ? (allTimeEarnings || 0).toLocaleString() : (allTimeEarnings || 0).toLocaleString()}
+                {unit}{(allTimeEarnings || 0).toLocaleString()}
               </span>
               <div className="px-3 py-1 bg-emerald-500/10 rounded-full">
                 <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">
