@@ -138,24 +138,24 @@ export function GeminiBrainOverlay() {
           onPointerUp={handlePointerUp}
           onClick={toggleChat}
           className={cn(
-            "w-16 h-16 rounded-full shadow-2xl flex items-center justify-center relative overflow-hidden transition-all duration-500",
-            isOpen ? "bg-slate-900 border-2 border-primary" : "bg-primary border-4 border-white/20",
+            "w-14 h-14 rounded-full shadow-2xl flex items-center justify-center relative overflow-hidden transition-all duration-500",
+            "bg-slate-950 border-2 border-primary/50 hover:border-primary",
             isDraggable && "ring-4 ring-white animate-pulse scale-110"
           )}
         >
           {isOpen ? (
-            <X className="w-8 h-8 text-primary relative z-10" />
+            <X className="w-6 h-6 text-primary relative z-10" />
           ) : (
-            <div className="relative w-10 h-10">
+            <div className="relative w-9 h-9 rounded-full overflow-hidden">
               <img 
                 src="/neural-core.webp" 
                 alt="Neural Brain" 
-                className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_12px_rgba(255,255,255,0.5)]"
+                className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]"
               />
               <motion.div 
-                animate={{ opacity: [0.4, 1, 0.4], scale: [0.9, 1.1, 0.9] }}
-                transition={{ repeat: Infinity, duration: 2 }}
-                className="absolute inset-0 bg-white/30 blur-md rounded-full -z-10"
+                animate={{ opacity: [0.3, 0.6, 0.3], scale: [0.8, 1.2, 0.8] }}
+                transition={{ repeat: Infinity, duration: 2.5 }}
+                className="absolute inset-0 bg-primary/20 blur-lg rounded-full -z-10"
               />
             </div>
           )}
@@ -164,9 +164,9 @@ export function GeminiBrainOverlay() {
           {isProcessing && (
             <motion.div
               initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: [0, 0.5, 0], scale: [1, 2, 1] }}
+              animate={{ opacity: [0, 0.4, 0], scale: [1, 1.5, 1] }}
               transition={{ repeat: Infinity, duration: 2 }}
-              className="absolute inset-0 bg-white rounded-full blur-xl"
+              className="absolute inset-0 bg-primary/30 rounded-full blur-xl"
             />
           )}
         </motion.button>
