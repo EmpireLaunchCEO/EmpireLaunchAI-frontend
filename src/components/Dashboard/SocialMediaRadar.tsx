@@ -27,7 +27,8 @@ import {
   Mail,
   Play,
   Palette,
-  ExternalLink
+  ExternalLink,
+  Stars
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';

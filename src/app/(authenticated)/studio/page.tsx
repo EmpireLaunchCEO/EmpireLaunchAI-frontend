@@ -177,10 +177,6 @@ export default function StudioPage() {
     setHarvestActivity([...demoItems, ...harvestActivity]);
   };
 
-  const handleRefresh = async () => {
-    await new Promise(r => setTimeout(r, 1000));
-  };
-
   const handleSuggestion = (suggestion: string) => {
     console.log('Studio suggestion:', suggestion);
   };

@@ -1,3 +1,5 @@
+"use client";
+
 import { Sidebar } from "@/components/Sidebar";
 import { MobileNav } from "@/components/MobileNav";
 import { SubscriptionGuard } from "@/components/SubscriptionGuard";
