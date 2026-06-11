@@ -84,7 +84,7 @@ export function BrandedGlobe({
   return (
     <div 
       className={cn(
-        "relative flex items-center justify-center shrink-0 bg-white shadow-2xl overflow-hidden border border-white/20", 
+        "relative flex items-center justify-center shrink-0 bg-white shadow-2xl overflow-hidden", 
         className
       )}
       style={{ 
