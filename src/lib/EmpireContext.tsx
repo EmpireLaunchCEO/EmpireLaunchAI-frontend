@@ -434,26 +434,14 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              setActiveEmpireId('1');
              localStorage.setItem('activeEmpireId', '1');
              
-             // Sync the internal state maps so derived values (connectedPlatforms, etc) work
-             const ownerPlatforms = ['gmail', 'etsy', 'tiktok', 'instagram', 'youtube', 'fiverr', 'stripe', 'canva', 'kittl', 'capcut', 'bannerbear'];
-             setPlatformsByEmpire(prev => ({ ...prev, ['1']: ownerPlatforms }));
-             setOnboardedByEmpire(prev => ({ ...prev, ['1']: true }));
-             setLinkingCompleteByEmpire(prev => ({ ...prev, ['1']: true }));
-
-             // Pre-fill vault data for standard apps to show handles
-             if (typeof window !== 'undefined') {
-               ownerPlatforms.forEach(p => {
-                 const key = `empire_vault_${p}`;
-                 if (!localStorage.getItem(key)) {
-                   localStorage.setItem(key, JSON.stringify({ 
-                     connected: true, 
-                     handle: p === 'gmail' ? OWNER_EMAIL : `@EmpireLaunch_${p}`,
-                     timestamp: Date.now() 
-                   }));
-                 }
-               });
-               localStorage.setItem('platformsByEmpire', JSON.stringify({ '1': ownerPlatforms }));
+             // WE REMOVE THE PRE-FILLED PLATFORMS so the owner can test the empty state.
+             // Only if they haven't manually linked anything yet.
+             const savedPlatforms = localStorage.getItem('platformsByEmpire');
+             if (!savedPlatforms) {
+               setPlatformsByEmpire({ '1': [] });
+               setLinkingCompleteByEmpire({ '1': false });
              }
+
         }
 
         // Auto-detect Owner Admin Status

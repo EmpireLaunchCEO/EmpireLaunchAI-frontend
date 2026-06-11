@@ -110,39 +110,31 @@ function PlatformSummaryCard({ summary }: { summary: any }) {
       initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-theme-surface border-2 border-theme rounded-[28px] overflow-hidden hover:border-primary/30 transition-all"
+      className="bg-theme-surface border-2 border-theme rounded-[24px] overflow-hidden hover:border-primary/30 transition-all shadow-sm"
     >
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-5 flex items-center justify-between text-left"
+        className="w-full p-4 flex items-center justify-between text-left"
       >
-        <div className="flex items-center gap-4">
-          <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center border", platformColors[summary.platform])}>
-            <PlatformIcon platform={summary.platform} className="w-5 h-5" />
+        <div className="flex items-center gap-3">
+          <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center border", platformColors[summary.platform])}>
+            <PlatformIcon platform={summary.platform} className="w-4 h-4" />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h4 className="font-black text-foreground uppercase tracking-tight">{platformLabels[summary.platform] || summary.platform}</h4>
-              <span className={cn(
-                "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full",
-                summary.weeklyViewsTrend === 'up'
-                  ? "bg-emerald-500/10 text-emerald-400"
-                  : "bg-red-500/10 text-red-400"
-              )}>
-                {summary.weeklyViewsChange}
-              </span>
+              <h4 className="font-black text-foreground uppercase tracking-tight text-xs truncate">{platformLabels[summary.platform] || summary.platform}</h4>
             </div>
-            <p className="text-[10px] text-muted-foreground font-bold mt-0.5">
+            <p className="text-[9px] text-muted-foreground font-bold mt-0.5 truncate">
               {summary.handle}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 shrink-0">
           <div className="text-right">
-            <p className="text-lg font-black text-foreground">{formatNumber(summary.totalViews)}</p>
-            <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Views</p>
+            <p className="text-sm font-black text-foreground">{formatNumber(summary.totalViews)}</p>
+            <p className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">Views</p>
           </div>
-          {expanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+          {expanded ? <ChevronUp className="w-3 h-3 text-muted-foreground" /> : <ChevronDown className="w-3 h-3 text-muted-foreground" />}
         </div>
       </button>
 
@@ -154,36 +146,28 @@ function PlatformSummaryCard({ summary }: { summary: any }) {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5 space-y-4 border-t border-theme pt-4">
+            <div className="px-4 pb-4 space-y-3 border-t border-theme pt-3 bg-theme-background/30">
               {/* Metrics Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="p-3 bg-theme-background rounded-2xl border border-theme">
-                  <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Likes</p>
-                  <p className="text-sm font-black text-foreground mt-1">{formatNumber(summary.totalLikes)}</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="p-2 bg-theme-background rounded-xl border border-theme">
+                  <p className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">Likes</p>
+                  <p className="text-xs font-black text-foreground mt-0.5">{formatNumber(summary.totalLikes)}</p>
                 </div>
-                <div className="p-3 bg-theme-background rounded-2xl border border-theme">
-                  <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Comments</p>
-                  <p className="text-sm font-black text-foreground mt-1">{formatNumber(summary.totalComments)}</p>
-                </div>
-                <div className="p-3 bg-theme-background rounded-2xl border border-theme">
-                  <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Shares</p>
-                  <p className="text-sm font-black text-foreground mt-1">{formatNumber(summary.totalShares)}</p>
-                </div>
-                <div className="p-3 bg-theme-background rounded-2xl border border-theme">
-                  <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Engagement</p>
-                  <p className="text-sm font-black text-foreground mt-1">{summary.avgEngagementRate}%</p>
+                <div className="p-2 bg-theme-background rounded-xl border border-theme">
+                  <p className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">Engage</p>
+                  <p className="text-xs font-black text-foreground mt-0.5">{summary.avgEngagementRate}%</p>
                 </div>
               </div>
 
               {/* AI Strategy Suggestion */}
-              <div className="p-4 bg-gradient-to-r from-primary/5 to-transparent rounded-2xl border border-primary/10 flex items-start gap-3">
-                <BrainCircuit className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                <p className="text-[10px] text-muted-foreground font-medium italic leading-relaxed">
-                  AI Strategy: {summary.platform === 'tiktok'
-                    ? 'Your TikTok engagement is strong (+24% WoW). Increase posting frequency to 2x/day for max reach.'
+              <div className="p-3 bg-gradient-to-r from-primary/5 to-transparent rounded-xl border border-primary/10 flex items-start gap-2">
+                <BrainCircuit className="w-3 h-3 text-primary mt-0.5 shrink-0" />
+                <p className="text-[9px] text-muted-foreground font-medium italic leading-tight">
+                  Strategy: {summary.platform === 'tiktok'
+                    ? 'Engagement is strong. Post 2x/day.'
                     : summary.platform === 'instagram'
-                    ? 'Instagram views dipped slightly. Try Reels with trending audio to regain momentum.'
-                    : 'YouTube growth is accelerating (+31%). Consider a weekly series to build subscriber velocity.'}
+                    ? 'Views dipped. Try trending Reels.'
+                    : 'Growth is up. Focus on shorts.'}
                 </p>
               </div>
             </div>
@@ -406,9 +390,11 @@ export function SocialMediaRadar() {
             className="space-y-4"
           >
             {platformSummaries.length > 0 ? (
-              platformSummaries.map((summary: any, i: number) => (
-                <PlatformSummaryCard key={summary.platform} summary={summary} />
-              ))
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {platformSummaries.map((summary: any, i: number) => (
+                  <PlatformSummaryCard key={summary.platform} summary={summary} />
+                ))}
+              </div>
             ) : (
               <div className="p-12 text-center space-y-4 bg-theme-surface rounded-[32px] border-2 border-dashed border-theme opacity-50 grayscale">
                 <div className="w-16 h-16 bg-theme-background rounded-full flex items-center justify-center mx-auto">
