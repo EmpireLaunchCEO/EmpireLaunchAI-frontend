@@ -18,13 +18,13 @@ export function MobileNav() {
   const { isLinkingComplete } = useEmpire();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 lg:bottom-8 lg:left-1/2 lg:-translate-x-1/2 lg:w-fit lg:min-w-[500px] bg-theme-surface/80 lg:bg-slate-900/90 backdrop-blur-xl border-t lg:border border-theme lg:border-white/10 px-6 py-3 lg:px-8 lg:py-4 z-[100] flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.05)] lg:shadow-2xl lg:rounded-full">
+    <div className="fixed bottom-0 left-0 right-0 lg:bottom-8 lg:left-1/2 lg:-translate-x-1/2 lg:w-fit lg:min-w-[500px] bg-theme-surface/90 lg:bg-slate-900/95 backdrop-blur-2xl border-t lg:border border-theme lg:border-white/10 px-6 py-3 lg:px-8 lg:py-4 z-[9999] flex justify-between items-center shadow-[0_-10px_60px_rgba(0,0,0,0.3)] lg:shadow-2xl lg:rounded-full pointer-events-auto">
         {/* Home */}
         <Link
           href="/dashboard"
           id="nav-home"
           className={cn(
-            "flex flex-col items-center gap-1 transition-all",
+            "flex flex-col items-center gap-1 transition-all relative z-[10000] cursor-pointer",
             pathname === '/dashboard' ? "scale-110" : "text-slate-500 hover:text-white"
           )}
         >
@@ -47,7 +47,7 @@ export function MobileNav() {
           href="/empire-center"
           id="nav-ec"
           className={cn(
-            "flex flex-col items-center gap-1 transition-all",
+            "flex flex-col items-center gap-1 transition-all relative z-[10000] cursor-pointer",
             pathname === '/empire-center' ? "scale-110" : "text-slate-500 hover:text-white"
           )}
         >
@@ -70,7 +70,7 @@ export function MobileNav() {
           href="/studio"
           id="nav-studio"
           className={cn(
-            "flex flex-col items-center gap-1 transition-all relative group",
+            "flex flex-col items-center gap-1 transition-all relative group z-[10000] cursor-pointer",
             pathname === '/studio' ? "scale-110" : "text-blue-400 hover:text-blue-300"
           )}
         >
@@ -96,7 +96,7 @@ export function MobileNav() {
           href="/link-center"
           id="nav-lc"
           className={cn(
-            "flex flex-col items-center gap-1 transition-all",
+            "flex flex-col items-center gap-1 transition-all relative z-[10000] cursor-pointer",
             pathname === '/link-center' ? "scale-110" : "text-slate-500 hover:text-white"
           )}
         >
@@ -119,7 +119,7 @@ export function MobileNav() {
           href="/settings"
           id="nav-settings"
           className={cn(
-            "flex flex-col items-center gap-1 transition-all",
+            "flex flex-col items-center gap-1 transition-all relative z-[10000] cursor-pointer",
             pathname === '/settings' ? "scale-110" : "text-slate-500 hover:text-white"
           )}
         >
