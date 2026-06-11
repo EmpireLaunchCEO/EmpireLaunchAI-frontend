@@ -1,0 +1,39 @@
+
+> EmpireLaunchAI-frontend@4.7.0-ELECTRIC-REVENUE build
+> next build
+
+   ▲ Next.js 15.5.19
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 7.0s
+   Skipping validation of types
+   Linting ...
+
+Failed to compile.
+
+./src/app/(authenticated)/settings/page.tsx
+236:16  Error: 'Video' is not defined.  react/jsx-no-undef
+
+./src/components/Dashboard/FileUploadDropZone.tsx
+158:44  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+
+./src/components/Dashboard/GuidedLinking.tsx
+237:6  Warning: React Hook useEffect has missing dependencies: 'currentEmpire?.name', 'currentEmpire?.title', and 'isNamePending'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/Dashboard/MissionBriefing.tsx
+101:6  Warning: React Hook useMemo has a missing dependency: 'isAdmin'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+114:6  Warning: React Hook useMemo has unnecessary dependencies: 'connectedPlatforms.length', 'empireData.name', and 'isPaid'. Either exclude them or remove the dependency array.  react-hooks/exhaustive-deps
+147:6  Warning: React Hook useEffect has a missing dependency: 'reasoningSteps.length'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/Dashboard/SuccessHub/EmpireIdentityHeader.tsx
+124:6  Warning: React Hook useCallback has a missing dependency: 'isAdmin'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/EmpireMode/Gates/VisualDraftGate.tsx
+105:25  Warning: img elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+
+./src/lib/EmpireContext.tsx
+555:6  Warning: React Hook useEffect has missing dependencies: 'activeEmpireId', 'isInitialized', 'linkingCompleteByEmpire', and 'onboardedByEmpire'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+606:6  Warning: React Hook useEffect has a missing dependency: 'addToast'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

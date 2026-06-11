@@ -24,7 +24,8 @@ import {
   Mail,
   ShieldCheck,
   AlertCircle,
-  DollarSign
+  DollarSign,
+  Video
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
