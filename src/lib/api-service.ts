@@ -226,16 +226,7 @@ export const discoveryService = {
       if (res && res.ok) return await res.json();
     } catch(e) {}
     
-    return [
-      { 
-        id: '1', 
-        source: 'Gmail (ceo@my-empire.com)', 
-        type: 'credential', 
-        maskedSnippet: 'Your Etsy shop "AestheticTreasures" is ready. Access key: ETSY_XXXX_XXXX', 
-        maskedKey: 'ETSY_API_KEY',
-        confidence: 0.98
-      }
-    ];
+    return [];
   },
   async approveResult(id: string): Promise<boolean> { return true; },
   async rejectResult(id: string): Promise<boolean> { return true; }
@@ -394,10 +385,10 @@ export const analyticsService = {
     } catch (e) {}
 
     return {
-      status: 'researching',
-      description: 'Analyzing global market velocity...',
-      progress: 68,
-      logs: ['[SYSTEM] Initializing Market Pulse scan...']
+      status: 'idle',
+      description: 'Awaiting platform link...',
+      progress: 0,
+      logs: ['[SYSTEM] Neural Node standby. Waiting for platform data...']
     };
   },
 

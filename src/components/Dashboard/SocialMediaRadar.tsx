@@ -38,17 +38,17 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 // ─── Platform Data & Config ──────────────────────────────────────────────────
 
 const MOCK_PLATFORM_DATA: Record<string, any> = {
-  tiktok: { totalViews: 125400, totalLikes: 12400, totalComments: 850, totalShares: 1200, avgEngagementRate: 11.2, followers: 42300, followerChange: '+12%', postsThisWeek: 12, weeklyViewsChange: '+24%', weeklyViewsTrend: 'up' },
-  instagram: { totalViews: 85200, totalLikes: 8200, totalComments: 420, totalShares: 350, avgEngagementRate: 9.8, followers: 18500, followerChange: '+8%', postsThisWeek: 8, weeklyViewsChange: '-5%', weeklyViewsTrend: 'down' },
-  youtube: { totalViews: 45000, totalLikes: 4200, totalComments: 310, totalShares: 150, avgEngagementRate: 16.3, followers: 8200, followerChange: '+15%', postsThisWeek: 2, weeklyViewsChange: '+31%', weeklyViewsTrend: 'up' },
-  facebook: { totalViews: 32000, totalLikes: 1200, totalComments: 150, totalShares: 80, avgEngagementRate: 4.2, followers: 5400, followerChange: '+2%', postsThisWeek: 4, weeklyViewsChange: '+8%', weeklyViewsTrend: 'up' },
-  etsy: { totalViews: 12000, totalLikes: 450, totalComments: 120, totalShares: 0, avgEngagementRate: 5.5, followers: 850, followerChange: '+5%', postsThisWeek: 3, weeklyViewsChange: '+15%', weeklyViewsTrend: 'up' },
-  fiverr: { totalViews: 8500, totalLikes: 210, totalComments: 45, totalShares: 0, avgEngagementRate: 3.8, followers: 120, followerChange: '+1%', postsThisWeek: 1, weeklyViewsChange: '+10%', weeklyViewsTrend: 'up' },
-  gmail: { totalViews: 5400, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 25.4, followers: 1200, followerChange: '+4%', postsThisWeek: 15, weeklyViewsChange: '+12%', weeklyViewsTrend: 'up' },
-  canva: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 24, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
-  kittl: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 8, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
-  capcut: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 14, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
-  bannerbear: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 42, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  tiktok: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  instagram: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'down' },
+  youtube: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  facebook: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  etsy: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  fiverr: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  gmail: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  canva: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  kittl: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  capcut: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
+  bannerbear: { totalViews: 0, totalLikes: 0, totalComments: 0, totalShares: 0, avgEngagementRate: 0, followers: 0, followerChange: '0%', postsThisWeek: 0, weeklyViewsChange: '0%', weeklyViewsTrend: 'up' },
 };
 
 const platformColors: Record<string, string> = {

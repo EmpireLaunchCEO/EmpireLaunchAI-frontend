@@ -82,10 +82,10 @@ export default function AnalyticsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-theme-surface p-8 rounded-[40px] border border-theme shadow-sm space-y-4">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Empire Revenue</p>
-                <h3 className="text-4xl font-black text-foreground">$12,450.00</h3>
-                <div className="flex items-center gap-2 text-green-500 font-bold text-sm">
-                  <TrendingUp className="w-4 h-4" />
-                  +18.4% this month
+                <h3 className="text-4xl font-black text-foreground">$0.00</h3>
+                <div className="flex items-center gap-2 text-slate-500 font-bold text-sm">
+                  <Activity className="w-4 h-4" />
+                  Syncing real-time ledger...
                 </div>
               </div>
 
@@ -104,14 +104,14 @@ export default function AnalyticsPage() {
                    </div>
                 </div>
                 <div className="h-24 flex items-end gap-1 px-2">
-                  {[30, 45, 35, 60, 55, 80, 70, 95, 85, 100, 90, 110].map((h, i) => (
+                  {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map((h, i) => (
                     <div
                       key={i}
                       className="flex-1 bg-primary/20 rounded-t-sm relative group cursor-pointer hover:bg-primary/40 transition-colors"
-                      style={{ height: `${h}%` }}
+                      style={{ height: `2%` }}
                     >
                       <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                        ${h * 10}
+                        $0.00
                       </div>
                     </div>
                   ))}
