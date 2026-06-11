@@ -60,6 +60,8 @@ interface EmpireContextType {
   isAdmin: boolean;
   setIsAdmin: (admin: boolean) => void;
   userEmail: string | null;
+  triggerRefresh: () => Promise<void>;
+  registerRefreshHandler: (handler: () => Promise<void>) => () => void;
 
   // Notifications
   notifications: Notification[];
@@ -122,10 +124,23 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notificationSettings, setNotificationSettings] = useState({ sales: true, approvals: true });
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [refreshHandlers, setRefreshHandlers] = useState<(() => Promise<void>)[]>([]);
 
   // Constants
   const MASTER_USER_ID = '00000000-0000-0000-0000-000000000000';
   const OWNER_EMAIL = 'stacipeabody@gmail.com';
+
+  const registerRefreshHandler = (handler: () => Promise<void>) => {
+    setRefreshHandlers(prev => [...prev, handler]);
+    return () => {
+      setRefreshHandlers(prev => prev.filter(h => h !== handler));
+    };
+  };
+
+  const triggerRefresh = async () => {
+    if (refreshHandlers.length === 0) return;
+    await Promise.all(refreshHandlers.map(handler => handler()));
+  };
 
   // Scoped Computed Values
   const connectedPlatforms = platformsByEmpire[activeEmpireId] || [];
@@ -636,6 +651,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       isAdmin,
       setIsAdmin,
       userEmail,
+      triggerRefresh,
+      registerRefreshHandler,
       notifications,
       unreadCount,
       markAsRead,

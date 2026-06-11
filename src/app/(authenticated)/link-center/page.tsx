@@ -34,16 +34,20 @@ export default function LinkCenterPage() {
     updatePlatformPermission,
     spendingPermissions,
     updateSpendingPermission,
-    activeEmpire: empireData
+    activeEmpire: empireData,
+    registerRefreshHandler
   } = useEmpire();
 
-  const handleRefresh = async () => {
+  const handleRefresh = React.useCallback(async () => {
     // Simulate refresh logic
     await new Promise(resolve => setTimeout(resolve, 1500));
-  };
+  }, []);
+
+  React.useEffect(() => {
+    return registerRefreshHandler(handleRefresh);
+  }, [registerRefreshHandler, handleRefresh]);
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
       <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-16 overflow-x-hidden">
         
         {/* 1. Identity Header */}
@@ -213,6 +217,5 @@ export default function LinkCenterPage() {
           </div>
         </div>
       </div>
-    </PullToRefresh>
   );
 }

@@ -46,19 +46,22 @@ import { NicheCalibrationBox } from '@/components/Dashboard/SuccessHub/NicheCali
 
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'pending-approvals' | 'empire-intel'>('pending-approvals');
-  const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData } = useEmpire();
+  const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
 
   const isPlatformConnected = (platform: string) => {
     return connectedPlatforms.some(p => p.toLowerCase() === platform.toLowerCase());
   };
 
-  const handleRefresh = async () => {
+  const handleRefresh = React.useCallback(async () => {
     // Simulate refresh logic
     await new Promise(resolve => setTimeout(resolve, 1500));
-  };
+  }, []);
+
+  React.useEffect(() => {
+    return registerRefreshHandler(handleRefresh);
+  }, [registerRefreshHandler, handleRefresh]);
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
       <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-16 overflow-x-hidden">
         
         {/* 1. Identity Header */}
@@ -188,6 +191,5 @@ export default function EmpireCenterPage() {
           </div>
         </div>
       </div>
-    </PullToRefresh>
   );
 }

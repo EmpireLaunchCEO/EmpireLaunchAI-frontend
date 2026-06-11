@@ -21,7 +21,7 @@ import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { DisclaimerAgreementBox } from '@/components/Dashboard/DisclaimerAgreementBox';
 
 export default function Dashboard() {
-  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms } = useEmpire();
+  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
@@ -87,6 +87,10 @@ export default function Dashboard() {
     }
   }, [activeEmpireId, mounted, isInitialized, fetchData]);
 
+  useEffect(() => {
+    return registerRefreshHandler(fetchData);
+  }, [registerRefreshHandler, fetchData]);
+
   if (!mounted || !isInitialized) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
@@ -100,7 +104,6 @@ export default function Dashboard() {
 
   return (
     <DashboardErrorBoundary>
-      <PullToRefresh onRefresh={fetchData}>
         <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-16 overflow-x-hidden">
           <GrowthProtocolGate
             isOpen={isGrowthGateOpen}
@@ -257,7 +260,6 @@ export default function Dashboard() {
             </motion.div>
           )}
         </AnimatePresence>
-      </PullToRefresh>
     </DashboardErrorBoundary>
   );
 }

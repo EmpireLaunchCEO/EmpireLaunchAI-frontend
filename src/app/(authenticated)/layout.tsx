@@ -7,6 +7,8 @@ import { GlobalEmpireHeader } from "@/components/Dashboard/GlobalEmpireHeader";
 import { GeminiBrainOverlay } from "@/components/Dashboard/GeminiBrainOverlay";
 import { SlotGuard } from "@/components/SlotGuard";
 import { Suspense } from "react";
+import { PullToRefresh } from "@/components/Dashboard/PullToRefresh";
+import { useEmpire } from "@/lib/EmpireContext";
 
 import { FeedbackBox } from "@/components/Dashboard/FeedbackChannel";
 
@@ -15,6 +17,8 @@ export default function AuthenticatedLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { triggerRefresh } = useEmpire();
+
   return (
     <SubscriptionGuard>
       <div className="flex bg-theme-background min-h-screen relative overflow-x-hidden max-w-full">
@@ -26,13 +30,17 @@ export default function AuthenticatedLayout({
           <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
             <NotificationBell id="notification-bell-desktop" />
           </div>
-          <div className="min-h-[calc(100vh-80px)] flex flex-col">
-            <GlobalEmpireHeader />
-            <div className="flex-1">
-              <SlotGuard>
-                {children}
-              </SlotGuard>
-            </div>
+          <div className="min-h-screen flex flex-col">
+            <PullToRefresh onRefresh={triggerRefresh}>
+              <div className="min-h-screen flex flex-col">
+                <GlobalEmpireHeader />
+                <div className="flex-1">
+                  <SlotGuard>
+                    {children}
+                  </SlotGuard>
+                </div>
+              </div>
+            </PullToRefresh>
             
             {/* Global Feedback Footer */}
             <div className="p-4 md:p-8 max-w-7xl mx-auto w-full mt-auto">

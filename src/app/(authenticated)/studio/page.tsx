@@ -43,7 +43,15 @@ export default function StudioPage() {
   const [cinemaActiveSlot, setCinemaActiveSlot] = useState<'twin' | 'lab' | 'logs'>('twin');
   const [harvestActivity, setHarvestActivity] = useState(vaultActivity);
   const [isDemoMode, setIsDemoMode] = useState(false);
-  const { activeEmpire: empireData } = useEmpire();
+  const { activeEmpire: empireData, registerRefreshHandler } = useEmpire();
+
+  const handleRefresh = React.useCallback(async () => {
+    await new Promise(r => setTimeout(r, 1000));
+  }, []);
+
+  React.useEffect(() => {
+    return registerRefreshHandler(handleRefresh);
+  }, [registerRefreshHandler, handleRefresh]);
 
   // Upload states
   const [facialDnaUpload, setFacialDnaUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
@@ -177,7 +185,6 @@ export default function StudioPage() {
   };
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
       <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-16 overflow-x-hidden">
         
         {/* 1. Identity Header */}
@@ -559,6 +566,5 @@ export default function StudioPage() {
           </div>
         </div>
       </div>
-    </PullToRefresh>
   );
 }

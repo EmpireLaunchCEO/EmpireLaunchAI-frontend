@@ -26,7 +26,7 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 
 export default function EmpireIdentityHeader() {
-  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, setDashboardLoaded, isAdmin, isDashboardLoaded } = useEmpire();
+  const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, setDashboardLoaded, isAdmin, isDashboardLoaded, registerRefreshHandler } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
   const [healthData, setHealthData] = useState<any>(null);
@@ -129,6 +129,10 @@ export default function EmpireIdentityHeader() {
     }
   }, [fetchData, mounted, isInitialized]);
 
+  useEffect(() => {
+    return registerRefreshHandler(fetchData);
+  }, [registerRefreshHandler, fetchData]);
+
   const handleExecute = async (goal: string) => {
     if (!isLinkingComplete && (window as any).interceptTeacher) {
       (window as any).interceptTeacher(goal);
@@ -183,7 +187,6 @@ export default function EmpireIdentityHeader() {
   // 2. Main Dashboard Render
   return (
     <DashboardErrorBoundary>
-      <PullToRefresh onRefresh={fetchData}>
       <div className="p-3 md:p-8 pb-24 max-w-full md:max-w-7xl mx-auto space-y-6 md:space-y-12">
         {/* Persistent Header */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 bg-theme-surface/30 p-5 md:p-0 rounded-[24px] md:rounded-none border border-theme md:border-none">
@@ -396,7 +399,6 @@ export default function EmpireIdentityHeader() {
 
         {isLinkingComplete && <NotificationOnboarding />}
       </div>
-    </PullToRefresh>
     </DashboardErrorBoundary>
   );
 }

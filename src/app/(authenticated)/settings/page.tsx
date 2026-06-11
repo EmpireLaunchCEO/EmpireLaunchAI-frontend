@@ -147,12 +147,16 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
 };
 
 export default function SettingsPage() {
-  const { theme, setTheme, aiMode, setAiMode, isAdmin, setIsAdmin, isProtocolAccepted, activeEmpire: empireData } = useEmpire();
+  const { theme, setTheme, aiMode, setAiMode, isAdmin, setIsAdmin, isProtocolAccepted, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
   const { isLinked: isStripeLinked } = useStripeStatus();
 
   const [activeTab, setActiveTab] = useState('link-center');
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
   const [isAgreementOpen, setIsAgreementOpen] = useState(false);
+
+  useEffect(() => {
+    return registerRefreshHandler(async () => { await new Promise(r => setTimeout(r, 1000)); });
+  }, [registerRefreshHandler]);
 
   useEffect(() => {
     const handleSwitchTab = (e: any) => {
@@ -194,7 +198,6 @@ export default function SettingsPage() {
   ];
 
   return (
-    <PullToRefresh onRefresh={async () => { await new Promise(r => setTimeout(r, 1000)); }}>
       <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-16 overflow-x-hidden">
         
         {/* 1. Identity Header */}
@@ -567,6 +570,5 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
-    </PullToRefresh>
   );
 }
