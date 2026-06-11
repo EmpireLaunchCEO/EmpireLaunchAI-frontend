@@ -131,7 +131,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
   return (
     <div 
       ref={containerRef}
-      className="relative w-full min-h-screen overflow-x-hidden"
+      className="relative w-full flex-1 flex flex-col overflow-x-hidden"
     >
       {/* Neural Sync Indicator */}
       <div 
