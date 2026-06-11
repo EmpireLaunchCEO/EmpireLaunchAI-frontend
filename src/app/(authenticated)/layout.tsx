@@ -52,12 +52,8 @@ export default function AuthenticatedLayout({
           <NotificationBell id="notification-bell-mobile" />
         </div>
         
-        <div className="fixed inset-0 pointer-events-none z-[9999]">
-          <div className="absolute inset-0 pointer-events-none">
-            <MobileNav />
-            <GeminiBrainOverlay />
-          </div>
-        </div>
+        <MobileNav />
+        <GeminiBrainOverlay />
       </div>
     </SubscriptionGuard>
   );
