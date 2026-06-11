@@ -110,7 +110,7 @@ function PlatformSummaryCard({ summary }: { summary: any }) {
       initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-theme-surface border-2 border-theme rounded-[24px] overflow-hidden hover:border-primary/30 transition-all shadow-sm"
+      className="bg-theme-background border-2 border-theme rounded-[24px] overflow-hidden hover:border-primary/30 transition-all shadow-sm"
     >
       <button
         onClick={() => setExpanded(!expanded)}
@@ -182,7 +182,7 @@ function PlatformSummaryCard({ summary }: { summary: any }) {
 
 function SignalCard({ signal }: { signal: any }) {
   return (
-    <div className="p-4 bg-theme-surface border border-theme rounded-2xl space-y-2 hover:border-primary/30 transition-all">
+    <div className="p-4 bg-theme-background border border-theme rounded-2xl space-y-2 hover:border-primary/30 transition-all">
       <div className="flex items-center justify-between">
         <span className={cn(
           "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded",
@@ -319,8 +319,11 @@ export function SocialMediaRadar() {
   ];
 
   return (
-    <div className="space-y-6 relative">
-      <div className="absolute top-0 right-0 z-20">
+    <div className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 shadow-lg space-y-8 relative overflow-hidden group/radar">
+      {/* Decorative background pulse */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] -z-10 group-hover/radar:bg-primary/10 transition-colors" />
+
+      <div className="absolute top-6 right-8 z-20">
         <button 
           onClick={toggleMinimize}
           className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
@@ -331,7 +334,7 @@ export function SocialMediaRadar() {
 
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <div className="relative">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
               <BarChart3 className="w-6 h-6 text-primary" />
@@ -396,8 +399,8 @@ export function SocialMediaRadar() {
                 ))}
               </div>
             ) : (
-              <div className="p-12 text-center space-y-4 bg-theme-surface rounded-[32px] border-2 border-dashed border-theme opacity-50 grayscale">
-                <div className="w-16 h-16 bg-theme-background rounded-full flex items-center justify-center mx-auto">
+              <div className="p-12 text-center space-y-4 bg-theme-background border border-theme rounded-[32px] border-dashed opacity-50 grayscale">
+                <div className="w-16 h-16 bg-theme-surface rounded-full flex items-center justify-center mx-auto">
                   <Signal className="w-8 h-8 text-muted-foreground" />
                 </div>
                 <h4 className="font-black text-foreground uppercase italic">Radar Offline</h4>
@@ -416,7 +419,7 @@ export function SocialMediaRadar() {
             className="space-y-6"
           >
             {/* Live Signals */}
-            <div className="p-5 bg-theme-surface border-2 border-theme rounded-[32px] space-y-6">
+            <div className="p-6 bg-theme-background border-2 border-theme rounded-[32px] space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Globe className="w-4 h-4 text-primary" />
@@ -465,7 +468,7 @@ export function SocialMediaRadar() {
                    initial={{ opacity: 0, y: 20 }}
                    animate={{ opacity: 1, y: 0 }}
                    transition={{ delay: i * 0.1 }}
-                   className="p-5 bg-theme-surface border-2 border-theme rounded-[24px] space-y-3 hover:border-primary/30 transition-all group"
+                   className="p-5 bg-theme-background border-2 border-theme rounded-[24px] space-y-3 hover:border-primary/30 transition-all group"
                  >
                    <div className="flex items-center justify-between">
                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
