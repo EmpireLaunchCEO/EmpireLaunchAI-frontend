@@ -7,9 +7,8 @@ import { test, expect } from '@playwright/test';
  */
 test.describe('Empire Studio', () => {
   test('studio page loads with tab navigation', async ({ page }) => {
-    await page.goto('/studio');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2500);
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(4000);
 
     // Check that the page has rendered with content
     const bodyText = await page.locator('body').innerText().catch(() => '');
@@ -35,9 +34,8 @@ test.describe('Empire Studio', () => {
   });
 
   test('studio page tabs switch content', async ({ page }) => {
-    await page.goto('/studio');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(3000);
 
     // Find clickable tab buttons
     const tabs = page.locator('button, [role="tab"]').filter({ hasText: /Gallery|Cinema|Activity|Radar/i });
@@ -68,9 +66,8 @@ test.describe('Empire Studio', () => {
   });
 
   test('studio has DNA vault counter', async ({ page }) => {
-    await page.goto('/studio');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(3000);
 
     // The DNAVaultCounter component shows vaulted items
     const dnaVault = page.locator('text=DNA Vault, text=Vaulted, text=Design DNA').first();

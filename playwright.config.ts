@@ -35,11 +35,5 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
-    command: 'cd /home/team/shared/EmpireLaunchAI-frontend && npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
-    timeout: 60000,
-    cwd: '/home/team/shared/EmpireLaunchAI-frontend',
-  },
+  // Dev server is already running on port 3000 — no webServer needed
 });

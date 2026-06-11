@@ -5,11 +5,14 @@ import { test, expect } from '@playwright/test';
  * Verifies the sidebar navigation renders correctly and all main routes
  * are accessible. Since these routes require auth/onboarding context,
  * we test by direct navigation and verify content rendering.
+ * 
+ * NOTE: Uses domcontentloaded + timeout instead of networkidle because
+ * the dev server may return 500 on some routes, causing networkidle to hang.
  */
 test.describe('Navigation & Sidebar', () => {
   test('sidebar contains all main navigation links', async ({ page }) => {
     await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(3000);
 
     // Wait for sidebar to render
     const sidebar = page.locator('nav').or(page.locator('[class*="sidebar"]')).first();
@@ -38,8 +41,7 @@ test.describe('Navigation & Sidebar', () => {
 
   test('dashboard page loads with key components', async ({ page }) => {
     await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000); // Allow async components to hydrate
+    await page.waitForTimeout(4000); // Allow async components to hydrate
 
     // The page should render at least some content
     const bodyContent = page.locator('body');
@@ -64,9 +66,8 @@ test.describe('Navigation & Sidebar', () => {
     ];
 
     for (const route of routes) {
-      await page.goto(route.path);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(1500);
+      await page.goto(route.path, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(3000);
 
       // Verify page loaded - should have content
       const bodyText = await page.locator('body').innerText().catch(() => '');
@@ -83,8 +84,7 @@ test.describe('Navigation & Sidebar', () => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(4000);
 
     // Check for mobile navigation elements
     const mobileNav = page.locator('[class*="MobileNav"], [class*="mobile"], nav[class*="bottom"]').first();

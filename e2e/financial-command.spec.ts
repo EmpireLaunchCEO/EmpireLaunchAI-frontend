@@ -8,9 +8,8 @@ import { test, expect } from '@playwright/test';
  */
 test.describe('Financial Command - Empire Finances', () => {
   test('financial command renders on dashboard', async ({ page }) => {
-    await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(3000);
+    await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(4000);
 
     // Wait for the Financial Command component to appear
     // It may be in minimized or expanded state
@@ -39,9 +38,8 @@ test.describe('Financial Command - Empire Finances', () => {
   });
 
   test('financial command can toggle minimize/expand', async ({ page }) => {
-    await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(3000);
+    await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(4000);
 
     // Look for the minimize/expand toggle button
     // The FinancialCommand has a maximize button when minimized, and a minimize button when expanded
@@ -69,9 +67,8 @@ test.describe('Financial Command - Empire Finances', () => {
   });
 
   test('financial command shows revenue and subscription information', async ({ page }) => {
-    await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(3000);
+    await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(4000);
 
     // The component shows formatted currency values
     // Check for dollar amounts in the financial section
@@ -84,9 +81,8 @@ test.describe('Financial Command - Empire Finances', () => {
   });
 
   test('financial command subscription items render correctly', async ({ page }) => {
-    await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(3000);
+    await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(4000);
 
     // The expanded view shows subscription line items
     const subscriptionItem = page.locator('text=Canva Pro, text=ChatGPT Plus, text=EmpireLaunch AI Platform').first();

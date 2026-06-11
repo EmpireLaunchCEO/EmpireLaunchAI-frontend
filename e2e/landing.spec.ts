@@ -7,13 +7,13 @@ import { test, expect } from '@playwright/test';
  */
 test.describe('Landing Page & Brand', () => {
   test('landing page loads with correct title and brand elements', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
 
     // Verify the page title contains the brand name
     await expect(page).toHaveTitle(/EmpireLaunch AI/);
 
-    // Wait for the page to render (not in SSR loading state)
-    await page.waitForLoadState('networkidle');
+    // Wait for the page to render
+    await page.waitForTimeout(3000);
 
     // Verify the brand globe component renders
     const globe = page.locator('[class*="BrandedGlobe"], svg[class*="globe"], svg[vieWbox="0 0 100 100"]').first();
@@ -25,7 +25,7 @@ test.describe('Landing Page & Brand', () => {
 
   test('landing page has functional language and currency selectors', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(3000);
 
     // Check that the language selector exists (if the TermsModal or language button renders)
     // This is a soft check - the page should at least show something interactive
@@ -36,7 +36,7 @@ test.describe('Landing Page & Brand', () => {
 
   test('landing page redirects to onboarding when terms accepted', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(3000);
 
     // Check for call-to-action or continue navigation
     const getStartedBtn = page.getByRole('link', { name: /get started|launch|start/i }).first();

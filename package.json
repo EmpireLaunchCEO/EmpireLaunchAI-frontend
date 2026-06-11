@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "PLAYWRIGHT_BROWSERS_PATH=/opt/browsers npx playwright test",
+    "test:e2e:headed": "PLAYWRIGHT_BROWSERS_PATH=/opt/browsers npx playwright test --headed",
+    "test:e2e:ui": "PLAYWRIGHT_BROWSERS_PATH=/opt/browsers npx playwright test --ui",
+    "test:e2e:smoke": "PLAYWRIGHT_BROWSERS_PATH=/opt/browsers npx playwright test --grep 'regression|smoke'"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.2",

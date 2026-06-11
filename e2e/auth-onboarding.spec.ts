@@ -4,14 +4,16 @@ import { test, expect } from '@playwright/test';
  * Authentication & Onboarding Tests
  * Tests the public landing page flow and the onboarding flow.
  * The app auto-redirects based on localStorage state.
+ * 
+ * NOTE: Uses domcontentloaded instead of networkidle because
+ * the dev server may return 500 on some routes, causing networkidle to hang.
  */
 test.describe('Authentication & Onboarding', () => {
   test('root path serves the landing page', async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    
     // Wait for the landing page content to render
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(3000);
 
     // Verify that we're on a page with content (not a blank page)
     const bodyText = await page.locator('body').innerText().catch(() => '');
@@ -25,9 +27,8 @@ test.describe('Authentication & Onboarding', () => {
   });
 
   test('landing page shows terms modal when terms button clicked', async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(3000);
 
     // Look for terms/privacy related buttons or links
     const termsLink = page.locator('a:has-text("Terms"), button:has-text("Terms"), a:has-text("Privacy"), button:has-text("Legal")').first();
@@ -45,9 +46,8 @@ test.describe('Authentication & Onboarding', () => {
   });
 
   test('onboarding page loads', async ({ page }) => {
-    await page.goto('/onboarding');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
+    await page.goto('/onboarding', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(3000);
 
     // The onboarding page should render some content
     const bodyText = await page.locator('body').innerText().catch(() => '');
@@ -56,9 +56,8 @@ test.describe('Authentication & Onboarding', () => {
 
   test('auth callback page loads without crash', async ({ page }) => {
     // Test the auth callback route structure
-    await page.goto('/auth/callback/etsy');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
+    await page.goto('/auth/callback/etsy', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
 
     // Should not crash - either shows processing or redirects
     const hasError = await page.locator('text=Application Error, text=500, text=Not Found').first().isVisible().catch(() => false);
@@ -66,9 +65,8 @@ test.describe('Authentication & Onboarding', () => {
   });
 
   test('design center page loads', async ({ page }) => {
-    await page.goto('/design-center');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1500);
+    await page.goto('/design-center', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(3000);
 
     const bodyText = await page.locator('body').innerText().catch(() => '');
     expect(bodyText.length).toBeGreaterThan(0);

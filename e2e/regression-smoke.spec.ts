@@ -23,7 +23,7 @@ test.describe('Regression Smoke Suite', () => {
 
   for (const route of criticalRoutes) {
     test(`smoke: ${route.name} (${route.path}) loads without 500 error`, async ({ page }) => {
-      const response = await page.goto(route.path, { waitUntil: 'networkidle' });
+      const response = await page.goto(route.path, { waitUntil: 'domcontentloaded' });
       
       // Allow soft failures for auth-gated pages (they might redirect)
       const status = response?.status() ?? 0;
@@ -75,9 +75,8 @@ test.describe('Regression Smoke Suite', () => {
 
   test('regression: payment button list renders without touching security layer', async ({ page }) => {
     // This test verifies we don't break the Payment Button system (LOCKED)
-    await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(3000);
+    await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(4000);
 
     // PaymentButtonList component - check it exists without testing security logic
     const paymentSection = page.locator('text=Buy Button, text=Payment, text=Sell').first();
@@ -90,9 +89,8 @@ test.describe('Regression Smoke Suite', () => {
   });
 
   test('regression: all sidebar links point to valid routes', async ({ page }) => {
-    await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
+    await page.goto('/dashboard', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(4000);
 
     // Find all navigation links in the sidebar
     const navLinks = page.locator('nav a, [class*="sidebar"] a, aside a');

@@ -13,6 +13,7 @@ export interface UploadState {
   preview: string | null;
   status: UploadStatus;
   progress: number;
+  metadata?: any;
 }
 
 interface Props {
