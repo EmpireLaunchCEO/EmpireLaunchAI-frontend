@@ -75,7 +75,13 @@ export const GrowthTracker = ({
   const percentage = Math.max(0, Math.min(100, progress !== undefined ? progress : Math.round(((monthlyEarnings || 0) / (localTarget || 1)) * 100))) || 0;
 
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme shadow-2xl relative overflow-hidden group">
+    <div className="bg-theme-surface rounded-[40px] p-8 border-2 !border-white/20 shadow-2xl relative overflow-hidden group">
+      {/* Name at the Top */}
+      <div className="flex items-center gap-2 mb-8">
+        <Award className="w-5 h-5 text-amber-500" />
+        <h3 className="text-xl font-black uppercase tracking-[0.2em] text-amber-500 italic">Growth Tracker</h3>
+      </div>
+
       {/* Minimize Toggle */}
       <div className="absolute top-4 right-5 z-20">
         <button 
@@ -127,16 +133,10 @@ export const GrowthTracker = ({
         </div>
 
         <div className="flex-1 space-y-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Award className="w-5 h-5 text-amber-500" />
-              <h3 className="text-xl font-black uppercase tracking-[0.2em] text-amber-500 italic">Growth Tracker</h3>
-            </div>
-            <p className="text-slate-400 text-xs font-medium italic">Monitor your path to financial dominance and strategic milestones.</p>
-          </div>
+          <p className="text-slate-400 text-xs font-medium italic">Monitor your path to financial dominance and strategic milestones.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-theme-background/30 rounded-3xl p-6 border border-theme">
+
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Monthly Empire Earnings</span>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">

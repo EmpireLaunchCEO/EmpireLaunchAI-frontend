@@ -83,7 +83,15 @@ export function FinancialCommand({
   }
 
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
+    <div className="bg-theme-surface rounded-[40px] p-8 text-foreground relative overflow-hidden shadow-2xl border-2 !border-white/20">
+      {/* Name at the Top */}
+      <div className="flex items-center gap-3 mb-8">
+        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
+          <CreditCard className="w-5 h-5" />
+        </div>
+        <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Empire Finances</h3>
+      </div>
+
       <div className="absolute top-8 right-8 z-20">
         <button 
           onClick={toggleMinimize}
@@ -116,7 +124,6 @@ export function FinancialCommand({
           </div>
 
           <div className="flex-1 space-y-2 pr-12">
-            <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Empire Finances</h3>
             <p className="text-slate-400 text-xs font-medium italic">Monitoring capital velocity and upcoming obligations.</p>
             <div className="flex gap-4 pt-2">
               <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">

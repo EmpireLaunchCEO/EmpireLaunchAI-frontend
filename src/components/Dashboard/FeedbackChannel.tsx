@@ -39,22 +39,23 @@ export function FeedbackBox({ className }: FeedbackBoxProps) {
 
   return (
     <div className={cn(
-      "bg-theme-surface border-2 border-theme rounded-[32px] p-6 shadow-lg overflow-hidden relative group transition-all",
+      "bg-theme-surface border-2 !border-white/20 rounded-[32px] p-6 shadow-lg overflow-hidden relative group transition-all",
       className
     )}>
-      <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-            <MessageSquare className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-sm font-black text-foreground uppercase tracking-tight italic">Feedback Counsel</h3>
-            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
-               Enjoying the app? Do you want to keep track of something we don't have yet? Send us feedback
-            </p>
-          </div>
+      {/* Name at the Top */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+          <MessageSquare className="w-5 h-5" />
         </div>
+        <div>
+          <h3 className="text-sm font-black text-foreground uppercase tracking-tight italic">Feedback Counsel</h3>
+          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
+             Enjoying the app? Do you want to keep track of something we don't have yet? Send us feedback
+          </p>
+        </div>
+      </div>
 
+      <div className="space-y-4">
         {isSent ? (
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
