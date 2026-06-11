@@ -324,7 +324,7 @@ export function SocialMediaRadar() {
       {/* Decorative background pulse */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] -z-10 group-hover/radar:bg-primary/10 transition-colors" />
 
-      <div className="absolute top-6 right-8 z-20">
+      <div className="absolute top-2 right-8 z-20">
         <button 
           onClick={toggleMinimize}
           className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
