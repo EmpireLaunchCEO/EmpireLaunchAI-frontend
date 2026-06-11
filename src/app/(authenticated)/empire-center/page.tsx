@@ -138,45 +138,6 @@ export default function EmpireCenterPage() {
                   </motion.div>
 
                   <SocialMediaRadar />
-                  
-                  {/* AI Active Research */}
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="bg-theme-surface border-2 border-theme rounded-[40px] p-8 space-y-6"
-                  >
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-xl font-black text-foreground pr-2">AI Active Research</h3>
-                      <button className="text-xs font-black text-blue-600 uppercase tracking-widest">New Request +</button>
-                    </div>
-
-                    <div className="space-y-4">
-                      {connectedPlatforms.length > 0 ? (
-                        <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4">
-                          <div className="flex items-center gap-3">
-                            <Stars className="w-5 h-5 text-primary" />
-                            <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
-                          </div>
-                          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                            <motion.div
-                              initial={{ width: "0%" }}
-                              animate={{ width: "65%" }}
-                              className="bg-primary h-full shadow-[0_0_10px_rgba(251,191,36,0.5)]"
-                            />
-                          </div>
-                          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-                            <span>Phase: Data Synthesis</span>
-                            <span>65% Complete</span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="p-8 text-center text-muted-foreground font-medium text-xs italic">
-                          Link a marketplace to initialize research protocols.
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
                 </div>
 
                 {/* Sidebar Context */}

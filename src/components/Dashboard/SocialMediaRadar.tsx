@@ -277,8 +277,9 @@ export function SocialMediaRadar() {
     });
 
   const panels = [
-    { id: 'overview' as const, label: 'Platform Overview', icon: BarChart3 },
-    { id: 'intelligence' as const, label: 'Market Intelligence', icon: TrendingUp },
+    { id: 'overview' as const, label: 'Overview', icon: BarChart3 },
+    { id: 'intelligence' as const, label: 'Signals', icon: TrendingUp },
+    { id: 'research' as const, label: 'Research', icon: BrainCircuit },
   ];
 
   const intelligenceMetrics = [
@@ -486,6 +487,55 @@ export function SocialMediaRadar() {
                    </div>
                  </motion.div>
                ))}
+            </div>
+          </motion.div>
+        )}
+        {activePanel === 'research' && (
+          <motion.div
+            key="research"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="space-y-6"
+          >
+            <div className="p-6 bg-theme-background border-2 border-theme rounded-[32px] space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-black text-foreground pr-2">AI Active Research</h3>
+                <button className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all">New Request +</button>
+              </div>
+
+              <div className="space-y-4">
+                {connectedPlatforms.length > 0 ? (
+                  <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4 bg-theme-surface/50">
+                    <div className="flex items-center gap-3">
+                      <Stars className="w-5 h-5 text-primary" />
+                      <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
+                    </div>
+                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: "0%" }}
+                        animate={{ width: "65%" }}
+                        className="bg-primary h-full shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
+                      <span>Phase: Data Synthesis</span>
+                      <span>65% Complete</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-muted-foreground font-medium text-xs italic bg-theme-background rounded-3xl border border-theme">
+                    Link a marketplace in the Link Center to initialize research protocols.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="p-6 bg-gradient-to-br from-indigo-900/20 to-blue-900/20 border-2 border-indigo-500/20 rounded-[32px] space-y-4">
+               <h4 className="text-sm font-black text-indigo-300 uppercase tracking-widest">Research Roadmap</h4>
+               <p className="text-xs text-slate-400 font-medium leading-relaxed">
+                 The AI is currently hunting for high-velocity keywords. Once synthesis is complete, a new "Product Blueprint" will appear in your Pending Approvals.
+               </p>
             </div>
           </motion.div>
         )}
