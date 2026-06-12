@@ -24,8 +24,7 @@ import {
   Mail,
   ShieldCheck,
   AlertCircle,
-  DollarSign,
-  Video
+  DollarSign
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
@@ -140,129 +139,6 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
           <div className="flex justify-end gap-4 pt-4">
             <button onClick={onClose} className="px-8 py-4 bg-white/5 text-white/60 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
             <button className="px-10 py-4 bg-slate-950 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-slate-900/40">Sync TikTok</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (platform.toLowerCase() === 'canva') {
-    return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-4 border-cyan-400 shadow-2xl space-y-8 relative overflow-hidden">
-          <div className="flex items-center justify-between border-b border-theme pb-6">
-            <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
-              <Palette className="w-6 h-6 text-cyan-400" /> Connecting Canva Creative
-            </h3>
-            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-              <X className="w-6 h-6 text-white/40" />
-            </button>
-          </div>
-          <div className="space-y-6">
-            <p className="text-sm text-slate-400 italic">
-              "To harvest Style DNA from your Canva designs, provide your Canva Public Profile URL or a specific Public Design Link. I'll analyze the visual patterns to improve your empire's creative intelligence."
-            </p>
-            <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-white/40">Canva Profile or Design URL</label>
-              <input id="canva-url" type="text" placeholder="https://www.canva.com/p/yourname or https://www.canva.com/design/..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-cyan-400 outline-none transition-all font-bold text-lg text-white" />
-            </div>
-          </div>
-          <div className="flex justify-end gap-4 pt-4">
-            <button onClick={onClose} className="px-8 py-4 bg-white/5 text-white/60 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
-            <button 
-              onClick={() => {
-                const url = (document.getElementById('canva-url') as HTMLInputElement)?.value;
-                if (url) {
-                  localStorage.setItem('empire_link_canva', url);
-                  onClose();
-                }
-              }}
-              className="px-10 py-4 bg-cyan-400 text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-cyan-500 transition-all shadow-xl shadow-cyan-900/20"
-            >
-              Start DNA Harvest
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (platform.toLowerCase() === 'kittl') {
-    return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-4 border-amber-500 shadow-2xl space-y-8 relative overflow-hidden">
-          <div className="flex items-center justify-between border-b border-theme pb-6">
-            <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
-              <Stars className="w-6 h-6 text-amber-500" /> Connecting Kittl Studio
-            </h3>
-            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-              <X className="w-6 h-6 text-white/40" />
-            </button>
-          </div>
-          <div className="space-y-6">
-            <p className="text-sm text-slate-400 italic">
-              "Kittl is a powerhouse for typography and layout DNA. Link your Kittl project or profile to allow the Empire AI to learn from your highest-performing assets."
-            </p>
-            <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-white/40">Kittl Profile or Project Link</label>
-              <input id="kittl-url" type="text" placeholder="https://www.kittl.com/u/yourname or https://www.kittl.com/design/..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-amber-500 outline-none transition-all font-bold text-lg text-white" />
-            </div>
-          </div>
-          <div className="flex justify-end gap-4 pt-4">
-            <button onClick={onClose} className="px-8 py-4 bg-white/5 text-white/60 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
-            <button 
-              onClick={() => {
-                const url = (document.getElementById('kittl-url') as HTMLInputElement)?.value;
-                if (url) {
-                  localStorage.setItem('empire_link_kittl', url);
-                  onClose();
-                }
-              }}
-              className="px-10 py-4 bg-amber-500 text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-amber-600 transition-all shadow-xl shadow-amber-900/20"
-            >
-              Link Kittl Account
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (platform.toLowerCase() === 'capcut') {
-    return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-4 border-slate-100 shadow-2xl space-y-8 relative overflow-hidden">
-          <div className="flex items-center justify-between border-b border-theme pb-6">
-            <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
-              <Video className="w-6 h-6 text-slate-200" /> Connecting CapCut Production
-            </h3>
-            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-              <X className="w-6 h-6 text-white/40" />
-            </button>
-          </div>
-          <div className="space-y-6">
-            <p className="text-sm text-slate-400 italic">
-              "CapCut provides the pacing and transition DNA. Link your CapCut workspace or a shared project link to synchronize video editing intelligence."
-            </p>
-            <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-white/40">CapCut Share Link</label>
-              <input id="capcut-url" type="text" placeholder="https://www.capcut.com/t/..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-slate-100 outline-none transition-all font-bold text-lg text-white" />
-            </div>
-          </div>
-          <div className="flex justify-end gap-4 pt-4">
-            <button onClick={onClose} className="px-8 py-4 bg-white/5 text-white/60 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
-            <button 
-              onClick={() => {
-                const url = (document.getElementById('capcut-url') as HTMLInputElement)?.value;
-                if (url) {
-                  localStorage.setItem('empire_link_capcut', url);
-                  onClose();
-                }
-              }}
-              className="px-10 py-4 bg-slate-100 text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white transition-all shadow-xl shadow-white/10"
-            >
-              Sync Production DNA
-            </button>
           </div>
         </div>
       </div>
@@ -612,92 +488,77 @@ export default function SettingsPage() {
 
               {activeTab === 'subscription' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  {/* Unified Subscription & Milestone Protocol Box */}
-                  <div className="p-8 md:p-12 bg-slate-900 border-2 border-primary/30 rounded-[48px] overflow-hidden shadow-2xl relative">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
-                    
-                    <div className="space-y-12 relative z-10">
-                      {/* Header Section */}
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-white/10">
-                        <div className="flex items-center gap-6">
-                          <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center border border-primary/20 shrink-0">
-                            <Diamond className="w-10 h-10 text-primary" />
-                          </div>
-                          <div>
-                            <h3 className="text-3xl font-black text-white italic uppercase tracking-tighter">Empire Elite</h3>
-                            <div className="flex items-center gap-2 text-emerald-500 mt-1">
-                               <ShieldCheck className="w-4 h-4" />
-                               <span className="text-[10px] font-black uppercase tracking-[0.2em]">Verified Partnership Active</span>
+                  {/* Subscription Agreement Box (Moves here after acceptance) */}
+                  {isProtocolAccepted && (
+                    <div className="p-8 md:p-12 bg-slate-900 border-2 border-primary/30 rounded-[48px] overflow-hidden shadow-2xl relative">
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
+                      <div className="flex items-start gap-6 relative z-10">
+                         <div className="w-16 h-16 bg-primary/10 rounded-3xl flex items-center justify-center border border-primary/20 shrink-0">
+                            <ShieldCheck className="w-8 h-8 text-primary" />
+                         </div>
+                         <div className="space-y-4">
+                            <div>
+                              <h3 className="text-2xl font-black text-white italic uppercase tracking-tight">Subscription Agreement.</h3>
+                              <div className="flex items-center gap-2 text-emerald-500 mt-1">
+                                 <CheckCircle2 className="w-3.5 h-3.5" />
+                                 <span className="text-[10px] font-black uppercase tracking-widest">Protocol Accepted & Active</span>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                        <div className="bg-white/5 p-6 rounded-[32px] border border-white/10 text-center md:text-right">
-                           <div className="text-4xl font-black text-white tracking-tighter">$40<span className="text-lg text-white/40">/mo</span></div>
-                           <span className="text-[10px] font-black text-slate-500 block uppercase tracking-widest mt-1">Base Subscription</span>
-                        </div>
-                      </div>
-
-                      {/* Agreement & Protocol Section */}
-                      <div className="space-y-6">
-                        <div className="flex items-center gap-3">
-                          <Stars className="w-5 h-5 text-primary" />
-                          <h4 className="font-black text-white uppercase italic tracking-wider">Success-Share Agreement</h4>
-                        </div>
-                        <p className="text-sm md:text-base text-slate-400 font-medium italic leading-relaxed max-w-4xl">
-                          "To keep the Empire AI accessible, we operate on a performance-based partnership. A simple <span className="text-white font-bold">$40 Success-Share</span> is applied for every <span className="text-white font-bold">$1,000</span> earned through AI-generated assets (videos, posts, designs). This ensures we only grow when you grow. By maintaining this subscription, you authorize the Empire AI to act as your autonomous growth agent."
-                        </p>
-                        
-                        <div className="flex flex-wrap gap-4 pt-2">
-                           <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20">
+                            <p className="text-sm text-slate-400 font-medium italic leading-relaxed">
+                              "We wanted to make the Empire AI accessible to everyone from day one. To keep it affordable upfront, we decided to handle our partnership through a Success-Share model on the backend. A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, if you choose Auto-Pilot, you authorize the Empire AI to create and deploy content on your behalf either from high trends or your guidance, acting as your autonomous growth agent to ensure 24/7 expansion."
+                            </p>
+                            <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 w-fit">
                                <DollarSign className="w-4 h-4 text-primary" />
                                <span className="text-[10px] font-black text-primary uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
-                           </div>
-                           <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
-                               <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                               <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Auto-Pilot Authorized</span>
-                           </div>
-                        </div>
-                      </div>
-
-                      {/* Tier Details Grid */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="p-8 rounded-[40px] bg-white/5 border border-white/10 space-y-4 group hover:bg-white/[0.07] transition-all">
-                          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20">
-                            <Building2 className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <h4 className="text-xs font-black uppercase tracking-widest text-blue-400">Empire Expansion</h4>
-                            <p className="text-xl font-black text-white mt-1">$40 Unlock + $40/mo</p>
-                            <p className="text-[11px] text-slate-500 font-medium leading-relaxed mt-2 italic">Per additional business slot. Activated immediately upon node initialization.</p>
-                          </div>
-                        </div>
-                        <div className="p-8 rounded-[40px] bg-white/5 border border-white/10 space-y-4 group hover:bg-white/[0.07] transition-all">
-                          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 border border-emerald-500/20">
-                            <Zap className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <h4 className="text-xs font-black uppercase tracking-widest text-emerald-400">Milestone Payouts</h4>
-                            <p className="text-xl font-black text-white mt-1">Automatic & Secured</p>
-                            <p className="text-[11px] text-slate-500 font-medium leading-relaxed mt-2 italic">Success-shares are processed automatically as revenue milestones are reached.</p>
-                          </div>
-                        </div>
+                            </div>
+                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
 
-                  <div className="flex justify-center pt-8">
-                    <button 
-                      className="group relative px-12 py-6 bg-red-600 hover:bg-red-500 text-white rounded-[32px] font-black text-sm uppercase tracking-[0.2em] transition-all shadow-[0_0_40px_rgba(220,38,38,0.3)] hover:shadow-[0_0_60px_rgba(220,38,38,0.5)] active:scale-95 overflow-hidden"
-                      onClick={() => {
-                        if (confirm("Are you absolutely sure? Your Empire growth protocols will be terminated immediately.")) {
-                          alert("This is a master account. Deletion protocol suppressed.");
-                        }
-                      }}
-                    >
-                      <span className="relative z-10">I'm sure I want to lose my empire now</span>
-                      <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-[-25deg]" />
-                    </button>
-                  </div>
+                  <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-slate-900 text-white space-y-8">
+
+                      <div className="flex items-center gap-6">
+                        <div className="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center">
+                          <Diamond className="w-8 h-8 text-blue-400" />
+                        </div>
+                        <div>
+                          <h3 className="text-2xl font-black italic">Empire Elite</h3>
+                          <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Base Subscription: $40 / Month</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                         <span className="text-3xl font-black">$40</span>
+                         <span className="text-[10px] font-black text-slate-500 block uppercase tracking-widest">Current Base</span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                      <div className="p-6 rounded-[32px] bg-white/5 border border-white/10 space-y-2">
+                        <h4 className="text-xs font-black uppercase tracking-widest text-blue-400">Empire Expansion</h4>
+                        <p className="text-lg font-bold">$40 Unlock + $40/mo</p>
+                        <p className="text-[10px] text-slate-400 font-medium leading-relaxed">Per additional business slot authorized. Charged immediately upon activation.</p>
+                      </div>
+                      <div className="p-6 rounded-[32px] bg-white/5 border border-white/10 space-y-2">
+                        <h4 className="text-xs font-black uppercase tracking-widest text-emerald-400">Success Fee</h4>
+                        <p className="text-lg font-bold">$40 / $1,000</p>
+                        <p className="text-[10px] text-slate-400 font-medium leading-relaxed">Secured automatically upon revenue milestones.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center pt-8">
+                      <button 
+                        className="group relative px-12 py-6 bg-red-600 hover:bg-red-500 text-white rounded-[32px] font-black text-sm uppercase tracking-[0.2em] transition-all shadow-[0_0_40px_rgba(220,38,38,0.3)] hover:shadow-[0_0_60px_rgba(220,38,38,0.5)] active:scale-95 overflow-hidden"
+                        onClick={() => {
+                          if (confirm("Are you absolutely sure? Your Empire growth protocols will be terminated immediately.")) {
+                            alert("This is a master account. Deletion protocol suppressed.");
+                          }
+                        }}
+                      >
+                        <span className="relative z-10">I'm sure I want to lose my empire now</span>
+                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-[-25deg]" />
+                      </button>
+                    </div>
                 </div>
               )}
             </main>

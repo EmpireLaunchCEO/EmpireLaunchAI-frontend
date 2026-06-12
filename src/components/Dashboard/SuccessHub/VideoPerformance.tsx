@@ -11,31 +11,31 @@ const MOCK_VIDEOS = [
     id: 1,
     thumbnail: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=400&fit=crop',
     platform: 'TikTok',
-    views: '0',
-    likes: '0',
-    clicks: 0,
-    insight: 'Establishing neural sync...',
-    status: 'Syncing'
+    views: '12.4K',
+    likes: '1.2K',
+    clicks: 84,
+    insight: 'High Virality Potential',
+    status: 'Trending'
   },
   {
     id: 2,
     thumbnail: 'https://images.unsplash.com/photo-1611606063065-ee7946f0787a?w=400&h=400&fit=crop',
     platform: 'Instagram',
-    views: '0',
-    likes: '0',
-    clicks: 0,
-    insight: 'Establishing neural sync...',
-    status: 'Syncing'
+    views: '8.2K',
+    likes: '942',
+    clicks: 126,
+    insight: 'High Conversion',
+    status: 'Stable'
   },
   {
     id: 3,
     thumbnail: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=400&fit=crop',
     platform: 'YouTube',
-    views: '0',
-    likes: '0',
-    clicks: 0,
-    insight: 'Establishing neural sync...',
-    status: 'Syncing'
+    views: '2.1K',
+    likes: '341',
+    clicks: 42,
+    insight: 'Needs Hook Optimization',
+    status: 'At Risk'
   }
 ];
 

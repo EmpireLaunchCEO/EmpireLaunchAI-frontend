@@ -186,7 +186,6 @@ export default function Dashboard() {
                       <GrowthTracker
                         allTimeEarnings={(healthData?.revenue || 0) * 100}
                         progress={healthData?.growthScore}
-                        subscribers={healthData?.subscribers || 0}
                       />
                     </motion.div>
 

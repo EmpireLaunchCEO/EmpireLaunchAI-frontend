@@ -113,24 +113,9 @@ export default function StudioPage() {
       const data = await response.json();
       setRawVideoUpload(prev => ({ ...prev, status: 'complete', progress: 100, metadata: data }));
       
-      // Trigger AI enhancement
       setActiveRenderType('raw-video');
       setRenderLogs(generateMockRenderLogs('raw-video'));
       setIsRendering(true);
-
-      try {
-        const enhanceResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/cinema/enhance-video`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ videoPath: data.videoUrl }),
-        });
-        
-        if (!enhanceResponse.ok) throw new Error('Enhancement failed');
-        const enhancedData = await enhanceResponse.json();
-        console.log('Video enhanced:', enhancedData);
-      } catch (err) {
-        console.error('Enhancement error:', err);
-      }
     } catch (error) {
       console.error('Raw video upload error:', error);
       setRawVideoUpload(prev => ({ ...prev, status: 'error' }));
@@ -163,7 +148,7 @@ export default function StudioPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: 'system', // In a real app, this would be the actual user ID
-          photoUrl: facialDnaUpload.metadata?.photoUrl,
+          photoPath: facialDnaUpload.metadata?.path,
           script: "Welcome to my Empire! This is my Neural Twin double, ready to market 24/7.",
         }),
       });
@@ -181,34 +166,6 @@ export default function StudioPage() {
     setRenderLogs([]);
     setIsRendering(false);
   };
-
-  // Add usage states
-  const [usage, setUsage] = useState<{ 
-    neural: { remaining: number, limit: number }, 
-    enhanced: { remaining: number, limit: string },
-    design: { remaining: number, limit: number } 
-  } | null>(null);
-
-  // Fetch usage on mount
-  useEffect(() => {
-    const fetchUsage = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/cinema/usage`, {
-          headers: {
-            'Authorization': 'Bearer mock-mobile-token',
-            'x-user-id': '00000000-0000-0000-0000-000000000000'
-          }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setUsage(data);
-        }
-      } catch (e) {
-        console.error('Failed to fetch usage:', e);
-      }
-    };
-    fetchUsage();
-  }, []);
 
   const startDemo = () => {
     setIsDemoMode(true);
@@ -283,23 +240,12 @@ export default function StudioPage() {
                     <p className="text-sm font-medium text-foreground italic leading-relaxed">
                       "I've synchronized <span className="text-primary font-bold">1,000,000+ DNA codes</span> from across the global marketplace. Whether it's custom rugs, apparel, or digital blueprints, I can now synthesize <span className="text-primary font-bold">anything</span> based on market-winning patterns. Choose a vibe and let's build your next physical or digital empire item."
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/20 text-[8px] font-black uppercase tracking-widest text-cyan-400">
-                        <Database className="w-2.5 h-2.5" />
-                        Universal Vault Injected — Infinite Synthesis Active
-                        <Shield className="w-2.5 h-2.5" />
-                      </div>
-                      {usage && (
-                        <div className={cn(
-                          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[8px] font-black uppercase tracking-widest",
-                          usage.design.remaining > 0 ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" : "bg-red-500/10 border-red-500/20 text-red-500"
-                        )}>
-                          <Zap className="w-2.5 h-2.5" />
-                          {usage.design.remaining} / {usage.design.limit} High-Res Designs Left This Month
-                        </div>
-                      )}
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/20 text-[8px] font-black uppercase tracking-widest text-cyan-400">
+                      <Database className="w-2.5 h-2.5" />
+                      Universal Vault Injected — Infinite Synthesis Active
+                      <Shield className="w-2.5 h-2.5" />
                     </div>
-
+                    
                     {!isDemoMode && (
                       <button 
                         onClick={startDemo}
@@ -369,17 +315,7 @@ export default function StudioPage() {
                           </div>
                           <div>
                             <h3 className="text-xl md:text-2xl font-black text-white italic">Neural Twin.</h3>
-                            <div className="flex items-center gap-2">
-                              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
-                              {usage && (
-                                <div className={cn(
-                                  "px-2 py-0.5 rounded-full border text-[8px] font-black uppercase",
-                                  usage.neural.remaining > 0 ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" : "bg-red-500/10 border-red-500/20 text-red-500"
-                                )}>
-                                  {usage.neural.remaining} / {usage.neural.limit} Left Today
-                                </div>
-                              )}
-                            </div>
+                            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
                           </div>
                         </div>
 

@@ -1,16 +1,66 @@
-nohup: ignoring input
 
 > EmpireLaunchAI-frontend@4.7.0-ELECTRIC-REVENUE dev
 > next dev
 
-▲ Next.js 16.2.6 (Turbopack)
-- Local:         http://localhost:3000
-- Network:       http://169.254.0.21:3000
-✓ Ready in 539ms
-⚠ `eslint` configuration in next.config.mjs is no longer supported. See more info here: https://nextjs.org/docs/app/api-reference/cli/next#next-lint-options
-⚠ Invalid next.config.mjs options detected: 
-⚠     Unrecognized key(s) in object: 'eslint'
-⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+   ▲ Next.js 15.5.19
+   - Local:        http://localhost:3000
+   - Network:      http://169.254.0.21:3000
+   - Environments: .env.local
 
-○ Compiling / ...
- GET / 200 in 262ms (next.js: 17ms, application-code: 244ms)
+ ✓ Starting...
+ ✓ Ready in 2.7s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 694ms (115 modules)
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 18.3s (1756 modules)
+ ⨯ [Error: Cannot find module '/home/team/shared/EmpireLaunchAI-frontend/.next/server/app/page.js'
+Require stack:
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/require.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/load-components.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/utils.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/swc/options.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/swc/index.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/analysis/parse-module.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/analysis/get-page-static-info.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/lib/router-server.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/lib/start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ ⨯ [Error: Cannot find module '/home/team/shared/EmpireLaunchAI-frontend/.next/server/app/page.js'
+Require stack:
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/require.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/load-components.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/utils.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/swc/options.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/swc/index.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/analysis/parse-module.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/analysis/get-page-static-info.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/lib/router-server.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/lib/start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ ⨯ [Error: Cannot find module '/home/team/shared/EmpireLaunchAI-frontend/.next/server/app/(authenticated)/dashboard/page.js'
+Require stack:
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/require.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/load-components.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/utils.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/swc/options.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/swc/index.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/analysis/parse-module.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/build/analysis/get-page-static-info.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/lib/router-server.js
+- /home/team/shared/EmpireLaunchAI-frontend/node_modules/next/dist/server/lib/start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/dashboard'
+}
+ ○ Compiling /_error ...
+ GET / 500 in 40139ms
+ GET / 500 in 31454ms

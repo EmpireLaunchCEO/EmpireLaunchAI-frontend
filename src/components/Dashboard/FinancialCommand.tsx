@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity, Minus, Maximize2, DollarSign } from 'lucide-react';
+import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity, Minus, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
-import { useEmpire } from '@/lib/EmpireContext';
 
 interface FinancialCommandProps {
   withholdableEarnings?: number;
@@ -16,13 +15,12 @@ interface FinancialCommandProps {
 }
 
 export function FinancialCommand({ 
-  withholdableEarnings = 0, 
-  securedDues = 0, 
-  growthScore = 0,
+  withholdableEarnings = 125050, 
+  securedDues = 18000, 
+  growthScore = 92,
   businessId = "1",
   onActivateGrowthProtocol
 }: Partial<FinancialCommandProps>) {
-  const { isAdmin } = useEmpire();
   const [infraBalances, setInfraBalances] = useState<InfrastructureBalance[]>([]);
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -33,7 +31,7 @@ export function FinancialCommand({
     if (saved === 'true') setIsMinimized(true);
 
     const loadInfra = async () => {
-      const bals = await infrastructureService.getBalances().catch(() => []);
+      const bals = await infrastructureService.getBalances();
       setInfraBalances(bals);
     };
     loadInfra();
@@ -51,24 +49,16 @@ export function FinancialCommand({
     return `${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
   };
 
-  // REALITY GROUNDING: All numbers strictly 0.00
-  const subscriptions = isAdmin ? [
-    { name: "Active User Subscriptions", amount: 0, date: "No active users", type: "platform" },
-  ] : (withholdableEarnings > 0 ? [
-    { name: "EmpireLaunch AI Platform", amount: 0, date: "Pending Activation", type: "app" },
-  ] : []);
-
-  // Infrastructure items
-  const displayInfra = infraBalances.length > 0 ? infraBalances : [
-    { platform: 'Railway', balance: 0.00, status: 'active', currency: 'USD' },
-    { platform: 'OpenAI', balance: 0.00, status: 'active', currency: 'USD' },
-    { platform: 'Gemini', balance: 0.00, status: 'active', currency: 'USD' },
-    { platform: 'Stripe', balance: 0.00, status: 'active', currency: 'USD' }
+  const subscriptions = [
+    { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },
+    { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
+    { name: "EmpireLaunch AI Platform", amount: 4000, date: "June 20, 2024", type: "app" },
   ];
 
-  const successShareAmount = 0;
-  const successShareLabel = isAdmin ? "Platform Success-Shares" : "Success-Share (Due)";
-  const successShareDesc = isAdmin ? "Total commission from all user sales" : "4% platform partner fee";
+  const dues = [
+    { name: "Etsy Listing Fees", amount: 420, date: "June 30, 2024" },
+    { name: "Fiverr Commission", amount: 1250, date: "June 30, 2024" },
+  ];
 
   if (isMinimized) {
     return (
@@ -102,18 +92,18 @@ export function FinancialCommand({
         <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Empire Finances</h3>
       </div>
 
-      <div className="absolute top-4 right-5 z-20">
+      <div className="absolute top-8 right-8 z-20">
         <button 
           onClick={toggleMinimize}
-          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
         >
-          <Minus className="w-4 h-4" />
+          <Minus className="w-5 h-5" />
         </button>
       </div>
 
-      <div className="relative z-10 space-y-12">
+      <div className="relative z-10 space-y-10">
         
-        {/* Top Header: Efficiency Ring & Available Earnings */}
+        {/* Top Header: Bucket Visuals */}
         <div className="flex flex-col md:flex-row gap-8 items-center border-b border-theme/30 pb-8">
           <div className="relative w-32 h-32 shrink-0">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
@@ -122,70 +112,77 @@ export function FinancialCommand({
                 cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-primary" strokeWidth="12"
                 strokeDasharray="251.2"
                 initial={{ strokeDashoffset: 251.2 }}
-                animate={{ strokeDashoffset: 251.2 * (1 - 0) }}
+                animate={{ strokeDashoffset: 251.2 * (1 - 0.75) }}
                 strokeLinecap="round"
                 transition={{ duration: 1.5, ease: "easeOut" }}
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Efficiency</span>
-              <span className="text-xl font-black">0%</span>
+              <span className="text-xl font-black">{growthScore}%</span>
             </div>
           </div>
 
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 space-y-2 pr-12">
             <p className="text-slate-400 text-xs font-medium italic">Monitoring capital velocity and upcoming obligations.</p>
-            <div className="flex flex-wrap gap-4">
-              <div className="px-6 py-3 bg-primary/10 border border-primary/30 rounded-2xl flex items-center gap-3">
-                <DollarSign className="w-5 h-5 text-primary" />
-                <div className="flex flex-col">
-                  <span className="text-[8px] font-black text-primary uppercase tracking-widest">Available to Withdraw</span>
-                  <span className="text-xl font-black text-foreground">${formatCurrency(withholdableEarnings)}</span>
-                </div>
+            <div className="flex gap-4 pt-2">
+              <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
+                <span className="text-[10px] font-black text-primary uppercase">Available: {formatCurrency(withholdableEarnings)}</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Infrastructure Monitor - Restore prominance */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
-            <Cpu className="w-3 h-3" />
-            Infrastructure Balance Monitors
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {displayInfra.map((item, i) => (
-              <div key={i} className="p-5 bg-theme-background border border-theme rounded-[24px] space-y-3 group hover:border-primary/40 transition-all">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">{item.platform}</span>
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+        {/* Infrastructure Monitor */}
+        {infraBalances.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
+              <Cpu className="w-3 h-3" />
+              System Infrastructure Balances
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {infraBalances.map((item, i) => (
+                <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[8px] font-black uppercase text-muted-foreground">{item.platform}</span>
+                    {item.status === 'low' && <Zap className="w-3 h-3 text-amber-500 animate-pulse" />}
+                  </div>
+                  <p className={cn(
+                    "text-lg font-black tracking-tighter italic",
+                    item.status === 'low' ? "text-amber-500" : "text-foreground"
+                  )}>
+                    ${item.balance.toFixed(2)}
+                  </p>
+                  <div className="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                    <div 
+                      className={cn("h-full", item.status === 'low' ? "bg-amber-500" : "bg-primary")} 
+                      style={{ width: `${Math.min(100, (item.balance / 50) * 100)}%` }} 
+                    />
+                  </div>
                 </div>
-                <p className="text-xl font-black tracking-tighter italic text-foreground">
-                  ${item.balance.toFixed(2)}
-                </p>
-                <div className="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
-                  <div className="h-full bg-primary/20" style={{ width: '15%' }} />
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* REVERTED TO TWO COLUMN LAYOUT: Subscriptions | Success Share */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Breakdown Sections */}
+        <div className="flex flex-col gap-12">
           
-          {/* Column 1: Empire Obligations */}
+          {/* Subscriptions Section */}
           <div className="space-y-6">
             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
               <CreditCard className="w-3 h-3" />
-              Empire Obligations
+              Active Subscriptions
             </div>
             <div className="space-y-3">
-              {subscriptions.length > 0 ? subscriptions.map((sub, i) => (
-                <div key={`sub-${i}`} className="p-6 rounded-[24px] border bg-theme-background border-theme flex items-center justify-between transition-all">
+              {subscriptions.map((sub, i) => (
+                <div key={i} className={cn(
+                  "p-6 rounded-[24px] border flex items-center justify-between transition-all",
+                  sub.type === 'app' ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"
+                )}>
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-primary">
-                      {(sub.type === 'app' || sub.type === 'platform') ? <AppWindow className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />}
+                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", sub.type === 'app' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
+                      {sub.type === 'app' ? <AppWindow className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />}
                     </div>
                     <div>
                       <p className="text-xs font-black uppercase italic">{sub.name}</p>
@@ -196,70 +193,45 @@ export function FinancialCommand({
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>
+                    {sub.type === 'app' && <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>}
                   </div>
                 </div>
-              )) : (
-                <div className="p-10 border-2 border-dashed border-theme rounded-[32px] text-center bg-slate-950/50">
-                  <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em] italic">No pending obligations</p>
-                </div>
-              )}
+              ))}
             </div>
           </div>
 
-          {/* Column 2: Success-Shares Card */}
+          {/* Dues Section */}
           <div className="space-y-6">
-            <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest">
-              <TrendingUp className="w-3 h-3" />
-              Success Protocols
+            <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">
+              <ShieldCheck className="w-3 h-3" />
+              Marketplace Dues
             </div>
-            <div className="p-8 bg-emerald-500/5 border-2 border-emerald-500/20 rounded-[40px] space-y-8 relative overflow-hidden h-full">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[40px] -mr-16 -mt-16 pointer-events-none" />
+            <div className="space-y-3">
+              {dues.map((due, i) => (
+                <div key={i} className="p-6 bg-theme-background border border-theme rounded-[24px] flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-amber-500">
+                      <Bucket className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-black uppercase italic">{due.name}</p>
+                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
+                        <Calendar className="w-2.5 h-2.5" /> {due.date}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-sm font-black italic text-amber-500">{formatCurrency(due.amount)}</p>
+                </div>
+              ))}
               
-              <div className="flex items-center gap-4 relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                  <ShieldCheck className="w-7 h-7 text-emerald-400" />
-                </div>
-                <div>
-                  <h4 className="text-base font-black uppercase tracking-wider text-emerald-400 italic">{successShareLabel}</h4>
-                  <p className="text-[10px] font-medium text-emerald-400/70">{successShareDesc}</p>
-                </div>
-              </div>
-
-              <div className="text-left relative z-10">
-                <p className="text-4xl font-black text-emerald-400 italic leading-none">
-                  $0.00
-                </p>
-                <span className="text-[9px] font-black text-emerald-500/60 uppercase tracking-widest mt-2 block">
-                  {isAdmin ? "Total Platform Collection" : "Current Milestone Progress"}
-                </span>
-              </div>
-
-              <div className="space-y-4 relative z-10">
-                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em]">
-                  <span className="text-slate-500">Milestone Cycle</span>
-                  <span className="text-emerald-500">0%</span>
-                </div>
-                <div className="h-4 bg-slate-900 border border-white/5 rounded-full overflow-hidden p-1">
-                  <motion.div
-                    initial={{ width: '0%' }}
-                    animate={{ width: '0%' }}
-                    className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.4)]"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-2 relative z-10">
-                <div className="flex items-center gap-2 text-[9px] font-black text-slate-500 uppercase tracking-widest mb-6">
-                  <Zap className="w-4 h-4 text-emerald-500" />
-                  $40 per $1,000 Revenue Protocol
-                </div>
-                <button className="w-full flex items-center justify-center gap-3 px-8 py-5 bg-emerald-500/10 border border-emerald-500/20 rounded-[20px] text-emerald-400 text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-xl active:scale-95 group">
-                  {isAdmin ? "Audit All Empires" : "Request Success Report"}
-                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              <div className="mt-8 pt-4 border-t border-theme/30">
+                <button className="w-full py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
+                  Settle All Dues
                 </button>
               </div>
             </div>
           </div>
+
         </div>
 
       </div>

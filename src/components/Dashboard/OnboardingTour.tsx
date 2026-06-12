@@ -219,8 +219,7 @@ export function OnboardingTour() {
   if (!Icon) return null;
 
   return (
-    <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-4 md:p-6 bg-slate-900/60 pointer-events-auto overflow-hidden max-w-full">
-      <div className="absolute inset-0 cursor-pointer" onClick={handleComplete} title="Click to skip tour" />
+    <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center p-4 md:p-6 bg-slate-900/60 pointer-events-none overflow-hidden max-w-full">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}

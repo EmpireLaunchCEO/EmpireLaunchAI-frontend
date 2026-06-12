@@ -13,10 +13,15 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const transactions: any[] = [];
+const transactions = [
+  { id: '1', type: 'sale', platform: 'Etsy', amount: 45.00, date: '2h ago', status: 'completed', origin: 'empire-original', name: 'Vintage Bloom Journal' },
+  { id: '2', type: 'sale', platform: 'Stripe', amount: 29.99, date: '5h ago', status: 'completed', origin: 'growth-protocol', name: 'Digital Planner Pro' },
+  { id: '3', type: 'fee', platform: 'EmpireLaunch', amount: -40.00, name: 'Growth Share ($1,000 Milestone)', date: 'Yesterday', status: 'processed' },
+  { id: '4', type: 'sale', platform: 'Etsy', amount: 15.50, date: 'Yesterday', status: 'completed', origin: 'organic', name: 'Classic Sticker Pack' },
+];
 
 export function EmpireLedger() {
-  const securedShares = 0.00;
+  const securedShares = 60.00;
 
   return (
     <div className="space-y-8">
@@ -48,7 +53,7 @@ export function EmpireLedger() {
               </tr>
             </thead>
             <tbody className="divide-y divide-theme">
-              {transactions.length > 0 ? transactions.map((tx) => (
+              {transactions.map((tx) => (
                 <tr key={tx.id} className="hover:bg-theme-background/50 transition-colors group">
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-3">
@@ -102,13 +107,7 @@ export function EmpireLedger() {
                     {tx.amount > 0 ? `+${tx.amount.toFixed(2)}` : `-${Math.abs(tx.amount).toFixed(2)}`}
                   </td>
                 </tr>
-              )) : (
-                <tr>
-                  <td colSpan={4} className="px-8 py-20 text-center">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">No transactions recorded yet</p>
-                  </td>
-                </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>
