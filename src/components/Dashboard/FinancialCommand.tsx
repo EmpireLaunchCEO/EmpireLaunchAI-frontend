@@ -75,7 +75,8 @@ export function FinancialCommand({
   const { connectedPlatforms } = useEmpire();
 
   const subscriptions = [
-    { name: "Empire Subscription - platform fee 40$", amount: 4000, date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }), type: "app", successShare: "40/1k" },
+    { name: "Empire Subscription", amount: 4000, date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }), type: "app" },
+    { name: "Success-Shares (40/1k Protocol)", amount: 0, date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }), type: "app", successShare: "40/1k" },
   ];
 
   const dues: any[] = [];
@@ -211,7 +212,7 @@ export function FinancialCommand({
                   <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-4">
                       <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", sub.type === 'app' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
-                        {sub.type === 'app' ? <AppWindow className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />}
+                        {sub.name.includes('Shares') ? <Stars className="w-5 h-5" /> : (sub.type === 'app' ? <AppWindow className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />)}
                       </div>
                       <div>
                         <p className="text-xs font-black uppercase italic">{sub.name}</p>
@@ -222,16 +223,16 @@ export function FinancialCommand({
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>
-                      {sub.type === 'app' && <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>}
+                      <span className="text-[8px] font-black text-primary uppercase">{sub.amount > 0 ? "Platform Due" : "No Dues"}</span>
                     </div>
                   </div>
                   
-                  {sub.type === 'app' && (
+                  {sub.successShare && (
                     <div className="pt-4 border-t border-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div className="flex items-center gap-2">
-                        <Stars className="w-4 h-4 text-primary" />
+                        <Activity className="w-4 h-4 text-primary" />
                         <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                          Success-Share Protocol: {sub.successShare}
+                          Success-Share Audit Log
                         </span>
                       </div>
                       <button 
@@ -239,7 +240,7 @@ export function FinancialCommand({
                         disabled={isDownloading}
                         className="flex items-center justify-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-xl transition-all active:scale-95 disabled:opacity-50"
                       >
-                        <Activity className={cn("w-3.5 h-3.5 text-primary", isDownloading && "animate-spin")} />
+                        <ShieldCheck className={cn("w-3.5 h-3.5 text-primary", isDownloading && "animate-spin")} />
                         <span className="text-[9px] font-black text-primary uppercase tracking-widest">
                           {isDownloading ? "Generating Audit..." : "Download Shares Audit"}
                         </span>
