@@ -71,11 +71,21 @@ export function FinancialCommand({
     return `${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
   };
 
+  const { connectedPlatforms } = useEmpire();
+
   const subscriptions = [
     { name: "Empire Subscription - platform fee 40$", amount: 4000, date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }), type: "app", successShare: "40/1k" },
   ];
 
   const dues: any[] = [];
+  
+  if (connectedPlatforms.includes('Etsy')) {
+    dues.push({ 
+      name: "Etsy Listing Fees", 
+      amount: securedDues || 0, 
+      date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) 
+    });
+  }
 
   if (isMinimized) {
     return (
@@ -241,30 +251,32 @@ export function FinancialCommand({
           </div>
 
           {/* Dues Section */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">
-              <ShieldCheck className="w-3 h-3" />
-              Marketplace Dues
-            </div>
-            <div className="space-y-3">
-              {dues.map((due, i) => (
-                <div key={i} className="p-6 bg-theme-background border border-theme rounded-[24px] flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-amber-500">
-                      <Bucket className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-black uppercase italic">{due.name}</p>
-                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
-                        <Calendar className="w-2.5 h-2.5" /> {due.date}
+          {dues.length > 0 && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">
+                <ShieldCheck className="w-3 h-3" />
+                Marketplace Dues
+              </div>
+              <div className="space-y-3">
+                {dues.map((due, i) => (
+                  <div key={i} className="p-6 bg-theme-background border border-theme rounded-[24px] flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-amber-500">
+                        <Bucket className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-black uppercase italic">{due.name}</p>
+                        <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
+                          <Calendar className="w-2.5 h-2.5" /> {due.date}
+                        </div>
                       </div>
                     </div>
+                    <p className="text-sm font-black italic text-amber-500">{formatCurrency(due.amount)}</p>
                   </div>
-                  <p className="text-sm font-black italic text-amber-500">{formatCurrency(due.amount)}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
         </div>
 

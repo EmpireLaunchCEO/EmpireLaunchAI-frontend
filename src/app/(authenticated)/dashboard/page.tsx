@@ -171,6 +171,7 @@ export default function Dashboard() {
                     <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                       <FinancialCommand
                         withholdableEarnings={(healthData?.revenue || 0) * 100}
+                        securedDues={(healthData?.pendingDues || 0) * 100}
                         growthScore={healthData?.growthScore}
                         onActivateGrowthProtocol={(name) => {
                           setGrowthProtocolGateProduct(name);
