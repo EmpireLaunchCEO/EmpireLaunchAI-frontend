@@ -136,7 +136,7 @@ export const GrowthTracker = ({
           <p className="text-slate-400 text-xs font-medium italic">Monitor your path to financial dominance and strategic milestones.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
+            <div className="bg-theme-background/30 rounded-3xl p-6 border border-theme">
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground block mb-2">Monthly Empire Earnings</span>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
