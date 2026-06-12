@@ -56,12 +56,10 @@ export default function AuthenticatedLayout({
         <Suspense fallback={null}>
           <OnboardingTour />
         </Suspense>
-
-        {/* NAVIGATION - ABSOLUTE TOP OF EVERYTHING */}
-        <div className="relative z-[999999] pointer-events-auto">
-          <MobileNav />
-        </div>
       </div>
+
+      {/* NAVIGATION - ABSOLUTE TOP OF EVERYTHING, OUTSIDE MAIN FLEX */}
+      <MobileNav />
     </SubscriptionGuard>
   );
 }
