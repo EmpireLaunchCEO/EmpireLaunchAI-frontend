@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService, empireService } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
-import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
@@ -139,7 +138,24 @@ export default function Dashboard() {
                     className="text-center space-y-4"
                   >
                     <div className="flex items-center justify-center gap-2">
-                      <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Link Center Active</span>
+                       <div className={cn(
+                          "px-4 py-1.5 rounded-full border flex items-center gap-2 shadow-sm",
+                          aiMode === 'empire' 
+                            ? "bg-amber-500/10 border-amber-500/30" 
+                            : "bg-primary/10 border-primary/30"
+                        )}
+                      >
+                        <div className={cn(
+                          "w-1.5 h-1.5 rounded-full animate-pulse",
+                          aiMode === 'empire' ? "bg-amber-500" : "bg-primary"
+                        )} />
+                        <span className={cn(
+                          "text-[8px] font-black uppercase tracking-[0.2em]",
+                          aiMode === 'empire' ? "text-amber-500" : "text-primary"
+                        )}>
+                          {aiMode === 'empire' ? 'Auto-Pilot Mode Active' : 'Co-Pilot Mode Active'}
+                        </span>
+                      </div>
                     </div>
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
                       {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE') ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
@@ -148,34 +164,6 @@ export default function Dashboard() {
 
                   {/* 2. Operations Column */}
                   <div className="max-w-6xl mx-auto space-y-12 md:space-y-16" style={{ contentVisibility: 'auto' }}>
-                    {!isLinkingComplete && (
-                      <div className="space-y-6">
-                        <div className="flex justify-center">
-                          <motion.div 
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className={cn(
-                              "px-4 py-1.5 rounded-full border flex items-center gap-2 shadow-sm",
-                              aiMode === 'empire' 
-                                ? "bg-amber-500/10 border-amber-500/30" 
-                                : "bg-primary/10 border-primary/30"
-                            )}
-                          >
-                            <div className={cn(
-                              "w-1.5 h-1.5 rounded-full animate-pulse",
-                              aiMode === 'empire' ? "bg-amber-500" : "bg-primary"
-                            )} />
-                            <span className={cn(
-                              "text-[8px] font-black uppercase tracking-[0.2em]",
-                              aiMode === 'empire' ? "text-amber-500" : "text-primary"
-                            )}>
-                              {aiMode === 'empire' ? 'Auto-Pilot Mode Active' : 'Co-Pilot Mode Active'}
-                            </span>
-                          </motion.div>
-                        </div>
-                        <GuidedLinking currentEmpire={empireData} onRefresh={fetchData} />
-                      </div>
-                    )}
                     
                     {/* Primary Results Section */}
                     <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
