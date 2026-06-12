@@ -56,9 +56,9 @@ export default function LinkCenterPage() {
           <div className="flex items-center justify-center gap-2">
             <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Link Center Active</span>
           </div>
-          <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-            {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE') ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
-          </h1>
+                    <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
+                      {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE' || !empireData?.name) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title)}
+                    </h1>
         </div>
 
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000">

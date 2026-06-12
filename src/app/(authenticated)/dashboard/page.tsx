@@ -128,26 +128,6 @@ export default function Dashboard() {
                     viewport={{ once: true }}
                     className="text-center space-y-4"
                   >
-                    <div className="flex items-center justify-center gap-2">
-                       <div className={cn(
-                          "px-4 py-1.5 rounded-full border flex items-center gap-2 shadow-sm",
-                          aiMode === 'empire' 
-                            ? "bg-amber-500/10 border-amber-500/30" 
-                            : "bg-primary/10 border-primary/30"
-                        )}
-                      >
-                        <div className={cn(
-                          "w-1.5 h-1.5 rounded-full animate-pulse",
-                          aiMode === 'empire' ? "bg-amber-500" : "bg-primary"
-                        )} />
-                        <span className={cn(
-                          "text-[8px] font-black uppercase tracking-[0.2em]",
-                          aiMode === 'empire' ? "text-amber-500" : "text-primary"
-                        )}>
-                          {aiMode === 'empire' ? 'Auto-Pilot Mode Active' : 'Co-Pilot Mode Active'}
-                        </span>
-                      </div>
-                    </div>
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
                       {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE' || !empireData?.name) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title)}
                     </h1>

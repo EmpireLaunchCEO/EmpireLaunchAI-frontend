@@ -87,34 +87,6 @@ export function OnboardingTour() {
       page: "/settings?tab=link-center"
     },
     {
-      title: "AI Intelligence",
-      description: "This is the brain of the operation. Here you decide how much control I have.",
-      target: "tab-ai-intelligence",
-      icon: Zap,
-      page: "/settings?tab=ai-intelligence"
-    },
-    {
-      title: "Co-Pilot Mode",
-      description: "In Co-Pilot, I'll do the heavy lifting but I'll always ask for your final approval before taking action.",
-      target: "tab-ai-intelligence",
-      icon: Bot,
-      page: "/settings?tab=ai-intelligence"
-    },
-    {
-      title: "Auto-Pilot Mode",
-      description: "Switch to Auto-Pilot for maximum growth. I'll execute strategies and manage your empire autonomously 24/7.",
-      target: "tab-ai-intelligence",
-      icon: Zap,
-      page: "/settings?tab=ai-intelligence"
-    },
-    {
-      title: "Notification Center",
-      description: "Configure your alerts here. We can notify you of new sales or when the AI has content ready for your final look.",
-      target: "tab-notifications",
-      icon: SettingsIcon,
-      page: "/settings?tab=notifications"
-    },
-    {
       title: "Real-Time Alerts",
       description: "Keep an eye on this bell! It will pulse when you have new sales or when I need your approval on a new strategy.",
       target: "notification-bell-mobile",
@@ -123,9 +95,9 @@ export function OnboardingTour() {
     },
     {
       title: "That's the Tour!",
-      description: "When you're ready to link your apps so I can work and scale your business with your direction, go to the AI Intelligence Tab under Settings, and Put me on Auto-Pilot! You can put me back to Co-Pilot any time after we get you Linked!",
+      description: "When you're ready to link your apps so I can work and scale your business with your direction, go to the Link Center and set your preferred AI permissions for each platform. You can change these any time!",
       icon: Stars,
-      page: "/settings"
+      page: "/link-center"
     }
   ], []);
 

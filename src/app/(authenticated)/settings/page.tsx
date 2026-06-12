@@ -149,7 +149,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
 };
 
 export default function SettingsPage() {
-  const { theme, setTheme, aiMode, setAiMode, isAdmin, setIsAdmin, isProtocolAccepted, acceptProtocols, connectedPlatforms, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
+  const { theme, setTheme, isAdmin, setIsAdmin, isProtocolAccepted, acceptProtocols, connectedPlatforms, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
   const { isLinked: isStripeLinked } = useStripeStatus();
 
   const [activeTab, setActiveTab] = useState('link-center');
@@ -216,9 +216,9 @@ export default function SettingsPage() {
             </div>
           </div>
           <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-            {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE') ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
+            {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE' || !empireData?.name) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title)}
           </h1>
-        </div>
+
 
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000">
           <div className="flex flex-col lg:flex-row gap-8 md:gap-12 relative items-start">
