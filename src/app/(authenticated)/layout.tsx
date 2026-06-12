@@ -49,14 +49,15 @@ export default function AuthenticatedLayout({
           <NotificationBell id="notification-bell-mobile" />
         </div>
 
-        {/* NAVIGATION & BRAIN - HIGHEST Z-INDEX */}
-        <MobileNav />
         <GeminiBrainOverlay />
 
         {/* TOUR - OVER EVERYTHING ELSE */}
         <Suspense fallback={null}>
           <OnboardingTour />
         </Suspense>
+
+        {/* NAVIGATION - ABSOLUTE TOP OF STACK */}
+        <MobileNav />
       </div>
     </SubscriptionGuard>
   );
