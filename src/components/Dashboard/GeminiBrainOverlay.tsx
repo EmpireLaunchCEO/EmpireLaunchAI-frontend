@@ -26,8 +26,10 @@ export function GeminiBrainOverlay() {
     }
   }, [messages, isOpen]);
 
-  const handlePointerDown = () => {
-    // Start 2 second timer to unlock dragging
+  const handlePointerDown = (e: React.PointerEvent) => {
+    // Prevent default to stop browser context menu on long press
+    if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
+    
     holdTimerRef.current = setTimeout(() => {
       setIsDraggable(true);
       if (window.navigator.vibrate) window.navigator.vibrate(50);
@@ -39,15 +41,12 @@ export function GeminiBrainOverlay() {
       clearTimeout(holdTimerRef.current);
       holdTimerRef.current = null;
     }
-    // Note: We don't reset isDraggable here immediately to allow the drag to finish
-    // isDraggable will be reset on dragEnd
   };
 
-  const toggleChat = () => {
-    // Only toggle if we weren't just dragging
-    if (!isDraggable) {
-      setIsOpen(!isOpen);
-    }
+  const toggleChat = (e: React.MouseEvent) => {
+    // Prevent the click from happening if we just finished a drag
+    if (isDraggable) return;
+    setIsOpen(!isOpen);
   };
 
   const handleSubmit = async (e?: React.FormEvent) => {
@@ -124,11 +123,10 @@ export function GeminiBrainOverlay() {
         onDragEnd={() => {
           setIsDraggable(false);
         }}
-        className="fixed z-[9999]"
+        className="fixed z-[99999]"
         style={{ 
-          top: dragPosition.y || '50%', 
-          right: 24,
-          translateY: dragPosition.y ? 0 : '-50%'
+          top: 'calc(50% - 28px)', 
+          right: 24
         }}
       >
         <motion.button
@@ -137,13 +135,18 @@ export function GeminiBrainOverlay() {
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
           onClick={toggleChat}
+          onContextMenu={(e) => {
+            if (holdTimerRef.current || isDraggable) {
+              e.preventDefault();
+            }
+          }}
           className={cn(
-            "group w-14 h-14 rounded-full shadow-2xl flex items-center justify-center relative transition-all duration-500",
+            "group w-14 h-14 rounded-full shadow-2xl flex items-center justify-center relative",
             "bg-theme-gradient p-[2px]", // High-fidelity gradient ring
             isDraggable && "ring-4 ring-white animate-pulse scale-110"
           )}
         >
-          <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center overflow-hidden relative">
+          <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center overflow-hidden relative pointer-events-none">
             {isOpen ? (
               <X className="w-6 h-6 text-primary relative z-10" />
             ) : (
@@ -151,7 +154,8 @@ export function GeminiBrainOverlay() {
                 <img 
                   src="/neural-core.webp" 
                   alt="Neural Brain" 
-                  className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]"
+                  draggable={false}
+                  className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)] select-none"
                 />
                 <motion.div 
                   animate={{ opacity: [0.3, 0.6, 0.3], scale: [0.8, 1.2, 0.8] }}

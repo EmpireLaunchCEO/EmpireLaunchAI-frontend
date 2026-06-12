@@ -1,7 +1,8 @@
 "use client";
 
 import React from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import {
   Home,
   Settings,
@@ -14,14 +15,7 @@ import { useEmpire } from '@/lib/EmpireContext';
 
 export function MobileNav() {
   const pathname = usePathname();
-  const router = useRouter();
   const { isLinkingComplete } = useEmpire();
-
-  const handleNav = (e: React.MouseEvent | React.TouchEvent, href: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    router.push(href);
-  };
 
   return (
     <div 
@@ -31,9 +25,8 @@ export function MobileNav() {
       }}
     >
         {/* Home */}
-        <button
-          onClick={(e) => handleNav(e, '/dashboard')}
-          onTouchEnd={(e) => handleNav(e, '/dashboard')}
+        <Link
+          href="/dashboard"
           id="nav-home"
           className={cn(
             "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",
@@ -41,7 +34,7 @@ export function MobileNav() {
           )}
         >
           <div className={cn(
-            "p-2 rounded-xl transition-all shadow-2xl pointer-events-none",
+            "p-2 rounded-xl transition-all shadow-2xl",
             pathname === '/dashboard'
               ? "bg-primary text-white shadow-primary/20"
               : "bg-transparent text-white/40"
@@ -49,15 +42,14 @@ export function MobileNav() {
             <Home className="w-6 h-6" />
           </div>
           <span className={cn(
-            "text-[10px] font-black uppercase tracking-tighter pointer-events-none",
+            "text-[10px] font-black uppercase tracking-tighter",
             pathname === '/dashboard' ? "text-white" : "text-white/40"
           )}>Home</span>
-        </button>
+        </Link>
 
         {/* EC: Empire Center */}
-        <button
-          onClick={(e) => handleNav(e, '/empire-center')}
-          onTouchEnd={(e) => handleNav(e, '/empire-center')}
+        <Link
+          href="/empire-center"
           id="nav-ec"
           className={cn(
             "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",
@@ -65,7 +57,7 @@ export function MobileNav() {
           )}
         >
           <div className={cn(
-            "p-2 rounded-xl transition-all shadow-2xl pointer-events-none",
+            "p-2 rounded-xl transition-all shadow-2xl",
             pathname === '/empire-center'
               ? "bg-primary text-white shadow-primary/20"
               : "bg-transparent text-white/40"
@@ -73,15 +65,14 @@ export function MobileNav() {
             <ClipboardList className="w-6 h-6" />
           </div>
           <span className={cn(
-            "text-[10px] font-black uppercase tracking-tighter pointer-events-none",
+            "text-[10px] font-black uppercase tracking-tighter",
             pathname === '/empire-center' ? "text-white" : "text-white/40"
           )}>EC</span>
-        </button>
+        </Link>
 
         {/* Studio — Now Direct Link */}
-        <button
-          onClick={(e) => handleNav(e, '/studio')}
-          onTouchEnd={(e) => handleNav(e, '/studio')}
+        <Link
+          href="/studio"
           id="nav-studio"
           className={cn(
             "flex flex-col items-center gap-1 transition-all relative group cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",
@@ -89,7 +80,7 @@ export function MobileNav() {
           )}
         >
           <div className={cn(
-            "p-2 rounded-xl transition-all shadow-2xl pointer-events-none",
+            "p-2 rounded-xl transition-all shadow-2xl",
             pathname === '/studio'
               ? "bg-primary text-white shadow-primary/20"
               : "bg-blue-900/30 text-blue-400 shadow-xl shadow-blue-500/10"
@@ -97,18 +88,17 @@ export function MobileNav() {
             <Video className="w-6 h-6" />
           </div>
           <span className={cn(
-            "text-[10px] font-black uppercase tracking-tighter pointer-events-none",
+            "text-[10px] font-black uppercase tracking-tighter",
             pathname === '/studio' ? "text-white" : "text-blue-400"
           )}>Studio</span>
           {pathname !== '/studio' && (
-            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900 pointer-events-none" />
+            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900" />
           )}
-        </button>
+        </Link>
 
         {/* LC: Link Center */}
-        <button
-          onClick={(e) => handleNav(e, '/link-center')}
-          onTouchEnd={(e) => handleNav(e, '/link-center')}
+        <Link
+          href="/link-center"
           id="nav-lc"
           className={cn(
             "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",
@@ -116,7 +106,7 @@ export function MobileNav() {
           )}
         >
           <div className={cn(
-            "p-2 rounded-xl transition-all shadow-2xl pointer-events-none",
+            "p-2 rounded-xl transition-all shadow-2xl",
             pathname === '/link-center'
               ? "bg-primary text-white shadow-primary/20"
               : "bg-transparent text-white/40"
@@ -124,15 +114,14 @@ export function MobileNav() {
             <PlusCircle className="w-6 h-6" />
           </div>
           <span className={cn(
-            "text-[10px] font-black uppercase tracking-tighter pointer-events-none",
+            "text-[10px] font-black uppercase tracking-tighter",
             pathname === '/link-center' ? "text-white" : "text-white/40"
           )}>LC</span>
-        </button>
+        </Link>
 
         {/* COG: Settings */}
-        <button
-          onClick={(e) => handleNav(e, '/settings')}
-          onTouchEnd={(e) => handleNav(e, '/settings')}
+        <Link
+          href="/settings"
           id="nav-settings"
           className={cn(
             "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",
@@ -140,7 +129,7 @@ export function MobileNav() {
           )}
         >
           <div className={cn(
-            "p-2 rounded-xl transition-all shadow-2xl pointer-events-none",
+            "p-2 rounded-xl transition-all shadow-2xl",
             pathname === '/settings'
               ? "bg-primary text-white shadow-primary/20"
               : "bg-transparent text-white/40"
@@ -148,10 +137,10 @@ export function MobileNav() {
             <Settings className="w-6 h-6" />
           </div>
           <span className={cn(
-            "text-[10px] font-black uppercase tracking-tighter pointer-events-none",
+            "text-[10px] font-black uppercase tracking-tighter",
             pathname === '/settings' ? "text-white" : "text-white/40"
           )}>Settings</span>
-        </button>
+        </Link>
     </div>
   );
 }
