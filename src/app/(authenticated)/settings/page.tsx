@@ -149,7 +149,7 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
 };
 
 export default function SettingsPage() {
-  const { theme, setTheme, aiMode, setAiMode, isAdmin, setIsAdmin, isProtocolAccepted, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
+  const { theme, setTheme, aiMode, setAiMode, isAdmin, setIsAdmin, isProtocolAccepted, acceptProtocols, connectedPlatforms, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
   const { isLinked: isStripeLinked } = useStripeStatus();
 
   const [activeTab, setActiveTab] = useState('link-center');
@@ -488,7 +488,45 @@ export default function SettingsPage() {
 
               {activeTab === 'subscription' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  {/* Subscription Agreement Box (Moves here after acceptance) */}
+                  {/* Subscription Agreement Prompt (for users who haven't accepted) */}
+                  {!isProtocolAccepted && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-8 md:p-12 bg-slate-900 border-2 border-amber-500/30 rounded-[48px] overflow-hidden shadow-2xl relative"
+                    >
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
+                      <div className="flex items-start gap-6 relative z-10">
+                        <div className="w-16 h-16 bg-amber-500/10 rounded-3xl flex items-center justify-center border border-amber-500/20 shrink-0">
+                          <ShieldCheck className="w-8 h-8 text-amber-500" />
+                        </div>
+                        <div className="space-y-4 flex-1">
+                          <div>
+                            <h3 className="text-2xl font-black text-white italic uppercase tracking-tight">Partner Protocol.</h3>
+                            <div className="flex items-center gap-2 text-amber-500 mt-1">
+                              <AlertCircle className="w-3.5 h-3.5" />
+                              <span className="text-[10px] font-black uppercase tracking-widest">Awaiting Acceptance</span>
+                            </div>
+                          </div>
+                          <p className="text-sm text-slate-400 font-medium italic leading-relaxed max-w-2xl">
+                            "To keep Empire AI accessible from day one, we use a <span className="text-primary font-bold">Success-Share model</span>. A simple <span className="text-white font-bold">$40 fee</span> applies for every <span className="text-white font-bold">$1,000</span> you earn from content created through this app. Accept the protocol below to unlock platform linking and autonomous operations."
+                          </p>
+                          <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 rounded-xl border border-amber-500/20 w-fit">
+                            <DollarSign className="w-4 h-4 text-amber-500" />
+                            <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
+                          </div>
+                          <button
+                            onClick={() => acceptProtocols()}
+                            className="mt-4 px-8 py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20"
+                          >
+                            I Accept These Terms
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Subscription Agreement Record (shows after acceptance) */}
                   {isProtocolAccepted && (
                     <div className="p-8 md:p-12 bg-slate-900 border-2 border-primary/30 rounded-[48px] overflow-hidden shadow-2xl relative">
                       <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />

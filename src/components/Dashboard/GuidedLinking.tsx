@@ -1,10 +1,9 @@
 "use client";
 import { cn } from "@/lib/utils";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BrandedGlobe } from '@/components/BrandedGlobe';
 import {
   Search,
   Stars,
@@ -24,10 +23,7 @@ import {
   Cpu
   } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
-import { useRouter } from 'next/navigation';
 import { API_URL } from '@/lib/config';
-
-import { analyticsService, empireService } from '@/lib/api-service';
 
 import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 
@@ -100,172 +96,15 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
     completeLinkingPhase,
     updatePlatformPermission,
     platformPermissions,
-    aiMode,
     isProtocolAccepted
   } = useEmpire();
-  const router = useRouter();
 
-  // Robust check for name/niche status
-  const checkNamePending = (empire: any) => {
-    const name = empire?.name || empire?.title || '';
-    const placeholders = ['', 'The First Empire', 'unnamed empire', 'Unnamed Empire', 'Empire One'];
-    return !name || placeholders.includes(name);
-  };
-
-  const checkNichePending = (empire: any) => {
-    const niche = empire?.niche || empire?.businessNiche || empire?.description?.match(/Empire Niche: (.*?)\./)?.[1] || '';
-    const placeholders = ['', 'Niche Pending', 'CALIBRATION PENDING'];
-    return !niche || placeholders.includes(niche);
-  };
-
-  const checkAnglePending = (empire: any) => {
-    const angle = empire?.angle || empire?.businessAngle || empire?.description?.match(/Angle: (.*?)\./)?.[1] || '';
-    const placeholders = ['', 'Angle Pending', 'CALIBRATION PENDING'];
-    return !angle || placeholders.includes(angle);
-  };
-
-  const isNamePending = checkNamePending(currentEmpire);
-  const isNichePending = checkNichePending(currentEmpire);
-  const isAnglePending = checkAnglePending(currentEmpire);
-
-  useEffect(() => {
-    if (isNichePending || isNamePending || isAnglePending) {
-       // Auto-trigger the high-intel auditor for a better "Pop Up" experience
-       window.dispatchEvent(new CustomEvent('empire:force-intel-sync'));
-    }
-    
-    // Synchronize setup step when empire data updates
-    if (checkNamePending(currentEmpire)) {
-      setSetupStep('name');
-    } else if (checkNichePending(currentEmpire)) {
-      setSetupStep('niche');
-    } else if (checkAnglePending(currentEmpire)) {
-      setSetupStep('angle');
-    } else {
-      setSetupStep('done');
-    }
-  }, [currentEmpire, isNichePending, isNamePending, isAnglePending]);
-
-  const [nicheInput, setNicheInput] = useState('');
-  const [nameInput, setNameInput] = useState('');
-  const [angleInput, setAngleInput] = useState('');
-  const [chatInput, setChatInput] = useState('');
-  const [isUpdatingNiche, setIsUpdatingNiche] = useState(false);
-  const [setupStep, setSetupStep] = useState<'name' | 'niche' | 'angle' | 'done'>('done');
-
-  const handleChatSubmit = async () => {
-    const input = chatInput.trim() || searchQuery.trim();
-    if (!input) return;
-    
-    setIsUpdatingNiche(true);
-    try {
-      if (setupStep === 'name' || input.toLowerCase().includes('name is')) {
-        const cleanName = input.replace(/my business name is:?/i, '').trim();
-        await empireService.updateEmpire(currentEmpire?.id || '1', { 
-          title: cleanName,
-          name: cleanName 
-        });
-        setNameInput(cleanName);
-        setSetupStep('niche');
-        setTeacherMessage(`"${cleanName}"—a powerful choice. Now, to calibrate my deep research protocols: What is your business niche? What exactly are we selling or growing?`);
-      } else if (setupStep === 'niche') {
-        await empireService.updateEmpire(currentEmpire?.id || '1', { niche: input });
-        setNicheInput(input);
-        setSetupStep('angle');
-        setTeacherMessage(`Excellent. A "${input}" focus is high-potential. Now, what is our "Angle"? What makes your brand unique or different from competitors?`);
-      } else if (setupStep === 'angle') {
-        await empireService.updateEmpire(currentEmpire?.id || '1', { angle: input });
-        setAngleInput(input);
-        setSetupStep('done');
-        setTeacherMessage(`Protocols fully calibrated. I have synchronized your unique angle into our neural network. I am now scanning for high-velocity profit opportunities. Let's link your first platform to begin the automation.`);
-      } else {
-        // Natural language handling even in "done" state
-        handleInterception(input);
-      }
-      
-      if (onRefresh) onRefresh();
-      setChatInput('');
-      setSearchQuery('');
-      setConversationTrigger(prev => prev + 1);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsUpdatingNiche(false);
-    }
-  };
-
-  const handleComplete = () => {
-    if (onClose) {
-      onClose();
-    } else {
-      completeLinkingPhase();
-      router.push('/dashboard');
-    }
-  };
   const [searchQuery, setSearchQuery] = useState('');
-  const [showTeacher, setShowTeacher] = useState(true);
   const [linkingStep, setLinkingStep] = useState<'tier' | 'auth' | 'keys'>('tier');
   const [selectedTier, setSelectedTier] = useState<'co-pilot' | 'empire'>('co-pilot');
 
-  const [teacherMessage, setTeacherMessage] = useState('');
-  const [displayedMessage, setDisplayedMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const [conversationTrigger, setConversationTrigger] = useState(0);
-
   const isGmailLinked = connectedPlatforms.includes('gmail') || connectedPlatforms.includes('imap');
   const hasNoPlatforms = connectedPlatforms.length === 0;
-
-  // Multi-stage message logic
-  useEffect(() => {
-    let msg = "";
-    if (isNamePending) {
-      msg = "Welcome. I am the Empire Teacher. Before we begin, I need to know: What shall we call your new business empire? Give me a name that represents your vision.";
-    } else if (isNichePending) {
-      msg = `"${currentEmpire?.name || currentEmpire?.title}"—a powerful choice. Now, to calibrate my deep research protocols: What is your business niche? What exactly are we selling or growing?`;
-    } else if (isReturning) {
-      msg = "Back for more? Let's expand your footprint. What are we linking today?";
-    } else if (hasNoPlatforms) {
-      msg = "This is where you search for any app you want to link. I will personally walk you through what needs to be done! Let's start with your email, that way I can get some codes that will be required and you won't have to go back and forth.";
-    } else if (isGmailLinked && connectedPlatforms.length === 1) {
-      msg = "Now that your email is fully linked, pick another app you're wanting to link.";
-    } else if (connectedPlatforms.length === 1) {
-      msg = "One down! What's next on your roadmap? Link your existing store like Etsy or Shopify so I can start tracking your revenue.";
-    } else {
-      msg = "We're building momentum. I'm already scanning your linked stores for trends and sales. Do you want to link more platforms, or are you ready to see your initial strategy?";
-    }
-    setTeacherMessage(msg);
-  }, [connectedPlatforms.length, hasNoPlatforms, isGmailLinked, isReturning, isNichePending]);
-
-  // Typing effect
-  useEffect(() => {
-    if (!teacherMessage) return;
-
-    setIsTyping(true);
-    setDisplayedMessage('');
-
-    let i = 0;
-    const interval = setInterval(() => {
-      i++;
-      setDisplayedMessage(teacherMessage.slice(0, i));
-
-      if (i >= teacherMessage.length) {
-        clearInterval(interval);
-        setIsTyping(false);
-      }
-    }, 20);
-
-    return () => clearInterval(interval);
-  }, [teacherMessage, conversationTrigger]);
-
-  // Contextual reactions to search
-  useEffect(() => {
-    if (searchQuery.toLowerCase() === 'etsy') {
-      setTeacherMessage("Etsy is a powerhouse for digital products. I can help you find best-sellers there once we're linked.");
-      setConversationTrigger(prev => prev + 1);
-    } else if (searchQuery.toLowerCase() === 'tiktok') {
-      setTeacherMessage("Great choice! TikTok is essential for brand velocity. We can automate your posting schedule once it's linked.");
-    }
-  }, [searchQuery]);
 
   const filteredPlatforms = availablePlatforms.filter(p =>
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -273,29 +112,14 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   );
 
   const handleSelectPlatform = (platformId: string) => {
-    if (!isProtocolAccepted) {
-      setTeacherMessage("Protocol acceptance required. Please accept the Success-Share disclaimer above to unlock app linking and autonomous operations.");
-      setConversationTrigger(prev => prev + 1);
-      return;
-    }
+    if (!isProtocolAccepted) return;
     startSetup(platformId);
     setLinkingStep('tier');
     setSearchQuery('');
-
-    if (platformId === 'gmail') {
-      setTeacherMessage("Excellent! Choose your intelligence tier for Gmail. Co-Pilot for tracking, or Empire Mode for automated responses.");
-    } else if (platformId === 'imap') {
-      setTeacherMessage("Establish your neural link via IMAP. Will you lead with Co-Pilot or grant full Empire control?");
-    } else if (platformId === 'etsy') {
-      setTeacherMessage("Etsy OAuth selected! Choose your intelligence tier, then I'll open a secure popup for you to authorize via Etsy's official login. No API keys needed.");
-    } else {
-      setTeacherMessage(`Initializing protocols for ${platformId.toUpperCase()}. Choose your access level to begin.`);
-    }
-    setConversationTrigger(prev => prev + 1);
   };
 
   const handleAuth = () => {
-    // Universal OAuth via popup — backend provides auth URL for each platform
+    // Universal OAuth via popup
     const oauthPlatforms: Record<string, { endpoint: string; sessionKey: string; vaultKey: string; label: string }> = {
       etsy: { endpoint: 'etsy', sessionKey: 'etsy_oauth_session_id', vaultKey: 'empire_vault_etsy', label: 'Etsy' },
       tiktok: { endpoint: 'tiktok', sessionKey: 'tiktok_oauth_session_id', vaultKey: 'empire_vault_tiktok', label: 'TikTok' },
@@ -321,7 +145,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
     };
 
     const oauth = oauthPlatforms[activeSetupPlatform || ''];
-    
+
     if (oauth) {
       fetch(`${API_URL}/api/auth/${oauth.endpoint}/url`, {
         method: 'POST',
@@ -347,23 +171,15 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                 connectPlatform(activeSetupPlatform!);
                 updatePlatformPermission(activeSetupPlatform!, selectedTier);
                 finishSetup();
-                setTeacherMessage(`${oauth.label} linked successfully! Your data is now flowing into the intelligence network.`);
-                setConversationTrigger(prev => prev + 1);
               }
             }
           }, 500);
-        } else {
-          setTeacherMessage(`I'm having trouble reaching ${oauth.label}'s authorization server.`);
-          setConversationTrigger(prev => prev + 1);
         }
       })
-      .catch(() => {
-        setTeacherMessage(`Connection error for ${oauth.label}. Please make sure the backend is running.`);
-        setConversationTrigger(prev => prev + 1);
-      });
+      .catch(() => {});
       return;
     }
-    
+
     setLinkingStep('keys');
   };
 
@@ -373,53 +189,19 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
       updatePlatformPermission(activeSetupPlatform, selectedTier);
       finishSetup();
       setLinkingStep('tier');
-
-      if (activeSetupPlatform === 'gmail' || activeSetupPlatform === 'imap') {
-        setTeacherMessage("Excellent! Your neural link to email is established. This will allow me to monitor verification codes and customer inquiries autonomously.");
-        setConversationTrigger(prev => prev + 1);
-      }
     }
   };
 
   const currentPlatform = availablePlatforms.find(p => p.id === activeSetupPlatform);
 
-  const handleManualPreFill = () => {
-    setTeacherMessage("I understand. We'll go the manual route. I'll walk you through finding the API keys for each platform one by one. Where should we start? Search for an app above.");
-    setConversationTrigger(prev => prev + 1);
-  };
-
   const handleImapStart = () => {
-    setTeacherMessage("Universal IMAP is a great alternative. Enter your email and App Password below, and I'll establish the link.");
     startSetup('imap');
     setLinkingStep('auth');
-    setConversationTrigger(prev => prev + 1);
   };
-
-  const handleInterception = useCallback((input: string) => {
-    const query = input.toLowerCase();
-    if (query.includes('how') && query.includes('link')) {
-      setTeacherMessage("Linking is easy! Just type the name of the app in the search bar above, and I'll guide you through the secure OAuth or API key setup.");
-    } else if (query.includes('what') && query.includes('next')) {
-      if (hasNoPlatforms) {
-        setTeacherMessage("I recommend starting with your email (Gmail or Universal IMAP). It acts as the backbone for your empire's communications.");
-      } else {
-        setTeacherMessage("You've got your email linked. Next, let's connect your existing sales channels like Etsy or Shopify so I can start tracking your revenue.");
-      }
-    } else {
-      setTeacherMessage("I'm processing your request... During this linking phase, I'm focused on getting your core apps connected. Ask me how to link a specific platform!");
-    }
-    setConversationTrigger(prev => prev + 1);
-  }, [hasNoPlatforms]);
-
-  // Expose interception to window for simplicity in this prototype or use a ref in real app
-  useEffect(() => {
-    (window as any).interceptTeacher = handleInterception;
-    return () => { delete (window as any).interceptTeacher; };
-  }, [handleInterception]);
 
   return (
     <div className="space-y-12">
-      {/* Connected Platforms Quick View (Always visible) */}
+      {/* Connected Platforms Quick View */}
       {connectedPlatforms.length > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -428,7 +210,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
         >
           <div className="flex items-center justify-between px-2">
             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Established Links</h4>
-            <span className="text-[8px] font-black text-primary bg-primary/10 px-2 py-1 rounded-full">{connectedPlatforms.length} Neural Syncs</span>
+            <span className="text-[8px] font-black text-primary bg-primary/10 px-2 py-1 rounded-full">{connectedPlatforms.length} Connected</span>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {connectedPlatforms.map(id => {
@@ -445,9 +227,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                   </div>
                   <div className="flex flex-col">
                     <span className="font-bold text-foreground text-xs group-hover:text-white transition-colors">{platform.name}</span>
-                    <span className="text-[9px] font-medium text-muted-foreground">
-                      {JSON.parse(localStorage.getItem(`empire_vault_${id}`) || '{}').handle || 'Syncing...'}
-                    </span>
                     <span className={cn(
                       "text-[7px] font-black uppercase tracking-widest transition-colors",
                       platformPermissions[id] === 'empire' ? "text-amber-500" : "text-primary",
@@ -464,198 +243,132 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
         </motion.div>
       )}
 
-      {/* Empire Teacher Popup (Search Integrated) */}
-      <AnimatePresence mode="wait">
-        {showTeacher && !activeSetupPlatform && (
-          <motion.div
-            key={connectedPlatforms.length}
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="bg-theme-surface rounded-[40px] p-8 md:p-10 text-white border border-white/10 relative overflow-hidden shadow-2xl"
-          >
-            <div className="relative z-10 flex flex-col md:flex-row gap-8">
-              <div className="shrink-0">
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-[24px] md:rounded-[28px] bg-white flex items-center justify-center shadow-2xl relative overflow-hidden border border-theme">
-                  <BrandedGlobe size="lg" spinning={isTyping} />
-                  {isTyping && (
-                    <div className="absolute -top-2 -right-2 bg-primary rounded-full p-2 animate-bounce shadow-lg">
-                      <div className="flex gap-1">
-                        <div className="w-1 h-1 bg-slate-950 rounded-full" />
-                        <div className="w-1 h-1 bg-slate-950 rounded-full animate-pulse" />
-                        <div className="w-1 h-1 bg-slate-950 rounded-full" />
-                      </div>
-                    </div>
-                  )}
+      {/* Search & Connect Card */}
+      {!activeSetupPlatform && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-theme-surface rounded-[40px] p-8 md:p-10 border border-theme relative overflow-hidden shadow-2xl"
+        >
+          <div className="relative z-10">
+            <div className="space-y-6">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                    <Zap className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black uppercase tracking-[0.2em] text-foreground">Link Center</h3>
+                    <p className="text-[9px] text-muted-foreground font-medium">
+                      {hasNoPlatforms
+                        ? "Search for an app to connect your empire"
+                        : "Search and connect more platforms"}
+                    </p>
+                  </div>
+                </div>
+                <div className={cn(
+                  "px-3 py-1.5 rounded-full border text-[8px] font-black uppercase tracking-widest",
+                  isProtocolAccepted
+                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                    : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                )}>
+                  {isProtocolAccepted ? 'Acceptance Active' : 'Protocol Pending'}
                 </div>
               </div>
 
-              <div className="space-y-6 flex-1">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Empire Teacher</h3>
-                    <div className="flex items-center gap-2">
-                      <div className="px-2 py-0.5 bg-primary/20 rounded-full border border-primary/30">
-                        <span className="text-[8px] font-black text-primary uppercase tracking-widest">Active</span>
-                      </div>
-                      <div className={cn(
-                        "px-2 py-0.5 rounded-full border",
-                        aiMode === 'empire' ? "bg-amber-500/20 border-amber-500/30" : "bg-primary/20 border-primary/30"
-                      )}>
-                        <span className={cn(
-                          "text-[8px] font-black uppercase tracking-widest",
-                          aiMode === 'empire' ? "text-amber-500" : "text-primary"
-                        )}>
-                          {aiMode === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={() => setShowTeacher(false)} 
-                    className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+              {/* Search Input */}
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                </div>
+                <input
+                  type="text"
+                  placeholder={hasNoPlatforms ? "Search for an app to link (e.g. Gmail, Etsy, TikTok)..." : "Search for more apps..."}
+                  className="w-full bg-theme-background border-2 border-theme rounded-2xl py-4 pl-12 pr-6 text-xs font-bold focus:border-primary focus:ring-0 transition-all placeholder:text-muted-foreground/50 text-foreground"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+
+              {/* Quick Action Buttons */}
+              {hasNoPlatforms && !searchQuery && (
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => { setSearchQuery('gmail'); handleSelectPlatform('gmail'); }}
+                    className="px-4 py-2.5 bg-primary/10 border border-primary/30 rounded-xl font-black text-[8px] uppercase tracking-widest text-primary hover:bg-primary/20 transition-all flex items-center gap-2"
                   >
-                    <X className="w-4 h-4" />
+                    <Mail className="w-3 h-3" /> Start with Gmail
+                  </button>
+                  <button
+                    onClick={handleImapStart}
+                    className="px-4 py-2.5 bg-theme-background border border-theme rounded-xl font-black text-[8px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all flex items-center gap-2"
+                  >
+                    <Mail className="w-3 h-3" /> Other Email (IMAP)
                   </button>
                 </div>
+              )}
 
-                <div className="relative min-h-[60px]">
-                  <p className="text-xl md:text-2xl font-black leading-snug tracking-tight text-white italic">
-                    {displayedMessage}
-                    {isTyping && <span className="inline-block w-2 h-6 bg-primary ml-1 animate-pulse" />}
-                  </p>
-                </div>
-
-                {/* Interactive AI Chat Input for Setup */}
-                <div className="relative group max-w-xl">
-                  {setupStep !== 'done' ? (
-                    <div className="space-y-4">
-                      <div className="relative">
-                        <input
-                          type="text"
-                          placeholder={setupStep === 'name' ? "Enter Empire Name..." : "Describe your Niche..."}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-6 pr-16 text-[11px] font-black focus:border-primary focus:ring-0 transition-all placeholder:text-white/20 text-white shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]"
-                          value={chatInput}
-                          onChange={(e) => setChatInput(e.target.value)}
-                          onKeyDown={(e) => e.key === 'Enter' && handleChatSubmit()}
-                          disabled={isUpdatingNiche}
-                        />
-                        <button 
-                          onClick={handleChatSubmit}
-                          disabled={isUpdatingNiche || !chatInput.trim()}
-                          className="absolute right-3 top-3 bottom-3 px-5 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest disabled:opacity-50 hover:scale-105 transition-transform shadow-lg shadow-primary/20 flex items-center justify-center"
-                        >
-                          {isUpdatingNiche ? <BrandedGlobe size="sm" spinning /> : "Send"}
-                        </button>
-                      </div>
-                      <div className="flex items-center gap-2 ml-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                        <p className="text-[9px] text-primary/60 font-black uppercase tracking-widest">
-                          AI is waiting for your response...
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                        <Search className="h-3.5 w-3.5 text-white/40 group-focus-within:text-primary transition-colors" />
-                      </div>
-                      <input
-                        type="text"
-                        placeholder="Search for an app or talk to Teacher..."
-                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-20 text-[8px] font-bold focus:border-primary focus:ring-0 transition-all placeholder:text-white/20 text-white"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleChatSubmit()}
-                      />
-                      <button 
-                        onClick={handleChatSubmit}
-                        className="absolute right-2 top-2 bottom-2 px-3 bg-white/5 hover:bg-white/10 text-white/40 hover:text-white rounded-lg text-[7px] font-black uppercase tracking-widest transition-all"
-                      >
-                        Send
-                      </button>
-                      
-                      <AnimatePresence>
-                        {searchQuery && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            className="absolute top-full left-0 right-0 mt-2 bg-slate-800 border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden"
+              {/* Search Results Dropdown */}
+              <AnimatePresence>
+                {searchQuery && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="bg-theme-background border border-theme rounded-2xl shadow-2xl z-50 overflow-hidden"
+                  >
+                    {filteredPlatforms.length > 0 ? (
+                      <div className="p-2 max-h-[300px] overflow-y-auto">
+                        {filteredPlatforms.map(platform => (
+                          <button
+                            key={platform.id}
+                            onClick={() => handleSelectPlatform(platform.id)}
+                            className="w-full flex items-center gap-3 p-3 hover:bg-theme-surface rounded-xl transition-colors text-left"
                           >
-                            {filteredPlatforms.length > 0 ? (
-                              <div className="p-1">
-                                {filteredPlatforms.map(platform => (
-                                  <button
-                                    key={platform.id}
-                                    onClick={() => handleSelectPlatform(platform.id)}
-                                    className="w-full flex items-center gap-3 p-3 hover:bg-white/5 rounded-lg transition-colors text-left"
-                                  >
-                                    <div className={cn("p-1.5 rounded-md", platform.bg)}>
-                                      <PlatformIcon id={platform.id} icon={platform.icon} className={cn("w-3.5 h-3.5", platform.color)} size={14} />
-                                    </div>
-                                    <span className="font-bold text-[10px] text-white">{platform.name}</span>
-                                  </button>
-                                ))}
-                              </div>
-                            ) : (
-                              <div className="p-4 text-center text-white/40 text-[10px] font-medium">
-                                No platforms found matching "{searchQuery}"
-                              </div>
-                            )}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </>
-                  )}
-                </div>
+                            <div className={cn("p-2 rounded-lg", platform.bg)}>
+                              <PlatformIcon id={platform.id} icon={platform.icon} className={cn("w-4 h-4", platform.color)} size={16} />
+                            </div>
+                            <div className="flex-1">
+                              <span className="font-bold text-xs text-foreground">{platform.name}</span>
+                              <p className="text-[8px] text-muted-foreground font-medium">Click to connect</p>
+                            </div>
+                            <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-6 text-center text-muted-foreground text-xs font-medium">
+                        No platforms found matching &ldquo;{searchQuery}&rdquo;
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-                <div className="flex flex-wrap gap-3 pt-2">
-                  {!isNichePending && hasNoPlatforms ? (
-                    <>
-                      <button
-                        onClick={() => handleSelectPlatform('gmail')}
-                        className="px-6 py-3 bg-primary hover:bg-primary/90 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all flex items-center gap-2 shadow-lg shadow-primary/20 group text-slate-950"
-                      >
-                        Start with Gmail <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                      </button>
-                      <button
-                        onClick={handleImapStart}
-                        className="px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all flex items-center gap-2 text-white"
-                      >
-                        Other Email (IMAP)
-                      </button>
-                      <button
-                        onClick={handleManualPreFill}
-                        className="px-6 py-3 bg-transparent border border-white/10 hover:bg-white/5 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all flex items-center gap-2 text-white/40 hover:text-white"
-                      >
-                        Manual Pre-fill
-                      </button>
-                    </>
-                  ) : connectedPlatforms.length >= 2 ? (
-                    <button
-                      onClick={handleComplete}
-                      className="px-8 py-4 bg-gradient-to-r from-primary to-amber-600 hover:opacity-90 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center gap-3 shadow-2xl shadow-primary/40 group animate-pulse text-slate-950"
-                    >
-                      Ready to move on <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  ) : (
-                    <div className="flex items-center gap-2 text-white/40 italic text-[10px] font-medium">
-                      <Stars className="w-3 h-3" /> I'm waiting for your next choice...
-                    </div>
-                  )}
+              {!searchQuery && connectedPlatforms.length >= 2 && (
+                <div className="flex justify-center pt-2">
+                  <button
+                    onClick={() => {
+                      if (onClose) onClose();
+                      else completeLinkingPhase();
+                    }}
+                    className="px-8 py-4 bg-gradient-to-r from-primary to-amber-600 hover:opacity-90 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center gap-3 shadow-2xl shadow-primary/40 group text-slate-950"
+                  >
+                    Ready to move on <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
                 </div>
-              </div>
+              )}
             </div>
+          </div>
 
-            {/* Background elements for premium feel */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-5 -mr-48 -mt-48" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600 rounded-full blur-[100px] opacity-5 -ml-32 -mb-32" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+          {/* Background glow */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px] opacity-5 -mr-48 -mt-48" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600 rounded-full blur-[100px] opacity-5 -ml-32 -mb-32" />
+        </motion.div>
+      )}
 
-      {/* Active Setup Card (Updated with IMAP support) */}
+      {/* Active Setup Card */}
       <AnimatePresence>
         {currentPlatform && (
           <motion.div
@@ -664,7 +377,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
             exit={{ opacity: 0, y: -30 }}
             className="bg-theme-surface border-2 border-theme rounded-[48px] p-10 md:p-16 shadow-[0_48px_96px_-24px_rgba(0,0,0,0.1)] relative overflow-hidden"
           >
-            {/* ... card content ... */}
             <div className="flex flex-col md:flex-row gap-10 md:items-center justify-between relative z-10">
               <div className="flex items-center gap-8">
                 <div className={cn("p-8 rounded-[36px] shadow-inner relative bg-white border border-theme")}>
@@ -675,7 +387,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                   <div className="flex items-center gap-3 mt-2">
                     <div className={cn("w-2.5 h-2.5 rounded-full", linkingStep === 'auth' ? "bg-amber-500 animate-pulse" : "bg-green-500")} />
                     <span className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
-                      {linkingStep === 'auth' ? 'Establishing Neural Connection' : 'Decrypting API Protocols'}
+                      {linkingStep === 'auth' ? 'Establishing Connection' : 'Finalizing Setup'}
                     </span>
                   </div>
                 </div>
@@ -686,7 +398,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                   onClick={finishSetup}
                   className="px-8 py-4 rounded-2xl border-2 border-theme text-muted-foreground font-black text-xs uppercase tracking-widest hover:bg-theme-background transition-all"
                 >
-                  Abort
+                  Cancel
                 </button>
               </div>
             </div>
@@ -750,12 +462,11 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                         ))}
                       </ul>
 
-                      {/* Secure Vault Indicator */}
                       <div className="mt-8 p-4 bg-slate-950/50 rounded-2xl border border-white/10 flex items-center gap-4">
                         <ShieldCheck className="w-8 h-8 text-amber-500 shrink-0" />
                         <div>
                             <p className="text-[10px] font-black text-white uppercase tracking-widest">Secure Vault Protocol</p>
-                            <p className="text-[9px] text-slate-400 font-medium leading-tight">Tokens are encrypted & isolated in the Ownership Vault (Admin Blindness Enforced).</p>
+                            <p className="text-[9px] text-slate-400 font-medium leading-tight">Tokens are encrypted & isolated in the Ownership Vault.</p>
                         </div>
                       </div>
                     </div>
@@ -772,7 +483,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  {/* Step 1: Auth / Email Auth */}
+                  {/* Auth Step */}
                   <div className={cn(
                     "p-10 rounded-[40px] border-2 transition-all relative",
                     linkingStep === 'auth' ? "border-primary bg-primary/5 ring-4 ring-primary/10" : "border-theme bg-theme-background/50 opacity-60"
@@ -788,8 +499,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                     </h3>
                     <p className="text-base font-medium text-muted-foreground leading-relaxed mb-8">
                       {currentPlatform.id === 'imap'
-                        ? "Enter your email and App Password (or account password) to allow IMAP access."
-                        : `Connect your ${currentPlatform.name} account via our encrypted OAuth gateway.`
+                        ? "Enter your email and App Password to allow IMAP access."
+                        : `Connect your ${currentPlatform.name} account via encrypted OAuth.`
                       }
                     </p>
                     {linkingStep === 'auth' && (
@@ -799,12 +510,12 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                             <input
                               type="email"
                               placeholder="Email Address"
-                              className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors text-white"
+                              className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors text-foreground"
                             />
                             <input
                               type="password"
                               placeholder="App Password"
-                              className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors text-white"
+                              className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors text-foreground"
                             />
                           </>
                         )}
@@ -818,7 +529,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                     )}
                   </div>
 
-                  {/* Step 2: Keys */}
+                  {/* Keys Step */}
                   <div className={cn(
                     "p-10 rounded-[40px] border-2 transition-all",
                     linkingStep === 'keys' ? "border-primary bg-primary/5 ring-4 ring-primary/10" : "border-theme bg-theme-background/50 opacity-40"
@@ -837,11 +548,11 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                       <div className="space-y-5">
                         <div className="space-y-2">
                           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Protocol Identifier</label>
-                          <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold" />
+                          <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold text-foreground" />
                         </div>
                         <div className="space-y-2">
                           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Secure Token</label>
-                          <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold" />
+                          <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold text-foreground" />
                         </div>
                         <button
                           onClick={handleLink}
