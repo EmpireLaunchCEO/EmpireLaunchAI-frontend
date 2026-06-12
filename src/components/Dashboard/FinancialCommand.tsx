@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity, Minus, Maximize2 } from 'lucide-react';
+import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity, Minus, Maximize2, Stars } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
+import { useEmpire } from '@/lib/EmpireContext';
 
 interface FinancialCommandProps {
   withholdableEarnings?: number;
