@@ -25,6 +25,8 @@ export function FinancialCommand({
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
   
+  const [isDownloading, setIsDownloading] = useState(false);
+  
   useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem('minimized-financial-command');
@@ -36,6 +38,24 @@ export function FinancialCommand({
     };
     loadInfra();
   }, []);
+
+  const handleDownloadAudit = () => {
+    setIsDownloading(true);
+    // Simulate generation and download
+    setTimeout(() => {
+      const auditContent = `EMPIRELAUNCH AI - SUCCESS-SHARE AUDIT\nGenerated: ${new Date().toLocaleString()}\n\nBusiness Tracking:\n- Content Generated: 142 Assets\n- Marketing Campaigns: 12\n- Revenue Attributed to AI: $1,250.50\n- Success-Share Rate: 4% (40/1k)\n- Success-Share Due: $50.02\n\nAll tracking verified via Neural Sync.`;
+      const blob = new Blob([auditContent], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Empire_Success_Audit_${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      setIsDownloading(false);
+    }, 1500);
+  };
 
   const toggleMinimize = () => {
     const newState = !isMinimized;
@@ -52,7 +72,7 @@ export function FinancialCommand({
   const subscriptions = [
     { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },
     { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
-    { name: "EmpireLaunch AI Platform", amount: 4000, date: "June 20, 2024", type: "app" },
+    { name: "Empire Subscription - platform fee 40$", amount: 4000, date: "June 20, 2024", type: "app", successShare: "40/1k" },
   ];
 
   const dues = [
@@ -177,24 +197,47 @@ export function FinancialCommand({
             <div className="space-y-3">
               {subscriptions.map((sub, i) => (
                 <div key={i} className={cn(
-                  "p-6 rounded-[24px] border flex items-center justify-between transition-all",
+                  "p-6 rounded-[24px] border flex flex-col gap-4 transition-all",
                   sub.type === 'app' ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"
                 )}>
-                  <div className="flex items-center gap-4">
-                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", sub.type === 'app' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
-                      {sub.type === 'app' ? <AppWindow className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />}
-                    </div>
-                    <div>
-                      <p className="text-xs font-black uppercase italic">{sub.name}</p>
-                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
-                        <Calendar className="w-2.5 h-2.5" /> {sub.date}
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-4">
+                      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", sub.type === 'app' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
+                        {sub.type === 'app' ? <AppWindow className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />}
+                      </div>
+                      <div>
+                        <p className="text-xs font-black uppercase italic">{sub.name}</p>
+                        <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
+                          <Calendar className="w-2.5 h-2.5" /> {sub.date}
+                        </div>
                       </div>
                     </div>
+                    <div className="text-right">
+                      <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>
+                      {sub.type === 'app' && <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>}
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>
-                    {sub.type === 'app' && <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>}
-                  </div>
+                  
+                  {sub.type === 'app' && (
+                    <div className="pt-4 border-t border-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div className="flex items-center gap-2">
+                        <Stars className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                          Success-Share Protocol: {sub.successShare}
+                        </span>
+                      </div>
+                      <button 
+                        onClick={handleDownloadAudit}
+                        disabled={isDownloading}
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-xl transition-all active:scale-95 disabled:opacity-50"
+                      >
+                        <Activity className={cn("w-3.5 h-3.5 text-primary", isDownloading && "animate-spin")} />
+                        <span className="text-[9px] font-black text-primary uppercase tracking-widest">
+                          {isDownloading ? "Generating Audit..." : "Download Shares Audit"}
+                        </span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -223,12 +266,6 @@ export function FinancialCommand({
                   <p className="text-sm font-black italic text-amber-500">{formatCurrency(due.amount)}</p>
                 </div>
               ))}
-              
-              <div className="mt-8 pt-4 border-t border-theme/30">
-                <button className="w-full py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
-                  Settle All Dues
-                </button>
-              </div>
             </div>
           </div>
 
