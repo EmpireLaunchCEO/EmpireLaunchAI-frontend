@@ -125,12 +125,12 @@
   }
 }
 
+/* Reverting the position:fixed on body as it breaks scrolling */
 html, body {
   background-color: rgb(var(--background-rgb)) !important;
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  /* Allow native scrolling at the root */
   overflow-y: auto !important;
   overflow-x: hidden !important;
   overscroll-behavior-y: contain;

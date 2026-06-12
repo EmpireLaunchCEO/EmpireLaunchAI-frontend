@@ -57,8 +57,10 @@ export default function AuthenticatedLayout({
           <OnboardingTour />
         </Suspense>
 
-        {/* NAVIGATION - ABSOLUTE TOP */}
-        <MobileNav />
+        {/* NAVIGATION - ABSOLUTE TOP OF EVERYTHING */}
+        <div className="relative z-[999999] pointer-events-auto">
+          <MobileNav />
+        </div>
       </div>
     </SubscriptionGuard>
   );
