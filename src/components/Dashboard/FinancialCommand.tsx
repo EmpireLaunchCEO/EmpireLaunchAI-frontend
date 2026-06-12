@@ -204,51 +204,59 @@ export function FinancialCommand({
               Active Subscriptions
             </div>
             <div className="space-y-3">
-              {subscriptions.map((sub, i) => (
-                <div key={i} className={cn(
-                  "p-6 rounded-[24px] border flex flex-col gap-4 transition-all",
-                  sub.type === 'app' ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"
-                )}>
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-4">
-                      <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", sub.type === 'app' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>
-                        {sub.name.includes('Shares') ? <Stars className="w-5 h-5" /> : (sub.type === 'app' ? <AppWindow className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />)}
-                      </div>
-                      <div>
-                        <p className="text-xs font-black uppercase italic">{sub.name}</p>
-                        <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
-                          <Calendar className="w-2.5 h-2.5" /> {sub.date}
-                        </div>
-                      </div>
+              <div className="p-6 rounded-[32px] border-2 border-primary/30 bg-primary/5 space-y-6 transition-all">
+                {/* 1. Empire Subscription */}
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-slate-950">
+                      <AppWindow className="w-5 h-5" />
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>
-                      <span className="text-[8px] font-black text-primary uppercase">{sub.amount > 0 ? "Platform Due" : "No Dues"}</span>
+                    <div>
+                      <p className="text-xs font-black uppercase italic">Empire Subscription</p>
+                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
+                        <Calendar className="w-2.5 h-2.5" /> {new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}
+                      </div>
                     </div>
                   </div>
-                  
-                  {sub.successShare && (
-                    <div className="pt-4 border-t border-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div className="flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-primary" />
-                        <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                          Success-Share Audit Log
-                        </span>
-                      </div>
-                      <button 
-                        onClick={handleDownloadAudit}
-                        disabled={isDownloading}
-                        className="flex items-center justify-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-xl transition-all active:scale-95 disabled:opacity-50"
-                      >
-                        <ShieldCheck className={cn("w-3.5 h-3.5 text-primary", isDownloading && "animate-spin")} />
-                        <span className="text-[9px] font-black text-primary uppercase tracking-widest">
-                          {isDownloading ? "Generating Audit..." : "Download Shares Audit"}
-                        </span>
-                      </button>
-                    </div>
-                  )}
+                  <div className="text-right">
+                    <p className="text-sm font-black italic">{formatCurrency(4000)}</p>
+                    <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>
+                  </div>
                 </div>
-              ))}
+
+                {/* 2. Success-Shares */}
+                <div className="pt-6 border-t border-white/5 flex items-center justify-between w-full">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-primary">
+                      <Stars className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-black uppercase italic">Success-Shares (40/1k)</p>
+                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
+                        <ShieldCheck className="w-2.5 h-2.5" /> Verified Protocol
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-black italic">{formatCurrency(0)}</p>
+                    <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>
+                  </div>
+                </div>
+
+                {/* 3. Action Button */}
+                <div className="pt-2">
+                  <button 
+                    onClick={handleDownloadAudit}
+                    disabled={isDownloading}
+                    className="w-full flex items-center justify-center gap-2 py-4 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-2xl transition-all active:scale-95 disabled:opacity-50"
+                  >
+                    <Activity className={cn("w-4 h-4 text-primary", isDownloading && "animate-spin")} />
+                    <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                      {isDownloading ? "Generating Audit..." : "Download Shares Audit"}
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
