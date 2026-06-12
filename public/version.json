@@ -1,10 +1,10 @@
 {
-  "version": "4.9.6",
-  "buildId": "launch-v4-9-6",
+  "version": "4.9.7",
+  "buildId": "launch-v4-9-7",
   "changelog": [
-    "Finalized high-fidelity 3D Globe branding with Dark Violet theme",
-    "Busted PWA icon cache for all mobile platforms (v1025)",
-    "Optimized loading globe sizing and 3D volume overlays",
+    "Reverted PWA icons to SOLID WHITE background per owner mandate",
+    "Busted PWA icon cache for all mobile platforms (v1030)",
+    "Verified 3D volume overlays on BrandedGlobe component",
     "Integrated theme engine into Landing Page (bg-theme-background)",
     "Enforced theme colors on 'YOUR EMPIRE AWAITS' and all hero text",
     "Balanced global text logic to prevent accidental white-outs",

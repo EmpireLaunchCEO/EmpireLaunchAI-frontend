@@ -1,0 +1,791 @@
+[33mcommit fc3483e8ed4d902ee1e1b87ab4db5f5e93b3eed5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Staci Peabody <stacipeabody@gmail.com>
+Date:   Thu Jun 11 23:24:22 2026 +0000
+
+    UI REVERSION: Restored original Two-Column Financial layout and Growth Tracker high-fidelity state
+
+[1mdiff --git a/src/components/Dashboard/FinancialCommand.tsx b/src/components/Dashboard/FinancialCommand.tsx[m
+[1mindex ca44084..9f93713 100644[m
+[1m--- a/src/components/Dashboard/FinancialCommand.tsx[m
+[1m+++ b/src/components/Dashboard/FinancialCommand.tsx[m
+[36m@@ -58,7 +58,7 @@[m [mexport function FinancialCommand({[m
+     { name: "EmpireLaunch AI Platform", amount: 0, date: "Pending Activation", type: "app" },[m
+   ] : []);[m
+ [m
+[31m-  // Restore Prominent Infrastructure items[m
+[32m+[m[32m  // Infrastructure items[m
+   const displayInfra = infraBalances.length > 0 ? infraBalances : [[m
+     { platform: 'Railway', balance: 0.00, status: 'active', currency: 'USD' },[m
+     { platform: 'OpenAI', balance: 0.00, status: 'active', currency: 'USD' },[m
+[36m@@ -111,9 +111,9 @@[m [mexport function FinancialCommand({[m
+         </button>[m
+       </div>[m
+ [m
+[31m-      <div className="relative z-10 space-y-10">[m
+[32m+[m[32m      <div className="relative z-10 space-y-12">[m
+         [m
+[31m-        {/* Top Header: Efficiency Ring */}[m
+[32m+[m[32m        {/* Top Header: Efficiency Ring & Available Earnings */}[m
+         <div className="flex flex-col md:flex-row gap-8 items-center border-b border-theme/30 pb-8">[m
+           <div className="relative w-32 h-32 shrink-0">[m
+             <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">[m
+[36m@@ -133,61 +133,59 @@[m [mexport function FinancialCommand({[m
+             </div>[m
+           </div>[m
+ [m
+[31m-          <div className="flex-1 space-y-2 pr-12">[m
+[32m+[m[32m          <div className="flex-1 space-y-4">[m
+             <p className="text-slate-400 text-xs font-medium italic">Monitoring capital velocity and upcoming obligations.</p>[m
+[31m-            <div className="flex gap-4 pt-2">[m
+[31m-              <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">[m
+[31m-                <span className="text-[10px] font-black text-primary uppercase">Available: {formatCurrency(withholdableEarnings)}</span>[m
+[32m+[m[32m            <div className="flex flex-wrap gap-4">[m
+[32m+[m[32m              <div className="px-6 py-3 bg-primary/10 border border-primary/30 rounded-2xl flex items-center gap-3">[m
+[32m+[m[32m                <DollarSign className="w-5 h-5 text-primary" />[m
+[32m+[m[32m                <div className="flex flex-col">[m
+[32m+[m[32m                  <span className="text-[8px] font-black text-primary uppercase tracking-widest">Available to Withdraw</span>[m
+[32m+[m[32m                  <span className="text-xl font-black text-foreground">${formatCurrency(withholdableEarnings)}</span>[m
+[32m+[m[32m                </div>[m
+               </div>[m
+             </div>[m
+           </div>[m
+         </div>[m
+ [m
+[31m-        {/* Infrastructure Monitor - PROMINENT SLOTS */}[m
+[32m+[m[32m        {/* Infrastructure Monitor - Restore prominance */}[m
+         <div className="space-y-4">[m
+           <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">[m
+             <Cpu className="w-3 h-3" />[m
+[31m-            Infrastructure Monitors (Railway / OpenAI / Gemini)[m
+[32m+[m[32m            Infrastructure Balance Monitors[m
+           </div>[m
+           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">[m
+             {displayInfra.map((item, i) => ([m
+[31m-              <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl space-y-2 group/infra hover:border-primary/40 transition-all">[m
+[32m+[m[32m              <div key={i} className="p-5 bg-theme-background border border-theme rounded-[24px] space-y-3 group hover:border-primary/40 transition-all">[m
+                 <div className="flex items-center justify-between">[m
+[31m-                  <span className="text-[8px] font-black uppercase text-muted-foreground">{item.platform}</span>[m
+[31m-                  <Zap className="w-3 h-3 text-primary/30 group-hover/infra:text-primary transition-colors" />[m
+[32m+[m[32m                  <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">{item.platform}</span>[m
+[32m+[m[32m                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />[m
+                 </div>[m
+[31m-                <p className="text-lg font-black tracking-tighter italic text-foreground">[m
+[32m+[m[32m                <p className="text-xl font-black tracking-tighter italic text-foreground">[m
+                   ${item.balance.toFixed(2)}[m
+                 </p>[m
+                 <div className="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">[m
+[31m-                  <div [m
+[31m-                    className="h-full bg-primary/20" [m
+[31m-                    style={{ width: '10%' }} [m
+[31m-                  />[m
+[32m+[m[32m                  <div className="h-full bg-primary/20" style={{ width: '15%' }} />[m
+                 </div>[m
+               </div>[m
+             ))}[m
+           </div>[m
+         </div>[m
+ [m
+[31m-        {/* Unified Subscriptions & Success Protocols Section */}[m
+[31m-        <div className="space-y-8">[m
+[31m-          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">[m
+[31m-            <CreditCard className="w-3 h-3" />[m
+[31m-            {isAdmin ? "Empire Revenue & Success Protocols" : "Subscriptions & Success Protocols"}[m
+[31m-          </div>[m
+[31m-[m
+[31m-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">[m
+[31m-            {/* Subscriptions List */}[m
+[32m+[m[32m        {/* REVERTED TO TWO COLUMN LAYOUT: Subscriptions | Success Share */}[m
+[32m+[m[32m        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">[m
+[32m+[m[41m          [m
+[32m+[m[32m          {/* Column 1: Empire Obligations */}[m
+[32m+[m[32m          <div className="space-y-6">[m
+[32m+[m[32m            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">[m
+[32m+[m[32m              <CreditCard className="w-3 h-3" />[m
+[32m+[m[32m              Empire Obligations[m
+[32m+[m[32m            </div>[m
+             <div className="space-y-3">[m
+               {subscriptions.length > 0 ? subscriptions.map((sub, i) => ([m
+[31m-                <div key={`sub-${i}`} className={cn([m
+[31m-                  "p-5 rounded-2xl border flex items-center justify-between transition-all",[m
+[31m-                  (sub.type === 'app' || sub.type === 'platform') ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"[m
+[31m-                )}>[m
+[31m-                  <div className="flex items-center gap-3">[m
+[31m-                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", (sub.type === 'app' || sub.type === 'platform') ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>[m
+[31m-                      {(sub.type === 'app' || sub.type === 'platform') ? <AppWindow className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}[m
+[32m+[m[32m                <div key={`sub-${i}`} className="p-6 rounded-[24px] border bg-theme-background border-theme flex items-center justify-between transition-all">[m
+[32m+[m[32m                  <div className="flex items-center gap-4">[m
+[32m+[m[32m                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-primary">[m
+[32m+[m[32m                      {(sub.type === 'app' || sub.type === 'platform') ? <AppWindow className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />}[m
+                     </div>[m
+                     <div>[m
+                       <p className="text-xs font-black uppercase italic">{sub.name}</p>[m
+[36m@@ -198,61 +196,66 @@[m [mexport function FinancialCommand({[m
+                   </div>[m
+                   <div className="text-right">[m
+                     <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>[m
+[31m-                    {(sub.type === 'app' || sub.type === 'platform') && <span className="text-[8px] font-black text-primary uppercase">{isAdmin ? "Total MRR" : "Platform Due"}</span>}[m
+                   </div>[m
+                 </div>[m
+               )) : ([m
+[31m-                <div className="p-8 border-2 border-dashed border-theme rounded-3xl text-center">[m
+[31m-                  <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">No active subscriptions</p>[m
+[32m+[m[32m                <div className="p-10 border-2 border-dashed border-theme rounded-[32px] text-center bg-slate-950/50">[m
+[32m+[m[32m                  <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em] italic">No pending obligations</p>[m
+                 </div>[m
+               )}[m
+             </div>[m
+[32m+[m[32m          </div>[m
+ [m
+[31m-            {/* Success-Shares Protocol Box */}[m
+[31m-            <div className="p-6 bg-emerald-500/5 border-2 border-emerald-500/20 rounded-[32px] space-y-6 relative overflow-hidden group">[m
+[32m+[m[32m          {/* Column 2: Success-Shares Card */}[m
+[32m+[m[32m          <div className="space-y-6">[m
+[32m+[m[32m            <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest">[m
+[32m+[m[32m              <TrendingUp className="w-3 h-3" />[m
+[32m+[m[32m              Success Protocols[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m            <div className="p-8 bg-emerald-500/5 border-2 border-emerald-500/20 rounded-[40px] space-y-8 relative overflow-hidden h-full">[m
+               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[40px] -mr-16 -mt-16 pointer-events-none" />[m
+               [m
+               <div className="flex items-center gap-4 relative z-10">[m
+[31m-                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">[m
+[31m-                  <TrendingUp className="w-6 h-6 text-emerald-400" />[m
+[32m+[m[32m                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">[m
+[32m+[m[32m                  <ShieldCheck className="w-7 h-7 text-emerald-400" />[m
+                 </div>[m
+                 <div>[m
+[31m-                  <h4 className="text-sm font-black uppercase tracking-wider text-emerald-400">{successShareLabel}</h4>[m
+[32m+[m[32m                  <h4 className="text-base font-black uppercase tracking-wider text-emerald-400 italic">{successShareLabel}</h4>[m
+                   <p className="text-[10px] font-medium text-emerald-400/70">{successShareDesc}</p>[m
+                 </div>[m
+               </div>[m
+ [m
+               <div className="text-left relative z-10">[m
+[31m-                <p className="text-3xl font-black text-emerald-400 italic leading-none">[m
+[32m+[m[32m                <p className="text-4xl font-black text-emerald-400 italic leading-none">[m
+                   $0.00[m
+                 </p>[m
+[31m-                <span className="text-[9px] font-black text-emerald-500/60 uppercase tracking-widest mt-1 block">[m
+[31m-                  {isAdmin ? "Platform Collection" : "Current Milestone Progress"}[m
+[32m+[m[32m                <span className="text-[9px] font-black text-emerald-500/60 uppercase tracking-widest mt-2 block">[m
+[32m+[m[32m                  {isAdmin ? "Total Platform Collection" : "Current Milestone Progress"}[m
+                 </span>[m
+               </div>[m
+ [m
+[31m-              <div className="space-y-3 relative z-10">[m
+[31m-                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">[m
+[31m-                  <span className="text-slate-500">Current Milestone Cycle</span>[m
+[32m+[m[32m              <div className="space-y-4 relative z-10">[m
+[32m+[m[32m                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em]">[m
+[32m+[m[32m                  <span className="text-slate-500">Milestone Cycle</span>[m
+                   <span className="text-emerald-500">0%</span>[m
+                 </div>[m
+[31m-                <div className="h-3 bg-slate-900 border border-white/5 rounded-full overflow-hidden p-0.5">[m
+[32m+[m[32m                <div className="h-4 bg-slate-900 border border-white/5 rounded-full overflow-hidden p-1">[m
+                   <motion.div[m
+                     initial={{ width: '0%' }}[m
+                     animate={{ width: '0%' }}[m
+[31m-                    className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.3)]"[m
+[32m+[m[32m                    className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.4)]"[m
+                   />[m
+                 </div>[m
+               </div>[m
+ [m
+               <div className="pt-2 relative z-10">[m
+[31m-                <div className="flex items-center gap-2 text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4">[m
+[31m-                  <ShieldCheck className="w-4 h-4 text-emerald-500" />[m
+[31m-                  $40 share per $1,000 revenue protocol[m
+[32m+[m[32m                <div className="flex items-center gap-2 text-[9px] font-black text-slate-500 uppercase tracking-widest mb-6">[m
+[32m+[m[32m                  <Zap className="w-4 h-4 text-emerald-500" />[m
+[32m+[m[32m                  $40 per $1,000 Revenue Protocol[m
+                 </div>[m
+[31m-                <button className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-lg active:scale-95">[m
+[31m-                  <ArrowUpRight className="w-4 h-4" />[m
+[31m-                  {isAdmin ? "Platform Audit" : "Success Report"}[m
+[32m+[m[32m                <button className="w-full flex items-center justify-center gap-3 px-8 py-5 bg-emerald-500/10 border border-emerald-500/20 rounded-[20px] text-emerald-400 text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-xl active:scale-95 group">[m
+[32m+[m[32m                  {isAdmin ? "Audit All Empires" : "Request Success Report"}[m
+[32m+[m[32m                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />[m
+                 </button>[m
+               </div>[m
+             </div>[m
+
+[33mcommit b6c0f5b2715eb77723868d10e4d4dc062b9590d0[m
+Author: Staci Peabody <stacipeabody@gmail.com>
+Date:   Thu Jun 11 23:10:19 2026 +0000
+
+    FIX: Navigation resurrection - Z-index overhaul and pointer-event audit
+
+[1mdiff --git a/src/components/Dashboard/FinancialCommand.tsx b/src/components/Dashboard/FinancialCommand.tsx[m
+[1mindex 74b76c5..ca44084 100644[m
+[1m--- a/src/components/Dashboard/FinancialCommand.tsx[m
+[1m+++ b/src/components/Dashboard/FinancialCommand.tsx[m
+[36m@@ -2,7 +2,7 @@[m
+ [m
+ import React, { useState, useEffect } from 'react';[m
+ import { motion, AnimatePresence } from 'framer-motion';[m
+[31m-import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity, Minus, Maximize2 } from 'lucide-react';[m
+[32m+[m[32mimport { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity, Minus, Maximize2, DollarSign } from 'lucide-react';[m
+ import { cn } from '@/lib/utils';[m
+ import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';[m
+ import { useEmpire } from '@/lib/EmpireContext';[m
+[36m@@ -51,21 +51,22 @@[m [mexport function FinancialCommand({[m
+     return `${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;[m
+   };[m
+ [m
+[31m-  // Logic: Owner sees Platform Revenue, Customer sees Business Revenue[m
+[32m+[m[32m  // REALITY GROUNDING: All numbers strictly 0.00[m
+   const subscriptions = isAdmin ? [[m
+[31m-    { name: "Active User Subscriptions", amount: 1240 * 4000, date: "Real-time sync", type: "platform" },[m
+[32m+[m[32m    { name: "Active User Subscriptions", amount: 0, date: "No active users", type: "platform" },[m
+   ] : (withholdableEarnings > 0 ? [[m
+[31m-    { name: "EmpireLaunch AI Platform", amount: 4000, date: "Next: July 01, 2024", type: "app" },[m
+[32m+[m[32m    { name: "EmpireLaunch AI Platform", amount: 0, date: "Pending Activation", type: "app" },[m
+   ] : []);[m
+ [m
+[31m-  const dues = isAdmin ? [[m
+[31m-    { name: "Total Success-Shares Collected", amount: 1542000, date: "Platform Total" },[m
+[31m-  ] : (withholdableEarnings >= 100000 ? [[m
+[31m-    { name: "Etsy Listing Fees", amount: 420, date: "Auto-Deduct Pending" },[m
+[31m-    { name: "Fiverr Commission", amount: 1250, date: "Auto-Deduct Pending" },[m
+[31m-  ] : []);[m
+[32m+[m[32m  // Restore Prominent Infrastructure items[m
+[32m+[m[32m  const displayInfra = infraBalances.length > 0 ? infraBalances : [[m
+[32m+[m[32m    { platform: 'Railway', balance: 0.00, status: 'active', currency: 'USD' },[m
+[32m+[m[32m    { platform: 'OpenAI', balance: 0.00, status: 'active', currency: 'USD' },[m
+[32m+[m[32m    { platform: 'Gemini', balance: 0.00, status: 'active', currency: 'USD' },[m
+[32m+[m[32m    { platform: 'Stripe', balance: 0.00, status: 'active', currency: 'USD' }[m
+[32m+[m[32m  ];[m
+ [m
+[31m-  const successShareAmount = isAdmin ? 1542000 : (withholdableEarnings / 100) * 0.04;[m
+[32m+[m[32m  const successShareAmount = 0;[m
+   const successShareLabel = isAdmin ? "Platform Success-Shares" : "Success-Share (Due)";[m
+   const successShareDesc = isAdmin ? "Total commission from all user sales" : "4% platform partner fee";[m
+ [m
+[36m@@ -112,7 +113,7 @@[m [mexport function FinancialCommand({[m
+ [m
+       <div className="relative z-10 space-y-10">[m
+         [m
+[31m-        {/* Top Header: Bucket Visuals */}[m
+[32m+[m[32m        {/* Top Header: Efficiency Ring */}[m
+         <div className="flex flex-col md:flex-row gap-8 items-center border-b border-theme/30 pb-8">[m
+           <div className="relative w-32 h-32 shrink-0">[m
+             <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">[m
+[36m@@ -121,14 +122,14 @@[m [mexport function FinancialCommand({[m
+                 cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-primary" strokeWidth="12"[m
+                 strokeDasharray="251.2"[m
+                 initial={{ strokeDashoffset: 251.2 }}[m
+[31m-                animate={{ strokeDashoffset: 251.2 * (1 - 0.75) }}[m
+[32m+[m[32m                animate={{ strokeDashoffset: 251.2 * (1 - 0) }}[m
+                 strokeLinecap="round"[m
+                 transition={{ duration: 1.5, ease: "easeOut" }}[m
+               />[m
+             </svg>[m
+             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">[m
+               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Efficiency</span>[m
+[31m-              <span className="text-xl font-black">{growthScore}%</span>[m
+[32m+[m[32m              <span className="text-xl font-black">0%</span>[m
+             </div>[m
+           </div>[m
+ [m
+[36m@@ -142,51 +143,46 @@[m [mexport function FinancialCommand({[m
+           </div>[m
+         </div>[m
+ [m
+[31m-        {/* Infrastructure Monitor */}[m
+[31m-        {infraBalances.length > 0 && ([m
+[31m-          <div className="space-y-4">[m
+[31m-            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">[m
+[31m-              <Cpu className="w-3 h-3" />[m
+[31m-              System Infrastructure Balances[m
+[31m-            </div>[m
+[31m-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">[m
+[31m-              {infraBalances.map((item, i) => ([m
+[31m-                <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl space-y-2">[m
+[31m-                  <div className="flex items-center justify-between">[m
+[31m-                    <span className="text-[8px] font-black uppercase text-muted-foreground">{item.platform}</span>[m
+[31m-                    {item.status === 'low' && <Zap className="w-3 h-3 text-amber-500 animate-pulse" />}[m
+[31m-                  </div>[m
+[31m-                  <p className={cn([m
+[31m-                    "text-lg font-black tracking-tighter italic",[m
+[31m-                    item.status === 'low' ? "text-amber-500" : "text-foreground"[m
+[31m-                  )}>[m
+[31m-                    ${item.balance.toFixed(2)}[m
+[31m-                  </p>[m
+[31m-                  <div className="w-full bg-slate-800 h-1 rounded-full overflow-hidden">[m
+[31m-                    <div [m
+[31m-                      className={cn("h-full", item.status === 'low' ? "bg-amber-500" : "bg-primary")} [m
+[31m-                      style={{ width: `${Math.min(100, (item.balance / 50) * 100)}%` }} [m
+[31m-                    />[m
+[31m-                  </div>[m
+[32m+[m[32m        {/* Infrastructure Monitor - PROMINENT SLOTS */}[m
+[32m+[m[32m        <div className="space-y-4">[m
+[32m+[m[32m          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">[m
+[32m+[m[32m            <Cpu className="w-3 h-3" />[m
+[32m+[m[32m            Infrastructure Monitors (Railway / OpenAI / Gemini)[m
+[32m+[m[32m          </div>[m
+[32m+[m[32m          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">[m
+[32m+[m[32m            {displayInfra.map((item, i) => ([m
+[32m+[m[32m              <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl space-y-2 group/infra hover:border-primary/40 transition-all">[m
+[32m+[m[32m                <div className="flex items-center justify-between">[m
+[32m+[m[32m                  <span className="text-[8px] font-black uppercase text-muted-foreground">{item.platform}</span>[m
+[32m+[m[32m                  <Zap className="w-3 h-3 text-primary/30 group-hover/infra:text-primary transition-colors" />[m
+                 </div>[m
+[31m-              ))}[m
+[31m-            </div>[m
+[32m+[m[32m                <p className="text-lg font-black tracking-tighter italic text-foreground">[m
+[32m+[m[32m                  ${item.balance.toFixed(2)}[m
+[32m+[m[32m                </p>[m
+[32m+[m[32m                <div className="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">[m
+[32m+[m[32m                  <div[m[41m [m
+[32m+[m[32m                    className="h-full bg-primary/20"[m[41m [m
+[32m+[m[32m                    style={{ width: '10%' }}[m[41m [m
+[32m+[m[32m                  />[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m              </div>[m
+[32m+[m[32m            ))}[m
+[32m+[m[32m          </div>[m
+[32m+[m[32m        </div>[m
+[32m+[m
+[32m+[m[32m        {/* Unified Subscriptions & Success Protocols Section */}[m
+[32m+[m[32m        <div className="space-y-8">[m
+[32m+[m[32m          <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">[m
+[32m+[m[32m            <CreditCard className="w-3 h-3" />[m
+[32m+[m[32m            {isAdmin ? "Empire Revenue & Success Protocols" : "Subscriptions & Success Protocols"}[m
+           </div>[m
+[31m-        )}[m
+ [m
+[31m-        {/* Breakdown Sections */}[m
+[31m-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">[m
+[31m-          [m
+[31m-          {/* Subscriptions Section */}[m
+[31m-          <div className="space-y-6">[m
+[31m-            <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">[m
+[31m-              <CreditCard className="w-3 h-3" />[m
+[31m-              {isAdmin ? "Platform Recurring Revenue" : "Active Subscriptions"}[m
+[31m-            </div>[m
+[32m+[m[32m          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">[m
+[32m+[m[32m            {/* Subscriptions List */}[m
+             <div className="space-y-3">[m
+[31m-              {subscriptions.map((sub, i) => ([m
+[31m-                <div key={i} className={cn([m
+[31m-                  "p-4 rounded-2xl border flex items-center justify-between transition-all",[m
+[32m+[m[32m              {subscriptions.length > 0 ? subscriptions.map((sub, i) => ([m
+[32m+[m[32m                <div key={`sub-${i}`} className={cn([m
+[32m+[m[32m                  "p-5 rounded-2xl border flex items-center justify-between transition-all",[m
+                   (sub.type === 'app' || sub.type === 'platform') ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"[m
+                 )}>[m
+                   <div className="flex items-center gap-3">[m
+[36m@@ -205,87 +201,62 @@[m [mexport function FinancialCommand({[m
+                     {(sub.type === 'app' || sub.type === 'platform') && <span className="text-[8px] font-black text-primary uppercase">{isAdmin ? "Total MRR" : "Platform Due"}</span>}[m
+                   </div>[m
+                 </div>[m
+[31m-              ))}[m
+[31m-              {subscriptions.length === 0 && ([m
+[32m+[m[32m              )) : ([m
+                 <div className="p-8 border-2 border-dashed border-theme rounded-3xl text-center">[m
+[31m-                  <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">No active obligations</p>[m
+[32m+[m[32m                  <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">No active subscriptions</p>[m
+                 </div>[m
+               )}[m
+             </div>[m
+[31m-          </div>[m
+ [m
+[31m-          {/* Dues Section */}[m
+[31m-          <div className="space-y-6">[m
+[31m-            <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest">[m
+[31m-              <ShieldCheck className="w-3 h-3" />[m
+[31m-              {successShareLabel}[m
+[31m-            </div>[m
+[31m-            <div className="space-y-3">[m
+[31m-              {dues.map((due, i) => ([m
+[31m-                <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">[m
+[31m-                  <div className="flex items-center gap-3">[m
+[31m-                    <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-emerald-500">[m
+[31m-                      <Bucket className="w-4 h-4" />[m
+[31m-                    </div>[m
+[31m-                    <div>[m
+[31m-                      <p className="text-xs font-black uppercase italic">{due.name}</p>[m
+[31m-                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">[m
+[31m-                        <Calendar className="w-2.5 h-2.5" /> {due.date}[m
+[31m-                      </div>[m
+[31m-                    </div>[m
+[31m-                  </div>[m
+[31m-                  <p className="text-sm font-black italic text-emerald-500">{formatCurrency(due.amount)}</p>[m
+[32m+[m[32m            {/* Success-Shares Protocol Box */}[m
+[32m+[m[32m            <div className="p-6 bg-emerald-500/5 border-2 border-emerald-500/20 rounded-[32px] space-y-6 relative overflow-hidden group">[m
+[32m+[m[32m              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[40px] -mr-16 -mt-16 pointer-events-none" />[m
+[32m+[m[41m              [m
+[32m+[m[32m              <div className="flex items-center gap-4 relative z-10">[m
+[32m+[m[32m                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">[m
+[32m+[m[32m                  <TrendingUp className="w-6 h-6 text-emerald-400" />[m
+                 </div>[m
+[31m-              ))}[m
+[31m-[m
+[31m-              {/* Success-Shares Box — Below EmpireLaunch AI Platform */}[m
+[31m-              <div className="mt-4 p-5 bg-emerald-500/5 border-2 border-emerald-500/20 rounded-3xl space-y-4">[m
+[31m-                <div className="flex items-center justify-between">[m
+[31m-                  <div className="flex items-center gap-3">[m
+[31m-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">[m
+[31m-                      <TrendingUp className="w-5 h-5 text-emerald-400" />[m
+[31m-                    </div>[m
+[31m-                    <div>[m
+[31m-                      <h4 className="text-xs font-black uppercase tracking-wider text-emerald-400">{successShareLabel}</h4>[m
+[31m-                      <p className="text-[9px] font-medium text-emerald-400/70">{successShareDesc}</p>[m
+[31m-                    </div>[m
+[31m-                  </div>[m
+[31m-                  <div className="text-right">[m
+[31m-                    <p className="text-lg font-black text-emerald-400 italic">[m
+[31m-                      ${(successShareAmount / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}[m
+[31m-                    </p>[m
+[31m-                    <span className="text-[8px] font-black text-emerald-400/70 uppercase tracking-widest">{isAdmin ? "Platform Total" : "4% Success-Share"}</span>[m
+[31m-                  </div>[m
+[32m+[m[32m                <div>[m
+[32m+[m[32m                  <h4 className="text-sm font-black uppercase tracking-wider text-emerald-400">{successShareLabel}</h4>[m
+[32m+[m[32m                  <p className="text-[10px] font-medium text-emerald-400/70">{successShareDesc}</p>[m
+                 </div>[m
+[32m+[m[32m              </div>[m
+ [m
+[31m-                <div className="flex items-center gap-3">[m
+[31m-                  <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">[m
+[31m-                    <motion.div[m
+[31m-                      initial={{ width: '0%' }}[m
+[31m-                      animate={{ width: `${Math.min(100, ((withholdableEarnings / 100) % 1000) / 10)}%` }}[m
+[31m-                      transition={{ duration: 1.5, ease: 'easeOut' }}[m
+[31m-                      className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"[m
+[31m-                    />[m
+[31m-                  </div>[m
+[31m-                  <span className="text-[9px] font-black text-emerald-400 uppercase tracking-wider">[m
+[31m-                    {Math.floor(((withholdableEarnings / 100) % 1000) / 10)}%[m
+[31m-                  </span>[m
+[32m+[m[32m              <div className="text-left relative z-10">[m
+[32m+[m[32m                <p className="text-3xl font-black text-emerald-400 italic leading-none">[m
+[32m+[m[32m                  $0.00[m
+[32m+[m[32m                </p>[m
+[32m+[m[32m                <span className="text-[9px] font-black text-emerald-500/60 uppercase tracking-widest mt-1 block">[m
+[32m+[m[32m                  {isAdmin ? "Platform Collection" : "Current Milestone Progress"}[m
+[32m+[m[32m                </span>[m
+[32m+[m[32m              </div>[m
+[32m+[m
+[32m+[m[32m              <div className="space-y-3 relative z-10">[m
+[32m+[m[32m                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">[m
+[32m+[m[32m                  <span className="text-slate-500">Current Milestone Cycle</span>[m
+[32m+[m[32m                  <span className="text-emerald-500">0%</span>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m                <div className="h-3 bg-slate-900 border border-white/5 rounded-full overflow-hidden p-0.5">[m
+[32m+[m[32m                  <motion.div[m
+[32m+[m[32m                    initial={{ width: '0%' }}[m
+[32m+[m[32m                    animate={{ width: '0%' }}[m
+[32m+[m[32m                    className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.3)]"[m
+[32m+[m[32m                  />[m
+                 </div>[m
+[32m+[m[32m              </div>[m
+ [m
+[31m-                <div className="flex items-center justify-between pt-1">[m
+[31m-                  <div className="flex items-center gap-2 text-[8px] font-black text-muted-foreground uppercase tracking-widest">[m
+[31m-                    <ShieldCheck className="w-3 h-3 text-emerald-400" />[m
+[31m-                    $40 fee per $1,000 revenue[m
+[31m-                  </div>[m
+[31m-                  <button className="flex items-center gap-1.5 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-[8px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all">[m
+[31m-                    <ArrowUpRight className="w-3 h-3" />[m
+[31m-                    Download Audit Report[m
+[31m-                  </button>[m
+[32m+[m[32m              <div className="pt-2 relative z-10">[m
+[32m+[m[32m                <div className="flex items-center gap-2 text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4">[m
+[32m+[m[32m                  <ShieldCheck className="w-4 h-4 text-emerald-500" />[m
+[32m+[m[32m                  $40 share per $1,000 revenue protocol[m
+                 </div>[m
+[32m+[m[32m                <button className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-lg active:scale-95">[m
+[32m+[m[32m                  <ArrowUpRight className="w-4 h-4" />[m
+[32m+[m[32m                  {isAdmin ? "Platform Audit" : "Success Report"}[m
+[32m+[m[32m                </button>[m
+               </div>[m
+             </div>[m
+           </div>[m
+[31m-[m
+         </div>[m
+ [m
+       </div>[m
+
+[33mcommit c7577e08a588aa3ac15a3caa5c469a2b13fe8ce5[m
+Author: Staci Peabody <stacipeabody@gmail.com>
+Date:   Thu Jun 11 22:15:25 2026 +0000
+
+    Production Update: Reality Grounding, Financial Protocol Hard-Lock, and Hybrid Intelligence cost-optimization
+
+[1mdiff --git a/src/components/Dashboard/FinancialCommand.tsx b/src/components/Dashboard/FinancialCommand.tsx[m
+[1mindex ede8c7c..74b76c5 100644[m
+[1m--- a/src/components/Dashboard/FinancialCommand.tsx[m
+[1m+++ b/src/components/Dashboard/FinancialCommand.tsx[m
+[36m@@ -5,6 +5,7 @@[m [mimport { motion, AnimatePresence } from 'framer-motion';[m
+ import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity, Minus, Maximize2 } from 'lucide-react';[m
+ import { cn } from '@/lib/utils';[m
+ import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';[m
+[32m+[m[32mimport { useEmpire } from '@/lib/EmpireContext';[m
+ [m
+ interface FinancialCommandProps {[m
+   withholdableEarnings?: number;[m
+[36m@@ -15,12 +16,13 @@[m [minterface FinancialCommandProps {[m
+ }[m
+ [m
+ export function FinancialCommand({ [m
+[31m-  withholdableEarnings = 125050, [m
+[31m-  securedDues = 18000, [m
+[31m-  growthScore = 92,[m
+[32m+[m[32m  withholdableEarnings = 0,[m[41m [m
+[32m+[m[32m  securedDues = 0,[m[41m [m
+[32m+[m[32m  growthScore = 0,[m
+   businessId = "1",[m
+   onActivateGrowthProtocol[m
+ }: Partial<FinancialCommandProps>) {[m
+[32m+[m[32m  const { isAdmin } = useEmpire();[m
+   const [infraBalances, setInfraBalances] = useState<InfrastructureBalance[]>([]);[m
+   const [isMinimized, setIsMinimized] = useState(false);[m
+   const [mounted, setMounted] = useState(false);[m
+[36m@@ -31,7 +33,7 @@[m [mexport function FinancialCommand({[m
+     if (saved === 'true') setIsMinimized(true);[m
+ [m
+     const loadInfra = async () => {[m
+[31m-      const bals = await infrastructureService.getBalances();[m
+[32m+[m[32m      const bals = await infrastructureService.getBalances().catch(() => []);[m
+       setInfraBalances(bals);[m
+     };[m
+     loadInfra();[m
+[36m@@ -49,16 +51,23 @@[m [mexport function FinancialCommand({[m
+     return `${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;[m
+   };[m
+ [m
+[31m-  const subscriptions = [[m
+[31m-    { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },[m
+[31m-    { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },[m
+[31m-    { name: "EmpireLaunch AI Platform", amount: 4000, date: "June 20, 2024", type: "app" },[m
+[31m-  ];[m
+[32m+[m[32m  // Logic: Owner sees Platform Revenue, Customer sees Business Revenue[m
+[32m+[m[32m  const subscriptions = isAdmin ? [[m
+[32m+[m[32m    { name: "Active User Subscriptions", amount: 1240 * 4000, date: "Real-time sync", type: "platform" },[m
+[32m+[m[32m  ] : (withholdableEarnings > 0 ? [[m
+[32m+[m[32m    { name: "EmpireLaunch AI Platform", amount: 4000, date: "Next: July 01, 2024", type: "app" },[m
+[32m+[m[32m  ] : []);[m
+ [m
+[31m-  const dues = [[m
+[31m-    { name: "Etsy Listing Fees", amount: 420, date: "June 30, 2024" },[m
+[31m-    { name: "Fiverr Commission", amount: 1250, date: "June 30, 2024" },[m
+[31m-  ];[m
+[32m+[m[32m  const dues = isAdmin ? [[m
+[32m+[m[32m    { name: "Total Success-Shares Collected", amount: 1542000, date: "Platform Total" },[m
+[32m+[m[32m  ] : (withholdableEarnings >= 100000 ? [[m
+[32m+[m[32m    { name: "Etsy Listing Fees", amount: 420, date: "Auto-Deduct Pending" },[m
+[32m+[m[32m    { name: "Fiverr Commission", amount: 1250, date: "Auto-Deduct Pending" },[m
+[32m+[m[32m  ] : []);[m
+[32m+[m
+[32m+[m[32m  const successShareAmount = isAdmin ? 1542000 : (withholdableEarnings / 100) * 0.04;[m
+[32m+[m[32m  const successShareLabel = isAdmin ? "Platform Success-Shares" : "Success-Share (Due)";[m
+[32m+[m[32m  const successShareDesc = isAdmin ? "Total commission from all user sales" : "4% platform partner fee";[m
+ [m
+   if (isMinimized) {[m
+     return ([m
+[36m@@ -172,17 +181,17 @@[m [mexport function FinancialCommand({[m
+           <div className="space-y-6">[m
+             <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">[m
+               <CreditCard className="w-3 h-3" />[m
+[31m-              Active Subscriptions[m
+[32m+[m[32m              {isAdmin ? "Platform Recurring Revenue" : "Active Subscriptions"}[m
+             </div>[m
+             <div className="space-y-3">[m
+               {subscriptions.map((sub, i) => ([m
+                 <div key={i} className={cn([m
+                   "p-4 rounded-2xl border flex items-center justify-between transition-all",[m
+[31m-                  sub.type === 'app' ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"[m
+[32m+[m[32m                  (sub.type === 'app' || sub.type === 'platform') ? "bg-primary/5 border-primary/30" : "bg-theme-background border-theme"[m
+                 )}>[m
+                   <div className="flex items-center gap-3">[m
+[31m-                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", sub.type === 'app' ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>[m
+[31m-                      {sub.type === 'app' ? <AppWindow className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}[m
+[32m+[m[32m                    <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", (sub.type === 'app' || sub.type === 'platform') ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400")}>[m
+[32m+[m[32m                      {(sub.type === 'app' || sub.type === 'platform') ? <AppWindow className="w-4 h-4" /> : <CreditCard className="w-4 h-4" />}[m
+                     </div>[m
+                     <div>[m
+                       <p className="text-xs font-black uppercase italic">{sub.name}</p>[m
+[36m@@ -193,24 +202,29 @@[m [mexport function FinancialCommand({[m
+                   </div>[m
+                   <div className="text-right">[m
+                     <p className="text-sm font-black italic">{formatCurrency(sub.amount)}</p>[m
+[31m-                    {sub.type === 'app' && <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>}[m
+[32m+[m[32m                    {(sub.type === 'app' || sub.type === 'platform') && <span className="text-[8px] font-black text-primary uppercase">{isAdmin ? "Total MRR" : "Platform Due"}</span>}[m
+                   </div>[m
+                 </div>[m
+               ))}[m
+[32m+[m[32m              {subscriptions.length === 0 && ([m
+[32m+[m[32m                <div className="p-8 border-2 border-dashed border-theme rounded-3xl text-center">[m
+[32m+[m[32m                  <p className="text-[10px] font-black text-white/20 uppercase tracking-widest">No active obligations</p>[m
+[32m+[m[32m                </div>[m
+[32m+[m[32m              )}[m
+             </div>[m
+           </div>[m
+ [m
+           {/* Dues Section */}[m
+           <div className="space-y-6">[m
+[31m-            <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">[m
+[32m+[m[32m            <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest">[m
+               <ShieldCheck className="w-3 h-3" />[m
+[31m-              Marketplace Dues[m
+[32m+[m[32m              {successShareLabel}[m
+             </div>[m
+             <div className="space-y-3">[m
+               {dues.map((due, i) => ([m
+                 <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">[m
+                   <div className="flex items-center gap-3">[m
+[31m-                    <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-500">[m
+[32m+[m[32m                    <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-emerald-500">[m
+                       <Bucket className="w-4 h-4" />[m
+                     </div>[m
+                     <div>[m
+[36m@@ -220,7 +234,7 @@[m [mexport function FinancialCommand({[m
+                       </div>[m
+                     </div>[m
+                   </div>[m
+[31m-                  <p className="text-sm font-black italic text-amber-500">{formatCurrency(due.amount)}</p>[m
+[32m+[m[32m                  <p className="text-sm font-black italic text-emerald-500">{formatCurrency(due.amount)}</p>[m
+                 </div>[m
+               ))}[m
+ [m
+[36m@@ -232,13 +246,15 @@[m [mexport function FinancialCommand({[m
+                       <TrendingUp className="w-5 h-5 text-emerald-400" />[m
+                     </div>[m
+                     <div>[m
+[31m-                      <h4 className="text-xs font-black uppercase tracking-wider text-emerald-400">Success-Shares</h4>[m
+[31m-                      <p className="text-[9px] font-medium text-emerald-400/70">Your share of empire growth revenue</p>[m
+[32m+[m[32m                      <h4 className="text-xs font-black uppercase tracking-wider text-emerald-400">{successShareLabel}</h4>[m
+[32m+[m[32m                      <p className="text-[9px] font-medium text-emerald-400/70">{successShareDesc}</p>[m
+                     </div>[m
+                   </div>[m
+                   <div className="text-right">[m
+[31m-                    <p className="text-lg font-black text-emerald-400 italic">$847.20</p>[m
+[31m-                    <span className="text-[8px] font-black text-emerald-400/70 uppercase tracking-widest">This Period</span>[m
+[32m+[m[32m                    <p className="text-lg font-black text-emerald-400 italic">[m
+[32m+[m[32m                      ${(successShareAmount / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}[m
+[32m+[m[32m                    </p>[m
+[32m+[m[32m                    <span className="text-[8px] font-black text-emerald-400/70 uppercase tracking-widest">{isAdmin ? "Platform Total" : "4% Success-Share"}</span>[m
+                   </div>[m
+                 </div>[m
+ [m
+[36m@@ -246,18 +262,20 @@[m [mexport function FinancialCommand({[m
+                   <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">[m
+                     <motion.div[m
+                       initial={{ width: '0%' }}[m
+[31m-                      animate={{ width: '68%' }}[m
+[32m+[m[32m                      animate={{ width: `${Math.min(100, ((withholdableEarnings / 100) % 1000) / 10)}%` }}[m
+                       transition={{ duration: 1.5, ease: 'easeOut' }}[m
+                       className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"[m
+                     />[m
+                   </div>[m
+[31m-                  <span className="text-[9px] font-black text-emerald-400 uppercase tracking-wider">68%</span>[m
+[32m+[m[32m                  <span className="text-[9px] font-black text-emerald-400 uppercase tracking-wider">[m
+[32m+[m[32m                    {Math.floor(((withholdableEarnings / 100) % 1000) / 10)}%[m
+[32m+[m[32m                  </span>[m
+                 </div>[m
+ [m
+                 <div className="flex items-center justify-between pt-1">[m
+                   <div className="flex items-center gap-2 text-[8px] font-black text-muted-foreground uppercase tracking-widest">[m
+                     <ShieldCheck className="w-3 h-3 text-emerald-400" />[m
+[31m-                    Auto-allocated from platform revenue[m
+[32m+[m[32m                    $40 fee per $1,000 revenue[m
+                   </div>[m
+                   <button className="flex items-center gap-1.5 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-[8px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all">[m
+                     <ArrowUpRight className="w-3 h-3" />[m
+
+[33mcommit a0577ad328e55c0cf3ffbd40eb5923ece96ff8de[m
+Author: EmpireLaunchCEO <EmpireLaunchCEO@users.noreply.github.com>
+Date:   Thu Jun 11 15:37:02 2026 +0000
+
+    feat: update Empire Financials — remove Settle Dues, add Success-Shares
+    
+    - Remove 'Settle All Dues' button from Marketplace Dues section
+    - Add 'Success-Shares' box directly below the EmpireLaunch AI Platform subscription
+    - Success-Shares shows: 47.20 current period, animated 68% progress bar, 'Auto-allocated from platform revenue' label
+    - Include 'Download Audit Report' button within the Success-Shares box
+    - Maintain high-fidelity Electric Empire dark theme (emerald-500 styling for shares)
+
+[1mdiff --git a/src/components/Dashboard/FinancialCommand.tsx b/src/components/Dashboard/FinancialCommand.tsx[m
+[1mindex 758f5b0..ede8c7c 100644[m
+[1m--- a/src/components/Dashboard/FinancialCommand.tsx[m
+[1m+++ b/src/components/Dashboard/FinancialCommand.tsx[m
+[36m@@ -223,11 +223,47 @@[m [mexport function FinancialCommand({[m
+                   <p className="text-sm font-black italic text-amber-500">{formatCurrency(due.amount)}</p>[m
+                 </div>[m
+               ))}[m
+[31m-              [m
+[31m-              <div className="mt-8 pt-4 border-t border-theme/30">[m
+[31m-                <button className="w-full py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">[m
+[31m-                  Settle All Dues[m
+[31m-                </button>[m
+[32m+[m
+[32m+[m[32m              {/* Success-Shares Box — Below EmpireLaunch AI Platform */}[m
+[32m+[m[32m              <div className="mt-4 p-5 bg-emerald-500/5 border-2 border-emerald-500/20 rounded-3xl space-y-4">[m
+[32m+[m[32m                <div className="flex items-center justify-between">[m
+[32m+[m[32m                  <div className="flex items-center gap-3">[m
+[32m+[m[32m                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">[m
+[32m+[m[32m                      <TrendingUp className="w-5 h-5 text-emerald-400" />[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                    <div>[m
+[32m+[m[32m                      <h4 className="text-xs font-black uppercase tracking-wider text-emerald-400">Success-Shares</h4>[m
+[32m+[m[32m                      <p className="text-[9px] font-medium text-emerald-400/70">Your share of empire growth revenue</p>[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                  </div>[m
+[32m+[m[32m                  <div className="text-right">[m
+[32m+[m[32m                    <p className="text-lg font-black text-emerald-400 italic">$847.20</p>[m
+[32m+[m[32m                    <span className="text-[8px] font-black text-emerald-400/70 uppercase tracking-widest">This Period</span>[m
+[32m+[m[32m                  </div>[m
+[32m+[m[32m                </div>[m
+[32m+[m
+[32m+[m[32m                <div className="flex items-center gap-3">[m
+[32m+[m[32m                  <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">[m
+[32m+[m[32m                    <motion.div[m
+[32m+[m[32m                      initial={{ width: '0%' }}[m
+[32m+[m[32m                      animate={{ width: '68%' }}[m
+[32m+[m[32m                      transition={{ duration: 1.5, ease: 'easeOut' }}[m
+[32m+[m[32m                      className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"[m
+[32m+[m[32m                    />[m
+[32m+[m[32m                  </div>[m
+[32m+[m[32m                  <span className="text-[9px] font-black text-emerald-400 uppercase tracking-wider">68%</span>[m
+[32m+[m[32m                </div>[m
+[32m+[m
+[32m+[m[32m                <div className="flex items-center justify-between pt-1">[m
+[32m+[m[32m                  <div className="flex items-center gap-2 text-[8px] font-black text-muted-foreground uppercase tracking-widest">[m
+[32m+[m[32m                    <ShieldCheck className="w-3 h-3 text-emerald-400" />[m
+[32m+[m[32m                    Auto-allocated from platform revenue[m
+[32m+[m[32m                  </div>[m
+[32m+[m[32m                  <button className="flex items-center gap-1.5 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-[8px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all">[m
+[32m+[m[32m                    <ArrowUpRight className="w-3 h-3" />[m
+[32m+[m[32m                    Download Audit Report[m
+[32m+[m[32m                  </button>[m
+[32m+[m[32m                </div>[m
+               </div>[m
+             </div>[m
+           </div>[m
+
+[33mcommit 8bfe3520adde33849a7b33d850cca2ae033c3719[m
+Author: Staci Peabody <stacipeabody@gmail.com>
+Date:   Thu Jun 11 01:50:23 2026 +0000
+
+    UI Refinement: Standardized minimize button size and placement on Empire Finances box to match Growth Tracker
+
+[1mdiff --git a/src/components/Dashboard/FinancialCommand.tsx b/src/components/Dashboard/FinancialCommand.tsx[m
+[1mindex dc1e921..758f5b0 100644[m
+[1m--- a/src/components/Dashboard/FinancialCommand.tsx[m
+[1m+++ b/src/components/Dashboard/FinancialCommand.tsx[m
+[36m@@ -92,12 +92,12 @@[m [mexport function FinancialCommand({[m
+         <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Empire Finances</h3>[m
+       </div>[m
+ [m
+[31m-      <div className="absolute top-8 right-8 z-20">[m
+[32m+[m[32m      <div className="absolute top-4 right-5 z-20">[m
+         <button [m
+           onClick={toggleMinimize}[m
+[31m-          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"[m
+[32m+[m[32m          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"[m
+         >[m
+[31m-          <Minus className="w-5 h-5" />[m
+[32m+[m[32m          <Minus className="w-4 h-4" />[m
+         </button>[m
+       </div>[m
+ [m

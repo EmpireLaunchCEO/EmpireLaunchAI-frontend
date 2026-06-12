@@ -40,7 +40,7 @@ export default function RootLoading() {
       <div className="absolute bottom-10 flex flex-col items-center gap-2 opacity-30">
         <div className="flex items-center gap-2">
           <div className="w-1 h-1 bg-primary rounded-full animate-ping" />
-          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">v4.7.0 ELECTRIC</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">v4.9.7 ELECTRIC</span>
         </div>
         <div className="w-32 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
       </div>
