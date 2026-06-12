@@ -58,16 +58,7 @@ export default function Dashboard() {
 
       if (eData) {
         let finalData = eData;
-        if (isAdmin && (activeEmpireId === '1' || !eData.title || eData.title === 'The First Empire' || eData.title === 'EMPIRELAUNCH' || eData.title === 'HOME BASE' || eData.name === 'HOME BASE')) {
-          finalData = {
-            ...eData,
-            title: 'EmpireLaunch AI',
-            name: 'EmpireLaunch AI',
-            niche: 'AI Business Automation',
-            description: 'Empire Niche: AI Business Automation.'
-          };
-        }
-
+        
         setEmpireDataState(finalData);
         setActiveEmpire(finalData);
         setPulseData(pulse);
@@ -158,7 +149,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-                      {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE') ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
+                      {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE' || !empireData?.name) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title)}
                     </h1>
                   </motion.div>
 

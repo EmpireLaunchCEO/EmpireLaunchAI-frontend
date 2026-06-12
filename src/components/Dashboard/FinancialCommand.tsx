@@ -41,9 +41,11 @@ export function FinancialCommand({
 
   const handleDownloadAudit = () => {
     setIsDownloading(true);
-    // Simulate generation and download
     setTimeout(() => {
-      const auditContent = `EMPIRELAUNCH AI - SUCCESS-SHARE AUDIT\nGenerated: ${new Date().toLocaleString()}\n\nBusiness Tracking:\n- Content Generated: 142 Assets\n- Marketing Campaigns: 12\n- Revenue Attributed to AI: $1,250.50\n- Success-Share Rate: 4% (40/1k)\n- Success-Share Due: $50.02\n\nAll tracking verified via Neural Sync.`;
+      const revenueCents = withholdableEarnings;
+      const shareCents = Math.floor(revenueCents * 0.04);
+      
+      const auditContent = `EMPIRELAUNCH AI - SUCCESS-SHARE AUDIT\nGenerated: ${new Date().toLocaleString()}\n\nBusiness Tracking:\n- Content Generated: 0 Assets\n- Marketing Campaigns: 0\n- Revenue Attributed to AI: ${(revenueCents / 100).toFixed(2)}\n- Success-Share Rate: 4% (40/1k)\n- Success-Share Due: ${(shareCents / 100).toFixed(2)}\n\nAll tracking verified via Neural Sync.`;
       const blob = new Blob([auditContent], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -54,7 +56,7 @@ export function FinancialCommand({
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
       setIsDownloading(false);
-    }, 1500);
+    }, 1000);
   };
 
   const toggleMinimize = () => {
@@ -70,15 +72,10 @@ export function FinancialCommand({
   };
 
   const subscriptions = [
-    { name: "Canva Pro", amount: 1299, date: "June 12, 2024", type: "business" },
-    { name: "ChatGPT Plus", amount: 2000, date: "June 15, 2024", type: "business" },
-    { name: "Empire Subscription - platform fee 40$", amount: 4000, date: "June 20, 2024", type: "app", successShare: "40/1k" },
+    { name: "Empire Subscription - platform fee 40$", amount: 4000, date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }), type: "app", successShare: "40/1k" },
   ];
 
-  const dues = [
-    { name: "Etsy Listing Fees", amount: 420, date: "June 30, 2024" },
-    { name: "Fiverr Commission", amount: 1250, date: "June 30, 2024" },
-  ];
+  const dues: any[] = [];
 
   if (isMinimized) {
     return (

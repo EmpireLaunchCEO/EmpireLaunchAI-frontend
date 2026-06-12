@@ -71,7 +71,7 @@ export function Sidebar() {
             </div>
             <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
                <p className="text-[11px] font-bold text-primary leading-relaxed italic">
-                 "Analyzing market trends for '{displayNiche}'... I'll suggest new content soon."
+                 {activeEmpire?.niche ? `Analyzing market trends for '${displayNiche}'... I'll suggest new content soon.` : "Awaiting Neural Sync... Connect a platform to begin analysis."}
                </p>
             </div>
           </div>
