@@ -39,7 +39,7 @@ export function MobileNav() {
       style={{ isolation: 'isolate' }}
     >
       <nav 
-        className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-[32px] px-6 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-8 pointer-events-auto touch-manipulation"
+        className="bg-theme-surface/90 backdrop-blur-2xl border border-theme rounded-[32px] px-6 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-8 pointer-events-auto touch-manipulation animate-shimmer-border"
         onClick={(e) => e.stopPropagation()}
       >
         {navItems.map((item) => {
@@ -57,20 +57,20 @@ export function MobileNav() {
               }}
               className={cn(
                 "flex flex-col items-center gap-1 transition-all relative cursor-pointer active:scale-90 touch-manipulation outline-none",
-                isActive ? "scale-110" : (item.color || "text-slate-500")
+                isActive ? "scale-110" : (item.color || "text-slate-500/70 hover:text-white transition-colors")
               )}
             >
               <div className={cn(
                 "p-2 rounded-xl transition-all pointer-events-none",
                 isActive 
-                  ? "bg-primary text-white shadow-lg shadow-primary/40" 
+                  ? "bg-theme-gradient text-white shadow-lg shadow-primary/40 text-glow" 
                   : "bg-white/5 text-inherit"
               )}>
                 <Icon className="w-6 h-6" />
               </div>
               <span className={cn(
-                "text-[10px] font-black uppercase tracking-tighter pointer-events-none",
-                isActive ? "text-white" : "opacity-40"
+                "text-[10px] font-black uppercase tracking-tighter pointer-events-none transition-all",
+                isActive ? "text-white text-glow font-extrabold" : "opacity-40"
               )}>
                 {item.label}
               </span>
