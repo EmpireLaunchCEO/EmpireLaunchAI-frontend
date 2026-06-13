@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { 
   LayoutDashboard, 
   Settings, 
@@ -13,12 +14,12 @@ import { cn } from '@/lib/utils';
 
 export function MobileNav() {
   const pathname = usePathname();
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    setActiveTab(null);
     console.log("[EmpireNav] MobileNav Mounted. Path:", pathname);
   }, [pathname]);
 
@@ -31,26 +32,6 @@ export function MobileNav() {
     { id: 'nav-lc', href: '/link-center', label: 'LC', icon: PlusCircle },
     { id: 'nav-settings', href: '/settings', label: 'Settings', icon: Settings },
   ];
-
-  const handleNav = (href: string, id: string) => {
-    console.log(`[EmpireNav] Navigating to: ${href} (ID: ${id})`);
-    setActiveTab(id);
-    
-    // Immediate visual feedback
-    if (window.navigator.vibrate) {
-      window.navigator.vibrate(10);
-    }
-
-    try {
-      router.push(href);
-    } catch (e) {
-      console.error("[EmpireNav] Router push failed, falling back to window.location", e);
-      window.location.href = href;
-    }
-
-    // Reset active tab after a short delay if navigation is slow
-    setTimeout(() => setActiveTab(null), 1000);
-  };
 
   return (
     <div 
@@ -66,11 +47,14 @@ export function MobileNav() {
           const Icon = item.icon;
           
           return (
-            <button
+            <Link
               key={item.id}
               id={item.id}
-              type="button"
-              onPointerDown={() => handleNav(item.href, item.id)}
+              href={item.href}
+              onClick={() => {
+                setActiveTab(item.id);
+                if (window.navigator.vibrate) window.navigator.vibrate(10);
+              }}
               className={cn(
                 "flex flex-col items-center gap-1 transition-all relative cursor-pointer active:scale-90 touch-manipulation outline-none",
                 isActive ? "scale-110" : (item.color || "text-slate-500")
@@ -93,7 +77,7 @@ export function MobileNav() {
               {item.id === 'nav-studio' && !isActive && (
                 <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900" />
               )}
-            </button>
+            </Link>
           );
         })}
       </nav>
