@@ -1,35 +1,79 @@
 "use client";
 
-import React, { useState } from 'react';
-import { ShoppingCart, ShieldCheck, Lock, CreditCard, CheckCircle2, ArrowRight } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { ShoppingCart, ShieldCheck, Lock, CreditCard, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
+import { paymentService } from '@/lib/api-service';
 
 interface BuyButtonProps {
   productId: string;
   productName: string;
   price: string;
+  priceInCents?: number;
   sellerName: string;
+  description?: string;
   className?: string;
 }
 
-export function BuyButton({ productId, productName, price, sellerName, className }: BuyButtonProps) {
+/**
+ * BuyButton — Stripe Checkout Integration
+ * 
+ * Opens a Stripe-hosted Checkout session in a new tab for secure payment processing.
+ * Falls back to modal-based mock flow if Stripe is not connected (Demo Mode).
+ */
+export function BuyButton({ 
+  productId, 
+  productName, 
+  price, 
+  priceInCents, 
+  sellerName, 
+  description,
+  className 
+}: BuyButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState<'details' | 'processing' | 'success'>('details');
+  const [error, setError] = useState<string | null>(null);
   const { isLinked: isStripeLinked } = useStripeStatus();
 
-  const handlePurchase = () => {
+  const handleStripeCheckout = useCallback(async () => {
+    setError(null);
     setStep('processing');
-    // Simulate payment processing
-    setTimeout(() => {
+
+    try {
+      const cents = priceInCents || Math.round(parseFloat(price.replace(/[^0-9.]/g, '')) * 100);
+      const result = await paymentService.createPaymentLink(
+        productName,
+        description || productName,
+        cents
+      );
+      // Open Stripe Checkout in a new tab
+      window.open(result.url, '_blank');
       setStep('success');
-    }, 2500);
+    } catch (err) {
+      console.error('Stripe checkout error:', err);
+      setError('Failed to create checkout. Please try again.');
+      setStep('details');
+    }
+  }, [productName, description, price, priceInCents]);
+
+  const handlePurchase = () => {
+    if (isStripeLinked) {
+      handleStripeCheckout();
+    } else {
+      // Demo mode: simulate payment
+      setStep('processing');
+      setTimeout(() => {
+        setStep('success');
+      }, 2500);
+    }
   };
 
   const closeModal = () => {
     setIsOpen(false);
+    setError(null);
     setTimeout(() => setStep('details'), 300);
   };
 
@@ -38,7 +82,7 @@ export function BuyButton({ productId, productName, price, sellerName, className
       <button
         onClick={() => setIsOpen(true)}
         className={cn(
-          "bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-3 shadow-xl shadow-blue-200 transition-all active:scale-95",
+          "bg-primary hover:bg-white text-white hover:text-slate-950 px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-3 shadow-xl shadow-primary/20 transition-all active:scale-95",
           className
         )}
       >
@@ -65,8 +109,8 @@ export function BuyButton({ productId, productName, price, sellerName, className
             >
               {/* Header */}
               <div className="p-8 pb-0 flex justify-between items-start">
-                <div className="bg-blue-50 p-3 rounded-2xl">
-                  <ShieldCheck className="w-6 h-6 text-blue-600" />
+                <div className="bg-primary/10 p-3 rounded-2xl">
+                  <ShieldCheck className="w-6 h-6 text-primary" />
                 </div>
                 <div className="flex flex-col items-end">
                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Secure Checkout</span>
@@ -87,7 +131,7 @@ export function BuyButton({ productId, productName, price, sellerName, className
                     <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
                       <div className="flex justify-between items-center mb-4">
                         <span className="text-sm font-bold text-slate-600">Total Price</span>
-                        <span className="text-2xl font-black text-blue-600">{price}</span>
+                        <span className="text-2xl font-black text-primary">{price}</span>
                       </div>
                       <div className="space-y-3">
                         <div className="flex items-center gap-3 text-xs font-bold text-slate-400">
@@ -104,10 +148,10 @@ export function BuyButton({ productId, productName, price, sellerName, className
                     <div className="space-y-4">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Payment Method</label>
-                        <div className="flex items-center justify-between p-4 bg-white border-2 border-blue-600 rounded-2xl shadow-sm">
+                        <div className="flex items-center justify-between p-4 bg-white border-2 border-primary rounded-2xl shadow-sm">
                           <div className="flex items-center gap-3">
-                            <CreditCard className="w-5 h-5 text-blue-600" />
-                            <span className="font-bold text-sm">•••• •••• •••• 4242</span>
+                            <CreditCard className="w-5 h-5 text-primary" />
+                            <span className="font-bold text-sm">Stripe Secure Checkout</span>
                           </div>
                           {isStripeLinked ? (
                             <span className="text-[8px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">Live Gateway</span>
@@ -118,11 +162,31 @@ export function BuyButton({ productId, productName, price, sellerName, className
                       </div>
                     </div>
 
+                    {error && (
+                      <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-[9px] font-bold text-red-500 text-center"
+                      >
+                        {error}
+                      </motion.p>
+                    )}
+
                     <button
                       onClick={handlePurchase}
-                      className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-600 transition-all flex items-center justify-center gap-2"
+                      disabled={false}
+                      className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                      {isStripeLinked ? `Pay ${price}` : `Test Purchase (${price})`} <ArrowRight className="w-4 h-4" />
+                      {isStripeLinked ? (
+                        <>
+                          <Lock className="w-4 h-4" />
+                          Pay {price} via Stripe <ArrowRight className="w-4 h-4" />
+                        </>
+                      ) : (
+                        <>
+                          {`Test Purchase (${price})`} <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
                     </button>
 
                     <p className="text-[10px] text-center font-bold text-slate-400 flex items-center justify-center gap-1">
@@ -134,14 +198,18 @@ export function BuyButton({ productId, productName, price, sellerName, className
                 {step === 'processing' && (
                   <div className="py-12 flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-300">
                     <div className="relative">
-                      <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_50px_rgba(37,99,235,0.2)]" />
+                      <BrandedGlobe size="xl" animate={true} className="shadow-[0_0_50px_rgba(var(--primary-rgb),0.2)]" />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-8 h-8 bg-blue-100/50 rounded-full animate-ping" />
+                        <div className="w-8 h-8 bg-primary/20 rounded-full animate-ping" />
                       </div>
                     </div>
                     <div className="text-center space-y-2">
-                      <h3 className="text-xl font-black uppercase italic tracking-tight">Processing.</h3>
-                      <p className="text-sm font-bold text-slate-500 uppercase tracking-widest">Verifying with Bank...</p>
+                      <h3 className="text-xl font-black uppercase italic tracking-tight">
+                        {isStripeLinked ? 'Redirecting to Stripe...' : 'Processing.'}
+                      </h3>
+                      <p className="text-sm font-bold text-slate-500 uppercase tracking-widest">
+                        {isStripeLinked ? 'Opening secure checkout' : 'Verifying with Bank...'}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -152,20 +220,25 @@ export function BuyButton({ productId, productName, price, sellerName, className
                       <CheckCircle2 className="w-10 h-10 text-emerald-600" />
                     </div>
                     <div className="text-center space-y-2 px-4">
-                      <h3 className="text-2xl font-black tracking-tight">Purchase Complete!</h3>
+                      <h3 className="text-2xl font-black tracking-tight">Checkout Initiated!</h3>
                       <p className="text-sm font-medium text-slate-500 leading-relaxed">
-                        The transaction was successful. The funds have been routed to <strong>{sellerName}</strong>. 
+                        {isStripeLinked 
+                          ? 'A secure Stripe Checkout tab has been opened. Complete your payment there.'
+                          : 'The transaction was successful. The funds have been routed to '}<strong>{sellerName}</strong>. 
                       </p>
-                      <div className="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-100 text-left">
-                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Receipt Number</p>
-                         <p className="text-xs font-mono font-bold text-slate-600">EMP-{Math.random().toString(36).substring(2, 10).toUpperCase()}</p>
-                      </div>
+                      {isStripeLinked && (
+                        <div className="mt-4 p-4 bg-amber-50 rounded-2xl border border-amber-100 text-left">
+                          <p className="text-[9px] font-black uppercase tracking-widest text-amber-600">
+                            ⚠ Check your browser tabs — Stripe Checkout is open
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <button
                       onClick={closeModal}
-                      className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-all"
+                      className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary transition-all"
                     >
-                      Return to Store
+                      {isStripeLinked ? 'Return to Store' : 'Continue'}
                     </button>
                   </div>
                 )}

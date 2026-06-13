@@ -377,7 +377,97 @@ export const retentionService = {
   }
 };
 
-export const analyticsService = {
+export interface CreatePaymentButtonRequest {
+  name: string;
+  description: string;
+  priceInCents: number;
+  buttonText?: string;
+  buttonColor?: string;
+}
+
+export interface StripeOnboardingResult {
+  url: string;
+}
+
+export interface StripeAccountStatus {
+  connected: boolean;
+  charges_enabled?: boolean;
+  payouts_enabled?: boolean;
+}
+
+export const paymentService = {
+  /**
+   * Initiate Stripe Connect onboarding for the user
+   */
+  async onboardStripe(): Promise<StripeOnboardingResult> {
+    const res = await fetch(`${API_URL}/api/stripe/onboard`, {
+      method: 'POST',
+      headers: HEADERS,
+    });
+    if (!res.ok) throw new Error('Stripe onboarding failed');
+    return res.json();
+  },
+
+  /**
+   * Check Stripe Connect account status
+   */
+  async getStripeStatus(): Promise<StripeAccountStatus> {
+    try {
+      const res = await fetch(`${API_URL}/api/stripe/status`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) {}
+    return { connected: false };
+  },
+
+  /**
+   * Create a payment link (simpler than full button)
+   */
+  async createPaymentLink(name: string, description: string, priceInCents: number): Promise<{ url: string; productId: string }> {
+    const res = await fetch(`${API_URL}/api/stripe/payment-link`, {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify({ name, description, priceInCents }),
+    });
+    if (!res.ok) throw new Error('Payment link creation failed');
+    return res.json();
+  },
+
+  /**
+   * Create a full payment button with custom styling
+   */
+  async createPaymentButton(data: CreatePaymentButtonRequest): Promise<{ id: string; url: string }> {
+    const res = await fetch(`${API_URL}/api/stripe/payment-button`, {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Payment button creation failed');
+    return res.json();
+  },
+
+  /**
+   * Create a platform checkout session (for subscription payments)
+   */
+  async createPlatformCheckout(returnUrl: string): Promise<{ url: string }> {
+    const res = await fetch(`${API_URL}/api/stripe/checkout/platform`, {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify({ returnUrl }),
+    });
+    if (!res.ok) throw new Error('Checkout session creation failed');
+    return res.json();
+  },
+
+  /**
+   * Verify a platform payment session
+   */
+  async verifyPlatformPayment(sessionId: string): Promise<{ status: string }> {
+    const res = await fetch(`${API_URL}/api/stripe/verify/platform?sessionId=${sessionId}`, { headers: HEADERS });
+    if (!res.ok) throw new Error('Payment verification failed');
+    return res.json();
+  },
+};
+  export const analyticsService = {
   async getEmpirePulse(): Promise<EmpirePulseState> {
     try {
       const res = await fetch(`${API_URL}/api/analytics/pulse`, { headers: HEADERS });
@@ -455,6 +545,21 @@ export const analyticsService = {
   },
 
   async getPaymentButtons(): Promise<PaymentButton[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/payment-buttons?userId=00000000-0000-0000-0000-000000000000`, { headers: HEADERS });
+      if (res.ok) {
+        const data = await res.json();
+        return (data.buttons || []).map((b: any) => ({
+          id: b.id,
+          label: b.buttonData?.label || b.label || 'Buy Now',
+          productName: b.productName || b.productId || 'Product',
+          price: b.priceInCents ? (b.priceInCents / 100) : (b.price || 0),
+          status: b.status || 'active',
+          usageCount: b.clicks || b.usageCount || 0,
+          platform: b.platform || 'general',
+        }));
+      }
+    } catch (e) {}
     return [];
   },
 
