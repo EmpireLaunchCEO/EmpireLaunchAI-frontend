@@ -1,147 +1,102 @@
 "use client";
 
-// Navigation specialist fix for unclickable mobile navigation bar
-import React from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import {
-  Home,
-  Settings,
-  PlusCircle,
+import React, { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { 
+  LayoutDashboard, 
+  Settings, 
+  PlusCircle, 
   ClipboardList,
   Video
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useEmpire } from '@/lib/EmpireContext';
 
 export function MobileNav() {
   const pathname = usePathname();
-  const { isLinkingComplete } = useEmpire();
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    console.log("[EmpireNav] MobileNav Mounted. Path:", pathname);
+  }, [pathname]);
+
+  if (!mounted) return null;
+
+  const navItems = [
+    { id: 'nav-home', href: '/dashboard', label: 'Home', icon: LayoutDashboard },
+    { id: 'nav-ec', href: '/empire-center', label: 'EC', icon: ClipboardList },
+    { id: 'nav-studio', href: '/studio', label: 'Studio', icon: Video, color: 'text-blue-400' },
+    { id: 'nav-lc', href: '/link-center', label: 'LC', icon: PlusCircle },
+    { id: 'nav-settings', href: '/settings', label: 'Settings', icon: Settings },
+  ];
+
+  const handleNav = (href: string, id: string) => {
+    console.log(`[EmpireNav] Navigating to: ${href} (ID: ${id})`);
+    setActiveTab(id);
+    
+    // Immediate visual feedback
+    if (window.navigator.vibrate) {
+      window.navigator.vibrate(10);
+    }
+
+    try {
+      router.push(href);
+    } catch (e) {
+      console.error("[EmpireNav] Router push failed, falling back to window.location", e);
+      window.location.href = href;
+    }
+
+    // Reset active tab after a short delay if navigation is slow
+    setTimeout(() => setActiveTab(null), 1000);
+  };
 
   return (
     <div 
-      className="fixed bottom-0 left-0 right-0 lg:bottom-8 lg:left-1/2 lg:-translate-x-1/2 lg:w-fit lg:min-w-[500px] bg-theme-surface/90 lg:bg-slate-900/95 backdrop-blur-2xl border-t lg:border border-theme lg:border-white/10 px-6 py-3 lg:px-8 lg:py-4 z-[999999999] flex justify-between items-center shadow-[0_-10px_60px_rgba(0,0,0,0.3)] lg:shadow-2xl lg:rounded-full pointer-events-auto cursor-default"
-      style={{ 
-        touchAction: 'manipulation',
-      }}
+      className="fixed bottom-0 left-0 right-0 z-[999999] px-4 pb-6 pointer-events-none flex justify-center"
+      style={{ isolation: 'isolate' }}
     >
-        {/* Home */}
-        <Link
-          href="/dashboard"
-          id="nav-home"
-          className={cn(
-            "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",
-            pathname === '/dashboard' ? "scale-110" : "text-slate-500 hover:text-white"
-          )}
-        >
-          <div className={cn(
-            "p-2 rounded-xl transition-all shadow-2xl",
-            pathname === '/dashboard'
-              ? "bg-primary text-white shadow-primary/20"
-              : "bg-transparent text-white/40"
-          )}>
-            <Home className="w-6 h-6" />
-          </div>
-          <span className={cn(
-            "text-[10px] font-black uppercase tracking-tighter",
-            pathname === '/dashboard' ? "text-white" : "text-white/40"
-          )}>Home</span>
-        </Link>
-
-        {/* EC: Empire Center */}
-        <Link
-          href="/empire-center"
-          id="nav-ec"
-          className={cn(
-            "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",
-            pathname === '/empire-center' ? "scale-110" : "text-slate-500 hover:text-white"
-          )}
-        >
-          <div className={cn(
-            "p-2 rounded-xl transition-all shadow-2xl",
-            pathname === '/empire-center'
-              ? "bg-primary text-white shadow-primary/20"
-              : "bg-transparent text-white/40"
-          )}>
-            <ClipboardList className="w-6 h-6" />
-          </div>
-          <span className={cn(
-            "text-[10px] font-black uppercase tracking-tighter",
-            pathname === '/empire-center' ? "text-white" : "text-white/40"
-          )}>EC</span>
-        </Link>
-
-        {/* Studio — Now Direct Link */}
-        <Link
-          href="/studio"
-          id="nav-studio"
-          className={cn(
-            "flex flex-col items-center gap-1 transition-all relative group cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",
-            pathname === '/studio' ? "scale-110" : "text-blue-400 hover:text-blue-300"
-          )}
-        >
-          <div className={cn(
-            "p-2 rounded-xl transition-all shadow-2xl",
-            pathname === '/studio'
-              ? "bg-primary text-white shadow-primary/20"
-              : "bg-blue-900/30 text-blue-400 shadow-xl shadow-blue-500/10"
-          )}>
-            <Video className="w-6 h-6" />
-          </div>
-          <span className={cn(
-            "text-[10px] font-black uppercase tracking-tighter",
-            pathname === '/studio' ? "text-white" : "text-blue-400"
-          )}>Studio</span>
-          {pathname !== '/studio' && (
-            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900" />
-          )}
-        </Link>
-
-        {/* LC: Link Center */}
-        <Link
-          href="/link-center"
-          id="nav-lc"
-          className={cn(
-            "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",
-            pathname === '/link-center' ? "scale-110" : "text-slate-500 hover:text-white"
-          )}
-        >
-          <div className={cn(
-            "p-2 rounded-xl transition-all shadow-2xl",
-            pathname === '/link-center'
-              ? "bg-primary text-white shadow-primary/20"
-              : "bg-transparent text-white/40"
-          )}>
-            <PlusCircle className="w-6 h-6" />
-          </div>
-          <span className={cn(
-            "text-[10px] font-black uppercase tracking-tighter",
-            pathname === '/link-center' ? "text-white" : "text-white/40"
-          )}>LC</span>
-        </Link>
-
-        {/* COG: Settings */}
-        <Link
-          href="/settings"
-          id="nav-settings"
-          className={cn(
-            "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",
-            pathname === '/settings' ? "scale-110" : "text-slate-500 hover:text-white"
-          )}
-        >
-          <div className={cn(
-            "p-2 rounded-xl transition-all shadow-2xl",
-            pathname === '/settings'
-              ? "bg-primary text-white shadow-primary/20"
-              : "bg-transparent text-white/40"
-          )}>
-            <Settings className="w-6 h-6" />
-          </div>
-          <span className={cn(
-            "text-[10px] font-black uppercase tracking-tighter",
-            pathname === '/settings' ? "text-white" : "text-white/40"
-          )}>Settings</span>
-        </Link>
+      <nav 
+        className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-[32px] px-6 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-8 pointer-events-auto touch-manipulation"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {navItems.map((item) => {
+          const isActive = pathname === item.href || activeTab === item.id;
+          const Icon = item.icon;
+          
+          return (
+            <button
+              key={item.id}
+              id={item.id}
+              type="button"
+              onPointerDown={() => handleNav(item.href, item.id)}
+              className={cn(
+                "flex flex-col items-center gap-1 transition-all relative cursor-pointer active:scale-90 touch-manipulation outline-none",
+                isActive ? "scale-110" : (item.color || "text-slate-500")
+              )}
+            >
+              <div className={cn(
+                "p-2 rounded-xl transition-all pointer-events-none",
+                isActive 
+                  ? "bg-primary text-white shadow-lg shadow-primary/40" 
+                  : "bg-white/5 text-inherit"
+              )}>
+                <Icon className="w-6 h-6" />
+              </div>
+              <span className={cn(
+                "text-[10px] font-black uppercase tracking-tighter pointer-events-none",
+                isActive ? "text-white" : "opacity-40"
+              )}>
+                {item.label}
+              </span>
+              {item.id === 'nav-studio' && !isActive && (
+                <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900" />
+              )}
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 }
