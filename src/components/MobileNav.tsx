@@ -1,5 +1,6 @@
 "use client";
 
+// Navigation specialist fix for unclickable mobile navigation bar
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
