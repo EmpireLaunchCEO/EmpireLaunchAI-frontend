@@ -37,7 +37,7 @@ const vaultActivity = [
 ];
 
 import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
-import { BarChart3 } from 'lucide-react';
+import { BarChart3, PenSquare, Lightbulb, SendHorizonal } from 'lucide-react';
 
 export default function StudioPage() {
   const [activeTab, setActiveTab] = useState<'gallery' | 'cinema' | 'activity' | 'radar'>('gallery');
@@ -177,6 +177,22 @@ export default function StudioPage() {
     setHarvestActivity([...demoItems, ...harvestActivity]);
   };
 
+  // Custom design idea input state
+  const [customIdea, setCustomIdea] = useState('');
+  const [isSubmittingIdea, setIsSubmittingIdea] = useState(false);
+  const [ideaSubmitted, setIdeaSubmitted] = useState(false);
+
+  const handleCustomIdeaSubmit = async () => {
+    if (!customIdea.trim()) return;
+    setIsSubmittingIdea(true);
+    // Simulate AI processing custom design concept
+    await new Promise(r => setTimeout(r, 2000));
+    setIsSubmittingIdea(false);
+    setIdeaSubmitted(true);
+    setCustomIdea('');
+    setTimeout(() => setIdeaSubmitted(false), 5000);
+  };
+
   const handleSuggestion = (suggestion: string) => {
     console.log('Studio suggestion:', suggestion);
   };
@@ -255,6 +271,60 @@ export default function StudioPage() {
                         View Sample Rendering Campaign
                       </button>
                     )}
+                  </div>
+                </div>
+
+                {/* Custom Design Input — Free-text Idea Entry */}
+                <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                      <PenSquare className="w-5 h-5 text-amber-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Custom Design Idea</h3>
+                      <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                        Describe your concept — I'll synthesize it with market-winning DNA
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="relative">
+                    <textarea
+                      value={customIdea}
+                      onChange={(e) => setCustomIdea(e.target.value)}
+                      placeholder="e.g. A minimalist sage-green yoga mat with gold mandala print, 72x24 inches, boho-luxe aesthetic..."
+                      disabled={isSubmittingIdea}
+                      className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-amber-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                    />
+                    <button
+                      onClick={handleCustomIdeaSubmit}
+                      disabled={!customIdea.trim() || isSubmittingIdea}
+                      className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    >
+                      {isSubmittingIdea ? (
+                        <div className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
+                      ) : (
+                        <SendHorizonal className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  {ideaSubmitted && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">
+                        Design concept received — injecting into Neural Synthesis pipeline
+                      </span>
+                    </motion.div>
+                  )}
+
+                  <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-600">
+                    <Lightbulb className="w-3 h-3" />
+                    <span>Tip: Be specific about colors, materials, dimensions, and target platform</span>
                   </div>
                 </div>
 
