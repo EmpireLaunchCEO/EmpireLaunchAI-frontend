@@ -1,0 +1,495 @@
+[1mdiff --git a/src/components/MobileNav.tsx b/src/components/MobileNav.tsx[m
+[1mindex 5ec63fd..ed3eab6 100755[m
+[1m--- a/src/components/MobileNav.tsx[m
+[1m+++ b/src/components/MobileNav.tsx[m
+[36m@@ -1,147 +1,102 @@[m
+ "use client";[m
+ [m
+[31m-// Navigation specialist fix for unclickable mobile navigation bar[m
+[31m-import React from 'react';[m
+[31m-import { usePathname } from 'next/navigation';[m
+[31m-import Link from 'next/link';[m
+[31m-import {[m
+[31m-  Home,[m
+[31m-  Settings,[m
+[31m-  PlusCircle,[m
+[32m+[m[32mimport React, { useState, useEffect } from 'react';[m
+[32m+[m[32mimport { usePathname, useRouter } from 'next/navigation';[m
+[32m+[m[32mimport {[m[41m [m
+[32m+[m[32m  LayoutDashboard,[m[41m [m
+[32m+[m[32m  Settings,[m[41m [m
+[32m+[m[32m  PlusCircle,[m[41m [m
+   ClipboardList,[m
+   Video[m
+ } from 'lucide-react';[m
+ import { cn } from '@/lib/utils';[m
+[31m-import { useEmpire } from '@/lib/EmpireContext';[m
+ [m
+ export function MobileNav() {[m
+   const pathname = usePathname();[m
+[31m-  const { isLinkingComplete } = useEmpire();[m
+[32m+[m[32m  const router = useRouter();[m
+[32m+[m[32m  const [mounted, setMounted] = useState(false);[m
+[32m+[m[32m  const [activeTab, setActiveTab] = useState<string | null>(null);[m
+ [m
+[31m-  return ([m
+[31m-    <div [m
+[31m-      className="fixed bottom-0 left-0 right-0 lg:bottom-8 lg:left-1/2 lg:-translate-x-1/2 lg:w-fit lg:min-w-[500px] bg-theme-surface/90 lg:bg-slate-900/95 backdrop-blur-2xl border-t lg:border border-theme lg:border-white/10 px-6 py-3 lg:px-8 lg:py-4 z-[999999999] flex justify-between items-center shadow-[0_-10px_60px_rgba(0,0,0,0.3)] lg:shadow-2xl lg:rounded-full pointer-events-auto cursor-default"[m
+[31m-      style={{ [m
+[31m-        touchAction: 'manipulation',[m
+[31m-      }}[m
+[31m-    >[m
+[31m-        {/* Home */}[m
+[31m-        <Link[m
+[31m-          href="/dashboard"[m
+[31m-          id="nav-home"[m
+[31m-          className={cn([m
+[31m-            "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",[m
+[31m-            pathname === '/dashboard' ? "scale-110" : "text-slate-500 hover:text-white"[m
+[31m-          )}[m
+[31m-        >[m
+[31m-          <div className={cn([m
+[31m-            "p-2 rounded-xl transition-all shadow-2xl",[m
+[31m-            pathname === '/dashboard'[m
+[31m-              ? "bg-primary text-white shadow-primary/20"[m
+[31m-              : "bg-transparent text-white/40"[m
+[31m-          )}>[m
+[31m-            <Home className="w-6 h-6" />[m
+[31m-          </div>[m
+[31m-          <span className={cn([m
+[31m-            "text-[10px] font-black uppercase tracking-tighter",[m
+[31m-            pathname === '/dashboard' ? "text-white" : "text-white/40"[m
+[31m-          )}>Home</span>[m
+[31m-        </Link>[m
+[32m+[m[32m  useEffect(() => {[m
+[32m+[m[32m    setMounted(true);[m
+[32m+[m[32m    console.log("[EmpireNav] MobileNav Mounted. Path:", pathname);[m
+[32m+[m[32m  }, [pathname]);[m
+[32m+[m
+[32m+[m[32m  if (!mounted) return null;[m
+ [m
+[31m-        {/* EC: Empire Center */}[m
+[31m-        <Link[m
+[31m-          href="/empire-center"[m
+[31m-          id="nav-ec"[m
+[31m-          className={cn([m
+[31m-            "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",[m
+[31m-            pathname === '/empire-center' ? "scale-110" : "text-slate-500 hover:text-white"[m
+[31m-          )}[m
+[31m-        >[m
+[31m-          <div className={cn([m
+[31m-            "p-2 rounded-xl transition-all shadow-2xl",[m
+[31m-            pathname === '/empire-center'[m
+[31m-              ? "bg-primary text-white shadow-primary/20"[m
+[31m-              : "bg-transparent text-white/40"[m
+[31m-          )}>[m
+[31m-            <ClipboardList className="w-6 h-6" />[m
+[31m-          </div>[m
+[31m-          <span className={cn([m
+[31m-            "text-[10px] font-black uppercase tracking-tighter",[m
+[31m-            pathname === '/empire-center' ? "text-white" : "text-white/40"[m
+[31m-          )}>EC</span>[m
+[31m-        </Link>[m
+[32m+[m[32m  const navItems = [[m
+[32m+[m[32m    { id: 'nav-home', href: '/dashboard', label: 'Home', icon: LayoutDashboard },[m
+[32m+[m[32m    { id: 'nav-ec', href: '/empire-center', label: 'EC', icon: ClipboardList },[m
+[32m+[m[32m    { id: 'nav-studio', href: '/studio', label: 'Studio', icon: Video, color: 'text-blue-400' },[m
+[32m+[m[32m    { id: 'nav-lc', href: '/link-center', label: 'LC', icon: PlusCircle },[m
+[32m+[m[32m    { id: 'nav-settings', href: '/settings', label: 'Settings', icon: Settings },[m
+[32m+[m[32m  ];[m
+ [m
+[31m-        {/* Studio — Now Direct Link */}[m
+[31m-        <Link[m
+[31m-          href="/studio"[m
+[31m-          id="nav-studio"[m
+[31m-          className={cn([m
+[31m-            "flex flex-col items-center gap-1 transition-all relative group cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",[m
+[31m-            pathname === '/studio' ? "scale-110" : "text-blue-400 hover:text-blue-300"[m
+[31m-          )}[m
+[31m-        >[m
+[31m-          <div className={cn([m
+[31m-            "p-2 rounded-xl transition-all shadow-2xl",[m
+[31m-            pathname === '/studio'[m
+[31m-              ? "bg-primary text-white shadow-primary/20"[m
+[31m-              : "bg-blue-900/30 text-blue-400 shadow-xl shadow-blue-500/10"[m
+[31m-          )}>[m
+[31m-            <Video className="w-6 h-6" />[m
+[31m-          </div>[m
+[31m-          <span className={cn([m
+[31m-            "text-[10px] font-black uppercase tracking-tighter",[m
+[31m-            pathname === '/studio' ? "text-white" : "text-blue-400"[m
+[31m-          )}>Studio</span>[m
+[31m-          {pathname !== '/studio' && ([m
+[31m-            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900" />[m
+[31m-          )}[m
+[31m-        </Link>[m
+[32m+[m[32m  const handleNav = (href: string, id: string) => {[m
+[32m+[m[32m    console.log(`[EmpireNav] Navigating to: ${href} (ID: ${id})`);[m
+[32m+[m[32m    setActiveTab(id);[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Immediate visual feedback[m
+[32m+[m[32m    if (window.navigator.vibrate) {[m
+[32m+[m[32m      window.navigator.vibrate(10);[m
+[32m+[m[32m    }[m
+ [m
+[31m-        {/* LC: Link Center */}[m
+[31m-        <Link[m
+[31m-          href="/link-center"[m
+[31m-          id="nav-lc"[m
+[31m-          className={cn([m
+[31m-            "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",[m
+[31m-            pathname === '/link-center' ? "scale-110" : "text-slate-500 hover:text-white"[m
+[31m-          )}[m
+[31m-        >[m
+[31m-          <div className={cn([m
+[31m-            "p-2 rounded-xl transition-all shadow-2xl",[m
+[31m-            pathname === '/link-center'[m
+[31m-              ? "bg-primary text-white shadow-primary/20"[m
+[31m-              : "bg-transparent text-white/40"[m
+[31m-          )}>[m
+[31m-            <PlusCircle className="w-6 h-6" />[m
+[31m-          </div>[m
+[31m-          <span className={cn([m
+[31m-            "text-[10px] font-black uppercase tracking-tighter",[m
+[31m-            pathname === '/link-center' ? "text-white" : "text-white/40"[m
+[31m-          )}>LC</span>[m
+[31m-        </Link>[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      router.push(href);[m
+[32m+[m[32m    } catch (e) {[m
+[32m+[m[32m      console.error("[EmpireNav] Router push failed, falling back to window.location", e);[m
+[32m+[m[32m      window.location.href = href;[m
+[32m+[m[32m    }[m
+ [m
+[31m-        {/* COG: Settings */}[m
+[31m-        <Link[m
+[31m-          href="/settings"[m
+[31m-          id="nav-settings"[m
+[31m-          className={cn([m
+[31m-            "flex flex-col items-center gap-1 transition-all relative cursor-pointer pointer-events-auto outline-none border-none bg-transparent p-0",[m
+[31m-            pathname === '/settings' ? "scale-110" : "text-slate-500 hover:text-white"[m
+[31m-          )}[m
+[31m-        >[m
+[31m-          <div className={cn([m
+[31m-            "p-2 rounded-xl transition-all shadow-2xl",[m
+[31m-            pathname === '/settings'[m
+[31m-              ? "bg-primary text-white shadow-primary/20"[m
+[31m-              : "bg-transparent text-white/40"[m
+[31m-          )}>[m
+[31m-            <Settings className="w-6 h-6" />[m
+[31m-          </div>[m
+[31m-          <span className={cn([m
+[31m-            "text-[10px] font-black uppercase tracking-tighter",[m
+[31m-            pathname === '/settings' ? "text-white" : "text-white/40"[m
+[31m-          )}>Settings</span>[m
+[31m-        </Link>[m
+[32m+[m[32m    // Reset active tab after a short delay if navigation is slow[m
+[32m+[m[32m    setTimeout(() => setActiveTab(null), 1000);[m
+[32m+[m[32m  };[m
+[32m+[m
+[32m+[m[32m  return ([m
+[32m+[m[32m    <div[m[41m [m
+[32m+[m[32m      className="fixed bottom-0 left-0 right-0 z-[999999] px-4 pb-6 pointer-events-none flex justify-center"[m
+[32m+[m[32m      style={{ isolation: 'isolate' }}[m
+[32m+[m[32m    >[m
+[32m+[m[32m      <nav[m[41m [m
+[32m+[m[32m        className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-[32px] px-6 py-3 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-8 pointer-events-auto touch-manipulation"[m
+[32m+[m[32m        onClick={(e) => e.stopPropagation()}[m
+[32m+[m[32m      >[m
+[32m+[m[32m        {navItems.map((item) => {[m
+[32m+[m[32m          const isActive = pathname === item.href || activeTab === item.id;[m
+[32m+[m[32m          const Icon = item.icon;[m
+[32m+[m[41m          [m
+[32m+[m[32m          return ([m
+[32m+[m[32m            <button[m
+[32m+[m[32m              key={item.id}[m
+[32m+[m[32m              id={item.id}[m
+[32m+[m[32m              type="button"[m
+[32m+[m[32m              onPointerDown={() => handleNav(item.href, item.id)}[m
+[32m+[m[32m              className={cn([m
+[32m+[m[32m                "flex flex-col items-center gap-1 transition-all relative cursor-pointer active:scale-90 touch-manipulation outline-none",[m
+[32m+[m[32m                isActive ? "scale-110" : (item.color || "text-slate-500")[m
+[32m+[m[32m              )}[m
+[32m+[m[32m            >[m
+[32m+[m[32m              <div className={cn([m
+[32m+[m[32m                "p-2 rounded-xl transition-all pointer-events-none",[m
+[32m+[m[32m                isActive[m[41m [m
+[32m+[m[32m                  ? "bg-primary text-white shadow-lg shadow-primary/40"[m[41m [m
+[32m+[m[32m                  : "bg-white/5 text-inherit"[m
+[32m+[m[32m              )}>[m
+[32m+[m[32m                <Icon className="w-6 h-6" />[m
+[32m+[m[32m              </div>[m
+[32m+[m[32m              <span className={cn([m
+[32m+[m[32m                "text-[10px] font-black uppercase tracking-tighter pointer-events-none",[m
+[32m+[m[32m                isActive ? "text-white" : "opacity-40"[m
+[32m+[m[32m              )}>[m
+[32m+[m[32m                {item.label}[m
+[32m+[m[32m              </span>[m
+[32m+[m[32m              {item.id === 'nav-studio' && !isActive && ([m
+[32m+[m[32m                <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900" />[m
+[32m+[m[32m              )}[m
+[32m+[m[32m            </button>[m
+[32m+[m[32m          );[m
+[32m+[m[32m        })}[m
+[32m+[m[32m      </nav>[m
+     </div>[m
+   );[m
+ }[m
+
+                   SSUUMMMMAARRYY OOFF LLEESSSS CCOOMMMMAANNDDSS
+
+      Commands marked with * may be preceded by a number, _N.
+      Notes in parentheses indicate the behavior if _N is given.
+      A key preceded by a caret indicates the Ctrl key; thus ^K is ctrl-K.
+
+  h  H                 Display this help.
+  q  :q  Q  :Q  ZZ     Exit.
+ ---------------------------------------------------------------------------
+
+                           MMOOVVIINNGG
+
+  e  ^E  j  ^N  CR  *  Forward  one line   (or _N lines).
+  y  ^Y  k  ^K  ^P  *  Backward one line   (or _N lines).
+  f  ^F  ^V  SPACE  *  Forward  one window (or _N lines).
+  b  ^B  ESC-v      *  Backward one window (or _N lines).
+  z                 *  Forward  one window (and set window to _N).
+  w                 *  Backward one window (and set window to _N).
+  ESC-SPACE         *  Forward  one window, but don't stop at end-of-file.
+  d  ^D             *  Forward  one half-window (and set half-window to _N).
+  u  ^U             *  Backward one half-window (and set half-window to _N).
+  ESC-)  RightArrow *  Right one half screen width (or _N positions).
+  ESC-(  LeftArrow  *  Left  one half screen width (or _N positions).
+  ESC-}  ^RightArrow   Right to last column displayed.
+  ESC-{  ^LeftArrow    Left  to first column.
+  F                    Forward forever; like "tail -f".
+  ESC-F                Like F but stop when search pattern is found.
+  r  ^R  ^L            Repaint screen.
+  R                    Repaint screen, discarding buffered input.
+        ---------------------------------------------------
+        Default "window" is the screen height.
+        Default "half-window" is half of the screen height.
+ ---------------------------------------------------------------------------
+
+                          SSEEAARRCCHHIINNGG
+
+  /_p_a_t_t_e_r_n          *  Search forward for (_N-th) matching line.
+  ?_p_a_t_t_e_r_n          *  Search backward for (_N-th) matching line.
+  n                 *  Repeat previous search (for _N-th occurrence).
+  N                 *  Repeat previous search in reverse direction.
+  ESC-n             *  Repeat previous search, spanning files.
+  ESC-N             *  Repeat previous search, reverse dir. & spanning files.
+  ESC-u                Undo (toggle) search highlighting.
+  ESC-U                Clear search highlighting.
+  &_p_a_t_t_e_r_n          *  Display only matching lines.
+        ---------------------------------------------------
+        A search pattern may begin with one or more of:
+        ^N or !  Search for NON-matching lines.
+        ^E or *  Search multiple files (pass thru END OF FILE).
+        ^F or @  Start search at FIRST file (for /) or last file (for ?).
+        ^K       Highlight matches, but don't move (KEEP position).
+        ^R       Don't use REGULAR EXPRESSIONS.
+        ^W       WRAP search if no match found.
+ ---------------------------------------------------------------------------
+
+                           JJUUMMPPIINNGG
+
+  g  <  ESC-<       *  Go to first line in file (or line _N).
+  G  >  ESC->       *  Go to last line in file (or line _N).
+  p  %              *  Go to beginning of file (or _N percent into file).
+  t                 *  Go to the (_N-th) next tag.
+  T                 *  Go to the (_N-th) previous tag.
+  {  (  [           *  Find close bracket } ) ].
+  }  )  ]           *  Find open bracket { ( [.
+  ESC-^F _<_c_1_> _<_c_2_>  *  Find close bracket _<_c_2_>.
+  ESC-^B _<_c_1_> _<_c_2_>  *  Find open bracket _<_c_1_>.
+        ---------------------------------------------------
+        Each "find close bracket" command goes forward to the close bracket 
+          matching the (_N-th) open bracket in the top line.
+        Each "find open bracket" command goes backward to the open bracket 
+          matching the (_N-th) close bracket in the bottom line.
+
+  m_<_l_e_t_t_e_r_>            Mark the current top line with <letter>.
+  M_<_l_e_t_t_e_r_>            Mark the current bottom line with <letter>.
+  '_<_l_e_t_t_e_r_>            Go to a previously marked position.
+  ''                   Go to the previous position.
+  ^X^X                 Same as '.
+  ESC-M_<_l_e_t_t_e_r_>        Clear a mark.
+        ---------------------------------------------------
+        A mark is any upper-case or lower-case letter.
+        Certain marks are predefined:
+             ^  means  beginning of the file
+             $  means  end of the file
+ ---------------------------------------------------------------------------
+
+                        CCHHAANNGGIINNGG FFIILLEESS
+
+  :e [_f_i_l_e]            Examine a new file.
+  ^X^V                 Same as :e.
+  :n                *  Examine the (_N-th) next file from the command line.
+  :p                *  Examine the (_N-th) previous file from the command line.
+  :x                *  Examine the first (or _N-th) file from the command line.
+  :d                   Delete the current file from the command line list.
+  =  ^G  :f            Print current file name.
+ ---------------------------------------------------------------------------
+
+                    MMIISSCCEELLLLAANNEEOOUUSS CCOOMMMMAANNDDSS
+
+  -_<_f_l_a_g_>              Toggle a command line option [see OPTIONS below].
+  --_<_n_a_m_e_>             Toggle a command line option, by name.
+  __<_f_l_a_g_>              Display the setting of a command line option.
+  ___<_n_a_m_e_>             Display the setting of an option, by name.
+  +_c_m_d                 Execute the less cmd each time a new file is examined.
+
+  !_c_o_m_m_a_n_d             Execute the shell command with $SHELL.
+  |XX_c_o_m_m_a_n_d            Pipe file between current pos & mark XX to shell command.
+  s _f_i_l_e               Save input to a file.
+  v                    Edit the current file with $VISUAL or $EDITOR.
+  V                    Print version number of "less".
+ ---------------------------------------------------------------------------
+
+                           OOPPTTIIOONNSS
+
+        Most options may be changed either on the command line,
+        or from within less by using the - or -- command.
+        Options may be given in one of two forms: either a single
+        character preceded by a -, or a name preceded by --.
+
+  -?  ........  --help
+                  Display help (from command line).
+  -a  ........  --search-skip-screen
+                  Search skips current screen.
+  -A  ........  --SEARCH-SKIP-SCREEN
+                  Search starts just after target line.
+  -b [_N]  ....  --buffers=[_N]
+                  Number of buffers.
+  -B  ........  --auto-buffers
+                  Don't automatically allocate buffers for pipes.
+  -c  ........  --clear-screen
+                  Repaint by clearing rather than scrolling.
+  -d  ........  --dumb
+                  Dumb terminal.
+  -D xx_c_o_l_o_r  .  --color=xx_c_o_l_o_r
+                  Set screen colors.
+  -e  -E  ....  --quit-at-eof  --QUIT-AT-EOF
+                  Quit at end of file.
+  -f  ........  --force
+                  Force open non-regular files.
+  -F  ........  --quit-if-one-screen
+                  Quit if entire file fits on first screen.
+  -g  ........  --hilite-search
+                  Highlight only last match for searches.
+  -G  ........  --HILITE-SEARCH
+                  Don't highlight any matches for searches.
+  -h [_N]  ....  --max-back-scroll=[_N]
+                  Backward scroll limit.
+  -i  ........  --ignore-case
+                  Ignore case in searches that do not contain uppercase.
+  -I  ........  --IGNORE-CASE
+                  Ignore case in all searches.
+  -j [_N]  ....  --jump-target=[_N]
+                  Screen position of target lines.
+  -J  ........  --status-column
+                  Display a status column at left edge of screen.
+  -k [_f_i_l_e]  .  --lesskey-file=[_f_i_l_e]
+                  Use a lesskey file.
+  -K  ........  --quit-on-intr
+                  Exit less in response to ctrl-C.
+  -L  ........  --no-lessopen
+                  Ignore the LESSOPEN environment variable.
+  -m  -M  ....  --long-prompt  --LONG-PROMPT
+                  Set prompt style.
+  -n  -N  ....  --line-numbers  --LINE-NUMBERS
+                  Don't use line numbers.
+  -o [_f_i_l_e]  .  --log-file=[_f_i_l_e]
+                  Copy to log file (standard input only).
+  -O [_f_i_l_e]  .  --LOG-FILE=[_f_i_l_e]
+                  Copy to log file (unconditionally overwrite).
+  -p [_p_a_t_t_e_r_n]  --pattern=[_p_a_t_t_e_r_n]
+                  Start at pattern (from command line).
+  -P [_p_r_o_m_p_t]   --prompt=[_p_r_o_m_p_t]
+                  Define new prompt.
+  -q  -Q  ....  --quiet  --QUIET  --silent --SILENT
+                  Quiet the terminal bell.
+  -r  -R  ....  --raw-control-chars  --RAW-CONTROL-CHARS
+                  Output "raw" control characters.
+  -s  ........  --squeeze-blank-lines
+                  Squeeze multiple blank lines.
+  -S  ........  --chop-long-lines
+                  Chop (truncate) long lines rather than wrapping.
+  -t [_t_a_g]  ..  --tag=[_t_a_g]
+                  Find a tag.
+  -T [_t_a_g_s_f_i_l_e] --tag-file=[_t_a_g_s_f_i_l_e]
+                  Use an alternate tags file.
+  -u  -U  ....  --underline-special  --UNDERLINE-SPECIAL
+                  Change handling of backspaces.
+  -V  ........  --version
+                  Display the version number of "less".
+  -w  ........  --hilite-unread
+                  Highlight first new line after forward-screen.
+  -W  ........  --HILITE-UNREAD
+                  Highlight first new line after any forward movement.
+  -x [_N[,...]]  --tabs=[_N[,...]]
+                  Set tab stops.
+  -X  ........  --no-init
+                  Don't use termcap init/deinit strings.
+  -y [_N]  ....  --max-forw-scroll=[_N]
+                  Forward scroll limit.
+  -z [_N]  ....  --window=[_N]
+                  Set size of window.
+  -" [_c[_c]]  .  --quotes=[_c[_c]]
+                  Set shell quote characters.
+  -~  ........  --tilde
+                  Don't display tildes after end of file.
+  -# [_N]  ....  --shift=[_N]
+                  Set horizontal scroll amount (0 = one half screen width).
+                --file-size
+                  Automatically determine the size of the input file.
+                --follow-name
+                  The F command changes files if the input file is renamed.
+                --incsearch
+                  Search file as each pattern character is typed in.
+                --line-num-width=N
+                  Set the width of the -N line number field to N characters.
+                --mouse
+                  Enable mouse input.
+                --no-keypad
+                  Don't send termcap keypad init/deinit strings.
+                --no-histdups
+                  Remove duplicates from command history.
+                --rscroll=C
+                  Set the character used to mark truncated lines.
+                --save-marks
+                  Retain marks across invocations of less.
+                --status-col-width=N
+                  Set the width of the -J status column to N characters.
+                --use-backslash
+                  Subsequent options use backslash as escape char.
+                --use-color
+                  Enables colored text.
+                --wheel-lines=N
+                  Each click of the mouse wheel moves N lines.
+
+
+ ---------------------------------------------------------------------------
+
+                          LLIINNEE EEDDIITTIINNGG
+
+        These keys can be used to edit text being entered 
+        on the "command line" at the bottom of the screen.
+
+ RightArrow ..................... ESC-l ... Move cursor right one character.
+ LeftArrow ...................... ESC-h ... Move cursor left one character.
+ ctrl-RightArrow  ESC-RightArrow  ESC-w ... Move cursor right one word.
+ ctrl-LeftArrow   ESC-LeftArrow   ESC-b ... Move cursor left one word.
+ HOME ........................... ESC-0 ... Move cursor to start of line.
+ END ............................ ESC-$ ... Move cursor to end of line.
+ BACKSPACE ................................ Delete char to left of cursor.
+ DELETE ......................... ESC-x ... Delete char under cursor.
+ ctrl-BACKSPACE   ESC-BACKSPACE ........... Delete word to left of cursor.
+ ctrl-DELETE .... ESC-DELETE .... ESC-X ... Delete word under cursor.
+ ctrl-U ......... ESC (MS-DOS only) ....... Delete entire line.
+ UpArrow ........................ ESC-k ... Retrieve previous command line.
+ DownArrow ...................... ESC-j ... Retrieve next command line.
+ TAB ...................................... Complete filename & cycle.
+ SHIFT-TAB ...................... ESC-TAB   Complete filename & reverse cycle.
+ ctrl-L ................................... Complete filename, list all.
