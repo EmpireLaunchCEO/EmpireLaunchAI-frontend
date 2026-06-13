@@ -20,6 +20,7 @@ import { VaultInjected } from '@/components/VaultInjected';
 import { creativeService, DesignTask } from '@/lib/api-service';
 
 import { BrandedGlobe } from '@/components/BrandedGlobe';
+import { ViralSignalsPanel, generateMockSignals } from '@/components/Dashboard/MarketHeatMeter';
 
 interface DesignCenterHubProps {
   onSelectTask: (task: DesignTask) => void;
@@ -28,6 +29,7 @@ interface DesignCenterHubProps {
 export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
   const [tasks, setTasks] = useState<DesignTask[]>([]);
   const [loading, setLoading] = useState(true);
+  const [viralSignals] = useState(() => generateMockSignals());
 
   useEffect(() => {
     async function loadTasks() {
@@ -149,7 +151,13 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
         </div>
       </div>
 
-      {/* AI Strategy Note */}
+                {/* Real-Time Market Heat — Etsy & Fiverr Velocity Meters */}
+                <ViralSignalsPanel
+                  etsySignal={viralSignals.etsy}
+                  fiverrSignal={viralSignals.fiverr}
+                />
+
+                {/* AI Strategy Note */}
       <div className="bg-gradient-to-br from-slate-900 to-slate-950 rounded-[40px] p-10 text-white relative overflow-hidden shadow-2xl border border-white/5">
          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="space-y-6">

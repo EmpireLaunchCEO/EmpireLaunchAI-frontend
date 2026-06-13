@@ -29,11 +29,13 @@ import {
   Play,
   Palette,
   ExternalLink,
-  Stars
+  Stars,
+  Flame
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
+import { ViralSignalsPanel, generateMockSignals } from '@/components/Dashboard/MarketHeatMeter';
 
 // ─── Platform Data & Config ──────────────────────────────────────────────────
 
@@ -245,6 +247,7 @@ export function SocialMediaRadar() {
   const [activePanel, setActivePanel] = useState<'overview' | 'signals' | 'metrics'>('overview');
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [viralSignals] = useState(() => generateMockSignals());
 
   useEffect(() => {
     setMounted(true);
@@ -510,10 +513,20 @@ export function SocialMediaRadar() {
                      </p>
                    </div>
                  </motion.div>
-               ))}
-            </div>
-          </motion.div>
-        )}
+                                    ))}
+                                 </div>
+
+                                 {/* Real-Time Market Heat — Etsy & Fiverr Velocity Meters */}
+                                 {isLinkingComplete && (
+                                   <div className="pt-4">
+                                     <ViralSignalsPanel
+                                       etsySignal={viralSignals.etsy}
+                                       fiverrSignal={viralSignals.fiverr}
+                                     />
+                                   </div>
+                                 )}
+                               </motion.div>
+                             )}
         {activePanel === 'research' && (
           <motion.div
             key="research"

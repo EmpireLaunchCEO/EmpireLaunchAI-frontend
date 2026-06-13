@@ -52,6 +52,11 @@ const availablePlatforms = [
   { id: 'capcut', name: 'CapCut', icon: Video, color: 'text-blue-500', bg: 'bg-blue-50' },
   { id: 'canva', name: 'Canva', icon: Stars, color: 'text-cyan-500', bg: 'bg-cyan-50' },
   { id: 'bannerbear', name: 'Bannerbear', icon: Stars, color: 'text-blue-900', bg: 'bg-slate-100' },
+  { id: 'figma', name: 'Figma', icon: Palette, color: 'text-purple-600', bg: 'bg-purple-50' },
+  { id: 'behance', name: 'Behance', icon: Palette, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { id: 'redbubble', name: 'Redbubble', icon: ShoppingBag, color: 'text-red-500', bg: 'bg-red-50' },
+  { id: 'artstation', name: 'ArtStation', icon: Palette, color: 'text-sky-500', bg: 'bg-sky-50' },
+  { id: 'substack', name: 'Substack', icon: Mail, color: 'text-orange-500', bg: 'bg-orange-50' },
 ];
 
 interface GuidedLinkingProps {
@@ -72,6 +77,11 @@ const PLATFORM_3D_ICONS: Record<string, string> = {
   canva: '/brands/canva_128.png',
   kittl: '/brands/kittl_128.png',
   capcut: '/brands/capcut_128.png',
+  figma: '/brands/figma_128.png',
+  behance: '/brands/behance_128.png',
+  redbubble: '/brands/redbubble_128.png',
+  artstation: '/brands/artstation_128.png',
+  substack: '/brands/substack_128.png',
 };
 
 function PlatformIcon({ id, icon: Icon, className, size = 20 }: { id: string, icon: any, className?: string, size?: number }) {
