@@ -80,22 +80,15 @@ export function ProtectedPaymentButton({
         window.open(config.directUrl, '_blank');
         onPaymentComplete?.();
       } else if (config.productId && config.userId && config.platform) {
-        // Generate a protected proxy URL via the backend
+        // Generate a protected proxy URL via the backend and open it directly
         const result = await paymentService.generateProtectedUrl({
           userId: config.userId,
           productId: config.productId,
           platform: config.platform,
           isSingleUse: true,
         });
-
-        // Extract the buttonId from the proxy URL for the resolve endpoint
-        const proxyUrl = new URL(result.proxyUrl);
-        const buttonId = proxyUrl.pathname.split('/').pop();
-        const ott = proxyUrl.searchParams.get('ott');
-
-        // Build the resolve URL (which will create Stripe session and redirect)
-        const resolveUrl = `${window.location.origin}/api/payment-buttons/protected/resolve/${buttonId}?ott=${ott}`;
-        window.open(resolveUrl, '_blank');
+        // Open the full proxy URL — the backend resolves it to a real Stripe session
+        window.open(result.proxyUrl, '_blank');
         onPaymentComplete?.();
       } else {
         // Fallback: create a payment link via the standard API
