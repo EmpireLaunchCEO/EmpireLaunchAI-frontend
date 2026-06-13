@@ -25,6 +25,14 @@ export interface ProtectedButtonConfig {
   description?: string;
   /** Pre-generated Stripe payment URL (if available) */
   directUrl?: string;
+  /** Product ID for proxy generation */
+  productId?: string;
+  /** User/Owner ID for proxy generation */
+  userId?: string;
+  /** Social media post ID for attribution tracking */
+  postId?: string;
+  /** Platform source (e.g. 'tiktok', 'instagram', 'youtube') */
+  platform?: string;
 }
 
 interface ProtectedPaymentButtonProps {
@@ -68,17 +76,34 @@ export function ProtectedPaymentButton({
 
     try {
       if (config.directUrl) {
-        // If we already have a Stripe Payment Link URL, redirect directly
+        // If we already have a direct Stripe Payment Link, open it
         window.open(config.directUrl, '_blank');
         onPaymentComplete?.();
+      } else if (config.productId && config.userId && config.platform) {
+        // Generate a protected proxy URL via the backend
+        const result = await paymentService.generateProtectedUrl({
+          userId: config.userId,
+          productId: config.productId,
+          platform: config.platform,
+          isSingleUse: true,
+        });
+
+        // Extract the buttonId from the proxy URL for the resolve endpoint
+        const proxyUrl = new URL(result.proxyUrl);
+        const buttonId = proxyUrl.pathname.split('/').pop();
+        const ott = proxyUrl.searchParams.get('ott');
+
+        // Build the resolve URL (which will create Stripe session and redirect)
+        const resolveUrl = `${window.location.origin}/api/payment-buttons/protected/resolve/${buttonId}?ott=${ott}`;
+        window.open(resolveUrl, '_blank');
+        onPaymentComplete?.();
       } else {
-        // Create a new payment link via the backend
+        // Fallback: create a payment link via the standard API
         const result = await paymentService.createPaymentLink(
           config.productName,
           config.description || config.productName,
           config.priceInCents
         );
-        // Open Stripe Checkout in a new tab
         window.open(result.url, '_blank');
         onPaymentComplete?.();
       }

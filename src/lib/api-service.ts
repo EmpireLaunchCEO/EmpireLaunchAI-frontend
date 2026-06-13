@@ -466,6 +466,28 @@ export const paymentService = {
     if (!res.ok) throw new Error('Payment verification failed');
     return res.json();
   },
+
+  /**
+   * Generate a protected proxy URL for a payment button
+   * POST /api/payment-buttons/protected/generate
+   */
+  async generateProtectedUrl(payload: {
+    userId: string;
+    productId: string;
+    platform: string;
+    isSingleUse?: boolean;
+  }): Promise<{ proxyUrl: string }> {
+    const res = await fetch(`${API_URL}/api/payment-buttons/protected/generate`, {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Generation failed' }));
+      throw new Error(err.error || 'Failed to generate protected URL');
+    }
+    return res.json();
+  },
 };
   export const analyticsService = {
   async getEmpirePulse(): Promise<EmpirePulseState> {
