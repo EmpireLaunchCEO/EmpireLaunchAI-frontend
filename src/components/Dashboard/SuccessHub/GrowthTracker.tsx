@@ -168,10 +168,10 @@ export const GrowthTracker = ({
 
           <button 
             onClick={handleSetGoal}
-            className="w-full bg-amber-500 text-slate-950 rounded-2xl py-4 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-all group/btn shadow-lg shadow-amber-500/20"
+            className="w-full bg-amber-500 text-slate-950 rounded-2xl py-4 font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-all group-empire shadow-lg shadow-amber-500"
           >
             Set Monthly Revenue Goal
-            <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+            <ChevronRight className="w-4 h-4 group-hover-empire:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>
