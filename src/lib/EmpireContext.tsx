@@ -429,9 +429,10 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         const localProtocol = localStorage.getItem('isProtocolAccepted');
         if (localProtocol === 'true') setIsProtocolAccepted(true);
 
-        // EMERGENCY BYPASS FOR OWNER (Runs before network calls)
-        if (MASTER_USER_ID === '00000000-0000-0000-0000-000000000000') {
-             console.log('[Security] Emergency Owner Bypass Active.');
+        // EMERGENCY BYPASS: Only if the user has manually entered the Master ID or it's saved from a previous session
+        const storedUserId = localStorage.getItem('empire_userId');
+        if (storedUserId === MASTER_USER_ID) {
+             console.log('[Security] Verified Owner Session Active.');
              setIsAdmin(true);
              setIsPaidState(true);
              setSlotStatus({ 0: true, 1: true, 2: true });

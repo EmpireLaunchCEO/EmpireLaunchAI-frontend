@@ -1,8 +1,8 @@
 "use client";
 
-import React from 'react';
-import Link from 'next/link';
+import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import {
   LayoutDashboard,
   Settings,
@@ -10,14 +10,11 @@ import {
   ClipboardCheck,
   BarChart3,
   ShieldCheck,
-  Video,
-  Sparkles
+  Video
 } from 'lucide-react';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
-
 import { useEmpire } from '@/lib/EmpireContext';
-import { analyticsService, empireService } from '@/lib/api-service';
 
 const navItems = [
   { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
@@ -51,8 +48,9 @@ export function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
+                prefetch={true}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm cursor-pointer select-none relative z-[5002]",
+                  "w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm cursor-pointer select-none relative z-[5002] outline-none",
                   isActive
                   ? "bg-primary text-white shadow-xl shadow-primary/20 pointer-events-auto"
                   : "text-white/40 hover:text-white hover:bg-theme-background pointer-events-auto"
