@@ -95,11 +95,11 @@ export default function AnalyticsPage() {
                    <div className="flex gap-4">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-primary" />
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Empire 1</span>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">EmpireLaunch AI</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-secondary" />
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Empire 2</span>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Business 2</span>
                       </div>
                    </div>
                 </div>

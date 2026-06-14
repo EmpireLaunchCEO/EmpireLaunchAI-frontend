@@ -85,7 +85,7 @@ export function Sidebar() {
             <div className="flex flex-col truncate">
               <span className="text-sm font-black text-white truncate">Founder</span>
               <span className="text-[10px] font-black text-primary uppercase tracking-widest truncate">
-                {activeEmpire?.name || "Empire Owner"}
+                {(activeEmpire?.name === 'Business 1' || !activeEmpire?.name) ? "EmpireLaunch AI" : activeEmpire.name}
               </span>
             </div>
           </div>

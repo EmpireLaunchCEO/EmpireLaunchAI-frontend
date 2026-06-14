@@ -47,9 +47,13 @@ export function GlobalEmpireHeader() {
           const empireId = (idx + 1).toString();
           const isActive = activeBusinessIndex === idx;
 
-          let label = `Business ${idx + 1}`;
-          if (isActive && (activeEmpire?.name || activeEmpire?.title)) {
-            label = activeEmpire.name || activeEmpire.title;
+          let label = (idx === 0) ? "EmpireLaunch AI" : `Business ${idx + 1}`;
+          
+          if (isActive && activeEmpire) {
+            const name = activeEmpire.name || activeEmpire.title;
+            if (name && name !== 'HOME BASE' && !name.startsWith('Business ')) {
+              label = name;
+            }
           }
 
           return (

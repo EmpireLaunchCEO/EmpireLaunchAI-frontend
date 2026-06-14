@@ -129,7 +129,7 @@ export default function Dashboard() {
                     className="text-center space-y-4"
                   >
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-                      {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE' || !empireData?.name) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title)}
+                      {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE' || empireData?.name === 'Business 1' || !empireData?.name) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title)}
                     </h1>
                   </motion.div>
 
