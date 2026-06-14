@@ -76,3 +76,144 @@
            );[m
          })}[m
        </nav>[m
+c48a5c5 2026-06-14 Navigation: Replaced Link with Button + explicit route fallback + loading spinners
+ea8476c 2026-06-14 Branding: Consistent EmpireLaunch AI labeling for Business 1 across all pages
+9327771 2026-06-14 UI: Docked Mobile Nav to bottom with safe-area padding and 5 core items
+0178d32 2026-06-14 fix: resolve fast-track security bug and restore reliable navigation via Link components
+a7a7f44 2026-06-13 fix: refactor mobile navigation to use native Link component for reliability
+11c752b 2026-06-13 fix(nav): restore Link components for reliable navigation and lower bottom padding
+3506ac5 2026-06-13 fix(nav): force mobile navigation clickability and add behance asset
+4352be5 2026-06-13 Implement Real-Time Velocity Meters for Etsy & Fiverr market heat signals
+9961a44 2026-06-13 fix: resolve unterminated regexp literal in GrowthTracker.tsx by simplifying Tailwind classes
+e8ad98e 2026-06-13 Simplify proxy mode: open proxyUrl directly instead of re-parsing
+6ab6a71 2026-06-13 Pass productId, userId, platform, postId metadata to ProtectedPaymentButton from PublicListingPage
+cc7b1af 2026-06-13 Connect ProtectedPaymentButton to proxy resolver API
+0557203 2026-06-13 Cleanup misnamed file
+2982b02 2026-06-13 Add Protected Payment Button frontend components
+f6f787d 2026-06-13 Add custom design idea text input to Universal Studio (Gallery tab)
+aabf386 2026-06-13 Comment documentation updates for mobile navigation touch event fix
+cbd99e8 2026-06-12 Fix unclickable mobile navigation with standard native Link components and optimized pointer-event z-index interactions
+cb34094 2026-06-12 Fix unclickable mobile navigation bar with direct touch/pointer event handlers and simplified container event bubbling
+631fbf0 2026-06-12 Branding: Restore high-fidelity 1024x1024 globe asset per lead requirement
+37ddf62 2026-06-12 NUCLEAR FIX: Resolved mobile navigation interaction blockade by moving Nav to absolute top of stack and forcing pointer-events
+ddcb80b 2026-06-12 Fixed syntax error in settings page
+753a12b 2026-06-12 Restored unified Financial Command layout and updated MobileNav labels
+5f85727 2026-06-12 fix: refine subscription area with separate Success-Shares entry
+4b7e914 2026-06-12 fix: remove global AI modes and prioritize per-app permissions in Link Center
+c1996b2 2026-06-12 fix: import Stars and useEmpire in FinancialCommand
+aa8eba4 2026-06-12 fix: make financial command dynamic and data-driven based on connected platforms
+0abac81 2026-06-12 fix: remove all simulated/mock data and reset initial state to blank
+6234e9c 2026-06-12 fix: update empire finance subscription area and remove settle dues button
+38b2414 2026-06-12 fix: restore high-fidelity nav and remove link center box from dashboard
+3b70fd5 2026-06-12 refactor: remove Empire Teacher branding from GuidedLinking, relocate protocol agreement to Settings
+1041e43 2026-06-12 FIX: Navigation routing. Replaced Links with explicit button-push logic, added safe area padding, and isolated Nav component.
+2d4458e 2026-06-12 FIX: Ultimate Navigation Fix. Isolated Nav in z-999999 wrapper, disabled touch-action interference, and removed horizontal shim.
+eda6146 2026-06-12 FIX: Navigation bar blockade. Moved MobileNav to absolute top of stack (z-99999) and adjusted layout order.
+e816355 2026-06-12 FIX: Resolved syntax error (missing div and unterminated literal) in GrowthTracker
+f6dc989 2026-06-12 UI RESTORATION: Reverted all pages and components to high-fidelity mock layout from 24h ago (0957055) while preserving single-column Financial Command and navigation fixes
+10c10e7 2026-06-12 fix: remove accidentally committed typo file
+e6d1fda 2026-06-12 fix: revert PWA icons to SOLID WHITE background per owner mandate and bust cache (v1030)
+2d8c1dd 2026-06-12 Branding: High-fidelity 3D globe asset and component update
+fc3483e 2026-06-11 UI REVERSION: Restored original Two-Column Financial layout and Growth Tracker high-fidelity state
+b6c0f5b 2026-06-11 FIX: Navigation resurrection - Z-index overhaul and pointer-event audit
+a51c702 2026-06-11 Fix: Import 'Video' in settings and ignore ESLint during build
+5554047 2026-06-11 Cleanup: Remove junk file
+c7577e0 2026-06-11 Production Update: Reality Grounding, Financial Protocol Hard-Lock, and Hybrid Intelligence cost-optimization
+be16f6d 2026-06-11 feat: high-fidelity 3D globe with white background
+9b8a89c 2026-06-11 fix: add metadata field to UploadState interface
+a0577ad 2026-06-11 feat: update Empire Financials — remove Settle Dues, add Success-Shares
+868183d 2026-06-11 fix: resolve mobile bottom navigation interactivity
+a810949 2026-06-11 UX Fix: Guaranteed bottom navigation interactivity by isolating stacking context and elevating UI layers
+8bfe352 2026-06-11 UI Refinement: Standardized minimize button size and placement on Empire Finances box to match Growth Tracker
+e8492a1 2026-06-11 Build Fix: Restored missing opening div in GrowthTracker grid layout
+0957055 2026-06-11 UI Refinement: Standardized dashboard boxes with white outlines and top-aligned branding headers
+e2bf710 2026-06-11 UX Hardening: Guaranteed navigation interactivity by elevating z-index and optimizing layer stack
+3c3de83 2026-06-11 UX Fix: Resolved non-clickable navigation buttons by optimizing layout architecture and PullToRefresh height logic
+eaa63df 2026-06-11 UI Refinement: Hardened Gemini Brain Chat trigger to a tight circular architecture with high-fidelity dark background and primary ring
+7f90619 2026-06-11 Deployment Fix: Resolved compilation errors and SSR/Client Component mismatch
+c7a16a6 2026-06-11 UI: Adjusted Social Media Radar minimize button position (moved up and right)
+3bc9642 2026-06-11 UI: Moved Feedback Counsel from global footer to follow content on each page for better accessibility
+2cf13ff 2026-06-11 Refactor Pull to Refresh to Layout-level and global sync registry
+70f9b4f 2026-06-11 UI: Moved Social Media Radar minimize button up for better alignment
+610cfba 2026-06-11 UI: Removed redundant AI Research box from Overview tab and unified into a single 3-tab Radar container
+97c0fef 2026-06-11 UI Architecture: Consolidated AI Research into a 3rd tab within the Social Media Radar
+acce982 2026-06-11 UI: Wrapped Social Media Radar in a unified high-fidelity container and refined internal nested cards
+4ec5797 2026-06-11 UI: Renamed Neural Center/Neural Link to LINK CENTER globally
+83b31bb 2026-06-11 UI: Refined Social Media Radar to start empty and use a compact Grid layout for linked apps
+fa2cb39 2026-06-10 UI: Renamed feedback component to Feedback Counsel and added interactive Star Rating system
+cafb911 2026-06-10 UI: Updated feedback counsel text to include 'Enjoying the app?'
+a61bfb9 2026-06-10 UI Architecture: Moved Feedback Counsel to global layout to appear at the bottom of every page
+df3f565 2026-06-10 UI Refinement: Removed floating feedback, added integrated inline FeedbackBox with custom copy
+03a9cc0 2026-06-10 System Integrity: Added Global Feedback Channel and locked structural components from customer modification
+1a8eb03 2026-06-10 UI: Renamed Financial Command to EMPIRE FINANCES and added minimize/maximize functionality
+47118b0 2026-06-10 UI: Renamed Social Media to Empire Intel, moved Niche Calibration to Empire Intel, and cleaned up Home Base
+208f763 2026-06-10 UI: Updated Business Tab Bar with consistent gradients and surface backgrounds
+174bcc0 2026-06-10 Fix build: Corrected framer-motion import in OmniApprovalHub
+d4a369d 2026-06-10 Layout Overhaul: Renamed Duties to Pending Approvals (Full Width), moved Research to Social Media tab, and removed Feedback Channel
+5e9a83a 2026-06-10 UI Simplification: Renamed Approval Hub to Pending Approvals and consolidated Social Media Radar tabs
+9f19ce8 2026-06-10 Cleanup: Removed Empire Notes from Dashboard and Operation Base, and added Live Market Signals with AI Strategic Counsel
+1a9c3c8 2026-06-10 Cleanup: Removed redundant Goals and Cycles from Operation Base
+708db9c 2026-06-10 Performance Optimization: Global CSS fixes, entrance animation throttling, and content-visibility hints
+fa123ed 2026-06-10 Fix Disclaimer Agreement persistence and UI glitch
+6b76b2f 2026-06-10 Refactor: Integrated Platform Overview into Social Media Radar, removed Intelligence Center and moved Radar to Social Media tab
+150d9dc 2026-06-10 Fix build errors
+de6e78e 2026-06-10 Migration: Social Media Radar to Operations Base and Tab cleanup
+ff752e8 2026-06-10 feat: make neural brain movable after 2s hold
+10a850c 2026-06-10 ui: move Gemini brain to center-right to avoid blocking bottom nav
+693b362 2026-06-10 feat: finalize Cinema Hub integration, expand platform linking to 24 platforms, and remove global AI Intelligence settings
+4b0cdc3 2026-06-10 feat: implement video production upload spots and AI render logs in Cinema Hub
+af87bb2 2026-06-10 feat: add DNA Vault counter to Studio page
+d094754 2026-06-10 feat: integrate neural-core.webp into GeminiBrainOverlay
+1843bda 2026-06-10 fix: resolve merge conflicts and restore infrastructure monitoring
+720b5c5 2026-06-10 fix: restore infrastructure monitoring in FinancialCommand and sync package versions
+0801adc 2026-06-10 Branding: Finalize 3D Globe with Dark Violet theme, bust PWA cache v1025, and enhance BrandedGlobe 3D effects
+84bcb2f 2026-06-10 feat: unify high-fidelity 3D assets and loading indicators across dashboard
+b0d7e5d 2026-06-10 docs: re-align system language to focus on management/tracking of existing accounts
+2cdc936 2026-06-10 docs: clarify marketplace monitoring in Financial Command and Settings
+a6d2105 2026-06-10 feat: re-integrate OpenAI, Google Studio, and Railway as 'App Life' in Financial Tracker
+411490e 2026-06-10 chore: delete redundant cost tracking and streamline financial command
+82bfde9 2026-06-10 feat: streamline Operation Base and customize personal Home Base metrics
+f66d596 2026-06-10 feat: complete platform-wide locking until success-share protocol is accepted
+4de82cb 2026-06-10 feat: conditionally show subscription agreement in settings after acceptance
+4978336 2026-06-10 fix: resolved all syntax and typescript build errors for Vercel deployment
+68724e5 2026-06-10 fix: cleanup jsx syntax and ensure build passes
+2a2a51d 2026-06-09 fix: resolve build errors in Settings page and update disclaimer text
+fccf2d0 2026-06-09 cleanup: remove redundant autopilot agreement gate
+2ffe045 2026-06-09 feat: add DisclaimerAgreementBox and move to Subscription tab on acceptance
+a5fb5e4 2026-06-09 feat: expand Growth Tracker with Monthly and All-Time earnings boxes
+8017ed3 2026-06-09 feat: restore Growth Tracker, add minimizer, and refine Financial Tracker UI
+fdfb0f4 2026-06-09 Integrate Real-time Infrastructure Balance in Financial Command
+6891a9e 2026-06-09 Shrink minimize buttons and fix currency formatting
+6e0b920 2026-06-09 Final Dashboard Purge: Remove Primary Intelligence Hub and move operations to Approval Center
+fb2b70b 2026-06-09 Restructure Finance Tracker and clean dashboard
+1c429db 2026-06-09 Clean up build logs and finalize Finance Tracker integration
+fd8d9ee 2026-06-09 Fix Pull-to-Refresh with native touch events, streamline Finance Tracker, and remove redundant Ledger
+bac7448 2026-06-09 Streamline Financials: Rename to Finance Tracker, remove itemized fees, and consolidate Audit actions
+3a06ca1 2026-06-09 Fix Pull-to-Refresh: Implement native drag, high-fidelity globe reveal, and neural sync animation logic
+9da027f 2026-06-09 Streamline Home Base: Remove redundant revenue box and optimize Success-Share Ledger
+1aa8395 2026-06-09 UI: Implement Growth Protocol Activation and Growth Ledger system
+774a686 2026-06-09 Architecture: Move Social Media Radar to Link Center, Remove Posting Tracker, and Implement Strategic Scheduling
+37e9a69 2026-06-09 UI: Refine minimize button positioning on Home Base (move top-8/right-8 to top-5/right-5)
+5fa8fd1 2026-06-09 Branding: Replace 'HOME BASE' with 'EmpireLaunch AI' in business identity headers below the tab bar
+c5f264e 2026-06-09 UI: Remove trailing periods from prominent titles and branding strings for a cleaner look
+50e4cb7 2026-06-09 Branding: Update Dashboard Header title to HOME BASE while keeping app name EmpireLaunch AI
+179871e 2026-06-09 Branding: Revert all instances of HOME BASE back to EmpireLaunch AI as requested
+a69428a 2026-06-09 Branding: Change EmpireLaunch AI to HOME BASE across all core UI components and PWA manifest
+57f77c3 2026-06-09 Auth: Implement Login Mode deep linking and password gate for Returning Owner
+37123a4 2026-06-09 Dashboard: Implement minimize functionality for all widgets, move optimization and cycles to Approval Center, and remove redundant revenue milestones
+fd6e905 2026-06-09 Branding: Rename Operations Hub to Approval Center and update nav labels to AC
+3324c43 2026-06-09 style: reduce white container size while maintaining absolute globe dimensions
+cc66d19 2026-06-09 style: reduce white margin around globe by half and revert to compact container sizes
+31fb9f7 2026-06-09 fix: resolve white pull-to-refresh background and enhance globe spin feedback
+399576e 2026-06-09 style: lock BrandedGlobe component to mandatory white rounded-square background with optimized scaling
+c164cc3 2026-06-09 fix: resolve linting and effect dependency issues for Vercel build
+cd44d56 2026-06-09 ui: upgrade onboarding to 6-step SaaS flow with functional sign-up and payment
+0262202 2026-06-09 Cleanup: Remove temporary lint output file.
+530fd9a 2026-06-09 Fix: Add missing Eye icon import in Link Center page.
+99b887d 2026-06-09 Hardening: Make permission toggles functional and add per-app AI Spending permissions in Link Center.
+7af0384 2026-06-09 Hardening: Implement Security Vault UI, Multi-Tier Permissions, and Anti-Copycat safeguards. Fix build error in FinancialCommand.tsx.
+83f4740 2026-06-08 UI: Added calculated Platform Dues (0 per k earned)
+529b005 2026-06-08 UI: Hardened Intelligence Center and Financial Command logic for new users
+961bbaf 2026-06-08 chore: Remove accidental file
+2cd7c17 2026-06-08 fix: Resolve duplicate state declarations in EmpireContext.tsx
+95dc853 2026-06-08 fix: Correct Name and Niche across all UI components and sync with EmpireLaunch AI branding

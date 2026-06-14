@@ -130,6 +130,34 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const MASTER_USER_ID = '00000000-0000-0000-0000-000000000000';
   const OWNER_EMAIL = 'stacipeabody@gmail.com';
 
+  const getOwnerBrandingForId = (id: string) => {
+    if (id === '2') {
+      return {
+        id: '2',
+        title: 'Empire Two',
+        name: 'Empire Two',
+        niche: 'E-commerce Business Builders',
+        description: 'Empire Niche: E-commerce Business Builders.'
+      };
+    }
+    if (id === '3') {
+      return {
+        id: '3',
+        title: 'Empire Three',
+        name: 'Empire Three',
+        niche: 'Digital Marketing Studio',
+        description: 'Empire Niche: Digital Marketing Studio.'
+      };
+    }
+    return {
+      id: '1',
+      title: 'EmpireLaunch AI',
+      name: 'EmpireLaunch AI',
+      niche: 'AI Business Automation',
+      description: 'Empire Niche: AI Business Automation. Angle: The No-Subscription Empire. Target: Entrepreneurs.'
+    };
+  };
+
   const registerRefreshHandler = (handler: () => Promise<void>) => {
     setRefreshHandlers(prev => [...prev, handler]);
     return () => {
@@ -442,22 +470,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              const lastActiveId = localStorage.getItem('activeEmpireId') || '1';
              setActiveEmpireId(lastActiveId);
 
-             // HARD-INJECTION OF OWNER DATA for Slot 1
-             const ownerBranding = {
-               id: '1',
-               title: 'EmpireLaunch AI',
-               name: 'EmpireLaunch AI',
-               niche: 'AI Business Automation',
-               description: 'Empire Niche: AI Business Automation. Angle: The No-Subscription Empire. Target: Entrepreneurs.'
-             };
-             
-             if (lastActiveId === '1') {
-               setActiveEmpire(ownerBranding);
-             } else {
-               // Load the correct data for the active slot
-               const empire = await empireService.getEmpire(lastActiveId).catch(() => null);
-               if (empire) setActiveEmpire(empire);
-             }
+             // HARD-INJECTION OF OWNER DATA based on slot id
+             const ownerBranding = getOwnerBrandingForId(lastActiveId);
+             setActiveEmpire(ownerBranding);
              
              // WE REMOVE THE PRE-FILLED PLATFORMS so the owner can test the empty state.
              // Only if they haven't manually linked anything yet.
@@ -512,13 +527,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(newLinking));
              
              // FORCE THE BRANDING
-             const ownerBranding = {
-               id: activeEmpireId,
-               title: 'EmpireLaunch AI',
-               name: 'EmpireLaunch AI',
-               niche: 'AI Business Automation',
-               description: 'Empire Niche: AI Business Automation. Angle: The No-Subscription Empire. Target: Entrepreneurs.'
-             };
+             const ownerBranding = getOwnerBrandingForId(activeEmpireId);
              setActiveEmpire(ownerBranding);
              
              // Persist locally to avoid flickers on refresh
@@ -547,11 +556,21 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
             }
         }
 
-        const goal = await empireService.getLatestEmpire().catch(() => null);
-        if (goal && goal.id) {
-          setActiveEmpireId(goal.id);
-          setActiveEmpire(goal);
-          localStorage.setItem('activeEmpireId', goal.id);
+        // Only fetch and set the latest empire if we don't have an activeEmpireId saved already!
+        const savedActiveEmpireId = localStorage.getItem('activeEmpireId');
+        if (savedActiveEmpireId) {
+          const empire = await empireService.getEmpire(savedActiveEmpireId).catch(() => null);
+          if (empire) {
+            setActiveEmpireId(savedActiveEmpireId);
+            setActiveEmpire(empire);
+          }
+        } else {
+          const goal = await empireService.getLatestEmpire().catch(() => null);
+          if (goal && goal.id) {
+            setActiveEmpireId(goal.id);
+            setActiveEmpire(goal);
+            localStorage.setItem('activeEmpireId', goal.id);
+          }
         }
       } catch (e) {
         console.error('Initial backend sync failed', e);
@@ -568,19 +587,11 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     if (!isInitialized) return;
     
     const updateActiveEmpireData = async () => {
-      // Slot 1 hard-injection for Owner
-      if (activeEmpireId === '1') {
-        const storedUserId = localStorage.getItem('empire_userId');
-        if (storedUserId === MASTER_USER_ID) {
-          setActiveEmpire({
-            id: '1',
-            title: 'EmpireLaunch AI',
-            name: 'EmpireLaunch AI',
-            niche: 'AI Business Automation',
-            description: 'Empire Niche: AI Business Automation. Angle: The No-Subscription Empire. Target: Entrepreneurs.'
-          });
-          return;
-        }
+      // Slot hard-injection for Owner
+      const storedUserId = localStorage.getItem('empire_userId');
+      if (storedUserId === MASTER_USER_ID || userEmail === OWNER_EMAIL) {
+        setActiveEmpire(getOwnerBrandingForId(activeEmpireId));
+        return;
       }
 
       // Standard fetch for all slots
@@ -591,7 +602,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     };
 
     updateActiveEmpireData();
-  }, [activeEmpireId, isInitialized]);
+  }, [activeEmpireId, isInitialized, userEmail]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

@@ -21,6 +21,7 @@ import { creativeService, DesignTask } from '@/lib/api-service';
 
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { ViralSignalsPanel, generateMockSignals } from '@/components/Dashboard/MarketHeatMeter';
+import { StylePickerGallery } from '@/components/Dashboard/StylePickerGallery';
 
 interface DesignCenterHubProps {
   onSelectTask: (task: DesignTask) => void;
@@ -156,6 +157,9 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
                   etsySignal={viralSignals.etsy}
                   fiverrSignal={viralSignals.fiverr}
                 />
+
+                {/* Style Picker — Browse Global DNA Pool */}
+                <StylePickerGallery />
 
                 {/* AI Strategy Note */}
       <div className="bg-gradient-to-br from-slate-900 to-slate-950 rounded-[40px] p-10 text-white relative overflow-hidden shadow-2xl border border-white/5">

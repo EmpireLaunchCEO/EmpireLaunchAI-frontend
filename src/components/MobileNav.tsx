@@ -1,37 +1,24 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { 
   LayoutDashboard, 
   Settings, 
   Stars, 
   ClipboardCheck,
-  Video,
-  Loader2
+  Video
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function MobileNav() {
   const pathname = usePathname();
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [isNavigating, setIsNavigating] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
-    // Prefetch all routes for instant feel
-    router.prefetch('/dashboard');
-    router.prefetch('/empire-center');
-    router.prefetch('/studio');
-    router.prefetch('/link-center');
-    router.prefetch('/settings');
-  }, [router]);
-
-  // Reset loading state when pathname changes
-  useEffect(() => {
-    setIsNavigating(null);
-  }, [pathname]);
+  }, []);
 
   if (!mounted) return null;
 
@@ -42,26 +29,6 @@ export function MobileNav() {
     { id: 'nav-lc', href: '/link-center', label: 'LC', icon: Stars },
     { id: 'nav-settings', href: '/settings', label: 'Settings', icon: Settings },
   ];
-
-  const handleNavigation = (href: string) => {
-    if (pathname === href) return;
-    
-    setIsNavigating(href);
-    console.log(`[Neural Sync] Transferring to ${href}`);
-    
-    // Use a small timeout to let the UI state update before the heavy navigation task
-    setTimeout(() => {
-      router.push(href);
-      
-      // Fallback for extremely stubborn browsers/slow routing
-      setTimeout(() => {
-        if (window.location.pathname !== href) {
-           console.log(`[Neural Sync] Fallback: Direct assignment to ${href}`);
-           window.location.href = href;
-        }
-      }, 3000);
-    }, 10);
-  };
 
   return (
     <div 
@@ -74,17 +41,16 @@ export function MobileNav() {
       >
         {navItems.map((item) => {
           const isActive = pathname === item.href;
-          const isLoading = isNavigating === item.href;
           const Icon = item.icon;
           
           return (
-            <button
+            <Link
               key={item.id}
-              onClick={() => handleNavigation(item.href)}
+              href={item.href}
+              prefetch={true}
               className={cn(
                 "flex flex-col items-center justify-center gap-1.5 transition-all relative cursor-pointer active:scale-75 outline-none flex-1 py-2",
-                isActive ? "scale-100" : (item.color || "text-slate-500"),
-                isLoading && "animate-pulse"
+                isActive ? "scale-100" : (item.color || "text-slate-500")
               )}
             >
               <div className={cn(
@@ -93,14 +59,10 @@ export function MobileNav() {
                   ? "bg-primary text-white shadow-[0_0_25px_rgba(var(--primary-rgb),0.5)] border border-white/20" 
                   : "bg-white/5 text-inherit border border-transparent"
               )}>
-                {isLoading ? (
-                  <Loader2 className="w-5 h-5 animate-spin text-white" />
-                ) : (
-                  <Icon className={cn("w-5 h-5", isActive ? "scale-110" : "")} />
-                )}
+                <Icon className={cn("w-5 h-5", isActive ? "scale-110" : "")} />
                 
                 {/* Notification indicator for Studio (Auto-Pilot) */}
-                {item.id === 'nav-studio' && !isActive && !isLoading && (
+                {item.id === 'nav-studio' && !isActive && (
                   <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900" />
                 )}
               </div>
@@ -115,7 +77,7 @@ export function MobileNav() {
               {isActive && (
                 <div className="absolute -bottom-1 w-6 h-1 bg-primary rounded-full shadow-[0_0_12px_rgba(var(--primary-rgb),1)]" />
               )}
-            </button>
+            </Link>
           );
         })}
       </nav>

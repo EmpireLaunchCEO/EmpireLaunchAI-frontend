@@ -1,3 +1,55 @@
 
 Running 4 tests using 1 worker
 
+  ✓  1 [chromium] › e2e/navigation.spec.ts:13:7 › Navigation & Sidebar › sidebar contains all main navigation links (28.5s)
+  ✓  2 [chromium] › e2e/navigation.spec.ts:42:7 › Navigation & Sidebar › dashboard page loads with key components (4.4s)
+  ✘  3 [chromium] › e2e/navigation.spec.ts:57:7 › Navigation & Sidebar › navigation to each authenticated page loads content (36.9s)
+  ✘  4 [chromium] › e2e/navigation.spec.ts:57:7 › Navigation & Sidebar › navigation to each authenticated page loads content (retry #1) (58.9s)
+  ✓  5 [chromium] › e2e/navigation.spec.ts:83:7 › Navigation & Sidebar › responsive mobile nav renders on small viewport (4.8s)
+
+
+  1) [chromium] › e2e/navigation.spec.ts:57:7 › Navigation & Sidebar › navigation to each authenticated page loads content 
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: page.waitForTimeout: Test timeout of 30000ms exceeded.
+
+      68 |     for (const route of routes) {
+      69 |       await page.goto(route.path, { waitUntil: 'domcontentloaded' });
+    > 70 |       await page.waitForTimeout(3000);
+         |                  ^
+      71 |
+      72 |       // Verify page loaded - should have content
+      73 |       const bodyText = await page.locator('body').innerText().catch(() => '');
+        at /home/team/shared/EmpireLaunchAI-frontend/e2e/navigation.spec.ts:70:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/navigation-Navigation-Side-17da0-nticated-page-loads-content-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/navigation-Navigation-Side-17da0-nticated-page-loads-content-chromium/error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    [31mTest timeout of 30000ms exceeded.[39m
+
+    Error: page.waitForTimeout: Test timeout of 30000ms exceeded.
+
+      68 |     for (const route of routes) {
+      69 |       await page.goto(route.path, { waitUntil: 'domcontentloaded' });
+    > 70 |       await page.waitForTimeout(3000);
+         |                  ^
+      71 |
+      72 |       // Verify page loaded - should have content
+      73 |       const bodyText = await page.locator('body').innerText().catch(() => '');
+        at /home/team/shared/EmpireLaunchAI-frontend/e2e/navigation.spec.ts:70:18
+
+    Error: ENOENT: no such file or directory, unlink '/home/team/shared/EmpireLaunchAI-frontend/test-results/.playwright-artifacts-1/943f2a6e5f629a51681d3143c8f3d633.zip'
+
+    Error Context: test-results/navigation-Navigation-Side-17da0-nticated-page-loads-content-chromium-retry1/error-context.md
+
+  1 failed
+    [chromium] › e2e/navigation.spec.ts:57:7 › Navigation & Sidebar › navigation to each authenticated page loads content 
+  3 passed (2.3m)
+
+[36m  Serving HTML report at http://localhost:9323. Press Ctrl+C to quit.[39m
