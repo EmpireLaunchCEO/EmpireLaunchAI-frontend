@@ -435,6 +435,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              console.log('[Security] Verified Owner Session Active.');
              setIsAdmin(true);
              setIsPaidState(true);
+             setIsProtocolAccepted(true); // Owner has already agreed to their own business model
              setSlotStatus({ 0: true, 1: true, 2: true });
              
              // HARD-INJECTION OF OWNER DATA: Ensure context is never empty for Master User
