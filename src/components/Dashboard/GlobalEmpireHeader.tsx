@@ -49,11 +49,18 @@ export function GlobalEmpireHeader() {
 
           let label = (idx === 0) ? "EmpireLaunch AI" : `Business ${idx + 1}`;
           
+          // If this is the active slot, use the actual name from the empire data
           if (isActive && activeEmpire) {
             const name = activeEmpire.name || activeEmpire.title;
+            // Ensure we don't use generic titles as labels
             if (name && name !== 'HOME BASE' && !name.startsWith('Business ')) {
               label = name;
             }
+          }
+
+          // Special Case: Slot 1 is always EmpireLaunch AI unless named otherwise
+          if (idx === 0 && label === 'Business 1') {
+            label = "EmpireLaunch AI";
           }
 
           return (

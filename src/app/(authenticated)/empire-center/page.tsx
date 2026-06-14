@@ -44,6 +44,7 @@ import { OmniApprovalHub as PendingApprovals } from '@/components/OmniApprovalHu
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 
 import { NicheCalibrationBox } from '@/components/Dashboard/SuccessHub/NicheCalibrationBox';
+import { GlobalDnaPoolPanel, AutoPilotStatusBadge } from '@/components/Dashboard/GlobalDnaPoolPanel';
 
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'pending-approvals' | 'empire-intel'>('pending-approvals');
@@ -72,8 +73,9 @@ export default function EmpireCenterPage() {
           viewport={{ once: true }}
           className="text-center space-y-4"
         >
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-3">
             <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Link Center Active</span>
+            <AutoPilotStatusBadge />
           </div>
           <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
             {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE' || empireData?.name === 'Business 1' || !empireData?.name) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title)}
@@ -147,6 +149,10 @@ export default function EmpireCenterPage() {
 
                 {/* Sidebar Context */}
                 <div className="space-y-8">
+                  <div className="space-y-4">
+                    <GlobalDnaPoolPanel />
+                  </div>
+
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
