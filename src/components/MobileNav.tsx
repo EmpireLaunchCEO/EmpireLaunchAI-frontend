@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { 
   LayoutDashboard, 
   Settings, 
   Stars, 
   ClipboardCheck,
-  Video
+  Video,
+  Loader2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -16,10 +16,22 @@ export function MobileNav() {
   const pathname = usePathname();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [isNavigating, setIsNavigating] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    // Prefetch all routes for instant feel
+    router.prefetch('/dashboard');
+    router.prefetch('/empire-center');
+    router.prefetch('/studio');
+    router.prefetch('/link-center');
+    router.prefetch('/settings');
+  }, [router]);
+
+  // Reset loading state when pathname changes
+  useEffect(() => {
+    setIsNavigating(null);
+  }, [pathname]);
 
   if (!mounted) return null;
 
@@ -31,9 +43,24 @@ export function MobileNav() {
     { id: 'nav-settings', href: '/settings', label: 'Settings', icon: Settings },
   ];
 
-  const handleNav = (href: string) => {
-    // Force navigation as a secondary trigger in case Link is blocked
-    router.push(href);
+  const handleNavigation = (href: string) => {
+    if (pathname === href) return;
+    
+    setIsNavigating(href);
+    console.log(`[Neural Sync] Transferring to ${href}`);
+    
+    // Use a small timeout to let the UI state update before the heavy navigation task
+    setTimeout(() => {
+      router.push(href);
+      
+      // Fallback for extremely stubborn browsers/slow routing
+      setTimeout(() => {
+        if (window.location.pathname !== href) {
+           console.log(`[Neural Sync] Fallback: Direct assignment to ${href}`);
+           window.location.href = href;
+        }
+      }, 3000);
+    }, 10);
   };
 
   return (
@@ -42,47 +69,53 @@ export function MobileNav() {
       style={{ isolation: 'isolate' }}
     >
       <nav 
-        className="bg-slate-900/95 backdrop-blur-2xl border-t border-white/10 rounded-t-[32px] p-2 pb-6 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex items-center justify-around pointer-events-auto w-full max-w-full overflow-hidden"
+        className="bg-slate-900/98 backdrop-blur-3xl border-t-2 border-white/10 rounded-t-[40px] p-2 pb-8 shadow-[0_-20px_60px_rgba(0,0,0,0.8)] flex items-center justify-around pointer-events-auto w-full max-w-full overflow-hidden transition-all duration-500"
         onClick={(e) => e.stopPropagation()}
       >
         {navItems.map((item) => {
           const isActive = pathname === item.href;
+          const isLoading = isNavigating === item.href;
           const Icon = item.icon;
           
           return (
-            <Link
+            <button
               key={item.id}
-              href={item.href}
-              prefetch={true}
-              onClick={(e) => {
-                // We let the Link handle it normally, but if it fails, the router.push is here
-                // We don't preventDefault so Link works, but we can log it
-                console.log(`[Nav] Syncing to ${item.href}`);
-              }}
+              onClick={() => handleNavigation(item.href)}
               className={cn(
-                "flex flex-col items-center justify-center gap-1 transition-all relative cursor-pointer active:scale-90 outline-none flex-1 py-1",
-                isActive ? "scale-105" : (item.color || "text-slate-500")
+                "flex flex-col items-center justify-center gap-1.5 transition-all relative cursor-pointer active:scale-75 outline-none flex-1 py-2",
+                isActive ? "scale-100" : (item.color || "text-slate-500"),
+                isLoading && "animate-pulse"
               )}
             >
               <div className={cn(
-                "p-2 rounded-xl transition-all",
+                "p-2.5 rounded-2xl transition-all relative",
                 isActive 
-                  ? "bg-primary text-white shadow-lg shadow-primary/40" 
-                  : "bg-white/5 text-inherit"
+                  ? "bg-primary text-white shadow-[0_0_25px_rgba(var(--primary-rgb),0.5)] border border-white/20" 
+                  : "bg-white/5 text-inherit border border-transparent"
               )}>
-                <Icon className="w-5 h-5" />
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin text-white" />
+                ) : (
+                  <Icon className={cn("w-5 h-5", isActive ? "scale-110" : "")} />
+                )}
+                
+                {/* Notification indicator for Studio (Auto-Pilot) */}
+                {item.id === 'nav-studio' && !isActive && !isLoading && (
+                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900" />
+                )}
               </div>
+              
               <span className={cn(
-                "text-[9px] font-black uppercase tracking-tighter",
-                isActive ? "text-white" : "opacity-40"
+                "text-[9px] font-black uppercase tracking-widest transition-opacity",
+                isActive ? "text-white opacity-100" : "opacity-40"
               )}>
                 {item.label}
               </span>
               
               {isActive && (
-                <div className="absolute -bottom-1 w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_rgba(var(--primary-rgb),0.8)]" />
+                <div className="absolute -bottom-1 w-6 h-1 bg-primary rounded-full shadow-[0_0_12px_rgba(var(--primary-rgb),1)]" />
               )}
-            </Link>
+            </button>
           );
         })}
       </nav>
