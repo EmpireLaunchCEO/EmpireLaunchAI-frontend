@@ -600,3 +600,23 @@ export const paymentService = {
     return [];
   }
 };
+
+export const onboardingService = {
+  async startOnboarding(platform: string): Promise<any> {
+    const res = await fetch(`${API_URL}/api/onboarding/start`, {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify({
+        userId: '00000000-0000-0000-0000-000000000000',
+        platform
+      }),
+    });
+    if (!res.ok) throw new Error('Onboarding failed to start');
+    return res.json();
+  },
+  async getStatus(sessionId: string): Promise<any> {
+    const res = await fetch(`${API_URL}/api/onboarding/status/${sessionId}`, { headers: HEADERS });
+    if (!res.ok) throw new Error('Failed to get onboarding status');
+    return res.json();
+  }
+};

@@ -24,6 +24,7 @@ import {
   } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
+import { onboardingService } from '@/lib/api-service';
 
 import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 
@@ -112,6 +113,34 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   const [searchQuery, setSearchQuery] = useState('');
   const [linkingStep, setLinkingStep] = useState<'tier' | 'auth' | 'keys'>('tier');
   const [selectedTier, setSelectedTier] = useState<'co-pilot' | 'empire'>('co-pilot');
+  const [onboardingSessionId, setOnboardingSessionId] = useState<string | null>(null);
+  const [onboardingStatus, setOnboardingStatus] = useState<any>(null);
+
+  useEffect(() => {
+    let interval: any;
+    if (onboardingSessionId) {
+      interval = setInterval(async () => {
+        try {
+          const status = await onboardingService.getStatus(onboardingSessionId);
+          setOnboardingStatus(status.session);
+          if (status.session.status === 'completed') {
+            clearInterval(interval);
+            connectPlatform(status.session.platform);
+            updatePlatformPermission(status.session.platform, selectedTier);
+            finishSetup();
+            setLinkingStep('tier');
+            setOnboardingSessionId(null);
+          } else if (status.session.status === 'failed') {
+            clearInterval(interval);
+            setOnboardingSessionId(null);
+          }
+        } catch (e) {
+          console.error('Polling error:', e);
+        }
+      }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [onboardingSessionId, connectPlatform, finishSetup, selectedTier, updatePlatformPermission]);
 
   const isGmailLinked = connectedPlatforms.includes('gmail') || connectedPlatforms.includes('imap');
   const hasNoPlatforms = connectedPlatforms.length === 0;
@@ -187,6 +216,21 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
         }
       })
       .catch(() => {});
+      return;
+    }
+
+    if (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(activeSetupPlatform || '')) {
+      setLinkingStep('keys');
+      onboardingService.startOnboarding(activeSetupPlatform!)
+        .then(data => {
+          if (data.sessionId) {
+            setOnboardingSessionId(data.sessionId);
+          }
+        })
+        .catch(err => {
+          console.error('Failed to start neural onboarding', err);
+          setLinkingStep('auth');
+        });
       return;
     }
 
@@ -556,20 +600,77 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
 
                     {linkingStep === 'keys' ? (
                       <div className="space-y-5">
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Protocol Identifier</label>
-                          <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold text-foreground" />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Secure Token</label>
-                          <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold text-foreground" />
-                        </div>
-                        <button
-                          onClick={handleLink}
-                          className="w-full py-5 bg-primary text-foreground rounded-[24px] font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl"
-                        >
-                          Finalize Link Center
-                        </button>
+                        {onboardingStatus ? (
+                          <div className="space-y-4">
+                            <div className="p-4 bg-primary/10 rounded-2xl border border-primary/30">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Session Status</p>
+                              <p className="text-xs font-bold text-foreground capitalize">{onboardingStatus.status.replace('_', ' ')}</p>
+                            </div>
+                            <div className="p-4 bg-theme-background border border-theme rounded-2xl">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Current Task</p>
+                              <p className="text-xs font-bold text-foreground">{onboardingStatus.currentState.replace('_', ' ')}</p>
+                            </div>
+                            
+                            {onboardingStatus.status === 'hitl_required' && (
+                              <div className="p-6 bg-amber-500/10 border-2 border-amber-500/50 rounded-[32px] space-y-4">
+                                <div className="flex items-center gap-3">
+                                  <Stars className="w-5 h-5 text-amber-500 animate-pulse" />
+                                  <p className="text-xs font-black uppercase tracking-widest text-amber-500">Action Required</p>
+                                </div>
+                                <p className="text-[10px] font-bold text-muted-foreground leading-relaxed">
+                                  Our Neural Node has reached the login screen. Please log in to your {currentPlatform.name} account in the window that just opened (or on your device) to allow the AI to continue.
+                                </p>
+                                <button
+                                  onClick={() => window.open(currentPlatform.id === 'canva' ? 'https://www.canva.com/login' : '#', '_blank')}
+                                  className="w-full py-3 bg-amber-500 text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all"
+                                >
+                                  Open {currentPlatform.name} Login
+                                </button>
+                              </div>
+                            )}
+
+                            {onboardingStatus.status === 'failed' && (
+                              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-2xl">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-red-500 mb-1">Error</p>
+                                <p className="text-xs font-bold text-foreground">{onboardingStatus.error || 'Connection failed'}</p>
+                              </div>
+                            )}
+
+                            <div className="flex items-center justify-center py-4">
+                              <div className="flex gap-1">
+                                {[1, 2, 3].map(i => (
+                                  <motion.div
+                                    key={i}
+                                    animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }}
+                                    transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
+                                    className="w-1.5 h-1.5 rounded-full bg-primary"
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Protocol Identifier</label>
+                              <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold text-foreground" />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Secure Token</label>
+                              <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold text-foreground" />
+                            </div>
+                            <button
+                              disabled={!!onboardingSessionId}
+                              onClick={handleLink}
+                              className={cn(
+                                "w-full py-5 bg-primary text-foreground rounded-[24px] font-black text-xs uppercase tracking-widest transition-all shadow-2xl",
+                                onboardingSessionId ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
+                              )}
+                            >
+                              {onboardingSessionId ? 'Processing Neural Handshake...' : 'Finalize Link Center'}
+                            </button>
+                          </>
+                        )}
                       </div>
                     ) : (
                       <div className="h-48 flex items-center justify-center text-muted-foreground/30 italic font-bold">
