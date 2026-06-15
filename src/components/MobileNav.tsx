@@ -36,7 +36,7 @@ export function MobileNav() {
       style={{ isolation: 'isolate' }}
     >
       <nav 
-        className="bg-slate-900/98 backdrop-blur-3xl border-t-2 border-white/10 rounded-t-[40px] p-2 pb-8 shadow-[0_-20px_60px_rgba(0,0,0,0.8)] flex items-center justify-around pointer-events-auto w-full max-w-full overflow-hidden transition-all duration-500"
+        className="bg-slate-950/90 backdrop-blur-xl border-t-2 border-white/10 rounded-t-[40px] p-2 pb-8 shadow-[0_-20px_60px_rgba(0,0,0,0.8)] flex items-center justify-around pointer-events-auto w-full max-w-full overflow-hidden transition-all duration-500"
         onClick={(e) => e.stopPropagation()}
       >
         {navItems.map((item) => {
