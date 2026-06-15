@@ -112,5 +112,21 @@ export const PLATFORM_CAPABILITIES: Record<string, PlatformCapabilities> = {
       { tier: 'co-pilot', description: 'AI suggests design templates and drafts asset variations for your review.' },
       { tier: 'empire', description: 'Programmatically generate and publish social media assets from live data feeds autonomously.' }
     ]
+  },
+  godaddy: {
+    id: 'godaddy',
+    capabilities: [
+      { tier: 'read-only', description: 'Monitor domain registrations and DNS settings. Track domain expiry dates.' },
+      { tier: 'co-pilot', description: 'AI drafts DNS record changes and searches for available domains based on your niche.' },
+      { tier: 'empire', description: 'Auto-Pilot: AI auto-renews domains, manages DNS records, and monitors domain health autonomously.' }
+    ]
+  },
+  systeme_io: {
+    id: 'systeme_io',
+    capabilities: [
+      { tier: 'read-only', description: 'Monitor contact list growth, email campaign performance, and sales funnel analytics.' },
+      { tier: 'co-pilot', description: 'AI drafts newsletter content and suggests email sequences based on market trends.' },
+      { tier: 'empire', description: 'Auto-Pilot: AI sends automated newsletters, manages contact tags, and optimizes campaign timing.' }
+    ]
   }
 };

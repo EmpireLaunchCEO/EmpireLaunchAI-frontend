@@ -58,6 +58,8 @@ const availablePlatforms = [
   { id: 'redbubble', name: 'Redbubble', icon: ShoppingBag, color: 'text-red-500', bg: 'bg-red-50' },
   { id: 'artstation', name: 'ArtStation', icon: Palette, color: 'text-sky-500', bg: 'bg-sky-50' },
   { id: 'substack', name: 'Substack', icon: Mail, color: 'text-orange-500', bg: 'bg-orange-50' },
+  { id: 'godaddy', name: 'GoDaddy', icon: Globe, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { id: 'systeme_io', name: 'Systeme.io', icon: Mail, color: 'text-emerald-600', bg: 'bg-emerald-50' },
 ];
 
 interface GuidedLinkingProps {
@@ -181,6 +183,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
       printify: { endpoint: 'printify', sessionKey: 'printify_oauth_session_id', vaultKey: 'empire_vault_printify', label: 'Printify' },
       cj_dropshipping: { endpoint: 'cj_dropshipping', sessionKey: 'cj_dropshipping_oauth_session_id', vaultKey: 'empire_vault_cj_dropshipping', label: 'CJ Dropshipping' },
       autods: { endpoint: 'autods', sessionKey: 'autods_oauth_session_id', vaultKey: 'empire_vault_autods', label: 'AutoDS' },
+      godaddy: { endpoint: 'godaddy', sessionKey: 'godaddy_oauth_session_id', vaultKey: 'empire_vault_godaddy', label: 'GoDaddy' },
+      systeme_io: { endpoint: 'systeme_io', sessionKey: 'systeme_io_oauth_session_id', vaultKey: 'empire_vault_systeme_io', label: 'Systeme.io' },
     };
 
     const oauth = oauthPlatforms[activeSetupPlatform || ''];
