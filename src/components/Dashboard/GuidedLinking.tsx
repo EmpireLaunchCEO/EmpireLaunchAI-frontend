@@ -221,6 +221,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
 
     if (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(activeSetupPlatform || '')) {
       setLinkingStep('keys');
+      setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
       onboardingService.startOnboarding(activeSetupPlatform!)
         .then(data => {
           if (data.sessionId) {
@@ -229,7 +230,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
         })
         .catch(err => {
           console.error('Failed to start neural onboarding', err);
-          setLinkingStep('auth');
+          setOnboardingStatus({ status: 'failed', error: 'Failed to wake neural node. Please try again.' });
         });
       return;
     }
@@ -660,14 +661,15 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                               <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold text-foreground" />
                             </div>
                             <button
-                              disabled={!!onboardingSessionId}
+                              disabled={!!onboardingSessionId || (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(currentPlatform.id) && !onboardingSessionId)}
                               onClick={handleLink}
                               className={cn(
                                 "w-full py-5 bg-primary text-foreground rounded-[24px] font-black text-xs uppercase tracking-widest transition-all shadow-2xl",
-                                onboardingSessionId ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
+                                (onboardingSessionId || (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(currentPlatform.id) && !onboardingSessionId)) ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
                               )}
                             >
-                              {onboardingSessionId ? 'Processing Neural Handshake...' : 'Finalize Link Center'}
+                              {onboardingSessionId ? 'Processing Neural Handshake...' : 
+                               (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(currentPlatform.id) ? 'Waking Neural Node...' : 'Finalize Link Center')}
                             </button>
                           </>
                         )}
