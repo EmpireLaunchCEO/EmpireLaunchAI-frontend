@@ -33,7 +33,6 @@ export function MobileNav() {
   return (
     <div 
       className="fixed bottom-0 left-0 right-0 z-[999999] pointer-events-none flex justify-center"
-      style={{ isolation: 'isolate' }}
     >
       <nav 
         className="bg-slate-950/90 backdrop-blur-xl border-t-2 border-white/10 rounded-t-[40px] p-2 pb-8 shadow-[0_-20px_60px_rgba(0,0,0,0.8)] flex items-center justify-around pointer-events-auto w-full max-w-full overflow-hidden transition-all duration-500"

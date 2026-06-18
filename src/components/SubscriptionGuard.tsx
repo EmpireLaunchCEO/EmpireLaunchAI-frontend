@@ -72,15 +72,17 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
   // Ensure first render matches server (which doesn't have isPaid)
   if (!mounted || !isInitialized) {
     return (
-      <div className="fixed inset-0 z-[999] bg-[#0a0519] flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-primary font-black uppercase tracking-[0.3em] text-sm animate-pulse">
-            Neural Path Authorized
-          </h2>
-          <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2">
-            Synchronizing Neural Path...
-          </p>
+      <div className="absolute inset-0 z-[50] bg-[#0a0519] flex flex-col items-center justify-center gap-8 w-full min-h-screen">
+        <div className="flex flex-col items-center justify-center gap-6">
+          <BrandedGlobe size="xl" className="shadow-[0_0_60px_rgba(0,229,255,0.4)]" />
+          <div className="flex flex-col items-center gap-3">
+            <h2 className="text-primary font-black uppercase tracking-[0.4em] text-sm animate-pulse text-center">
+              Neural Path Authorized
+            </h2>
+            <p className="text-slate-500 text-[10px] uppercase font-black tracking-widest mt-2 text-center opacity-70">
+              Synchronizing Neural Path...
+            </p>
+          </div>
         </div>
       </div>
     );

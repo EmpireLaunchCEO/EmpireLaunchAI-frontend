@@ -427,10 +427,13 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
       // Safety timeout for initialization
       const initTimeout = setTimeout(() => {
-        if (!isInitialized) {
-          console.warn("Global initialization timeout - forcing initialized state");
-          setIsInitialized(true);
-        }
+        setIsInitialized(current => {
+          if (!current) {
+            console.warn("Global initialization timeout - forcing initialized state");
+            return true;
+          }
+          return current;
+        });
       }, 6000);
 
       const savedActiveEmpireId = localStorage.getItem('activeEmpireId');
