@@ -18,8 +18,10 @@ import {
   Lock,
   Grid,
   List,
+  Globe,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 // ─── Types (mirrors backend DnaStrand) ──────────────────────────────────────
 
@@ -53,6 +55,17 @@ const CATEGORIES = [
   { id: 'layout', label: 'Layouts', icon: Grid },
   { id: 'avatar', label: 'Avatars', icon: Cpu },
   { id: 'background', label: 'Backgrounds', icon: Layers },
+];
+
+const SUBCATEGORIES = [
+  { id: 'all', label: 'All Niches', parent: null },
+  { id: 'planner', label: 'Planners', parent: 'niche_pattern' },
+  { id: 'notion', label: 'Notion Templates', parent: 'niche_pattern' },
+  { id: 'tracker', label: 'Trackers', parent: 'niche_pattern' },
+  { id: 'social', label: 'Social Media', parent: 'layout' },
+  { id: 'branding', label: 'Branding', parent: 'palette' },
+  { id: 'editorial', label: 'Editorial', parent: 'typography' },
+  { id: 'wellness', label: 'Wellness', parent: 'background' },
 ];
 
 function TypeIcon({ className }: { className?: string }) { return <span className={cn('font-black text-xs', className)}>T</span>; }
@@ -346,6 +359,7 @@ export function StylePickerGallery({ inline, onApplyStyle, className }: StylePic
   const [strands, setStrands] = useState<DnaStrandData[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [activeSubCategory, setActiveSubCategory] = useState('all');
   const [selectedStrand, setSelectedStrand] = useState<DnaStrandData | null>(null);
   const [detailStrand, setDetailStrand] = useState<DnaStrandData | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -386,6 +400,7 @@ export function StylePickerGallery({ inline, onApplyStyle, className }: StylePic
 
   const filtered = strands.filter(s => {
     if (activeCategory !== 'all' && s.category !== activeCategory) return false;
+    if (activeSubCategory !== 'all' && s.subCategory !== activeSubCategory) return false;
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       const name = (s.manifest.name || '').toLowerCase();
@@ -395,6 +410,15 @@ export function StylePickerGallery({ inline, onApplyStyle, className }: StylePic
     }
     return true;
   });
+
+  const relevantSubCategories = SUBCATEGORIES.filter(
+    sc => sc.parent === null || sc.parent === activeCategory || activeCategory === 'all'
+  );
+
+  const handleCategoryChange = (catId: string) => {
+    setActiveCategory(catId);
+    setActiveSubCategory('all');
+  };
 
   const handleSelect = (strand: DnaStrandData) => {
     setSelectedStrand(strand);
@@ -430,7 +454,7 @@ export function StylePickerGallery({ inline, onApplyStyle, className }: StylePic
           return (
             <button
               key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
+              onClick={() => handleCategoryChange(cat.id)}
               className={cn(
                 'flex items-center gap-1.5 px-3.5 py-2 rounded-full font-black text-[8px] uppercase tracking-widest whitespace-nowrap transition-all border shrink-0',
                 activeCategory === cat.id
@@ -445,6 +469,26 @@ export function StylePickerGallery({ inline, onApplyStyle, className }: StylePic
         })}
       </div>
 
+      {/* SubCategory/Niche filter tabs */}
+      {relevantSubCategories.length > 1 && (
+        <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+          {relevantSubCategories.map((sc) => (
+            <button
+              key={sc.id}
+              onClick={() => setActiveSubCategory(sc.id)}
+              className={cn(
+                'px-3 py-1.5 rounded-lg font-bold text-[7px] uppercase tracking-widest whitespace-nowrap transition-all border shrink-0',
+                activeSubCategory === sc.id
+                  ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
+                  : 'bg-transparent text-muted-foreground border-transparent hover:border-theme'
+              )}
+            >
+              {sc.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Strand count */}
       <div className="flex items-center justify-between px-1">
         <p className="text-[9px] font-bold text-muted-foreground">
@@ -458,17 +502,11 @@ export function StylePickerGallery({ inline, onApplyStyle, className }: StylePic
 
       {/* Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="rounded-[24px] border-2 border-theme bg-theme-surface overflow-hidden animate-pulse">
-              <div className="h-16 bg-slate-800" />
-              <div className="p-4 space-y-3">
-                <div className="h-4 bg-slate-800 rounded w-2/3" />
-                <div className="h-3 bg-slate-800 rounded w-1/2" />
-                <div className="h-3 bg-slate-800 rounded w-full" />
-              </div>
-            </div>
-          ))}
+        <div className="flex flex-col items-center justify-center py-16 space-y-6">
+          <BrandedGlobe size="lg" animate={true} className="shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" />
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">
+            Loading DNA Strands...
+          </p>
         </div>
       ) : filtered.length === 0 ? (
         <div className="p-12 text-center space-y-4 bg-theme-surface rounded-[32px] border-2 border-dashed border-theme">
