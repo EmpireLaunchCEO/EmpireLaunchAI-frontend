@@ -134,8 +134,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     if (id === '2') {
       return {
         id: '2',
-        title: 'Empire Two',
-        name: 'Empire Two',
+        title: 'Empire 2',
+        name: 'Empire 2',
         niche: 'E-commerce Business Builders',
         description: 'Empire Niche: E-commerce Business Builders.'
       };
@@ -143,8 +143,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     if (id === '3') {
       return {
         id: '3',
-        title: 'Empire Three',
-        name: 'Empire Three',
+        title: 'Empire 3',
+        name: 'Empire 3',
         niche: 'Digital Marketing Studio',
         description: 'Empire Niche: Digital Marketing Studio.'
       };

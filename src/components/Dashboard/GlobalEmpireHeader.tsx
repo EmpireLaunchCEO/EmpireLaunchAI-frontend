@@ -48,8 +48,8 @@ export function GlobalEmpireHeader() {
           const isActive = activeBusinessIndex === idx;
 
           let label = "EmpireLaunch AI";
-          if (idx === 1) label = "Empire Two";
-          if (idx === 2) label = "Empire Three";
+          if (idx === 1) label = "Empire 2";
+          if (idx === 2) label = "Empire 3";
           
           // If this is the active slot, use the actual name from the empire data
           if (isActive && activeEmpire) {

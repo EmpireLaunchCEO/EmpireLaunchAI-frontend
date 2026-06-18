@@ -98,10 +98,10 @@ export const empireService = {
       
       // Mock data for Business 2 and 3 if they don't exist yet
       if (id === '2') {
-        return { id: '2', name: 'Empire Two', description: 'Empire Niche: . Angle: . Mode: co-pilot' };
+        return { id: '2', name: 'Empire 2', description: 'Empire Niche: . Angle: . Mode: co-pilot' };
       }
       if (id === '3') {
-        return { id: '3', name: 'Empire Three', description: 'Empire Niche: . Angle: . Mode: co-pilot' };
+        return { id: '3', name: 'Empire 3', description: 'Empire Niche: . Angle: . Mode: co-pilot' };
       }
 
       const res = await fetch(`${API_URL}/api/agent/empire/${id}`, { headers: HEADERS });
