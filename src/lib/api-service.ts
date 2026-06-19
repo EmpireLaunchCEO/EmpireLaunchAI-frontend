@@ -58,6 +58,7 @@ export interface EmpirePulseState {
 export interface EmpireHealth {
   growthScore: number;
   revenue: number;
+  monthlyRevenue?: number;
   pendingDues: number;
   subscribers: number;
   platformBreakdown: {
@@ -522,22 +523,25 @@ export const analyticsService = {
     };
   },
 
-  async getEmpireHealth(): Promise<EmpireHealth> {
+  async getEmpireHealth(): Promise<EmpireHealth & { status?: string; logs?: string[] }> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/pulse`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/analytics/empire-health`, { headers: HEADERS });
       if (res.ok) {
          const data = await res.json();
          return {
+           status: data.status || 'stable',
            growthScore: data.progress || 0,
            revenue: data.health?.revenue || 0,
+           monthlyRevenue: data.health?.monthlyRevenue || 0,
            pendingDues: data.health?.pendingDues || 0,
            subscribers: data.health?.subscribers || 0,
-           platformBreakdown: data.health?.platformBreakdown || []
+           platformBreakdown: data.health?.platformBreakdown || [],
+           logs: data.logs || [],
          };
       }
     } catch (e) {}
 
-    return { growthScore: 0, revenue: 0, pendingDues: 0, subscribers: 0, platformBreakdown: [] };
+    return { growthScore: 0, revenue: 0, monthlyRevenue: 0, pendingDues: 0, subscribers: 0, platformBreakdown: [], status: 'stable', logs: [] };
   },
 
   async getRevenueTransactions(): Promise<RevenueTransaction[]> {
