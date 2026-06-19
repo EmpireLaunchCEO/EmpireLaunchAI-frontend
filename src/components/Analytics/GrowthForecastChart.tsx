@@ -2,22 +2,54 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Minus, Maximize2, ChevronRight, AlertCircle } from 'lucide-react';
+import { TrendingUp, Minus, Maximize2, AlertCircle, ArrowUp, ArrowDown, Minus as MinusIcon } from 'lucide-react';
 import { analyticsService, ForecastPoint } from '@/lib/api-service';
 import { cn } from '@/lib/utils';
+
+type StoplightStatus = 'green' | 'yellow' | 'red';
+
+function getStoplight(
+  firstRevenue: number,
+  lastRevenue: number,
+  trend: 'up' | 'down' | 'flat'
+): { status: StoplightStatus; label: string; description: string } {
+  const growth = ((lastRevenue - firstRevenue) / firstRevenue) * 100;
+
+  if (trend === 'up' && growth > 10) {
+    return { status: 'green', label: 'Healthy', description: 'Your business is growing well. Keep doing what you\'re doing.' };
+  }
+  if (trend === 'up' && growth > 0) {
+    return { status: 'green', label: 'Healthy', description: 'Moderate growth detected. Stay consistent.' };
+  }
+  if (trend === 'flat' || (growth >= -5 && growth <= 0)) {
+    return { status: 'yellow', label: 'Stable', description: 'Revenue is steady but not growing. Try a new strategy.' };
+  }
+  if (growth < -5 && growth >= -20) {
+    return { status: 'yellow', label: 'Needs Attention', description: 'Revenue is dipping. Check your recent content and engagement.' };
+  }
+  return { status: 'red', label: 'Needs Attention', description: 'Significant drop detected. Consider pausing to re-strategize.' };
+}
+
+function getTrend(firstRevenue: number, lastRevenue: number): 'up' | 'down' | 'flat' {
+  const diff = lastRevenue - firstRevenue;
+  if (diff > firstRevenue * 0.02) return 'up';
+  if (diff < -firstRevenue * 0.02) return 'down';
+  return 'flat';
+}
+
+const STOPLIGHT_STYLES: Record<StoplightStatus, { dot: string; bg: string; border: string; text: string; icon: any }> = {
+  green:  { dot: 'bg-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400', icon: ArrowUp },
+  yellow: { dot: 'bg-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20', text: 'text-amber-400', icon: MinusIcon },
+  red:    { dot: 'bg-red-500', bg: 'bg-red-500/10', border: 'border-red-500/20', text: 'text-red-400', icon: ArrowDown },
+};
 
 export function GrowthForecastChart() {
   const [forecast, setForecast] = useState<ForecastPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-    const saved = localStorage.getItem('minimized-growth-forecast');
-    if (saved === 'true') setIsMinimized(true);
-  }, []);
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,7 +60,7 @@ export function GrowthForecastChart() {
         const data = await analyticsService.getGrowthForecast();
         if (!cancelled) setForecast(data);
       } catch (e) {
-        if (!cancelled) setError('Failed to load forecast data');
+        if (!cancelled) setError('Could not load forecast');
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -37,246 +69,147 @@ export function GrowthForecastChart() {
     return () => { cancelled = true; };
   }, []);
 
-  const toggleMinimize = () => {
-    const newState = !isMinimized;
-    setIsMinimized(newState);
-    localStorage.setItem('minimized-growth-forecast', String(newState));
-  };
-
   if (!mounted) return null;
 
-  if (isMinimized) {
-    return (
-      <div className="bg-theme-surface rounded-[40px] p-6 border-2 border-theme shadow-xl flex items-center justify-between group transition-all">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-primary" />
-          </div>
-          <h2 className="text-sm font-black uppercase tracking-widest text-foreground">Growth Forecast</h2>
-        </div>
-        <button onClick={toggleMinimize} className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95">
-          <Maximize2 className="w-4 h-4" />
-        </button>
-      </div>
-    );
-  }
-
-  // Loading state
+  // Loading
   if (loading) {
     return (
       <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme shadow-2xl">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 animate-pulse" />
-            <div>
-              <div className="h-5 w-40 bg-slate-700 rounded animate-pulse" />
-              <div className="h-3 w-24 bg-slate-700 rounded mt-1 animate-pulse" />
-            </div>
-          </div>
-        </div>
+        <div className="h-5 w-40 bg-slate-700 rounded animate-pulse mb-6" />
         <div className="h-56 bg-slate-800/50 rounded-[32px] animate-pulse flex items-center justify-center">
-          <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Loading Forecast...</span>
+          <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Loading forecast...</span>
         </div>
       </div>
     );
   }
 
-  // Error state
+  // Error
   if (error) {
     return (
       <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme shadow-2xl">
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center gap-4 mb-4">
           <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center">
             <AlertCircle className="w-5 h-5 text-red-400" />
           </div>
           <div>
-            <h3 className="text-sm font-black text-foreground uppercase tracking-widest">Forecast Unavailable</h3>
-            <p className="text-[10px] text-slate-500 mt-1">Connect data sources to enable projections.</p>
+            <h3 className="text-sm font-black text-foreground">Forecast</h3>
+            <p className="text-xs text-slate-500">Connect platforms to see your growth forecast.</p>
           </div>
-        </div>
-        <div className="h-56 border-2 border-dashed border-white/5 rounded-[32px] flex items-center justify-center">
-          <p className="text-[10px] font-bold text-slate-600 italic">{error}</p>
         </div>
       </div>
     );
   }
 
-  // Empty state
+  // Empty
   if (forecast.length === 0) {
     return (
       <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme shadow-2xl">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-primary" />
-          </div>
+        <div className="flex items-center gap-4 mb-4">
+          <TrendingUp className="w-6 h-6 text-primary" />
           <div>
-            <h3 className="text-sm font-black text-foreground uppercase tracking-widest">Growth Forecast</h3>
-            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-1">30-Day Revenue Projection</p>
+            <h3 className="text-sm font-black text-foreground">Growth Forecast</h3>
+            <p className="text-xs text-slate-500">Not enough data yet. Keep selling!</p>
           </div>
-        </div>
-        <div className="h-56 border-2 border-dashed border-white/5 rounded-[32px] flex items-center justify-center">
-          <p className="text-[10px] font-bold text-slate-600 italic">Insufficient data to generate forecast. Sync your platforms.</p>
         </div>
       </div>
     );
   }
 
-  // Calculate chart dimensions
+  // Calculate plain English insights
+  const firstRevenue = forecast[0].forecastedRevenue;
+  const lastRevenue = forecast[forecast.length - 1].forecastedRevenue;
+  const trend = getTrend(firstRevenue, lastRevenue);
+  const stoplight = getStoplight(firstRevenue, lastRevenue, trend);
+  const TrendIcon = STOPLIGHT_STYLES[stoplight.status].icon;
+
+  // Simple chart
   const values = forecast.map(f => f.forecastedRevenue);
   const minVal = Math.min(...forecast.map(f => f.lowerBound));
   const maxVal = Math.max(...forecast.map(f => f.upperBound));
   const range = maxVal - minVal || 1;
-  const chartHeight = 180;
+  const chartHeight = 120;
   const chartWidth = 100;
   const pointSpacing = chartWidth / (forecast.length - 1);
 
-  // Build SVG path for forecast line
   const linePath = values.map((v, i) => {
     const x = i * pointSpacing;
     const y = chartHeight - ((v - minVal) / range) * chartHeight;
     return `${i === 0 ? 'M' : 'L'}${x},${y}`;
   }).join(' ');
 
-  // Build upper/lower bound area
-  const upperPath = forecast.map((f, i) => {
-    const x = i * pointSpacing;
-    const y = chartHeight - ((f.upperBound - minVal) / range) * chartHeight;
-    return `${i === 0 ? 'M' : 'L'}${x},${y}`;
-  }).join(' ');
+  const totalProjectedFormatted = `$${(lastRevenue / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-  const lowerPath = forecast.map((f, i) => {
-    const x = i * pointSpacing;
-    const y = chartHeight - ((f.lowerBound - minVal) / range) * chartHeight;
-    return `${i === 0 ? 'M' : 'L'}${x},${y}`;
-  }).join(' ');
-
-  const lastForecast = forecast[forecast.length - 1];
-  const totalProjected = lastForecast.forecastedRevenue;
-  const totalProjectedFormatted = `$${(totalProjected / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const plainEnglishMessage = trend === 'up'
+    ? `Sales trending up. You're on track to earn ${totalProjectedFormatted} in 30 days.`
+    : trend === 'down'
+    ? `Sales slightly down. Your 30-day projection is ${totalProjectedFormatted}.`
+    : `Sales are steady. Your 30-day projection is ${totalProjectedFormatted}.`;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme shadow-2xl relative overflow-hidden"
+      className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme shadow-2xl"
     >
-      {/* Minimize Toggle */}
-      <div className="absolute top-5 right-5 z-20">
-        <button onClick={toggleMinimize} className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95">
-          <Minus className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      {/* Stoplight Status — Big & Clear */}
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-primary" />
+          <div className={cn(
+            "w-14 h-14 rounded-2xl flex items-center justify-center border-2",
+            STOPLIGHT_STYLES[stoplight.status].bg,
+            STOPLIGHT_STYLES[stoplight.status].border
+          )}>
+            <TrendIcon className={cn("w-7 h-7", STOPLIGHT_STYLES[stoplight.status].text)} />
           </div>
           <div>
-            <h3 className="text-xl font-black text-foreground uppercase tracking-tight">Growth Forecast</h3>
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mt-1">30-Day Revenue Projection</p>
+            <div className="flex items-center gap-2">
+              <div className={cn("w-3 h-3 rounded-full", STOPLIGHT_STYLES[stoplight.status].dot)} />
+              <h3 className="text-2xl font-black text-foreground">{stoplight.label}</h3>
+            </div>
+            <p className="text-sm text-slate-400 mt-0.5">{stoplight.description}</p>
           </div>
-        </div>
-        <div className="flex items-center gap-2 bg-emerald-500/5 px-3 py-1.5 rounded-full border border-emerald-500/10">
-          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">ARIMA+ ML Model</span>
         </div>
       </div>
 
-      {/* Chart */}
-      <div className="w-full overflow-x-auto pb-4">
-        <svg viewBox={`0 0 ${chartWidth + 20} ${chartHeight + 40}`} className="w-full h-auto max-h-64" preserveAspectRatio="xMidYMid meet">
-          {/* Grid lines */}
-          {[0, 0.25, 0.5, 0.75, 1].map((pct) => {
-            const y = chartHeight - pct * chartHeight;
-            const val = Math.round(minVal + pct * range);
-            return (
-              <g key={pct}>
-                <line x1="0" y1={y} x2={chartWidth} y2={y} stroke="currentColor" className="text-white/5" strokeWidth="1" />
-                <text x={chartWidth + 4} y={y + 3} className="text-[6px] fill-slate-600 font-bold" textAnchor="start">
-                  ${(val / 100).toFixed(0)}
-                </text>
-              </g>
-            );
-          })}
-
-          {/* Confidence interval area */}
-          <path d={`${upperPath} ${lowerPath.split('').reverse().join('')}`} fill="url(#confidenceGrad)" opacity="0.15" />
-
-          {/* Upper bound line */}
-          <path d={upperPath} fill="none" stroke="currentColor" className="text-primary/20" strokeWidth="1" strokeDasharray="3,3" />
-
-          {/* Lower bound line */}
-          <path d={lowerPath} fill="none" stroke="currentColor" className="text-primary/20" strokeWidth="1" strokeDasharray="3,3" />
-
-          {/* Main forecast line */}
+      {/* Simple mini chart */}
+      <div className="bg-theme-background/30 rounded-[24px] p-5 border border-theme mb-6">
+        <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-32" preserveAspectRatio="xMidYMid meet">
           <motion.path
             d={linePath}
             fill="none"
-            stroke="url(#forecastGrad)"
-            strokeWidth="2.5"
+            stroke="currentColor"
+            className={cn(
+              stoplight.status === 'green' ? 'text-emerald-400' :
+              stoplight.status === 'yellow' ? 'text-amber-400' : 'text-red-400'
+            )}
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
           />
-
-          {/* Data points */}
-          {forecast.filter((_, i) => i % Math.max(1, Math.floor(forecast.length / 10)) === 0 || i === forecast.length - 1).map((f, i) => {
-            const v = f.forecastedRevenue;
-            const x = i * pointSpacing * (forecast.length / Math.max(1, Math.floor(forecast.length / 10)) > 1 ? 1 : 1);
-            // Recalculate actual x position
-            const actualIdx = forecast.indexOf(f);
-            const actualX = actualIdx * pointSpacing;
-            const actualY = chartHeight - ((v - minVal) / range) * chartHeight;
-            return (
-              <g key={f.date}>
-                <circle cx={actualX} cy={actualY} r="3" className="fill-primary" />
-                <text x={actualX} y={chartHeight + 16} className="text-[5px] fill-slate-500 font-bold" textAnchor="middle" transform={`rotate(-30, ${actualX}, ${chartHeight + 16})`}>
-                  {new Date(f.date + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                </text>
-              </g>
-            );
-          })}
-
-          <defs>
-            <linearGradient id="forecastGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#f59e0b" />
-              <stop offset="50%" stopColor="#10b981" />
-              <stop offset="100%" stopColor="#3b82f6" />
-            </linearGradient>
-            <linearGradient id="confidenceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#f59e0b" />
-              <stop offset="100%" stopColor="transparent" />
-            </linearGradient>
-          </defs>
         </svg>
       </div>
 
-      {/* Summary stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-        <div className="bg-theme-background/30 rounded-2xl p-5 border border-theme">
-          <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block mb-2">Projected End Revenue</span>
-          <span className="text-lg font-black text-foreground">{totalProjectedFormatted}</span>
-        </div>
-        <div className="bg-theme-background/30 rounded-2xl p-5 border border-theme">
-          <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block mb-2">Forecast Days</span>
-          <span className="text-lg font-black text-foreground">{forecast.length} days</span>
-        </div>
-        <div className="bg-theme-background/30 rounded-2xl p-5 border border-theme">
-          <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest block mb-2">Avg Daily Growth</span>
-          <span className="text-lg font-black text-emerald-400">+{(Math.pow(lastForecast.forecastedRevenue / forecast[0].forecastedRevenue, 1 / forecast.length) - 1) * 100 > 0 ? '+' : ''}{((Math.pow(lastForecast.forecastedRevenue / forecast[0].forecastedRevenue, 1 / forecast.length) - 1) * 100).toFixed(1)}%</span>
-        </div>
+      {/* Plain English insight */}
+      <div className="flex items-start gap-3 px-5 py-4 rounded-2xl bg-theme-background/40 border border-theme mb-4">
+        {trend === 'up' && <ArrowUp className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />}
+        {trend === 'down' && <ArrowDown className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />}
+        {trend === 'flat' && <MinusIcon className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />}
+        <p className="text-sm text-slate-300 leading-relaxed">{plainEnglishMessage}</p>
       </div>
 
-      {/* Confidence note */}
-      <div className="flex items-center gap-2 mt-6 px-4 py-3 rounded-2xl bg-white/5 border border-white/5">
-        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-        <p className="text-[8px] font-medium text-slate-500 italic">
-          Confidence interval (±10%) shown as shaded area. Based on ARIMA+ ML model using historical revenue data and platform engagement signals.
-        </p>
+      {/* Simple stat row */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-theme-background/30 rounded-2xl p-4 border border-theme">
+          <span className="text-[9px] font-bold text-slate-500 uppercase block mb-1">30-Day Projection</span>
+          <span className="text-lg font-black text-foreground">{totalProjectedFormatted}</span>
+        </div>
+        <div className="bg-theme-background/30 rounded-2xl p-4 border border-theme">
+          <span className="text-[9px] font-bold text-slate-500 uppercase block mb-1">Trend</span>
+          <span className="text-lg font-black text-foreground capitalize">{trend === 'up' ? 'Trending Up' : trend === 'down' ? 'Slightly Down' : 'Steady'}</span>
+        </div>
       </div>
     </motion.div>
   );
