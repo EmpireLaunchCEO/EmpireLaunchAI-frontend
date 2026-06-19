@@ -4,18 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
-  Wallet, 
+  ClipboardCheck, 
   Film, 
   Settings,
-  BrainCircuit
+  Stars
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Empire", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Intel", href: "/empire-center", icon: BrainCircuit },
-  { label: "Finances", href: "/analytics", icon: Wallet },
+  { label: "Home", href: "/dashboard", icon: LayoutDashboard },
+  { label: "OB-Operations Base", href: "/empire-center", icon: ClipboardCheck },
   { label: "Studio", href: "/studio", icon: Film },
+  { label: "LC-Link Center", href: "/link-center", icon: Stars },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 
