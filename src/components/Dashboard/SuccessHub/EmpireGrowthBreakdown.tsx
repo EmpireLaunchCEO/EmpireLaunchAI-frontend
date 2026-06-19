@@ -25,7 +25,7 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
       weight: '50%',
       icon: TrendingUp,
       color: 'text-emerald-500',
-      bgColor: 'bg-emerald-50'
+      bgColor: 'bg-emerald-500/10'
     },
     {
       label: 'Engagement Pulse',
@@ -33,7 +33,7 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
       weight: '30%',
       icon: BarChart3,
       color: 'text-blue-500',
-      bgColor: 'bg-blue-50'
+      bgColor: 'bg-blue-500/10'
     },
     {
       label: 'Operation Consistency',
@@ -41,7 +41,7 @@ export const EmpireGrowthBreakdown = ({ growthScore, healthData }: EmpireGrowthB
       weight: '20%',
       icon: Zap,
       color: 'text-purple-500',
-      bgColor: 'bg-purple-50'
+      bgColor: 'bg-purple-500/10'
     },
   ];
 

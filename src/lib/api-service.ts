@@ -489,7 +489,25 @@ export const paymentService = {
     return res.json();
   },
 };
-  export const analyticsService = {
+export interface ForecastPoint {
+  date: string;
+  forecastedRevenue: number;
+  lowerBound: number;
+  upperBound: number;
+}
+
+export interface OpportunityCard {
+  id: string;
+  type: 'optimization' | 'growth' | 'expansion';
+  title: string;
+  description: string;
+  impact: 'high' | 'medium' | 'low';
+  metric: string;
+  cta: string;
+  payload: Record<string, any>;
+}
+
+export const analyticsService = {
   async getEmpirePulse(): Promise<EmpirePulseState> {
     try {
       const res = await fetch(`${API_URL}/api/analytics/pulse`, { headers: HEADERS });
@@ -585,7 +603,29 @@ export const paymentService = {
     return [];
   },
 
-  async getOpportunityCards() {
+  async getGrowthForecast(): Promise<ForecastPoint[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/analytics/forecast`, { headers: HEADERS });
+      if (res.ok) {
+        const data = await res.json();
+        return data.forecast || [];
+      }
+    } catch (e) {
+      console.error('Failed to fetch growth forecast', e);
+    }
+    return [];
+  },
+
+  async getOpportunityCards(): Promise<OpportunityCard[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/analytics/opportunities`, { headers: HEADERS });
+      if (res.ok) {
+        const data = await res.json();
+        return data.cards || [];
+      }
+    } catch (e) {
+      console.error('Failed to fetch opportunity cards', e);
+    }
     return [];
   },
 
