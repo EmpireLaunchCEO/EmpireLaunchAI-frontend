@@ -30,7 +30,7 @@ import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 
 const availablePlatforms = [
   { id: 'gmail', name: 'Gmail', icon: Mail, color: 'text-red-500', bg: 'bg-red-50' },
-  { id: 'imap', name: 'Universal Email', icon: Mail, color: 'text-slate-600', bg: 'bg-theme-background' },
+  { id: 'imap', name: 'Empire Email', icon: Mail, color: 'text-slate-600', bg: 'bg-theme-background' },
   { id: 'etsy', name: 'Etsy', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
   { id: 'tiktok', name: 'TikTok', icon: Video, color: 'text-pink-600', bg: 'bg-pink-50' },
   { id: 'shopify', name: 'Shopify', icon: Globe, color: 'text-green-600', bg: 'bg-green-50' },
@@ -160,7 +160,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   };
 
   const handleAuth = () => {
-    // Universal OAuth via popup
+    // Empire OAuth via popup
     const oauthPlatforms: Record<string, { endpoint: string; sessionKey: string; vaultKey: string; label: string }> = {
       etsy: { endpoint: 'etsy', sessionKey: 'etsy_oauth_session_id', vaultKey: 'empire_vault_etsy', label: 'Etsy' },
       tiktok: { endpoint: 'tiktok', sessionKey: 'tiktok_oauth_session_id', vaultKey: 'empire_vault_tiktok', label: 'TikTok' },

@@ -22,7 +22,7 @@ import { analyticsService, empireService } from '@/lib/api-service';
 const navItems = [
   { name: 'HOME', href: '/dashboard', icon: Home },
   { name: 'OB', href: '/empire-center', icon: ClipboardCheck },
-  { name: 'Studio', href: '/studio', icon: Video },
+  { name: 'EMPIRE STUDIO', href: '/studio', icon: Video },
   { name: 'LC', href: '/link-center', icon: Stars },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];

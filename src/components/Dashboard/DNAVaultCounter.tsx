@@ -116,7 +116,7 @@ export function DNAVaultCounter() {
         <div className="hidden sm:flex flex-col items-end gap-2 shrink-0">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20">
             <Database className="w-3 h-3 text-cyan-400" />
-            <span className="text-[8px] font-black uppercase tracking-widest text-cyan-400">Universal Vault</span>
+            <span className="text-[8px] font-black uppercase tracking-widest text-cyan-400">Empire Vault</span>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700">
             <Cpu className="w-3 h-3 text-slate-400" />

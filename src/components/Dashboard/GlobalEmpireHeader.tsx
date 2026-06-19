@@ -20,7 +20,7 @@ export function GlobalEmpireHeader() {
     }
     switch (pathname) {
       case '/empire-center': return 'Operation Base';
-      case '/studio': return 'Empire Studio';
+      case '/studio': return 'EMPIRE STUDIO';
       case '/link-center': return 'Neural Sync';
       case '/review': return 'Control Gates';
       case '/analytics': return 'Empire Ledger';

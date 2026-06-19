@@ -45,7 +45,7 @@ import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { EmpireAIChatBox } from '@/components/Dashboard/EmpireAIChatBox';
 
 import { NicheCalibrationBox } from '@/components/Dashboard/SuccessHub/NicheCalibrationBox';
-import { GlobalDnaPoolPanel, AutoPilotStatusBadge } from '@/components/Dashboard/GlobalDnaPoolPanel';
+import { AutoPilotStatusBadge } from '@/components/Dashboard/GlobalDnaPoolPanel';
 import { NeuralDispatchCenter } from '@/components/Dashboard/NeuralDispatchCenter';
 
 export default function EmpireCenterPage() {
@@ -164,10 +164,6 @@ export default function EmpireCenterPage() {
 
                 {/* Sidebar Context */}
                 <div className="space-y-8">
-                  <div className="space-y-4">
-                    <GlobalDnaPoolPanel />
-                  </div>
-
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -180,19 +176,19 @@ export default function EmpireCenterPage() {
                         {isPlatformConnected('TikTok') && (
                           <li className="flex items-start gap-3">
                             <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
-                            <p className="text-xs font-medium text-indigo-100">Post 'Product Showcase' to TikTok (Pending Approval)</p>
+                            <p className="text-xs font-medium text-indigo-100">Post 'Product Showcase' to TikTok (Scheduled)</p>
                           </li>
                         )}
                         {isPlatformConnected('Gmail') && (
                           <li className="flex items-start gap-3">
                             <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
-                            <p className="text-xs font-medium text-indigo-100">Finalize 'Email Sequence' for new subscribers</p>
+                            <p className="text-xs font-medium text-indigo-100">AI 'Email Sequence' firing for new subscribers</p>
                           </li>
                         )}
                         {!isPlatformConnected('TikTok') && !isPlatformConnected('Gmail') && (
                           <li className="flex items-start gap-3">
                             <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0" />
-                            <p className="text-xs font-medium text-indigo-100">Scanning connected platforms for growth opportunities...</p>
+                            <p className="text-xs font-medium text-indigo-100">Autonomous growth cycles active...</p>
                           </li>
                         )}
                       </ul>

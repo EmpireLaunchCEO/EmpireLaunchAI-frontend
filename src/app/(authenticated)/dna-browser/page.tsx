@@ -60,7 +60,7 @@ export default function DnaBrowserPage() {
       {/* Version Verification */}
       <div className="flex justify-center pb-20 pt-12">
         <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
-          Global DNA Browser v1.0 · Powered by Universal Vault
+          Global DNA Browser v1.0 · Powered by Empire Vault
         </span>
       </div>
     </div>

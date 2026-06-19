@@ -27,24 +27,11 @@ import { AIRenderLog, generateMockRenderLogs, RenderLogEntry } from '@/component
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 
-// ─── Mock Harvest Activity ────────────────────────────────────────────────
-
-const vaultActivity = [
-  { id: 1, action: 'Harvested', source: 'Etsy', niche: 'Digital Zen Planners', time: '2 min ago', confidence: 94 },
-  { id: 2, action: 'Extracted', source: 'TikTok', niche: 'Morning Routine Aesthetic', time: '15 min ago', confidence: 88 },
-  { id: 3, action: 'Analyzed', source: 'Pinterest', niche: 'Sage Green Office Trends', time: '1 hour ago', confidence: 92 },
-  { id: 4, action: 'Vaulted', source: 'Instagram', niche: 'Boho Luxe Color Palette', time: '2 hours ago', confidence: 96 },
-  { id: 5, action: 'Synthesized', source: 'AI', niche: 'Avatar: Casual Lifestyle DNA', time: '3 hours ago', confidence: 91 },
-  { id: 6, action: 'Vaulted', source: 'AI', niche: 'Animal: Pet Portrait Fur DNA', time: '4 hours ago', confidence: 87 },
-];
-
-import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 import { BarChart3, PenSquare, Lightbulb, SendHorizonal } from 'lucide-react';
 
 export default function StudioPage() {
-  const [activeTab, setActiveTab] = useState<'gallery' | 'cinema' | 'activity' | 'radar'>('gallery');
+  const [activeTab, setActiveTab] = useState<'gallery' | 'cinema'>('gallery');
   const [cinemaActiveSlot, setCinemaActiveSlot] = useState<'twin' | 'lab' | 'logs'>('twin');
-  const [harvestActivity, setHarvestActivity] = useState(vaultActivity);
   const [isDemoMode, setIsDemoMode] = useState(false);
   const { activeEmpire: empireData, registerRefreshHandler } = useEmpire();
 
@@ -171,12 +158,7 @@ export default function StudioPage() {
 
   const startDemo = () => {
     setIsDemoMode(true);
-    // Add demo items to harvest activity
-    const demoItems = [
-      { id: Date.now() + 1, action: 'Synthesized', source: 'DEMO', niche: 'Minimalist Tech Aesthetic', time: 'Just now', confidence: 99 },
-      { id: Date.now() + 2, action: 'Vaulted', source: 'DEMO', niche: 'Holographic Gradient Pack', time: 'Just now', confidence: 98 },
-    ];
-    setHarvestActivity([...demoItems, ...harvestActivity]);
+    // Demo mode logic without harvestActivity
   };
 
   // Custom design idea input state
@@ -219,10 +201,8 @@ export default function StudioPage() {
           {/* Tab Navigation */}
           <div className="flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-[calc(100%-2rem)] overflow-x-auto no-scrollbar gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
             {[
-              { id: 'gallery', label: 'Universal Studio', icon: Palette },
+              { id: 'gallery', label: 'EMPIRE STUDIO', icon: Palette },
               { id: 'cinema', label: 'Cinema Hub', icon: Video },
-              { id: 'radar', label: 'Social Radar', icon: BarChart3 },
-              { id: 'activity', label: 'DNA Feed', icon: Database },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -260,7 +240,7 @@ export default function StudioPage() {
                     </p>
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/20 text-[8px] font-black uppercase tracking-widest text-cyan-400">
                       <Database className="w-2.5 h-2.5" />
-                      Universal Vault Injected — Infinite Synthesis Active
+                      EMPIRE VAULT Injected — Infinite Synthesis Active
                       <Shield className="w-2.5 h-2.5" />
                     </div>
                     
@@ -532,97 +512,6 @@ export default function StudioPage() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </motion.div>
-            )}
-
-            {activeTab === 'radar' && (
-              <motion.div
-                key="radar"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-8"
-              >
-                <SocialMediaRadar />
-              </motion.div>
-            )}
-
-            {activeTab === 'activity' && (
-              <motion.div
-                key="activity"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-6"
-              >
-                {/* Harvest Activity Feed */}
-                <div className="bg-theme-surface border-2 border-theme rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
-                        <Database className="w-5 h-5 text-cyan-400" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-black text-foreground tracking-tight">Recently Vaulted DNA</h3>
-                        <p className="text-xs text-muted-foreground font-medium">Automatic harvest from market intelligence</p>
-                      </div>
-                    </div>
-                    <span className="text-[9px] font-black text-primary uppercase tracking-widest bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
-                      {harvestActivity.length} Strands
-                    </span>
-                  </div>
-
-                  <div className="space-y-3">
-                    {harvestActivity.map((item) => (
-                      <div key={item.id} className="p-4 md:p-5 bg-theme-background rounded-[24px] border border-theme hover:border-primary/30 transition-all group">
-                        <div className="flex items-center justify-between gap-4">
-                          <div className="flex items-center gap-4">
-                            <div className={cn(
-                              "w-10 h-10 rounded-xl flex items-center justify-center text-[9px] font-black",
-                              item.action === 'Harvested' ? "bg-emerald-500/10 text-emerald-500" :
-                              item.action === 'Extracted' ? "bg-blue-500/10 text-blue-500" :
-                              item.action === 'Analyzed' ? "bg-amber-500/10 text-amber-500" :
-                              item.action === 'Vaulted' ? "bg-cyan-500/10 text-cyan-400" :
-                              "bg-primary/10 text-primary"
-                            )}>
-                              <Zap className="w-4 h-4" />
-                            </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="text-[9px] font-black uppercase tracking-widest text-cyan-400">AI-Synthesized</span>
-                                <span className="text-[9px] font-bold text-muted-foreground">·</span>
-                                <span className="text-[9px] font-bold text-muted-foreground">{item.action} from {item.source}</span>
-                              </div>
-                              <p className="text-sm font-bold text-foreground mt-0.5">{item.niche}</p>
-                            </div>
-                          </div>
-                          <div className="text-right flex items-center gap-4">
-                            <div className="hidden sm:block">
-                              <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Confidence</p>
-                              <p className="text-sm font-black text-primary">{item.confidence}%</p>
-                            </div>
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/20">
-                              <Database className="w-2.5 h-2.5 text-cyan-400" />
-                              <span className="text-[7px] font-black uppercase tracking-widest text-cyan-400">Vaulted</span>
-                            </div>
-                            <span className="text-[10px] font-bold text-slate-500">{item.time}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* AI Harvest Summary */}
-                  <div className="p-4 md:p-5 bg-slate-900 rounded-[24px] md:rounded-[28px] text-white space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Bot className="w-4 h-4 text-primary" />
-                      <span className="text-[9px] font-black uppercase tracking-widest text-primary">Harvest Intelligence</span>
-                    </div>
-                    <p className="text-sm text-slate-300 font-medium italic leading-relaxed">
-                      "I'm continuously scanning Etsy, TikTok, Pinterest, and Instagram for emerging design patterns. Each strand is extracted, analyzed, and synthesized into unique visual DNA — stored in your Vault for instant creative execution. No copies, no clones — just pure market intelligence converted into original design."
-                    </p>
-                  </div>
-                </div>
               </motion.div>
             )}
           </AnimatePresence>
