@@ -20,6 +20,8 @@ import { cn } from '@/lib/utils';
 import { InspirationGallery, SuggestionBubbles } from '@/components/Dashboard/InspirationGallery';
 import { DNAVaultCounter } from '@/components/Dashboard/DNAVaultCounter';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
+import { EmpireAIChatBox } from '@/components/Dashboard/EmpireAIChatBox';
+
 import { FileUploadDropZone, UploadState } from '@/components/Dashboard/FileUploadDropZone';
 import { AIRenderLog, generateMockRenderLogs, RenderLogEntry } from '@/components/Dashboard/AIRenderLog';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
@@ -624,6 +626,10 @@ export default function StudioPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <EmpireAIChatBox className="max-w-6xl mx-auto" />
+          </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-12">
             <FeedbackBox />

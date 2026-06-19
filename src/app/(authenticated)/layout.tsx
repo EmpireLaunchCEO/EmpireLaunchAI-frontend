@@ -6,7 +6,6 @@ import { SubscriptionGuard } from "@/components/SubscriptionGuard";
 import { OnboardingTour } from "@/components/Dashboard/OnboardingTour";
 import { NotificationBell } from "@/components/Dashboard/NotificationBell";
 import { GlobalEmpireHeader } from "@/components/Dashboard/GlobalEmpireHeader";
-import { GeminiBrainOverlay } from "@/components/Dashboard/GeminiBrainOverlay";
 import { SlotGuard } from "@/components/SlotGuard";
 import { Suspense } from "react";
 import { PullToRefresh } from "@/components/Dashboard/PullToRefresh";
@@ -49,8 +48,6 @@ export default function AuthenticatedLayout({
         <div className="fixed top-4 right-4 z-[1000] lg:hidden flex items-center gap-2 pointer-events-auto">
           <NotificationBell id="notification-bell-mobile" />
         </div>
-
-        <GeminiBrainOverlay />
 
         {/* TOUR - ONLY OVER CONTENT */}
         <Suspense fallback={null}>

@@ -32,6 +32,7 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 import { SupportHub } from '@/components/Settings/SupportHub';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
+import { EmpireAIChatBox } from '@/components/Dashboard/EmpireAIChatBox';
 import { SubscriptionSuccessShareBox } from '@/components/Dashboard/SubscriptionSuccessShareBox';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
@@ -517,6 +518,10 @@ function SettingsContent() {
               )}
             </main>
           </div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <EmpireAIChatBox className="max-w-6xl mx-auto" />
+          </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <FeedbackBox />

@@ -19,6 +19,7 @@ import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { DisclaimerAgreementBox } from '@/components/Dashboard/DisclaimerAgreementBox';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
+import { EmpireAIChatBox } from '@/components/Dashboard/EmpireAIChatBox';
 
 export default function Dashboard() {
   const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler } = useEmpire();
@@ -188,6 +189,10 @@ export default function Dashboard() {
                       <FeedbackBox />
                     </motion.div>
                   </div>
+
+                  <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                    <EmpireAIChatBox className="max-w-6xl mx-auto" />
+                  </motion.div>
 
                   {/* Version Verification */}
                   <div className="flex justify-center pb-20">

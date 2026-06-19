@@ -42,6 +42,7 @@ import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 import { OmniApprovalHub as PendingApprovals } from '@/components/OmniApprovalHub';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
+import { EmpireAIChatBox } from '@/components/Dashboard/EmpireAIChatBox';
 
 import { NicheCalibrationBox } from '@/components/Dashboard/SuccessHub/NicheCalibrationBox';
 import { GlobalDnaPoolPanel, AutoPilotStatusBadge } from '@/components/Dashboard/GlobalDnaPoolPanel';
@@ -189,6 +190,10 @@ export default function EmpireCenterPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <EmpireAIChatBox className="max-w-6xl mx-auto" />
+          </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <FeedbackBox />
