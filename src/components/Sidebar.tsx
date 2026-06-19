@@ -24,8 +24,6 @@ const navItems = [
   { name: 'OB-Operations Base', href: '/empire-center', icon: ClipboardCheck },
   { name: 'Studio', href: '/studio', icon: Video },
   { name: 'LC-Link Center', href: '/link-center', icon: Stars },
-  { name: 'Control Gates', href: '/review', icon: ShieldCheck },
-  { name: 'Empire Ledger', href: '/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 

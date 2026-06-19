@@ -21,10 +21,18 @@ const navItems = [
 
 export function MobileNav() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleNavigate = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log(`[MobileNav] Force navigating to: ${href}`);
+    router.push(href);
+  };
 
   return (
     <div 
-      className="fixed bottom-0 left-0 right-0 w-full bg-slate-900 border-t border-white/20 flex justify-around items-stretch z-[9999999] pointer-events-auto shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"
+      className="fixed bottom-0 left-0 right-0 w-full bg-slate-900 border-t border-white/20 flex justify-around items-stretch z-[10000000] pointer-events-auto shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"
       style={{ 
         height: 'calc(72px + env(safe-area-inset-bottom))',
         paddingBottom: 'env(safe-area-inset-bottom)',
@@ -38,11 +46,12 @@ export function MobileNav() {
             key={item.href}
             href={item.href}
             id={`nav-${item.label.toLowerCase()}`}
+            onClick={(e) => handleNavigate(e, item.href)}
             className={cn(
               "flex-1 flex flex-col items-center justify-center gap-1 relative transition-all active:scale-95 touch-manipulation",
               isActive ? "text-primary" : "text-white/40"
             )}
-            style={{ pointerEvents: 'auto' }}
+            style={{ pointerEvents: 'auto', WebkitTapHighlightColor: 'transparent' }}
           >
             <item.icon className={cn("w-6 h-6", isActive && "drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]")} />
             <span className="text-[10px] font-black uppercase tracking-tighter">
