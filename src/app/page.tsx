@@ -39,8 +39,10 @@ function LandingPageContent() {
   useEffect(() => {
     // Only redirect if NOT in a forced preview state
     const isForcedPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
+    const isAlreadyOnDashboard = typeof window !== 'undefined' && window.location.pathname === '/dashboard';
     
-    if (isMounted && isInitialized && isOnboarded && isPaid && !isForcedPreview) {
+    if (isMounted && isInitialized && isOnboarded && isPaid && !isForcedPreview && !isAlreadyOnDashboard) {
+      // Use replace to avoid polluting history with multiple landing page entries
       router.replace('/dashboard');
     }
   }, [isInitialized, isOnboarded, isPaid, isMounted, router]);

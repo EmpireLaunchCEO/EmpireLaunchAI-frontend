@@ -31,7 +31,7 @@ export function DisclaimerAgreementBox() {
       animate={{ opacity: 1, y: 0 }}
       className="max-w-6xl mx-auto mb-12"
     >
-      <div className="relative p-8 md:p-12 bg-slate-900 border-2 !border-white/20 rounded-[48px] overflow-hidden shadow-2xl">
+      <div className="relative p-8 md:p-12 bg-slate-900 border-2 border-theme rounded-[48px] overflow-hidden shadow-2xl">
         {/* Background Accents */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-[100px] -ml-32 -mb-32 pointer-events-none" />

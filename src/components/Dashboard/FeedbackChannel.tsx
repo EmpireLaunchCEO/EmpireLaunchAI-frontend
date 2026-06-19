@@ -55,7 +55,7 @@ export function FeedbackBox({ className }: FeedbackBoxProps) {
 
   return (
     <div className={cn(
-      "bg-theme-surface border-2 !border-white/20 rounded-[32px] p-6 shadow-lg overflow-hidden relative group transition-all",
+      "bg-theme-surface border-2 border-theme rounded-[32px] p-6 shadow-lg overflow-hidden relative group transition-all",
       className
     )}>
       {/* Name at the Top */}

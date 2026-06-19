@@ -31,13 +31,12 @@ export default function RootLayout({
         <style>{`
           html, body { background-color: #0a0519 !important; }
         `}</style>
-        <link rel="canonical" href="https://empire-launch-ai-frontend.vercel.app" />
-        <link rel="manifest" href="/manifest.json?v=1020" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon-v1020.png" />
-        <link rel="icon" href="/favicon.ico?v=1020" />
-        <link rel="apple-touch-startup-image" href="/apple-touch-icon-v1020.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192-v1020.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512-v1020.png" />
+        <link rel="manifest" href="/manifest.json?v=1024" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon-v1024.png" />
+        <link rel="icon" href="/favicon.ico?v=1024" />
+        <link rel="apple-touch-startup-image" href="/apple-touch-icon-v1024.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192-v1024.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512-v1024.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -47,16 +46,18 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // SERVICE WORKER TERMINATOR - Prevent cached service workers
-                if ('serviceWorker' in navigator) {
+                // SERVICE WORKER TERMINATOR - Prevent cached service workers from conflicting with new builds
+                // Only run once per session to maintain stability
+                if ('serviceWorker' in navigator && !sessionStorage.getItem('empire_sw_cleaned')) {
                   navigator.serviceWorker.getRegistrations().then(function(registrations) {
                     for(let registration of registrations) {
                       registration.unregister();
                     }
+                    sessionStorage.setItem('empire_sw_cleaned', 'true');
                   });
                 }
 
-                // RELOAD LOOP GUARD
+                // RELOAD LOOP GUARD - Prevents rapid refresh cycles
                 try {
                   var now = Date.now();
                   var lastReload = parseInt(localStorage.getItem('last_empire_reload') || '0');
@@ -72,8 +73,11 @@ export default function RootLayout({
                   localStorage.setItem('empire_reload_count', reloadCount.toString());
 
                   if (reloadCount > 5) {
-                    console.log('Reload activity detected, maintaining stability.');
-                    return;
+                    console.warn('Excessive reload activity detected. Maintaining last stable state.');
+                    // If we're looping, stop the redirect behavior
+                    window.EMPIRE_LOOP_PROTECTION = true;
+                    // Reset count after a delay to allow future valid reloads
+                    setTimeout(function() { localStorage.setItem('empire_reload_count', '0'); }, 10000);
                   }
                 } catch(e) {}
               })();

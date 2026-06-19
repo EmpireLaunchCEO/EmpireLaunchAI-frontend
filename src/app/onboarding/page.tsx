@@ -119,11 +119,12 @@ function OnboardingContent() {
     setIsMounted(true);
     if (typeof window !== 'undefined') {
       const stepParam = searchParams.get('step');
+      const savedStep = localStorage.getItem('onboarding_step');
+      
       if (stepParam) {
         setCurrentStep(parseInt(stepParam));
-      } else {
-        const savedStep = localStorage.getItem('onboarding_step');
-        if (savedStep) setCurrentStep(parseInt(savedStep));
+      } else if (savedStep) {
+        setCurrentStep(parseInt(savedStep));
       }
       
       const savedUserId = localStorage.getItem('empire_userId');
@@ -144,6 +145,16 @@ function OnboardingContent() {
     if (isMounted && typeof window !== 'undefined') {
       localStorage.setItem('onboarding_step', currentStep.toString());
       if (userId) localStorage.setItem('empire_userId', userId);
+      
+      // Update URL silently without adding history entries if possible, or just keep it sync'd
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('step') !== currentStep.toString()) {
+        const step = currentStep.toString();
+        const mode = url.searchParams.get('mode');
+        const newUrl = `${window.location.pathname}?step=${step}${mode ? `&mode=${mode}` : ''}`;
+        window.history.replaceState({}, '', newUrl);
+      }
+      
       window.scrollTo(0, 0);
     }
   }, [currentStep, isMounted, userId]);

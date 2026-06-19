@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { API_URL } from '@/lib/config';
 import { empireService } from '@/lib/api-service';
 
@@ -158,17 +158,17 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     };
   };
 
-  const registerRefreshHandler = (handler: () => Promise<void>) => {
+  const registerRefreshHandler = useCallback((handler: () => Promise<void>) => {
     setRefreshHandlers(prev => [...prev, handler]);
     return () => {
       setRefreshHandlers(prev => prev.filter(h => h !== handler));
     };
-  };
+  }, []);
 
-  const triggerRefresh = async () => {
+  const triggerRefresh = useCallback(async () => {
     if (refreshHandlers.length === 0) return;
     await Promise.all(refreshHandlers.map(handler => handler()));
-  };
+  }, [refreshHandlers]);
 
   // Scoped Computed Values
   const connectedPlatforms = platformsByEmpire[activeEmpireId] || [];
@@ -460,31 +460,27 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         const localProtocol = localStorage.getItem('isProtocolAccepted');
         if (localProtocol === 'true') setIsProtocolAccepted(true);
 
+        const localActiveId = localStorage.getItem('activeEmpireId') || '1';
+        setActiveEmpireId(localActiveId);
+
         // EMERGENCY BYPASS: Only if the user has manually entered the Master ID or it's saved from a previous session
         const storedUserId = localStorage.getItem('empire_userId');
         if (storedUserId === MASTER_USER_ID) {
              console.log('[Security] Verified Owner Session Active.');
              setIsAdmin(true);
              setIsPaidState(true);
-             setIsProtocolAccepted(true); // Owner has already agreed to their own business model
+             setIsProtocolAccepted(true);
              setSlotStatus({ 0: true, 1: true, 2: true });
              
-             // Restore last active slot if it exists, otherwise default to 1
-             const lastActiveId = localStorage.getItem('activeEmpireId') || '1';
-             setActiveEmpireId(lastActiveId);
-
              // HARD-INJECTION OF OWNER DATA based on slot id
-             const ownerBranding = getOwnerBrandingForId(lastActiveId);
+             const ownerBranding = getOwnerBrandingForId(localActiveId);
              setActiveEmpire(ownerBranding);
              
-             // WE REMOVE THE PRE-FILLED PLATFORMS so the owner can test the empty state.
-             // Only if they haven't manually linked anything yet.
              const savedPlatforms = localStorage.getItem('platformsByEmpire');
              if (!savedPlatforms) {
                setPlatformsByEmpire({ '1': [] });
                setLinkingCompleteByEmpire({ '1': false });
              }
-
         }
 
         // Auto-detect Owner Admin Status
@@ -498,18 +494,18 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         if (settingsRes && settingsRes.ok) {
            const data = await settingsRes.json();
            
-        // Apply standard settings from backend
-        if (data.isPaid) setIsPaidState(true);
-        if (data.theme) setTheme(data.theme);
-        if (data.aiMode) setAiModeState(data.aiMode);
-        if (data.email) setUserEmail(data.email);
-        if (data.protocolAccepted) setIsProtocolAccepted(true);
+           // Apply standard settings from backend
+           if (data.isPaid) setIsPaidState(true);
+           if (data.theme) setTheme(data.theme);
+           if (data.aiMode) setAiModeState(data.aiMode);
+           if (data.email) setUserEmail(data.email);
+           if (data.protocolAccepted) setIsProtocolAccepted(true);
 
-        const localSpending = localStorage.getItem('spendingPermissions');
-        if (localSpending) setSpendingPermissions(JSON.parse(localSpending));
-        
-        const localPlatformPerms = localStorage.getItem('platformPermissions');
-        if (localPlatformPerms) setPlatformPermissions(JSON.parse(localPlatformPerms));
+           const localSpending = localStorage.getItem('spendingPermissions');
+           if (localSpending) setSpendingPermissions(JSON.parse(localSpending));
+           
+           const localPlatformPerms = localStorage.getItem('platformPermissions');
+           if (localPlatformPerms) setPlatformPermissions(JSON.parse(localPlatformPerms));
 
            // If the email matches the owner, grant full slot access automatically
            if (data.email === OWNER_EMAIL || data.userId === MASTER_USER_ID) {
@@ -519,18 +515,14 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              setSlotStatus({ 0: true, 1: true, 2: true });
              
              // Sync state maps for the active empire
-             const newOnboarded = { ...onboardedByEmpire, [activeEmpireId]: true };
-             const newLinking = { ...linkingCompleteByEmpire, [activeEmpireId]: true };
+             const newOnboarded = { ...onboardedByEmpire, [localActiveId]: true };
+             const newLinking = { ...linkingCompleteByEmpire, [localActiveId]: true };
              
              setOnboardedByEmpire(newOnboarded);
              setLinkingCompleteByEmpire(newLinking);
              
-             // PERSIST THESE TO LOCAL STORAGE IMMEDIATELY
-             localStorage.setItem('onboardedByEmpire', JSON.stringify(newOnboarded));
-             localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(newLinking));
-             
              // FORCE THE BRANDING
-             const ownerBranding = getOwnerBrandingForId(activeEmpireId);
+             const ownerBranding = getOwnerBrandingForId(localActiveId);
              setActiveEmpire(ownerBranding);
              
              // Persist locally to avoid flickers on refresh
@@ -541,32 +533,22 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
            } else {
              // Standard user sync
              if (data.onboardingComplete) {
-               const nextOnboarded = { ...onboardedByEmpire, [activeEmpireId]: true };
+               const nextOnboarded = { ...onboardedByEmpire, [localActiveId]: true };
                setOnboardedByEmpire(nextOnboarded);
                localStorage.setItem('onboardedByEmpire', JSON.stringify(nextOnboarded));
              }
              if (data.linkingComplete) {
-               const nextLinking = { ...linkingCompleteByEmpire, [activeEmpireId]: true };
+               const nextLinking = { ...linkingCompleteByEmpire, [localActiveId]: true };
                setLinkingCompleteByEmpire(nextLinking);
                localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(nextLinking));
              }
            }
-        } else {
-            // BACKEND FAILED OR SLOW - Check if we should bypass anyway for the owner
-            const localIsPaid = localStorage.getItem('isPaid');
-            if (localIsPaid === 'true') {
-                setIsPaidState(true);
-            }
         }
 
-        // Only fetch and set the latest empire if we don't have an activeEmpireId saved already!
-        const savedActiveEmpireId = localStorage.getItem('activeEmpireId');
-        if (savedActiveEmpireId) {
-          const empire = await empireService.getEmpire(savedActiveEmpireId).catch(() => null);
-          if (empire) {
-            setActiveEmpireId(savedActiveEmpireId);
-            setActiveEmpire(empire);
-          }
+        // Fetch empire data
+        const empire = await empireService.getEmpire(localActiveId).catch(() => null);
+        if (empire) {
+          setActiveEmpire(empire);
         } else {
           const goal = await empireService.getLatestEmpire().catch(() => null);
           if (goal && goal.id) {

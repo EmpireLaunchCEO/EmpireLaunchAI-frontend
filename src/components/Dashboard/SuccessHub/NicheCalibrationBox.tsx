@@ -47,7 +47,7 @@ export const NicheCalibrationBox = ({ niche, angle }: NicheBoxProps) => {
   }
 
   return (
-    <div className="bg-theme-surface border border-theme rounded-[32px] p-8 shadow-lg space-y-6 relative">
+    <div className="bg-theme-surface border-2 border-theme rounded-[32px] p-8 shadow-lg space-y-6 relative">
       {/* Minimize Toggle */}
       <div className="absolute top-4 right-5 z-20">
         <button 

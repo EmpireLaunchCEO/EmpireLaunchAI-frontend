@@ -75,7 +75,7 @@ export const GrowthTracker = ({
   const percentage = Math.max(0, Math.min(100, progress !== undefined ? progress : Math.round(((monthlyEarnings || 0) / (localTarget || 1)) * 100))) || 0;
 
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 border-2 !border-white/20 shadow-2xl relative overflow-hidden group">
+    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme shadow-2xl relative overflow-hidden group">
       {/* Name at the Top */}
       <div className="flex items-center gap-2 mb-8">
         <Award className="w-5 h-5 text-amber-500" />
