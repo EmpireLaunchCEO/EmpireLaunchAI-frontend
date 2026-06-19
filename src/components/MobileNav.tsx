@@ -12,11 +12,11 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Home", href: "/dashboard", icon: LayoutDashboard },
-  { label: "OB-Operations Base", href: "/empire-center", icon: ClipboardCheck },
-  { label: "Studio", href: "/studio", icon: Film },
-  { label: "LC-Link Center", href: "/link-center", icon: Stars },
-  { label: "Settings", href: "/settings", icon: Settings },
+  { label: "Home", id: "home", href: "/dashboard", icon: LayoutDashboard },
+  { label: "OB-Operations Base", id: "ec", href: "/empire-center", icon: ClipboardCheck },
+  { label: "Studio", id: "studio", href: "/studio", icon: Film },
+  { label: "LC-Link Center", id: "lc", href: "/link-center", icon: Stars },
+  { label: "Settings", id: "settings", href: "/settings", icon: Settings },
 ];
 
 export function MobileNav() {
@@ -45,7 +45,7 @@ export function MobileNav() {
           <Link
             key={item.href}
             href={item.href}
-            id={`nav-${item.label.toLowerCase()}`}
+            id={`nav-${item.id}`}
             onClick={(e) => handleNavigate(e, item.href)}
             className={cn(
               "flex-1 flex flex-col items-center justify-center gap-1 relative transition-all active:scale-95 touch-manipulation",
