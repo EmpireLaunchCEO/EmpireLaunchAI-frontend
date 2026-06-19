@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  LayoutDashboard,
+  Home,
   Settings,
   Stars,
   ClipboardCheck,
@@ -20,7 +20,7 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService, empireService } from '@/lib/api-service';
 
 const navItems = [
-  { name: 'HOME', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'HOME', href: '/dashboard', icon: Home },
   { name: 'OB', href: '/empire-center', icon: ClipboardCheck },
   { name: 'Studio', href: '/studio', icon: Video },
   { name: 'LC', href: '/link-center', icon: Stars },

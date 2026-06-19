@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
-  LayoutDashboard, 
+  Home, 
   ClipboardCheck, 
   Video, 
   Stars, 
@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "HOME", id: "home", href: "/dashboard", icon: LayoutDashboard },
+  { label: "HOME", id: "home", href: "/dashboard", icon: Home },
   { label: "OB", id: "ec", href: "/empire-center", icon: ClipboardCheck },
   { label: "Studio", id: "studio", href: "/studio", icon: Video },
   { label: "LC", id: "lc", href: "/link-center", icon: Stars },
