@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, 
@@ -32,6 +32,7 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 import { SupportHub } from '@/components/Settings/SupportHub';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
+import { SubscriptionSuccessShareBox } from '@/components/Dashboard/SubscriptionSuccessShareBox';
 
 const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
   if (platform.toLowerCase() === 'stripe') {
@@ -149,10 +150,27 @@ const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () 
 };
 
 export default function SettingsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SettingsContent />
+    </Suspense>
+  );
+}
+
+function SettingsContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { theme, setTheme, isAdmin, setIsAdmin, isProtocolAccepted, acceptProtocols, connectedPlatforms, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
   const { isLinked: isStripeLinked } = useStripeStatus();
 
   const [activeTab, setActiveTab] = useState('link-center');
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
   const [isAgreementOpen, setIsAgreementOpen] = useState(false);
 
@@ -543,7 +561,7 @@ export default function SettingsPage() {
                               </div>
                             </div>
                             <p className="text-sm text-slate-400 font-medium italic leading-relaxed">
-                              "We wanted to make the Empire AI accessible to everyone from day one. To keep it affordable upfront, we decided to handle our partnership through a Success-Share model on the backend. A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, if you choose Auto-Pilot, you authorize the Empire AI to create and deploy content on your behalf either from high trends or your guidance, acting as your autonomous growth agent to ensure 24/7 expansion."
+                              "We wanted to make the Empire AI accessible to everyone from day one. To keep it affordable upfront, we decided to handle our partnership through a Success-Share model on the backend. Instead of high monthly fees, we only succeed when you do. A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, if you choose Auto-Pilot, you authorize the Empire AI to sync with your existing store and social accounts to create and deploy content on your behalf, acting as your autonomous growth agent to ensure 24/7 expansion and accurate sales tracking for AI-optimized products."
                             </p>
                             <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 w-fit">
                                <DollarSign className="w-4 h-4 text-primary" />

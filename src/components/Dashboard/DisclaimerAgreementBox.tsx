@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, Stars, Zap, ChevronRight, CheckCircle2, DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 
 export function DisclaimerAgreementBox() {
+  const router = useRouter();
   const { isProtocolAccepted, acceptProtocols } = useEmpire();
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -18,6 +20,8 @@ export function DisclaimerAgreementBox() {
     setTimeout(() => {
       acceptProtocols();
       setIsProcessing(false);
+      // Redirect to Settings -> Subscription tab
+      router.push('/settings?tab=subscription');
     }, 1500);
   };
 

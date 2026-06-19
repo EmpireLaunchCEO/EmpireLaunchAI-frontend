@@ -1,0 +1,71 @@
+[33me464caf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m UI: improve navigation robustness and fix stuck loading screen
+src/app/(authenticated)/layout.tsx
+src/components/MobileNav.tsx
+src/components/Sidebar.tsx
+src/components/SubscriptionGuard.tsx
+src/lib/EmpireContext.tsx
+[33m6173b6d[m[33m ([m[1;31morigin/feat/global-dna-browser-page[m[33m, [m[1;32mfeat/global-dna-browser-page[m[33m)[m UI: change business tab bar labels to numbers (Empire 2, Empire 3)
+src/components/Dashboard/GlobalEmpireHeader.tsx
+src/lib/EmpireContext.tsx
+src/lib/api-service.ts
+[33m18c7d57[m Add dedicated Global DNA Browser page with subCategory filtering and BrandedGlobe loading
+e2e/phase3-validation.spec.ts
+src/app/(authenticated)/dna-browser/page.tsx
+src/components/Dashboard/StylePickerGallery.tsx
+test-results/.last-run.json
+test-results/phase3-validation-Phase-3--3bc4c-plied-to-cards-on-dashboard-chromium-retry1/error-context.md
+test-results/phase3-validation-Phase-3--3bc4c-plied-to-cards-on-dashboard-chromium-retry1/test-failed-1.png
+test-results/phase3-validation-Phase-3--3bc4c-plied-to-cards-on-dashboard-chromium-retry1/trace.zip
+test-results/phase3-validation-Phase-3--3bc4c-plied-to-cards-on-dashboard-chromium/error-context.md
+test-results/phase3-validation-Phase-3--3bc4c-plied-to-cards-on-dashboard-chromium/test-failed-1.png
+test-results/phase3-validation-Phase-3--51f9a-persists-on-mobile-viewport-chromium-retry1/error-context.md
+test-results/phase3-validation-Phase-3--51f9a-persists-on-mobile-viewport-chromium-retry1/test-failed-1.png
+test-results/phase3-validation-Phase-3--51f9a-persists-on-mobile-viewport-chromium-retry1/trace.zip
+test-results/phase3-validation-Phase-3--51f9a-persists-on-mobile-viewport-chromium/error-context.md
+test-results/phase3-validation-Phase-3--51f9a-persists-on-mobile-viewport-chromium/test-failed-1.png
+test-results/phase3-validation-Phase-3--78245-ptions-for-returning-owners-chromium-retry1/error-context.md
+test-results/phase3-validation-Phase-3--78245-ptions-for-returning-owners-chromium-retry1/test-failed-1.png
+test-results/phase3-validation-Phase-3--78245-ptions-for-returning-owners-chromium-retry1/trace.zip
+test-results/phase3-validation-Phase-3--78245-ptions-for-returning-owners-chromium/error-context.md
+test-results/phase3-validation-Phase-3--78245-ptions-for-returning-owners-chromium/test-failed-1.png
+test-results/phase3-validation-Phase-3--b9d04-dark-violet-on-landing-page-chromium-retry1/error-context.md
+test-results/phase3-validation-Phase-3--b9d04-dark-violet-on-landing-page-chromium-retry1/test-failed-1.png
+test-results/phase3-validation-Phase-3--b9d04-dark-violet-on-landing-page-chromium-retry1/trace.zip
+test-results/phase3-validation-Phase-3--b9d04-dark-violet-on-landing-page-chromium/error-context.md
+test-results/phase3-validation-Phase-3--b9d04-dark-violet-on-landing-page-chromium/test-failed-1.png
+[33mda924e5[m Merge branch 'fix/pwa-icons-padding' into main (PWA white background fix)
+[33ma286c91[m[33m ([m[1;31morigin/fix/pwa-icons-padding[m[33m)[m fix(rebrand): update PWA icons to solid white background with 15% padding per owner mandate
+public/apple-touch-icon-v1020.png
+public/apple-touch-icon.png
+public/favicon.ico
+public/icon-192-v1020.png
+public/icon-192.png
+public/icon-512-v1020.png
+public/icon-512.png
+public/icon-v1020.png
+public/icon.png
+[33m75c6999[m[33m ([m[1;31morigin/feat/add-godaddy-systemeio-v2[m[33m, [m[1;32mfeat/add-godaddy-systemeio-v2[m[33m)[m Add GoDaddy and Systeme.io to Guided Linking platform list
+src/components/Dashboard/GuidedLinking.tsx
+src/components/MobileNav.tsx
+src/data/platform-capabilities.ts
+[33m58f276a[m Add GoDaddy and Systeme.io to Guided Linking platform list
+src/components/Dashboard/GuidedLinking.tsx
+src/components/MobileNav.tsx
+src/data/platform-capabilities.ts
+[33m351be1b[m fix(rebrand): high-fidelity 3D Globe icons with white internal padding on #0a0519 background
+public/apple-touch-icon-v1020.png
+public/apple-touch-icon.png
+public/favicon.ico
+public/icon-192-v1020.png
+public/icon-192.png
+public/icon-512-v1020.png
+public/icon-512.png
+public/icon-v1020.png
+public/icon.png
+public/manifest.json
+src/app/layout.tsx
+[33m0694ee2[m[33m ([m[1;31morigin/feat/global-dna-autopilot-ui[m[33m, [m[1;31morigin/feat/add-godaddy-systemeio[m[33m, [m[1;32mfeat/global-dna-autopilot-ui[m[33m, [m[1;32mfeat/add-godaddy-systemeio[m[33m)[m fix: block manual bypass for neural onboarding and show initialization state
+src/components/Dashboard/GuidedLinking.tsx
+[33m62021c3[m fix: enforce neural handshake for Canva and improve linking UI
+src/components/Dashboard/GuidedLinking.tsx
+src/lib/api-service.ts
