@@ -141,9 +141,9 @@ export function GlobalDnaPoolPanel({ className }: GlobalDnaPoolPanelProps) {
             <Database className="w-5 h-5 text-cyan-400" />
           </div>
           <div>
-            <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Global DNA Pool</h3>
+            <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Autonomous Market Discovery</h3>
             <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
-              {stats.totalStrands.toLocaleString()} strands harvested from market intelligence
+              Real-time style harvesting and trend extraction active.
             </p>
           </div>
         </div>
@@ -156,59 +156,39 @@ export function GlobalDnaPoolPanel({ className }: GlobalDnaPoolPanelProps) {
         </div>
       </div>
 
-      {/* Main count */}
-      <div className="flex items-end gap-3">
-        <motion.span
-          key={stats.totalStrands}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-5xl md:text-6xl font-black text-foreground tracking-tight"
-        >
-          {stats.totalStrands.toLocaleString()}
-        </motion.span>
-        <span className="text-sm font-bold text-muted-foreground mb-1.5">DNA strands</span>
+      {/* Main Action Feed (Replaces large count) */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5">
+            <Zap className="w-3 h-3 text-primary" />
+            Live Discovery Feed
+          </span>
+          <span className="text-[8px] font-bold text-muted-foreground uppercase">Real-time Synthesis</span>
+        </div>
+        <div className="bg-theme-background/50 rounded-2xl border border-theme p-4">
+          <AutoPilotActivityFeed className="max-h-[180px] overflow-y-auto no-scrollbar" />
+        </div>
       </div>
 
-      {/* Category breakdown */}
+      {/* Category breakdown (Simplified, no counts) */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
             <Layers className="w-3 h-3 text-cyan-400" />
-            Strands by Category
+            Active Harvesting Sectors
           </span>
-          <span className="text-[8px] font-bold text-muted-foreground">{displayedCategories.length} categories</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {displayedCategories.map((cat) => {
-            const pct = Math.round((cat.count / stats.totalStrands) * 100);
-            return (
-              <button
-                key={cat.name}
-                onClick={() => setActiveCategory(activeCategory === cat.name ? null : cat.name)}
-                className={cn(
-                  'relative p-3 rounded-2xl border transition-all text-left',
-                  activeCategory === cat.name
-                    ? 'bg-cyan-500/10 border-cyan-500/30'
-                    : 'bg-theme-background border-theme hover:border-cyan-500/20'
-                )}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] font-bold text-foreground truncate">{cat.name}</span>
-                  <span className="text-[9px] font-black text-cyan-400">{cat.count}</span>
-                </div>
-                <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${pct}%` }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
-                    className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500"
-                  />
-                </div>
-                <span className="text-[7px] font-bold text-muted-foreground mt-1 block">{pct}% of pool</span>
-              </button>
-            );
-          })}
+        <div className="flex flex-wrap gap-2">
+          {displayedCategories.map((cat) => (
+            <div
+              key={cat.name}
+              className="px-3 py-2 rounded-xl bg-theme-background border border-theme text-[10px] font-bold text-slate-300 flex items-center gap-2"
+            >
+              <div className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse" />
+              {cat.name}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -237,7 +217,7 @@ export function GlobalDnaPoolPanel({ className }: GlobalDnaPoolPanelProps) {
                   </span>
                   <div>
                     <p className="text-xs font-bold text-foreground">{niche.name}</p>
-                    <p className="text-[8px] text-muted-foreground font-medium">{niche.count} patterns</p>
+                    <p className="text-[8px] text-muted-foreground font-medium">Mastering style parameters...</p>
                   </div>
                 </div>
                 <div className="text-right">
