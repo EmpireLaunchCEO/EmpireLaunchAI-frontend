@@ -12,10 +12,10 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Home", id: "home", href: "/dashboard", icon: LayoutDashboard },
-  { label: "OB-Operations Base", id: "ec", href: "/empire-center", icon: ClipboardCheck },
+  { label: "HOME", id: "home", href: "/dashboard", icon: LayoutDashboard },
+  { label: "OB", id: "ec", href: "/empire-center", icon: ClipboardCheck },
   { label: "Studio", id: "studio", href: "/studio", icon: Video },
-  { label: "LC-Link Center", id: "lc", href: "/link-center", icon: Stars },
+  { label: "LC", id: "lc", href: "/link-center", icon: Stars },
   { label: "Settings", id: "settings", href: "/settings", icon: Settings },
 ];
 
