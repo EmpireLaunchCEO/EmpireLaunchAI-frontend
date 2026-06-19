@@ -60,6 +60,13 @@ export default function EmpireCenterPage() {
     await new Promise(resolve => setTimeout(resolve, 1500));
   }, []);
 
+  // Neural Dispatch State
+  const [dispatchStep, setDispatchStep] = useState<'grid' | 'focus' | 'selecting'>('grid');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedApps, setSelectedApps] = useState<string[]>([]);
+  const [isApproved, setIsApproved] = useState(false);
+  const [draftNumber, setDraftNumber] = useState(1);
+
   React.useEffect(() => {
     return registerRefreshHandler(handleRefresh);
   }, [registerRefreshHandler, handleRefresh]);
@@ -85,6 +92,10 @@ export default function EmpireCenterPage() {
 
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000" style={{ contentVisibility: 'auto' }}>
           
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <EmpireAIChatBox className="max-w-6xl mx-auto" />
+          </motion.div>
+
           {/* Primary Tabs - Optimized for mobile visibility */}
           <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
             {[
@@ -190,10 +201,6 @@ export default function EmpireCenterPage() {
               </motion.div>
             )}
           </AnimatePresence>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <EmpireAIChatBox className="max-w-6xl mx-auto" />
-          </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <FeedbackBox />
