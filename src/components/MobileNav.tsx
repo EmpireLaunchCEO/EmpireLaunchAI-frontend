@@ -30,12 +30,23 @@ export function MobileNav() {
     e.preventDefault();
     e.stopPropagation();
     
-    console.log(`[MobileNav] Dispatched to: ${href}`);
+    console.log(`[MobileNav] Navigation attempt: ${href}`);
     
-    // Use window.location as the absolute fallback for mobile stability
-    // but try the router first for smooth transition
+    // Debug helper
+    if (typeof window !== 'undefined') {
+      (window as any).lastNav = href;
+    }
+
     try {
       router.push(href);
+      
+      // Safety timeout: if URL hasn't changed in 400ms, force it
+      setTimeout(() => {
+        if (window.location.pathname !== href && !window.location.pathname.startsWith(href)) {
+          console.warn(`[MobileNav] Push slow, forcing location.href for ${href}`);
+          window.location.href = href;
+        }
+      }, 400);
     } catch (err) {
       window.location.href = href;
     }
@@ -47,7 +58,6 @@ export function MobileNav() {
       style={{ 
         height: 'calc(72px + env(safe-area-inset-bottom))',
         paddingBottom: 'env(safe-area-inset-bottom)',
-        touchAction: 'none' // Prevent gestures from hijacking clicks on the nav itself
       }}
     >
       {navItems.map((item) => {
