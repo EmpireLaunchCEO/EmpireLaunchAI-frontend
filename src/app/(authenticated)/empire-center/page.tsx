@@ -131,7 +131,7 @@ export default function EmpireCenterPage() {
                 {/* Full Width Pending Approvals */}
                 <section className="space-y-6">
                     <div className="flex items-center justify-between px-2">
-                      <h3 className="text-xl font-black text-foreground uppercase tracking-normal italic pr-4">Action Required</h3>
+                      <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-normal italic pr-8">Action Required</h3>
                       <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full">Neural Sync Active</span>
                     </div>
 
