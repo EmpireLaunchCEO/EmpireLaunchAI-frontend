@@ -81,7 +81,7 @@ export function SubscriptionSuccessShareBox({
 
   return (
     <div className={cn(
-      'bg-theme-surface border-2 border-theme rounded-[32px] md:rounded-[40px] overflow-hidden shadow-2xl relative',
+      'bg-primary/5 border-2 border-primary/30 rounded-[32px] md:rounded-[40px] overflow-hidden shadow-2xl relative',
       className
     )}>
       {/* Background decoration */}
