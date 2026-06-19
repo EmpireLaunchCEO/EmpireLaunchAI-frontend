@@ -46,7 +46,7 @@ export function Sidebar() {
 
         <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto no-scrollbar relative z-[5001]">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href));
             return (
               <Link
                 key={item.name}

@@ -21,17 +21,17 @@ export default function AuthenticatedLayout({
 
   return (
     <>
-      <SubscriptionGuard>
-        <div className="flex bg-theme-background min-h-screen relative max-w-full overflow-x-hidden">
-          {/* Sidebar - Desktop Only */}
-          <Sidebar />
+      <div className="flex bg-theme-background min-h-screen relative max-w-full overflow-x-hidden">
+        {/* Sidebar - Desktop Only */}
+        <Sidebar />
 
-          {/* Content Stack */}
-          <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[256px] max-w-full flex flex-col z-[1]">
-              <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
-                <NotificationBell id="notification-bell-desktop" />
-              </div>
+        {/* Content Stack */}
+        <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[256px] max-w-full flex flex-col z-[1]">
+            <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
+              <NotificationBell id="notification-bell-desktop" />
+            </div>
 
+            <SubscriptionGuard>
               <PullToRefresh onRefresh={triggerRefresh}>
                 <div className="flex-1 flex flex-col min-h-screen">
                   <GlobalEmpireHeader />
@@ -42,21 +42,21 @@ export default function AuthenticatedLayout({
                   </div>
                 </div>
               </PullToRefresh>
-          </main>
+            </SubscriptionGuard>
+        </main>
 
-          {/* Floating elements - High Z-Index */}
-          <div className="fixed top-4 right-4 z-[1000] lg:hidden flex items-center gap-2 pointer-events-auto">
-            <NotificationBell id="notification-bell-mobile" />
-          </div>
-
-          <GeminiBrainOverlay />
-
-          {/* TOUR - ONLY OVER CONTENT */}
-          <Suspense fallback={null}>
-            <OnboardingTour />
-          </Suspense>
+        {/* Floating elements - High Z-Index */}
+        <div className="fixed top-4 right-4 z-[1000] lg:hidden flex items-center gap-2 pointer-events-auto">
+          <NotificationBell id="notification-bell-mobile" />
         </div>
-      </SubscriptionGuard>
+
+        <GeminiBrainOverlay />
+
+        {/* TOUR - ONLY OVER CONTENT */}
+        <Suspense fallback={null}>
+          <OnboardingTour />
+        </Suspense>
+      </div>
 
       {/* 
          NAVIGATION - MOVED OUTSIDE GUARD 

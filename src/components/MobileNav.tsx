@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
   Wallet, 
@@ -20,17 +21,6 @@ const navItems = [
 
 export function MobileNav() {
   const pathname = usePathname();
-  const router = useRouter();
-
-  const handleNavigate = (href: string) => {
-    console.log(`[MobileNav] Clicked: ${href}`);
-    try {
-      router.push(href);
-    } catch (e) {
-      console.error("[MobileNav] Router failed, using window.location", e);
-      window.location.href = href;
-    }
-  };
 
   return (
     <div 
@@ -42,16 +32,14 @@ export function MobileNav() {
       }}
     >
       {navItems.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href));
         return (
-          <button
+          <Link
             key={item.href}
+            href={item.href}
             id={`nav-${item.label.toLowerCase()}`}
-            onClick={() => handleNavigate(item.href)}
-            onPointerDown={(e) => e.currentTarget.classList.add('bg-white/10')}
-            onPointerUp={(e) => e.currentTarget.classList.remove('bg-white/10')}
             className={cn(
-              "flex-1 flex flex-col items-center justify-center gap-1 relative transition-all active:scale-95",
+              "flex-1 flex flex-col items-center justify-center gap-1 relative transition-all active:scale-95 touch-manipulation",
               isActive ? "text-primary" : "text-white/40"
             )}
             style={{ pointerEvents: 'auto' }}
@@ -63,7 +51,7 @@ export function MobileNav() {
             {isActive && (
               <div className="absolute top-1 right-1/2 translate-x-4 w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             )}
-          </button>
+          </Link>
         );
       })}
     </div>

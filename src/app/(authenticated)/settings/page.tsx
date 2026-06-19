@@ -506,115 +506,13 @@ function SettingsContent() {
 
               {activeTab === 'subscription' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  {/* Subscription Agreement Prompt (for users who haven't accepted) */}
-                  {!isProtocolAccepted && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="p-8 md:p-12 bg-slate-900 border-2 border-amber-500/30 rounded-[48px] overflow-hidden shadow-2xl relative"
-                    >
-                      <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
-                      <div className="flex items-start gap-6 relative z-10">
-                        <div className="w-16 h-16 bg-amber-500/10 rounded-3xl flex items-center justify-center border border-amber-500/20 shrink-0">
-                          <ShieldCheck className="w-8 h-8 text-amber-500" />
-                        </div>
-                        <div className="space-y-4 flex-1">
-                          <div>
-                            <h3 className="text-2xl font-black text-white italic uppercase tracking-tight">Partner Protocol.</h3>
-                            <div className="flex items-center gap-2 text-amber-500 mt-1">
-                              <AlertCircle className="w-3.5 h-3.5" />
-                              <span className="text-[10px] font-black uppercase tracking-widest">Awaiting Acceptance</span>
-                            </div>
-                          </div>
-                          <p className="text-sm text-slate-400 font-medium italic leading-relaxed max-w-2xl">
-                            "To keep Empire AI accessible from day one, we use a <span className="text-primary font-bold">Success-Share model</span>. A simple <span className="text-white font-bold">$40 fee</span> applies for every <span className="text-white font-bold">$1,000</span> you earn from content created through this app. Accept the protocol below to unlock platform linking and autonomous operations."
-                          </p>
-                          <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 rounded-xl border border-amber-500/20 w-fit">
-                            <DollarSign className="w-4 h-4 text-amber-500" />
-                            <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
-                          </div>
-                          <button
-                            onClick={() => acceptProtocols()}
-                            className="mt-4 px-8 py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20"
-                          >
-                            I Accept These Terms
-                          </button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* Subscription Agreement Record (shows after acceptance) */}
-                  {isProtocolAccepted && (
-                    <div className="p-8 md:p-12 bg-slate-900 border-2 border-primary/30 rounded-[48px] overflow-hidden shadow-2xl relative">
-                      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] -mr-32 -mt-32 pointer-events-none" />
-                      <div className="flex items-start gap-6 relative z-10">
-                         <div className="w-16 h-16 bg-primary/10 rounded-3xl flex items-center justify-center border border-primary/20 shrink-0">
-                            <ShieldCheck className="w-8 h-8 text-primary" />
-                         </div>
-                         <div className="space-y-4">
-                            <div>
-                              <h3 className="text-2xl font-black text-white italic uppercase tracking-tight">Subscription Agreement.</h3>
-                              <div className="flex items-center gap-2 text-emerald-500 mt-1">
-                                 <CheckCircle2 className="w-3.5 h-3.5" />
-                                 <span className="text-[10px] font-black uppercase tracking-widest">Protocol Accepted & Active</span>
-                              </div>
-                            </div>
-                            <p className="text-sm text-slate-400 font-medium italic leading-relaxed">
-                              "We wanted to make the Empire AI accessible to everyone from day one. To keep it affordable upfront, we decided to handle our partnership through a Success-Share model on the backend. Instead of high monthly fees, we only succeed when you do. A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, if you choose Auto-Pilot, you authorize the Empire AI to sync with your existing store and social accounts to create and deploy content on your behalf, acting as your autonomous growth agent to ensure 24/7 expansion and accurate sales tracking for AI-optimized products."
-                            </p>
-                            <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 w-fit">
-                               <DollarSign className="w-4 h-4 text-primary" />
-                               <span className="text-[10px] font-black text-primary uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
-                            </div>
-                         </div>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-slate-900 text-white space-y-8">
-
-                      <div className="flex items-center gap-6">
-                        <div className="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center">
-                          <Diamond className="w-8 h-8 text-blue-400" />
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-black italic">Empire Elite</h3>
-                          <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Base Subscription: $40 / Month</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                         <span className="text-3xl font-black">$40</span>
-                         <span className="text-[10px] font-black text-slate-500 block uppercase tracking-widest">Current Base</span>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 pt-4 border-t border-white/10">
-                      <div className="p-6 rounded-[32px] bg-white/5 border border-white/10 space-y-2">
-                        <h4 className="text-xs font-black uppercase tracking-widest text-blue-400">Empire Expansion</h4>
-                        <p className="text-lg font-bold">$40 Unlock + $40/mo</p>
-                        <p className="text-[10px] text-slate-400 font-medium leading-relaxed">Per additional business slot authorized. Charged immediately upon activation.</p>
-                      </div>
-                      <div className="p-6 rounded-[32px] bg-white/5 border border-white/10 space-y-2">
-                        <h4 className="text-xs font-black uppercase tracking-widest text-emerald-400">Success Fee</h4>
-                        <p className="text-lg font-bold">$40 / $1,000</p>
-                        <p className="text-[10px] text-slate-400 font-medium leading-relaxed">Secured automatically upon revenue milestones.</p>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-center pt-8">
-                      <button 
-                        className="group relative px-12 py-6 bg-red-600 hover:bg-red-500 text-white rounded-[32px] font-black text-sm uppercase tracking-[0.2em] transition-all shadow-[0_0_40px_rgba(220,38,38,0.3)] hover:shadow-[0_0_60px_rgba(220,38,38,0.5)] active:scale-95 overflow-hidden"
-                        onClick={() => {
-                          if (confirm("Are you absolutely sure? Your Empire growth protocols will be terminated immediately.")) {
-                            alert("This is a master account. Deletion protocol suppressed.");
-                          }
-                        }}
-                      >
-                        <span className="relative z-10">I'm sure I want to lose my empire now</span>
-                        <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-[-25deg]" />
-                      </button>
-                    </div>
+                  <SubscriptionSuccessShareBox
+                    isProtocolAccepted={isProtocolAccepted}
+                    onAcceptProtocol={() => acceptProtocols()}
+                    totalRevenue={12450}
+                    totalFees={498}
+                    businessSlots={1}
+                  />
                 </div>
               )}
             </main>
