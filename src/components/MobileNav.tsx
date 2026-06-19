@@ -1,85 +1,71 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { usePathname, useRouter } from "next/navigation";
 import { 
   LayoutDashboard, 
-  Settings, 
-  Stars, 
-  ClipboardCheck,
-  Video
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+  Wallet, 
+  Film, 
+  Settings,
+  BrainCircuit
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const navItems = [
+  { label: "Empire", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Intel", href: "/empire-center", icon: BrainCircuit },
+  { label: "Finances", href: "/analytics", icon: Wallet },
+  { label: "Studio", href: "/studio", icon: Film },
+  { label: "Settings", href: "/settings", icon: Settings },
+];
 
 export function MobileNav() {
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
-  const navItems = [
-    { id: 'nav-home', href: '/dashboard', label: 'Home', icon: LayoutDashboard },
-    { id: 'nav-ec', href: '/empire-center', label: 'OB', icon: ClipboardCheck },
-    { id: 'nav-studio', href: '/studio', label: 'Studio', icon: Video, color: 'text-blue-400' },
-    { id: 'nav-lc', href: '/link-center', label: 'LC', icon: Stars },
-    { id: 'nav-settings', href: '/settings', label: 'Settings', icon: Settings },
-  ];
+  const handleNavigate = (href: string) => {
+    console.log(`[MobileNav] Clicked: ${href}`);
+    try {
+      router.push(href);
+    } catch (e) {
+      console.error("[MobileNav] Router failed, using window.location", e);
+      window.location.href = href;
+    }
+  };
 
   return (
     <div 
-      className="fixed bottom-0 left-0 right-0 z-[999999] pointer-events-none flex justify-center"
+      className="fixed bottom-0 left-0 right-0 w-full bg-slate-900 border-t border-white/20 flex justify-around items-stretch z-[9999999] pointer-events-auto shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"
+      style={{ 
+        height: 'calc(72px + env(safe-area-inset-bottom))',
+        paddingBottom: 'env(safe-area-inset-bottom)',
+        touchAction: 'manipulation'
+      }}
     >
-      <nav 
-        className="bg-slate-950/90 backdrop-blur-xl border-t-2 border-white/10 rounded-t-[40px] p-2 pb-8 shadow-[0_-20px_60px_rgba(0,0,0,0.8)] flex items-center justify-around pointer-events-auto w-full max-w-full overflow-hidden transition-all duration-500"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          const Icon = item.icon;
-          
-          return (
-            <Link
-              key={item.id}
-              href={item.href}
-              prefetch={true}
-              className={cn(
-                "flex flex-col items-center justify-center gap-1.5 transition-all relative cursor-pointer active:scale-75 outline-none flex-1 py-2",
-                isActive ? "scale-100" : (item.color || "text-slate-500")
-              )}
-            >
-              <div className={cn(
-                "p-2.5 rounded-2xl transition-all relative",
-                isActive 
-                  ? "bg-primary text-white shadow-[0_0_25px_rgba(var(--primary-rgb),0.5)] border border-white/20" 
-                  : "bg-white/5 text-inherit border border-transparent"
-              )}>
-                <Icon className={cn("w-5 h-5", isActive ? "scale-110" : "")} />
-                
-                {/* Notification indicator for Studio (Auto-Pilot) */}
-                {item.id === 'nav-studio' && !isActive && (
-                  <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full animate-pulse border-2 border-slate-900" />
-                )}
-              </div>
-              
-              <span className={cn(
-                "text-[9px] font-black uppercase tracking-widest transition-opacity",
-                isActive ? "text-white opacity-100" : "opacity-40"
-              )}>
-                {item.label}
-              </span>
-              
-              {isActive && (
-                <div className="absolute -bottom-1 w-6 h-1 bg-primary rounded-full shadow-[0_0_12px_rgba(var(--primary-rgb),1)]" />
-              )}
-            </Link>
-          );
-        })}
-      </nav>
+      {navItems.map((item) => {
+        const isActive = pathname === item.href;
+        return (
+          <button
+            key={item.href}
+            id={`nav-${item.label.toLowerCase()}`}
+            onClick={() => handleNavigate(item.href)}
+            onPointerDown={(e) => e.currentTarget.classList.add('bg-white/10')}
+            onPointerUp={(e) => e.currentTarget.classList.remove('bg-white/10')}
+            className={cn(
+              "flex-1 flex flex-col items-center justify-center gap-1 relative transition-all active:scale-95",
+              isActive ? "text-primary" : "text-white/40"
+            )}
+            style={{ pointerEvents: 'auto' }}
+          >
+            <item.icon className={cn("w-6 h-6", isActive && "drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]")} />
+            <span className="text-[10px] font-black uppercase tracking-tighter">
+              {item.label}
+            </span>
+            {isActive && (
+              <div className="absolute top-1 right-1/2 translate-x-4 w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }

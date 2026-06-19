@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Settings,
@@ -10,11 +10,14 @@ import {
   ClipboardCheck,
   BarChart3,
   ShieldCheck,
-  Video
+  Video,
+  Sparkles
 } from 'lucide-react';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
+
 import { useEmpire } from '@/lib/EmpireContext';
+import { analyticsService, empireService } from '@/lib/api-service';
 
 const navItems = [
   { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
@@ -33,7 +36,7 @@ export function Sidebar() {
 
   return (
     <>
-      <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-0 top-0 border-r border-theme shadow-sm transition-all duration-300 z-[999998] pointer-events-auto">
+      <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-0 top-0 border-r border-theme shadow-sm transition-all duration-300 z-[10005] pointer-events-auto">
         <div className="p-6 flex items-center gap-3">
           <BrandedGlobe size="md" spinning />
           <span className="text-lg font-black tracking-tight text-theme-gradient uppercase italic truncate">
@@ -48,9 +51,8 @@ export function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                prefetch={true}
                 className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm cursor-pointer select-none relative z-[5002] outline-none",
+                  "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all font-bold text-sm cursor-pointer select-none relative z-[5002]",
                   isActive
                   ? "bg-primary text-white shadow-xl shadow-primary/20 pointer-events-auto"
                   : "text-white/40 hover:text-white hover:bg-theme-background pointer-events-auto"
@@ -69,7 +71,7 @@ export function Sidebar() {
             </div>
             <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
                <p className="text-[11px] font-bold text-primary leading-relaxed italic">
-                 {activeEmpire?.niche ? `Analyzing market trends for '${displayNiche}'... I'll suggest new content soon.` : "Awaiting Neural Sync... Connect a platform to begin analysis."}
+                 "Analyzing market trends for '{displayNiche}'... I'll suggest new content soon."
                </p>
             </div>
           </div>
@@ -85,7 +87,7 @@ export function Sidebar() {
             <div className="flex flex-col truncate">
               <span className="text-sm font-black text-white truncate">Founder</span>
               <span className="text-[10px] font-black text-primary uppercase tracking-widest truncate">
-                {(activeEmpire?.name === 'Business 1' || !activeEmpire?.name) ? "EmpireLaunch AI" : activeEmpire.name}
+                {activeEmpire?.name || "Empire Owner"}
               </span>
             </div>
           </div>
