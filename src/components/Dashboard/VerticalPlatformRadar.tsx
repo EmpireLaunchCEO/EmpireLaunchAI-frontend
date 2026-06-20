@@ -203,13 +203,14 @@ export function VerticalPlatformRadar() {
               </div>
             </div>
           </motion.div>
-        {/* Version Verification */}
-        <div className="flex justify-center pt-8">
-          <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
-            Vital Signs Engine v3.1.0 (Real-Time)
-          </span>
-        </div>
         ))}
+      </div>
+
+      {/* Version Verification */}
+      <div className="flex justify-center pt-8">
+        <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
+          Vital Signs Engine v3.1.0 (Real-Time)
+        </span>
       </div>
     </section>
   );
