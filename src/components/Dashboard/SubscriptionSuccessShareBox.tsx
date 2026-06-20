@@ -110,9 +110,9 @@ export function SubscriptionSuccessShareBox({
               : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
           )}>
             {isProtocolAccepted ? (
-              <><CheckCircle2 className="w-3 h-3" /> Protocol Active</>
+              <><CheckCircle2 className="w-3 h-3" /> Approved</>
             ) : (
-              <><AlertCircle className="w-3 h-3" /> Awaiting Acceptance</>
+              <><AlertCircle className="w-3 h-3" /> Pending</>
             )}
           </div>
         </div>
