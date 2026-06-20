@@ -116,90 +116,99 @@ export function VerticalPlatformRadar() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         {displayData.map((platform) => (
           <motion.div
             key={platform.id}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            whileHover={{ scale: 1.01 }}
-            className="group relative bg-theme-surface border-2 border-theme rounded-[32px] p-5 md:p-6 overflow-hidden transition-all hover:border-white/30 shadow-sm"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -4 }}
+            className="group relative bg-theme-surface border-2 border-theme rounded-[32px] md:rounded-[48px] overflow-hidden transition-all shadow-xl"
           >
             {/* Background Glow */}
-            <div className={cn("absolute top-0 right-0 w-32 h-32 blur-[60px] -z-10 opacity-30", platform.bgSecondary)} />
+            <div className={cn("absolute top-0 right-0 w-64 h-64 blur-[100px] -z-10 opacity-20 transition-opacity group-hover:opacity-40", platform.bgSecondary)} />
 
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-              {/* Platform Identity */}
-              <div className="flex items-center gap-4">
-                <div className="relative w-12 h-12 rounded-2xl bg-white p-2 border border-theme shadow-sm group-hover:scale-110 transition-transform">
+            <div className="grid grid-cols-1 md:grid-cols-2 relative z-10">
+              {/* Left Side: Identity & Health Status */}
+              <div className="p-8 md:p-10 flex items-center gap-6 bg-primary/5 border-b md:border-b-0 md:border-r border-theme/30">
+                <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-[32px] bg-white p-3 border border-theme shadow-2xl rotate-[-2deg] group-hover:rotate-0 transition-transform duration-500">
                   <Image 
                     src={platform.logo} 
                     alt={platform.name} 
                     fill 
-                    className="object-contain p-2"
+                    className="object-contain p-4"
                   />
                 </div>
-                <div>
-                  <h3 className="text-lg font-black text-foreground uppercase tracking-tight">{platform.name}</h3>
-                  <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-1 text-[10px] font-black text-green-500 uppercase">
-                      <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
-                      Healthy
+                <div className="space-y-2">
+                  <h3 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tighter italic">{platform.name}</h3>
+                  <div className="flex flex-col gap-1">
+                    <span className="flex items-center gap-2 text-[10px] font-black text-green-500 uppercase tracking-widest">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                      Neural Health: Optimal
                     </span>
-                    <span className="w-1 h-1 rounded-full bg-slate-300" />
-                    <span className="text-[10px] font-black text-slate-400 uppercase">Synced 2m ago</span>
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Last Synced: 2m ago</span>
                   </div>
                 </div>
               </div>
 
-              {/* Metrics Row */}
-              <div className="flex flex-1 items-center justify-around md:justify-end md:gap-12 lg:gap-20">
-                <div className="text-center md:text-left space-y-1">
-                  <div className="flex items-center gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                    {platform.id === 'etsy' ? <Eye className="w-3 h-3" /> : <Users className="w-3 h-3" />}
-                    {platform.metricLabel}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-black text-foreground">{platform.followers}</span>
-                    <span className="text-[10px] font-black text-emerald-500 flex items-center">
-                      <ArrowUpRight className="w-3 h-3" />
-                      {platform.growth}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="text-center md:text-left space-y-1">
-                  <div className="flex items-center gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                    {platform.id === 'etsy' ? <ShoppingBag className="w-3 h-3" /> : <Heart className="w-3 h-3" />}
-                    {platform.secondaryMetricLabel}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-black text-foreground">{platform.likes}</span>
-                  </div>
-                </div>
-
-                {/* Mail Icon / Messages */}
-                <div className="relative group/mail">
-                  <button className="w-12 h-12 rounded-2xl bg-theme-background border border-theme flex items-center justify-center text-slate-400 hover:text-primary transition-all relative">
-                    <Mail className={cn("w-6 h-6", platform.messages > 0 ? "text-primary animate-pulse" : "opacity-30")} />
-                    {platform.messages > 0 && (
-                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-slate-950 text-[10px] font-black rounded-full flex items-center justify-center border-2 border-theme-surface">
-                        {platform.messages}
+              {/* Right Side: Vital Metrics & Communication */}
+              <div className="p-8 md:p-10 flex flex-col justify-center gap-8">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                      {platform.id === 'etsy' ? <Eye className="w-3 h-3" /> : <Users className="w-3 h-3" />}
+                      {platform.metricLabel}
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-black text-foreground tracking-tighter">{platform.followers}</span>
+                      <span className="text-[11px] font-black text-emerald-500 flex items-center">
+                        <ArrowUpRight className="w-3 h-3" />
+                        {platform.growth}
                       </span>
-                    )}
-                  </button>
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover/mail:opacity-100 transition-opacity pointer-events-none whitespace-nowrap bg-slate-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-xl z-20">
-                    {platform.messages > 0 ? `${platform.messages} unread messages` : 'No new messages'}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                      {platform.id === 'etsy' ? <ShoppingBag className="w-3 h-3" /> : <Heart className="w-3 h-3" />}
+                      {platform.secondaryMetricLabel}
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-black text-foreground tracking-tighter">{platform.likes}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Action */}
-              <button className="p-3 bg-theme-background border border-theme rounded-2xl text-slate-400 hover:text-primary transition-all group-hover:border-white/20">
-                <ExternalLink className="w-5 h-5" />
-              </button>
+                <div className="flex items-center justify-between pt-6 border-t border-theme/20">
+                  <div className="flex items-center gap-4">
+                    {/* Neural Inbox Link */}
+                    <button className="flex items-center gap-3 px-5 py-3 bg-theme-background border border-theme rounded-2xl group/btn transition-all hover:border-primary">
+                      <div className="relative">
+                        <Mail className={cn("w-5 h-5 transition-colors", platform.messages > 0 ? "text-primary animate-pulse" : "text-slate-500 group-hover/btn:text-primary")} />
+                        {platform.messages > 0 && (
+                          <span className="absolute -top-2 -right-2 w-4 h-4 bg-primary text-slate-950 text-[9px] font-black rounded-full flex items-center justify-center border border-theme-surface">
+                            {platform.messages}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Neural Inbox</span>
+                    </button>
+                  </div>
+
+                  {/* External Bridge */}
+                  <button className="w-12 h-12 flex items-center justify-center bg-theme-background border border-theme rounded-2xl text-slate-500 hover:text-primary transition-all hover:scale-105 active:scale-95">
+                    <ExternalLink className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
             </div>
           </motion.div>
+        {/* Version Verification */}
+        <div className="flex justify-center pt-8">
+          <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
+            Vital Signs Engine v3.1.0 (Real-Time)
+          </span>
+        </div>
         ))}
       </div>
     </section>

@@ -96,7 +96,7 @@ export default function LinkCenterPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 {connectedPlatforms.map(id => {
                   const tier = platformPermissions[id] || 'read-only';
                   
@@ -104,108 +104,119 @@ export default function LinkCenterPage() {
                     <motion.div
                       key={id}
                       whileHover={{ y: -4 }}
-                      className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] relative overflow-hidden group"
+                      className="bg-theme-surface border-2 border-theme rounded-[32px] md:rounded-[48px] relative overflow-hidden group shadow-xl"
                     >
-                      <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
-                        {/* Left Side: App Logo & Name */}
-                        <div className="flex-1 flex items-center gap-4 min-w-0 w-full md:w-auto">
-                          <div className="w-14 h-14 rounded-2xl bg-white p-2 border border-theme flex items-center justify-center shrink-0 shadow-lg">
+                      <div className="grid grid-cols-1 md:grid-cols-2 relative z-10">
+                        {/* Left Side: Brand Identity Box */}
+                        <div className="p-8 md:p-12 flex items-center gap-6 bg-primary/5 border-b md:border-b-0 md:border-r border-theme/30">
+                          <div className="w-20 h-20 md:w-24 md:h-24 rounded-[32px] bg-white p-3 border border-theme flex items-center justify-center shrink-0 shadow-2xl rotate-[-2deg] group-hover:rotate-0 transition-transform duration-500">
                             {PLATFORM_LOGOS[id] ? (
                               <Image 
                                 src={PLATFORM_LOGOS[id]} 
                                 alt={id} 
-                                width={40} 
-                                height={40} 
+                                width={80} 
+                                height={80} 
                                 className="object-contain"
                               />
                             ) : (
-                              <Share2 className="w-6 h-6 text-slate-900" />
+                              <Share2 className="w-10 h-10 text-slate-900" />
                             )}
                           </div>
-                          <div className="truncate">
-                            <h3 className="font-black text-lg capitalize text-foreground truncate">{id}</h3>
-                            <div className="flex items-center gap-1.5 mt-1">
-                               <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", tier === 'empire' ? "bg-cyan-400" : tier === 'co-pilot' ? "bg-primary" : "bg-slate-500")} />
-                               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                                  {tier === 'empire' ? 'Auto-Pilot' : tier === 'co-pilot' ? 'Co-Pilot' : 'Read-Only'}
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-black text-2xl md:text-3xl capitalize text-foreground tracking-tighter italic">{id}</h3>
+                              {tier === 'empire' && <Cpu className="w-5 h-5 text-cyan-400 animate-spin-slow" />}
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                               <div className={cn("w-2 h-2 rounded-full animate-pulse", tier === 'empire' ? "bg-cyan-400" : tier === 'co-pilot' ? "bg-primary" : "bg-slate-500")} />
+                               <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400">
+                                  {tier === 'empire' ? 'Auto-Pilot Mode' : tier === 'co-pilot' ? 'Co-Pilot Mode' : 'Read-Only Mode'}
                                </span>
                             </div>
                           </div>
                         </div>
 
-                        {/* Right Side: Toggles */}
-                        <div className="flex-1 w-full md:w-auto space-y-3 pl-0 md:pl-6 border-t md:border-t-0 md:border-l border-theme/30 pt-4 md:pt-0">
-                          {/* Read-Only Toggle */}
-                          <div className="flex items-center justify-between">
-                            <div className="flex flex-col">
-                              <span className="text-[10px] font-black uppercase tracking-tight text-foreground">Read-Only</span>
-                              <span className="text-[8px] font-bold text-slate-500">Analytics only</span>
+                        {/* Right Side: Governance Controls */}
+                        <div className="p-8 md:p-12 space-y-6 flex flex-col justify-center">
+                          <div className="space-y-4">
+                            {/* Read-Only Toggle (Locked) */}
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
+                              <div className="flex flex-col">
+                                <span className="text-xs font-black uppercase tracking-tight text-foreground">Data Analytics</span>
+                                <span className="text-[9px] font-bold text-slate-500">AI monitoring & signal harvesting</span>
+                              </div>
+                              <div className="w-10 h-5 rounded-full relative bg-primary/40 opacity-80">
+                                <div className="w-3.5 h-3.5 bg-slate-950 rounded-full absolute top-0.75 right-0.75" />
+                              </div>
                             </div>
-                            <button
-                              className="w-8 h-4 rounded-full relative bg-primary/40 cursor-not-allowed opacity-80"
-                              disabled
-                            >
-                              <div className="w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 right-0.75" />
-                            </button>
-                          </div>
 
-                          {/* Co-Pilot Toggle */}
-                          <div className="flex items-center justify-between">
-                            <div className="flex flex-col">
-                              <span className="text-[10px] font-black uppercase tracking-tight text-foreground">Co-Pilot</span>
-                              <span className="text-[8px] font-bold text-slate-500">Drafts & Suggestions</span>
-                            </div>
-                            <button
+                            {/* Co-Pilot Toggle */}
+                            <button 
                               onClick={() => updatePlatformPermission(id, (tier === 'co-pilot' || tier === 'empire') ? 'read-only' : 'co-pilot')}
                               className={cn(
-                                "w-8 h-4 rounded-full relative transition-all",
-                                (tier === 'co-pilot' || tier === 'empire') ? "bg-primary" : "bg-slate-800"
+                                "w-full flex items-center justify-between p-4 rounded-2xl border transition-all group/toggle",
+                                (tier === 'co-pilot' || tier === 'empire') ? "bg-primary/10 border-primary" : "bg-theme-background border-theme hover:border-primary/50"
                               )}
                             >
+                              <div className="flex flex-col text-left">
+                                <span className={cn("text-xs font-black uppercase tracking-tight", (tier === 'co-pilot' || tier === 'empire') ? "text-primary" : "text-foreground")}>Creative Co-Pilot</span>
+                                <span className="text-[9px] font-bold text-slate-500">AI drafts content for your approval</span>
+                              </div>
                               <div className={cn(
-                                "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
-                                (tier === 'co-pilot' || tier === 'empire') ? "right-0.75" : "left-0.75"
-                              )} />
+                                "w-10 h-5 rounded-full relative transition-all",
+                                (tier === 'co-pilot' || tier === 'empire') ? "bg-primary" : "bg-slate-800"
+                              )}>
+                                <div className={cn(
+                                  "w-3.5 h-3.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
+                                  (tier === 'co-pilot' || tier === 'empire') ? "right-0.75" : "left-0.75"
+                                )} />
+                              </div>
                             </button>
-                          </div>
 
-                          {/* Auto-Pilot Toggle */}
-                          <div className="flex items-center justify-between">
-                            <div className="flex flex-col">
-                              <span className="text-[10px] font-black uppercase tracking-tight text-foreground">Auto-Pilot</span>
-                              <span className="text-[8px] font-bold text-slate-500">Post Content Daily</span>
-                            </div>
-                            <button
+                            {/* Auto-Pilot Toggle */}
+                            <button 
                               onClick={() => updatePlatformPermission(id, tier === 'empire' ? 'co-pilot' : 'empire')}
                               className={cn(
-                                "w-8 h-4 rounded-full relative transition-all",
-                                tier === 'empire' ? "bg-cyan-400" : "bg-slate-800"
+                                "w-full flex items-center justify-between p-4 rounded-2xl border transition-all group/toggle",
+                                tier === 'empire' ? "bg-cyan-400/10 border-cyan-400" : "bg-theme-background border-theme hover:border-cyan-400/50"
                               )}
                             >
+                              <div className="flex flex-col text-left">
+                                <span className={cn("text-xs font-black uppercase tracking-tight", tier === 'empire' ? "text-cyan-400" : "text-foreground")}>Autonomous Auto-Pilot</span>
+                                <span className="text-[9px] font-bold text-slate-500">Authorized to post content daily</span>
+                              </div>
                               <div className={cn(
-                                "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
-                                tier === 'empire' ? "right-0.75" : "left-0.75"
-                              )} />
+                                "w-10 h-5 rounded-full relative transition-all",
+                                tier === 'empire' ? "bg-cyan-400" : "bg-slate-800"
+                              )}>
+                                <div className={cn(
+                                  "w-3.5 h-3.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
+                                  tier === 'empire' ? "right-0.75" : "left-0.75"
+                                )} />
+                              </div>
                             </button>
-                          </div>
 
-                          {/* Spending Toggle */}
-                          <div className="flex items-center justify-between pt-2 border-t border-theme/20">
-                            <div className="flex flex-col">
-                              <span className="text-[10px] font-black uppercase tracking-tight text-foreground">Spending</span>
-                              <span className="text-[8px] font-bold text-slate-500">Purchasing power</span>
-                            </div>
-                            <button
+                            {/* Spending Toggle */}
+                            <button 
                               onClick={() => updateSpendingPermission(id, !spendingPermissions[id])}
                               className={cn(
-                                "w-8 h-4 rounded-full relative transition-all",
-                                spendingPermissions[id] ? "bg-emerald-500" : "bg-slate-800"
+                                "w-full flex items-center justify-between p-4 rounded-2xl border transition-all group/toggle",
+                                spendingPermissions[id] ? "bg-emerald-500/10 border-emerald-500" : "bg-theme-background border-theme hover:border-emerald-500/50"
                               )}
                             >
+                              <div className="flex flex-col text-left">
+                                <span className={cn("text-xs font-black uppercase tracking-tight", spendingPermissions[id] ? "text-emerald-500" : "text-foreground")}>Autonomous Spending</span>
+                                <span className="text-[9px] font-bold text-slate-500">Authorized purchasing power</span>
+                              </div>
                               <div className={cn(
-                                "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
-                                spendingPermissions[id] ? "right-0.75" : "left-0.75"
-                              )} />
+                                "w-10 h-5 rounded-full relative transition-all",
+                                spendingPermissions[id] ? "bg-emerald-500" : "bg-slate-800"
+                              )}>
+                                <div className={cn(
+                                  "w-3.5 h-3.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
+                                  spendingPermissions[id] ? "right-0.75" : "left-0.75"
+                                )} />
+                              </div>
                             </button>
                           </div>
                         </div>
