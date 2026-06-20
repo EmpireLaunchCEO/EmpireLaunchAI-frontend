@@ -9,10 +9,10 @@ import { useEmpire } from '@/lib/EmpireContext';
 
 export function DisclaimerAgreementBox() {
   const router = useRouter();
-  const { isProtocolAccepted, acceptProtocols } = useEmpire();
+  const { isProtocolAccepted, acceptProtocols, isInitialized } = useEmpire();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  if (isProtocolAccepted) return null;
+  if (!isInitialized || isProtocolAccepted) return null;
 
   const handleAccept = () => {
     setIsProcessing(true);

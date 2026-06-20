@@ -469,7 +469,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              console.log('[Security] Verified Owner Session Active.');
              setIsAdmin(true);
              setIsPaidState(true);
-             setIsProtocolAccepted(true);
+             if (localStorage.getItem('isProtocolAccepted') === 'true') {
+               setIsProtocolAccepted(true);
+             }
              setSlotStatus({ 0: true, 1: true, 2: true });
              
              // HARD-INJECTION OF OWNER DATA based on slot id
