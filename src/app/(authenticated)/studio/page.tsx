@@ -30,8 +30,6 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { BarChart3, PenSquare, Lightbulb, SendHorizonal, Scissors, MonitorPlay, Clapperboard } from 'lucide-react';
 
 export default function StudioPage() {
-  const [activeTab, setActiveTab] = useState<'gallery' | 'cinema'>('gallery');
-  const [cinemaActiveSlot, setCinemaActiveSlot] = useState<'twin' | 'lab' | 'logs'>('twin');
   const [isDemoMode, setIsDemoMode] = useState(false);
   const { activeEmpire: empireData, registerRefreshHandler } = useEmpire();
 
@@ -228,409 +226,249 @@ export default function StudioPage() {
             <EmpireAIChatBox className="max-w-6xl mx-auto" />
           </motion.div>
 
-          {/* Tab Navigation */}
-          <div className="flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-[calc(100%-2rem)] overflow-x-auto no-scrollbar gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
-            {[
-              { id: 'gallery', label: 'EMPIRE STUDIO', icon: Palette },
-              { id: 'cinema', label: 'Cinema Hub', icon: Video },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={cn(
-                  "px-5 py-3 rounded-[18px] font-black text-[10px] uppercase tracking-tighter transition-all flex items-center gap-2 whitespace-nowrap min-w-fit",
-                  activeTab === tab.id
-                    ? "bg-theme-surface text-foreground shadow-lg border border-theme scale-105"
-                    : "text-slate-400 hover:text-foreground hover:bg-theme-surface/40"
-                )}
-              >
-                <tab.icon className={cn("w-3.5 h-3.5", activeTab === tab.id ? "text-primary" : "")} />
-                <span className="truncate">{tab.label}</span>
-              </button>
-            ))}
-          </div>
-
-          <AnimatePresence mode="wait">
-            {activeTab === 'gallery' && (
-              <motion.div
-                key="gallery"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-8"
-              >
-                {/* 1. Customize Video Box */}
-                <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                      <MonitorPlay className="w-5 h-5 text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Customize Video</h3>
-                      <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
-                        Direct the AI — define your style, pace, and visual narrative
-                      </p>
-                    </div>
+          <div className="space-y-12">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-8"
+            >
+              {/* 1. Customize Video Box */}
+              <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                    <MonitorPlay className="w-5 h-5 text-blue-400" />
                   </div>
-
-                  <div className="relative">
-                    <textarea
-                      value={customVideoIdea}
-                      onChange={(e) => setCustomVideoIdea(e.target.value)}
-                      placeholder="e.g. A 15-second high-energy product reveal for TikTok, fast cuts, vibrant neon overlays, focused on the 'Midnight Black' edition..."
-                      disabled={isSubmittingVideo}
-                      className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-blue-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
-                    />
-                    <button
-                      onClick={handleCustomVideoSubmit}
-                      disabled={!customVideoIdea.trim() || isSubmittingVideo}
-                      className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-blue-500/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
-                      {isSubmittingVideo ? (
-                        <div className="w-4 h-4 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin" />
-                      ) : (
-                        <SendHorizonal className="w-4 h-4" />
-                      )}
-                    </button>
+                  <div>
+                    <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Customize Video</h3>
+                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                      Direct the AI — define your style, pace, and visual narrative
+                    </p>
                   </div>
-
-                  {videoIdeaSubmitted && (
-                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Video directive received — generating visual storyboard</span>
-                    </motion.div>
-                  )}
                 </div>
 
-                {/* 2. Upload Video Box for Edits */}
-                <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                      <Scissors className="w-5 h-5 text-purple-400" />
-                    </div>
-                    <div>
-                      <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">AI Video Editor</h3>
-                      <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
-                        Upload raw clips — I'll apply the Empire Polish (Cuts, Captions, Music)
-                      </p>
-                    </div>
-                  </div>
-
-                  <FileUploadDropZone
-                    type="raw-video"
-                    state={rawVideoUpload}
-                    onFileSelect={handleRawVideoSelect}
-                    onRemove={handleRawVideoRemove}
-                    disabled={rawVideoUpload.status === 'uploading' || rawVideoUpload.status === 'processing'}
+                <div className="relative">
+                  <textarea
+                    value={customVideoIdea}
+                    onChange={(e) => setCustomVideoIdea(e.target.value)}
+                    placeholder="e.g. A 15-second high-energy product reveal for TikTok, fast cuts, vibrant neon overlays, focused on the 'Midnight Black' edition..."
+                    disabled={isSubmittingVideo}
+                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-blue-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                   />
+                  <button
+                    onClick={handleCustomVideoSubmit}
+                    disabled={!customVideoIdea.trim() || isSubmittingVideo}
+                    className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-blue-500/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    {isSubmittingVideo ? (
+                      <div className="w-4 h-4 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin" />
+                    ) : (
+                      <SendHorizonal className="w-4 h-4" />
+                    )}
+                  </button>
                 </div>
 
-                {/* 3. Faceless Content Creation Box */}
-                <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                      <Clapperboard className="w-5 h-5 text-emerald-400" />
+                {videoIdeaSubmitted && (
+                  <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Video directive received — generating visual storyboard</span>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* 2. Upload Video Box for Edits */}
+              <div className="bg-theme-surface border-2 border-white hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                    <Scissors className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">AI Video Editor</h3>
+                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                      Upload raw clips — I'll apply the Empire Polish (Cuts, Captions, Music)
+                    </p>
+                  </div>
+                </div>
+
+                <FileUploadDropZone
+                  type="raw-video"
+                  state={rawVideoUpload}
+                  onFileSelect={handleRawVideoSelect}
+                  onRemove={handleRawVideoRemove}
+                  disabled={rawVideoUpload.status === 'uploading' || rawVideoUpload.status === 'processing'}
+                />
+              </div>
+
+              {/* 3. Faceless Content Creation Box */}
+              <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                    <Clapperboard className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Faceless Empire Builder</h3>
+                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                      Generate viral faceless videos — you provide the niche, I provide the vision
+                    </p>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <textarea
+                    value={facelessIdea}
+                    onChange={(e) => setFacelessIdea(e.target.value)}
+                    placeholder="e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts, stock footage background, lo-fi beats, clean minimal captions..."
+                    disabled={isSubmittingFaceless}
+                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-emerald-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                  />
+                  <button
+                    onClick={handleFacelessSubmit}
+                    disabled={!facelessIdea.trim() || isSubmittingFaceless}
+                    className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    {isSubmittingFaceless ? (
+                      <div className="w-4 h-4 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
+                    ) : (
+                      <SendHorizonal className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+
+                {facelessSubmitted && (
+                  <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Faceless concept received — sourcing viral stock material</span>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Custom Design Input — Free-text Idea Entry */}
+              <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                    <PenSquare className="w-5 h-5 text-amber-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Custom Design Idea</h3>
+                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                      Describe your concept — I'll synthesize it with market-winning DNA
+                    </p>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <textarea
+                    value={customIdea}
+                    onChange={(e) => setCustomIdea(e.target.value)}
+                    placeholder="e.g. A minimalist sage-green yoga mat with gold mandala print, 72x24 inches, boho-luxe aesthetic..."
+                    disabled={isSubmittingIdea}
+                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-amber-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                  />
+                  <button
+                    onClick={handleCustomIdeaSubmit}
+                    disabled={!customIdea.trim() || isSubmittingIdea}
+                    className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  >
+                    {isSubmittingIdea ? (
+                      <div className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
+                    ) : (
+                      <SendHorizonal className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+
+                {ideaSubmitted && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">
+                      Design concept received — injecting into Neural Synthesis pipeline
+                    </span>
+                  </motion.div>
+                )}
+
+                <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-600">
+                  <Lightbulb className="w-3 h-3" />
+                  <span>Tip: Be specific about colors, materials, dimensions, and target platform</span>
+                </div>
+              </div>
+
+              {/* Neural Twin Section - Moved from Cinema Hub */}
+              <div className="flex flex-col md:flex-row gap-8 items-stretch">
+                <div className="flex-1 p-6 md:p-8 bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[32px] md:rounded-[40px] space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">
+                      <Stars className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
                     </div>
                     <div>
-                      <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Faceless Empire Builder</h3>
-                      <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
-                        Generate viral faceless videos — you provide the niche, I provide the vision
-                      </p>
+                      <h3 className="text-xl md:text-2xl font-black text-white italic">Neural Twin.</h3>
+                      <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
                     </div>
                   </div>
 
-                  <div className="relative">
-                    <textarea
-                      value={facelessIdea}
-                      onChange={(e) => setFacelessIdea(e.target.value)}
-                      placeholder="e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts, stock footage background, lo-fi beats, clean minimal captions..."
-                      disabled={isSubmittingFaceless}
-                      className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-emerald-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                  <p className="text-sm text-slate-400 leading-relaxed italic">
+                    "Upload a clear photo of yourself, and I'll create your Neural Twin. I can then generate high-fidelity marketing videos with perfect lip-syncing for any script you provide."
+                  </p>
+
+                  <div className="space-y-4">
+                    <FileUploadDropZone
+                      type="facial-dna"
+                      state={facialDnaUpload}
+                      onFileSelect={handleFacialDnaSelect}
+                      onRemove={handleFacialDnaRemove}
+                      disabled={facialDnaUpload.status === 'uploading' || facialDnaUpload.status === 'processing'}
                     />
+
+                    {facialDnaUpload.preview && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 mx-auto"
+                      >
+                        <img src={facialDnaUpload.preview} alt="Uploaded facial photo" className="w-full h-full object-cover" />
+                      </motion.div>
+                    )}
+
                     <button
-                      onClick={handleFacelessSubmit}
-                      disabled={!facelessIdea.trim() || isSubmittingFaceless}
-                      className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      onClick={handleSynthesizeTwin}
+                      disabled={facialDnaUpload.status !== 'complete'}
+                      className="w-full py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                     >
-                      {isSubmittingFaceless ? (
-                        <div className="w-4 h-4 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
-                      ) : (
-                        <SendHorizonal className="w-4 h-4" />
-                      )}
+                      {facialDnaUpload.status === 'complete' ? 'Synthesize Twin Double' : 'Upload a photo first'}
                     </button>
                   </div>
-
-                  {facelessSubmitted && (
-                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Faceless concept received — sourcing viral stock material</span>
-                    </motion.div>
-                  )}
                 </div>
 
-                {/* Custom Design Input — Free-text Idea Entry */}
-                <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                      <PenSquare className="w-5 h-5 text-amber-400" />
-                    </div>
-                    <div>
-                      <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Custom Design Idea</h3>
-                      <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
-                        Describe your concept — I'll synthesize it with market-winning DNA
-                      </p>
-                    </div>
+                <div className="flex-1 p-6 md:p-8 bg-theme-surface border border-theme rounded-[32px] md:rounded-[40px] flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                    <Video className="w-10 h-10 text-primary" />
                   </div>
-
-                  <div className="relative">
-                    <textarea
-                      value={customIdea}
-                      onChange={(e) => setCustomIdea(e.target.value)}
-                      placeholder="e.g. A minimalist sage-green yoga mat with gold mandala print, 72x24 inches, boho-luxe aesthetic..."
-                      disabled={isSubmittingIdea}
-                      className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-amber-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
-                    />
-                    <button
-                      onClick={handleCustomIdeaSubmit}
-                      disabled={!customIdea.trim() || isSubmittingIdea}
-                      className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-                    >
-                      {isSubmittingIdea ? (
-                        <div className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
-                      ) : (
-                        <SendHorizonal className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
-
-                  {ideaSubmitted && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">
-                        Design concept received — injecting into Neural Synthesis pipeline
-                      </span>
-                    </motion.div>
-                  )}
-
-                  <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-600">
-                    <Lightbulb className="w-3 h-3" />
-                    <span>Tip: Be specific about colors, materials, dimensions, and target platform</span>
-                  </div>
+                  <h4 className="text-xl font-bold text-white uppercase italic">Twin Active.</h4>
+                  <p className="text-sm text-slate-400">
+                    Once your Twin is synthesized, you can generate cinematic clips instantly.
+                  </p>
                 </div>
+              </div>
 
-                {/* Suggestion Bubbles - FORCED VERTICAL */}
-                <div className="flex flex-col gap-2">
-                  <SuggestionBubbles onSelect={handleSuggestion} />
-                </div>
+              {/* Suggestion Bubbles - FORCED VERTICAL */}
+              <div className="flex flex-col gap-2">
+                <SuggestionBubbles onSelect={handleSuggestion} />
+              </div>
 
-                {/* Inspiration Gallery */}
-                <InspirationGallery />
-              </motion.div>
-            )}
+              {/* Inspiration Gallery */}
+              <InspirationGallery />
 
-            {activeTab === 'cinema' && (
-              <motion.div
-                key="cinema"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-8"
-              >
-                {/* Cinema Slot Bar */}
-                <div className="flex bg-slate-900/50 p-1 rounded-[20px] border border-theme w-full max-w-2xl mx-auto gap-1">
-                  {[
-                    { id: 'twin', label: 'Neural Twin', icon: Stars },
-                    { id: 'lab', label: 'AI Video Lab', icon: Film },
-                    { id: 'logs', label: 'Production Logs', icon: Clock },
-                  ].map((slot) => (
-                    <button
-                      key={slot.id}
-                      onClick={() => setCinemaActiveSlot(slot.id as any)}
-                      className={cn(
-                        "flex-1 py-3 rounded-[16px] font-black text-[9px] uppercase tracking-widest transition-all flex items-center justify-center gap-2",
-                        cinemaActiveSlot === slot.id
-                          ? "bg-primary text-slate-950 shadow-lg"
-                          : "text-slate-400 hover:text-white hover:bg-white/5"
-                      )}
-                    >
-                      <slot.icon className="w-3 h-3" />
-                      <span>{slot.label}</span>
-                    </button>
-                  ))}
-                </div>
-
-                <AnimatePresence mode="wait">
-                  {cinemaActiveSlot === 'twin' && (
-                    <motion.div
-                      key="twin"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="flex flex-col md:flex-row gap-8 items-stretch"
-                    >
-                      <div className="flex-1 p-6 md:p-8 bg-theme-surface border-2 border-primary/20 rounded-[32px] md:rounded-[40px] space-y-6">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">
-                            <Stars className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
-                          </div>
-                          <div>
-                            <h3 className="text-xl md:text-2xl font-black text-white italic">Neural Twin.</h3>
-                            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
-                          </div>
-                        </div>
-
-                        <p className="text-sm text-slate-400 leading-relaxed italic">
-                          "Upload a clear photo of yourself, and I'll create your Neural Twin. I can then generate high-fidelity marketing videos with perfect lip-syncing for any script you provide. Your double, but autonomous."
-                        </p>
-
-                        <div className="space-y-4">
-                          <FileUploadDropZone
-                            type="facial-dna"
-                            state={facialDnaUpload}
-                            onFileSelect={handleFacialDnaSelect}
-                            onRemove={handleFacialDnaRemove}
-                            disabled={facialDnaUpload.status === 'uploading' || facialDnaUpload.status === 'processing'}
-                          />
-
-                          {facialDnaUpload.preview && (
-                            <motion.div
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: 'auto' }}
-                              className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 mx-auto"
-                            >
-                              <img src={facialDnaUpload.preview} alt="Uploaded facial photo" className="w-full h-full object-cover" />
-                              <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
-                            </motion.div>
-                          )}
-
-                          <button
-                            onClick={handleSynthesizeTwin}
-                            disabled={facialDnaUpload.status !== 'complete'}
-                            className="w-full py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                          >
-                            {facialDnaUpload.status === 'complete' ? 'Synthesize Twin Double' : 'Upload a photo first'}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="flex-1 p-6 md:p-8 bg-slate-900 border border-theme rounded-[32px] md:rounded-[40px] flex flex-col items-center justify-center text-center space-y-4">
-                        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                          <Video className="w-10 h-10 text-primary" />
-                        </div>
-                        <h4 className="text-xl font-bold text-white uppercase italic">Twin Active.</h4>
-                        <p className="text-sm text-slate-400">
-                          Once your Twin is synthesized, you can generate cinematic clips for TikTok, Instagram, and YouTube instantly.
-                        </p>
-                        {isRendering && activeRenderType === 'facial-dna' && (
-                          <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20"
-                          >
-                            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                            <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Twin Synthesis in Progress</span>
-                          </motion.div>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {cinemaActiveSlot === 'lab' && (
-                    <motion.div
-                      key="lab"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="space-y-8"
-                    >
-                      <div className="p-6 md:p-8 bg-theme-surface border-2 border-theme rounded-[32px] md:rounded-[40px] space-y-6">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center">
-                            <Film className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
-                          </div>
-                          <div>
-                            <h3 className="text-xl md:text-2xl font-black text-white italic">Raw Material Upload.</h3>
-                            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">AI-Powered Video Enhancement</p>
-                          </div>
-                        </div>
-
-                        <p className="text-sm text-slate-400 leading-relaxed italic">
-                          "Upload your raw footage and I'll apply the Empire Style — color grading, smart captions, trending music, and professional cuts. Your content, empire-certified."
-                        </p>
-
-                        <FileUploadDropZone
-                          type="raw-video"
-                          state={rawVideoUpload}
-                          onFileSelect={handleRawVideoSelect}
-                          onRemove={handleRawVideoRemove}
-                          disabled={rawVideoUpload.status === 'uploading' || rawVideoUpload.status === 'processing'}
-                        />
-
-                        {rawVideoUpload.status === 'complete' && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="flex items-center gap-3 p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20"
-                          >
-                            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                            <div>
-                              <p className="text-xs font-bold text-emerald-400">Raw video received</p>
-                              <p className="text-[9px] text-emerald-400/70 font-medium">Queued for AI enhancement pipeline</p>
-                            </div>
-                          </motion.div>
-                        )}
-                      </div>
-
-                      <div className="space-y-4">
-                        <h4 className="text-sm font-black text-foreground uppercase tracking-tight px-1">Enhanced Clips</h4>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                          {[1, 2].map(i => (
-                            <div key={i} className="aspect-[9/16] bg-theme-surface border-2 border-theme rounded-[24px] relative overflow-hidden group">
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-                              <div className="absolute bottom-4 left-4">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                  <span className="text-[8px] font-black uppercase tracking-widest text-emerald-400">Ready</span>
-                                </div>
-                                <p className="text-[10px] font-bold text-white">Enhanced Reel #{i}</p>
-                              </div>
-                              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
-                                <Zap className="w-8 h-8 text-primary" />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {cinemaActiveSlot === 'logs' && (
-                    <motion.div
-                      key="logs"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                    >
-                      <AIRenderLog
-                        logs={renderLogs}
-                        isProcessing={isRendering}
-                        type={activeRenderType}
-                        onClear={handleClearLogs}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-12">
-            <FeedbackBox />
-          </motion.div>
+              {/* Production Logs Section */}
+              <AIRenderLog
+                logs={renderLogs}
+                isProcessing={isRendering}
+                type={activeRenderType}
+                onClear={handleClearLogs}
+              />
+            </motion.div>
+          </div>
 
           {/* Version Verification */}
           <div className="flex justify-center pb-20 pt-12">
