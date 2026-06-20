@@ -190,7 +190,7 @@ function VisualStyleCard({
         "relative w-full text-left rounded-[24px] overflow-hidden border-2 transition-all flex items-stretch gap-4 p-3 bg-theme-surface",
         selected 
           ? "border-primary shadow-lg" 
-          : "border-theme hover:border-primary/40"
+          : "border-theme hover:border-white/40"
       )}
     >
       {/* Small Preview Image */}
@@ -289,7 +289,7 @@ export function InspirationGallery({ onSelectVibe }: InspirationGalleryProps) {
               "px-4 py-2 rounded-full font-black text-[9px] uppercase tracking-widest whitespace-nowrap transition-all border",
               filter === cat
                 ? "bg-primary text-slate-950 border-primary shadow-lg shadow-primary/20"
-                : "bg-theme-surface text-muted-foreground border-theme hover:border-primary/30"
+                : "bg-theme-surface text-muted-foreground border-theme hover:border-white/30"
             )}
           >
             {cat === 'all' ? 'All Styles' : cat}
@@ -468,7 +468,7 @@ export function StudioVibesSelector({ onVibeSelected }: StudioVibesSelectorProps
             <div className="flex gap-4">
               <button
                 onClick={() => setStep('choose')}
-                className="flex-1 py-4 border-2 border-theme rounded-2xl font-black text-xs uppercase tracking-widest text-muted-foreground hover:border-primary/30 transition-all"
+                className="flex-1 py-4 border-2 border-theme rounded-2xl font-black text-xs uppercase tracking-widest text-muted-foreground hover:border-white/30 transition-all"
               >
                 Try Another
               </button>
@@ -519,7 +519,7 @@ export function SuggestionBubbles({ onSelect }: SuggestionBubblesProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.1 }}
           onClick={() => onSelect(s.label)}
-          className="w-full px-4 py-3 bg-theme-surface border border-theme rounded-2xl font-bold text-[11px] text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all flex items-center justify-between group"
+          className="w-full px-4 py-3 bg-theme-surface border border-theme rounded-2xl font-bold text-[11px] text-foreground hover:border-white/40 hover:bg-primary/5 transition-all flex items-center justify-between group"
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
         >

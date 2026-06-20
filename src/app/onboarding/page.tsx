@@ -303,7 +303,7 @@ function OnboardingContent() {
               <p className="text-primary font-black tracking-widest text-xs uppercase">Add "EmpireLaunch AI" to your Home Screen to unlock the Command Center</p>
             </div>
             <div className="max-w-sm mx-auto space-y-6">
-              <button onClick={() => { handleActivate(); }} className="w-full py-5 bg-white text-slate-950 border-2 border-white font-black text-sm uppercase tracking-[0.2em] rounded-2xl hover:bg-primary hover:border-primary transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] active:scale-95">Already Installed / Skip</button>
+              <button onClick={() => { handleActivate(); }} className="w-full py-5 bg-white text-slate-950 border-2 border-white font-black text-sm uppercase tracking-[0.2em] rounded-2xl hover:bg-primary hover:border-white transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)] active:scale-95">Already Installed / Skip</button>
             </div>
           </div>
         </motion.div>

@@ -113,7 +113,7 @@ export function EmpireConstellation() {
           >
             <div className="relative flex flex-col items-center">
               <div className={cn(
-                "w-12 h-12 rounded-2xl bg-theme-surface border-2 border-theme flex items-center justify-center shadow-lg transition-all group-hover:scale-110 group-hover:border-primary/50 group-hover:shadow-primary/20",
+                "w-12 h-12 rounded-2xl bg-theme-surface border-2 border-theme flex items-center justify-center shadow-lg transition-all group-hover:scale-110 group-hover:border-white/50 group-hover:shadow-primary/20",
                 node.id === 'activity' ? "w-16 h-16 bg-slate-900 border-slate-800" : ""
               )}>
                 <node.icon className={cn("w-6 h-6", node.color, node.id === 'activity' ? "text-white" : "")} />

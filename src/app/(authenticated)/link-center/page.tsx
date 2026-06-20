@@ -147,7 +147,7 @@ export default function LinkCenterPage() {
                                  "py-2 rounded-lg text-[8px] font-black uppercase tracking-tight border transition-all",
                                  tier === t 
                                    ? "bg-primary text-slate-950 border-primary" 
-                                   : "bg-theme-background text-slate-500 border-theme hover:border-primary/30"
+                                   : "bg-theme-background text-slate-500 border-theme hover:border-white/30"
                                )}
                              >
                                {t === 'read-only' ? 'Read' : t === 'co-pilot' ? 'Co-Pilot' : 'Auto'}

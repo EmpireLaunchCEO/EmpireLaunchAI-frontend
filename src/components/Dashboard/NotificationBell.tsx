@@ -16,7 +16,7 @@ export function NotificationBell({ id }: { id?: string }) {
       <button
         id={id}
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-3 rounded-2xl bg-theme-surface border-2 border-theme hover:border-primary transition-all group shadow-sm"
+        className="relative p-3 rounded-2xl bg-theme-surface border-2 border-theme hover:border-white transition-all group shadow-sm"
       >
         <Bell className={cn("w-6 h-6 transition-colors", unreadCount > 0 ? "text-primary" : "text-muted-foreground group-hover:text-primary")} />
         {unreadCount > 0 && (

@@ -63,7 +63,7 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
               key={platform.id}
               whileHover={{ y: -5 }}
               className={cn(
-                "p-5 md:p-6 rounded-[28px] md:rounded-[32px] border-2 transition-all flex flex-col justify-between h-56 md:h-64 relative overflow-hidden group border-slate-800 bg-slate-900 hover:border-primary shadow-sm"
+                "p-5 md:p-6 rounded-[28px] md:rounded-[32px] border-2 transition-all flex flex-col justify-between h-56 md:h-64 relative overflow-hidden group border-slate-800 bg-slate-900 hover:border-white shadow-sm"
               )}
             >
               <div className="flex justify-between items-start">
@@ -91,9 +91,9 @@ export function PlatformMatrix({ connectedPlatforms, onConnect }: PlatformMatrix
         {/* "And Many More" Card */}
         <motion.div
           whileHover={{ y: -5 }}
-          className="p-6 rounded-[32px] border-2 border-dashed border-slate-800 bg-slate-900/50 flex flex-col justify-center items-center h-64 text-center space-y-4 group transition-colors hover:border-primary/40"
+          className="p-6 rounded-[32px] border-2 border-dashed border-slate-800 bg-slate-900/50 flex flex-col justify-center items-center h-64 text-center space-y-4 group transition-colors hover:border-white/40"
         >
-          <div className="w-16 h-16 rounded-full bg-slate-950 border-2 border-slate-800 flex items-center justify-center shadow-sm group-hover:border-primary transition-colors">
+          <div className="w-16 h-16 rounded-full bg-slate-950 border-2 border-slate-800 flex items-center justify-center shadow-sm group-hover:border-white transition-colors">
             <Plus className="w-8 h-8 text-slate-700 group-hover:text-primary transition-colors" />
           </div>
           <div>

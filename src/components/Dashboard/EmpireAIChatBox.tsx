@@ -38,7 +38,7 @@ export function EmpireAIChatBox({ className }: { className?: string }) {
 
   return (
     <div className={cn(
-      "bg-theme-surface border-2 border-theme rounded-[40px] overflow-hidden shadow-2xl flex flex-col h-[400px] relative group transition-all hover:border-primary/30",
+      "bg-theme-surface border-2 border-theme rounded-[40px] overflow-hidden shadow-2xl flex flex-col h-[400px] relative group transition-all hover:border-white/30",
       className
     )}>
       {/* Header */}

@@ -156,7 +156,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
                       <select
                         value={language}
                         onChange={(e) => setLanguage(e.target.value)}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 sm:py-2.5 pl-2 sm:pl-3 pr-6 sm:pr-8 text-[8px] sm:text-[9px] font-black uppercase appearance-none hover:border-primary/40 transition-all cursor-pointer outline-none text-white"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 sm:py-2.5 pl-2 sm:pl-3 pr-6 sm:pr-8 text-[8px] sm:text-[9px] font-black uppercase appearance-none hover:border-white/40 transition-all cursor-pointer outline-none text-white"
                       >
                         <option value="en-US">English (US)</option>
                         <option value="en-GB">English (UK)</option>
@@ -177,7 +177,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
                       <select
                         value={currency}
                         onChange={(e) => setCurrency(e.target.value)}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 sm:py-2.5 pl-2 sm:pl-3 pr-6 sm:pr-8 text-[8px] sm:text-[9px] font-black uppercase appearance-none hover:border-primary/40 transition-all cursor-pointer outline-none text-white"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-xl py-2 sm:py-2.5 pl-2 sm:pl-3 pr-6 sm:pr-8 text-[8px] sm:text-[9px] font-black uppercase appearance-none hover:border-white/40 transition-all cursor-pointer outline-none text-white"
                       >
                         <option value="USD">USD ($)</option>
                         <option value="EUR">EUR (€)</option>

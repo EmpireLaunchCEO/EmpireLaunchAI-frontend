@@ -81,7 +81,7 @@ export function FileUploadDropZone({ type, onFileSelect, onRemove, state, disabl
   };
 
   const statusColors: Record<UploadStatus, string> = {
-    idle: 'border-theme hover:border-primary/40 text-slate-500 group-hover:text-white',
+    idle: 'border-theme hover:border-white/40 text-slate-500 group-hover:text-white',
     selected: 'border-primary/50 text-primary',
     uploading: 'border-blue-500/50 text-blue-400',
     processing: 'border-purple-500/50 text-purple-400',

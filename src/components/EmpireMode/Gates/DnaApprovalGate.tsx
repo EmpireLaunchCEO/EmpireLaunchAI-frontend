@@ -264,7 +264,7 @@ export function DnaApprovalGate({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {dna.fonts.map((font, i) => (
-                  <div key={i} className="p-6 bg-theme-background rounded-[32px] border border-theme hover:border-primary/30 transition-all group">
+                  <div key={i} className="p-6 bg-theme-background rounded-[32px] border border-theme hover:border-white/30 transition-all group">
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-[9px] font-black uppercase tracking-widest text-primary">{font.platform}</span>
                       <div className="w-8 h-8 rounded-xl bg-theme-surface flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -287,7 +287,7 @@ export function DnaApprovalGate({
 
               <div className="space-y-3">
                 {dna.script.map((segment, i) => (
-                  <div key={i} className="p-5 bg-theme-background rounded-[24px] border border-theme hover:border-primary/30 transition-all">
+                  <div key={i} className="p-5 bg-theme-background rounded-[24px] border border-theme hover:border-white/30 transition-all">
                     <div className="flex items-start gap-4">
                       <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
                         <span className="text-[8px] font-black text-primary">{String(i + 1).padStart(2, '0')}</span>

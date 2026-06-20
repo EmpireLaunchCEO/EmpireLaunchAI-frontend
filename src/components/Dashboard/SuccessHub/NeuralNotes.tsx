@@ -113,7 +113,7 @@ export function NeuralNotes() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="p-6 bg-theme-background border border-theme rounded-3xl relative group hover:border-primary/30 transition-colors"
+                className="p-6 bg-theme-background border border-theme rounded-3xl relative group hover:border-white/30 transition-colors"
               >
                 <p className="text-sm text-slate-300 leading-relaxed italic">{note}</p>
                 <button 

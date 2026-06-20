@@ -293,7 +293,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                 <motion.div
                   key={id}
                   layoutId={id}
-                  className="p-6 bg-theme-surface border border-theme rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow group hover:border-primary/50"
+                  className="p-6 bg-theme-surface border border-theme rounded-[28px] flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow group hover:border-white/50"
                 >
                   <div className={cn("p-3 rounded-xl transition-colors", platform.bg, "group-hover:bg-primary/20")}>
                     <PlatformIcon id={id} icon={platform.icon} className={platform.color} size={20} />
@@ -485,7 +485,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
                       onClick={() => setSelectedTier('co-pilot')}
                       className={cn(
                         "p-8 rounded-[40px] border-4 transition-all cursor-pointer relative group h-full flex flex-col",
-                        selectedTier === 'co-pilot' ? "border-primary bg-primary/5 shadow-2xl" : "border-theme bg-theme-background hover:border-primary/50"
+                        selectedTier === 'co-pilot' ? "border-primary bg-primary/5 shadow-2xl" : "border-theme bg-theme-background hover:border-white/50"
                       )}
                     >
                       <div className="flex items-center justify-between mb-6">

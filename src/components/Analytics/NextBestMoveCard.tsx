@@ -102,7 +102,7 @@ export function NextBestMoveCard() {
       </div>
 
       {/* Featured card */}
-      <div className="bg-theme-background/40 rounded-[28px] p-6 border border-primary/20 hover:border-primary/40 transition-all group">
+      <div className="bg-theme-background/40 rounded-[28px] p-6 border border-primary/20 hover:border-white/40 transition-all group">
         <div className="flex items-start gap-4">
           <div className={cn(
             "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border",

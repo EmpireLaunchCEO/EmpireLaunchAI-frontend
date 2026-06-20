@@ -111,7 +111,7 @@ export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist:
                 href={getDeepLink(platform)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full p-4 bg-primary/5 border-2 border-primary/20 rounded-2xl flex items-center justify-between group hover:bg-primary hover:border-primary transition-all shadow-sm"
+                className="w-full p-4 bg-primary/5 border-2 border-primary/20 rounded-2xl flex items-center justify-between group hover:bg-primary hover:border-white transition-all shadow-sm"
               >
                  <div className="flex items-center gap-3">
                     <div className="p-2 bg-theme-surface rounded-lg text-primary group-hover:scale-110 transition-transform">
@@ -138,7 +138,7 @@ export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist:
                      onClick={() => toggleCheck(item.id)}
                      className={cn(
                        "w-full p-3.5 rounded-xl border-2 text-left transition-all flex items-center gap-3 group",
-                       item.completed ? "bg-theme-background border-theme" : "bg-theme-surface border-theme hover:border-primary/50"
+                       item.completed ? "bg-theme-background border-theme" : "bg-theme-surface border-theme hover:border-white/50"
                      )}
                    >
                      <div className={cn(
@@ -197,7 +197,7 @@ export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist:
                         setCopiedLabel(`font-${i}`);
                         setTimeout(() => setCopiedLabel(null), 2000);
                      }}
-                     className="w-full p-3 bg-theme-background border border-theme rounded-xl flex items-center justify-between group hover:border-primary transition-all"
+                     className="w-full p-3 bg-theme-background border border-theme rounded-xl flex items-center justify-between group hover:border-white transition-all"
                    >
                       <div className="text-left">
                          <span className="text-[8px] font-black text-slate-500 uppercase">{f.platform}</span>
@@ -219,7 +219,7 @@ export function CopyPastePowerTool({ blueprint, platform, onComplete, checklist:
                      onClick={() => handleCopy(item)}
                      className={cn(
                        "w-full p-4 rounded-2xl border-2 text-left transition-all group relative overflow-hidden",
-                       copiedLabel === item.label ? "border-green-500 bg-green-500/10" : "border-theme bg-theme-background/30 hover:border-primary hover:bg-theme-surface"
+                       copiedLabel === item.label ? "border-green-500 bg-green-500/10" : "border-theme bg-theme-background/30 hover:border-white hover:bg-theme-surface"
                      )}
                    >
                      <div className="flex justify-between items-start mb-2">

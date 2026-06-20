@@ -77,7 +77,7 @@ export function Sidebar() {
 
         <div className="p-6 border-t border-theme bg-theme-surface">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-slate-900 border border-theme flex items-center justify-center shadow-lg overflow-hidden group hover:border-primary/50 transition-colors">
+            <div className="w-10 h-10 rounded-2xl bg-slate-900 border border-theme flex items-center justify-center shadow-lg overflow-hidden group hover:border-white/50 transition-colors">
                <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-black text-[10px] group-hover:bg-primary group-hover:text-white transition-all">
                  {String(activeEmpire?.name || 'E').substring(0, 1).toUpperCase()}
                </div>

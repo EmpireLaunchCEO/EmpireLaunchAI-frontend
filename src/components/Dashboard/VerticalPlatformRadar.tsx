@@ -123,7 +123,7 @@ export function VerticalPlatformRadar() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             whileHover={{ scale: 1.01 }}
-            className="group relative bg-theme-surface border-2 border-theme rounded-[32px] p-5 md:p-6 overflow-hidden transition-all hover:border-primary/30 shadow-sm"
+            className="group relative bg-theme-surface border-2 border-theme rounded-[32px] p-5 md:p-6 overflow-hidden transition-all hover:border-white/30 shadow-sm"
           >
             {/* Background Glow */}
             <div className={cn("absolute top-0 right-0 w-32 h-32 blur-[60px] -z-10 opacity-30", platform.bgSecondary)} />
@@ -195,7 +195,7 @@ export function VerticalPlatformRadar() {
               </div>
 
               {/* Action */}
-              <button className="p-3 bg-theme-background border border-theme rounded-2xl text-slate-400 hover:text-primary transition-all group-hover:border-primary/20">
+              <button className="p-3 bg-theme-background border border-theme rounded-2xl text-slate-400 hover:text-primary transition-all group-hover:border-white/20">
                 <ExternalLink className="w-5 h-5" />
               </button>
             </div>

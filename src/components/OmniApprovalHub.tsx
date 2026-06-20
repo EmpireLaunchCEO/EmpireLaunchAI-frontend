@@ -136,7 +136,7 @@ export function OmniApprovalHub() {
             whileHover={{ y: -5 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleOpenCategory(config.type)}
-            className="bg-theme-surface border-2 border-theme rounded-[32px] p-6 text-left flex flex-col justify-between h-[180px] group transition-all hover:border-primary/30"
+            className="bg-theme-surface border-2 border-theme rounded-[32px] p-6 text-left flex flex-col justify-between h-[180px] group transition-all hover:border-white/30"
           >
             <div className="flex justify-between items-start">
               <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center border border-theme", config.color)}>

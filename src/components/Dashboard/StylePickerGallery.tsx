@@ -105,7 +105,7 @@ function StyleCard({ strand, selected, onSelect }: StyleCardProps) {
         'relative w-full text-left rounded-[24px] overflow-hidden border-2 transition-all flex flex-col',
         selected
           ? 'border-primary shadow-lg shadow-primary/20'
-          : 'border-theme hover:border-primary/40 bg-theme-surface'
+          : 'border-theme hover:border-white/40 bg-theme-surface'
       )}
     >
       {/* Color palette strip */}
@@ -459,7 +459,7 @@ export function StylePickerGallery({ inline, onApplyStyle, className }: StylePic
                 'flex items-center gap-1.5 px-3.5 py-2 rounded-full font-black text-[8px] uppercase tracking-widest whitespace-nowrap transition-all border shrink-0',
                 activeCategory === cat.id
                   ? 'bg-primary text-slate-950 border-primary shadow-lg shadow-primary/20'
-                  : 'bg-theme-surface text-muted-foreground border-theme hover:border-primary/30'
+                  : 'bg-theme-surface text-muted-foreground border-theme hover:border-white/30'
               )}
             >
               <Icon className="w-3 h-3" />

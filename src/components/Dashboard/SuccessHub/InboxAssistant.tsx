@@ -111,7 +111,7 @@ export const InboxAssistant = () => {
                    </div>
                 </div>
 
-                <div className="p-6 rounded-3xl bg-theme-background border border-theme relative group/body hover:border-primary/30 transition-colors">
+                <div className="p-6 rounded-3xl bg-theme-background border border-theme relative group/body hover:border-white/30 transition-colors">
                   <p className="text-sm text-foreground font-medium leading-relaxed">
                     <span className="text-muted-foreground font-bold">Subject:</span> {draft.subject}
                     <br /><br />
@@ -119,7 +119,7 @@ export const InboxAssistant = () => {
                   </p>
                   <button
                     onClick={() => handleCopy(`${draft.subject}\n\n${draft.body}`, draft.id)}
-                    className="absolute top-4 right-4 p-2.5 bg-theme-surface rounded-xl border border-theme shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-primary/10 hover:border-primary/20"
+                    className="absolute top-4 right-4 p-2.5 bg-theme-surface rounded-xl border border-theme shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-primary/10 hover:border-white/20"
                   >
                     {copiedId === draft.id ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-muted-foreground" />}
                   </button>

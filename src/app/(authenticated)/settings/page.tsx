@@ -387,7 +387,7 @@ function SettingsContent() {
                             onClick={() => !isConnected && setActivePlatform(p)} 
                             className={cn(
                               "p-6 rounded-[32px] border-2 transition-all flex flex-col items-center gap-3 group relative overflow-hidden",
-                              isConnected ? "border-emerald-600 bg-emerald-900/20 cursor-default" : "border-theme bg-theme-background hover:border-primary/50"
+                              isConnected ? "border-emerald-600 bg-emerald-900/20 cursor-default" : "border-theme bg-theme-background hover:border-white/50"
                             )}
                           >
                             <div className={cn(
@@ -441,7 +441,7 @@ function SettingsContent() {
                         { id: 'content', name: 'Content Ready for Review', desc: 'Alert when a high-converting video is drafted and ready.' },
                         { id: 'trends', name: 'Market Pivot Detected', desc: 'AI found a new trend your empire should capitalize on.' }
                       ].map((n) => (
-                        <div key={n.id} className="flex items-center justify-between p-6 bg-theme-background border-2 border-theme rounded-3xl group hover:border-primary/50 transition-all">
+                        <div key={n.id} className="flex items-center justify-between p-6 bg-theme-background border-2 border-theme rounded-3xl group hover:border-white/50 transition-all">
                           <div className="space-y-1">
                             <h4 className="font-bold text-white">{n.name}</h4>
                             <p className="text-xs text-white/40">{n.desc}</p>
@@ -475,7 +475,7 @@ function SettingsContent() {
                           onClick={() => setTheme(scheme.id)} 
                           className={cn(
                             "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 group", 
-                            theme === scheme.id ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" : "border-theme bg-theme-background hover:border-primary/30"
+                            theme === scheme.id ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" : "border-theme bg-theme-background hover:border-white/30"
                           )}
                         >
                           <div className="flex items-center justify-between">

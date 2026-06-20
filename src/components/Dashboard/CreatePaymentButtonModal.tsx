@@ -354,7 +354,7 @@ export function CreatePaymentButtonModal({
                     <div className="flex gap-3">
                       <button
                         onClick={handleClose}
-                        className="flex-1 py-4 border-2 border-theme rounded-2xl font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:border-primary/30 transition-all"
+                        className="flex-1 py-4 border-2 border-theme rounded-2xl font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:border-white/30 transition-all"
                       >
                         Done
                       </button>

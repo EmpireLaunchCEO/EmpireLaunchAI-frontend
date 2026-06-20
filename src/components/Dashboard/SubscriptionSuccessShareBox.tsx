@@ -145,7 +145,7 @@ export function SubscriptionSuccessShareBox({
         {/* Subscription & Success-Share Details */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Base Subscription */}
-          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-primary/30 transition-all group">
+          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-white/30 transition-all group">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center">
                 <Diamond className="w-4 h-4 text-blue-400" />
@@ -157,7 +157,7 @@ export function SubscriptionSuccessShareBox({
           </div>
 
           {/* Expansion Slots */}
-          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-primary/30 transition-all group">
+          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-white/30 transition-all group">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center">
                 <TrendingUp className="w-4 h-4 text-purple-400" />
@@ -169,7 +169,7 @@ export function SubscriptionSuccessShareBox({
           </div>
 
           {/* Success-Share Fee */}
-          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-primary/30 transition-all group">
+          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-white/30 transition-all group">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                 <DollarSign className="w-4 h-4 text-emerald-400" />

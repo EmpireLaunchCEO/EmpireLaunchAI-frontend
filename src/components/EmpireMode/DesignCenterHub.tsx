@@ -72,7 +72,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
             href={p.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-8 bg-theme-surface border-2 border-theme rounded-[40px] hover:border-primary transition-all group shadow-sm flex flex-col items-center text-center space-y-4"
+            className="p-8 bg-theme-surface border-2 border-theme rounded-[40px] hover:border-white transition-all group shadow-sm flex flex-col items-center text-center space-y-4"
           >
             <div className={cn("p-4 rounded-2xl group-hover:scale-110 transition-transform", p.bg)}>
               <p.icon className={cn("w-8 h-8", p.color)} />

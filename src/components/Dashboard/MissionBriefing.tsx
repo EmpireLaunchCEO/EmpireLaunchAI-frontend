@@ -247,7 +247,7 @@ export function MissionBriefing({ empireData }: { empireData: any }) {
                     key={step.id}
                     onClick={clickHandler}
                     className={cn(
-                      "block p-4 rounded-3xl border transition-all bg-theme-background text-foreground border-theme shadow-xl shadow-primary/5 active:scale-[0.98] hover:border-primary/50"
+                      "block p-4 rounded-3xl border transition-all bg-theme-background text-foreground border-theme shadow-xl shadow-primary/5 active:scale-[0.98] hover:border-white/50"
                     )}
                   >
                     {content}

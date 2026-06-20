@@ -47,7 +47,7 @@ export function VisualVariationSelector({ variations, selectedId, onSelect, onCo
             whileHover={{ y: -8 }}
             className={cn(
               "relative bg-theme-surface border-2 rounded-[40px] overflow-hidden transition-all text-left shadow-sm group",
-              selectedId === v.id ? "border-primary shadow-amber-900/20 shadow-2xl" : "border-theme hover:border-primary/50"
+              selectedId === v.id ? "border-primary shadow-amber-900/20 shadow-2xl" : "border-theme hover:border-white/50"
             )}
           >
             <div className="aspect-[4/5] bg-slate-900 relative overflow-hidden">

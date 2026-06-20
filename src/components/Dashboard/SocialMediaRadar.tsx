@@ -150,7 +150,7 @@ function PlatformSummaryCard({ summary }: { summary: any }) {
       initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-theme-background border-2 border-theme rounded-[24px] overflow-hidden hover:border-primary/30 transition-all shadow-sm"
+      className="bg-theme-background border-2 border-theme rounded-[24px] overflow-hidden hover:border-white/30 transition-all shadow-sm"
     >
       <button
         onClick={() => setExpanded(!expanded)}
@@ -222,7 +222,7 @@ function PlatformSummaryCard({ summary }: { summary: any }) {
 
 function SignalCard({ signal }: { signal: any }) {
   return (
-    <div className="p-4 bg-theme-background border border-theme rounded-2xl space-y-2 hover:border-primary/30 transition-all">
+    <div className="p-4 bg-theme-background border border-theme rounded-2xl space-y-2 hover:border-white/30 transition-all">
       <div className="flex items-center justify-between">
         <span className={cn(
           "text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded",
@@ -510,7 +510,7 @@ export function SocialMediaRadar() {
                    initial={{ opacity: 0, y: 20 }}
                    animate={{ opacity: 1, y: 0 }}
                    transition={{ delay: i * 0.1 }}
-                   className="p-5 bg-theme-background border-2 border-theme rounded-[24px] space-y-3 hover:border-primary/30 transition-all group"
+                   className="p-5 bg-theme-background border-2 border-theme rounded-[24px] space-y-3 hover:border-white/30 transition-all group"
                  >
                    <div className="flex items-center justify-between">
                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">

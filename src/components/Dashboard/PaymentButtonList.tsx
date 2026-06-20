@@ -189,7 +189,7 @@ export function PaymentButtonList({ variant = 'full', stripeStatus: knownStatus 
             </div>
           ) : (
             buttons.map((button) => (
-              <div key={button.id} className="p-5 border border-theme rounded-[24px] hover:border-primary/30 transition-colors flex items-center justify-between group">
+              <div key={button.id} className="p-5 border border-theme rounded-[24px] hover:border-white/30 transition-colors flex items-center justify-between group">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-theme-background flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                     <MousePointer2 className="w-6 h-6" />

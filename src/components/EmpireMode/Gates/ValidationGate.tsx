@@ -68,7 +68,7 @@ export function ValidationGate({ taskTitle, platform, onValidated, onCancel }: V
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2">
            {!preview ? (
-             <label className="group relative aspect-video bg-slate-950 border-4 border-dashed border-slate-800 rounded-[40px] flex flex-col items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-primary/50 transition-all">
+             <label className="group relative aspect-video bg-slate-950 border-4 border-dashed border-slate-800 rounded-[40px] flex flex-col items-center justify-center cursor-pointer hover:bg-primary/5 hover:border-white/50 transition-all">
                 <input type="file" className="hidden" onChange={handleFileChange} accept="image/*,video/*" />
                 <div className="p-6 bg-slate-900 rounded-3xl shadow-xl group-hover:scale-110 transition-transform mb-4 border border-white/5">
                    <Upload className="w-8 h-8 text-primary" />

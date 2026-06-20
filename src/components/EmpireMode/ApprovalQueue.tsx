@@ -97,7 +97,7 @@ export function ApprovalQueue() {
           <motion.button
             key={req.id}
             onClick={() => setActiveRequest(req)}
-            className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] hover:border-primary transition-all text-left group shadow-sm"
+            className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] hover:border-white transition-all text-left group shadow-sm"
             whileHover={{ y: -2 }}
           >
             <div className="flex justify-between items-start mb-4">

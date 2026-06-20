@@ -228,7 +228,7 @@ export default function StudioPage() {
               className="space-y-8"
             >
               {/* 1. Customize Video Box */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center">
                     <MonitorPlay className="w-5 h-5 text-blue-400" />
@@ -273,7 +273,7 @@ export default function StudioPage() {
               </div>
 
               {/* 2. Upload Video Box for Edits */}
-              <div className="bg-theme-surface border-2 border-white hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+              <div className="bg-theme-surface border-2 border-white hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
                     <Scissors className="w-5 h-5 text-purple-400" />
@@ -298,7 +298,7 @@ export default function StudioPage() {
               </div>
 
               {/* 3. Faceless Content Creation Box */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                     <Clapperboard className="w-5 h-5 text-emerald-400" />
@@ -343,7 +343,7 @@ export default function StudioPage() {
               </div>
 
               {/* Custom Design Input — Free-text Idea Entry */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
                     <PenSquare className="w-5 h-5 text-amber-400" />
@@ -399,7 +399,7 @@ export default function StudioPage() {
               </div>
 
               {/* Neural Twin Section - Single Box with Active Badge */}
-              <div className="relative bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6">
+              <div className="relative bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6">
                 {facialDnaUpload.status === 'complete' && (
                   <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />

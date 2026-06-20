@@ -311,7 +311,7 @@ export function HighIntelPostApproval({ payload, onApprove, onReject, onRefine, 
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-primary/20 rounded-[28px] blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
                 <button
                   onClick={() => setIsTimeDropdownOpen(!isTimeDropdownOpen)}
-                  className="relative w-full bg-slate-900/80 border border-white/10 rounded-[24px] p-6 flex items-center justify-between transition-all hover:border-primary/40 backdrop-blur-md"
+                  className="relative w-full bg-slate-900/80 border border-white/10 rounded-[24px] p-6 flex items-center justify-between transition-all hover:border-white/40 backdrop-blur-md"
                 >
                   <div className="flex items-center gap-5">
                     <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 shadow-inner">
