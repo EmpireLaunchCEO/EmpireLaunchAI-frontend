@@ -17,11 +17,8 @@ import { cn } from '@/lib/utils';
 import { GrowthTracker } from '@/components/Dashboard/SuccessHub/GrowthTracker';
 import { VideoPerformance } from '@/components/Dashboard/SuccessHub/VideoPerformance';
 import { TrendRadar } from '@/components/Analytics/TrendRadar';
-import { ViralAlertFeed } from '@/components/Analytics/ViralAlertFeed';
-import { NextBestMoveCard } from '@/components/Analytics/NextBestMoveCard';
 import { AutomationCenter } from '@/components/Automation/AutomationCenter';
 import { EmpireLedger } from '@/components/Analytics/EmpireLedger';
-import { VerticalPlatformRadar } from '@/components/Dashboard/VerticalPlatformRadar';
 import { SubscriptionSuccessShareBox } from '@/components/Dashboard/SubscriptionSuccessShareBox';
 
 const tabs = [
@@ -63,13 +60,6 @@ export default function AnalyticsPage() {
       <main className="space-y-12">
         {activeTab === 'growth' && (
           <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* AI Recommends — Primary Focus */}
-            <NextBestMoveCard />
-
-            {/* Live Market Signals */}
-            <ViralAlertFeed />
-
-            <VerticalPlatformRadar />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <GrowthTracker />
               <VideoPerformance />
