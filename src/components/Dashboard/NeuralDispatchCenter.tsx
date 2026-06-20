@@ -148,7 +148,7 @@ export function NeuralDispatchCenter() {
   return (
     <div className="bg-theme-surface/40 backdrop-blur-xl border-2 border-theme rounded-[40px] overflow-hidden shadow-2xl p-6 md:p-8 space-y-8 md:space-y-12">
       {/* 50/50 SPLIT: Queues on LEFT, Dispatch Targets on RIGHT */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
         
         {/* ── LEFT: CREATION QUEUES ─────────────────────── */}
         <div className="space-y-6">
