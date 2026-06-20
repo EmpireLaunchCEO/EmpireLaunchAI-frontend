@@ -26,7 +26,7 @@ export default function AuthenticatedLayout({
 
         {/* Content Stack */}
         <main className="flex-1 bg-theme-surface relative transition-all duration-300 lg:ml-[256px] max-w-full flex flex-col z-[1]">
-            <div className="absolute top-12 md:top-16 right-8 z-[60] hidden lg:flex items-center gap-3">
+            <div className="absolute top-8 md:top-10 right-8 z-[60] hidden lg:flex items-center gap-3">
               <NotificationBell id="notification-bell-desktop" />
             </div>
 
@@ -45,7 +45,7 @@ export default function AuthenticatedLayout({
         </main>
 
         {/* Floating elements - High Z-Index */}
-        <div className="fixed top-10 right-4 z-[1000] lg:hidden flex items-center gap-2 pointer-events-auto">
+        <div className="fixed top-8 right-4 z-[1000] lg:hidden flex items-center gap-2 pointer-events-auto">
           <NotificationBell id="notification-bell-mobile" />
         </div>
 

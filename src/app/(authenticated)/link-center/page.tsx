@@ -15,37 +15,10 @@ import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { EmpireAIChatBox } from '@/components/Dashboard/EmpireAIChatBox';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 
-const PLATFORM_LOGOS: Record<string, string> = {
-  tiktok: '/brands/tiktok_128.png',
-  instagram: '/brands/instagram_128.png',
-  youtube: '/brands/youtube_128.png',
-  etsy: '/brands/etsy_128.png',
-  fiverr: '/brands/fiverr_128.png',
-  gmail: '/brands/gmail_128.png',
-  facebook: '/brands/facebook_128.png',
-  canva: '/brands/canva_128.png',
-  kittl: '/brands/kittl_128.png',
-  capcut: '/brands/capcut_128.png',
-  shopify: '/brands/shopify_128.png',
-  godaddy: '/brands/godaddy_128.png',
-  systeme_io: '/brands/systeme_io_128.png',
-  pinterest: '/brands/pinterest_128.png',
-  printful: '/brands/printful_128.png',
-  printify: '/brands/printify_128.png',
-  behance: '/brands/behance_128.png',
-  substack: '/brands/substack_128.png',
-  tiktok_shop: '/brands/tiktok_shop_128.png',
-};
-
 export default function LinkCenterPage() {
   const { 
     isLinkingComplete, 
-    connectedPlatforms, 
-    platformPermissions, 
-    updatePlatformPermission,
-    spendingPermissions,
-    updateSpendingPermission,
-    activeEmpire: empireData,
+    empireData,
     registerRefreshHandler
   } = useEmpire();
 
@@ -81,172 +54,8 @@ export default function LinkCenterPage() {
             <GuidedLinking isReturning={isLinkingComplete} hideEstablished={true} />
           </motion.div>
 
+          {/* Combined Neural Vital Signs & Governance */}
           <VerticalPlatformRadar />
-
-          {connectedPlatforms.length > 0 && (
-            <section className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-2xl font-black text-foreground">Permission Governance</h2>
-                  <p className="text-sm text-muted-foreground font-medium">Active neural tiers and access scopes.</p>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-theme rounded-xl text-[10px] font-black uppercase tracking-widest text-primary">
-                  <ShieldCheck className="w-3 h-3" />
-                  Secure Vault Active
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-6">
-                {connectedPlatforms.map(id => {
-                  const tier = platformPermissions[id] || 'read-only';
-                  
-                  return (
-                    <motion.div
-                      key={id}
-                      whileHover={{ y: -4 }}
-                      className="bg-theme-surface border-2 border-theme rounded-[32px] md:rounded-[48px] relative overflow-hidden group shadow-xl"
-                    >
-                      <div className="grid grid-cols-1 md:grid-cols-2 relative z-10">
-                        {/* Left Side: Brand Identity Box */}
-                        <div className="p-8 md:p-12 flex items-center gap-6 bg-primary/5 border-b md:border-b-0 md:border-r border-theme/30">
-                          <div className="w-20 h-20 md:w-24 md:h-24 rounded-[32px] bg-white p-3 border border-theme flex items-center justify-center shrink-0 shadow-2xl rotate-[-2deg] group-hover:rotate-0 transition-transform duration-500">
-                            {PLATFORM_LOGOS[id] ? (
-                              <Image 
-                                src={PLATFORM_LOGOS[id]} 
-                                alt={id} 
-                                width={80} 
-                                height={80} 
-                                className="object-contain"
-                              />
-                            ) : (
-                              <Share2 className="w-10 h-10 text-slate-900" />
-                            )}
-                          </div>
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <h3 className="font-black text-2xl md:text-3xl capitalize text-foreground tracking-tighter italic">{id}</h3>
-                              {tier === 'empire' && <Cpu className="w-5 h-5 text-cyan-400 animate-spin-slow" />}
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                               <div className={cn("w-2 h-2 rounded-full animate-pulse", tier === 'empire' ? "bg-cyan-400" : tier === 'co-pilot' ? "bg-primary" : "bg-slate-500")} />
-                               <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400">
-                                  {tier === 'empire' ? 'Auto-Pilot Mode' : tier === 'co-pilot' ? 'Co-Pilot Mode' : 'Read-Only Mode'}
-                               </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Right Side: Governance Controls */}
-                        <div className="p-8 md:p-12 space-y-6 flex flex-col justify-center">
-                          <div className="space-y-4">
-                            {/* Read-Only Toggle (Locked) */}
-                            <div className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5">
-                              <div className="flex flex-col">
-                                <span className="text-xs font-black uppercase tracking-tight text-foreground">Data Analytics</span>
-                                <span className="text-[9px] font-bold text-slate-500">AI monitoring & signal harvesting</span>
-                              </div>
-                              <div className="w-10 h-5 rounded-full relative bg-primary/40 opacity-80">
-                                <div className="w-3.5 h-3.5 bg-slate-950 rounded-full absolute top-0.75 right-0.75" />
-                              </div>
-                            </div>
-
-                            {/* Co-Pilot Toggle */}
-                            <button 
-                              onClick={() => updatePlatformPermission(id, (tier === 'co-pilot' || tier === 'empire') ? 'read-only' : 'co-pilot')}
-                              className={cn(
-                                "w-full flex items-center justify-between p-4 rounded-2xl border transition-all group/toggle",
-                                (tier === 'co-pilot' || tier === 'empire') ? "bg-primary/10 border-primary" : "bg-theme-background border-theme hover:border-primary/50"
-                              )}
-                            >
-                              <div className="flex flex-col text-left">
-                                <span className={cn("text-xs font-black uppercase tracking-tight", (tier === 'co-pilot' || tier === 'empire') ? "text-primary" : "text-foreground")}>Creative Co-Pilot</span>
-                                <span className="text-[9px] font-bold text-slate-500">AI drafts content for your approval</span>
-                              </div>
-                              <div className={cn(
-                                "w-10 h-5 rounded-full relative transition-all",
-                                (tier === 'co-pilot' || tier === 'empire') ? "bg-primary" : "bg-slate-800"
-                              )}>
-                                <div className={cn(
-                                  "w-3.5 h-3.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
-                                  (tier === 'co-pilot' || tier === 'empire') ? "right-0.75" : "left-0.75"
-                                )} />
-                              </div>
-                            </button>
-
-                            {/* Auto-Pilot Toggle */}
-                            <button 
-                              onClick={() => updatePlatformPermission(id, tier === 'empire' ? 'co-pilot' : 'empire')}
-                              className={cn(
-                                "w-full flex items-center justify-between p-4 rounded-2xl border transition-all group/toggle",
-                                tier === 'empire' ? "bg-cyan-400/10 border-cyan-400" : "bg-theme-background border-theme hover:border-cyan-400/50"
-                              )}
-                            >
-                              <div className="flex flex-col text-left">
-                                <span className={cn("text-xs font-black uppercase tracking-tight", tier === 'empire' ? "text-cyan-400" : "text-foreground")}>Autonomous Auto-Pilot</span>
-                                <span className="text-[9px] font-bold text-slate-500">Authorized to post content daily</span>
-                              </div>
-                              <div className={cn(
-                                "w-10 h-5 rounded-full relative transition-all",
-                                tier === 'empire' ? "bg-cyan-400" : "bg-slate-800"
-                              )}>
-                                <div className={cn(
-                                  "w-3.5 h-3.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
-                                  tier === 'empire' ? "right-0.75" : "left-0.75"
-                                )} />
-                              </div>
-                            </button>
-
-                            {/* Spending Toggle */}
-                            <button 
-                              onClick={() => updateSpendingPermission(id, !spendingPermissions[id])}
-                              className={cn(
-                                "w-full flex items-center justify-between p-4 rounded-2xl border transition-all group/toggle",
-                                spendingPermissions[id] ? "bg-emerald-500/10 border-emerald-500" : "bg-theme-background border-theme hover:border-emerald-500/50"
-                              )}
-                            >
-                              <div className="flex flex-col text-left">
-                                <span className={cn("text-xs font-black uppercase tracking-tight", spendingPermissions[id] ? "text-emerald-500" : "text-foreground")}>Autonomous Spending</span>
-                                <span className="text-[9px] font-bold text-slate-500">Authorized purchasing power</span>
-                              </div>
-                              <div className={cn(
-                                "w-10 h-5 rounded-full relative transition-all",
-                                spendingPermissions[id] ? "bg-emerald-500" : "bg-slate-800"
-                              )}>
-                                <div className={cn(
-                                  "w-3.5 h-3.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
-                                  spendingPermissions[id] ? "right-0.75" : "left-0.75"
-                                )} />
-                              </div>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Decorative background pulse */}
-                      {tier === 'empire' && (
-                        <div className="absolute inset-0 bg-cyan-400/5 animate-pulse pointer-events-none" />
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </div>
-
-              <div className="p-8 rounded-[40px] bg-primary/5 border-2 border-primary/20 flex flex-col md:flex-row items-center gap-8">
-                 <div className="w-16 h-16 rounded-[24px] bg-primary flex items-center justify-center text-foreground shrink-0">
-                    <ShieldAlert className="w-8 h-8" />
-                 </div>
-                 <div className="flex-1 space-y-1 text-center md:text-left">
-                    <h4 className="text-lg font-black text-foreground">Ownership Sovereignty</h4>
-                    <p className="text-sm text-muted-foreground font-medium">
-                      EmpireLaunch AI operates under "Admin Blindness" protocols. Your platform tokens are stored in the Ownership Vault and are never visible to team members or system administrators.
-                    </p>
-                 </div>
-                 <button className="px-8 py-4 bg-theme-surface border-2 border-theme rounded-2xl font-black text-xs uppercase tracking-widest text-foreground hover:bg-theme-background transition-all">
-                    Vault Audit
-                 </button>
-              </div>
-            </section>
-          )}
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <FeedbackBox />
@@ -255,7 +64,7 @@ export default function LinkCenterPage() {
           {/* Version Verification */}
           <div className="flex justify-center pb-20">
             <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
-              Command Center v3.0.2 (Neural Sync Active)
+              Command Center v3.1.0 (Neural Sync Active)
             </span>
           </div>
         </div>
