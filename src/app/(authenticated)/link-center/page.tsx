@@ -96,7 +96,7 @@ export default function LinkCenterPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {connectedPlatforms.map(id => {
                   const tier = platformPermissions[id] || 'read-only';
                   
@@ -104,108 +104,110 @@ export default function LinkCenterPage() {
                     <motion.div
                       key={id}
                       whileHover={{ y: -4 }}
-                      className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] space-y-5 relative overflow-hidden group"
+                      className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] relative overflow-hidden group"
                     >
-                      <div className="flex items-center justify-between gap-3 relative z-10">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-10 h-10 rounded-xl bg-white p-1.5 border border-theme flex items-center justify-center shrink-0">
+                      <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
+                        {/* Left Side: App Logo & Name */}
+                        <div className="flex-1 flex items-center gap-4 min-w-0 w-full md:w-auto">
+                          <div className="w-14 h-14 rounded-2xl bg-white p-2 border border-theme flex items-center justify-center shrink-0 shadow-lg">
                             {PLATFORM_LOGOS[id] ? (
                               <Image 
                                 src={PLATFORM_LOGOS[id]} 
                                 alt={id} 
-                                width={24} 
-                                height={24} 
+                                width={40} 
+                                height={40} 
                                 className="object-contain"
                               />
                             ) : (
-                              <Share2 className="w-5 h-5 text-slate-900" />
+                              <Share2 className="w-6 h-6 text-slate-900" />
                             )}
                           </div>
                           <div className="truncate">
-                            <h3 className="font-black text-sm capitalize text-foreground truncate">{id}</h3>
-                            <div className="flex items-center gap-1">
-                               <div className={cn("w-1 h-1 rounded-full animate-pulse", tier === 'empire' ? "bg-cyan-400" : tier === 'co-pilot' ? "bg-primary" : "bg-slate-500")} />
-                               <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">
+                            <h3 className="font-black text-lg capitalize text-foreground truncate">{id}</h3>
+                            <div className="flex items-center gap-1.5 mt-1">
+                               <div className={cn("w-1.5 h-1.5 rounded-full animate-pulse", tier === 'empire' ? "bg-cyan-400" : tier === 'co-pilot' ? "bg-primary" : "bg-slate-500")} />
+                               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                                   {tier === 'empire' ? 'Auto-Pilot' : tier === 'co-pilot' ? 'Co-Pilot' : 'Read-Only'}
                                </span>
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="space-y-3 pt-4 border-t border-theme/30 relative z-10">
-                        {/* Read-Only Toggle */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex flex-col">
-                            <span className="text-[9px] font-black uppercase tracking-tight text-foreground">Read-Only</span>
-                            <span className="text-[7px] font-bold text-slate-500">AI monitors and analyzes</span>
+                        {/* Right Side: Toggles */}
+                        <div className="flex-1 w-full md:w-auto space-y-3 pl-0 md:pl-6 border-t md:border-t-0 md:border-l border-theme/30 pt-4 md:pt-0">
+                          {/* Read-Only Toggle */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-black uppercase tracking-tight text-foreground">Read-Only</span>
+                              <span className="text-[8px] font-bold text-slate-500">Analytics only</span>
+                            </div>
+                            <button
+                              className="w-8 h-4 rounded-full relative bg-primary/40 cursor-not-allowed opacity-80"
+                              disabled
+                            >
+                              <div className="w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 right-0.75" />
+                            </button>
                           </div>
-                          <button
-                            className="w-8 h-4 rounded-full relative bg-primary/40 cursor-not-allowed opacity-80"
-                            disabled
-                          >
-                            <div className="w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 right-0.75" />
-                          </button>
-                        </div>
 
-                        {/* Co-Pilot Toggle */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex flex-col">
-                            <span className="text-[9px] font-black uppercase tracking-tight text-foreground">Co-Pilot</span>
-                            <span className="text-[7px] font-bold text-slate-500">AI drafts and suggests</span>
+                          {/* Co-Pilot Toggle */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-black uppercase tracking-tight text-foreground">Co-Pilot</span>
+                              <span className="text-[8px] font-bold text-slate-500">Drafts & Suggestions</span>
+                            </div>
+                            <button
+                              onClick={() => updatePlatformPermission(id, (tier === 'co-pilot' || tier === 'empire') ? 'read-only' : 'co-pilot')}
+                              className={cn(
+                                "w-8 h-4 rounded-full relative transition-all",
+                                (tier === 'co-pilot' || tier === 'empire') ? "bg-primary" : "bg-slate-800"
+                              )}
+                            >
+                              <div className={cn(
+                                "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
+                                (tier === 'co-pilot' || tier === 'empire') ? "right-0.75" : "left-0.75"
+                              )} />
+                            </button>
                           </div>
-                          <button
-                            onClick={() => updatePlatformPermission(id, (tier === 'co-pilot' || tier === 'empire') ? 'read-only' : 'co-pilot')}
-                            className={cn(
-                              "w-8 h-4 rounded-full relative transition-all",
-                              (tier === 'co-pilot' || tier === 'empire') ? "bg-primary" : "bg-slate-800"
-                            )}
-                          >
-                            <div className={cn(
-                              "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
-                              (tier === 'co-pilot' || tier === 'empire') ? "right-0.75" : "left-0.75"
-                            )} />
-                          </button>
-                        </div>
 
-                        {/* Auto-Pilot Toggle */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex flex-col">
-                            <span className="text-[9px] font-black uppercase tracking-tight text-foreground">Auto-Pilot</span>
-                            <span className="text-[7px] font-bold text-slate-500">AI posts content daily</span>
+                          {/* Auto-Pilot Toggle */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-black uppercase tracking-tight text-foreground">Auto-Pilot</span>
+                              <span className="text-[8px] font-bold text-slate-500">Post Content Daily</span>
+                            </div>
+                            <button
+                              onClick={() => updatePlatformPermission(id, tier === 'empire' ? 'co-pilot' : 'empire')}
+                              className={cn(
+                                "w-8 h-4 rounded-full relative transition-all",
+                                tier === 'empire' ? "bg-cyan-400" : "bg-slate-800"
+                              )}
+                            >
+                              <div className={cn(
+                                "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
+                                tier === 'empire' ? "right-0.75" : "left-0.75"
+                              )} />
+                            </button>
                           </div>
-                          <button
-                            onClick={() => updatePlatformPermission(id, tier === 'empire' ? 'co-pilot' : 'empire')}
-                            className={cn(
-                              "w-8 h-4 rounded-full relative transition-all",
-                              tier === 'empire' ? "bg-cyan-400" : "bg-slate-800"
-                            )}
-                          >
-                            <div className={cn(
-                              "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
-                              tier === 'empire' ? "right-0.75" : "left-0.75"
-                            )} />
-                          </button>
-                        </div>
 
-                        {/* AI Spending Toggle */}
-                        <div className="flex items-center justify-between pt-2 border-t border-theme/20">
-                          <div className="flex flex-col">
-                            <span className="text-[9px] font-black uppercase tracking-tight text-foreground">Spending</span>
-                            <span className="text-[7px] font-bold text-slate-500">Purchasing power</span>
+                          {/* Spending Toggle */}
+                          <div className="flex items-center justify-between pt-2 border-t border-theme/20">
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-black uppercase tracking-tight text-foreground">Spending</span>
+                              <span className="text-[8px] font-bold text-slate-500">Purchasing power</span>
+                            </div>
+                            <button
+                              onClick={() => updateSpendingPermission(id, !spendingPermissions[id])}
+                              className={cn(
+                                "w-8 h-4 rounded-full relative transition-all",
+                                spendingPermissions[id] ? "bg-emerald-500" : "bg-slate-800"
+                              )}
+                            >
+                              <div className={cn(
+                                "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
+                                spendingPermissions[id] ? "right-0.75" : "left-0.75"
+                              )} />
+                            </button>
                           </div>
-                          <button
-                            onClick={() => updateSpendingPermission(id, !spendingPermissions[id])}
-                            className={cn(
-                              "w-8 h-4 rounded-full relative transition-all",
-                              spendingPermissions[id] ? "bg-emerald-500" : "bg-slate-800"
-                            )}
-                          >
-                            <div className={cn(
-                              "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
-                              spendingPermissions[id] ? "right-0.75" : "left-0.75"
-                            )} />
-                          </button>
                         </div>
                       </div>
 
