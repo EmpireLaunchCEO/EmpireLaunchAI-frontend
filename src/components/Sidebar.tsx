@@ -34,8 +34,8 @@ export function Sidebar() {
 
   return (
     <>
-      <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-0 top-0 border-r border-theme shadow-sm transition-all duration-300 z-[10005] pointer-events-auto">
-        <div className="p-6 flex items-center gap-3">
+      <div className="hidden lg:flex flex-col w-64 bg-theme-surface text-foreground h-screen fixed left-0 top-0 border-r border-theme shadow-sm transition-all duration-300 z-[10005] pointer-events-auto pt-10">
+        <div className="p-6 pt-2 flex items-center gap-3">
           <BrandedGlobe size="md" spinning />
           <span className="text-lg font-black tracking-tight text-theme-gradient uppercase italic truncate">
             EmpireLaunch AI

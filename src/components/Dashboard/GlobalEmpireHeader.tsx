@@ -30,7 +30,7 @@ export function GlobalEmpireHeader() {
   };
 
   return (
-    <div className="flex flex-col items-center pt-6 pb-2">
+    <div className="flex flex-col items-center pt-12 md:pt-16 pb-2">
       <div className="flex flex-col items-center">
         <BrandedGlobe 
           size="xl" 
