@@ -207,8 +207,8 @@ p, span, label, div, li, td, th, a {
 }
 
 .border-theme:hover {
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+  border-color: rgb(var(--primary-rgb) / 0.8) !important;
+  box-shadow: 0 0 30px rgb(var(--primary-rgb) / 0.2);
 }
 
 .animate-shimmer-border {
