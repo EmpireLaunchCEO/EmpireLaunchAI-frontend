@@ -85,8 +85,8 @@ export default function Dashboard() {
   if (!mounted || !isInitialized) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
-        <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" />
-        <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[10px] animate-pulse text-center">
+        <BrandedGlobe size="xl" spinning={true} className="shadow-[0_0_30px_rgba(255,255,255,0.15)]" />
+        <h2 className="text-white font-black uppercase tracking-[0.3em] text-[10px] animate-pulse text-center">
           Initializing Neural Sync
         </h2>
       </div>
@@ -110,7 +110,7 @@ export default function Dashboard() {
           {!isDashboardLoaded ? (
             <div className="flex flex-col items-center justify-center py-20 gap-6">
               <BrandedGlobe size="lg" spinning />
-              <h2 className="text-primary font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
+              <h2 className="text-white font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
                 Syncing Neural Node {activeEmpireId}
               </h2>
             </div>
@@ -166,7 +166,7 @@ export default function Dashboard() {
                         initial={{ opacity: 0, scale: 0.95 }} 
                         whileInView={{ opacity: 1, scale: 1 }} 
                         viewport={{ once: true }}
-                        className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(var(--surface-border-rgb),0.15)] transition-all"
+                        className="bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(255,255,255,0.08)] transition-all"
                       >
                         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[60px] -z-10" />
                         <div className="flex items-center gap-3">
@@ -209,15 +209,15 @@ export default function Dashboard() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] flex items-center justify-center bg-primary"
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-xl"
             >
               <div className="text-center space-y-8">
                 <motion.div
                   initial={{ scale: 0.5, rotate: -20 }}
                   animate={{ scale: 1, rotate: 0 }}
-                  className="w-32 h-32 bg-theme-surface rounded-[40px] mx-auto flex items-center justify-center shadow-2xl"
+                  className="w-32 h-32 bg-theme-surface border-2 border-white/20 rounded-[40px] mx-auto flex items-center justify-center shadow-2xl"
                 >
-                  <Stars className="w-16 h-16 text-primary" />
+                  <Stars className="w-16 h-16 text-white" />
                 </motion.div>
                 <h2 className="text-5xl font-black text-white tracking-tighter italic">Neural Sync Established.</h2>
                 <p className="text-white/80 text-xl font-medium italic">Welcome to your Empire Command Center.</p>

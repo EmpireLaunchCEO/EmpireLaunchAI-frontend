@@ -64,7 +64,7 @@ export const GrowthTracker = ({
         </div>
         <button 
           onClick={toggleMinimize}
-          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-white transition-all active:scale-95"
         >
           <Maximize2 className="w-3 h-3" />
         </button>
@@ -86,7 +86,7 @@ export const GrowthTracker = ({
       <div className="absolute top-4 right-5 z-20">
         <button 
           onClick={toggleMinimize}
-          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-white transition-all active:scale-95"
         >
           <Minus className="w-4 h-4" />
         </button>

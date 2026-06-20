@@ -229,8 +229,8 @@ export default function StudioPage() {
               {/* 1. Customize Video Box */}
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                    <MonitorPlay className="w-5 h-5 text-blue-400" />
+                  <div className="w-9 h-9 rounded-xl bg-slate-500/10 flex items-center justify-center">
+                    <MonitorPlay className="w-5 h-5 text-slate-400" />
                   </div>
                   <div>
                     <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Customize Video</h3>
@@ -246,15 +246,15 @@ export default function StudioPage() {
                     onChange={(e) => setCustomVideoIdea(e.target.value)}
                     placeholder="e.g. A 15-second high-energy product reveal for TikTok, fast cuts, vibrant neon overlays, focused on the 'Midnight Black' edition..."
                     disabled={isSubmittingVideo}
-                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-blue-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                   />
                   <button
                     onClick={handleCustomVideoSubmit}
                     disabled={!customVideoIdea.trim() || isSubmittingVideo}
-                    className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-blue-500/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     {isSubmittingVideo ? (
-                      <div className="w-4 h-4 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
                       <SendHorizonal className="w-4 h-4" />
                     )}
@@ -316,15 +316,15 @@ export default function StudioPage() {
                     onChange={(e) => setFacelessIdea(e.target.value)}
                     placeholder="e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts, stock footage background, lo-fi beats, clean minimal captions..."
                     disabled={isSubmittingFaceless}
-                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-emerald-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                   />
                   <button
                     onClick={handleFacelessSubmit}
                     disabled={!facelessIdea.trim() || isSubmittingFaceless}
-                    className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     {isSubmittingFaceless ? (
-                      <div className="w-4 h-4 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
                       <SendHorizonal className="w-4 h-4" />
                     )}
@@ -442,7 +442,7 @@ export default function StudioPage() {
                   <button
                     onClick={handleSynthesizeTwin}
                     disabled={facialDnaUpload.status !== 'complete'}
-                    className="w-full max-w-sm mx-auto flex justify-center py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="w-full max-w-sm mx-auto flex justify-center py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     {facialDnaUpload.status === 'complete' ? 'Synthesize Twin Double' : 'Upload a photo first'}
                   </button>

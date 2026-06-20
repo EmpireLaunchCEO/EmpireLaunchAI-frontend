@@ -37,7 +37,7 @@ export function GlobalEmpireHeader() {
           animate={false}
           className="shadow-[0_0_30px_rgba(255,255,255,0.05)]"
         />
-        <h2 className="mt-4 text-xl md:text-3xl lg:text-4xl font-black tracking-tight md:tracking-[0.1em] lg:tracking-[0.15em] uppercase italic text-theme-gradient leading-none text-center px-4 max-w-full drop-shadow-[0_2px_10px_rgba(var(--primary-rgb),0.3)]">
+        <h2 className="mt-4 text-xl md:text-3xl lg:text-4xl font-black tracking-tight md:tracking-[0.1em] lg:tracking-[0.15em] uppercase italic text-theme-gradient leading-none text-center px-4 max-w-full drop-shadow-[0_2px_10px_rgba(255,255,255,0.2)]">
           {getPageTitle()}
         </h2>
       </div>
@@ -70,14 +70,14 @@ export function GlobalEmpireHeader() {
               className={cn(
                 "px-5 md:px-10 py-3 md:py-4 rounded-[18px] font-black text-[10px] md:text-[11px] uppercase tracking-tighter transition-all flex items-center gap-2.5 whitespace-nowrap min-w-fit border",
                 isActive
-                  ? "bg-theme-surface border-theme shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] scale-105"
+                  ? "bg-theme-surface border-theme shadow-[0_0_20px_rgba(255,255,255,0.1)] scale-105"
                   : "bg-transparent border-transparent hover:bg-theme-surface/40 hover:border-theme/30"
               )}
             >
               {isActive ? (
-                <Globe className="w-3.5 h-3.5 text-primary animate-pulse shrink-0" />
+                <Globe className="w-3.5 h-3.5 text-white animate-pulse shrink-0" />
               ) : (
-                <Briefcase className="w-3.5 h-3.5 text-primary/40 shrink-0" />
+                <Briefcase className="w-3.5 h-3.5 text-slate-400/40 shrink-0" />
               )}
               <span className={cn(
                 "text-theme-gradient",

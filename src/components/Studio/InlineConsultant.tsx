@@ -82,7 +82,7 @@ export function InlineConsultant({ context, initialMessage, className }: InlineC
       {/* Mini Header */}
       <div className="px-3 py-2 border-b border-theme bg-theme-background/60 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          <Sparkles className="w-3 h-3 text-primary" />
+          <Sparkles className="w-3 h-3 text-slate-400" />
           <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Consultant: {context.replace('-', ' ')}</span>
         </div>
         <div className="flex items-center gap-1">
@@ -109,14 +109,14 @@ export function InlineConsultant({ context, initialMessage, className }: InlineC
             >
               <div className={cn(
                 "w-5 h-5 rounded-lg flex items-center justify-center shrink-0 border border-theme",
-                msg.role === 'user' ? "bg-primary/10" : "bg-slate-500/10"
+                msg.role === 'user' ? "bg-white/10" : "bg-slate-500/10"
               )}>
-                {msg.role === 'user' ? <User className="w-2.5 h-2.5 text-primary" /> : <Bot className="w-2.5 h-2.5 text-slate-400" />}
+                {msg.role === 'user' ? <User className="w-2.5 h-2.5 text-white" /> : <Bot className="w-2.5 h-2.5 text-slate-400" />}
               </div>
               <div className={cn(
                 "px-3 py-2 rounded-xl text-[10px] leading-relaxed max-w-[85%]",
                 msg.role === 'user' 
-                  ? "bg-primary text-slate-950 rounded-tr-none font-medium" 
+                  ? "bg-white text-slate-950 rounded-tr-none font-medium" 
                   : "bg-theme-surface border border-theme text-slate-300 rounded-tl-none italic"
               )}>
                 {msg.content}
@@ -130,7 +130,7 @@ export function InlineConsultant({ context, initialMessage, className }: InlineC
               <Bot className="w-2.5 h-2.5 text-slate-400" />
             </div>
             <div className="px-3 py-2 rounded-xl bg-theme-surface border border-theme">
-              <Loader2 className="w-3 h-3 text-primary animate-spin" />
+              <Loader2 className="w-3 h-3 text-white animate-spin" />
             </div>
           </div>
         )}
@@ -144,12 +144,12 @@ export function InlineConsultant({ context, initialMessage, className }: InlineC
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask your consultant..."
-            className="w-full bg-theme-surface/50 border border-theme rounded-xl px-3 py-2 text-[10px] focus:outline-none focus:border-primary/40 transition-all placeholder:text-slate-600 pr-10"
+            className="w-full bg-theme-surface/50 border border-theme rounded-xl px-3 py-2 text-[10px] focus:outline-none focus:border-white/40 transition-all placeholder:text-slate-600 pr-10"
           />
           <button
             type="submit"
             disabled={!input.trim() || isTyping}
-            className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center hover:bg-primary/20 transition-all disabled:opacity-30"
+            className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-all disabled:opacity-30"
           >
             <Send className="w-3 h-3" />
           </button>

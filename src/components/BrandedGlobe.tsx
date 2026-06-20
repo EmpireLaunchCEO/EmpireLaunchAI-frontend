@@ -129,7 +129,7 @@ export function BrandedGlobe({
         {/* Loading / Fallback state */}
         {!isLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-white">
-            <div className="w-1/2 h-1/2 bg-blue-500/10 rounded-full animate-pulse blur-md" />
+            <div className="w-1/2 h-1/2 bg-slate-500/10 rounded-full animate-pulse blur-md" />
           </div>
         )}
 

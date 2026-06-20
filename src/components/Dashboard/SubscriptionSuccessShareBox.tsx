@@ -147,10 +147,10 @@ export function SubscriptionSuccessShareBox({
           {/* Base Subscription */}
           <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-white/30 transition-all group">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                <Diamond className="w-4 h-4 text-blue-400" />
+              <div className="w-8 h-8 rounded-xl bg-slate-500/10 flex items-center justify-center">
+                <Diamond className="w-4 h-4 text-slate-400" />
               </div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-blue-400">Base Subscription</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Base Subscription</p>
             </div>
             <p className="text-2xl md:text-3xl font-black text-foreground">$40<span className="text-sm font-bold text-muted-foreground">/mo</span></p>
             <p className="text-[10px] text-muted-foreground font-medium">Full access to AI-driven business scaling, automations, and multi-tenant infrastructure.</p>
@@ -220,7 +220,7 @@ export function SubscriptionSuccessShareBox({
               'w-full py-4 px-6 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-lg',
               isDownloading
                 ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                : 'bg-primary text-slate-950 hover:bg-white active:scale-[0.98]'
+                : 'bg-white text-slate-950 hover:bg-slate-200 active:scale-[0.98]'
             )}
           >
             {isDownloading ? (

@@ -83,7 +83,7 @@ export function FileUploadDropZone({ type, onFileSelect, onRemove, state, disabl
   const statusColors: Record<UploadStatus, string> = {
     idle: 'border-theme hover:border-white/40 text-slate-500 group-hover:text-white',
     selected: 'border-primary/50 text-primary',
-    uploading: 'border-blue-500/50 text-blue-400',
+    uploading: 'border-white/50 text-white',
     processing: 'border-purple-500/50 text-purple-400',
     complete: 'border-emerald-500/50 text-emerald-400',
     error: 'border-red-500/50 text-red-400',
@@ -92,7 +92,7 @@ export function FileUploadDropZone({ type, onFileSelect, onRemove, state, disabl
   const statusBgColors: Record<UploadStatus, string> = {
     idle: 'bg-slate-800 group-hover:bg-primary/20',
     selected: 'bg-primary/20',
-    uploading: 'bg-blue-500/20',
+    uploading: 'bg-white/10',
     processing: 'bg-purple-500/20',
     complete: 'bg-emerald-500/20',
     error: 'bg-red-500/20',
@@ -139,7 +139,7 @@ export function FileUploadDropZone({ type, onFileSelect, onRemove, state, disabl
             <AnimatePresence mode="wait">
               {state.status === 'uploading' ? (
                 <motion.div key="uploading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <Loader2 className="w-7 h-7 text-blue-400 animate-spin" />
+                  <Loader2 className="w-7 h-7 text-white animate-spin" />
                 </motion.div>
               ) : state.status === 'processing' ? (
                 <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -194,7 +194,7 @@ export function FileUploadDropZone({ type, onFileSelect, onRemove, state, disabl
                 animate={{ width: `${state.progress}%` }}
                 className={cn(
                   "h-full rounded-full",
-                  state.status === 'uploading' ? "bg-blue-500" : "bg-purple-500"
+                  state.status === 'uploading' ? "bg-white" : "bg-purple-500"
                 )}
                 transition={{ duration: 0.3 }}
               />

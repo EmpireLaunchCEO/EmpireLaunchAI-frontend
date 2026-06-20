@@ -31,7 +31,7 @@ const Insight = ({ type, title, description, impact, color }: InsightProps) => (
       <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{description}</p>
     </div>
 
-    <button className="mt-6 w-full py-3 bg-theme-background hover:bg-primary hover:text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn">
+    <button className="mt-6 w-full py-3 bg-theme-background hover:bg-white hover:text-slate-950 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 group/btn">
       Execute Optimization
       <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
     </button>
@@ -67,7 +67,7 @@ export function AIOptimizationHub() {
         </div>
         <button 
           onClick={toggleMinimize}
-          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-white transition-all active:scale-95"
         >
           <Maximize2 className="w-4 h-4" />
         </button>
@@ -80,7 +80,7 @@ export function AIOptimizationHub() {
       <div className="absolute top-0 right-0 z-20">
         <button 
           onClick={toggleMinimize}
-          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-primary transition-all active:scale-95"
+          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-white transition-all active:scale-95"
         >
           <Minus className="w-5 h-5" />
         </button>
@@ -110,7 +110,7 @@ export function AIOptimizationHub() {
           title="Competitor Gap Analysis"
           description="Top 3 competitors in your niche are currently low on stock for 'Digital Wedding Planners'. Perfect time to boost ads."
           impact="Medium"
-          color="bg-blue-600"
+          color="bg-slate-600"
         />
         <Insight
           type="suggestion"
