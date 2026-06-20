@@ -22,24 +22,14 @@ export const GrowthTracker = ({
   unit = "$",
   progress
 }: GrowthTrackerProps) => {
-  const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [localTarget, setLocalTarget] = useState(targetValue);
 
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem('minimized-growth-tracker');
-    if (saved === 'true') setIsMinimized(true);
-    
     const savedGoal = localStorage.getItem('monthly-revenue-goal');
     if (savedGoal) setLocalTarget(parseInt(savedGoal));
   }, []);
-
-  const toggleMinimize = () => {
-    const newState = !isMinimized;
-    setIsMinimized(newState);
-    localStorage.setItem('minimized-growth-tracker', String(newState));
-  };
 
   const handleSetGoal = () => {
     const newGoal = prompt("What is your Monthly Revenue Goal?", localTarget.toString());
@@ -47,49 +37,20 @@ export const GrowthTracker = ({
       const val = parseInt(newGoal);
       setLocalTarget(val);
       localStorage.setItem('monthly-revenue-goal', val.toString());
-      alert(`Setting new Monthly Revenue Goal to $${val.toLocaleString()}. Strategy is being recalculated...`);
+      alert(`Setting new Monthly Revenue Goal to ${val.toLocaleString()}. Strategy is being recalculated...`);
     }
   };
 
   if (!mounted) return null;
 
-  if (isMinimized) {
-    return (
-      <div className="bg-theme-surface rounded-3xl p-4 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[64px] flex items-center justify-between group transition-all">
-        <div className="flex items-center gap-4">
-          <div className="w-8 h-8 rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-lg shadow-amber-500/20">
-            <Target className="w-4 h-4" />
-          </div>
-          <h2 className="text-[10px] font-black uppercase tracking-widest text-foreground">Growth Tracker</h2>
-        </div>
-        <button 
-          onClick={toggleMinimize}
-          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-white transition-all active:scale-95"
-        >
-          <Maximize2 className="w-3 h-3" />
-        </button>
-      </div>
-    );
-  }
-
   const percentage = Math.max(0, Math.min(100, progress !== undefined ? progress : Math.round(((monthlyEarnings || 0) / (localTarget || 1)) * 100))) || 0;
 
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 border-2 border-theme shadow-2xl relative overflow-hidden group">
+    <div className="bg-theme-surface rounded-[32px] p-6 border-2 border-theme shadow-2xl relative overflow-hidden group">
       {/* Name at the Top */}
-      <div className="flex items-center gap-2 mb-8">
+      <div className="flex items-center gap-2 mb-6">
         <Award className="w-5 h-5 text-amber-500" />
-        <h3 className="text-xl font-black uppercase tracking-[0.2em] text-amber-500 italic">Growth Tracker</h3>
-      </div>
-
-      {/* Minimize Toggle */}
-      <div className="absolute top-4 right-5 z-20">
-        <button 
-          onClick={toggleMinimize}
-          className="p-2 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-white transition-all active:scale-95"
-        >
-          <Minus className="w-4 h-4" />
-        </button>
+        <h3 className="text-lg font-black uppercase tracking-[0.2em] text-amber-500 italic">Growth Tracker</h3>
       </div>
 
       <div className="flex flex-col md:flex-row gap-8 items-center">

@@ -23,15 +23,12 @@ export function FinancialCommand({
   onActivateGrowthProtocol
 }: Partial<FinancialCommandProps>) {
   const [infraBalances, setInfraBalances] = useState<InfrastructureBalance[]>([]);
-  const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
   
   const [isDownloading, setIsDownloading] = useState(false);
   
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem('minimized-financial-command');
-    if (saved === 'true') setIsMinimized(true);
 
     const loadInfra = async () => {
       const bals = await infrastructureService.getBalances();
@@ -60,12 +57,6 @@ export function FinancialCommand({
     }, 1000);
   };
 
-  const toggleMinimize = () => {
-    const newState = !isMinimized;
-    setIsMinimized(newState);
-    localStorage.setItem('minimized-financial-command', String(newState));
-  };
-
   if (!mounted) return null;
 
   const formatCurrency = (cents: number) => {
@@ -89,48 +80,17 @@ export function FinancialCommand({
     });
   }
 
-  if (isMinimized) {
-    return (
-      <div className="bg-theme-surface rounded-3xl p-6 text-foreground relative overflow-hidden shadow-xl border-2 border-theme h-[80px] flex items-center justify-between group transition-all">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
-            <CreditCard className="w-5 h-5" />
-          </div>
-          <div className="flex flex-col">
-            <h2 className="text-sm font-black uppercase tracking-widest text-foreground leading-none">Empire Finances</h2>
-            <span className="text-[10px] font-black text-primary uppercase mt-1">Available: {formatCurrency(withholdableEarnings)}</span>
-          </div>
-        </div>
-        <button 
-          onClick={toggleMinimize}
-          className="p-3 rounded-xl bg-theme-background border border-theme text-slate-400 hover:text-white transition-all active:scale-95"
-        >
-          <Maximize2 className="w-4 h-4" />
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-theme-surface rounded-[40px] p-8 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
+    <div className="bg-theme-surface rounded-[32px] p-6 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme">
       {/* Name at the Top */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
           <CreditCard className="w-5 h-5" />
         </div>
-        <h3 className="text-xl font-black uppercase tracking-[0.2em] text-primary italic">Empire Finances</h3>
+        <h3 className="text-lg font-black uppercase tracking-[0.2em] text-primary italic">Empire Finances</h3>
       </div>
 
-      <div className="absolute top-8 right-8 z-20">
-        <button 
-          onClick={toggleMinimize}
-          className="p-3 rounded-2xl bg-theme-background border border-theme text-slate-400 hover:text-white transition-all active:scale-95"
-        >
-          <Minus className="w-5 h-5" />
-        </button>
-      </div>
-
-      <div className="relative z-10 space-y-10">
+      <div className="relative z-10 space-y-8">
         
         {/* Top Header: Bucket Visuals */}
         <div className="flex flex-col md:flex-row gap-8 items-center border-b border-theme/30 pb-8">
