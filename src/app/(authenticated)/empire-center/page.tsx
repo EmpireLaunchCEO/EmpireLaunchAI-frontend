@@ -49,7 +49,7 @@ import { AutoPilotStatusBadge } from '@/components/Dashboard/GlobalDnaPoolPanel'
 import { NeuralDispatchCenter } from '@/components/Dashboard/NeuralDispatchCenter';
 
 export default function EmpireCenterPage() {
-  const [activeTab, setActiveTab] = useState<'pending' | 'intel'>('pending');
+  const [activeTab, setActiveTab] = useState<'pending' | 'approved' | 'intel'>('pending');
   const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
 
   const isPlatformConnected = (platform: string) => {
@@ -100,7 +100,8 @@ export default function EmpireCenterPage() {
           {/* Primary Tabs - Optimized for mobile visibility */}
           <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
             {[
-              { id: 'pending', label: 'Pending', icon: Zap },
+              { id: 'pending', label: 'Pending', icon: ClipboardList },
+              { id: 'approved', label: 'Approved', icon: CheckCircle2 },
               { id: 'intel', label: 'Intel', icon: BarChart3 },
               ].map((tab) => (
               <button
@@ -137,6 +138,45 @@ export default function EmpireCenterPage() {
 
                     <NeuralDispatchCenter />
                 </section>
+              </motion.div>
+            )}
+
+            {activeTab === 'approved' && (
+              <motion.div
+                key="approved"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-8 w-full"
+              >
+                <div className="flex items-center justify-between px-2">
+                  <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-normal italic">Approved Work</h3>
+                  <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] bg-emerald-500/10 px-3 py-1 rounded-full">{postHistory.length} Live</span>
+                </div>
+                <div className="space-y-3">
+                  {postHistory.map((item) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="bg-theme-surface border-2 border-theme rounded-[24px] p-5 flex items-center gap-5 hover:border-emerald-500/20 transition-all group"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">{item.site}</span>
+                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-widest">Live</span>
+                        </div>
+                        <h4 className="text-sm font-black text-white uppercase tracking-widest">{item.title}</h4>
+                        <p className="text-[10px] text-slate-500 font-medium mt-0.5">{item.date}</p>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-slate-600 group-hover:text-primary transition-colors shrink-0" />
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
             )}
 
