@@ -272,7 +272,7 @@ export default function StudioPage() {
               </div>
 
               {/* 2. Upload Video Box for Edits */}
-              <div className="bg-theme-surface border-2 border-white hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
                     <Scissors className="w-5 h-5 text-purple-400" />
