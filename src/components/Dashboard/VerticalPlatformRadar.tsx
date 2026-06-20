@@ -144,7 +144,7 @@ export function VerticalPlatformRadar() {
                 {/* LEFT SIDE: Linked App Identity & Performance Metrics */}
                 <div className="p-6 md:p-10 flex flex-col justify-center gap-6 bg-primary/5 border-b md:border-b-0 md:border-r border-theme/30">
                   <div className="flex items-center gap-6">
-                    <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-[24px] md:rounded-[32px] bg-white p-3 border-2 border-theme shadow-xl rotate-[-2deg] group-hover:rotate-0 transition-all duration-700">
+                    <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-[24px] md:rounded-[32px] bg-white p-3 border-2 border-theme shadow-xl transition-all duration-700">
                       <Image 
                         src={platform.logo} 
                         alt={platform.name} 
