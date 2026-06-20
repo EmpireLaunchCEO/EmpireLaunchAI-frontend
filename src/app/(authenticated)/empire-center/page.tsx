@@ -49,7 +49,7 @@ import { AutoPilotStatusBadge } from '@/components/Dashboard/GlobalDnaPoolPanel'
 import { NeuralDispatchCenter } from '@/components/Dashboard/NeuralDispatchCenter';
 
 export default function EmpireCenterPage() {
-  const [activeTab, setActiveTab] = useState<'pending-approvals' | 'empire-intel'>('pending-approvals');
+  const [activeTab, setActiveTab] = useState<'pending' | 'intel'>('pending');
   const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
 
   const isPlatformConnected = (platform: string) => {
@@ -100,8 +100,8 @@ export default function EmpireCenterPage() {
           {/* Primary Tabs - Optimized for mobile visibility */}
           <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
             {[
-              { id: 'pending-approvals', label: 'Pending Approvals', icon: Zap },
-              { id: 'empire-intel', label: 'Empire Intel', icon: BarChart3 },
+              { id: 'pending', label: 'Pending', icon: Zap },
+              { id: 'intel', label: 'Intel', icon: BarChart3 },
               ].map((tab) => (
               <button
                 key={tab.id}
@@ -120,9 +120,9 @@ export default function EmpireCenterPage() {
           </div>
 
           <AnimatePresence mode="wait">
-            {activeTab === 'pending-approvals' && (
+            {activeTab === 'pending' && (
               <motion.div
-                key="pending-approvals"
+                key="pending"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -140,9 +140,9 @@ export default function EmpireCenterPage() {
               </motion.div>
             )}
 
-            {activeTab === 'empire-intel' && (
+            {activeTab === 'intel' && (
               <motion.div
-                key="empire-intel"
+                key="intel"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
