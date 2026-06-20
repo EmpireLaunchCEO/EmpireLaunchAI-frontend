@@ -9,10 +9,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Download,
-  TrendingUp,
-  ChevronRight,
   FileText,
-  ExternalLink,
+  Zap,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

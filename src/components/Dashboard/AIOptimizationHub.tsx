@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Stars, TrendingUp, Search, Zap, ArrowRight, Lightbulb, Minus, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useEmpire } from '@/lib/EmpireContext';
 
 interface InsightProps {
   type: 'trend' | 'research' | 'suggestion';

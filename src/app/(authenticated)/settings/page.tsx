@@ -14,7 +14,8 @@ import {
   CreditCard,
   LifeBuoy,
   Mail,
-  ShieldCheck
+  Zap,
+  ShieldCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
@@ -35,10 +36,12 @@ export default function SettingsPage() {
 function SettingsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { theme, setTheme, isAdmin, setIsAdmin, isProtocolAccepted, acceptProtocols, connectedPlatforms, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
+  const { theme, setTheme, isAdmin, setIsAdmin, isProtocolAccepted, acceptProtocols, connectedPlatforms, activeEmpire: empireData, registerRefreshHandler, slotStatus } = useEmpire();
   const { isLinked: isStripeLinked } = useStripeStatus();
 
   const [activeTab, setActiveTab] = useState('financials');
+
+  const ownedSlots = Object.values(slotStatus || {}).filter(Boolean).length;
 
   useEffect(() => {
     const tab = searchParams.get('tab');
@@ -77,7 +80,7 @@ function SettingsContent() {
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
     { id: 'theme-style', name: 'Theme & Style', icon: Palette },
-    { id: 'subscription', name: 'Subscription', icon: Diamond }
+    { id: 'subscription', name: 'Subscription', icon: Zap }
   ];
 
   const colorSchemes = [
@@ -310,9 +313,9 @@ function SettingsContent() {
                   <SubscriptionSuccessShareBox
                     isProtocolAccepted={isProtocolAccepted}
                     onAcceptProtocol={() => acceptProtocols()}
-                    totalRevenue={12450}
-                    totalFees={498}
-                    businessSlots={1}
+                    totalRevenue={0}
+                    totalFees={0}
+                    businessSlots={ownedSlots}
                   />
                 </div>
               )}
