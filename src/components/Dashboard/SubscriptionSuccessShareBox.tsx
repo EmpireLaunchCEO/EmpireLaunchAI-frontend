@@ -33,8 +33,8 @@ interface SubscriptionSuccessShareBoxProps {
 export function SubscriptionSuccessShareBox({
   isProtocolAccepted,
   onAcceptProtocol,
-  totalRevenue = 12450,
-  totalFees = 498,
+  totalRevenue = 0,
+  totalFees = 0,
   businessSlots = 1,
   className,
 }: SubscriptionSuccessShareBoxProps) {
@@ -53,13 +53,13 @@ export function SubscriptionSuccessShareBox({
       '',
       'Base Subscription: $40/month',
       `Business Slots Active: ${businessSlots}`,
-      `Expansion Fees: $${(businessSlots - 1) * 40}/month`,
+      `Expansion Fees: ${(businessSlots - 1) * 40}/month`,
       '',
       'Revenue Summary:',
-      `Total Revenue: $${totalRevenue.toLocaleString()}.00`,
+      `Total Revenue: ${totalRevenue.toLocaleString()}.00`,
       `Success-Share Rate: 4% ($40 per $1,000)`,
-      `Total Success-Shares Accrued: $${totalFees.toLocaleString()}.00`,
-      `Net Revenue After Shares: $${(totalRevenue - totalFees).toLocaleString()}.00`,
+      `Total Success-Shares Accrued: ${totalFees.toLocaleString()}.00`,
+      `Net Revenue After Shares: ${(totalRevenue - totalFees).toLocaleString()}.00`,
       '',
       'Transaction History:',
       '----------------------------------------',
@@ -117,12 +117,45 @@ export function SubscriptionSuccessShareBox({
           </div>
         </div>
 
+        {/* Subscription Boxes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Base Subscription Box */}
+          <div className="p-6 bg-theme-background border border-theme rounded-[24px] space-y-4 relative overflow-hidden group">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Diamond className="w-4 h-4 text-primary" />
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Base Subscription</span>
+              </div>
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded">Active</span>
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-2xl font-black text-foreground">$40.00<span className="text-xs text-muted-foreground font-bold italic">/mo</span></h4>
+              <p className="text-[10px] text-muted-foreground font-medium leading-relaxed italic">All workstations + Global DNA harvesting active.</p>
+            </div>
+          </div>
+
+          {/* Expansion Subscription Box */}
+          <div className="p-6 bg-theme-background border border-theme rounded-[24px] space-y-4 relative overflow-hidden group">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-cyan-400" />
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Expansion Slots</span>
+              </div>
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{businessSlots - 1} Slot{businessSlots - 1 !== 1 ? 's' : ''}</span>
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-2xl font-black text-foreground">$40.00<span className="text-xs text-muted-foreground font-bold italic">/mo</span></h4>
+              <p className="text-[10px] text-muted-foreground font-medium leading-relaxed italic">$40 one-time unlock + $40/mo per additional empire.</p>
+            </div>
+          </div>
+        </div>
+
         {/* Summary section - shows after acceptance */}
         {isProtocolAccepted && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 bg-theme-background border border-theme rounded-[24px] space-y-6"
+            className="p-6 bg-theme-background border-2 border-emerald-500/20 rounded-[24px] space-y-6"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
