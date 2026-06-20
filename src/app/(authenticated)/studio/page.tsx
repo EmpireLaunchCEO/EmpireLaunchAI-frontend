@@ -226,33 +226,6 @@ export default function StudioPage() {
                 exit={{ opacity: 0, y: -10 }}
                 className="space-y-8"
               >
-                {/* AI Consultant Message */}
-                <div className="flex items-start gap-4 p-4 md:p-5 bg-theme-surface border-2 border-primary/20 rounded-[24px] md:rounded-[28px]">
-                  <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <Bot className="w-5 h-5 text-primary" />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <p className="text-sm font-medium text-foreground italic leading-relaxed">
-                      "I've synchronized <span className="text-primary font-bold">1,000,000+ DNA codes</span> from across the global marketplace. Whether it's custom rugs, apparel, or digital blueprints, I can now synthesize <span className="text-primary font-bold">anything</span> based on market-winning patterns. Choose a vibe and let's build your next physical or digital empire item."
-                    </p>
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/20 text-[8px] font-black uppercase tracking-widest text-cyan-400">
-                      <Database className="w-2.5 h-2.5" />
-                      EMPIRE VAULT Injected — Infinite Synthesis Active
-                      <Shield className="w-2.5 h-2.5" />
-                    </div>
-                    
-                    {!isDemoMode && (
-                      <button 
-                        onClick={startDemo}
-                        className="mt-4 flex items-center gap-2 px-4 py-2 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-primary/20"
-                      >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        View Sample Rendering Campaign
-                      </button>
-                    )}
-                  </div>
-                </div>
-
                 {/* Custom Design Input — Free-text Idea Entry */}
                 <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
                   <div className="flex items-center gap-3">
