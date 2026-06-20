@@ -1,7 +1,8 @@
 "use client";
 
 import React from 'react';
-import { HelpCircle, LifeBuoy, FileText, ChevronRight, MessageCircle } from 'lucide-react';
+import { HelpCircle, LifeBuoy, FileText, ChevronRight, MessageCircle, X, Info } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { RateApp } from './RateApp';
 
 const supportTickets = [
@@ -9,7 +10,16 @@ const supportTickets = [
   { id: 'TIC-1190', subject: 'Billing Question', status: 'Resolved', date: '2d ago' },
 ];
 
+const faqContent: Record<string, string> = {
+  "Understanding Success Fees": "EmpireLaunch AI operates on a success-share model. We charge a flat 4% fee ($40 per $1,000 earned) only on revenue generated through content created by our AI. This aligns our interests with your growth—we only win when you win.",
+  "AI Video Posting Schedules": "Our Neural Dispatch Center monitors real-time engagement data across platforms. When a video is ready, we suggest 'Golden Windows'—the specific hours when your target audience is most active and algorithms are most receptive to new content.",
+  "Setting up Payouts": "Connect your Stripe account in the Financials tab. Once verified, all revenue from social commerce 'Buy' buttons is routed directly to your bank account. Hardware-level encryption and PCI-DSS compliance ensure your financial data is never exposed.",
+  "Scaling with Neural Twins": "Neural Twins allow you to clone successful business models into new niches instantly. The AI replicates your brand DNA, high-converting style, and marketing logic into a new 'Expansion Slot' for multi-channel dominance."
+};
+
 export function SupportHub() {
+  const [activeFAQ, setActiveFAQ] = React.useState<string | null>(null);
+
   const handlePrioritySupport = () => {
     const message = prompt("Direct line to Technical Assistants. Describe your issue:");
     if (message) {
@@ -79,11 +89,15 @@ export function SupportHub() {
           <div className="space-y-3">
             {[
               "Understanding Success Fees",
+              "AI Video Posting Schedules",
               "Setting up Payouts",
-              "Scaling with Neural Twins",
-              "Automating Viral Hooks"
+              "Scaling with Neural Twins"
             ].map((item) => (
-              <button key={item} className="w-full flex items-center justify-between p-5 rounded-2xl bg-theme-background border-2 border-theme hover:border-blue-600/20 hover:bg-blue-50/30 transition-all group">
+              <button 
+                key={item} 
+                onClick={() => setActiveFAQ(item)}
+                className="w-full flex items-center justify-between p-5 rounded-2xl bg-theme-background border-2 border-theme hover:border-blue-600/20 hover:bg-blue-50/30 transition-all group"
+              >
                 <div className="flex items-center gap-3">
                   <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
                   <span className="text-sm font-bold text-slate-700">{item}</span>
@@ -92,6 +106,53 @@ export function SupportHub() {
               </button>
             ))}
           </div>
+
+          <AnimatePresence>
+            {activeFAQ && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                onClick={() => setActiveFAQ(null)}
+              >
+                <motion.div 
+                  initial={{ scale: 0.9, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.9, y: 20 }}
+                  className="w-full max-w-lg bg-theme-surface border-4 border-theme p-8 rounded-[40px] shadow-2xl relative"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button 
+                    onClick={() => setActiveFAQ(null)}
+                    className="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-colors"
+                  >
+                    <X className="w-5 h-5 text-white/40" />
+                  </button>
+
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                        <Info className="w-6 h-6" />
+                      </div>
+                      <h4 className="text-xl font-black text-foreground italic uppercase tracking-tight">{activeFAQ}</h4>
+                    </div>
+                    
+                    <p className="text-base font-medium text-muted-foreground leading-relaxed">
+                      {faqContent[activeFAQ]}
+                    </p>
+
+                    <button 
+                      onClick={() => setActiveFAQ(null)}
+                      className="w-full py-4 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary/90 transition-all"
+                    >
+                      Understood
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <button className="w-full text-center text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 hover:text-blue-700 transition-colors">
             View Knowledge Base
