@@ -4,27 +4,17 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  User, 
-  Share2, 
-  Zap, 
   Bell, 
   Palette, 
   Diamond, 
   CheckCircle2, 
-  Bot, 
-  X, 
   ChevronRight, 
   Lock, 
   Building2, 
-  Globe, 
-  Stars,
   CreditCard,
-  ExternalLink,
   LifeBuoy,
   Mail,
-  ShieldCheck,
-  AlertCircle,
-  DollarSign
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
@@ -33,121 +23,6 @@ import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 import { SupportHub } from '@/components/Settings/SupportHub';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { SubscriptionSuccessShareBox } from '@/components/Dashboard/SubscriptionSuccessShareBox';
-
-const IntegrationForm = ({ platform, onClose }: { platform: string, onClose: () => void }) => {
-  if (platform.toLowerCase() === 'stripe') {
-    return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-4 border-emerald-600 shadow-2xl space-y-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-600/5 blur-[80px] -z-10" />
-          <div className="flex items-center justify-between border-b border-theme pb-6">
-            <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
-              <ShieldCheck className="w-6 h-6 text-emerald-600" /> Connecting Stripe Gateway
-            </h3>
-            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-              <X className="w-6 h-6 text-white/40" />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-white/40">Publishable Key</label>
-              <input id="stripe-pub-key" type="text" placeholder="pk_live_..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-emerald-600 outline-none transition-all font-bold text-lg text-white" />
-            </div>
-            <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-white/40">Secret Key</label>
-              <input id="stripe-sec-key" type="password" placeholder="sk_live_..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-emerald-600 outline-none transition-all font-bold text-lg text-white" />
-            </div>
-          </div>
-          <div className="flex justify-end gap-4 pt-4">
-            <button onClick={onClose} className="px-8 py-4 bg-white/5 text-white/60 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
-            <button 
-              onClick={() => {
-                const pub = (document.getElementById('stripe-pub-key') as HTMLInputElement)?.value;
-                const sec = (document.getElementById('stripe-sec-key') as HTMLInputElement)?.value;
-                if (pub && sec) {
-                  localStorage.setItem('empire_vault_stripe', JSON.stringify({ publishableKey: pub, secretKey: sec }));
-                  window.dispatchEvent(new CustomEvent('empire:vault-updated'));
-                  onClose();
-                }
-              }}
-              className="px-10 py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-900/20"
-            >
-              Link Stripe Account
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (platform.toLowerCase() === 'etsy') {
-    return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-4 border-blue-600 shadow-2xl space-y-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[80px] -z-10" />
-          <div className="flex items-center justify-between border-b border-theme pb-6">
-            <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
-              <Bot className="w-6 h-6 text-blue-600" /> Connecting Etsy Marketplace
-            </h3>
-            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-              <X className="w-6 h-6 text-white/40" />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-white/40">Etsy API Key (Keystring)</label>
-              <input id="etsy-api-key" type="password" placeholder="Paste your Keystring..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg text-white" />
-            </div>
-            <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-white/40">Shared Secret</label>
-              <input id="etsy-shared-secret" type="password" placeholder="Paste your Shared Secret..." className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold text-lg text-white" />
-            </div>
-          </div>
-          <div className="flex justify-end gap-4 pt-4">
-            <button onClick={onClose} className="px-8 py-4 bg-white/5 text-white/60 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
-            <button className="px-10 py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20">Save Connection</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (platform.toLowerCase() === 'tiktok') {
-    return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 mb-12">
-        <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-4 border-slate-900 shadow-2xl space-y-8 relative overflow-hidden">
-          <div className="flex items-center justify-between border-b border-theme pb-6">
-            <h3 className="text-2xl font-black text-foreground flex items-center gap-3 italic">
-              <Share2 className="w-6 h-6 text-blue-600" /> Connecting TikTok Marketing
-            </h3>
-            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-              <X className="w-6 h-6 text-white/40" />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-white/40">App Type</label>
-              <select className="w-full p-5 rounded-3xl bg-theme-background border-2 border-theme focus:border-blue-600 outline-none transition-all font-bold appearance-none text-lg text-white">
-                <option>Marketing API</option>
-                <option>Display API</option>
-              </select>
-            </div>
-            <div className="space-y-3">
-              <label className="text-xs font-black uppercase tracking-widest text-white/40">Redirect URI</label>
-              <input type="text" readOnly value="https://empire-launch-ai-frontend.vercel.app/api/auth/callback/tiktok" className="w-full p-5 rounded-3xl bg-white/5 border-2 border-theme outline-none transition-all font-bold text-lg text-white/40 cursor-not-allowed" />
-            </div>
-          </div>
-          <div className="flex justify-end gap-4 pt-4">
-            <button onClick={onClose} className="px-8 py-4 bg-white/5 text-white/60 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">Cancel</button>
-            <button className="px-10 py-4 bg-slate-950 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-slate-900/40">Sync TikTok</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
-};
 
 export default function SettingsPage() {
   return (
@@ -163,7 +38,7 @@ function SettingsContent() {
   const { theme, setTheme, isAdmin, setIsAdmin, isProtocolAccepted, acceptProtocols, connectedPlatforms, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
   const { isLinked: isStripeLinked } = useStripeStatus();
 
-  const [activeTab, setActiveTab] = useState('link-center');
+  const [activeTab, setActiveTab] = useState('financials');
 
   useEffect(() => {
     const tab = searchParams.get('tab');
@@ -171,9 +46,6 @@ function SettingsContent() {
       setActiveTab(tab);
     }
   }, [searchParams]);
-  const [activePlatform, setActivePlatform] = useState<string | null>(null);
-  const [isAgreementOpen, setIsAgreementOpen] = useState(false);
-
   useEffect(() => {
     return registerRefreshHandler(async () => { await new Promise(r => setTimeout(r, 1000)); });
   }, [registerRefreshHandler]);
@@ -201,7 +73,6 @@ function SettingsContent() {
   }, []);
 
   const tabs = [
-    { id: 'link-center', name: 'Link Center', icon: Share2 },
     { id: 'financials', name: 'Financials', icon: CreditCard },
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
@@ -224,7 +95,7 @@ function SettingsContent() {
         <div className="text-center space-y-4">
           <div className="flex flex-col items-center justify-center gap-2">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Link Center Active</span>
+              <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-primary">Settings Portal</span>
               <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
               <div className="flex items-center gap-1 bg-white/5 px-3 py-1 rounded-full border border-white/10">
                 <Mail className="w-3 h-3 text-primary" />
@@ -326,7 +197,7 @@ function SettingsContent() {
                       </p>
 
                       <button 
-                        onClick={() => setActiveTab('link-center')}
+                        onClick={() => router.push('/link-center')}
                         className={cn(
                           "w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl",
                           isStripeLinked 
@@ -347,76 +218,6 @@ function SettingsContent() {
                         <ShieldCheck className="w-3 h-3" />
                         <span className="text-[8px] font-black uppercase tracking-widest">Secure Bank Bridge</span>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'link-center' && (
-                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  {!isProtocolAccepted && (
-                    <div className="p-6 bg-blue-500/10 border-2 border-blue-500/20 rounded-[32px] flex items-center gap-4">
-                      <Lock className="w-6 h-6 text-blue-500 shrink-0" />
-                      <p className="text-xs font-bold text-blue-600 uppercase tracking-tight">
-                        Platform linking is locked until the <span className="text-slate-950">Partner Protocol</span> is accepted on the Dashboard.
-                      </p>
-                    </div>
-                  )}
-                  {activePlatform && <IntegrationForm platform={activePlatform} onClose={() => setActivePlatform(null)} />}
-                  <div className={cn(
-                    "p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8 transition-all",
-                    !isProtocolAccepted && "opacity-50 pointer-events-none grayscale"
-                  )}>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
-                        <Share2 className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-black text-foreground tracking-tight">Channel Authorization</h3>
-                        <p className="text-sm font-medium text-muted-foreground">Manage connections for automated marketing and fulfillment.</p>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {['Etsy', 'TikTok', 'Instagram', 'YouTube', 'Facebook', 'Gmail', 'Fiverr', 'Stripe', 'Canva', 'Kittl', 'CapCut', 'Bannerbear'].map((p) => {
-                        const id = p.toLowerCase().replace(' ', '_');
-                        const isConnected = connectedPlatforms.includes(id) || (id === 'stripe' && isStripeLinked);
-                        
-                        return (
-                          <button 
-                            key={p} 
-                            onClick={() => !isConnected && setActivePlatform(p)} 
-                            className={cn(
-                              "p-6 rounded-[32px] border-2 transition-all flex flex-col items-center gap-3 group relative overflow-hidden",
-                              isConnected ? "border-emerald-600 bg-emerald-900/20 cursor-default" : "border-theme bg-theme-background hover:border-white/50"
-                            )}
-                          >
-                            <div className={cn(
-                              "w-12 h-12 rounded-2xl flex items-center justify-center transition-colors",
-                              isConnected ? "bg-emerald-900/40" : "bg-theme-surface group-hover:bg-primary/20"
-                            )}>
-                              {isConnected 
-                                ? <ShieldCheck className="w-6 h-6 text-emerald-500" />
-                                : <Bot className={cn("w-6 h-6 transition-colors", "text-white/40 group-hover:text-primary")} />
-                              }
-                            </div>
-                            <div className="flex flex-col items-center">
-                              <span className={cn(
-                                "font-black text-[10px] uppercase tracking-widest",
-                                isConnected ? "text-emerald-500" : "text-white/60 group-hover:text-white"
-                              )}>{p}</span>
-                              {isConnected && (
-                                <span className="text-[7px] font-black text-emerald-500/60 uppercase tracking-tighter mt-1">Verified & Linked</span>
-                              )}
-                            </div>
-                            
-                            {isConnected && (
-                              <div className="absolute top-2 right-2">
-                                <Lock className="w-3 h-3 text-emerald-500/30" />
-                              </div>
-                            )}
-                          </button>
-                        );
-                      })}
                     </div>
                   </div>
                 </div>
@@ -525,7 +326,7 @@ function SettingsContent() {
           {/* Version Verification */}
           <div className="flex justify-center pb-20">
             <span className="text-[8px] font-black text-slate-800 uppercase tracking-widest opacity-30">
-              Command Center v3.0.2 (Neural Sync Active)
+              Command Center v3.0.2
             </span>
           </div>
         </div>
