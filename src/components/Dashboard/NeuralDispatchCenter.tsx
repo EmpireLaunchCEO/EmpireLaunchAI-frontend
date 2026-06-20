@@ -17,7 +17,8 @@ import {
   Mail,
   Globe,
   Zap,
-  AlertCircle
+  AlertCircle,
+  ThumbsUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -133,8 +134,9 @@ export function NeuralDispatchCenter() {
           <div className="flex gap-4">
             <button 
               onClick={handleApprove}
-              className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20"
+              className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
             >
+              <ThumbsUp className="w-4 h-4" />
               Approve Draft #{draftNumber}
             </button>
           </div>
