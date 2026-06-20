@@ -67,6 +67,7 @@ interface GuidedLinkingProps {
   onClose?: () => void;
   currentEmpire?: any;
   onRefresh?: () => void;
+  hideEstablished?: boolean;
 }
 
 const PLATFORM_3D_ICONS: Record<string, string> = {
@@ -113,7 +114,7 @@ function PlatformIcon({ id, icon: Icon, className, size = 20 }: { id: string, ic
   return <Icon className={cn(className)} style={{ width: size, height: size }} />;
 }
 
-export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }: GuidedLinkingProps) {
+export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, hideEstablished }: GuidedLinkingProps) {
   const {
     connectedPlatforms,
     connectPlatform,
@@ -275,7 +276,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh }
   return (
     <div className="space-y-12">
       {/* Connected Platforms Quick View */}
-      {connectedPlatforms.length > 0 && (
+      {connectedPlatforms.length > 0 && !hideEstablished && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

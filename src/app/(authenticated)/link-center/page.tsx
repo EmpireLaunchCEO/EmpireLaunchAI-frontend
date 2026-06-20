@@ -73,15 +73,15 @@ export default function LinkCenterPage() {
 
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000">
           
-          <VerticalPlatformRadar />
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <GuidedLinking isReturning={isLinkingComplete} />
+            <GuidedLinking isReturning={isLinkingComplete} hideEstablished={true} />
           </motion.div>
+
+          <VerticalPlatformRadar />
 
           {connectedPlatforms.length > 0 && (
             <section className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
@@ -234,10 +234,6 @@ export default function LinkCenterPage() {
               </div>
             </section>
           )}
-
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <EmpireAIChatBox className="max-w-6xl mx-auto" />
-          </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <FeedbackBox />
