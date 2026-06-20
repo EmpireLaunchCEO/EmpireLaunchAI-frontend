@@ -187,20 +187,22 @@ p, span, label, div, li, td, th, a {
 
 /* VIBRANT OUTLINES - All UI boxes and nested elements get themed outlines */
 .border-theme, .border-2, .border-4, .border {
-  border-color: rgba(var(--primary-rgb), 0.5) !important;
+  border-color: rgb(var(--primary-rgb) / 0.5) !important;
 }
 
 .bg-theme-surface {
-  border-color: rgba(var(--primary-rgb), 0.5) !important;
+  border-color: rgb(var(--primary-rgb) / 0.5) !important;
 }
 
 /* Ensure all theme borders and outlines follow the primary theme color */
-.border-theme, .border-2, .border-4, .border, [class*="border-"] {
-  border-color: rgba(var(--primary-rgb), 0.4) !important;
+.border-theme, .border-2, .border-4, .border, [class*="border-"], [class*="outline-"], [class*="ring-"] {
+  border-color: rgb(var(--primary-rgb) / 0.4) !important;
+  outline-color: rgb(var(--primary-rgb) / 0.4) !important;
+  ring-color: rgb(var(--primary-rgb) / 0.4) !important;
 }
 
 .bg-theme-surface, .bg-theme-background {
-  border-color: rgba(var(--primary-rgb), 0.4) !important;
+  border-color: rgb(var(--primary-rgb) / 0.4) !important;
   box-shadow: 0 0 20px rgb(var(--primary-rgb) / 0.05), inset 0 0 0 1px rgb(var(--primary-rgb) / 0.15);
 }
 
@@ -236,8 +238,8 @@ h1, h2, h3, h4 {
 /* Fallback Globe Styling */
 .fallback-globe {
   background: radial-gradient(circle at center, rgb(var(--primary-rgb)) 0%, transparent 70%);
-  border: 1px solid rgba(var(--primary-rgb), 0.3);
-  box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2);
+  border: 1px solid rgb(var(--primary-rgb) / 0.3);
+  box-shadow: 0 0 20px rgb(var(--primary-rgb) / 0.2);
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
