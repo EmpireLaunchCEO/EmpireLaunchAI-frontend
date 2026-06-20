@@ -78,10 +78,10 @@ export function SupportHub() {
 
           <div className="space-y-3">
             {[
-              "How to link Canva Enterprise",
               "Understanding Success Fees",
-              "Maximizing TikTok Virality",
-              "Setting up Payouts"
+              "Setting up Payouts",
+              "Scaling with Neural Twins",
+              "Automating Viral Hooks"
             ].map((item) => (
               <button key={item} className="w-full flex items-center justify-between p-5 rounded-2xl bg-theme-background border-2 border-theme hover:border-blue-600/20 hover:bg-blue-50/30 transition-all group">
                 <div className="flex items-center gap-3">
