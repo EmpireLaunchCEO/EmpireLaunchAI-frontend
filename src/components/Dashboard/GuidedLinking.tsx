@@ -85,6 +85,20 @@ const PLATFORM_3D_ICONS: Record<string, string> = {
   redbubble: '/brands/redbubble_128.png',
   artstation: '/brands/artstation_128.png',
   substack: '/brands/substack_128.png',
+  godaddy: '/brands/godaddy_128.png',
+  systeme_io: '/brands/systeme_io_128.png',
+  shopify: '/brands/shopify_128.png',
+  pinterest: '/brands/pinterest_128.png',
+  tiktok_shop: '/brands/tiktok_shop_128.png',
+  shipstation: '/brands/shipstation_128.png',
+  dsers: '/brands/dsers_128.png',
+  zendrop: '/brands/zendrop_128.png',
+  spocket: '/brands/spocket_128.png',
+  printful: '/brands/printful_128.png',
+  printify: '/brands/printify_128.png',
+  cj_dropshipping: '/brands/cj_dropshipping_128.png',
+  autods: '/brands/autods_128.png',
+  bannerbear: '/brands/bannerbear_128.png',
 };
 
 function PlatformIcon({ id, icon: Icon, className, size = 20 }: { id: string, icon: any, className?: string, size?: number }) {

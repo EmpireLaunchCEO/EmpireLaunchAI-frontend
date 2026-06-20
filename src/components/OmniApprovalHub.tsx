@@ -57,6 +57,20 @@ const PLATFORM_3D_ICONS: Record<string, string> = {
   canva: '/brands/canva_128.png',
   kittl: '/brands/kittl_128.png',
   capcut: '/brands/capcut_128.png',
+  godaddy: '/brands/godaddy_128.png',
+  systeme_io: '/brands/systeme_io_128.png',
+  shopify: '/brands/shopify_128.png',
+  pinterest: '/brands/pinterest_128.png',
+  tiktok_shop: '/brands/tiktok_shop_128.png',
+  shipstation: '/brands/shipstation_128.png',
+  dsers: '/brands/dsers_128.png',
+  zendrop: '/brands/zendrop_128.png',
+  spocket: '/brands/spocket_128.png',
+  printful: '/brands/printful_128.png',
+  printify: '/brands/printify_128.png',
+  cj_dropshipping: '/brands/cj_dropshipping_128.png',
+  autods: '/brands/autods_128.png',
+  bannerbear: '/brands/bannerbear_128.png',
 };
 
 function PlatformIcon({ platform, className, size = 20 }: { platform: string; className?: string; size?: number }) {

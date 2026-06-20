@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { GrowthTracker } from '@/components/Dashboard/SuccessHub/GrowthTracker';
 import { VideoPerformance } from '@/components/Dashboard/SuccessHub/VideoPerformance';
 import { TrendRadar } from '@/components/Analytics/TrendRadar';
+import { ViralAlertFeed } from '@/components/Analytics/ViralAlertFeed';
 import { AutomationCenter } from '@/components/Automation/AutomationCenter';
 import { EmpireLedger } from '@/components/Analytics/EmpireLedger';
 import { VerticalPlatformRadar } from '@/components/Dashboard/VerticalPlatformRadar';
@@ -66,6 +67,7 @@ export default function AnalyticsPage() {
               <GrowthTracker />
               <VideoPerformance />
             </div>
+            <ViralAlertFeed />
             <div className="pt-6">
               <TrendRadar />
             </div>
