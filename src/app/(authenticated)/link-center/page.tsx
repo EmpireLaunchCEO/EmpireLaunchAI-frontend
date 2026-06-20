@@ -26,6 +26,15 @@ const PLATFORM_LOGOS: Record<string, string> = {
   canva: '/brands/canva_128.png',
   kittl: '/brands/kittl_128.png',
   capcut: '/brands/capcut_128.png',
+  shopify: '/brands/shopify_128.png',
+  godaddy: '/brands/godaddy_128.png',
+  systeme_io: '/brands/systeme_io_128.png',
+  pinterest: '/brands/pinterest_128.png',
+  printful: '/brands/printful_128.png',
+  printify: '/brands/printify_128.png',
+  behance: '/brands/behance_128.png',
+  substack: '/brands/substack_128.png',
+  tiktok_shop: '/brands/tiktok_shop_128.png',
 };
 
 export default function LinkCenterPage() {
@@ -87,107 +96,122 @@ export default function LinkCenterPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {connectedPlatforms.map(id => {
                   const tier = platformPermissions[id] || 'read-only';
-                  const caps = PLATFORM_CAPABILITIES[id]?.capabilities?.find(c => c.tier === tier);
-
+                  
                   return (
                     <motion.div
                       key={id}
-                      whileHover={{ y: -5 }}
-                      className="p-6 bg-theme-surface border-2 border-theme rounded-[32px] space-y-6 relative overflow-hidden group"
+                      whileHover={{ y: -4 }}
+                      className="p-5 bg-theme-surface border-2 border-theme rounded-[28px] space-y-5 relative overflow-hidden group"
                     >
-                      <div className="flex items-start justify-between relative z-10">
-                        <div className="space-y-1">
-                          <h3 className="font-black text-lg capitalize text-foreground">{id}</h3>
-                          <div className={cn(
-                            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                            tier === 'empire' ? "bg-cyan-500/10 text-cyan-400" : 
-                            tier === 'co-pilot' ? "bg-primary/10 text-primary" :
-                            "bg-slate-500/10 text-slate-400"
-                          )}>
-                            {tier === 'empire' ? <Stars className="w-3 h-3" /> : 
-                             tier === 'co-pilot' ? <Cpu className="w-3 h-3" /> :
-                             <Eye className="w-3 h-3" />}
-                            {tier === 'empire' ? 'Auto-Pilot' : 
-                             tier === 'co-pilot' ? 'Co-Pilot' :
-                             'Read-Only'}
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end gap-2">
-                          <div className="w-10 h-10 rounded-xl bg-white p-1 border border-theme flex items-center justify-center overflow-hidden">
+                      <div className="flex items-center justify-between gap-3 relative z-10">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-10 h-10 rounded-xl bg-white p-1.5 border border-theme flex items-center justify-center shrink-0">
                             {PLATFORM_LOGOS[id] ? (
                               <Image 
                                 src={PLATFORM_LOGOS[id]} 
                                 alt={id} 
-                                width={32} 
-                                height={32} 
+                                width={24} 
+                                height={24} 
                                 className="object-contain"
                               />
                             ) : (
-                              <ShieldCheck className={cn("w-5 h-5", tier === 'empire' ? "text-cyan-400" : "text-primary")} />
+                              <Share2 className="w-5 h-5 text-slate-900" />
                             )}
+                          </div>
+                          <div className="truncate">
+                            <h3 className="font-black text-sm capitalize text-foreground truncate">{id}</h3>
+                            <div className="flex items-center gap-1">
+                               <div className={cn("w-1 h-1 rounded-full animate-pulse", tier === 'empire' ? "bg-cyan-400" : tier === 'co-pilot' ? "bg-primary" : "bg-slate-500")} />
+                               <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">
+                                  {tier === 'empire' ? 'Auto-Pilot' : tier === 'co-pilot' ? 'Co-Pilot' : 'Read-Only'}
+                               </span>
+                            </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="space-y-4 relative z-10">
-                        <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                          {caps?.description || 'Establishing secure monitoring protocols.'}
-                        </p>
-                        
-                        {/* Tier Selection Buttons */}
-                        <div className="grid grid-cols-3 gap-2 pt-2">
-                           {['read-only', 'co-pilot', 'empire'].map((t) => (
-                             <button
-                               key={t}
-                               onClick={() => updatePlatformPermission(id, t as any)}
-                               className={cn(
-                                 "py-2 rounded-lg text-[8px] font-black uppercase tracking-tight border transition-all",
-                                 tier === t 
-                                   ? "bg-primary text-slate-950 border-primary" 
-                                   : "bg-theme-background text-slate-500 border-theme hover:border-white/30"
-                               )}
-                             >
-                               {t === 'read-only' ? 'Read' : t === 'co-pilot' ? 'Co-Pilot' : 'Auto'}
-                             </button>
-                           ))}
+                      <div className="space-y-3 pt-4 border-t border-theme/30 relative z-10">
+                        {/* Read-Only Toggle */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-black uppercase tracking-tight text-foreground">Read-Only</span>
+                            <span className="text-[7px] font-bold text-slate-500">AI monitors and analyzes</span>
+                          </div>
+                          <button
+                            className="w-8 h-4 rounded-full relative bg-primary/40 cursor-not-allowed opacity-80"
+                            disabled
+                          >
+                            <div className="w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 right-0.75" />
+                          </button>
                         </div>
 
-                        <div className="pt-4 border-t border-theme flex flex-col gap-4">
-                           <div className="flex items-center justify-between">
-                             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</span>
-                             <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-green-500">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                Encrypted
-                             </span>
-                           </div>
+                        {/* Co-Pilot Toggle */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-black uppercase tracking-tight text-foreground">Co-Pilot</span>
+                            <span className="text-[7px] font-bold text-slate-500">AI drafts and suggests</span>
+                          </div>
+                          <button
+                            onClick={() => updatePlatformPermission(id, (tier === 'co-pilot' || tier === 'empire') ? 'read-only' : 'co-pilot')}
+                            className={cn(
+                              "w-8 h-4 rounded-full relative transition-all",
+                              (tier === 'co-pilot' || tier === 'empire') ? "bg-primary" : "bg-slate-800"
+                            )}
+                          >
+                            <div className={cn(
+                              "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
+                              (tier === 'co-pilot' || tier === 'empire') ? "right-0.75" : "left-0.75"
+                            )} />
+                          </button>
+                        </div>
 
-                           <div className="flex items-center justify-between bg-theme-background p-3 rounded-2xl border border-theme">
-                              <div className="flex flex-col">
-                                <span className="text-[10px] font-black uppercase tracking-tight text-foreground">AI Spending</span>
-                                <span className="text-[8px] font-bold text-slate-500">Autonomous purchasing power</span>
-                              </div>
-                              <button
-                                onClick={() => updateSpendingPermission(id, !spendingPermissions[id])}
-                                className={cn(
-                                  "w-10 h-5 rounded-full relative transition-all",
-                                  spendingPermissions[id] ? "bg-primary" : "bg-slate-700"
-                                )}
-                              >
-                                <div className={cn(
-                                  "w-3 h-3 bg-slate-950 rounded-full absolute top-1 transition-all",
-                                  spendingPermissions[id] ? "right-1" : "left-1"
-                                )} />
-                              </button>
-                           </div>
+                        {/* Auto-Pilot Toggle */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-black uppercase tracking-tight text-foreground">Auto-Pilot</span>
+                            <span className="text-[7px] font-bold text-slate-500">AI posts content daily</span>
+                          </div>
+                          <button
+                            onClick={() => updatePlatformPermission(id, tier === 'empire' ? 'co-pilot' : 'empire')}
+                            className={cn(
+                              "w-8 h-4 rounded-full relative transition-all",
+                              tier === 'empire' ? "bg-cyan-400" : "bg-slate-800"
+                            )}
+                          >
+                            <div className={cn(
+                              "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
+                              tier === 'empire' ? "right-0.75" : "left-0.75"
+                            )} />
+                          </button>
+                        </div>
+
+                        {/* AI Spending Toggle */}
+                        <div className="flex items-center justify-between pt-2 border-t border-theme/20">
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-black uppercase tracking-tight text-foreground">Spending</span>
+                            <span className="text-[7px] font-bold text-slate-500">Purchasing power</span>
+                          </div>
+                          <button
+                            onClick={() => updateSpendingPermission(id, !spendingPermissions[id])}
+                            className={cn(
+                              "w-8 h-4 rounded-full relative transition-all",
+                              spendingPermissions[id] ? "bg-emerald-500" : "bg-slate-800"
+                            )}
+                          >
+                            <div className={cn(
+                              "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.75 transition-all",
+                              spendingPermissions[id] ? "right-0.75" : "left-0.75"
+                            )} />
+                          </button>
                         </div>
                       </div>
 
-                      {/* Decorative background icon */}
+                      {/* Decorative background pulse */}
                       {tier === 'empire' && (
-                        <Stars className="absolute -right-4 -bottom-4 w-24 h-24 text-cyan-400/5 rotate-12 group-hover:scale-110 transition-transform" />
+                        <div className="absolute inset-0 bg-cyan-400/5 animate-pulse pointer-events-none" />
                       )}
                     </motion.div>
                   );
