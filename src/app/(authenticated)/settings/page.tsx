@@ -141,7 +141,7 @@ function SettingsContent() {
                     <div className="p-6 bg-amber-500/10 border-2 border-amber-500/20 rounded-[32px] flex items-center gap-4">
                       <Lock className="w-6 h-6 text-amber-500 shrink-0" />
                       <p className="text-xs font-bold text-amber-600 uppercase tracking-tight">
-                        Financial configuration is locked until the <span className="text-slate-950">Partner Protocol</span> is accepted on the Dashboard.
+                        Financial configuration is locked until the <span className="text-amber-500 font-black">Partner Protocol</span> is accepted on the Dashboard.
                       </p>
                     </div>
                   )}
