@@ -20,9 +20,8 @@ import { cn } from '@/lib/utils';
 import { InspirationGallery, SuggestionBubbles } from '@/components/Dashboard/InspirationGallery';
 import { DNAVaultCounter } from '@/components/Dashboard/DNAVaultCounter';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
-import { EmpireAIChatBox } from '@/components/Dashboard/EmpireAIChatBox';
-
 import { FileUploadDropZone, UploadState } from '@/components/Dashboard/FileUploadDropZone';
+import { InlineConsultant } from '@/components/Studio/InlineConsultant';
 import { AIRenderLog, generateMockRenderLogs, RenderLogEntry } from '@/components/Dashboard/AIRenderLog';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
@@ -222,10 +221,6 @@ export default function StudioPage() {
         </div>
 
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <EmpireAIChatBox className="max-w-6xl mx-auto" />
-          </motion.div>
-
           <div className="space-y-12">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -273,6 +268,8 @@ export default function StudioPage() {
                     <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Video directive received — generating visual storyboard</span>
                   </motion.div>
                 )}
+
+                <InlineConsultant context="video" />
               </div>
 
               {/* 2. Upload Video Box for Edits */}
@@ -296,6 +293,8 @@ export default function StudioPage() {
                   onRemove={handleRawVideoRemove}
                   disabled={rawVideoUpload.status === 'uploading' || rawVideoUpload.status === 'processing'}
                 />
+
+                <InlineConsultant context="editor" />
               </div>
 
               {/* 3. Faceless Content Creation Box */}
@@ -339,6 +338,8 @@ export default function StudioPage() {
                     <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Faceless concept received — sourcing viral stock material</span>
                   </motion.div>
                 )}
+
+                <InlineConsultant context="faceless" />
               </div>
 
               {/* Custom Design Input — Free-text Idea Entry */}
@@ -393,63 +394,62 @@ export default function StudioPage() {
                   <Lightbulb className="w-3 h-3" />
                   <span>Tip: Be specific about colors, materials, dimensions, and target platform</span>
                 </div>
+
+                <InlineConsultant context="design" />
               </div>
 
-              {/* Neural Twin Section - Moved from Cinema Hub */}
-              <div className="flex flex-col md:flex-row gap-8 items-stretch">
-                <div className="flex-1 p-6 md:p-8 bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[32px] md:rounded-[40px] space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">
-                      <Stars className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl md:text-2xl font-black text-white italic">Neural Twin.</h3>
-                      <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
-                    </div>
+              {/* Neural Twin Section - Single Box with Active Badge */}
+              <div className="relative bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6">
+                {facialDnaUpload.status === 'complete' && (
+                  <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest text-shadow-glow">active</span>
                   </div>
+                )}
 
-                  <p className="text-sm text-slate-400 leading-relaxed italic">
-                    "Upload a clear photo of yourself, and I'll create your Neural Twin. I can then generate high-fidelity marketing videos with perfect lip-syncing for any script you provide."
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">
+                    <Stars className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl md:text-2xl font-black text-white italic">Neural Twin.</h3>
+                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
+                  </div>
+                </div>
 
-                  <div className="space-y-4">
-                    <FileUploadDropZone
-                      type="facial-dna"
-                      state={facialDnaUpload}
-                      onFileSelect={handleFacialDnaSelect}
-                      onRemove={handleFacialDnaRemove}
-                      disabled={facialDnaUpload.status === 'uploading' || facialDnaUpload.status === 'processing'}
-                    />
+                <p className="text-sm text-slate-400 leading-relaxed italic max-w-2xl">
+                  "Upload a clear photo of yourself, and I'll create your Neural Twin. I can then generate high-fidelity marketing videos with perfect lip-syncing for any script you provide."
+                </p>
 
-                    {facialDnaUpload.preview && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 mx-auto"
-                      >
-                        <img src={facialDnaUpload.preview} alt="Uploaded facial photo" className="w-full h-full object-cover" />
-                      </motion.div>
-                    )}
+                <div className="space-y-4">
+                  <FileUploadDropZone
+                    type="facial-dna"
+                    state={facialDnaUpload}
+                    onFileSelect={handleFacialDnaSelect}
+                    onRemove={handleFacialDnaRemove}
+                    disabled={facialDnaUpload.status === 'uploading' || facialDnaUpload.status === 'processing'}
+                  />
 
-                    <button
-                      onClick={handleSynthesizeTwin}
-                      disabled={facialDnaUpload.status !== 'complete'}
-                      className="w-full py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  {facialDnaUpload.preview && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 mx-auto"
                     >
-                      {facialDnaUpload.status === 'complete' ? 'Synthesize Twin Double' : 'Upload a photo first'}
-                    </button>
-                  </div>
+                      <img src={facialDnaUpload.preview} alt="Uploaded facial photo" className="w-full h-full object-cover" />
+                    </motion.div>
+                  )}
+
+                  <button
+                    onClick={handleSynthesizeTwin}
+                    disabled={facialDnaUpload.status !== 'complete'}
+                    className="w-full max-w-sm mx-auto flex justify-center py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    {facialDnaUpload.status === 'complete' ? 'Synthesize Twin Double' : 'Upload a photo first'}
+                  </button>
                 </div>
 
-                <div className="flex-1 p-6 md:p-8 bg-theme-surface border border-theme rounded-[32px] md:rounded-[40px] flex flex-col items-center justify-center text-center space-y-4">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                    <Video className="w-10 h-10 text-primary" />
-                  </div>
-                  <h4 className="text-xl font-bold text-white uppercase italic">Twin Active.</h4>
-                  <p className="text-sm text-slate-400">
-                    Once your Twin is synthesized, you can generate cinematic clips instantly.
-                  </p>
-                </div>
+                <InlineConsultant context="neural-twin" />
               </div>
 
               {/* Suggestion Bubbles - FORCED VERTICAL */}
