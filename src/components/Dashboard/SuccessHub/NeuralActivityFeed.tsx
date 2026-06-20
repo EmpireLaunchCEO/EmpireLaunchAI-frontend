@@ -20,9 +20,12 @@ const MOCK_THOUGHTS = [
 ];
 
 export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }: { logs?: string[], status?: string }) => {
+  const { connectedPlatforms } = useEmpire();
   const [logs, setLogs] = useState<{ id: number; text: string; status: 'processing' | 'done' }[]>([]);
   const [mounted, setMounted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const hasLinks = connectedPlatforms.length > 0;
 
   useEffect(() => {
     setMounted(true);
@@ -68,7 +71,7 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
         text: typeof log === 'string' ? log : log.message || JSON.stringify(log),
         status: i === initialLogs.length - 1 ? 'processing' : 'done'
       })));
-    } else {
+    } else if (hasLinks) {
       let logId = 0;
       const addLog = () => {
         const newThought = MOCK_THOUGHTS[Math.floor(Math.random() * MOCK_THOUGHTS.length)];
@@ -89,12 +92,18 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
         clearInterval(interval);
         socket.disconnect();
       };
+    } else {
+      setLogs([
+        { id: 1, text: "[SYSTEM] Neural Core Standby.", status: 'done' },
+        { id: 2, text: "[SYSTEM] Waiting for platform telemetry...", status: 'processing' }
+      ]);
+      return () => socket.disconnect();
     }
 
     return () => {
       socket.disconnect();
     };
-  }, [initialLogs]);
+  }, [initialLogs, hasLinks]);
 
   return (
     <div className="bg-slate-900 rounded-[32px] p-6 border border-slate-800 shadow-2xl relative overflow-hidden group">
@@ -110,8 +119,10 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
           <div>
             <h3 className="text-white font-bold text-lg tracking-tight">Neural Activity</h3>
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">AI Reasoning: Online</span>
+              <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", hasLinks ? "bg-emerald-500" : "bg-amber-500")} />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                {hasLinks ? "AI Reasoning: Online" : "AI Reasoning: Standby"}
+              </span>
             </div>
           </div>
         </div>
@@ -161,11 +172,13 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
         <div className="flex gap-4">
           <div className="flex flex-col">
             <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Cycles</span>
-            <span className="text-white font-mono text-sm">1,242</span>
+            <span className="text-white font-mono text-sm">{hasLinks ? "1,242" : "0"}</span>
           </div>
           <div className="flex flex-col">
             <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">Stability</span>
-            <span className="text-emerald-400 font-mono text-sm">99.9%</span>
+            <span className={cn("font-mono text-sm", hasLinks ? "text-emerald-400" : "text-slate-500")}>
+              {hasLinks ? "99.9%" : "N/A"}
+            </span>
           </div>
         </div>
         <button className="text-[10px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 transition-colors">

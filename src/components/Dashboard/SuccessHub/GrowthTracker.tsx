@@ -18,18 +18,22 @@ export const GrowthTracker = ({
   goalTitle = "Monthly Revenue Goal",
   monthlyEarnings = 0,
   allTimeEarnings = 0,
-  targetValue = 1000,
+  targetValue = 0,
   unit = "$",
   progress
 }: GrowthTrackerProps) => {
   const [mounted, setMounted] = useState(false);
-  const [localTarget, setLocalTarget] = useState(targetValue);
+  const [localTarget, setLocalTarget] = useState(targetValue || 1000);
 
   useEffect(() => {
     setMounted(true);
     const savedGoal = localStorage.getItem('monthly-revenue-goal');
-    if (savedGoal) setLocalTarget(parseInt(savedGoal));
-  }, []);
+    if (savedGoal) {
+      setLocalTarget(parseInt(savedGoal));
+    } else if (targetValue > 0) {
+      setLocalTarget(targetValue);
+    }
+  }, [targetValue]);
 
   const handleSetGoal = () => {
     const newGoal = prompt("What is your Monthly Revenue Goal?", localTarget.toString());

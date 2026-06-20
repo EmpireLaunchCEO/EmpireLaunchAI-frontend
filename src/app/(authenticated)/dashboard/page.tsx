@@ -49,8 +49,8 @@ export default function Dashboard() {
       const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Fetch timeout')), 4500));
       const fetchPromise = Promise.all([
         empireService.getEmpire(activeEmpireId).catch(() => null),
-        analyticsService.getEmpirePulse().catch(() => ({ score: 85, logs: [] })),
-        analyticsService.getEmpireHealth().catch(() => ({ score: 92, revenue: 0 })),
+        analyticsService.getEmpirePulse().catch(() => ({ score: 0, logs: [] })),
+        analyticsService.getEmpireHealth().catch(() => ({ score: 0, revenue: 0 })),
       ]);
 
       const results = await Promise.race([fetchPromise, timeoutPromise]) as any[];

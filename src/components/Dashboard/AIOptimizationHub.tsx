@@ -39,6 +39,7 @@ const Insight = ({ type, title, description, impact, color }: InsightProps) => (
 );
 
 export function AIOptimizationHub() {
+  const { connectedPlatforms } = useEmpire();
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -75,6 +76,8 @@ export function AIOptimizationHub() {
     );
   }
 
+  const hasLinks = connectedPlatforms.length > 0;
+
   return (
     <div className="space-y-6 relative">
       <div className="absolute top-0 right-0 z-20">
@@ -98,27 +101,41 @@ export function AIOptimizationHub() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        <Insight
-          type="trend"
-          title="Viral Hook: 'Boho Minimalist'"
-          description="Etsy search volume for 'minimalist boho wall art' is up 114%. I suggest creating 3 new variants today."
-          impact="High"
-          color="bg-purple-600"
-        />
-        <Insight
-          type="research"
-          title="Competitor Gap Analysis"
-          description="Top 3 competitors in your niche are currently low on stock for 'Digital Wedding Planners'. Perfect time to boost ads."
-          impact="Medium"
-          color="bg-slate-600"
-        />
-        <Insight
-          type="suggestion"
-          title="Price Optimization: +$2.50"
-          description="Based on market velocity, your 'Luxe Bundle' is underpriced. Increasing by $2.50 will boost profit by 12% without affecting volume."
-          impact="Very High"
-          color="bg-emerald-600"
-        />
+        {hasLinks ? (
+          <>
+            <Insight
+              type="trend"
+              title="Viral Hook: 'Boho Minimalist'"
+              description="Etsy search volume for 'minimalist boho wall art' is up 114%. I suggest creating 3 new variants today."
+              impact="High"
+              color="bg-purple-600"
+            />
+            <Insight
+              type="research"
+              title="Competitor Gap Analysis"
+              description="Top 3 competitors in your niche are currently low on stock for 'Digital Wedding Planners'. Perfect time to boost ads."
+              impact="Medium"
+              color="bg-slate-600"
+            />
+            <Insight
+              type="suggestion"
+              title="Price Optimization: +$2.50"
+              description="Based on market velocity, your 'Luxe Bundle' is underpriced. Increasing by $2.50 will boost profit by 12% without affecting volume."
+              impact="Very High"
+              color="bg-emerald-600"
+            />
+          </>
+        ) : (
+          <div className="col-span-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-theme rounded-[40px] bg-theme-surface/30 space-y-4">
+             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                <Zap className="w-8 h-8 text-primary animate-pulse" />
+             </div>
+             <div className="text-center">
+                <h3 className="text-lg font-black uppercase italic">Standby for Data</h3>
+                <p className="text-slate-400 text-sm max-w-xs mx-auto">Link your first platform to activate AI-driven growth optimizations and trend harvesting.</p>
+             </div>
+          </div>
+        )}
       </div>
     </div>
   );

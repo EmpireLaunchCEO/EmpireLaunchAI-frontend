@@ -16,9 +16,9 @@ interface FinancialCommandProps {
 }
 
 export function FinancialCommand({ 
-  withholdableEarnings = 125050, 
-  securedDues = 18000, 
-  growthScore = 92,
+  withholdableEarnings = 0, 
+  securedDues = 0, 
+  growthScore = 0,
   businessId = "1",
   onActivateGrowthProtocol
 }: Partial<FinancialCommandProps>) {

@@ -45,11 +45,13 @@ export function NeuralDispatchCenter() {
   const [draftNumber, setDraftNumber] = useState(1);
   const [feedback, setFeedback] = useState('');
 
+  const hasLinks = connectedPlatforms.length > 0;
+
   const categories = [
-    { id: 'videos', label: 'Videos', icon: Video, count: 5 },
-    { id: 'edits', label: 'Edits', icon: Edit3, count: 3 },
-    { id: 'faceless', label: 'Faceless', icon: UserSquare2, count: 2 },
-    { id: 'designs', label: 'Designs', icon: Palette, count: 4 },
+    { id: 'videos', label: 'Videos', icon: Video, count: hasLinks ? 5 : 0 },
+    { id: 'edits', label: 'Edits', icon: Edit3, count: hasLinks ? 3 : 0 },
+    { id: 'faceless', label: 'Faceless', icon: UserSquare2, count: hasLinks ? 2 : 0 },
+    { id: 'designs', label: 'Designs', icon: Palette, count: hasLinks ? 4 : 0 },
   ];
 
   const handleAppToggle = (platform: string) => {

@@ -98,12 +98,38 @@ export function VerticalPlatformRadar() {
     updateSpendingPermission
   } = useEmpire();
 
-  // Filter based on connected platforms (simulated for now with all if none connected)
-  const displayData = connectedPlatforms.length > 0 
-    ? PLATFORM_STATUS_DATA.filter(p => connectedPlatforms.some(cp => cp.toLowerCase() === p.id))
-    : PLATFORM_STATUS_DATA;
+  // Filter based on connected platforms
+  const displayData = (connectedPlatforms || []).length > 0 
+    ? PLATFORM_STATUS_DATA.filter(p => connectedPlatforms.some(cp => cp && cp.toLowerCase() === p.id))
+    : [];
 
-  if (displayData.length === 0) return null;
+  if (displayData.length === 0) {
+    return (
+      <section className="space-y-8">
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-lg">
+              <BarChart3 className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tight italic">EMPIRE LINKS</h2>
+              <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Platform Governance & Performance</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="p-12 md:p-20 text-center border-2 border-dashed border-theme rounded-[40px] bg-theme-surface/30 space-y-6">
+           <div className="w-20 h-20 bg-theme-background border border-theme rounded-full flex items-center justify-center mx-auto shadow-xl">
+              <Zap className="w-10 h-10 text-slate-700 animate-pulse" />
+           </div>
+           <div className="space-y-2">
+              <h3 className="text-xl font-black uppercase italic tracking-tighter">No Verified Links</h3>
+              <p className="text-slate-500 text-sm max-w-sm mx-auto font-medium">Use the "Link an Empire App" section above to verify your first platform. Verified apps will appear here for governance and performance tracking.</p>
+           </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-8">

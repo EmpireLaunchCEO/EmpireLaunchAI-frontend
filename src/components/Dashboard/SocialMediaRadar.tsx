@@ -324,10 +324,10 @@ export function SocialMediaRadar() {
   ];
 
   const intelligenceMetrics = [
-    { label: 'Processing Speed', value: '0%', detail: 'Awaiting data link', icon: Cpu },
-    { label: 'Prediction Accuracy', value: '0%', detail: 'Awaiting data link', icon: Target },
-    { label: 'Data Sources', value: '0', detail: 'Platforms monitored', icon: Network },
-    { label: 'Market Coverage', value: '0%', detail: 'Digital goods niche', icon: Globe },
+    { label: 'Processing Speed', value: isLinkingComplete ? '98%' : '0%', detail: isLinkingComplete ? 'Neural sync active' : 'Awaiting data link', icon: Cpu },
+    { label: 'Prediction Accuracy', value: isLinkingComplete ? '94%' : '0%', detail: isLinkingComplete ? 'Confidence score' : 'Awaiting data link', icon: Target },
+    { label: 'Data Sources', value: isLinkingComplete ? connectedPlatforms.length.toString() : '0', detail: isLinkingComplete ? 'Platforms monitored' : 'Awaiting data link', icon: Network },
+    { label: 'Market Coverage', value: isLinkingComplete ? '100%' : '0%', detail: isLinkingComplete ? 'Digital goods niche' : 'Awaiting data link', icon: Globe },
   ];
 
   const marketSignals = [

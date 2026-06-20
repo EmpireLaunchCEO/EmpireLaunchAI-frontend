@@ -85,6 +85,8 @@ export function DetailedRevenue() {
     );
   }
 
+  const hasLinks = connectedPlatforms.length > 0;
+
   return (
     <div className="space-y-8 relative">
       <div className="absolute top-0 right-0 z-20">
@@ -105,7 +107,7 @@ export function DetailedRevenue() {
               </div>
               <div className="space-y-1">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Growth Velocity</p>
-                 <h4 className="text-xl font-black text-foreground">+18.4%</h4>
+                 <h4 className="text-xl font-black text-foreground">{hasLinks ? "+18.4%" : "0.0%"}</h4>
               </div>
            </div>
            <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm">
@@ -114,7 +116,7 @@ export function DetailedRevenue() {
               </div>
               <div className="space-y-1">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Fulfillment Rate</p>
-                 <h4 className="text-xl font-black text-foreground">99.2%</h4>
+                 <h4 className="text-xl font-black text-foreground">{hasLinks ? "99.2%" : "N/A"}</h4>
               </div>
            </div>
            <div className="bg-theme-surface border border-theme rounded-[32px] p-6 space-y-4 shadow-sm lg:col-span-2 flex items-center justify-between">

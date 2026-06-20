@@ -49,6 +49,8 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData }: Succes
     );
   }
 
+  const hasLinks = connectedPlatforms.length > 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -76,9 +78,12 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData }: Succes
                  <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Autonomous Control Hub</p>
               </div>
            </div>
-           <div className="flex items-center gap-2 bg-primary/5 px-3 py-1.5 rounded-full border border-primary/10">
-              <Stars className="w-3 h-3 text-primary animate-pulse" />
-              <span className="text-[9px] font-black text-primary uppercase">Neural Sync Active</span>
+           <div className={cn(
+             "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all",
+             hasLinks ? "bg-primary/5 border-primary/10 text-primary" : "bg-slate-500/10 border-slate-500/20 text-slate-400"
+           )}>
+              <Stars className={cn("w-3 h-3", hasLinks ? "text-primary animate-pulse" : "text-slate-500")} />
+              <span className="text-[9px] font-black uppercase">{hasLinks ? "Neural Sync Active" : "Neural Sync Standby"}</span>
            </div>
         </div>
 
@@ -101,10 +106,14 @@ export const SuccessHubOverview = ({ empireData, pulseData, healthData }: Succes
       {/* Footer bar for the unified hub */}
       <div className="bg-primary/5 py-4 px-10 border-t border-theme/30 flex items-center justify-between">
          <div className="flex items-center gap-2">
-            <Zap className="w-3 h-3 text-primary" />
-            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Processing Velocity: 98.4 TFLOPS</span>
+            <Zap className={cn("w-3 h-3", hasLinks ? "text-primary" : "text-slate-500")} />
+            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">
+              {hasLinks ? "Processing Velocity: 98.4 TFLOPS" : "Neural Standby Mode"}
+            </span>
          </div>
-         <span className="text-[8px] font-black text-primary uppercase tracking-widest">Global Link Verified</span>
+         <span className={cn("text-[8px] font-black uppercase tracking-widest", hasLinks ? "text-primary" : "text-slate-500")}>
+           {hasLinks ? "Global Link Verified" : "Awaiting Platform Link"}
+         </span>
       </div>
     </motion.div>
   );

@@ -37,6 +37,8 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
   const totalEngagement = (socialMetrics || []).reduce((acc, m) => acc + (m?.likes || 0) + (m?.comments || 0) + (m?.shares || 0), 0);
   const avgConversion = (socialMetrics || []).reduce((acc, m) => acc + (m?.conversionRate || 0), 0) / (socialMetrics && socialMetrics.length > 0 ? socialMetrics.length : 1);
 
+  const hasData = totalViews > 0;
+
   if (loading) return null;
 
   return (
@@ -48,7 +50,7 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
               <div className="w-10 h-10 rounded-xl bg-amber-400 flex items-center justify-center">
                  <DollarSign className="w-5 h-5 text-slate-900" />
               </div>
-              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">+12% WoW</span>
+              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">{hasData ? "+12% WoW" : "0%"}</span>
            </div>
            <div className="space-y-1">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Unified P&L (Net)</p>
@@ -74,11 +76,11 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
               <div className="w-10 h-10 rounded-xl bg-purple-500 flex items-center justify-center">
                  <Activity className="w-5 h-5 text-white" />
               </div>
-              <span className="text-[10px] font-black text-purple-400 uppercase tracking-widest">Sentiment: Positive</span>
+              <span className="text-[10px] font-black text-purple-400 uppercase tracking-widest">Sentiment: {hasData ? "Positive" : "N/A"}</span>
            </div>
            <div className="space-y-1">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Brand Affinity</p>
-              <h4 className="text-3xl font-black text-white">94.2%</h4>
+              <h4 className="text-3xl font-black text-white">{hasData ? "94.2%" : "0.0%"}</h4>
            </div>
         </div>
 
@@ -87,11 +89,11 @@ export function PerformanceIntelligence({ health }: { health: EmpireHealth | nul
               <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center">
                  <TrendingUp className="w-5 h-5 text-white" />
               </div>
-              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Optimal</span>
+              <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">{hasData ? "Optimal" : "Standby"}</span>
            </div>
            <div className="space-y-1">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Conv. Rate</p>
-              <h4 className="text-3xl font-black text-white">{avgConversion.toFixed(1)}%</h4>
+              <h4 className="text-3xl font-black text-white">{hasData ? avgConversion.toFixed(1) : "0.0"}%</h4>
            </div>
         </div>
       </div>
