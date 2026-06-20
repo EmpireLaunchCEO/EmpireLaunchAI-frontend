@@ -25,7 +25,7 @@ export default function AuthenticatedLayout({
         <Sidebar />
 
         {/* Content Stack */}
-        <main className="flex-1 bg-theme-surface border-l border-theme relative transition-all duration-300 lg:ml-[256px] max-w-full flex flex-col z-[1]">
+        <main className="flex-1 bg-theme-surface relative transition-all duration-300 lg:ml-[256px] max-w-full flex flex-col z-[1]">
             <div className="absolute top-8 right-8 z-[60] hidden lg:flex items-center gap-3">
               <NotificationBell id="notification-bell-desktop" />
             </div>

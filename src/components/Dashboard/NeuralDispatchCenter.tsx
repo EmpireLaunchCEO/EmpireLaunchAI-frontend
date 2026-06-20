@@ -17,7 +17,7 @@ import {
   Mail,
   Globe,
   Zap,
-  ArrowDown
+  AlertCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -144,128 +144,173 @@ export function NeuralDispatchCenter() {
   }
 
   return (
-    <div className="bg-theme-surface/40 backdrop-blur-xl border-2 border-theme rounded-[40px] overflow-hidden shadow-2xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/5">
+    <div className="space-y-8">
+      {/* 50/50 SPLIT: Queues on LEFT, Dispatch Targets on RIGHT */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        {/* LEFT SIDE: CREATION QUEUES */}
-        <div className="p-6 md:p-10 space-y-8">
-          <div className="flex items-center gap-3">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Creation Queues</h4>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => {
-                  setActiveQueue(cat.id);
-                  setView('review');
-                  setIsApproved(false);
-                }}
-                className={cn(
-                  "w-full rounded-[24px] p-5 flex items-center gap-4 transition-all border-2 relative group overflow-hidden",
-                  activeQueue === cat.id
-                    ? "bg-primary/10 border-primary shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]"
-                    : "bg-slate-900/50 border-white/5 hover:border-white/20"
-                )}
-              >
-                <div className={cn(
-                  "w-10 h-10 rounded-xl flex items-center justify-center transition-colors shrink-0",
-                  activeQueue === cat.id ? "bg-primary text-slate-950" : "bg-white/5 text-slate-400 group-hover:text-white"
-                )}>
-                  <cat.icon className="w-5 h-5" />
-                </div>
-                <div className="text-left">
-                  <p className="text-[11px] font-black uppercase tracking-widest text-white leading-tight">{cat.label}</p>
-                  <p className="text-[9px] font-bold text-slate-500 uppercase mt-1">{cat.count} Items</p>
-                </div>
-                <ChevronRight className="w-4 h-4 ml-auto text-slate-600 group-hover:text-primary transition-colors" />
-              </button>
-            ))}
+        {/* ── LEFT: CREATION QUEUES ─────────────────────── */}
+        <div className="bg-theme-surface/40 backdrop-blur-xl border-2 border-theme rounded-[40px] overflow-hidden shadow-2xl">
+          <div className="p-6 md:p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <Sparkles className="w-5 h-5 text-primary" />
+              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Creation Queues</h4>
+            </div>
+            
+            <div className="space-y-3">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => {
+                    setActiveQueue(cat.id);
+                    setView('review');
+                    setIsApproved(false);
+                  }}
+                  className={cn(
+                    "w-full rounded-[24px] p-5 flex items-center gap-5 transition-all border-2 relative group overflow-hidden",
+                    activeQueue === cat.id
+                      ? "bg-primary/10 border-primary shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]"
+                      : "bg-slate-900/50 border-white/5 hover:border-white/20"
+                  )}
+                >
+                  <div className={cn(
+                    "w-11 h-11 rounded-2xl flex items-center justify-center transition-colors shrink-0",
+                    activeQueue === cat.id ? "bg-primary text-slate-950" : "bg-white/5 text-slate-400 group-hover:text-white"
+                  )}>
+                    <cat.icon className="w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-black uppercase tracking-widest text-white leading-tight">{cat.label}</p>
+                    <p className="text-[9px] font-bold text-slate-500 uppercase mt-0.5">{cat.count} items in queue</p>
+                  </div>
+                  <ChevronRight className="w-4 h-4 ml-auto text-slate-600 group-hover:text-primary transition-colors" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* RIGHT SIDE: DISPATCH HUB (APPS) */}
-        <div className="p-6 md:p-10 space-y-8 bg-black/20">
-          <div className="flex items-center gap-3">
-            <Smartphone className="w-5 h-5 text-primary" />
-            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Dispatch Targets</h4>
-          </div>
+        {/* ── RIGHT: DISPATCH TARGETS ───────────────────── */}
+        <div className="bg-theme-surface/40 backdrop-blur-xl border-2 border-theme rounded-[40px] overflow-hidden shadow-2xl">
+          <div className="p-6 md:p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <Smartphone className="w-5 h-5 text-primary" />
+              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                {isApproved ? 'Dispatch Targets ✓' : 'Dispatch Targets'}
+              </h4>
+            </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {connectedPlatforms.length > 0 ? (
-              connectedPlatforms.map((platform) => {
-                const isSelected = selectedApps.includes(platform);
-                return (
-                  <button
-                    key={platform}
-                    disabled={!isApproved}
-                    onClick={() => handleAppToggle(platform)}
-                    className={cn(
-                      "p-4 rounded-[20px] border-2 flex flex-col items-center justify-center gap-3 transition-all group relative overflow-hidden text-center aspect-square",
-                      !isApproved && "opacity-40 cursor-not-allowed grayscale",
-                      isSelected
-                        ? "bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
-                        : "bg-slate-900/40 border-white/5 hover:border-white/10"
-                    )}
-                  >
-                    <div className={cn(
-                      "w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black relative overflow-hidden shrink-0 transition-all",
-                      isSelected ? "bg-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(16,185,129,0.4)]" : "bg-white/5 text-white/40"
-                    )}>
-                      {platformIcons[platform] ? React.createElement(platformIcons[platform], { className: "w-5 h-5" }) : platform.charAt(0).toUpperCase()}
-                      <AnimatePresence>
-                        {isSelected && (
-                           <motion.div
-                             initial={{ scale: 0, opacity: 0 }}
-                             animate={{ scale: 1, opacity: 1 }}
-                             exit={{ scale: 0, opacity: 0 }}
-                             className="absolute inset-0 bg-emerald-500 flex items-center justify-center"
-                           >
-                              <CheckCircle2 className="w-5 h-5 text-slate-950" />
-                           </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                    <span className={cn(
-                      "text-[9px] font-black uppercase tracking-widest",
-                      isSelected ? "text-emerald-400" : "text-slate-400 group-hover:text-white"
-                    )}>
-                      {platform}
-                    </span>
-                  </button>
-                );
-              })
-            ) : (
-              <div className="col-span-full py-10 text-center bg-white/5 rounded-[32px] border-2 border-dashed border-white/10">
-                <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed">
-                  Link Center Required<br/>
-                  <span className="text-slate-600 italic">Connect platforms to enable dispatch.</span>
-                </p>
+            {!isApproved && (
+              <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-amber-500/5 border border-amber-500/10 mb-5">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span className="text-[8px] font-bold text-amber-300 uppercase tracking-widest">
+                  Locked — Approve Draft first
+                </span>
               </div>
             )}
+
+            <div className="space-y-3">
+              {connectedPlatforms.length > 0 ? (
+                connectedPlatforms.map((platform) => {
+                  const isSelected = selectedApps.includes(platform);
+                  return (
+                    <button
+                      key={platform}
+                      disabled={!isApproved}
+                      onClick={() => handleAppToggle(platform)}
+                      className={cn(
+                        "w-full rounded-[24px] p-4 border-2 flex items-center gap-4 transition-all group relative overflow-hidden",
+                        !isApproved && "opacity-25 cursor-not-allowed grayscale",
+                        isSelected
+                          ? "bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
+                          : "bg-slate-900/40 border-white/5 hover:border-white/10"
+                      )}
+                    >
+                      <div className={cn(
+                        "w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black relative overflow-hidden shrink-0 transition-all",
+                        isSelected ? "bg-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(16,185,129,0.4)] scale-110" : "bg-white/5 text-white/40"
+                      )}>
+                        {platformIcons[platform] ? React.createElement(platformIcons[platform], { className: "w-5 h-5" }) : platform.charAt(0).toUpperCase()}
+                        <AnimatePresence>
+                          {isSelected && (
+                             <motion.div
+                               initial={{ scale: 0, opacity: 0 }}
+                               animate={{ scale: 1, opacity: 1 }}
+                               exit={{ scale: 0, opacity: 0 }}
+                               className="absolute inset-0 bg-emerald-500 flex items-center justify-center"
+                             >
+                                <CheckCircle2 className="w-5 h-5 text-slate-950" />
+                             </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                      <div className="flex-1 text-left">
+                        <span className={cn(
+                          "text-xs font-black uppercase tracking-widest",
+                          isSelected ? "text-emerald-400" : "text-slate-400 group-hover:text-white"
+                        )}>
+                          {platform}
+                        </span>
+                      </div>
+                      <div className={cn(
+                        "w-1.5 h-1.5 rounded-full",
+                        isSelected ? "bg-emerald-500 animate-pulse" : "bg-white/10"
+                      )} />
+                    </button>
+                  );
+                })
+              ) : (
+                <div className="p-8 text-center bg-white/5 rounded-[24px] border-2 border-dashed border-white/10">
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Link Center Required</p>
+                  <p className="text-[9px] text-slate-600 mt-2 italic">Connect platforms to enable dispatch.</p>
+                </div>
+              )}
+            </div>
           </div>
-
-          <button 
-            className={cn(
-              "w-full py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-3 relative overflow-hidden",
-              selectedApps.length > 0
-               ? "bg-primary text-slate-950 shadow-xl"
-               : "bg-white/5 text-slate-500 cursor-not-allowed border border-white/5 opacity-50"
-            )}
-            disabled={selectedApps.length === 0}
-            onClick={() => {
-              setActiveQueue(null);
-              setIsApproved(false);
-              setSelectedApps([]);
-            }}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            Execute Dispatch
-          </button>
         </div>
+      </div>
 
+      {/* ── EXECUTE DISPATCH — Centered below BOTH columns ── */}
+      <div className="flex justify-center">
+        <button 
+          className={cn(
+            "w-full max-w-xl py-6 rounded-[28px] font-black text-xs uppercase tracking-[0.4em] transition-all flex items-center justify-center gap-4 relative overflow-hidden",
+            selectedApps.length > 0 && isApproved
+              ? "bg-primary text-slate-950 shadow-[0_20px_50px_rgba(var(--primary-rgb),0.3)] scale-[1.02] hover:translate-y-[-2px] active:scale-95"
+              : "bg-white/5 text-slate-500 cursor-not-allowed border border-white/5 opacity-50"
+          )}
+          disabled={selectedApps.length === 0 || !isApproved}
+          onClick={() => {
+            setActiveQueue(null);
+            setIsApproved(false);
+            setSelectedApps([]);
+            setFeedback('');
+          }}
+        >
+          <Sparkles className="w-4 h-4" />
+          Execute Dispatch
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* FOOTER */}
+      <div className="flex flex-col items-center gap-3 pt-4">
+         <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-slate-900 border border-white/5">
+            <div className={cn(
+              "w-1.5 h-1.5 rounded-full",
+              isApproved ? "bg-emerald-500 animate-pulse" : "bg-amber-500"
+            )} />
+            <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest italic">
+              {isApproved
+                ? 'Draft Approved. Select platforms and dispatch.'
+                : 'Awaiting Draft approval to unlock dispatch.'}
+            </span>
+         </div>
+         <div className="flex items-center gap-1 opacity-20">
+            {[1,2,3,4,5].map(i => (
+              <div key={i} className="w-1 h-1 rounded-full bg-primary" />
+            ))}
+         </div>
       </div>
     </div>
   );
