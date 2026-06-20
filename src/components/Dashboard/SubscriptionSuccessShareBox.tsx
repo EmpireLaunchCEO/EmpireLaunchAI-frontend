@@ -186,7 +186,7 @@ export function SubscriptionSuccessShareBox({
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 bg-theme-background border border-theme rounded-[24px] space-y-4"
+            className="p-6 bg-theme-background border border-theme rounded-[24px] space-y-6"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -198,6 +198,7 @@ export function SubscriptionSuccessShareBox({
                 {businessSlots} slot{businessSlots !== 1 ? 's' : ''} active
               </div>
             </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Total Revenue Tracked</p>
@@ -207,6 +208,13 @@ export function SubscriptionSuccessShareBox({
                 <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Success-Shares Accrued</p>
                 <p className="text-2xl font-black text-primary">${totalFees.toLocaleString()}.00</p>
               </div>
+            </div>
+
+            <div className="pt-4 border-t border-white/5">
+              <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-3">Partner Protocol Agreement</p>
+              <p className="text-[10px] text-muted-foreground italic leading-relaxed">
+                "A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, choosing Auto-Pilot authorizes the Empire AI to sync with existing store and social accounts to create and deploy content on your behalf."
+              </p>
             </div>
           </motion.div>
         )}
