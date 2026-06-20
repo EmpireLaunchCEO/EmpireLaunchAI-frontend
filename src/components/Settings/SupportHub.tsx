@@ -37,20 +37,20 @@ export function SupportHub() {
 
       {/* 2. Contact & Issue Tracker */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="p-8 rounded-[40px] bg-slate-900 text-white space-y-8 shadow-xl">
+        <div className="p-8 rounded-[40px] bg-theme-surface text-white space-y-8 shadow-xl border-2 border-theme">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-theme-surface/10 flex items-center justify-center text-blue-400">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
               <LifeBuoy className="w-6 h-6" />
             </div>
             <div>
               <h3 className="text-xl font-black tracking-tight">Need Assistance?</h3>
-              <p className="text-sm font-medium text-slate-400">Our engineers are standing by.</p>
+              <p className="text-sm font-medium text-muted-foreground">Our engineers are standing by.</p>
             </div>
           </div>
 
           <button 
             onClick={handlePrioritySupport}
-            className="w-full flex items-center justify-center gap-3 bg-blue-600 text-white px-8 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20 group"
+            className="w-full flex items-center justify-center gap-3 bg-primary text-white px-8 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 group"
           >
             Priority Support Line <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
           </button>
@@ -59,7 +59,7 @@ export function SupportHub() {
             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Recent Tickets</p>
             <div className="space-y-3">
               {supportTickets.map((ticket) => (
-                <div key={ticket.id} className="flex items-center justify-between p-4 rounded-2xl bg-theme-surface/5 border border-white/5 hover:border-white/10 transition-colors">
+                <div key={ticket.id} className="flex items-center justify-between p-4 rounded-2xl bg-theme-background border border-theme hover:border-white/10 transition-colors">
                   <div className="space-y-1">
                     <p className="text-xs font-bold">{ticket.subject}</p>
                     <p className="text-[10px] font-medium text-muted-foreground">{ticket.id} • {ticket.date}</p>
@@ -77,7 +77,7 @@ export function SupportHub() {
 
         <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8 shadow-sm">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-theme-background flex items-center justify-center text-slate-600">
+            <div className="w-12 h-12 rounded-2xl bg-theme-background flex items-center justify-center text-primary">
               <HelpCircle className="w-6 h-6" />
             </div>
             <div>
@@ -96,13 +96,13 @@ export function SupportHub() {
               <button 
                 key={item} 
                 onClick={() => setActiveFAQ(item)}
-                className="w-full flex items-center justify-between p-5 rounded-2xl bg-theme-background border-2 border-theme hover:border-blue-600/20 hover:bg-blue-50/30 transition-all group"
+                className="w-full flex items-center justify-between p-5 rounded-2xl bg-theme-background border-2 border-theme hover:border-primary/20 hover:bg-primary/5 transition-all group"
               >
                 <div className="flex items-center gap-3">
-                  <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
-                  <span className="text-sm font-bold text-slate-700">{item}</span>
+                  <FileText className="w-4 h-4 text-primary/40 group-hover:text-primary transition-colors" />
+                  <span className="text-sm font-bold text-foreground/80 group-hover:text-primary">{item}</span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-4 h-4 text-primary/30 group-hover:translate-x-1 transition-transform" />
               </button>
             ))}
           </div>
@@ -154,7 +154,7 @@ export function SupportHub() {
             )}
           </AnimatePresence>
 
-          <button className="w-full text-center text-[10px] font-black uppercase tracking-[0.2em] text-blue-600 hover:text-blue-700 transition-colors">
+          <button className="w-full text-center text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-primary/80 transition-colors">
             View Knowledge Base
           </button>
         </div>

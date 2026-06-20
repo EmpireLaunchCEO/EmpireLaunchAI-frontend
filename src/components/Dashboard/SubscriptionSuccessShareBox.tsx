@@ -91,7 +91,7 @@ export function SubscriptionSuccessShareBox({
       <div className="p-6 md:p-10 space-y-8 relative z-10">
         {/* Header — Unified Title */}
         <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-emerald-500/20 flex items-center justify-center border border-primary/20 shrink-0">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center border border-primary/20 shrink-0">
             <Diamond className="w-7 h-7 text-primary" />
           </div>
           <div className="flex-1">
@@ -145,36 +145,36 @@ export function SubscriptionSuccessShareBox({
         {/* Subscription & Success-Share Details */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Base Subscription */}
-          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-white/30 transition-all group">
+          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-primary/50 transition-all group">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-slate-500/10 flex items-center justify-center">
-                <Diamond className="w-4 h-4 text-slate-400" />
+              <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Diamond className="w-4 h-4 text-primary" />
               </div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Base Subscription</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Base Subscription</p>
             </div>
             <p className="text-2xl md:text-3xl font-black text-foreground">$40<span className="text-sm font-bold text-muted-foreground">/mo</span></p>
             <p className="text-[10px] text-muted-foreground font-medium">Full access to AI-driven business scaling, automations, and multi-tenant infrastructure.</p>
           </div>
 
           {/* Expansion Slots */}
-          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-white/30 transition-all group">
+          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-secondary/50 transition-all group">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                <TrendingUp className="w-4 h-4 text-purple-400" />
+              <div className="w-8 h-8 rounded-xl bg-secondary/10 flex items-center justify-center">
+                <TrendingUp className="w-4 h-4 text-secondary" />
               </div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-purple-400">Expansion Slots</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-secondary/60">Expansion Slots</p>
             </div>
             <p className="text-2xl md:text-3xl font-black text-foreground">$40<span className="text-sm font-bold text-muted-foreground"> + $40/mo</span></p>
             <p className="text-[10px] text-muted-foreground font-medium">Per additional business slot. One-time unlock + monthly recurring per slot.</p>
           </div>
 
           {/* Success-Share Fee */}
-          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-white/30 transition-all group">
+          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-emerald-500/50 transition-all group">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                 <DollarSign className="w-4 h-4 text-emerald-400" />
               </div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Success-Share</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-emerald-400/60">Success-Share</p>
             </div>
             <p className="text-2xl md:text-3xl font-black text-foreground">4%<span className="text-sm font-bold text-muted-foreground"> / revenue</span></p>
             <p className="text-[10px] text-muted-foreground font-medium">$40 per $1,000 earned. Only on revenue generated through EmpireLaunch AI content.</p>
@@ -219,13 +219,13 @@ export function SubscriptionSuccessShareBox({
             className={cn(
               'w-full py-4 px-6 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-lg',
               isDownloading
-                ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                : 'bg-white text-slate-950 hover:bg-slate-200 active:scale-[0.98]'
+                ? 'bg-theme-surface text-primary/40 cursor-not-allowed'
+                : 'bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98]'
             )}
           >
             {isDownloading ? (
               <>
-                <div className="w-4 h-4 border-2 border-slate-500 border-t-slate-300 rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-primary/40 border-t-primary rounded-full animate-spin" />
                 Generating Audit Report...
               </>
             ) : (

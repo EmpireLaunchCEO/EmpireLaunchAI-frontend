@@ -175,7 +175,7 @@ function SettingsContent() {
                       </div>
                     </div>
 
-                    <div className="p-8 rounded-[32px] bg-slate-900 border border-slate-800 space-y-6">
+                    <div className="p-8 rounded-[32px] bg-theme-background border border-theme space-y-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <Building2 className="w-5 h-5 text-primary" />
@@ -183,13 +183,13 @@ function SettingsContent() {
                         </div>
                         <span className={cn(
                           "px-3 py-1 rounded-full text-[8px] font-black uppercase",
-                          isStripeLinked ? "bg-emerald-500/10 text-emerald-500" : "bg-cyan-500/10 text-cyan-400"
+                          isStripeLinked ? "bg-emerald-500/10 text-emerald-500" : "bg-primary/10 text-primary"
                         )}>
                           {isStripeLinked ? "Connected & Live" : "Pending Setup"}
                         </span>
                       </div>
                       
-                      <p className="text-xs text-slate-400 font-medium leading-relaxed">
+                      <p className="text-xs text-muted-foreground font-medium leading-relaxed">
                         {isStripeLinked 
                           ? "Your Stripe account is successfully linked. All 'Buy' buttons are now active and routing funds directly to your verified bank account."
                           : "To enable 'Buy' buttons on social media and automated invoicing, you must link your payout account. All transactions are safeguarded with hardware-level encryption."
@@ -202,7 +202,7 @@ function SettingsContent() {
                           "w-full py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl",
                           isStripeLinked 
                             ? "bg-white/10 text-white hover:bg-white/20 shadow-none" 
-                            : "bg-primary text-slate-950 hover:bg-white shadow-cyan-900/20"
+                            : "bg-primary text-slate-950 hover:bg-white shadow-primary/20"
                         )}
                       >
                         {isStripeLinked ? "Manage Payout Gateway" : "Setup Payout Gateway"}
@@ -227,7 +227,7 @@ function SettingsContent() {
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                         <Bell className="w-6 h-6" />
                       </div>
                       <div>
@@ -261,7 +261,7 @@ function SettingsContent() {
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                         <Palette className="w-6 h-6" />
                       </div>
                       <div>

@@ -176,27 +176,32 @@ h1, h2, h3, h4, .text-theme-gradient {
   filter: saturate(1.5) brightness(1.2); /* Enhance vibrancy for all themes */
 }
 
-/* VIBRANT TEXT - Apply accent color to all text elements */
+/* VIBRANT TEXT - Neutral body text with themed accents */
 p, span, label, div, li, td, th, a {
   color: inherit;
 }
 
 .text-muted-foreground, .text-slate-400, .text-slate-500 {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.6);
 }
 
-/* VIBRANT OUTLINES - All UI boxes get themed outlines */
+/* VIBRANT OUTLINES - All UI boxes and nested elements get themed outlines */
 .border-theme, .border-2, .border-4, .border {
-  border-color: var(--surface-border) !important;
+  border-color: rgba(var(--primary-rgb), 0.5) !important;
 }
 
 .bg-theme-surface {
-  border-color: var(--surface-border) !important;
+  border-color: rgba(var(--primary-rgb), 0.5) !important;
+}
+
+/* Ensure nested boxes also inherit the theme border */
+.bg-theme-surface div, .bg-theme-background div {
+  border-color: rgba(var(--primary-rgb), 0.3);
 }
 
 /* VIBRANT BOX SHADOW - Add subtle glow to theme surfaces */
 .bg-theme-surface, .bg-theme-background {
-  box-shadow: 0 0 20px rgb(var(--primary-rgb) / 0.1), inset 0 0 0 1px rgb(var(--primary-rgb) / 0.2);
+  box-shadow: 0 0 20px rgb(var(--primary-rgb) / 0.05), inset 0 0 0 1px rgb(var(--primary-rgb) / 0.15);
 }
 
 /* 
@@ -205,7 +210,7 @@ p, span, label, div, li, td, th, a {
    Now: Static borders by default, opt-in shimmer for key elements.
 */
 .border-theme, .border-2, .border {
-  border-color: rgba(var(--primary-rgb), 0.2) !important;
+  border-color: rgba(var(--primary-rgb), 0.4) !important;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
