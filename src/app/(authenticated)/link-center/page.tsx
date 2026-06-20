@@ -4,7 +4,7 @@ import React from 'react';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { useEmpire } from '@/lib/EmpireContext';
 import { motion } from 'framer-motion';
-import { Share2, LayoutDashboard, ShieldCheck, Cpu, Stars, ShieldAlert, Eye } from 'lucide-react';
+import { Share2, LayoutDashboard, ShieldCheck, Cpu, Stars, ShieldAlert, Eye, Lock, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
@@ -74,8 +74,7 @@ export default function LinkCenterPage() {
             <GuidedLinking isReturning={isLinkingComplete} />
           </motion.div>
 
-          {connectedPlatforms.length > 0 && (
-            <section className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <section className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-black text-foreground">Permission Governance</h2>
@@ -88,7 +87,8 @@ export default function LinkCenterPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {connectedPlatforms.map(id => {
+                {Object.keys(PLATFORM_CAPABILITIES).map(id => {
+                  const isConnected = connectedPlatforms.includes(id);
                   const tier = platformPermissions[id] || 'read-only';
                   const caps = PLATFORM_CAPABILITIES[id]?.capabilities?.find(c => c.tier === tier);
 
@@ -96,23 +96,41 @@ export default function LinkCenterPage() {
                     <motion.div
                       key={id}
                       whileHover={{ y: -5 }}
-                      className="p-6 bg-theme-surface border-2 border-theme rounded-[32px] space-y-6 relative overflow-hidden group"
+                      className={cn(
+                        "p-6 rounded-[32px] space-y-6 relative overflow-hidden group border-2 transition-all",
+                        isConnected 
+                          ? "bg-theme-surface border-theme"
+                          : "bg-theme-background/30 border-white/5 hover:border-white/20"
+                      )}
                     >
                       <div className="flex items-start justify-between relative z-10">
                         <div className="space-y-1">
                           <h3 className="font-black text-lg capitalize text-foreground">{id}</h3>
-                          <div className={cn(
-                            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                            tier === 'empire' ? "bg-cyan-500/10 text-cyan-400" : 
-                            tier === 'co-pilot' ? "bg-primary/10 text-primary" :
-                            "bg-slate-500/10 text-slate-400"
-                          )}>
-                            {tier === 'empire' ? <Stars className="w-3 h-3" /> : 
-                             tier === 'co-pilot' ? <Cpu className="w-3 h-3" /> :
-                             <Eye className="w-3 h-3" />}
-                            {tier === 'empire' ? 'Auto-Pilot' : 
-                             tier === 'co-pilot' ? 'Co-Pilot' :
-                             'Read-Only'}
+                          <div className="flex items-center gap-2">
+                            {isConnected ? (
+                              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                <CheckCircle2 className="w-3 h-3" />
+                                Connected
+                              </div>
+                            ) : (
+                              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-slate-500/10 text-slate-400 border border-slate-500/20">
+                                <Lock className="w-3 h-3" />
+                                Available
+                              </div>
+                            )}
+                            <div className={cn(
+                              "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
+                              tier === 'empire' ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20" : 
+                              tier === 'co-pilot' ? "bg-primary/10 text-primary border border-primary/20" :
+                              "bg-slate-500/10 text-slate-400 border border-slate-500/20"
+                            )}>
+                              {tier === 'empire' ? <Stars className="w-3 h-3" /> : 
+                               tier === 'co-pilot' ? <Cpu className="w-3 h-3" /> :
+                               <Eye className="w-3 h-3" />}
+                              {tier === 'empire' ? 'Auto-Pilot' : 
+                               tier === 'co-pilot' ? 'Co-Pilot' :
+                               'Read-Only'}
+                            </div>
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-2">
@@ -126,7 +144,7 @@ export default function LinkCenterPage() {
                                 className="object-contain"
                               />
                             ) : (
-                              <ShieldCheck className={cn("w-5 h-5", tier === 'empire' ? "text-cyan-400" : "text-primary")} />
+                              <ShieldCheck className={cn("w-5 h-5", isConnected ? "text-emerald-400" : tier === 'empire' ? "text-cyan-400" : "text-primary")} />
                             )}
                           </div>
                         </div>
@@ -155,38 +173,48 @@ export default function LinkCenterPage() {
                            ))}
                         </div>
 
-                        <div className="pt-4 border-t border-theme flex flex-col gap-4">
-                           <div className="flex items-center justify-between">
-                             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</span>
-                             <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-green-500">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                Encrypted
-                             </span>
-                           </div>
+                        {isConnected && (
+                          <div className="pt-4 border-t border-theme flex flex-col gap-4">
+                             <div className="flex items-center justify-between">
+                               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</span>
+                               <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-emerald-500">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                  Green Check — Secure
+                               </span>
+                             </div>
 
-                           <div className="flex items-center justify-between bg-theme-background p-3 rounded-2xl border border-theme">
-                              <div className="flex flex-col">
-                                <span className="text-[10px] font-black uppercase tracking-tight text-foreground">AI Spending</span>
-                                <span className="text-[8px] font-bold text-slate-500">Autonomous purchasing power</span>
-                              </div>
-                              <button
-                                onClick={() => updateSpendingPermission(id, !spendingPermissions[id])}
-                                className={cn(
-                                  "w-10 h-5 rounded-full relative transition-all",
-                                  spendingPermissions[id] ? "bg-primary" : "bg-slate-700"
-                                )}
-                              >
-                                <div className={cn(
-                                  "w-3 h-3 bg-slate-950 rounded-full absolute top-1 transition-all",
-                                  spendingPermissions[id] ? "right-1" : "left-1"
-                                )} />
-                              </button>
-                           </div>
-                        </div>
+                             <div className="flex items-center justify-between bg-theme-background p-3 rounded-2xl border border-theme">
+                                <div className="flex flex-col">
+                                  <span className="text-[10px] font-black uppercase tracking-tight text-foreground">AI Spending</span>
+                                  <span className="text-[8px] font-bold text-slate-500">Autonomous purchasing power</span>
+                                </div>
+                                <button
+                                  onClick={() => updateSpendingPermission(id, !spendingPermissions[id])}
+                                  className={cn(
+                                    "w-10 h-5 rounded-full relative transition-all",
+                                    spendingPermissions[id] ? "bg-primary" : "bg-slate-700"
+                                  )}
+                                >
+                                  <div className={cn(
+                                    "w-3 h-3 bg-slate-950 rounded-full absolute top-1 transition-all",
+                                    spendingPermissions[id] ? "right-1" : "left-1"
+                                  )} />
+                                </button>
+                             </div>
+                          </div>
+                        )}
+
+                        {!isConnected && (
+                          <div className="pt-4 border-t border-white/5">
+                            <button className="w-full py-3 rounded-2xl bg-primary/10 border border-primary/20 text-primary font-black text-[10px] uppercase tracking-widest hover:bg-primary/20 transition-all">
+                              Connect {id}
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       {/* Decorative background icon */}
-                      {tier === 'empire' && (
+                      {isConnected && tier === 'empire' && (
                         <Stars className="absolute -right-4 -bottom-4 w-24 h-24 text-cyan-400/5 rotate-12 group-hover:scale-110 transition-transform" />
                       )}
                     </motion.div>
