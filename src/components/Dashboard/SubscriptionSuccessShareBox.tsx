@@ -117,70 +117,6 @@ export function SubscriptionSuccessShareBox({
           </div>
         </div>
 
-        {/* Protocol Agreement Section — shown if not accepted */}
-        {!isProtocolAccepted && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="p-6 bg-amber-500/5 border border-amber-500/20 rounded-[24px] space-y-4"
-          >
-            <p className="text-sm text-muted-foreground italic leading-relaxed">
-              "To keep Empire AI accessible from day one, we use a <span className="text-primary font-bold">Success-Share model</span>. 
-              A simple <span className="text-foreground font-bold">$40 fee</span> applies for every <span className="text-foreground font-bold">$1,000</span> 
-              you earn from content created through this app. Accept the protocol below to unlock platform linking and autonomous operations."
-            </p>
-            <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 rounded-xl border border-amber-500/20 w-fit">
-              <DollarSign className="w-4 h-4 text-amber-400" />
-              <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
-            </div>
-            <button
-              onClick={onAcceptProtocol}
-              className="px-8 py-4 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20"
-            >
-              I Accept These Terms
-            </button>
-          </motion.div>
-        )}
-
-        {/* Subscription & Success-Share Details */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Base Subscription */}
-          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-primary/50 transition-all group">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Diamond className="w-4 h-4 text-primary" />
-              </div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Base Subscription</p>
-            </div>
-            <p className="text-2xl md:text-3xl font-black text-foreground">$40<span className="text-sm font-bold text-muted-foreground">/mo</span></p>
-            <p className="text-[10px] text-muted-foreground font-medium">Full access to AI-driven business scaling, automations, and multi-tenant infrastructure.</p>
-          </div>
-
-          {/* Expansion Slots */}
-          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-secondary/50 transition-all group">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-secondary/10 flex items-center justify-center">
-                <TrendingUp className="w-4 h-4 text-secondary" />
-              </div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-secondary/60">Expansion Slots</p>
-            </div>
-            <p className="text-2xl md:text-3xl font-black text-foreground">$40<span className="text-sm font-bold text-muted-foreground"> + $40/mo</span></p>
-            <p className="text-[10px] text-muted-foreground font-medium">Per additional business slot. One-time unlock + monthly recurring per slot.</p>
-          </div>
-
-          {/* Success-Share Fee */}
-          <div className="p-5 md:p-6 rounded-[24px] bg-theme-background border border-theme space-y-3 hover:border-emerald-500/50 transition-all group">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                <DollarSign className="w-4 h-4 text-emerald-400" />
-              </div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-emerald-400/60">Success-Share</p>
-            </div>
-            <p className="text-2xl md:text-3xl font-black text-foreground">4%<span className="text-sm font-bold text-muted-foreground"> / revenue</span></p>
-            <p className="text-[10px] text-muted-foreground font-medium">$40 per $1,000 earned. Only on revenue generated through EmpireLaunch AI content.</p>
-          </div>
-        </div>
-
         {/* Summary section - shows after acceptance */}
         {isProtocolAccepted && (
           <motion.div
@@ -208,13 +144,6 @@ export function SubscriptionSuccessShareBox({
                 <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Success-Shares Accrued</p>
                 <p className="text-2xl font-black text-primary">${totalFees.toLocaleString()}.00</p>
               </div>
-            </div>
-
-            <div className="pt-4 border-t border-white/5">
-              <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-3">Partner Protocol Agreement</p>
-              <p className="text-[10px] text-muted-foreground italic leading-relaxed">
-                "A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, choosing Auto-Pilot authorizes the Empire AI to sync with existing store and social accounts to create and deploy content on your behalf."
-              </p>
             </div>
           </motion.div>
         )}
@@ -247,6 +176,35 @@ export function SubscriptionSuccessShareBox({
           <p className="text-[8px] text-center text-muted-foreground/60 font-bold uppercase tracking-widest mt-2">
             Detailed success-share transaction log for your records
           </p>
+        </div>
+
+        {/* Protocol Disclosure Section — shown at the very bottom */}
+        <div className="pt-6 border-t border-white/5 space-y-4">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className={cn("w-4 h-4", isProtocolAccepted ? "text-emerald-400" : "text-amber-400")} />
+            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Partner Protocol Agreement</p>
+          </div>
+          
+          <div className="p-5 rounded-2xl bg-theme-background/50 border border-theme/30">
+            <p className="text-[10px] text-muted-foreground italic leading-relaxed">
+              "A simple $40 Success-Share is applied for every $1,000 you earn solely from the videos, posts, and designs created through this app. Additionally, choosing Auto-Pilot authorizes the Empire AI to sync with existing store and social accounts to create and deploy content on your behalf."
+            </p>
+            
+            {!isProtocolAccepted && (
+              <div className="mt-4 pt-4 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                  <DollarSign className="w-3 h-3 text-amber-400" />
+                  <span className="text-[8px] font-black text-amber-400 uppercase tracking-widest">$40 / $1k Milestone Protocol</span>
+                </div>
+                <button
+                  onClick={onAcceptProtocol}
+                  className="w-full sm:w-auto px-6 py-2.5 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-primary/10"
+                >
+                  I Accept Terms
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

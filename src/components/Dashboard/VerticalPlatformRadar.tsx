@@ -152,8 +152,8 @@ export function VerticalPlatformRadar() {
                         className="object-contain p-2.5"
                       />
                     </div>
-                    <div className="space-y-0.5">
-                      <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tighter italic leading-none">{platform.name}</h3>
+                    <div className="space-y-0.5 min-w-0 flex-1">
+                      <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tighter italic leading-none truncate pr-2">{platform.name}</h3>
                       <div className="flex flex-col gap-0.5">
                         <span className="flex items-center gap-1.5 text-[8px] md:text-[10px] font-black text-green-500 uppercase tracking-widest">
                           <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />

@@ -203,6 +203,15 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       const next = { ...prev, [platform]: level };
       if (typeof window !== 'undefined') {
         localStorage.setItem('platformPermissions', JSON.stringify(next));
+        fetch(`${API_URL}/api/settings/platformPermissions`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer mock-mobile-token',
+            'x-user-id': '00000000-0000-0000-0000-000000000000'
+          },
+          body: JSON.stringify({ value: next })
+        }).catch(err => console.error('Failed to sync platform permissions', err));
       }
       return next;
     });
@@ -213,6 +222,15 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       const next = { ...prev, [platform]: allowed };
       if (typeof window !== 'undefined') {
         localStorage.setItem('spendingPermissions', JSON.stringify(next));
+        fetch(`${API_URL}/api/settings/spendingPermissions`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer mock-mobile-token',
+            'x-user-id': '00000000-0000-0000-0000-000000000000'
+          },
+          body: JSON.stringify({ value: next })
+        }).catch(err => console.error('Failed to sync spending permissions', err));
       }
       return next;
     });
@@ -502,12 +520,21 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
            if (data.aiMode) setAiModeState(data.aiMode);
            if (data.email) setUserEmail(data.email);
            if (data.protocolAccepted) setIsProtocolAccepted(true);
-
-           const localSpending = localStorage.getItem('spendingPermissions');
-           if (localSpending) setSpendingPermissions(JSON.parse(localSpending));
+           if (data.spendingPermissions) {
+             setSpendingPermissions(data.spendingPermissions);
+             localStorage.setItem('spendingPermissions', JSON.stringify(data.spendingPermissions));
+           } else {
+             const localSpending = localStorage.getItem('spendingPermissions');
+             if (localSpending) setSpendingPermissions(JSON.parse(localSpending));
+           }
            
-           const localPlatformPerms = localStorage.getItem('platformPermissions');
-           if (localPlatformPerms) setPlatformPermissions(JSON.parse(localPlatformPerms));
+           if (data.platformPermissions) {
+             setPlatformPermissions(data.platformPermissions);
+             localStorage.setItem('platformPermissions', JSON.stringify(data.platformPermissions));
+           } else {
+             const localPlatformPerms = localStorage.getItem('platformPermissions');
+             if (localPlatformPerms) setPlatformPermissions(JSON.parse(localPlatformPerms));
+           }
 
            // If the email matches the owner, grant full slot access automatically
            if (data.email === OWNER_EMAIL || data.userId === MASTER_USER_ID) {
