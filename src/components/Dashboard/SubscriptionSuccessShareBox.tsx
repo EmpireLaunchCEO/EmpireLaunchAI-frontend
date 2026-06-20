@@ -191,7 +191,7 @@ export function SubscriptionSuccessShareBox({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-emerald-400" />
-                <span className="text-xs font-black text-emerald-400 uppercase tracking-widest">Protocol Active — $40/$1k Rate Locked</span>
+                <span className="text-xs font-black text-emerald-400 uppercase tracking-widest">Approved — $40/$1k Rate Locked</span>
               </div>
               <div className="flex items-center gap-1.5 text-[8px] font-bold text-muted-foreground">
                 <CheckCircle2 className="w-3 h-3 text-emerald-400" />
