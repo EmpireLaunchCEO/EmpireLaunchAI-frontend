@@ -76,7 +76,7 @@ export function NeuralDispatchCenter() {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-slate-950 border-2 border-theme rounded-[40px] overflow-hidden shadow-2xl min-h-[600px] flex flex-col"
+        className="bg-slate-950 border !border-white/10 rounded-[40px] overflow-hidden shadow-2xl min-h-[600px] flex flex-col"
       >
         {/* REVIEW HEADER */}
         <div className="p-6 border-b border-white/5 flex items-center justify-between">
@@ -146,7 +146,7 @@ export function NeuralDispatchCenter() {
   }
 
   return (
-    <div className="bg-theme-surface/40 backdrop-blur-xl border-2 border-theme rounded-[40px] overflow-hidden shadow-2xl p-6 md:p-8 space-y-8 md:space-y-12">
+    <div className="bg-theme-surface/40 backdrop-blur-xl border !border-white/10 rounded-[40px] overflow-hidden shadow-2xl p-6 md:p-8 space-y-8 md:space-y-12">
       {/* 50/50 SPLIT: Queues on LEFT, Dispatch Targets on RIGHT */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
         
@@ -167,7 +167,7 @@ export function NeuralDispatchCenter() {
                   setIsApproved(false);
                 }}
                 className={cn(
-                  "w-full rounded-[24px] p-5 flex items-center gap-5 transition-all border-2 relative group overflow-hidden",
+                  "w-full rounded-[24px] p-5 flex items-center gap-5 transition-all border !border-white/5 relative group overflow-hidden",
                   activeQueue === cat.id
                     ? "bg-primary/10 border-primary shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]"
                     : "bg-slate-900/50 border-white/5 hover:border-white/20"
@@ -218,7 +218,7 @@ export function NeuralDispatchCenter() {
                     disabled={!isApproved}
                     onClick={() => handleAppToggle(platform)}
                     className={cn(
-                      "w-full rounded-[24px] p-4 border-2 flex items-center gap-4 transition-all group relative overflow-hidden",
+                      "w-full rounded-[24px] p-4 border !border-white/5 flex items-center gap-4 transition-all group relative overflow-hidden",
                       !isApproved && "opacity-25 cursor-not-allowed grayscale",
                       isSelected
                         ? "bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
