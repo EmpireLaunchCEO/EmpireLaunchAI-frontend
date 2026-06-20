@@ -27,7 +27,7 @@ import { AIRenderLog, generateMockRenderLogs, RenderLogEntry } from '@/component
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 
-import { BarChart3, PenSquare, Lightbulb, SendHorizonal } from 'lucide-react';
+import { BarChart3, PenSquare, Lightbulb, SendHorizonal, Scissors, MonitorPlay, Clapperboard } from 'lucide-react';
 
 export default function StudioPage() {
   const [activeTab, setActiveTab] = useState<'gallery' | 'cinema'>('gallery');
@@ -166,6 +166,35 @@ export default function StudioPage() {
   const [isSubmittingIdea, setIsSubmittingIdea] = useState(false);
   const [ideaSubmitted, setIdeaSubmitted] = useState(false);
 
+  // New Content Creation States
+  const [customVideoIdea, setCustomVideoIdea] = useState('');
+  const [isSubmittingVideo, setIsSubmittingVideo] = useState(false);
+  const [videoIdeaSubmitted, setVideoIdeaSubmitted] = useState(false);
+
+  const [facelessIdea, setFacelessIdea] = useState('');
+  const [isSubmittingFaceless, setIsSubmittingFaceless] = useState(false);
+  const [facelessSubmitted, setFacelessSubmitted] = useState(false);
+
+  const handleCustomVideoSubmit = async () => {
+    if (!customVideoIdea.trim()) return;
+    setIsSubmittingVideo(true);
+    await new Promise(r => setTimeout(r, 2000));
+    setIsSubmittingVideo(false);
+    setVideoIdeaSubmitted(true);
+    setCustomVideoIdea('');
+    setTimeout(() => setVideoIdeaSubmitted(false), 5000);
+  };
+
+  const handleFacelessSubmit = async () => {
+    if (!facelessIdea.trim()) return;
+    setIsSubmittingFaceless(true);
+    await new Promise(r => setTimeout(r, 2000));
+    setIsSubmittingFaceless(false);
+    setFacelessSubmitted(true);
+    setFacelessIdea('');
+    setTimeout(() => setFacelessSubmitted(false), 5000);
+  };
+
   const handleCustomIdeaSubmit = async () => {
     if (!customIdea.trim()) return;
     setIsSubmittingIdea(true);
@@ -195,6 +224,10 @@ export default function StudioPage() {
         </div>
 
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+            <EmpireAIChatBox className="max-w-6xl mx-auto" />
+          </motion.div>
+
           {/* Tab Navigation */}
           <div className="flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-[calc(100%-2rem)] overflow-x-auto no-scrollbar gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
             {[
@@ -226,6 +259,115 @@ export default function StudioPage() {
                 exit={{ opacity: 0, y: -10 }}
                 className="space-y-8"
               >
+                {/* 1. Customize Video Box */}
+                <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                      <MonitorPlay className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Customize Video</h3>
+                      <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                        Direct the AI — define your style, pace, and visual narrative
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="relative">
+                    <textarea
+                      value={customVideoIdea}
+                      onChange={(e) => setCustomVideoIdea(e.target.value)}
+                      placeholder="e.g. A 15-second high-energy product reveal for TikTok, fast cuts, vibrant neon overlays, focused on the 'Midnight Black' edition..."
+                      disabled={isSubmittingVideo}
+                      className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-blue-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                    />
+                    <button
+                      onClick={handleCustomVideoSubmit}
+                      disabled={!customVideoIdea.trim() || isSubmittingVideo}
+                      className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-blue-500/20 border border-blue-500/30 text-blue-400 hover:bg-blue-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      {isSubmittingVideo ? (
+                        <div className="w-4 h-4 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin" />
+                      ) : (
+                        <SendHorizonal className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  {videoIdeaSubmitted && (
+                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Video directive received — generating visual storyboard</span>
+                    </motion.div>
+                  )}
+                </div>
+
+                {/* 2. Upload Video Box for Edits */}
+                <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                      <Scissors className="w-5 h-5 text-purple-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">AI Video Editor</h3>
+                      <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                        Upload raw clips — I'll apply the Empire Polish (Cuts, Captions, Music)
+                      </p>
+                    </div>
+                  </div>
+
+                  <FileUploadDropZone
+                    type="raw-video"
+                    state={rawVideoUpload}
+                    onFileSelect={handleRawVideoSelect}
+                    onRemove={handleRawVideoRemove}
+                    disabled={rawVideoUpload.status === 'uploading' || rawVideoUpload.status === 'processing'}
+                  />
+                </div>
+
+                {/* 3. Faceless Content Creation Box */}
+                <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                      <Clapperboard className="w-5 h-5 text-emerald-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Faceless Empire Builder</h3>
+                      <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                        Generate viral faceless videos — you provide the niche, I provide the vision
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="relative">
+                    <textarea
+                      value={facelessIdea}
+                      onChange={(e) => setFacelessIdea(e.target.value)}
+                      placeholder="e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts, stock footage background, lo-fi beats, clean minimal captions..."
+                      disabled={isSubmittingFaceless}
+                      className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-emerald-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                    />
+                    <button
+                      onClick={handleFacelessSubmit}
+                      disabled={!facelessIdea.trim() || isSubmittingFaceless}
+                      className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      {isSubmittingFaceless ? (
+                        <div className="w-4 h-4 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
+                      ) : (
+                        <SendHorizonal className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  {facelessSubmitted && (
+                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Faceless concept received — sourcing viral stock material</span>
+                    </motion.div>
+                  )}
+                </div>
+
                 {/* Custom Design Input — Free-text Idea Entry */}
                 <div className="bg-theme-surface border-2 border-theme hover:border-primary/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
                   <div className="flex items-center gap-3">
@@ -485,10 +627,6 @@ export default function StudioPage() {
               </motion.div>
             )}
           </AnimatePresence>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <EmpireAIChatBox className="max-w-6xl mx-auto" />
-          </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-12">
             <FeedbackBox />
