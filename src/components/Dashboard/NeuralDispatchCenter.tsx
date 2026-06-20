@@ -46,10 +46,10 @@ export function NeuralDispatchCenter() {
   const [feedback, setFeedback] = useState('');
 
   const categories = [
-    { id: 'videos', label: 'Pending Videos', icon: Video, count: 5 },
-    { id: 'edits', label: 'Pending Edits', icon: Edit3, count: 3 },
-    { id: 'faceless', label: 'Pending Faceless', icon: UserSquare2, count: 2 },
-    { id: 'designs', label: 'Pending Designs', icon: Palette, count: 4 },
+    { id: 'videos', label: 'Videos', icon: Video, count: 5 },
+    { id: 'edits', label: 'Edits', icon: Edit3, count: 3 },
+    { id: 'faceless', label: 'Faceless', icon: UserSquare2, count: 2 },
+    { id: 'designs', label: 'Designs', icon: Palette, count: 4 },
   ];
 
   const handleAppToggle = (platform: string) => {
@@ -154,7 +154,7 @@ export function NeuralDispatchCenter() {
         <div className="space-y-6">
           <div className="flex items-center gap-3">
             <Sparkles className="w-5 h-5 text-primary" />
-            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Creation Queues</h4>
+            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] truncate">Queues</h4>
           </div>
           
           <div className="space-y-3">
@@ -167,23 +167,23 @@ export function NeuralDispatchCenter() {
                   setIsApproved(false);
                 }}
                 className={cn(
-                  "w-full rounded-[24px] p-5 flex items-center gap-5 transition-all border !border-white/5 relative group overflow-hidden",
+                  "w-full rounded-[24px] p-3 md:p-5 flex flex-col md:flex-row items-center gap-3 md:gap-5 transition-all border !border-white/5 relative group overflow-hidden",
                   activeQueue === cat.id
                     ? "bg-white/10 !border-white/40 shadow-[0_0_30px_rgba(255,255,255,0.1)]"
                     : "bg-slate-900/50 !border-white/5 hover:!border-white/20"
                 )}
               >
                 <div className={cn(
-                  "w-11 h-11 rounded-2xl flex items-center justify-center transition-colors shrink-0",
+                  "w-10 h-10 md:w-11 md:h-11 rounded-2xl flex items-center justify-center transition-colors shrink-0",
                   activeQueue === cat.id ? "bg-white text-slate-950" : "bg-white/5 text-slate-400 group-hover:text-white"
                 )}>
                   <cat.icon className="w-5 h-5" />
                 </div>
-                <div className="text-left hidden sm:block">
-                  <p className="text-xs font-black uppercase tracking-widest text-white leading-tight">{cat.label}</p>
-                  <p className="text-[9px] font-bold text-slate-500 uppercase mt-0.5">{cat.count} items</p>
+                <div className="text-center md:text-left">
+                  <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-white leading-tight">{cat.label}</p>
+                  <p className="text-[8px] md:text-[9px] font-bold text-slate-500 uppercase mt-0.5">{cat.count} items</p>
                 </div>
-                <ChevronRight className="w-4 h-4 ml-auto text-slate-600 group-hover:text-primary transition-colors hidden sm:block" />
+                <ChevronRight className="w-4 h-4 ml-auto text-slate-600 group-hover:text-primary transition-colors hidden md:block" />
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               </button>
             ))}
@@ -194,16 +194,16 @@ export function NeuralDispatchCenter() {
         <div className="space-y-6">
           <div className="flex items-center gap-3">
             <Smartphone className="w-5 h-5 text-primary" />
-            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
-              {isApproved ? 'Dispatch Targets ✓' : 'Dispatch Targets'}
+            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] truncate">
+              {isApproved ? 'Targets ✓' : 'Targets'}
             </h4>
           </div>
 
           {!isApproved && (
-            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-amber-500/5 border !border-amber-500/10">
+            <div className="flex items-center justify-center md:justify-start gap-2 px-3 py-2 rounded-2xl bg-amber-500/5 border !border-amber-500/10">
               <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span className="text-[8px] font-bold text-amber-300 uppercase tracking-widest hidden sm:inline">
-                Locked — Approve Draft
+              <span className="text-[8px] font-bold text-amber-300 uppercase tracking-widest">
+                LOCKED
               </span>
             </div>
           )}
@@ -218,7 +218,7 @@ export function NeuralDispatchCenter() {
                     disabled={!isApproved}
                     onClick={() => handleAppToggle(platform)}
                     className={cn(
-                      "w-full rounded-[24px] p-4 border !border-white/5 flex items-center gap-4 transition-all group relative overflow-hidden",
+                      "w-full rounded-[24px] p-3 md:p-4 border !border-white/5 flex flex-col md:flex-row items-center gap-3 md:gap-4 transition-all group relative overflow-hidden",
                       !isApproved && "opacity-25 cursor-not-allowed grayscale",
                       isSelected
                         ? "bg-emerald-500/10 !border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
@@ -226,7 +226,7 @@ export function NeuralDispatchCenter() {
                     )}
                   >
                     <div className={cn(
-                      "w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black relative overflow-hidden shrink-0 transition-all",
+                      "w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center text-xs font-black relative overflow-hidden shrink-0 transition-all",
                       isSelected ? "bg-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(16,185,129,0.4)] scale-110" : "bg-white/5 text-white/40"
                     )}>
                       {platformIcons[platform] ? React.createElement(platformIcons[platform], { className: "w-5 h-5" }) : platform.charAt(0).toUpperCase()}
@@ -243,9 +243,9 @@ export function NeuralDispatchCenter() {
                         )}
                       </AnimatePresence>
                     </div>
-                    <div className="flex-1 text-left hidden sm:block">
+                    <div className="text-center md:text-left flex-1 min-w-0">
                       <span className={cn(
-                        "text-xs font-black uppercase tracking-widest",
+                        "text-[10px] md:text-xs font-black uppercase tracking-widest truncate block",
                         isSelected ? "text-emerald-400" : "text-slate-400 group-hover:text-white"
                       )}>
                         {platform}
@@ -260,8 +260,7 @@ export function NeuralDispatchCenter() {
               })
             ) : (
               <div className="p-8 text-center bg-white/5 rounded-[24px] border !border-white/10">
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Link Center Required</p>
-                <p className="text-[9px] text-slate-600 mt-2 italic">Connect platforms to enable dispatch.</p>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Link Required</p>
               </div>
             )}
           </div>
@@ -299,8 +298,8 @@ export function NeuralDispatchCenter() {
               )} />
               <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest italic">
                 {isApproved
-                  ? 'Draft Approved. Select platforms and dispatch.'
-                  : 'Awaiting Draft approval to unlock dispatch.'}
+                  ? 'Ready to Dispatch.'
+                  : 'Awaiting Approval.'}
               </span>
            </div>
            <div className="flex items-center gap-1 opacity-20">
