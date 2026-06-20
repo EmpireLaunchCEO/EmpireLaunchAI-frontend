@@ -22,7 +22,7 @@ interface Task {
 export default function ReviewQueue() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'dispatch' | 'classic'>('dispatch');
+  const [viewMode, setViewMode] = useState<'dispatch' | 'classic'>('classic');
   const [financialGate, setFinancialGate] = useState<{
     isOpen: boolean;
     type: 'subscription' | 'transfer' | 'authorization';

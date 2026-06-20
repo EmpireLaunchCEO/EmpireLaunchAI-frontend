@@ -328,32 +328,6 @@ export default function EmpireIdentityHeader() {
                   healthData={healthData}
                 />
 
-                {/* Empire Control Gates */}
-                <section className="space-y-10 pt-20 border-t border-theme">
-                   <div className="flex items-center justify-between">
-                     <div className="flex items-center gap-3">
-                       <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center">
-                         <LayoutDashboard className="w-5 h-5 text-slate-600" />
-                       </div>
-                       <div>
-                         <h2 className="text-2xl font-black text-foreground tracking-tight italic">Control Gates</h2>
-                         <p className="text-xs text-muted-foreground font-medium italic">Human-in-the-loop validation for autonomous actions.</p>
-                       </div>
-                     </div>
-                   </div>
-
-                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                     <div className="space-y-6">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 ml-2">Content Approval</h3>
-                        <ApprovalQueue />
-                     </div>
-                     <div className="space-y-6">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-slate-400 ml-2">Social Proof Queue</h3>
-                        <SocialProofApproval />
-                     </div>
-                   </div>
-                </section>
-
                 {/* Intelligence Hubs */}
                 <section className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                   <div className="lg:col-span-2">
@@ -364,10 +338,10 @@ export default function EmpireIdentityHeader() {
                     <EmpireConstellation />
                   </div>
                 </section>
-              </motion.div>
-            )}
-          </>
-        )}
+                </motion.div>
+                )}
+                </>
+                )}
 
         <AnimatePresence>
           {isCelebrating && (
