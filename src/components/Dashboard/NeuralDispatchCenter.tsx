@@ -148,7 +148,7 @@ export function NeuralDispatchCenter() {
   return (
     <div className="bg-theme-surface/40 backdrop-blur-xl border !border-white/10 rounded-[40px] overflow-hidden shadow-2xl p-6 md:p-8 space-y-8 md:space-y-12">
       {/* 50/50 SPLIT: Queues on LEFT, Dispatch Targets on RIGHT */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+      <div className="grid grid-cols-2 gap-4 md:gap-12">
         
         {/* ── LEFT: CREATION QUEUES ─────────────────────── */}
         <div className="space-y-6">
@@ -169,22 +169,22 @@ export function NeuralDispatchCenter() {
                 className={cn(
                   "w-full rounded-[24px] p-5 flex items-center gap-5 transition-all border !border-white/5 relative group overflow-hidden",
                   activeQueue === cat.id
-                    ? "bg-primary/10 border-primary shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]"
-                    : "bg-slate-900/50 border-white/5 hover:border-white/20"
+                    ? "bg-white/10 !border-white/40 shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+                    : "bg-slate-900/50 !border-white/5 hover:!border-white/20"
                 )}
               >
                 <div className={cn(
                   "w-11 h-11 rounded-2xl flex items-center justify-center transition-colors shrink-0",
-                  activeQueue === cat.id ? "bg-primary text-slate-950" : "bg-white/5 text-slate-400 group-hover:text-white"
+                  activeQueue === cat.id ? "bg-white text-slate-950" : "bg-white/5 text-slate-400 group-hover:text-white"
                 )}>
                   <cat.icon className="w-5 h-5" />
                 </div>
-                <div className="text-left">
+                <div className="text-left hidden sm:block">
                   <p className="text-xs font-black uppercase tracking-widest text-white leading-tight">{cat.label}</p>
-                  <p className="text-[9px] font-bold text-slate-500 uppercase mt-0.5">{cat.count} items in queue</p>
+                  <p className="text-[9px] font-bold text-slate-500 uppercase mt-0.5">{cat.count} items</p>
                 </div>
-                <ChevronRight className="w-4 h-4 ml-auto text-slate-600 group-hover:text-primary transition-colors" />
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                <ChevronRight className="w-4 h-4 ml-auto text-slate-600 group-hover:text-primary transition-colors hidden sm:block" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               </button>
             ))}
           </div>
@@ -200,10 +200,10 @@ export function NeuralDispatchCenter() {
           </div>
 
           {!isApproved && (
-            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-amber-500/5 border border-amber-500/10">
+            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-amber-500/5 border !border-amber-500/10">
               <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span className="text-[8px] font-bold text-amber-300 uppercase tracking-widest">
-                Locked — Approve Draft first
+              <span className="text-[8px] font-bold text-amber-300 uppercase tracking-widest hidden sm:inline">
+                Locked — Approve Draft
               </span>
             </div>
           )}
@@ -221,8 +221,8 @@ export function NeuralDispatchCenter() {
                       "w-full rounded-[24px] p-4 border !border-white/5 flex items-center gap-4 transition-all group relative overflow-hidden",
                       !isApproved && "opacity-25 cursor-not-allowed grayscale",
                       isSelected
-                        ? "bg-emerald-500/10 border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
-                        : "bg-slate-900/40 border-white/5 hover:border-white/10"
+                        ? "bg-emerald-500/10 !border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
+                        : "bg-slate-900/40 !border-white/5 hover:!border-white/10"
                     )}
                   >
                     <div className={cn(
@@ -243,7 +243,7 @@ export function NeuralDispatchCenter() {
                         )}
                       </AnimatePresence>
                     </div>
-                    <div className="flex-1 text-left">
+                    <div className="flex-1 text-left hidden sm:block">
                       <span className={cn(
                         "text-xs font-black uppercase tracking-widest",
                         isSelected ? "text-emerald-400" : "text-slate-400 group-hover:text-white"
@@ -259,7 +259,7 @@ export function NeuralDispatchCenter() {
                 );
               })
             ) : (
-              <div className="p-8 text-center bg-white/5 rounded-[24px] border-2 border-dashed border-white/10">
+              <div className="p-8 text-center bg-white/5 rounded-[24px] border !border-white/10">
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Link Center Required</p>
                 <p className="text-[9px] text-slate-600 mt-2 italic">Connect platforms to enable dispatch.</p>
               </div>
@@ -292,7 +292,7 @@ export function NeuralDispatchCenter() {
 
         {/* FOOTER - Now inside the big box */}
         <div className="flex flex-col items-center gap-3">
-           <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-slate-900 border border-white/5">
+           <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-slate-900 border !border-white/5">
               <div className={cn(
                 "w-1.5 h-1.5 rounded-full",
                 isApproved ? "bg-emerald-500 animate-pulse" : "bg-amber-500"

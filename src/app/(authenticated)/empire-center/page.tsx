@@ -91,7 +91,7 @@ export default function EmpireCenterPage() {
           </motion.div>
 
           {/* Primary Tabs - Optimized for mobile visibility */}
-          <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border-2 border-theme sticky top-0 z-20 gap-1">
+          <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border !border-white/10 sticky top-0 z-20 gap-1">
             {[
               { id: 'pending', label: 'Pending', icon: Zap },
               { id: 'intel', label: 'Intel', icon: BarChart3 },
@@ -102,7 +102,7 @@ export default function EmpireCenterPage() {
                 className={cn(
                   "flex-1 min-w-[120px] sm:min-w-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-[18px] font-black text-[9px] sm:text-[10px] uppercase tracking-tighter transition-all",
                   activeTab === tab.id
-                    ? "bg-theme-surface text-foreground shadow-sm border border-theme"
+                    ? "bg-theme-surface text-foreground shadow-sm border !border-white/20"
                     : "text-slate-400 hover:text-foreground hover:bg-theme-surface/50"
                 )}
               >
