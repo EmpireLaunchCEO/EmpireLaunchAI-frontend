@@ -194,9 +194,6 @@ export default function StudioPage() {
           </h1>
         </div>
 
-        {/* DNA Vault Counter — Live Harvest Intelligence */}
-        <DNAVaultCounter />
-
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000">
           {/* Tab Navigation */}
           <div className="flex bg-theme-background/60 p-1.5 rounded-[24px] border border-theme w-fit max-w-[calc(100%-2rem)] overflow-x-auto no-scrollbar gap-1.5 mx-auto shadow-2xl backdrop-blur-xl px-2 flex-nowrap relative z-50">
