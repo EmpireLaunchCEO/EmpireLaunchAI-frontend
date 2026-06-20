@@ -54,7 +54,7 @@ export default function LinkCenterPage() {
             <GuidedLinking isReturning={isLinkingComplete} hideEstablished={true} />
           </motion.div>
 
-          {/* Combined Neural Vital Signs & Governance */}
+          {/* Combined EMPIRE LINKS & Governance */}
           <VerticalPlatformRadar />
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
