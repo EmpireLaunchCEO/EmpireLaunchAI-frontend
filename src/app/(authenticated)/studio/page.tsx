@@ -17,7 +17,6 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { InspirationGallery, SuggestionBubbles } from '@/components/Dashboard/InspirationGallery';
 import { DNAVaultCounter } from '@/components/Dashboard/DNAVaultCounter';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FileUploadDropZone, UploadState } from '@/components/Dashboard/FileUploadDropZone';
@@ -451,14 +450,6 @@ export default function StudioPage() {
 
                 <InlineConsultant context="neural-twin" />
               </div>
-
-              {/* Suggestion Bubbles - FORCED VERTICAL */}
-              <div className="flex flex-col gap-2">
-                <SuggestionBubbles onSelect={handleSuggestion} />
-              </div>
-
-              {/* Inspiration Gallery */}
-              <InspirationGallery />
 
               {/* Production Logs Section */}
               <AIRenderLog
