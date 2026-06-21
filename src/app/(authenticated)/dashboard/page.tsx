@@ -173,29 +173,29 @@ export default function Dashboard() {
                     </motion.div>
 
                     {/* Active Subscribers - Owner Only - Restored below Finances */}
-                    {(isAdmin || userEmail === 'stacipeabody@gmail.com') && (
+                    {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com') && (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        className="max-w-4xl mx-auto bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-4 sm:p-5 flex items-center justify-between relative overflow-hidden group hover:shadow-[0_0_30px_rgba(255,255,255,0.08)] transition-all"
+                        className="max-w-4xl mx-auto bg-theme-surface border-2 border-theme rounded-[32px] p-8 space-y-6 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(255,255,255,0.08)] transition-all"
                       >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[60px] -z-10" />
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                            <Stars className="w-5 h-5 text-emerald-400" />
+                        <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 blur-[80px] -z-10" />
+                        <div className="flex items-center gap-6">
+                          <div className="w-16 h-16 rounded-[24px] bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-lg shadow-emerald-500/10">
+                            <Stars className="w-8 h-8 text-emerald-400" />
                           </div>
                           <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Active Subscribers</p>
-                            <p className="text-sm font-black text-muted-foreground uppercase">Revenue Stream Active</p>
+                            <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-1">Active Subscribers</p>
+                            <div className="flex items-baseline gap-3">
+                              <p className="text-5xl font-black text-foreground bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                                {(healthData?.subscribers || 0)}
+                              </p>
+                              <p className="text-sm font-black text-emerald-500 uppercase tracking-widest italic">Growth Optimal</p>
+                            </div>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-3xl font-black text-foreground bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                            {(healthData?.subscribers || 0)}
-                          </p>
-                          <p className="text-[8px] font-bold text-emerald-500 uppercase tracking-tighter">Growth Status: Optimal</p>
-                        </div>
+                        <p className="text-xs text-muted-foreground font-medium italic">Live recurring revenue stream tracking enabled for EmpireLaunch AI.</p>
                       </motion.div>
                     )}
 
