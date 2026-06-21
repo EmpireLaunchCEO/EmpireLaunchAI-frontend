@@ -20,7 +20,10 @@ import {
   X,
   Palette,
   ShieldCheck,
-  Cpu
+  Cpu,
+  LogOut,
+  AlertCircle,
+  HelpCircle
   } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
@@ -124,7 +127,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     completeLinkingPhase,
     updatePlatformPermission,
     platformPermissions,
-    isProtocolAccepted
+    isProtocolAccepted,
+    disconnectPlatform
   } = useEmpire();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -299,8 +303,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                   <div className={cn("p-3 rounded-xl transition-colors", platform.bg, "group-hover:bg-primary/20")}>
                     <PlatformIcon id={id} icon={platform.icon} className={platform.color} size={20} />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="font-bold text-foreground text-xs group-hover:text-white transition-colors">{platform.name}</span>
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <span className="font-bold text-foreground text-xs group-hover:text-white transition-colors truncate">{platform.name}</span>
                     <span className={cn(
                       "text-[7px] font-black uppercase tracking-widest transition-colors",
                       platformPermissions[id] === 'empire' ? "text-amber-500" : "text-primary",
@@ -309,7 +313,21 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                       {platformPermissions[id] === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
                     </span>
                   </div>
-                  <CheckCircle2 className="w-4 h-4 text-green-500 ml-auto group-hover:text-white" />
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-green-500 group-hover:text-white shrink-0" />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (confirm(`Sever the neural link with ${platform.name}? This will stop all autonomous actions for this platform.`)) {
+                          disconnectPlatform(id);
+                        }
+                      }}
+                      className="p-1.5 rounded-lg hover:bg-red-500/20 text-muted-foreground hover:text-red-500 transition-all opacity-0 group-hover:opacity-100"
+                      title="Disconnect Platform"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </motion.div>
               );
             })}

@@ -62,6 +62,7 @@ interface EmpireContextType {
   userEmail: string | null;
   triggerRefresh: () => Promise<void>;
   registerRefreshHandler: (handler: () => Promise<void>) => () => void;
+  disconnectPlatform: (platform: string) => void;
 
   // Notifications
   notifications: Notification[];
@@ -371,6 +372,33 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem('platformsByEmpire', JSON.stringify(next));
       }
       return next;
+    });
+  };
+
+  const disconnectPlatform = (platform: string) => {
+    setPlatformsByEmpire(prev => {
+      const current = prev[activeEmpireId] || [];
+      const next = { ...prev, [activeEmpireId]: current.filter(p => p !== platform) };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('platformsByEmpire', JSON.stringify(next));
+        localStorage.removeItem(`empire_vault_${platform}`);
+        
+        // Notify backend
+        fetch(`${API_URL}/api/integrations/${platform}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': 'Bearer mock-mobile-token',
+            'x-user-id': MASTER_USER_ID
+          }
+        }).catch(err => console.error('Failed to notify backend of disconnect', err));
+      }
+      return next;
+    });
+    
+    addToast({
+      title: "Link Severed",
+      message: `${platform.toUpperCase()} connection has been removed.`,
+      type: 'system'
     });
   };
 
@@ -729,7 +757,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       addToast,
       removeToast,
       spendingPermissions,
-      updateSpendingPermission
+      updateSpendingPermission,
+      disconnectPlatform
     }}>
       {children}
     </EmpireContext.Provider>
