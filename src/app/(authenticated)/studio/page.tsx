@@ -135,7 +135,11 @@ export default function StudioPage() {
         const formatReset = (dateStr?: string) => {
           if (!dateStr) return undefined;
           const date = new Date(dateStr);
-          return date.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+          const dayName = date.toLocaleDateString(undefined, { weekday: 'long' });
+          const monthName = date.toLocaleDateString(undefined, { month: 'short' });
+          const dayNum = date.getDate();
+          const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          return `${dayName}, ${monthName} ${dayNum} at ${timeStr}`;
         };
         setUsage({
           neural: { ...data.neural, nextReset: formatReset(data.neural.nextReset) },
@@ -252,6 +256,69 @@ export default function StudioPage() {
           <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
             {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE' || empireData?.name === 'Business 1' || !empireData?.name) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title)}
           </h1>
+        </div>
+
+        {/* Usage Quota Overview */}
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
+          <div className="bg-theme-surface border-2 border-theme rounded-[24px] p-5 flex flex-col gap-3 relative group">
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                <Video className="w-5 h-5" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-black text-foreground">{usage?.customize?.remaining ?? 14}</span>
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Available</span>
+                <div className="relative ml-1">
+                  <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                    <p className="font-black text-white uppercase tracking-widest mb-1">Weekly Video Quota</p>
+                    Your 14 weekly video slots reset every {usage?.customize?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Weekly Video Slots</div>
+          </div>
+
+          <div className="bg-theme-surface border-2 border-theme rounded-[24px] p-5 flex flex-col gap-3 relative group">
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 border border-purple-500/20">
+                <Bot className="w-5 h-5" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-black text-foreground">{usage?.neural?.remaining ?? 14}</span>
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Available</span>
+                <div className="relative ml-1">
+                  <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                    <p className="font-black text-white uppercase tracking-widest mb-1">Neural Twin Quota</p>
+                    Your 14 weekly Neural Twin slots reset every {usage?.neural?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Weekly Twin Slots</div>
+          </div>
+
+          <div className="bg-theme-surface border-2 border-theme rounded-[24px] p-5 flex flex-col gap-3 relative group">
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/20">
+                <Palette className="w-5 h-5" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-black text-foreground">{usage?.design?.remaining ?? 50}</span>
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Available</span>
+                <div className="relative ml-1">
+                  <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                    <p className="font-black text-white uppercase tracking-widest mb-1">Monthly Design Quota</p>
+                    Your 50 monthly design slots reset every {usage?.design?.nextReset || '30 days'}. Unused slots do not roll over. Resets occur on the same day of the month as your initial subscription.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Monthly Design Slots</div>
+          </div>
         </div>
 
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000">
