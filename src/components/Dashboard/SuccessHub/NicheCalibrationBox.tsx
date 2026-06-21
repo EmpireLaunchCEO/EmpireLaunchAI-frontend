@@ -6,9 +6,10 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 interface NicheBoxProps {
   niche?: string;
   angle?: string;
+  isOperationsBase?: boolean;
 }
 
-export const NicheCalibrationBox = ({ niche, angle }: NicheBoxProps) => {
+export const NicheCalibrationBox = ({ niche, angle, isOperationsBase }: NicheBoxProps) => {
   const isPending = !niche;
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -46,6 +47,10 @@ export const NicheCalibrationBox = ({ niche, angle }: NicheBoxProps) => {
     );
   }
 
+  const nicheDisplay = isOperationsBase 
+    ? (niche || "DONE FOR YOU BUSINESS")
+    : (niche || "Niche Pending");
+
   return (
     <div className="bg-theme-surface border-2 border-theme rounded-[32px] p-8 shadow-lg space-y-6 relative">
       {/* Minimize Toggle */}
@@ -75,10 +80,10 @@ export const NicheCalibrationBox = ({ niche, angle }: NicheBoxProps) => {
         </div>
         <div className="text-right">
            <p className={`text-sm font-black uppercase italic ${isPending ? "text-primary animate-pulse" : "text-foreground"}`}>
-             {niche || "CALIBRATING..."}
+             {nicheDisplay}
            </p>
            <p className="text-[9px] font-bold text-primary uppercase tracking-widest">
-             {isPending ? "Syncing..." : "Sync Active"}
+
            </p>
         </div>
       </div>

@@ -86,13 +86,106 @@
 }
 
 [data-theme='high-contrast-light'] {
-  --primary-rgb: 0 0 0; /* Black */
-  --secondary-rgb: 0 0 0; /* Black */
-  --background-rgb: 255 255 255; /* White */
-  --foreground-rgb: 0 0 0; /* Black */
-  --surface-rgb: 255 255 255; /* White */
-  --surface-border-rgb: 0 0 0; /* Black */
+  --primary-rgb: 0 0 0; 
+  --secondary-rgb: 0 0 0; 
+  --background-rgb: 255 255 255; 
+  --foreground-rgb: 0 0 0; 
+  --surface-rgb: 255 255 255;
+  --surface-border-rgb: 0 0 0;
   --theme-gradient: linear-gradient(135deg, #000000 0%, #000000 100%);
+  --border-thickness: 3px; 
+}
+
+/* 
+  STRICT PAPER WHITE ENFORCEMENT
+  "EVERYTHING BESIDES THE background needs to be black."
+*/
+[data-theme='high-contrast-light'],
+[data-theme='high-contrast-light'] *,
+[data-theme='high-contrast-light'] *::before,
+[data-theme='high-contrast-light'] *::after {
+  background-color: white !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  color: black !important;
+  border-color: black !important;
+  opacity: 1 !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-text-fill-color: black !important;
+  text-shadow: none !important;
+}
+
+/* EXCEPTION: Branded Buttons and specific colored elements stay */
+[data-theme='high-contrast-light'] button.bg-primary,
+[data-theme='high-contrast-light'] .bg-primary,
+[data-theme='high-contrast-light'] .bg-primary *,
+[data-theme='high-contrast-light'] button.bg-emerald-500,
+[data-theme='high-contrast-light'] .bg-emerald-500,
+[data-theme='high-contrast-light'] .bg-emerald-500 *,
+[data-theme='high-contrast-light'] .bg-green-500,
+[data-theme='high-contrast-light'] .bg-green-500 *,
+[data-theme='high-contrast-light'] .bg-amber-500,
+[data-theme='high-contrast-light'] .bg-amber-500 *,
+[data-theme='high-contrast-light'] .bg-red-500,
+[data-theme='high-contrast-light'] .bg-red-500 * {
+  background-color: revert !important;
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+  border-color: transparent !important;
+}
+
+/* Force Borders to be thick black and visible */
+[data-theme='high-contrast-light'] [class*="border"],
+[data-theme='high-contrast-light'] aside,
+[data-theme='high-contrast-light'] nav,
+[data-theme='high-contrast-light'] div,
+[data-theme='high-contrast-light'] section,
+[data-theme='high-contrast-light'] button {
+  border-width: 3px !important;
+  border-style: solid !important;
+  border-color: black !important;
+}
+
+/* Ensure non-branded icons are black */
+[data-theme='high-contrast-light'] svg:not(.text-primary):not(.text-emerald-500):not(.text-green-500):not(.text-amber-500) {
+  color: black !important;
+  stroke: black !important;
+  fill: none !important;
+}
+
+[data-theme='high-contrast-light'] svg:not(.text-primary):not(.text-emerald-500):not(.text-green-500):not(.text-amber-500) path {
+  stroke: black !important;
+}
+
+/* Text stroke for headers to match the bold high-contrast look */
+[data-theme='high-contrast-light'] .font-black,
+[data-theme='high-contrast-light'] h1,
+[data-theme='high-contrast-light'] h2,
+[data-theme='high-contrast-light'] h3,
+[data-theme='high-contrast-light'] button {
+  -webkit-text-stroke: 0.5px black;
+  font-weight: 950 !important;
+}
+
+/* Ensure placeholder text is also black/dark */
+[data-theme='high-contrast-light'] ::placeholder {
+  color: black !important;
+  opacity: 0.7 !important;
+}
+
+/* Override the gradient text utility to be solid black */
+[data-theme='high-contrast-light'] h1, 
+[data-theme='high-contrast-light'] h2, 
+[data-theme='high-contrast-light'] h3, 
+[data-theme='high-contrast-light'] h4, 
+[data-theme='high-contrast-light'] .text-theme-gradient {
+  background-image: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: black !important;
+  color: black !important;
+  filter: none !important;
 }
 
 /* HIGH CONTRAST LIGHT OVERRIDES */
