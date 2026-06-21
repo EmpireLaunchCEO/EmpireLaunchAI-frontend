@@ -188,7 +188,8 @@ aside, .mobile-nav {
   color: inherit !important;
   -webkit-text-fill-color: initial !important;
   background-image: none !important;
-  border-width: 1px !important;
+  border-width: 1.5px !important;
+  border-color: black !important;
 }
 
 /* 

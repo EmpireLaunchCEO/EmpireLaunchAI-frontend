@@ -116,7 +116,7 @@ function SettingsContent() {
     { id: 'pink', name: 'Electric Pink', primary: '#ff0099', secondary: '#be185d', description: 'High-energy vibrant neon aesthetic.' },
     { id: 'vibrant-cyan', name: 'Cyan Teal', primary: '#00ffff', secondary: '#008080', description: 'Cybernetic and fresh digital appearance.' },
     { id: 'electric-blue', name: 'Neon Blue', primary: '#00a2ff', secondary: '#0369a1', description: 'High-voltage neon sky blue.' },
-    { id: 'high-contrast', name: 'Paper White', primary: '#000000', secondary: '#000000', description: 'Pure Black & White contrast.' }
+    { id: 'high-contrast', name: 'Paper White', primary: '#ffffff', secondary: '#000000', description: 'Pure Black & White contrast.' }
   ];
 
   return (
@@ -311,16 +311,16 @@ function SettingsContent() {
                             bgMode === 'dark' ? "bg-primary text-white" : "text-muted-foreground hover:text-white"
                           )}
                         >
-                          Empire Dark
+                          Midnight Black
                         </button>
                         <button 
                           onClick={() => setBgMode('light')}
                           className={cn(
                             "px-4 py-2 rounded-xl font-black text-[9px] uppercase transition-all",
-                            bgMode === 'light' ? "bg-white text-black border border-black" : "text-muted-foreground hover:text-black"
+                            bgMode === 'light' ? "bg-white text-black border-2 border-black" : "text-muted-foreground hover:text-black"
                           )}
                         >
-                          Paper White
+                          Pure White
                         </button>
                       </div>
                     </div>
