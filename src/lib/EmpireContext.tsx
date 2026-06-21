@@ -244,6 +244,13 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const setIsAdmin = (admin: boolean) => {
+    setIsAdminState(admin);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isAdmin', admin ? 'true' : 'false');
+    }
+  };
+
   const setIsPaid = (paid: boolean) => {
     setIsPaidState(paid);
     if (typeof window !== 'undefined') {
@@ -514,7 +521,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
         // EMERGENCY BYPASS: Only if the user has manually entered the Master ID or it's saved from a previous session
         const storedUserId = localStorage.getItem('empire_userId');
-        if (storedUserId === MASTER_USER_ID) {
+        const storedIsAdmin = localStorage.getItem('isAdmin') === 'true';
+
+        if (storedUserId === MASTER_USER_ID || storedIsAdmin) {
              console.log('[Security] Verified Owner Session Active.');
              setIsAdmin(true);
              setIsPaidState(true);

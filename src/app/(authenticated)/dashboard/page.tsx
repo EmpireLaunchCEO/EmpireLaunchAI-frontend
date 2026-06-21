@@ -19,9 +19,10 @@ import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { DisclaimerAgreementBox } from '@/components/Dashboard/DisclaimerAgreementBox';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
+import { SubscriptionSuccessShareBox } from '@/components/Dashboard/SubscriptionSuccessShareBox';
 
 export default function Dashboard() {
-  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler } = useEmpire();
+  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler, isProtocolAccepted, acceptProtocols, userEmpires } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
@@ -31,6 +32,12 @@ export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
   const [isGrowthGateOpen, setIsGrowthProtocolGateOpen] = useState(false);
   const [growthGateProduct, setGrowthProtocolGateProduct] = useState('');
+
+  const ownedSlots = Object.values(slotStatus || {}).filter(Boolean).length;
+
+  const handleCancelSubscription = (empireId: string) => {
+    console.log(`[Subscription] Cancelling subscription for empire: ${empireId}`);
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -134,7 +141,7 @@ export default function Dashboard() {
                   </motion.div>
 
                   {/* 2. Operations Column */}
-                  <div className="max-w-6xl mx-auto space-y-12 md:space-y-16" style={{ contentVisibility: 'auto' }}>
+                  <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
                     
                     {/* Primary Results Section */}
                     <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
@@ -153,6 +160,11 @@ export default function Dashboard() {
                         withholdableEarnings={(healthData?.revenue || 0) * 100}
                         securedDues={(healthData?.pendingDues || 0) * 100}
                         growthScore={healthData?.growthScore}
+                        isProtocolAccepted={isProtocolAccepted}
+                        onAcceptProtocol={() => acceptProtocols()}
+                        businessSlots={ownedSlots}
+                        userEmpires={userEmpires}
+                        onCancelSubscription={handleCancelSubscription}
                         onActivateGrowthProtocol={(name) => {
                           setGrowthProtocolGateProduct(name);
                           setIsGrowthProtocolGateOpen(true);
@@ -160,7 +172,7 @@ export default function Dashboard() {
                       />
                     </motion.div>
 
-                    {/* Active Subscribers - Moved here for Admin/Owner per request */}
+                    {/* Active Subscribers - Owner Only - Restored below Finances */}
                     {isAdmin && (
                       <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }} 

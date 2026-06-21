@@ -7,12 +7,19 @@ import { cn } from '@/lib/utils';
 import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
 import { useEmpire } from '@/lib/EmpireContext';
 
+import { SubscriptionSuccessShareBox } from './SubscriptionSuccessShareBox';
+
 interface FinancialCommandProps {
   withholdableEarnings?: number;
   securedDues?: number;
   growthScore?: number;
   businessId?: string;
   onActivateGrowthProtocol?: (name: string) => void;
+  isProtocolAccepted?: boolean;
+  onAcceptProtocol?: () => void;
+  businessSlots?: number;
+  userEmpires?: any[];
+  onCancelSubscription?: (empireId: string) => void;
 }
 
 export function FinancialCommand({ 
@@ -20,7 +27,12 @@ export function FinancialCommand({
   securedDues = 0, 
   growthScore = 0,
   businessId = "1",
-  onActivateGrowthProtocol
+  onActivateGrowthProtocol,
+  isProtocolAccepted = false,
+  onAcceptProtocol,
+  businessSlots = 1,
+  userEmpires = [],
+  onCancelSubscription
 }: Partial<FinancialCommandProps>) {
   const [infraBalances, setInfraBalances] = useState<InfrastructureBalance[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -157,67 +169,22 @@ export function FinancialCommand({
         {/* Breakdown Sections */}
         <div className="flex flex-col gap-8">
           
-          {/* Subscriptions Section */}
+          {/* Subscriptions Section - Using Dedicated Subscription Component */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-primary font-black text-[9px] uppercase tracking-widest">
               <CreditCard className="w-3 h-3" />
-              Active Subscriptions
+              Active Partner Subscriptions
             </div>
-            <div className="space-y-2">
-              <div className="p-5 rounded-[24px] border-2 border-primary/30 bg-primary/5 space-y-5 transition-all">
-                {/* 1. Empire Subscription */}
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-slate-950">
-                      <AppWindow className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-black uppercase italic leading-tight">Empire Subscription</p>
-                      <div className="flex items-center gap-1 text-[8px] text-muted-foreground font-bold uppercase tracking-tighter">
-                        <Calendar className="w-2 h-2" /> {new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs font-black italic leading-tight">{formatCurrency(4000)}</p>
-                    <span className="text-[7px] font-black text-primary uppercase tracking-widest">Platform Due</span>
-                  </div>
-                </div>
-
-                {/* 2. Success-Shares */}
-                <div className="pt-5 border-t border-white/5 flex items-center justify-between w-full">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-primary">
-                      <Stars className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-black uppercase italic leading-tight">Success-Shares (40/1k)</p>
-                      <div className="flex items-center gap-1 text-[8px] text-muted-foreground font-bold uppercase tracking-tighter">
-                        <ShieldCheck className="w-2 h-2" /> Verified Protocol
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs font-black italic leading-tight">{formatCurrency(0)}</p>
-                    <span className="text-[7px] font-black text-primary uppercase tracking-widest">Platform Due</span>
-                  </div>
-                </div>
-
-                {/* 3. Action Button */}
-                <div className="pt-1">
-                  <button 
-                    onClick={handleDownloadAudit}
-                    disabled={isDownloading}
-                    className="w-full flex items-center justify-center gap-2 py-3 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-xl transition-all active:scale-95 disabled:opacity-50"
-                  >
-                    <Activity className={cn("w-3.5 h-3.5 text-primary", isDownloading && "animate-spin")} />
-                    <span className="text-[9px] font-black text-primary uppercase tracking-widest">
-                      {isDownloading ? "Generating Audit..." : "Download Shares Audit"}
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
+            <SubscriptionSuccessShareBox
+              isProtocolAccepted={isProtocolAccepted}
+              onAcceptProtocol={onAcceptProtocol}
+              totalRevenue={withholdableEarnings}
+              totalFees={securedDues}
+              businessSlots={businessSlots}
+              userEmpires={userEmpires}
+              onCancelSubscription={onCancelSubscription}
+              className="border-2 border-primary/20 shadow-none !rounded-[24px]"
+            />
           </div>
 
           {/* Dues Section */}

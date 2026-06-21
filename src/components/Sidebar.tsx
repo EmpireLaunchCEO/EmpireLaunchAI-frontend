@@ -30,6 +30,7 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const { activeEmpire, isAdmin, setIsAdmin, setIsPaid } = useEmpire();
+  const brandName = (isAdmin || !activeEmpire?.name || activeEmpire?.name === 'HOME BASE') ? "EmpireLaunch AI" : activeEmpire.name;
   const displayNiche = (isAdmin && (!activeEmpire?.niche || activeEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (activeEmpire?.niche || "your niche");
 
   const handleLogout = () => {
@@ -47,7 +48,7 @@ export function Sidebar() {
         <div className="p-6 pt-0 flex items-center gap-3">
           <BrandedGlobe size="md" spinning />
           <span className="text-lg font-black tracking-tight text-theme-gradient uppercase italic truncate">
-            EmpireLaunch AI
+            {brandName}
           </span>
         </div>
 

@@ -12,6 +12,27 @@ export function GlobalEmpireHeader() {
   const { activeEmpireId, setActiveEmpireId, isAdmin, activeEmpire, isInitialized } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
 
+  // State to persist discovered names for tabs
+  const [discoveredNames, setDiscoveredNames] = React.useState<Record<string, string>>({
+    '1': isAdmin ? "EmpireLaunch AI" : "Empire 1",
+    '2': "Empire 2",
+    '3': "Empire 3"
+  });
+
+  // Update names as they are discovered
+  React.useEffect(() => {
+    if (activeEmpire && activeEmpireId === '1') {
+      const name = activeEmpire.name || activeEmpire.title;
+      const isGeneric = !name || name === 'HOME BASE' || name === 'Business 1' || name === 'Empire 1';
+      
+      if (!isGeneric) {
+        setDiscoveredNames(prev => ({ ...prev, '1': name }));
+      } else if (isAdmin) {
+        setDiscoveredNames(prev => ({ ...prev, '1': "EmpireLaunch AI" }));
+      }
+    }
+  }, [activeEmpire, activeEmpireId, isAdmin]);
+
   if (!isInitialized) return null;
 
   const getPageTitle = () => {
@@ -46,19 +67,7 @@ export function GlobalEmpireHeader() {
         {[0, 1, 2].map((idx) => {
           const empireId = (idx + 1).toString();
           const isActive = activeBusinessIndex === idx;
-
-          let label = "EmpireLaunch AI";
-          if (idx === 1) label = "Empire 2";
-          if (idx === 2) label = "Empire 3";
-          
-          // If this is the active slot, use the actual name from the empire data
-          if (isActive && activeEmpire) {
-            const name = activeEmpire.name || activeEmpire.title;
-            // Ensure we don't use generic titles as labels
-            if (name && name !== 'HOME BASE' && !name.startsWith('Business ')) {
-              label = name;
-            }
-          }
+          const label = discoveredNames[empireId] || (idx === 0 ? "EmpireLaunch AI" : `Empire ${idx + 1}`);
 
           return (
             <button
