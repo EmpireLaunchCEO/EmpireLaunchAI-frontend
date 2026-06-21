@@ -128,15 +128,14 @@ export default function Dashboard() {
               ) : (
                 <div className="space-y-12 md:space-y-16 animate-in fade-in duration-1000">
                   
-                  {/* 1. Identity Header */}
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     className="text-center space-y-4"
                   >
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-                      {(activeEmpireId === '1' && (isAdmin || userEmail === 'stacipeabody@gmail.com')) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
+                      {activeEmpireId === '1' ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || `Empire ${activeEmpireId}`)}
                     </h1>
                   </motion.div>
 
