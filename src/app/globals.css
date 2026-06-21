@@ -101,7 +101,7 @@
   "EVERYTHING BESIDES THE background needs to be black."
 */
 [data-theme='high-contrast-light'],
-[data-theme='high-contrast-light'] *,
+[data-theme='high-contrast-light'] *:not(button.bg-primary):not(.bg-primary):not(button.bg-emerald-500):not(.bg-emerald-500):not(.bg-green-500):not(.bg-amber-500):not(.bg-red-500),
 [data-theme='high-contrast-light'] *::before,
 [data-theme='high-contrast-light'] *::after {
   background-color: white !important;
@@ -141,7 +141,7 @@
 [data-theme='high-contrast-light'] nav,
 [data-theme='high-contrast-light'] div,
 [data-theme='high-contrast-light'] section,
-[data-theme='high-contrast-light'] button {
+[data-theme='high-contrast-light'] button:not(.bg-primary):not(.bg-emerald-500) {
   border-width: 3px !important;
   border-style: solid !important;
   border-color: black !important;
