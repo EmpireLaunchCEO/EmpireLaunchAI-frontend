@@ -102,7 +102,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [linkingCompleteByEmpire, setLinkingCompleteByEmpire] = useState<Record<string, boolean>>({});
 
   // Shared States
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdminState] = useState(false);
   const [isPaid, setIsPaidState] = useState(false);
   const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: true, 2: true });
   const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>('co-pilot');
