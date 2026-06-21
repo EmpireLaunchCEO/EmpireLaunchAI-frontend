@@ -258,69 +258,6 @@ export default function StudioPage() {
           </h1>
         </div>
 
-        {/* Usage Quota Overview */}
-        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="bg-theme-surface border-2 border-theme rounded-[24px] p-5 flex flex-col gap-3 relative group">
-            <div className="flex items-center justify-between">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                <Video className="w-5 h-5" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-black text-foreground">{usage?.customize?.remaining ?? 14}</span>
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Available</span>
-                <div className="relative ml-1">
-                  <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
-                    <p className="font-black text-white uppercase tracking-widest mb-1">Weekly Video Quota</p>
-                    Your 14 weekly video slots reset every {usage?.customize?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Weekly Video Slots</div>
-          </div>
-
-          <div className="bg-theme-surface border-2 border-theme rounded-[24px] p-5 flex flex-col gap-3 relative group">
-            <div className="flex items-center justify-between">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 border border-purple-500/20">
-                <Bot className="w-5 h-5" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-black text-foreground">{usage?.neural?.remaining ?? 14}</span>
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Available</span>
-                <div className="relative ml-1">
-                  <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
-                    <p className="font-black text-white uppercase tracking-widest mb-1">Neural Twin Quota</p>
-                    Your 14 weekly Neural Twin slots reset every {usage?.neural?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Weekly Twin Slots</div>
-          </div>
-
-          <div className="bg-theme-surface border-2 border-theme rounded-[24px] p-5 flex flex-col gap-3 relative group">
-            <div className="flex items-center justify-between">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/20">
-                <Palette className="w-5 h-5" />
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-black text-foreground">{usage?.design?.remaining ?? 50}</span>
-                <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Available</span>
-                <div className="relative ml-1">
-                  <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
-                    <p className="font-black text-white uppercase tracking-widest mb-1">Monthly Design Quota</p>
-                    Your 50 monthly design slots reset every {usage?.design?.nextReset || '30 days'}. Unused slots do not roll over. Resets occur on the same day of the month as your initial subscription.
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Monthly Design Slots</div>
-          </div>
-        </div>
-
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000">
           <div className="space-y-12">
             <motion.div
@@ -329,13 +266,20 @@ export default function StudioPage() {
               className="space-y-8"
             >
               {/* 1. Customize Video Box */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative">
-                {usage?.customize && (
-                  <div className="absolute top-6 right-6 text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
-                    {(typeof usage.customize.limit === 'number' ? usage.customize.limit : 0) - usage.customize.remaining}/{usage.customize.limit}
-                    <Info className="w-3 h-3 text-slate-600 cursor-help" title={`Your weekly slots reset every ${usage.customize.nextReset || '7 days'}. Unused slots do not roll over.`} />
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
+                <div className="absolute top-6 right-6 flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
+                    <span className="text-[10px] font-black text-white">{(typeof usage?.customize?.limit === 'number' ? usage.customize.limit : 0) - (usage?.customize?.remaining ?? 0)}/{usage?.customize?.limit ?? 14}</span>
+                    <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest ml-1">Used</span>
                   </div>
-                )}
+                  <div className="relative">
+                    <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                    <div className="absolute bottom-full right-0 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                      <p className="font-black text-white uppercase tracking-widest mb-1">Weekly Video Quota</p>
+                      Your 14 weekly video slots reset every {usage?.customize?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
+                    </div>
+                  </div>
+                </div>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-slate-500/10 flex items-center justify-center">
                     <MonitorPlay className="w-5 h-5 text-slate-400" />
@@ -450,13 +394,20 @@ export default function StudioPage() {
               </div>
 
               {/* Custom Design Input — Free-text Idea Entry */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative">
-                {usage?.design && (
-                  <div className="absolute top-6 right-6 text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
-                    {(typeof usage.design.limit === 'number' ? usage.design.limit : 0) - usage.design.remaining}/{usage.design.limit}
-                    <Info className="w-3 h-3 text-slate-600 cursor-help" title={`Your monthly slots reset every ${usage.design.nextReset || '30 days'}. Unused slots do not roll over.`} />
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
+                <div className="absolute top-6 right-6 flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
+                    <span className="text-[10px] font-black text-white">{(typeof usage?.design?.limit === 'number' ? usage.design.limit : 0) - (usage?.design?.remaining ?? 0)}/{usage?.design?.limit ?? 50}</span>
+                    <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest ml-1">Used</span>
                   </div>
-                )}
+                  <div className="relative">
+                    <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                    <div className="absolute bottom-full right-0 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                      <p className="font-black text-white uppercase tracking-widest mb-1">Monthly Design Quota</p>
+                      Your 50 monthly design slots reset every {usage?.design?.nextReset || '30 days'}. Unused slots do not roll over. Resets occur on the same day of the month as your initial subscription.
+                    </div>
+                  </div>
+                </div>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
                     <PenSquare className="w-5 h-5 text-amber-400" />
@@ -512,14 +463,21 @@ export default function StudioPage() {
               </div>
 
               {/* Neural Twin Section - Single Box with Active Badge */}
-              <div className="relative bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6">
+              <div className="relative bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6 group">
                 <div className="absolute top-6 right-6 flex items-center gap-3">
-                  {usage?.neural && (
-                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
-                      {(typeof usage.neural.limit === 'number' ? usage.neural.limit : 0) - usage.neural.remaining}/{usage.neural.limit}
-                      <Info className="w-3 h-3 text-slate-600 cursor-help" title={`Your weekly slots reset every ${usage.neural.nextReset || '7 days'}. Unused slots do not roll over.`} />
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
+                      <span className="text-[10px] font-black text-white">{(typeof usage?.neural?.limit === 'number' ? usage.neural.limit : 0) - (usage?.neural?.remaining ?? 0)}/{usage?.neural?.limit ?? 14}</span>
+                      <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest ml-1">Used</span>
                     </div>
-                  )}
+                    <div className="relative">
+                      <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                      <div className="absolute bottom-full right-0 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                        <p className="font-black text-white uppercase tracking-widest mb-1">Neural Twin Quota</p>
+                        Your 14 weekly Neural Twin slots reset every {usage?.neural?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
+                      </div>
+                    </div>
+                  </div>
                   {facialDnaUpload.status === 'complete' && (
                     <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
