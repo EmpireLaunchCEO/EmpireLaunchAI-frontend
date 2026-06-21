@@ -1,0 +1,19 @@
+{
+  "appId": "io.empirelaunch.app",
+  "appName": "EmpireLaunch AI",
+  "webDir": "out",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "backgroundColor": "#0a0519",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": true,
+      "spinnerColor": "#f59e0b",
+      "iosSpinnerStyle": "large"
+    }
+  }
+}
