@@ -103,8 +103,18 @@ function SettingsContent() {
     { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
     { id: 'theme-style', name: 'Theme & Style', icon: Palette },
-    { id: 'subscription', name: 'Subscription', icon: Zap }
+    { id: 'subscription', name: 'Subscription', icon: Zap },
+    { id: 'security', name: 'Security', icon: ShieldCheck }
   ];
+
+  const handleLogout = () => {
+    if (confirm("Disconnect neural session? You will need to log back in to access your Command Center.")) {
+      localStorage.clear();
+      setIsAdmin(false);
+      setIsPaid(false);
+      window.location.href = '/';
+    }
+  };
 
   const colorSchemes = [
     { id: 'blue', name: 'Electric Empire', primary: '#7c3aed', secondary: '#3b82f6', description: 'Deep Violet-to-Electric Blue shimmer.' },
@@ -342,6 +352,45 @@ function SettingsContent() {
                     userEmpires={userEmpires}
                     onCancelSubscription={handleCancelSubscription}
                   />
+                </div>
+              )}
+
+              {activeTab === 'security' && (
+                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                        <ShieldCheck className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-black text-foreground tracking-tight uppercase italic">Security Matrix</h3>
+                        <p className="text-sm font-medium text-muted-foreground">Manage your neural session and encryption protocols.</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-6">
+                       <div className="p-6 bg-theme-background border border-theme rounded-[32px] space-y-4">
+                          <h4 className="font-black text-white uppercase italic tracking-wider">Active Session</h4>
+                          <p className="text-xs text-muted-foreground font-medium leading-relaxed">
+                            Your current session is encrypted and isolated. Terminating the session will clear all local neural tokens and require a fresh handshake to return.
+                          </p>
+                          <button
+                            onClick={handleLogout}
+                            className="w-full py-5 bg-red-500/10 text-red-500 border-2 border-red-500/20 hover:bg-red-500 hover:text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl"
+                          >
+                            Disconnect Neural Session (Log Out)
+                          </button>
+                       </div>
+
+                       <div className="p-6 bg-theme-background border border-theme rounded-[32px] space-y-4 opacity-50">
+                          <h4 className="font-black text-white uppercase italic tracking-wider">Two-Factor Authentication</h4>
+                          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Expansion Required</p>
+                          <p className="text-xs text-muted-foreground font-medium leading-relaxed">
+                            Biometric (FaceID) and 2FA protocols are managed via the Native Empire App.
+                          </p>
+                       </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </main>

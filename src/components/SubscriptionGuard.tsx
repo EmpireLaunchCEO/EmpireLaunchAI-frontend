@@ -29,7 +29,8 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
   }, [mounted, isInitialized, !isPaid, !isHandoverComplete, router]);
   */
 
-  // PWA Standalone Auto-Unlock
+  // PWA Standalone Auto-Unlock - DISABLED for security
+  /*
   useEffect(() => {
     if (mounted) {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
@@ -41,6 +42,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
       }
     }
   }, [isPaid, setIsPaid, mounted]);
+  */
 
   const handleSimulatePayment = () => {
     setIsProcessing(true);

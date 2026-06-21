@@ -75,6 +75,23 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
         </div>
       </div>
 
+      <AnimatePresence>
+        {aiInsight && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex gap-3 items-start mt-6"
+          >
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <MessageSquareQuote className="w-4 h-4 text-primary" />
+            </div>
+            <p className="text-[11px] font-medium text-slate-300 italic leading-relaxed">
+              {aiInsight}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

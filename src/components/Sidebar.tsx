@@ -29,8 +29,17 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { activeEmpire, isAdmin } = useEmpire();
+  const { activeEmpire, isAdmin, setIsAdmin, setIsPaid } = useEmpire();
   const displayNiche = (isAdmin && (!activeEmpire?.niche || activeEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (activeEmpire?.niche || "your niche");
+
+  const handleLogout = () => {
+    if (confirm("Disconnect neural session? You will need to log back in to access your Command Center.")) {
+      localStorage.clear();
+      setIsAdmin(false);
+      setIsPaid(false);
+      window.location.href = '/';
+    }
+  };
 
   return (
     <>
@@ -76,8 +85,8 @@ export function Sidebar() {
         </nav>
 
         <div className="p-6 border-t border-theme bg-theme-surface">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-slate-900 border border-theme flex items-center justify-center shadow-lg overflow-hidden group hover:border-white/50 transition-colors">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="w-10 h-10 rounded-2xl bg-slate-900 border border-theme flex items-center justify-center shadow-lg overflow-hidden group hover:border-white/50 transition-colors shrink-0">
                <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-black text-[10px] group-hover:bg-primary group-hover:text-white transition-all">
                  {String(activeEmpire?.name || 'E').substring(0, 1).toUpperCase()}
                </div>
@@ -89,6 +98,13 @@ export function Sidebar() {
               </span>
             </div>
           </div>
+          <button 
+            onClick={handleLogout}
+            className="p-2.5 rounded-xl hover:bg-red-500/10 text-slate-500 hover:text-red-500 transition-all shrink-0"
+            title="Log Out"
+          >
+            <ShieldCheck className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </>

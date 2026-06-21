@@ -35,7 +35,7 @@ function LandingPageContent() {
     setIsMounted(true);
   }, []);
 
-  // AUTO-REDIRECT: If already onboarded, go to dashboard
+  // AUTO-REDIRECT: Re-enabled for persistence on known devices
   useEffect(() => {
     // Only redirect if NOT in a forced preview state
     const isForcedPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
@@ -43,6 +43,7 @@ function LandingPageContent() {
     
     if (isMounted && isInitialized && isOnboarded && isPaid && !isForcedPreview && !isAlreadyOnDashboard) {
       // Use replace to avoid polluting history with multiple landing page entries
+      console.log('[Auth] Persistent session detected. Fast-tracking to Command Center.');
       router.replace('/dashboard');
     }
   }, [isInitialized, isOnboarded, isPaid, isMounted, router]);

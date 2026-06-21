@@ -98,12 +98,12 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   // Scoped Data Maps
   const [platformsByEmpire, setPlatformsByEmpire] = useState<Record<string, string[]>>({});
   const [notesByEmpire, setNotesByEmpire] = useState<Record<string, string>>({});
-  const [onboardedByEmpire, setOnboardedByEmpire] = useState<Record<string, boolean>>({ '1': true });
-  const [linkingCompleteByEmpire, setLinkingCompleteByEmpire] = useState<Record<string, boolean>>({ '1': true });
+  const [onboardedByEmpire, setOnboardedByEmpire] = useState<Record<string, boolean>>({});
+  const [linkingCompleteByEmpire, setLinkingCompleteByEmpire] = useState<Record<string, boolean>>({});
 
   // Shared States
-  const [isAdmin, setIsAdmin] = useState(true);
-  const [isPaid, setIsPaidState] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isPaid, setIsPaidState] = useState(false);
   const [slotStatus, setSlotStatus] = useState<Record<number, boolean>>({ 0: true, 1: true, 2: true });
   const [aiMode, setAiModeState] = useState<'co-pilot' | 'empire'>('co-pilot');
   const [platformPermissions, setPlatformPermissions] = useState<Record<string, 'read-only' | 'co-pilot' | 'empire'>>({});
@@ -502,6 +502,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
         const localIsPaid = localStorage.getItem('isPaid');
         if (localIsPaid === 'true') setIsPaidState(true);
+
+        const localOnboarded = localStorage.getItem('onboardedByEmpire');
+        if (localOnboarded) setOnboardedByEmpire(JSON.parse(localOnboarded));
 
         const localProtocol = localStorage.getItem('isProtocolAccepted');
         if (localProtocol === 'true') setIsProtocolAccepted(true);

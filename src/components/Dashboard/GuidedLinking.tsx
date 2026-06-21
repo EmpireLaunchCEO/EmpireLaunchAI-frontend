@@ -117,6 +117,31 @@ function PlatformIcon({ id, icon: Icon, className, size = 20 }: { id: string, ic
   return <Icon className={cn(className)} style={{ width: size, height: size }} />;
 }
 
+function PermissionToggle({ permission, onToggle }: { permission: string, onToggle: (next: 'co-pilot' | 'empire') => void }) {
+  const isEmpire = permission === 'empire';
+  return (
+    <div 
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle(isEmpire ? 'co-pilot' : 'empire');
+      }}
+      className={cn(
+        "relative w-9 h-5 rounded-full cursor-pointer transition-all duration-300 p-1 flex items-center shadow-inner",
+        isEmpire ? "bg-amber-500/20 border border-amber-500/40" : "bg-emerald-500/20 border border-emerald-500/40"
+      )}
+    >
+      <motion.div 
+        animate={{ x: isEmpire ? 16 : 0 }}
+        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+        className={cn(
+          "w-3 h-3 rounded-full shadow-lg border border-white/20",
+          isEmpire ? "bg-amber-500" : "bg-emerald-500"
+        )}
+      />
+    </div>
+  );
+}
+
 export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, hideEstablished }: GuidedLinkingProps) {
   const {
     connectedPlatforms,
@@ -132,7 +157,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
   } = useEmpire();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [linkingStep, setLinkingStep] = useState<'tier' | 'auth' | 'keys'>('tier');
+  const [linkingStep, setLinkingStep] = useState<'auth' | 'keys'>('auth');
   const [selectedTier, setSelectedTier] = useState<'co-pilot' | 'empire'>('co-pilot');
   const [onboardingSessionId, setOnboardingSessionId] = useState<string | null>(null);
   const [onboardingStatus, setOnboardingStatus] = useState<any>(null);
@@ -149,7 +174,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
             connectPlatform(status.session.platform);
             updatePlatformPermission(status.session.platform, selectedTier);
             finishSetup();
-            setLinkingStep('tier');
+            setLinkingStep('auth');
             setOnboardingSessionId(null);
           } else if (status.session.status === 'failed') {
             clearInterval(interval);
@@ -174,7 +199,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
   const handleSelectPlatform = (platformId: string) => {
     if (!isProtocolAccepted) return;
     startSetup(platformId);
-    setLinkingStep('tier');
+    setLinkingStep('auth');
     setSearchQuery('');
   };
 
@@ -266,7 +291,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       connectPlatform(activeSetupPlatform);
       updatePlatformPermission(activeSetupPlatform, selectedTier);
       finishSetup();
-      setLinkingStep('tier');
     }
   };
 
@@ -305,13 +329,19 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                   </div>
                   <div className="flex flex-col flex-1 min-w-0">
                     <span className="font-bold text-foreground text-xs group-hover:text-white transition-colors truncate">{platform.name}</span>
-                    <span className={cn(
-                      "text-[7px] font-black uppercase tracking-widest transition-colors",
-                      platformPermissions[id] === 'empire' ? "text-amber-500" : "text-primary",
-                      "group-hover:text-white"
-                    )}>
-                      {platformPermissions[id] === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
-                    </span>
+                    <div className="flex items-center gap-2 mt-0.5">
+                       <PermissionToggle 
+                         permission={platformPermissions[id] || 'co-pilot'} 
+                         onToggle={(next) => updatePlatformPermission(id, next)} 
+                       />
+                       <span className={cn(
+                         "text-[7px] font-black uppercase tracking-widest transition-colors",
+                         platformPermissions[id] === 'empire' ? "text-amber-500" : "text-emerald-500",
+                         "group-hover:text-white"
+                       )}>
+                         {platformPermissions[id] === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
+                       </span>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-green-500 group-hover:text-white shrink-0" />
@@ -496,85 +526,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
             </div>
 
             <div className="mt-8">
-              {linkingStep === 'tier' ? (
-                <div className="space-y-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Co-Pilot Card */}
-                    <div
-                      onClick={() => setSelectedTier('co-pilot')}
-                      className={cn(
-                        "p-5 rounded-3xl border-2 transition-all cursor-pointer relative group h-full flex flex-col",
-                        selectedTier === 'co-pilot' ? "border-primary bg-primary/5 shadow-2xl" : "border-theme bg-theme-background hover:border-white/50"
-                      )}
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center text-primary border border-theme">
-                            <Cpu className="w-5 h-5" />
-                        </div>
-                        {selectedTier === 'co-pilot' && <CheckCircle2 className="w-6 h-6 text-primary" />}
-                      </div>
-                      <h3 className="text-lg font-black text-foreground mb-1">Co-Pilot</h3>
-                      <p className="text-[10px] font-bold text-primary/70 uppercase tracking-widest mb-4">Partial Access</p>
-                      <ul className="space-y-2 flex-1">
-                        {PLATFORM_CAPABILITIES[currentPlatform.id]?.capabilities?.find(c => c.tier === 'co-pilot')?.description?.split('. ')?.map((cap, i) => (
-                          cap && (
-                            <li key={i} className="flex items-start gap-2 text-muted-foreground text-[11px] font-medium">
-                              <div className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
-                              {cap}
-                            </li>
-                          )
-                        ))}
-                      </ul>
-                    </div>
-
-                    {/* Auto-Pilot Card */}
-                    <div
-                      onClick={() => setSelectedTier('empire')}
-                      className={cn(
-                        "p-5 rounded-3xl border-2 transition-all cursor-pointer relative group h-full flex flex-col overflow-hidden",
-                        selectedTier === 'empire' ? "border-amber-500 bg-amber-500/5 shadow-2xl" : "border-theme bg-theme-background hover:border-amber-500/50"
-                      )}
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-foreground shadow-lg shadow-amber-500/20">
-                            <Stars className="w-5 h-5" />
-                        </div>
-                        {selectedTier === 'empire' && <CheckCircle2 className="w-6 h-6 text-amber-500" />}
-                      </div>
-                      <h3 className="text-lg font-black text-foreground mb-1">Auto-Pilot</h3>
-                      <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">Full Empire Access</p>
-                      <ul className="space-y-2 flex-1">
-                        {PLATFORM_CAPABILITIES[currentPlatform.id]?.capabilities?.find(c => c.tier === 'empire')?.description?.split('. ')?.map((cap, i) => (
-                          cap && (
-                            <li key={i} className="flex items-start gap-2 text-muted-foreground text-[11px] font-medium">
-                              <div className="w-1 h-1 rounded-full bg-amber-500 mt-1.5 shrink-0" />
-                              {cap}
-                            </li>
-                          )
-                        ))}
-                      </ul>
-
-                      <div className="mt-6 p-3 bg-slate-950/50 rounded-xl border border-white/10 flex items-center gap-3">
-                        <ShieldCheck className="w-6 h-6 text-amber-500 shrink-0" />
-                        <div>
-                            <p className="text-[8px] font-black text-white uppercase tracking-widest">Secure Vault Protocol</p>
-                            <p className="text-[8px] text-slate-400 font-medium leading-tight">Tokens are encrypted & isolated in the Ownership Vault.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-center">
-                    <button
-                      onClick={() => setLinkingStep('auth')}
-                      className="px-10 py-4 bg-primary text-foreground rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:opacity-90 transition-all shadow-xl shadow-primary/20 flex items-center gap-2 group"
-                    >
-                      Confirm Tier & Begin Connection <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Auth Step */}
                   <div className={cn(
                     "p-6 rounded-3xl border-2 transition-all relative",
@@ -718,7 +670,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                     )}
                   </div>
                 </div>
-              )}
             </div>
 
             <div className="absolute -right-32 -bottom-32 w-96 h-96 bg-theme-background rounded-full -z-10" />

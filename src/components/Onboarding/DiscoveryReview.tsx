@@ -66,14 +66,14 @@ export function DiscoveryReview({ onComplete }: DiscoveryReviewProps) {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center gap-4 bg-primary/5 p-6 rounded-[32px] border border-primary/20">
-        <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-slate-950 shadow-lg shadow-amber-900/20">
-          <Bot className="w-6 h-6" />
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 bg-primary/5 p-4 rounded-[24px] border border-primary/20">
+        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-slate-950 shadow-lg shadow-amber-900/20">
+          <Bot className="w-5 h-5" />
         </div>
         <div>
-          <h3 className="text-xl font-black text-foreground leading-tight uppercase italic">Neural Scan Findings.</h3>
-          <p className="text-sm text-muted-foreground font-medium italic">"I've identified potential assets in your ecosystem. Authorize the ones I should integrate into your empire."</p>
+          <h3 className="text-base font-black text-foreground leading-tight uppercase italic">Neural Scan Findings.</h3>
+          <p className="text-[11px] text-muted-foreground font-medium italic">"I've identified potential assets in your ecosystem. Authorize the ones I should integrate."</p>
         </div>
       </div>
 

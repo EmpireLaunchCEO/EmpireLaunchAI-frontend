@@ -117,18 +117,18 @@ export function ConsultantToolkit({ businessAngle, onToolkitComplete }: Consulta
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="p-6 md:p-8 rounded-[32px] border-2 border-theme bg-theme-surface shadow-xl"
+            className="p-5 md:p-6 rounded-[24px] border-2 border-theme bg-theme-surface shadow-xl"
           >
-            <div className="flex justify-between items-start mb-6">
-              <div className={cn("p-4 rounded-2xl", engine.bg)}>
-                <engine.icon className={cn("w-8 h-8", engine.color)} />
+            <div className="flex justify-between items-start mb-4">
+              <div className={cn("p-3 rounded-xl", engine.bg)}>
+                <engine.icon className={cn("w-6 h-6", engine.color)} />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <h3 className="text-2xl font-bold text-white italic">{engine.name}</h3>
-              <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">{engine.tech}</p>
-              <p className="text-sm text-slate-400 font-medium leading-relaxed">{engine.purpose}</p>
+            <div className="space-y-1.5">
+              <h3 className="text-xl font-bold text-white italic">{engine.name}</h3>
+              <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">{engine.tech}</p>
+              <p className="text-xs text-slate-400 font-medium leading-relaxed">{engine.purpose}</p>
             </div>
           </motion.div>
         ))}
