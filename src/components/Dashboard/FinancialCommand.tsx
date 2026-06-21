@@ -92,6 +92,8 @@ export function FinancialCommand({
     });
   }
 
+  const shareCents = Math.floor(withholdableEarnings * 0.04);
+
   return (
     <div className="bg-theme-surface rounded-[32px] p-6 md:p-8 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme max-w-4xl mx-auto">
       {/* 1. Header + Efficiency Row */}
@@ -175,23 +177,39 @@ export function FinancialCommand({
                 <TrendingUp className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-black uppercase tracking-widest">Success-Share Audit</p>
-                <p className="text-[10px] text-muted-foreground font-bold italic">Neural Tracking Active</p>
+                <p className="text-xs font-black uppercase tracking-widest">Success-Share (4%)</p>
+                <p className="text-[10px] text-muted-foreground font-bold italic">Neural Protocol Due</p>
               </div>
             </div>
-            <button
-              onClick={handleDownloadAudit}
-              disabled={isDownloading}
-              className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 rounded-xl border border-emerald-500/30 transition-all group flex items-center gap-2"
-            >
-              {isDownloading ? (
-                <Activity className="w-4 h-4 animate-spin" />
-              ) : (
-                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              )}
-              <span className="text-[10px] font-black uppercase">Download Audit</span>
-            </button>
+            <div className="text-right">
+              <p className="text-xl font-black italic text-emerald-500">{formatCurrency(shareCents)}</p>
+            </div>
           </div>
+        </div>
+
+        {/* Audit Button Row */}
+        <div className="p-6 bg-theme-background border border-theme rounded-[24px] flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-2xl bg-slate-500/10 flex items-center justify-center text-slate-400 border border-slate-500/20">
+              <Activity className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-widest">Success-Share Audit</p>
+              <p className="text-[10px] text-muted-foreground font-bold italic">Generated Verification</p>
+            </div>
+          </div>
+          <button
+            onClick={handleDownloadAudit}
+            disabled={isDownloading}
+            className="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 rounded-xl border border-emerald-500/30 transition-all group flex items-center gap-2"
+          >
+            {isDownloading ? (
+              <Activity className="w-4 h-4 animate-spin" />
+            ) : (
+              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            )}
+            <span className="text-[10px] font-black uppercase">Download Audit</span>
+          </button>
         </div>
 
         {/* Marketplace Dues Row (if any) */}
@@ -215,17 +233,6 @@ export function FinancialCommand({
             ))}
           </div>
         )}
-
-        {/* 4. Action Row */}
-        <div className="flex items-center justify-between pt-4">
-          <p className="text-[10px] text-muted-foreground font-medium italic">Full financial sovereignty protocols active.</p>
-          <button
-            onClick={() => window.location.href = '/settings?tab=financials'}
-            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-white transition-colors"
-          >
-            Manage Treasury <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
       </div>
 
       <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] rounded-full -mr-32 -mt-32" />

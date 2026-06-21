@@ -173,7 +173,7 @@ export default function Dashboard() {
                     </motion.div>
 
                     {/* Active Subscribers - Owner Only - Restored below Finances */}
-                    {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com') && (
+                    {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com' || activeEmpireId === '1') && (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
