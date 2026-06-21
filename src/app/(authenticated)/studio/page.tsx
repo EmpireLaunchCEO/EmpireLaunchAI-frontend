@@ -25,7 +25,7 @@ import { AIRenderLog, generateMockRenderLogs, RenderLogEntry } from '@/component
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 
-import { BarChart3, PenSquare, Lightbulb, SendHorizonal, Scissors, MonitorPlay, Clapperboard } from 'lucide-react';
+import { BarChart3, PenSquare, Lightbulb, SendHorizonal, Scissors, MonitorPlay, Clapperboard, Info } from 'lucide-react';
 
 export default function StudioPage() {
   const [isDemoMode, setIsDemoMode] = useState(false);
@@ -119,6 +119,39 @@ export default function StudioPage() {
     setRawVideoUpload({ file: null, preview: null, status: 'idle', progress: 0 });
   };
 
+  // Usage state
+  const [usage, setUsage] = useState<{
+    neural: { remaining: number; limit: number | string; nextReset?: string };
+    customize: { remaining: number; limit: number | string; nextReset?: string };
+    design: { remaining: number; limit: number | string; nextReset?: string };
+  } | null>(null);
+
+  const fetchUsage = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/cinema/usage`);
+      if (response.ok) {
+        const data = await response.json();
+        // Format dates for display
+        const formatReset = (dateStr?: string) => {
+          if (!dateStr) return undefined;
+          const date = new Date(dateStr);
+          return date.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+        };
+        setUsage({
+          neural: { ...data.neural, nextReset: formatReset(data.neural.nextReset) },
+          customize: { ...data.customize, nextReset: formatReset(data.customize.nextReset) },
+          design: { ...data.design, nextReset: formatReset(data.design.nextReset) }
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch usage:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsage();
+  }, []);
+
   // Synthesize Twin
   const handleSynthesizeTwin = async () => {
     if (facialDnaUpload.status !== 'complete') return;
@@ -141,6 +174,7 @@ export default function StudioPage() {
       if (!response.ok) throw new Error('Synthesis failed');
       const data = await response.json();
       console.log('Twin created:', data);
+      fetchUsage();
     } catch (error) {
       console.error('Twin synthesis error:', error);
     }
@@ -199,6 +233,7 @@ export default function StudioPage() {
     setIsSubmittingIdea(false);
     setIdeaSubmitted(true);
     setCustomIdea('');
+    fetchUsage();
     setTimeout(() => setIdeaSubmitted(false), 5000);
   };
 
@@ -227,7 +262,13 @@ export default function StudioPage() {
               className="space-y-8"
             >
               {/* 1. Customize Video Box */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative">
+                {usage?.customize && (
+                  <div className="absolute top-6 right-6 text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+                    {(typeof usage.customize.limit === 'number' ? usage.customize.limit : 0) - usage.customize.remaining}/{usage.customize.limit}
+                    <Info className="w-3 h-3 text-slate-600 cursor-help" title={`Your weekly slots reset every ${usage.customize.nextReset || '7 days'}. Unused slots do not roll over.`} />
+                  </div>
+                )}
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-slate-500/10 flex items-center justify-center">
                     <MonitorPlay className="w-5 h-5 text-slate-400" />
@@ -342,7 +383,13 @@ export default function StudioPage() {
               </div>
 
               {/* Custom Design Input — Free-text Idea Entry */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative">
+                {usage?.design && (
+                  <div className="absolute top-6 right-6 text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+                    {(typeof usage.design.limit === 'number' ? usage.design.limit : 0) - usage.design.remaining}/{usage.design.limit}
+                    <Info className="w-3 h-3 text-slate-600 cursor-help" title={`Your monthly slots reset every ${usage.design.nextReset || '30 days'}. Unused slots do not roll over.`} />
+                  </div>
+                )}
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
                     <PenSquare className="w-5 h-5 text-amber-400" />
@@ -399,12 +446,20 @@ export default function StudioPage() {
 
               {/* Neural Twin Section - Single Box with Active Badge */}
               <div className="relative bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6">
-                {facialDnaUpload.status === 'complete' && (
-                  <div className="absolute top-6 right-6 flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest text-shadow-glow">active</span>
-                  </div>
-                )}
+                <div className="absolute top-6 right-6 flex items-center gap-3">
+                  {usage?.neural && (
+                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+                      {(typeof usage.neural.limit === 'number' ? usage.neural.limit : 0) - usage.neural.remaining}/{usage.neural.limit}
+                      <Info className="w-3 h-3 text-slate-600 cursor-help" title={`Your weekly slots reset every ${usage.neural.nextReset || '7 days'}. Unused slots do not roll over.`} />
+                    </div>
+                  )}
+                  {facialDnaUpload.status === 'complete' && (
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest text-shadow-glow">active</span>
+                    </div>
+                  )}
+                </div>
 
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">

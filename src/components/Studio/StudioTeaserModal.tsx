@@ -56,7 +56,7 @@ export const StudioTeaserModal: React.FC<StudioTeaserModalProps> = ({ isOpen, on
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-900">Neural Video Synth</h4>
-                    <p className="text-xs text-slate-500">Generate 3 high-conversion videos daily for TikTok, Reels, & Shorts automatically.</p>
+                    <p className="text-xs text-slate-500">Generate 14 customized & 14 Neural Twin videos weekly automatically.</p>
                   </div>
                 </div>
 
