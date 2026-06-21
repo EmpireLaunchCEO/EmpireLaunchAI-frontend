@@ -36,12 +36,35 @@ export default function SettingsPage() {
 function SettingsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { theme, setTheme, isAdmin, setIsAdmin, isProtocolAccepted, acceptProtocols, connectedPlatforms, activeEmpire: empireData, registerRefreshHandler, slotStatus } = useEmpire();
+  const { 
+    theme, 
+    setTheme, 
+    isAdmin, 
+    setIsAdmin, 
+    isProtocolAccepted, 
+    acceptProtocols, 
+    connectedPlatforms, 
+    activeEmpire: empireData, 
+    registerRefreshHandler, 
+    slotStatus,
+    userEmpires,
+    addToast
+  } = useEmpire();
   const { isLinked: isStripeLinked } = useStripeStatus();
 
   const [activeTab, setActiveTab] = useState('financials');
 
   const ownedSlots = Object.values(slotStatus || {}).filter(Boolean).length;
+
+  const handleCancelSubscription = (empireId: string) => {
+    // In a real app, this would call the backend
+    console.log(`[Subscription] Cancelling subscription for empire: ${empireId}`);
+    addToast({
+      title: "Cancellation Initiated",
+      message: "Your request is being processed. You will receive an email confirmation shortly.",
+      type: "system"
+    });
+  };
 
   useEffect(() => {
     const tab = searchParams.get('tab');
@@ -316,6 +339,8 @@ function SettingsContent() {
                     totalRevenue={0}
                     totalFees={0}
                     businessSlots={ownedSlots}
+                    userEmpires={userEmpires}
+                    onCancelSubscription={handleCancelSubscription}
                   />
                 </div>
               )}

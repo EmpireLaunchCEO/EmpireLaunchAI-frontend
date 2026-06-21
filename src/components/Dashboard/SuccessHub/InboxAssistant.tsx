@@ -78,68 +78,68 @@ export const InboxAssistant = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-theme-surface rounded-[40px] p-8 border border-theme shadow-sm space-y-6 group relative overflow-hidden"
+              className="bg-theme-surface rounded-[32px] p-6 border border-theme shadow-sm space-y-4 group relative overflow-hidden"
             >
               {/* Type Badge */}
               <div className="absolute top-0 right-0">
                  <div className={cn(
-                   "px-6 py-2 rounded-bl-[20px] text-[9px] font-black uppercase tracking-[0.2em] text-white",
+                   "px-4 py-1.5 rounded-bl-[16px] text-[8px] font-black uppercase tracking-[0.2em] text-white",
                    draft.type === 'THANK_YOU' ? "bg-emerald-500" : "bg-blue-600"
                  )}>
                    {draft.type.replace('_', ' ')}
                  </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center justify-between pt-1">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-theme-background flex items-center justify-center border border-theme">
-                     <User className="w-5 h-5 text-muted-foreground" />
+                  <div className="w-9 h-9 rounded-xl bg-theme-background flex items-center justify-center border border-theme">
+                     <User className="w-4 h-4 text-muted-foreground" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-black text-foreground leading-tight">{draft.customer}</h4>
-                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{draft.platform} Order</p>
+                    <h4 className="text-xs font-black text-foreground leading-tight">{draft.customer}</h4>
+                    <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">{draft.platform} Order</p>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                   <h5 className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">Draft Message</h5>
-                   <div className="flex items-center gap-1.5 text-[9px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                   <h5 className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Draft Message</h5>
+                   <div className="flex items-center gap-1.5 text-[8px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                       <Bot className="w-3 h-3" />
                       AI Calibrated
                    </div>
                 </div>
 
-                <div className="p-6 rounded-3xl bg-theme-background border border-theme relative group/body hover:border-white/30 transition-colors">
-                  <p className="text-sm text-foreground font-medium leading-relaxed">
+                <div className="p-4 rounded-2xl bg-theme-background border border-theme relative group/body hover:border-white/30 transition-colors">
+                  <p className="text-xs text-foreground font-medium leading-relaxed">
                     <span className="text-muted-foreground font-bold">Subject:</span> {draft.subject}
                     <br /><br />
                     {draft.body}
                   </p>
                   <button
                     onClick={() => handleCopy(`${draft.subject}\n\n${draft.body}`, draft.id)}
-                    className="absolute top-4 right-4 p-2.5 bg-theme-surface rounded-xl border border-theme shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-primary/10 hover:border-white/20"
+                    className="absolute top-4 right-4 p-2 bg-theme-surface rounded-lg border border-theme shadow-sm opacity-0 group-hover/body:opacity-100 transition-opacity hover:bg-primary/10 hover:border-white/20"
                   >
-                    {copiedId === draft.id ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-muted-foreground" />}
+                    {copiedId === draft.id ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 text-muted-foreground" />}
                   </button>
                 </div>
               </div>
 
               {/* AI Reasoning */}
-              <div className="flex items-start gap-3 p-4 rounded-2xl bg-primary/5 border border-primary/10">
-                <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                <p className="text-[10px] font-bold text-muted-foreground leading-relaxed italic">
+              <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10">
+                <Info className="w-3 h-3 text-primary shrink-0 mt-0.5" />
+                <p className="text-[9px] font-bold text-muted-foreground leading-relaxed italic">
                   <span className="text-primary font-black uppercase mr-1">AI Reasoning:</span>
                   {draft.reasoning}
                 </p>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleDecision(draft.id, 'approved')}
-                  className="flex-1 flex items-center justify-center gap-2 bg-primary text-foreground py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:shadow-lg hover:shadow-primary/20 transition-all"
+                  className="flex-1 flex items-center justify-center gap-2 bg-primary text-foreground py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:shadow-lg hover:shadow-primary/20 transition-all"
                 >
                   Approve & Send <ChevronRight className="w-4 h-4" />
                 </motion.button>
@@ -147,9 +147,9 @@ export const InboxAssistant = () => {
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleDecision(draft.id, 'rejected')}
-                  className="p-4 rounded-2xl bg-theme-background text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 border border-theme transition-all"
+                  className="p-3 rounded-xl bg-theme-background text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 border border-theme transition-all"
                 >
-                  <Trash2 className="w-5 h-5" />
+                  <Trash2 className="w-4 h-4" />
                 </motion.button>
               </div>
             </motion.div>

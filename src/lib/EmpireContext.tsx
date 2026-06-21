@@ -628,6 +628,19 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!isInitialized) return;
     
+    // Construct userEmpires list based on active slots
+    const activeSlots = Object.keys(slotStatus).filter(key => slotStatus[parseInt(key)]);
+    const empires = activeSlots.map(key => {
+      const id = (parseInt(key) + 1).toString();
+      return getOwnerBrandingForId(id);
+    });
+    
+    setUserEmpires(empires);
+  }, [slotStatus, isInitialized]);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+    
     const updateActiveEmpireData = async () => {
       // Slot hard-injection for Owner
       const storedUserId = localStorage.getItem('empire_userId');

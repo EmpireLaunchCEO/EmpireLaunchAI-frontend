@@ -55,18 +55,18 @@ export function FeedbackBox({ className }: FeedbackBoxProps) {
 
   return (
     <div className={cn(
-      "bg-theme-surface border-2 border-theme rounded-[32px] p-6 shadow-lg overflow-hidden relative group transition-all",
+      "bg-theme-surface border-2 border-theme rounded-[24px] p-5 shadow-lg overflow-hidden relative group transition-all max-w-4xl mx-auto",
       className
     )}>
       {/* Name at the Top */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-          <MessageSquare className="w-5 h-5" />
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+          <MessageSquare className="w-4 h-4" />
         </div>
         <div>
           <h3 className="text-sm font-black text-foreground uppercase tracking-tight italic">Feedback Counsel</h3>
           <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
-             Enjoying the app? Do you want to keep track of something we don't have yet? Send us feedback
+             Send us feedback or feature requests.
           </p>
         </div>
       </div>
