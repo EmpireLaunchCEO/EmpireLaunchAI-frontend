@@ -449,59 +449,59 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
-            className="bg-theme-surface border-2 border-theme rounded-[48px] p-10 md:p-16 shadow-[0_48px_96px_-24px_rgba(0,0,0,0.1)] relative overflow-hidden"
+            className="bg-theme-surface border-2 border-theme rounded-[32px] p-6 md:p-8 shadow-[0_48px_96px_-24px_rgba(0,0,0,0.1)] relative overflow-hidden"
           >
-            <div className="flex flex-col md:flex-row gap-10 md:items-center justify-between relative z-10">
-              <div className="flex items-center gap-8">
-                <div className={cn("p-8 rounded-[36px] shadow-inner relative bg-white border border-theme")}>
-                  <PlatformIcon id={currentPlatform.id} icon={currentPlatform.icon} className={currentPlatform.color} size={48} />
+            <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between relative z-10">
+              <div className="flex items-center gap-6">
+                <div className={cn("p-4 rounded-2xl shadow-inner relative bg-white border border-theme")}>
+                  <PlatformIcon id={currentPlatform.id} icon={currentPlatform.icon} className={currentPlatform.color} size={32} />
                 </div>
                 <div>
-                  <h2 className="text-4xl font-black text-foreground tracking-tighter">{currentPlatform?.name ?? 'Connecting...'}</h2>
-                  <div className="flex items-center gap-3 mt-2">
-                    <div className={cn("w-2.5 h-2.5 rounded-full", linkingStep === 'auth' ? "bg-amber-500 animate-pulse" : "bg-green-500")} />
-                    <span className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                  <h2 className="text-2xl font-black text-foreground tracking-tighter">{currentPlatform?.name ?? 'Connecting...'}</h2>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className={cn("w-2 h-2 rounded-full", linkingStep === 'auth' ? "bg-amber-500 animate-pulse" : "bg-green-500")} />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                       {linkingStep === 'auth' ? 'Establishing Connection' : 'Finalizing Setup'}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 <button
                   onClick={finishSetup}
-                  className="px-8 py-4 rounded-2xl border-2 border-theme text-muted-foreground font-black text-xs uppercase tracking-widest hover:bg-theme-background transition-all"
+                  className="px-6 py-3 rounded-xl border border-theme text-muted-foreground font-black text-[10px] uppercase tracking-widest hover:bg-theme-background transition-all"
                 >
                   Cancel
                 </button>
               </div>
             </div>
 
-            <div className="mt-16">
+            <div className="mt-8">
               {linkingStep === 'tier' ? (
-                <div className="space-y-12">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Co-Pilot Card */}
                     <div
                       onClick={() => setSelectedTier('co-pilot')}
                       className={cn(
-                        "p-8 rounded-[40px] border-4 transition-all cursor-pointer relative group h-full flex flex-col",
+                        "p-5 rounded-3xl border-2 transition-all cursor-pointer relative group h-full flex flex-col",
                         selectedTier === 'co-pilot' ? "border-primary bg-primary/5 shadow-2xl" : "border-theme bg-theme-background hover:border-white/50"
                       )}
                     >
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="w-14 h-14 rounded-2xl bg-theme-surface flex items-center justify-center text-primary border border-theme">
-                            <Cpu className="w-7 h-7" />
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-theme-surface flex items-center justify-center text-primary border border-theme">
+                            <Cpu className="w-5 h-5" />
                         </div>
-                        {selectedTier === 'co-pilot' && <CheckCircle2 className="w-8 h-8 text-primary" />}
+                        {selectedTier === 'co-pilot' && <CheckCircle2 className="w-6 h-6 text-primary" />}
                       </div>
-                      <h3 className="text-2xl font-black text-foreground mb-2">Co-Pilot</h3>
-                      <p className="text-sm font-bold text-primary/70 uppercase tracking-widest mb-6">Partial Access</p>
-                      <ul className="space-y-4 flex-1">
+                      <h3 className="text-lg font-black text-foreground mb-1">Co-Pilot</h3>
+                      <p className="text-[10px] font-bold text-primary/70 uppercase tracking-widest mb-4">Partial Access</p>
+                      <ul className="space-y-2 flex-1">
                         {PLATFORM_CAPABILITIES[currentPlatform.id]?.capabilities?.find(c => c.tier === 'co-pilot')?.description?.split('. ')?.map((cap, i) => (
                           cap && (
-                            <li key={i} className="flex items-start gap-3 text-muted-foreground text-sm font-medium">
-                              <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                            <li key={i} className="flex items-start gap-2 text-muted-foreground text-[11px] font-medium">
+                              <div className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
                               {cap}
                             </li>
                           )
@@ -513,34 +513,34 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                     <div
                       onClick={() => setSelectedTier('empire')}
                       className={cn(
-                        "p-8 rounded-[40px] border-4 transition-all cursor-pointer relative group h-full flex flex-col overflow-hidden",
+                        "p-5 rounded-3xl border-2 transition-all cursor-pointer relative group h-full flex flex-col overflow-hidden",
                         selectedTier === 'empire' ? "border-amber-500 bg-amber-500/5 shadow-2xl" : "border-theme bg-theme-background hover:border-amber-500/50"
                       )}
                     >
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="w-14 h-14 rounded-2xl bg-amber-500 flex items-center justify-center text-foreground shadow-lg shadow-amber-500/20">
-                            <Stars className="w-7 h-7" />
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-foreground shadow-lg shadow-amber-500/20">
+                            <Stars className="w-5 h-5" />
                         </div>
-                        {selectedTier === 'empire' && <CheckCircle2 className="w-8 h-8 text-amber-500" />}
+                        {selectedTier === 'empire' && <CheckCircle2 className="w-6 h-6 text-amber-500" />}
                       </div>
-                      <h3 className="text-2xl font-black text-foreground mb-2">Auto-Pilot</h3>
-                      <p className="text-sm font-bold text-amber-500 uppercase tracking-widest mb-6">Full Empire Access</p>
-                      <ul className="space-y-4 flex-1">
+                      <h3 className="text-lg font-black text-foreground mb-1">Auto-Pilot</h3>
+                      <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-4">Full Empire Access</p>
+                      <ul className="space-y-2 flex-1">
                         {PLATFORM_CAPABILITIES[currentPlatform.id]?.capabilities?.find(c => c.tier === 'empire')?.description?.split('. ')?.map((cap, i) => (
                           cap && (
-                            <li key={i} className="flex items-start gap-3 text-muted-foreground text-sm font-medium">
-                              <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
+                            <li key={i} className="flex items-start gap-2 text-muted-foreground text-[11px] font-medium">
+                              <div className="w-1 h-1 rounded-full bg-amber-500 mt-1.5 shrink-0" />
                               {cap}
                             </li>
                           )
                         ))}
                       </ul>
 
-                      <div className="mt-8 p-4 bg-slate-950/50 rounded-2xl border border-white/10 flex items-center gap-4">
-                        <ShieldCheck className="w-8 h-8 text-amber-500 shrink-0" />
+                      <div className="mt-6 p-3 bg-slate-950/50 rounded-xl border border-white/10 flex items-center gap-3">
+                        <ShieldCheck className="w-6 h-6 text-amber-500 shrink-0" />
                         <div>
-                            <p className="text-[10px] font-black text-white uppercase tracking-widest">Secure Vault Protocol</p>
-                            <p className="text-[9px] text-slate-400 font-medium leading-tight">Tokens are encrypted & isolated in the Ownership Vault.</p>
+                            <p className="text-[8px] font-black text-white uppercase tracking-widest">Secure Vault Protocol</p>
+                            <p className="text-[8px] text-slate-400 font-medium leading-tight">Tokens are encrypted & isolated in the Ownership Vault.</p>
                         </div>
                       </div>
                     </div>
@@ -549,53 +549,53 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                   <div className="flex justify-center">
                     <button
                       onClick={() => setLinkingStep('auth')}
-                      className="px-12 py-5 bg-primary text-foreground rounded-[24px] font-black text-sm uppercase tracking-[0.2em] hover:opacity-90 transition-all shadow-xl shadow-primary/20 flex items-center gap-3 group"
+                      className="px-10 py-4 bg-primary text-foreground rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:opacity-90 transition-all shadow-xl shadow-primary/20 flex items-center gap-2 group"
                     >
-                      Confirm Tier & Begin Connection <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      Confirm Tier & Begin Connection <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Auth Step */}
                   <div className={cn(
-                    "p-10 rounded-[40px] border-2 transition-all relative",
+                    "p-6 rounded-3xl border-2 transition-all relative",
                     linkingStep === 'auth' ? "border-primary bg-primary/5 ring-4 ring-primary/10" : "border-theme bg-theme-background/50 opacity-60"
                   )}>
-                    <div className="flex items-center justify-between mb-8">
-                      <div className="w-12 h-12 rounded-2xl bg-theme-background shadow-sm flex items-center justify-center text-primary">
-                        <Lock className="w-6 h-6" />
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="w-10 h-10 rounded-xl bg-theme-background shadow-sm flex items-center justify-center text-primary">
+                        <Lock className="w-5 h-5" />
                       </div>
-                      {linkingStep === 'keys' && <CheckCircle2 className="w-8 h-8 text-green-500" />}
+                      {linkingStep === 'keys' && <CheckCircle2 className="w-6 h-6 text-green-500" />}
                     </div>
-                    <h3 className="text-2xl font-bold text-foreground mb-3">
+                    <h3 className="text-lg font-bold text-foreground mb-2">
                       {currentPlatform.id === 'imap' ? 'Email Credentials' : 'Secure Authorization'}
                     </h3>
-                    <p className="text-base font-medium text-muted-foreground leading-relaxed mb-8">
+                    <p className="text-xs font-medium text-muted-foreground leading-relaxed mb-6">
                       {currentPlatform.id === 'imap'
                         ? "Enter your email and App Password to allow IMAP access."
                         : `Connect your ${currentPlatform.name} account via encrypted OAuth.`
                       }
                     </p>
                     {linkingStep === 'auth' && (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {currentPlatform.id === 'imap' && (
                           <>
                             <input
                               type="email"
                               placeholder="Email Address"
-                              className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors text-foreground"
+                              className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
                             />
                             <input
                               type="password"
                               placeholder="App Password"
-                              className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold outline-none focus:border-primary transition-colors text-foreground"
+                              className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
                             />
                           </>
                         )}
                         <button
                           onClick={handleAuth}
-                          className="w-full py-5 bg-primary text-foreground rounded-[24px] font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-primary/20"
+                          className="w-full py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-primary/20"
                         >
                           {currentPlatform.id === 'imap' ? 'Authenticate IMAP' : `Authorize ${currentPlatform.name}`}
                         </button>
@@ -605,44 +605,44 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
 
                   {/* Keys Step */}
                   <div className={cn(
-                    "p-10 rounded-[40px] border-2 transition-all",
+                    "p-6 rounded-3xl border-2 transition-all",
                     linkingStep === 'keys' ? "border-primary bg-primary/5 ring-4 ring-primary/10" : "border-theme bg-theme-background/50 opacity-40"
                   )}>
-                    <div className="flex items-center justify-between mb-8">
-                      <div className="w-12 h-12 rounded-2xl bg-theme-background shadow-sm flex items-center justify-center text-primary">
-                        <Zap className="w-6 h-6" />
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="w-10 h-10 rounded-xl bg-theme-background shadow-sm flex items-center justify-center text-primary">
+                        <Zap className="w-5 h-5" />
                       </div>
                     </div>
-                    <h3 className="text-2xl font-bold text-foreground mb-3">Neural Handshake</h3>
-                    <p className="text-base font-medium text-muted-foreground leading-relaxed mb-8">
+                    <h3 className="text-lg font-bold text-foreground mb-2">Neural Handshake</h3>
+                    <p className="text-xs font-medium text-muted-foreground leading-relaxed mb-6">
                       Verifying API endpoints and establishing autonomous bridge protocols.
                     </p>
 
                     {linkingStep === 'keys' ? (
-                      <div className="space-y-5">
+                      <div className="space-y-4">
                         {onboardingStatus ? (
-                          <div className="space-y-4">
-                            <div className="p-4 bg-primary/10 rounded-2xl border border-primary/30">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Session Status</p>
-                              <p className="text-xs font-bold text-foreground capitalize">{onboardingStatus.status.replace('_', ' ')}</p>
+                          <div className="space-y-3">
+                            <div className="p-3 bg-primary/10 rounded-xl border border-primary/30">
+                              <p className="text-[8px] font-black uppercase tracking-widest text-primary mb-0.5">Session Status</p>
+                              <p className="text-[10px] font-bold text-foreground capitalize">{onboardingStatus.status.replace('_', ' ')}</p>
                             </div>
-                            <div className="p-4 bg-theme-background border border-theme rounded-2xl">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Current Task</p>
-                              <p className="text-xs font-bold text-foreground">{onboardingStatus.currentState.replace('_', ' ')}</p>
+                            <div className="p-3 bg-theme-background border border-theme rounded-xl">
+                              <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Current Task</p>
+                              <p className="text-[10px] font-bold text-foreground">{onboardingStatus.currentState.replace('_', ' ')}</p>
                             </div>
                             
                             {onboardingStatus.status === 'hitl_required' && (
-                              <div className="p-6 bg-amber-500/10 border-2 border-amber-500/50 rounded-[32px] space-y-4">
-                                <div className="flex items-center gap-3">
-                                  <Stars className="w-5 h-5 text-amber-500 animate-pulse" />
-                                  <p className="text-xs font-black uppercase tracking-widest text-amber-500">Action Required</p>
+                              <div className="p-4 bg-amber-500/10 border-2 border-amber-500/50 rounded-2xl space-y-3">
+                                <div className="flex items-center gap-2">
+                                  <Stars className="w-4 h-4 text-amber-500 animate-pulse" />
+                                  <p className="text-[10px] font-black uppercase tracking-widest text-amber-500">Action Required</p>
                                 </div>
-                                <p className="text-[10px] font-bold text-muted-foreground leading-relaxed">
+                                <p className="text-[9px] font-bold text-muted-foreground leading-relaxed">
                                   Our Neural Node has reached the login screen. Please log in to your {currentPlatform.name} account in the window that just opened (or on your device) to allow the AI to continue.
                                 </p>
                                 <button
                                   onClick={() => window.open(currentPlatform.id === 'canva' ? 'https://www.canva.com/login' : '#', '_blank')}
-                                  className="w-full py-3 bg-amber-500 text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all"
+                                  className="w-full py-2.5 bg-amber-500 text-slate-950 rounded-lg font-black text-[9px] uppercase tracking-widest hover:opacity-90 transition-all"
                                 >
                                   Open {currentPlatform.name} Login
                                 </button>
@@ -650,20 +650,20 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                             )}
 
                             {onboardingStatus.status === 'failed' && (
-                              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-2xl">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-red-500 mb-1">Error</p>
-                                <p className="text-xs font-bold text-foreground">{onboardingStatus.error || 'Connection failed'}</p>
+                              <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
+                                <p className="text-[8px] font-black uppercase tracking-widest text-red-500 mb-0.5">Error</p>
+                                <p className="text-[10px] font-bold text-foreground">{onboardingStatus.error || 'Connection failed'}</p>
                               </div>
                             )}
 
-                            <div className="flex items-center justify-center py-4">
+                            <div className="flex items-center justify-center py-2">
                               <div className="flex gap-1">
                                 {[1, 2, 3].map(i => (
                                   <motion.div
                                     key={i}
-                                    animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }}
+                                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 1, 0.3] }}
                                     transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
-                                    className="w-1.5 h-1.5 rounded-full bg-primary"
+                                    className="w-1 h-1 rounded-full bg-primary"
                                   />
                                 ))}
                               </div>
@@ -671,19 +671,19 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                           </div>
                         ) : (
                           <>
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Protocol Identifier</label>
-                              <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold text-foreground" />
+                            <div className="space-y-1">
+                              <label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground ml-1">Protocol Identifier</label>
+                              <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold text-foreground" />
                             </div>
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Secure Token</label>
-                              <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-2xl p-4 text-sm font-bold text-foreground" />
+                            <div className="space-y-1">
+                              <label className="text-[8px] font-black uppercase tracking-widest text-muted-foreground ml-1">Secure Token</label>
+                              <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold text-foreground" />
                             </div>
                             <button
                               disabled={!!onboardingSessionId || (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(currentPlatform.id) && !onboardingSessionId)}
                               onClick={handleLink}
                               className={cn(
-                                "w-full py-5 bg-primary text-foreground rounded-[24px] font-black text-xs uppercase tracking-widest transition-all shadow-2xl",
+                                "w-full py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-2xl",
                                 (onboardingSessionId || (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(currentPlatform.id) && !onboardingSessionId)) ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
                               )}
                             >
@@ -694,7 +694,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                         )}
                       </div>
                     ) : (
-                      <div className="h-48 flex items-center justify-center text-muted-foreground/30 italic font-bold">
+                      <div className="h-32 flex items-center justify-center text-muted-foreground/30 italic font-bold text-sm">
                         Waiting for Authentication Phase...
                       </div>
                     )}
