@@ -121,7 +121,8 @@ function SettingsContent() {
     { id: 'emerald', name: 'Growth Green', primary: '#10b981', secondary: '#059669', description: 'Focused on clarity and profitability.' },
     { id: 'pink', name: 'Electric Pink', primary: '#ff0099', secondary: '#be185d', description: 'High-energy vibrant neon aesthetic.' },
     { id: 'vibrant-cyan', name: 'Cyan Teal', primary: '#00ffff', secondary: '#008080', description: 'Cybernetic and fresh digital appearance.' },
-    { id: 'electric-blue', name: 'Neon Blue', primary: '#00a2ff', secondary: '#0369a1', description: 'High-voltage neon sky blue.' }
+    { id: 'electric-blue', name: 'Neon Blue', primary: '#00a2ff', secondary: '#0369a1', description: 'High-voltage neon sky blue.' },
+    { id: 'high-contrast-light', name: 'Paper White', primary: '#000000', secondary: '#000000', description: 'White background with black outlines.' }
   ];
 
   return (
@@ -295,42 +296,42 @@ function SettingsContent() {
 
               {activeTab === 'theme-style' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                        <Palette className="w-6 h-6" />
+                  <div className="p-4 md:p-6 rounded-[24px] md:rounded-[32px] bg-theme-surface border-2 border-theme space-y-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                        <Palette className="w-5 h-5" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-black text-foreground tracking-tight">Color Scheme</h3>
-                        <p className="text-sm font-medium text-muted-foreground">Personalize your Command Center aesthetics.</p>
+                        <h3 className="text-lg font-black text-foreground tracking-tight uppercase italic">Color Scheme</h3>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest italic">Personalize your Command Center aesthetics.</p>
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                       {colorSchemes.map((scheme) => (
                         <button 
                           key={scheme.id} 
                           onClick={() => setTheme(scheme.id)} 
                           className={cn(
-                            "p-6 rounded-[32px] border-4 text-left transition-all space-y-4 group", 
-                            theme === scheme.id ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" : "border-theme bg-theme-background hover:border-white/30"
+                            "p-4 rounded-[24px] border-2 text-left transition-all space-y-3 group", 
+                            theme === scheme.id ? "border-primary bg-primary/10 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" : "border-theme bg-theme-background hover:border-white/20"
                           )}
                         >
                           <div className="flex items-center justify-between">
-                            <div className="flex items-end gap-3">
+                            <div className="flex items-end gap-2">
                               <div 
-                                className="w-10 h-10 rounded-2xl border-2 static-border shadow-lg shadow-black/40" 
+                                className="w-8 h-8 rounded-xl border-2 static-border shadow-md shadow-black/40" 
                                 style={{ backgroundColor: scheme.primary }} 
                               />
                               <div 
-                                className="w-6 h-6 rounded-lg border static-border" 
+                                className="w-4 h-4 rounded-md border static-border" 
                                 style={{ backgroundColor: scheme.secondary }} 
                               />
                             </div>
-                            {theme === scheme.id && <CheckCircle2 className="w-6 h-6 text-primary" />}
+                            {theme === scheme.id && <CheckCircle2 className="w-4 h-4 text-primary" />}
                           </div>
-                          <div>
-                            <h4 className="text-lg font-black text-foreground uppercase italic">{scheme.name}</h4>
-                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-tight italic">{scheme.description}</p>
+                          <div className="space-y-1">
+                            <h4 className="text-[10px] font-black text-foreground uppercase italic leading-tight">{scheme.name}</h4>
+                            <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-tighter italic leading-tight">{scheme.description}</p>
                           </div>
                         </button>
                       ))}

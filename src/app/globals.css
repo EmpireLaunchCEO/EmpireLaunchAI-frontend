@@ -85,6 +85,93 @@
   --theme-gradient: linear-gradient(135deg, #00BFFF 0%, #1E90FF 100%);
 }
 
+[data-theme='high-contrast-light'] {
+  --primary-rgb: 0 0 0; /* Black */
+  --secondary-rgb: 0 0 0; /* Black */
+  --background-rgb: 255 255 255; /* White */
+  --foreground-rgb: 0 0 0; /* Black */
+  --surface-rgb: 255 255 255; /* White */
+  --surface-border-rgb: 0 0 0; /* Black */
+  --theme-gradient: linear-gradient(135deg, #000000 0%, #000000 100%);
+}
+
+/* HIGH CONTRAST LIGHT OVERRIDES */
+[data-theme='high-contrast-light'] {
+  --primary-rgb: 0 0 0;
+  --secondary-rgb: 0 0 0;
+  --background-rgb: 255 255 255;
+  --foreground-rgb: 0 0 0;
+  --surface-rgb: 255 255 255;
+  --surface-border-rgb: 0 0 0;
+  --theme-gradient: none !important;
+}
+
+/* Force ALL text to black regardless of utility class */
+[data-theme='high-contrast-light'] *:not(button):not(.bg-primary):not(.text-white) {
+  color: black !important;
+  -webkit-text-fill-color: black !important;
+  background-image: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+/* Specific handling for primary buttons and text-white elements */
+[data-theme='high-contrast-light'] .bg-primary *,
+[data-theme='high-contrast-light'] .bg-primary,
+[data-theme='high-contrast-light'] .bg-slate-900 * {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+}
+
+[data-theme='high-contrast-light'] .text-white {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+}
+
+/* Force ALL borders and outlines to black */
+[data-theme='high-contrast-light'] *,
+[data-theme='high-contrast-light'] div,
+[data-theme='high-contrast-light'] section,
+[data-theme='high-contrast-light'] aside,
+[data-theme='high-contrast-light'] main {
+  border-color: black !important;
+  outline-color: black !important;
+  box-shadow: none !important;
+}
+
+/* Force ALL backgrounds to white (except primary action buttons and sidebar) */
+[data-theme='high-contrast-light'] div:not(.bg-primary):not(.bg-slate-900),
+[data-theme='high-contrast-light'] section,
+[data-theme='high-contrast-light'] aside:not(.bg-theme-surface),
+[data-theme='high-contrast-light'] main,
+[data-theme='high-contrast-light'] nav {
+  background-color: white !important;
+  background-image: none !important;
+}
+
+/* Selected State in Paper White: Solid black background with white text */
+[data-theme='high-contrast-light'] .bg-primary\/10 {
+  background-color: black !important;
+  border: 2px solid black !important;
+}
+
+[data-theme='high-contrast-light'] .bg-primary\/10 * {
+  color: white !important;
+  -webkit-text-fill-color: white !important;
+}
+
+[data-theme='high-contrast-light'] .bg-primary\/10 svg {
+  stroke: white !important;
+}
+
+/* Remove all blurs and decorative glows */
+[data-theme='high-contrast-light'] .blur-\[100px\],
+[data-theme='high-contrast-light'] .blur-\[80px\],
+[data-theme='high-contrast-light'] .bg-primary\/5,
+[data-theme='high-contrast-light'] .bg-emerald-500\/5 {
+  display: none !important;
+}
+
 /* 
    SCROLL ARCHITECTURE v515
    Total native scroll restoration for mobile PWA.
@@ -182,7 +269,7 @@ p, span, label, div, li, td, th, a {
 }
 
 .text-muted-foreground, .text-slate-400, .text-slate-500 {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgb(var(--foreground-rgb) / 0.6);
 }
 
 /* VIBRANT OUTLINES - All UI boxes and nested elements get themed outlines */

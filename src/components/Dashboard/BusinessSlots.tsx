@@ -138,13 +138,8 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
   const [isStudioOpen, setIsStudioOpen] = useState(false);
   const { slotStatus, isAdmin, unlockSlot } = useEmpire();
 
-  const handleSlotClick = () => {
-    // Navigate to Empire Center for operations
-    window.location.href = '/empire-center';
-  };
-
-  const slot1Name = (isAdmin && (!currentEmpire?.name || currentEmpire?.name === 'EMPIRELAUNCH' || currentEmpire?.name === 'The First Empire' || currentEmpire?.name === 'HOME BASE')) ? "EmpireLaunch AI" : (currentEmpire?.name || "The First Empire");
-  const slot1Niche = (isAdmin && (!currentEmpire?.niche || currentEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (currentEmpire?.niche || currentEmpire?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || "Niche Pending");
+  const slot1Name = (isAdmin || currentEmpire?.name === 'HOME BASE' || !currentEmpire?.name) ? "EmpireLaunch AI" : currentEmpire.name;
+  const slot1Niche = (isAdmin || !currentEmpire?.niche || currentEmpire?.niche === 'Niche Pending') ? "AI Business Automation" : (currentEmpire?.niche || currentEmpire?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || "Niche Pending");
 
   return (
     <div className="space-y-6">

@@ -93,20 +93,20 @@ export function FinancialCommand({
   }
 
   return (
-    <div className="bg-theme-surface rounded-[24px] p-5 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme max-w-4xl mx-auto">
+    <div className="bg-theme-surface rounded-[24px] p-4 md:p-6 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme max-w-4xl mx-auto">
       {/* Name at the Top */}
       <div className="flex items-center gap-3 mb-4">
         <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
           <CreditCard className="w-4 h-4" />
         </div>
-        <h3 className="text-sm font-black uppercase tracking-[0.2em] text-primary italic">Empire Finances</h3>
+        <h3 className="text-sm font-black uppercase tracking-[0.2em] text-primary italic leading-tight">Empire Finances</h3>
       </div>
 
-      <div className="relative z-10 space-y-6">
+      <div className="relative z-10 space-y-4">
         
         {/* Top Header: Bucket Visuals */}
-        <div className="flex flex-col md:flex-row gap-6 items-center border-b border-theme/30 pb-6">
-          <div className="relative w-24 h-24 shrink-0">
+        <div className="flex flex-col md:flex-row gap-4 items-center border-b border-theme/30 pb-4">
+          <div className="relative w-16 h-16 shrink-0">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-slate-100/10" strokeWidth="12" />
               <motion.circle
@@ -119,12 +119,12 @@ export function FinancialCommand({
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-[7px] font-black uppercase tracking-widest text-muted-foreground">Efficiency</span>
-              <span className="text-lg font-black">{growthScore}%</span>
+              <span className="text-[6px] font-black uppercase tracking-widest text-muted-foreground">Efficiency</span>
+              <span className="text-xs font-black">{growthScore}%</span>
             </div>
           </div>
 
-          <div className="flex-1 space-y-2">
+          <div className="flex-1 space-y-1">
             <p className="text-slate-400 text-[10px] font-medium italic">Monitoring capital velocity and upcoming obligations.</p>
             <div className="flex gap-4 pt-1">
               <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
