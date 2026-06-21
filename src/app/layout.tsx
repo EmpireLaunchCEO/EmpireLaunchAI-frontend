@@ -28,9 +28,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <style>{`
-          html, body { background-color: #0a0519 !important; }
-        `}</style>
         <link rel="manifest" href="/manifest.json?v=1024" />
         <link rel="apple-touch-icon" href="/apple-touch-icon-v1024.png" />
         <link rel="icon" href="/favicon.ico?v=1024" />
@@ -41,7 +38,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="EmpireLaunch AI" />
-        <meta name="theme-color" content="#0a0519" />
+        <meta id="theme-color-meta" name="theme-color" content="#0a0519" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
