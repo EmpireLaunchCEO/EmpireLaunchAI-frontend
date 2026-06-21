@@ -375,6 +375,7 @@ function SettingsContent() {
                     businessSlots={ownedSlots}
                     userEmpires={userEmpires}
                     onCancelSubscription={handleCancelSubscription}
+                    showCancelButton={true}
                   />
                 </div>
               )}

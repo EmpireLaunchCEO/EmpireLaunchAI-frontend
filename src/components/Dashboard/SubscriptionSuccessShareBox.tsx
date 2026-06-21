@@ -33,6 +33,8 @@ interface SubscriptionSuccessShareBoxProps {
   userEmpires?: any[];
   /** Callback for cancellation */
   onCancelSubscription?: (empireId: string) => void;
+  /** Whether to show the cancel button (defaults to true) */
+  showCancelButton?: boolean;
   className?: string;
 }
 
@@ -44,6 +46,7 @@ export function SubscriptionSuccessShareBox({
   businessSlots = 1,
   userEmpires = [],
   onCancelSubscription,
+  showCancelButton = true,
   className,
 }: SubscriptionSuccessShareBoxProps) {
   const [isDownloading, setIsDownloading] = useState(false);
@@ -236,15 +239,17 @@ export function SubscriptionSuccessShareBox({
         </div>
 
         {/* Cancel Subscription Button */}
-        <div className="pt-2">
-          <button
-            onClick={() => setShowCancelModal(true)}
-            className="w-full py-4 text-red-500/60 hover:text-red-500 font-black text-[10px] uppercase tracking-widest transition-all border-2 border-theme hover:border-red-500/30 rounded-2xl flex items-center justify-center gap-2 group"
-          >
-            <Trash2 className="w-4 h-4 group-hover:animate-pulse" />
-            Cancel Empire Subscription
-          </button>
-        </div>
+        {showCancelButton && (
+          <div className="pt-2">
+            <button
+              onClick={() => setShowCancelModal(true)}
+              className="w-full py-4 text-red-500/60 hover:text-red-500 font-black text-[10px] uppercase tracking-widest transition-all border-2 border-theme hover:border-red-500/30 rounded-2xl flex items-center justify-center gap-2 group"
+            >
+              <Trash2 className="w-4 h-4 group-hover:animate-pulse" />
+              Cancel Empire Subscription
+            </button>
+          </div>
+        )}
 
         {/* Protocol Disclosure Section — shown at the very bottom */}
         <div className="pt-6 border-t border-white/5 space-y-4">

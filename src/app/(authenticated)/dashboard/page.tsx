@@ -174,25 +174,28 @@ export default function Dashboard() {
 
                     {/* Active Subscribers - Owner Only - Restored below Finances */}
                     {(isAdmin || userEmail === 'stacipeabody@gmail.com') && (
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }} 
-                        whileInView={{ opacity: 1, scale: 1 }} 
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        className="max-w-4xl mx-auto bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 space-y-4 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(255,255,255,0.08)] transition-all"
+                        className="max-w-4xl mx-auto bg-theme-surface border-2 border-theme rounded-[24px] sm:rounded-[32px] p-4 sm:p-5 flex items-center justify-between relative overflow-hidden group hover:shadow-[0_0_30px_rgba(255,255,255,0.08)] transition-all"
                       >
                         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-[60px] -z-10" />
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                            <Stars className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
+                          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                            <Stars className="w-5 h-5 text-emerald-400" />
                           </div>
                           <div>
                             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Active Subscribers</p>
-                            <p className="text-2xl sm:text-3xl font-black text-foreground bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                              {(healthData?.subscribers || 0)}
-                            </p>
+                            <p className="text-sm font-black text-muted-foreground uppercase">Revenue Stream Active</p>
                           </div>
                         </div>
-                        <p className="text-[10px] text-muted-foreground font-medium">Recurring revenue subscribers</p>
+                        <div className="text-right">
+                          <p className="text-3xl font-black text-foreground bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                            {(healthData?.subscribers || 0)}
+                          </p>
+                          <p className="text-[8px] font-bold text-emerald-500 uppercase tracking-tighter">Growth Status: Optimal</p>
+                        </div>
                       </motion.div>
                     )}
 

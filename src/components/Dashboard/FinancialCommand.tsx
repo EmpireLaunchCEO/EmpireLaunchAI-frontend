@@ -93,134 +93,127 @@ export function FinancialCommand({
   }
 
   return (
-    <div className="bg-theme-surface rounded-[20px] p-3 md:p-4 text-foreground relative overflow-hidden shadow-xl border-2 border-theme max-w-4xl mx-auto">
-      {/* Name at the Top */}
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
-          <CreditCard className="w-3.5 h-3.5" />
+    <div className="bg-theme-surface rounded-[24px] p-4 md:p-5 text-foreground relative overflow-hidden shadow-xl border-2 border-theme max-w-4xl mx-auto">
+      {/* 1. Header + Efficiency Row */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4 pb-4 border-b border-theme/30">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
+            <CreditCard className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-sm font-black uppercase tracking-[0.2em] text-primary italic leading-none">Empire Finances</h3>
+            <p className="text-[10px] text-muted-foreground font-medium italic mt-1">Live Capital Velocity</p>
+          </div>
         </div>
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary italic leading-tight">Empire Finances</h3>
+
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 px-4 py-2 bg-theme-background border border-theme rounded-2xl">
+            <div className="relative w-8 h-8">
+              <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-slate-100/10" strokeWidth="15" />
+                <motion.circle
+                  cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-primary" strokeWidth="15"
+                  strokeDasharray="251.2"
+                  initial={{ strokeDashoffset: 251.2 }}
+                  animate={{ strokeDashoffset: 251.2 * (1 - 0.75) }}
+                  strokeLinecap="round"
+                  transition={{ duration: 1.5, ease: "easeOut" }}
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-[8px] font-black">{growthScore}%</span>
+              </div>
+            </div>
+            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Efficiency</span>
+          </div>
+
+          <div className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
+             <p className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">Available</p>
+             <p className="text-sm font-black text-foreground">{formatCurrency(withholdableEarnings)}</p>
+          </div>
+        </div>
       </div>
 
-      <div className="relative z-10 space-y-3">
-        
-        {/* Top Header: Bucket Visuals - COMPACTED */}
-        <div className="flex gap-3 items-center border-b border-theme/30 pb-3">
-          <div className="relative w-12 h-12 shrink-0">
-            <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-slate-100/10" strokeWidth="15" />
-              <motion.circle
-                cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-primary" strokeWidth="15"
-                strokeDasharray="251.2"
-                initial={{ strokeDashoffset: 251.2 }}
-                animate={{ strokeDashoffset: 251.2 * (1 - 0.75) }}
-                strokeLinecap="round"
-                transition={{ duration: 1.5, ease: "easeOut" }}
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-[10px] font-black">{growthScore}%</span>
-            </div>
-          </div>
-
-          <div className="flex-1">
-            <div className="flex gap-2">
-              <div className="px-2 py-0.5 bg-primary/10 border border-primary/20 rounded-full">
-                <span className="text-[8px] font-black text-primary uppercase">Revenue: {formatCurrency(withholdableEarnings)}</span>
-              </div>
-              <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
-                <span className="text-[8px] font-black text-emerald-500 uppercase">Efficiency: High</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Infrastructure Monitor */}
+      <div className="space-y-4">
+        {/* 2. Infrastructure Monitor - More Compact Icons */}
         {infraBalances.length > 0 && (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-primary font-black text-[9px] uppercase tracking-widest">
-              <Cpu className="w-3 h-3" />
-              System Infrastructure Balances
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {infraBalances.map((item, i) => (
-                <div key={i} className="p-3 bg-theme-background border border-theme rounded-xl space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[7px] font-black uppercase text-muted-foreground">{item.platform}</span>
-                    {item.status === 'low' && <Zap className="w-3 h-3 text-amber-500 animate-pulse" />}
-                  </div>
-                  <p className={cn(
-                    "text-base font-black tracking-tighter italic",
-                    item.status === 'low' ? "text-amber-500" : "text-foreground"
-                  )}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {infraBalances.map((item, i) => (
+              <div key={i} className="p-2 bg-theme-background/50 border border-theme/50 rounded-xl flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-[7px] font-black uppercase text-muted-foreground">{item.platform}</p>
+                  <p className={cn("text-xs font-black italic", item.status === 'low' ? "text-amber-500" : "text-foreground")}>
                     ${item.balance.toFixed(2)}
                   </p>
-                  <div className="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
-                    <div 
-                      className={cn("h-full", item.status === 'low' ? "bg-amber-500" : "bg-primary")} 
-                      style={{ width: `${Math.min(100, (item.balance / 50) * 100)}%` }} 
-                    />
-                  </div>
                 </div>
-              ))}
-            </div>
+                {item.status === 'low' ? <Zap className="w-3 h-3 text-amber-500 animate-pulse" /> : <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />}
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Breakdown Sections */}
-        <div className="flex flex-col gap-8">
-          
-          {/* Subscriptions Section - Using Dedicated Subscription Component */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-primary font-black text-[9px] uppercase tracking-widest">
-              <CreditCard className="w-3 h-3" />
-              Active Partner Subscriptions
+        {/* 3. Summary Breakdown (Replaces large component on Dashboard) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <Diamond className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-tight">Partner Subscription</p>
+                <p className="text-[8px] text-muted-foreground font-bold italic">Active - $40/mo Base</p>
+              </div>
             </div>
-            <SubscriptionSuccessShareBox
-              isProtocolAccepted={isProtocolAccepted}
-              onAcceptProtocol={onAcceptProtocol}
-              totalRevenue={withholdableEarnings}
-              totalFees={securedDues}
-              businessSlots={businessSlots}
-              userEmpires={userEmpires}
-              onCancelSubscription={onCancelSubscription}
-              className="border-2 border-primary/20 shadow-none !rounded-[24px]"
-            />
+            <div className="text-right">
+              <p className="text-xs font-black italic text-foreground">$40.00</p>
+            </div>
           </div>
 
-          {/* Dues Section */}
-          {dues.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-amber-500 font-black text-[9px] uppercase tracking-widest">
-                <ShieldCheck className="w-3 h-3" />
-                Marketplace Dues
-              </div>
-              <div className="space-y-2">
-                {dues.map((due, i) => (
-                  <div key={i} className="p-5 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-amber-500">
-                        <Bucket className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <p className="text-[11px] font-black uppercase italic leading-tight">{due.name}</p>
-                        <div className="flex items-center gap-1 text-[8px] text-muted-foreground font-bold uppercase tracking-tighter">
-                          <Calendar className="w-2 h-2" /> {due.date}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-xs font-black italic text-amber-500">{formatCurrency(due.amount)}</p>
+          {dues.length > 0 ? (
+            dues.map((due, i) => (
+              <div key={i} className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500">
+                    <Bucket className="w-4 h-4" />
                   </div>
-                ))}
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-tight">{due.name}</p>
+                    <p className="text-[8px] text-muted-foreground font-bold italic">Marketplace Dues</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs font-black italic text-amber-500">{formatCurrency(due.amount)}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="p-4 bg-theme-background border border-theme rounded-2xl flex items-center justify-between opacity-50">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center text-slate-500">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-tight">No Pending Dues</p>
+                  <p className="text-[8px] text-muted-foreground font-bold italic">Clear Standing</p>
+                </div>
               </div>
             </div>
           )}
-
         </div>
 
+        {/* 4. Action Row */}
+        <div className="flex items-center justify-between pt-2">
+          <p className="text-[9px] text-muted-foreground font-medium italic">Full breakdown available in Settings.</p>
+          <button 
+            onClick={() => window.location.href = '/settings?tab=financials'}
+            className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-primary hover:text-white transition-colors"
+          >
+            Manage Treasury <ChevronRight className="w-3 h-3" />
+          </button>
+        </div>
       </div>
       
-      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] rounded-full -mr-32 -mt-32" />
+      <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 blur-[80px] rounded-full -mr-24 -mt-24" />
     </div>
   );
 }
