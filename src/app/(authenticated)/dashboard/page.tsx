@@ -22,7 +22,7 @@ import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { SubscriptionSuccessShareBox } from '@/components/Dashboard/SubscriptionSuccessShareBox';
 
 export default function Dashboard() {
-  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler, isProtocolAccepted, acceptProtocols, userEmpires } = useEmpire();
+  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler, isProtocolAccepted, acceptProtocols, userEmpires, userEmail } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
