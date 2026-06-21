@@ -54,7 +54,7 @@ export default function TermsPage() {
         </ul>
 
         <h3 className="text-lg">2.2 Mandatory Anti-Copycat Verification Gate</h3>
-        <p>Before any generated product design, planner layout, or thumbnail is cleared for export or publication, it must undergo automated uniqueness validation via <strong>difference hashing (dHash)</strong>. A generated asset is cleared only if it registers a <strong>Hamming distance of greater than 20 (>20)</strong> against marketplace bestsellers. If you bypass this verification, <strong>you assume all legal and financial liability</strong>.</p>
+        <p>Before any generated product design, planner layout, or thumbnail is cleared for export or publication, it must undergo automated uniqueness validation via <strong>difference hashing (dHash)</strong>. A generated asset is cleared only if it registers a <strong>Hamming distance of greater than 20 (&gt;20)</strong> against marketplace bestsellers. If you bypass this verification, <strong>you assume all legal and financial liability</strong>.</p>
 
         <hr className="border-slate-800 my-8" />
 
