@@ -96,88 +96,99 @@
 }
 
 /* HIGH CONTRAST LIGHT OVERRIDES */
-/* HIGH CONTRAST LIGHT OVERRIDES */
-[data-theme='high-contrast-light'] {
-  --primary-rgb: 0 0 0;
-  --secondary-rgb: 0 0 0;
+/* 
+  THEME ARCHITECTURE - LIGHT MODE SUPPORT
+  Every color now has a -light variant.
+*/
+
+:root {
+  --background-rgb: 10 5 25;
+  --foreground-rgb: 255 255 255;
+  --surface-rgb: 12 8 30;
+  --surface-border-rgb: 124 58 237;
+  --border-thickness: 1px;
+}
+
+[data-theme$='-light'] {
   --background-rgb: 255 255 255;
   --foreground-rgb: 0 0 0;
   --surface-rgb: 255 255 255;
   --surface-border-rgb: 0 0 0;
-  --theme-gradient: none !important;
+  --border-thickness: 2.5px; /* Thicker borders for light mode */
 }
 
-/* NUCLEAR OVERRIDE: Force ALL text, icons, and strokes to black */
-[data-theme='high-contrast-light'] *:not(.bg-primary):not(.bg-primary *):not(.bg-slate-900):not(.bg-slate-900 *) {
-  color: black !important;
-  -webkit-text-fill-color: black !important;
-  fill: black !important;
-  stroke: black !important;
-  background-image: none !important;
-  text-shadow: none !important;
-  filter: none !important;
+/* Light Theme Definitions */
+[data-theme='blue-light'] { --primary-rgb: 124 58 237; --secondary-rgb: 59 130 246; }
+[data-theme='emerald-light'] { --primary-rgb: 16 185 129; --secondary-rgb: 5 150 105; }
+[data-theme='pink-light'] { --primary-rgb: 255 20 147; --secondary-rgb: 190 24 93; }
+[data-theme='vibrant-cyan-light'] { --primary-rgb: 0 255 255; --secondary-rgb: 0 128 128; }
+[data-theme='electric-blue-light'] { --primary-rgb: 0 162 255; --secondary-rgb: 3 105 161; }
+[data-theme='high-contrast-light'] { 
+  --primary-rgb: 0 0 0; 
+  --secondary-rgb: 0 0 0; 
+  --border-thickness: 3px; /* Extra thick for high contrast */
 }
 
-/* Force ALL borders and outlines to black */
-[data-theme='high-contrast-light'] *,
-[data-theme='high-contrast-light'] div,
-[data-theme='high-contrast-light'] section,
-[data-theme='high-contrast-light'] aside,
-[data-theme='high-contrast-light'] main,
-[data-theme='high-contrast-light'] button {
-  border-color: black !important;
-  outline-color: black !important;
+/* THICKER TEXT FOR LIGHT THEMES */
+[data-theme$='-light'] h1, 
+[data-theme$='-light'] h2, 
+[data-theme$='-light'] h3, 
+[data-theme$='-light'] h4,
+[data-theme$='-light'] button,
+[data-theme$='-light'] .font-black {
+  font-weight: 900 !important;
+  letter-spacing: -0.02em;
+}
+
+/* GLOBAL BORDER OVERRIDE */
+.border-theme, .border, .border-2, .border-4 {
+  border-width: var(--border-thickness) !important;
+  border-color: rgb(var(--foreground-rgb) / 0.8) !important;
+}
+
+[data-theme$='-light'] .bg-theme-surface,
+[data-theme$='-light'] .bg-theme-background,
+[data-theme$='-light'] .bg-slate-900,
+[data-theme$='-light'] .bg-slate-800 {
+  background-color: white !important;
   box-shadow: none !important;
 }
 
-/* Force ALL backgrounds to white (except primary action buttons and sidebar) */
-[data-theme='high-contrast-light'] div:not(.bg-primary):not(.bg-slate-900):not(.bg-primary *),
-[data-theme='high-contrast-light'] section,
-[data-theme='high-contrast-light'] aside:not(.bg-theme-surface),
-[data-theme='high-contrast-light'] main,
-[data-theme='high-contrast-light'] nav,
-[data-theme='high-contrast-light'] button:not(.bg-primary) {
-  background-color: white !important;
-  background-image: none !important;
+/* SIDEBAR & NAV COLOR SYNC */
+aside, .mobile-nav {
+  background-color: rgb(var(--surface-rgb)) !important;
+  border-color: rgb(var(--foreground-rgb) / 0.2) !important;
 }
 
-/* Special Case: Progress bars and Gauges in Black */
+[data-theme$='-light'] aside, 
+[data-theme$='-light'] .mobile-nav {
+  border-right: var(--border-thickness) solid black !important;
+  border-top: var(--border-thickness) solid black !important;
+}
+
+/* BUTTONS IN LIGHT MODE */
+[data-theme$='-light'] .bg-primary {
+  background-color: rgb(var(--primary-rgb)) !important;
+  color: white !important;
+  border: var(--border-thickness) solid rgb(var(--primary-rgb)) !important;
+}
+
+/* Specific override for High Contrast Light to keep it Black/White */
 [data-theme='high-contrast-light'] .bg-primary {
   background-color: black !important;
+  border-color: black !important;
+}
+
+[data-theme$='-light'] .bg-primary * {
   color: white !important;
 }
 
-[data-theme='high-contrast-light'] circle.text-primary,
-[data-theme='high-contrast-light'] .bg-primary-500,
-[data-theme='high-contrast-light'] .bg-emerald-500,
-[data-theme='high-contrast-light'] .bg-green-500 {
-  background-color: black !important;
-  stroke: black !important;
-}
-
-/* Ensure the white globe container still works but with black details */
-[data-theme='high-contrast-light'] .bg-white {
-  background-color: white !important;
-  border: 1px solid black !important;
-}
-
-/* Remove all blurs and decorative glows */
-[data-theme='high-contrast-light'] .blur-\[100px\],
-[data-theme='high-contrast-light'] .blur-\[80px\],
-[data-theme='high-contrast-light'] [class*="blur-"],
-[data-theme='high-contrast-light'] [class*="bg-primary/"],
-[data-theme='high-contrast-light'] [class*="bg-emerald-500/"] {
-  display: none !important;
-}
-
-/* Inverse the Sidebar items for clarity in High Contrast */
-[data-theme='high-contrast-light'] aside .bg-primary {
-  background-color: black !important;
-  color: white !important;
-}
-[data-theme='high-contrast-light'] aside .bg-primary * {
-  color: white !important;
-  stroke: white !important;
+/* PREVENT OVERRIDES ON THEME PREVIEW BUBBLES */
+.static-color {
+  color: inherit !important;
+  -webkit-text-fill-color: initial !important;
+  background-image: none !important;
+  border-width: 1px !important;
 }
 
 /* 

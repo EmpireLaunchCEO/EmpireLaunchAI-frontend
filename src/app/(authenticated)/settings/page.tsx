@@ -18,7 +18,6 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 import { SupportHub } from '@/components/Settings/SupportHub';
@@ -53,11 +52,11 @@ function SettingsContent() {
   const { isLinked: isStripeLinked } = useStripeStatus();
 
   const [activeTab, setActiveTab] = useState('financials');
+  const [bgMode, setBgMode] = useState<'dark' | 'light'>('dark');
 
   const ownedSlots = Object.values(slotStatus || {}).filter(Boolean).length;
 
   const handleCancelSubscription = (empireId: string) => {
-    // In a real app, this would call the backend
     console.log(`[Subscription] Cancelling subscription for empire: ${empireId}`);
     addToast({
       title: "Cancellation Initiated",
@@ -72,31 +71,27 @@ function SettingsContent() {
       setActiveTab(tab);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (theme.endsWith('-light') || theme === 'high-contrast-light') {
+      setBgMode('light');
+    } else {
+      setBgMode('dark');
+    }
+  }, [theme]);
+
+  const handleThemeChange = (schemeId: string, mode: 'dark' | 'light') => {
+    if (schemeId === 'high-contrast') {
+      setTheme('high-contrast-light');
+      return;
+    }
+    const newTheme = mode === 'light' ? `${schemeId}-light` : schemeId;
+    setTheme(newTheme);
+  };
+
   useEffect(() => {
     return registerRefreshHandler(async () => { await new Promise(r => setTimeout(r, 1000)); });
   }, [registerRefreshHandler]);
-
-  useEffect(() => {
-    const handleSwitchTab = (e: any) => {
-      const tabId = e.detail;
-      setActiveTab(tabId);
-      
-      // Update URL without a full page refresh to keep things stable
-      const newUrl = `${window.location.pathname}?tab=${tabId}`;
-      window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl);
-      
-      // Smooth scroll the tab into view
-      setTimeout(() => {
-        const tabEl = document.getElementById(`tab-${tabId}`);
-        if (tabEl) {
-          tabEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
-      }, 100);
-    };
-
-    window.addEventListener('empire:switch-tab', handleSwitchTab);
-    return () => window.removeEventListener('empire:switch-tab', handleSwitchTab);
-  }, []);
 
   const tabs = [
     { id: 'financials', name: 'Financials', icon: CreditCard },
@@ -111,7 +106,6 @@ function SettingsContent() {
     if (confirm("Disconnect neural session? You will need to log back in to access your Command Center.")) {
       localStorage.clear();
       setIsAdmin(false);
-      setIsPaid(false);
       window.location.href = '/';
     }
   };
@@ -122,7 +116,7 @@ function SettingsContent() {
     { id: 'pink', name: 'Electric Pink', primary: '#ff0099', secondary: '#be185d', description: 'High-energy vibrant neon aesthetic.' },
     { id: 'vibrant-cyan', name: 'Cyan Teal', primary: '#00ffff', secondary: '#008080', description: 'Cybernetic and fresh digital appearance.' },
     { id: 'electric-blue', name: 'Neon Blue', primary: '#00a2ff', secondary: '#0369a1', description: 'High-voltage neon sky blue.' },
-    { id: 'high-contrast-light', name: 'Paper White', primary: '#000000', secondary: '#000000', description: 'White background with black outlines.' }
+    { id: 'high-contrast', name: 'Paper White', primary: '#000000', secondary: '#000000', description: 'Pure Black & White contrast.' }
   ];
 
   return (
@@ -160,12 +154,12 @@ function SettingsContent() {
                       "flex-none lg:flex-none flex items-center justify-center lg:justify-start gap-2 px-4 lg:px-6 py-3 lg:py-4 rounded-[18px] lg:rounded-[24px] font-black text-[9px] lg:text-[10px] uppercase tracking-tighter transition-all whitespace-nowrap lg:whitespace-normal",
                       activeTab === tab.id
                         ? "bg-primary text-white shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] border-white/20"
-                        : "text-white/40 hover:text-white hover:bg-theme-surface/50"
+                        : "text-foreground/40 hover:text-foreground hover:bg-theme-surface/50"
                     )}
                   >
-                    <tab.icon className={cn("w-3.5 h-3.5 lg:w-4 h-4", activeTab === tab.id ? "text-white" : "text-white/40")} />
+                    <tab.icon className={cn("w-3.5 h-3.5 lg:w-4 h-4", activeTab === tab.id ? "text-white" : "text-foreground/40")} />
                     <span className="truncate">{tab.name}</span>
-                    {activeTab === tab.id && <ChevronRight className="hidden lg:block w-3 h-3 ml-auto text-primary" />}
+                    {activeTab === tab.id && <ChevronRight className="hidden lg:block w-3 h-3 ml-auto text-white/50" />}
                   </button>
                 ))}
               </div>
@@ -269,7 +263,7 @@ function SettingsContent() {
                       </div>
                       <div>
                         <h3 className="text-xl font-black text-foreground tracking-tight uppercase italic">Intelligence Pulse</h3>
-                        <p className="text-sm font-medium text-muted-foreground">Configure how your Empire alerts you of critical events.</p>
+                        <p className="text-sm font-medium text-muted-foreground">Configure how your Empire alerts of critical events.</p>
                       </div>
                     </div>
 
@@ -297,44 +291,73 @@ function SettingsContent() {
               {activeTab === 'theme-style' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="p-4 md:p-6 rounded-[24px] md:rounded-[32px] bg-theme-surface border-2 border-theme space-y-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                        <Palette className="w-5 h-5" />
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                          <Palette className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-black text-foreground tracking-tight uppercase italic">Color Scheme</h3>
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest italic">Personalize your aesthetics.</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-black text-foreground tracking-tight uppercase italic">Color Scheme</h3>
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest italic">Personalize your Command Center aesthetics.</p>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {colorSchemes.map((scheme) => (
+
+                      {/* BG MODE TOGGLE */}
+                      <div className="flex bg-theme-background p-1 rounded-2xl border-2 border-theme gap-1 shrink-0">
                         <button 
-                          key={scheme.id} 
-                          onClick={() => setTheme(scheme.id)} 
+                          onClick={() => setBgMode('dark')}
                           className={cn(
-                            "p-4 rounded-[24px] border-2 text-left transition-all space-y-3 group", 
-                            theme === scheme.id ? "border-primary bg-primary/10 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" : "border-theme bg-theme-background hover:border-white/20"
+                            "px-4 py-2 rounded-xl font-black text-[9px] uppercase transition-all",
+                            bgMode === 'dark' ? "bg-primary text-white" : "text-muted-foreground hover:text-white"
                           )}
                         >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-end gap-2">
-                              <div 
-                                className="w-8 h-8 rounded-xl border-2 static-border shadow-md shadow-black/40" 
-                                style={{ backgroundColor: scheme.primary }} 
-                              />
-                              <div 
-                                className="w-4 h-4 rounded-md border static-border" 
-                                style={{ backgroundColor: scheme.secondary }} 
-                              />
-                            </div>
-                            {theme === scheme.id && <CheckCircle2 className="w-4 h-4 text-primary" />}
-                          </div>
-                          <div className="space-y-1">
-                            <h4 className="text-[10px] font-black text-foreground uppercase italic leading-tight">{scheme.name}</h4>
-                            <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-tighter italic leading-tight">{scheme.description}</p>
-                          </div>
+                          Empire Dark
                         </button>
-                      ))}
+                        <button 
+                          onClick={() => setBgMode('light')}
+                          className={cn(
+                            "px-4 py-2 rounded-xl font-black text-[9px] uppercase transition-all",
+                            bgMode === 'light' ? "bg-white text-black border border-black" : "text-muted-foreground hover:text-black"
+                          )}
+                        >
+                          Paper White
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {colorSchemes.map((scheme) => {
+                        const isSelected = theme === scheme.id || theme === `${scheme.id}-light` || (scheme.id === 'high-contrast' && theme === 'high-contrast-light');
+                        
+                        return (
+                          <button 
+                            key={scheme.id} 
+                            onClick={() => handleThemeChange(scheme.id, bgMode)} 
+                            className={cn(
+                              "p-4 rounded-[24px] border-2 text-left transition-all space-y-3 group", 
+                              isSelected ? "border-primary bg-primary/10 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" : "border-theme bg-theme-background hover:border-white/20"
+                            )}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-end gap-2">
+                                <div 
+                                  className="w-8 h-8 rounded-xl border-2 static-border shadow-md shadow-black/40 static-color" 
+                                  style={{ backgroundColor: scheme.primary }} 
+                                />
+                                <div 
+                                  className="w-4 h-4 rounded-md border static-border static-color" 
+                                  style={{ backgroundColor: scheme.secondary }} 
+                                />
+                              </div>
+                              {isSelected && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                            </div>
+                            <div className="space-y-1">
+                              <h4 className="text-[10px] font-black text-foreground uppercase italic leading-tight">{scheme.name}</h4>
+                              <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-tighter italic leading-tight">{scheme.description}</p>
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

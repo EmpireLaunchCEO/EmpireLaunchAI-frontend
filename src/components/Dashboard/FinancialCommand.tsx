@@ -93,24 +93,24 @@ export function FinancialCommand({
   }
 
   return (
-    <div className="bg-theme-surface rounded-[24px] p-4 md:p-6 text-foreground relative overflow-hidden shadow-2xl border-2 border-theme max-w-4xl mx-auto">
+    <div className="bg-theme-surface rounded-[20px] p-3 md:p-4 text-foreground relative overflow-hidden shadow-xl border-2 border-theme max-w-4xl mx-auto">
       {/* Name at the Top */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
-          <CreditCard className="w-4 h-4" />
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/20">
+          <CreditCard className="w-3.5 h-3.5" />
         </div>
-        <h3 className="text-sm font-black uppercase tracking-[0.2em] text-primary italic leading-tight">Empire Finances</h3>
+        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary italic leading-tight">Empire Finances</h3>
       </div>
 
-      <div className="relative z-10 space-y-4">
+      <div className="relative z-10 space-y-3">
         
-        {/* Top Header: Bucket Visuals */}
-        <div className="flex flex-col md:flex-row gap-4 items-center border-b border-theme/30 pb-4">
-          <div className="relative w-16 h-16 shrink-0">
+        {/* Top Header: Bucket Visuals - COMPACTED */}
+        <div className="flex gap-3 items-center border-b border-theme/30 pb-3">
+          <div className="relative w-12 h-12 shrink-0">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-slate-100/10" strokeWidth="12" />
+              <circle cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-slate-100/10" strokeWidth="15" />
               <motion.circle
-                cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-primary" strokeWidth="12"
+                cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-primary" strokeWidth="15"
                 strokeDasharray="251.2"
                 initial={{ strokeDashoffset: 251.2 }}
                 animate={{ strokeDashoffset: 251.2 * (1 - 0.75) }}
@@ -119,16 +119,17 @@ export function FinancialCommand({
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-[6px] font-black uppercase tracking-widest text-muted-foreground">Efficiency</span>
-              <span className="text-xs font-black">{growthScore}%</span>
+              <span className="text-[10px] font-black">{growthScore}%</span>
             </div>
           </div>
 
-          <div className="flex-1 space-y-1">
-            <p className="text-slate-400 text-[10px] font-medium italic">Monitoring capital velocity and upcoming obligations.</p>
-            <div className="flex gap-4 pt-1">
-              <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
-                <span className="text-[9px] font-black text-primary uppercase">Available: {formatCurrency(withholdableEarnings)}</span>
+          <div className="flex-1">
+            <div className="flex gap-2">
+              <div className="px-2 py-0.5 bg-primary/10 border border-primary/20 rounded-full">
+                <span className="text-[8px] font-black text-primary uppercase">Revenue: {formatCurrency(withholdableEarnings)}</span>
+              </div>
+              <div className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+                <span className="text-[8px] font-black text-emerald-500 uppercase">Efficiency: High</span>
               </div>
             </div>
           </div>

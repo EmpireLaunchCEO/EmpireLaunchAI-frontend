@@ -136,7 +136,7 @@ export default function Dashboard() {
                     className="text-center space-y-4"
                   >
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-                      {(empireData?.name === 'HOME BASE' || empireData?.title === 'HOME BASE' || empireData?.name === 'Business 1' || !empireData?.name) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title)}
+                      {(activeEmpireId === '1' && (isAdmin || userEmail === 'stacipeabody@gmail.com')) ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || "EmpireLaunch AI")}
                     </h1>
                   </motion.div>
 

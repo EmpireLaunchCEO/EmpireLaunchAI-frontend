@@ -54,7 +54,7 @@ export function MobileNav() {
 
   return (
     <div 
-      className="fixed bottom-0 left-0 right-0 w-full bg-slate-900 border-t border-white/20 flex justify-around items-stretch z-[10000005] pointer-events-auto shadow-[0_-10px_40px_rgba(0,0,0,0.8)]"
+      className="fixed bottom-0 left-0 right-0 w-full bg-theme-surface border-t border-theme flex justify-around items-stretch z-[10000005] pointer-events-auto shadow-[0_-10px_40px_rgba(0,0,0,0.4)] mobile-nav"
       style={{ 
         height: 'calc(72px + env(safe-area-inset-bottom))',
         paddingBottom: 'env(safe-area-inset-bottom)',
@@ -70,7 +70,7 @@ export function MobileNav() {
             onClick={(e) => handleNavigate(e, item.href)}
             className={cn(
               "flex-1 flex flex-col items-center justify-center gap-1 relative transition-all active:scale-90",
-              isActive ? "text-primary" : "text-white/40"
+              isActive ? "text-primary" : "text-foreground/40"
             )}
             style={{ 
               pointerEvents: 'auto', 
