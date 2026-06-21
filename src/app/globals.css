@@ -96,6 +96,7 @@
 }
 
 /* HIGH CONTRAST LIGHT OVERRIDES */
+/* HIGH CONTRAST LIGHT OVERRIDES */
 [data-theme='high-contrast-light'] {
   --primary-rgb: 0 0 0;
   --secondary-rgb: 0 0 0;
@@ -106,26 +107,15 @@
   --theme-gradient: none !important;
 }
 
-/* Force ALL text to black regardless of utility class */
-[data-theme='high-contrast-light'] *:not(button):not(.bg-primary):not(.text-white) {
+/* NUCLEAR OVERRIDE: Force ALL text, icons, and strokes to black */
+[data-theme='high-contrast-light'] *:not(.bg-primary):not(.bg-primary *):not(.bg-slate-900):not(.bg-slate-900 *) {
   color: black !important;
   -webkit-text-fill-color: black !important;
+  fill: black !important;
+  stroke: black !important;
   background-image: none !important;
   text-shadow: none !important;
   filter: none !important;
-}
-
-/* Specific handling for primary buttons and text-white elements */
-[data-theme='high-contrast-light'] .bg-primary *,
-[data-theme='high-contrast-light'] .bg-primary,
-[data-theme='high-contrast-light'] .bg-slate-900 * {
-  color: white !important;
-  -webkit-text-fill-color: white !important;
-}
-
-[data-theme='high-contrast-light'] .text-white {
-  color: white !important;
-  -webkit-text-fill-color: white !important;
 }
 
 /* Force ALL borders and outlines to black */
@@ -133,43 +123,61 @@
 [data-theme='high-contrast-light'] div,
 [data-theme='high-contrast-light'] section,
 [data-theme='high-contrast-light'] aside,
-[data-theme='high-contrast-light'] main {
+[data-theme='high-contrast-light'] main,
+[data-theme='high-contrast-light'] button {
   border-color: black !important;
   outline-color: black !important;
   box-shadow: none !important;
 }
 
 /* Force ALL backgrounds to white (except primary action buttons and sidebar) */
-[data-theme='high-contrast-light'] div:not(.bg-primary):not(.bg-slate-900),
+[data-theme='high-contrast-light'] div:not(.bg-primary):not(.bg-slate-900):not(.bg-primary *),
 [data-theme='high-contrast-light'] section,
 [data-theme='high-contrast-light'] aside:not(.bg-theme-surface),
 [data-theme='high-contrast-light'] main,
-[data-theme='high-contrast-light'] nav {
+[data-theme='high-contrast-light'] nav,
+[data-theme='high-contrast-light'] button:not(.bg-primary) {
   background-color: white !important;
   background-image: none !important;
 }
 
-/* Selected State in Paper White: Solid black background with white text */
-[data-theme='high-contrast-light'] .bg-primary\/10 {
+/* Special Case: Progress bars and Gauges in Black */
+[data-theme='high-contrast-light'] .bg-primary {
   background-color: black !important;
-  border: 2px solid black !important;
-}
-
-[data-theme='high-contrast-light'] .bg-primary\/10 * {
   color: white !important;
-  -webkit-text-fill-color: white !important;
 }
 
-[data-theme='high-contrast-light'] .bg-primary\/10 svg {
-  stroke: white !important;
+[data-theme='high-contrast-light'] circle.text-primary,
+[data-theme='high-contrast-light'] .bg-primary-500,
+[data-theme='high-contrast-light'] .bg-emerald-500,
+[data-theme='high-contrast-light'] .bg-green-500 {
+  background-color: black !important;
+  stroke: black !important;
+}
+
+/* Ensure the white globe container still works but with black details */
+[data-theme='high-contrast-light'] .bg-white {
+  background-color: white !important;
+  border: 1px solid black !important;
 }
 
 /* Remove all blurs and decorative glows */
 [data-theme='high-contrast-light'] .blur-\[100px\],
 [data-theme='high-contrast-light'] .blur-\[80px\],
-[data-theme='high-contrast-light'] .bg-primary\/5,
-[data-theme='high-contrast-light'] .bg-emerald-500\/5 {
+[data-theme='high-contrast-light'] [class*="blur-"],
+[data-theme='high-contrast-light'] [class*="bg-primary/"],
+[data-theme='high-contrast-light'] [class*="bg-emerald-500/"] {
   display: none !important;
+}
+
+/* Inverse the Sidebar items for clarity in High Contrast */
+[data-theme='high-contrast-light'] aside .bg-primary {
+  background-color: black !important;
+  color: white !important;
+}
+[data-theme='high-contrast-light'] aside .bg-primary * {
+  color: white !important;
+  stroke: white !important;
 }
 
 /* 
