@@ -228,6 +228,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       printify: { endpoint: 'printify', sessionKey: 'printify_oauth_session_id', vaultKey: 'empire_vault_printify', label: 'Printify' },
       cj_dropshipping: { endpoint: 'cj_dropshipping', sessionKey: 'cj_dropshipping_oauth_session_id', vaultKey: 'empire_vault_cj_dropshipping', label: 'CJ Dropshipping' },
       autods: { endpoint: 'autods', sessionKey: 'autods_oauth_session_id', vaultKey: 'empire_vault_autods', label: 'AutoDS' },
+      canva: { endpoint: 'canva', sessionKey: 'canva_oauth_session_id', vaultKey: 'empire_vault_canva', label: 'Canva' },
+      figma: { endpoint: 'figma', sessionKey: 'figma_oauth_session_id', vaultKey: 'empire_vault_figma', label: 'Figma' },
       godaddy: { endpoint: 'godaddy', sessionKey: 'godaddy_oauth_session_id', vaultKey: 'empire_vault_godaddy', label: 'GoDaddy' },
       systeme_io: { endpoint: 'systeme_io', sessionKey: 'systeme_io_oauth_session_id', vaultKey: 'empire_vault_systeme_io', label: 'Systeme.io' },
     };
@@ -235,15 +237,27 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     const oauth = oauthPlatforms[activeSetupPlatform || ''];
 
     if (oauth) {
-      fetch(`${API_URL}/api/auth/${oauth.endpoint}/url`, {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
+
+      const authUrl = `${API_URL}/api/auth/${oauth.endpoint}/url`;
+      fetch(authUrl, {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: '00000000-0000-0000-0000-000000000000',
           redirectUri: `${window.location.origin}/auth/callback/${oauth.endpoint}`
         })
       })
-      .then(res => res.json())
+      .then(async (res) => {
+        clearTimeout(timeout);
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          throw new Error(`HTTP ${res.status}: ${text || res.statusText}`);
+        }
+        return res.json();
+      })
       .then(data => {
         if (data.url) {
           if (data.state) localStorage.setItem(oauth.sessionKey, data.state);
@@ -262,14 +276,25 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
               }
             }
           }, 500);
+        } else if (data.error) {
+          alert(`Configuration Notice: ${data.error}. API keys may need to be set in the backend.`);
         }
       })
-      .catch(() => {});
+      .catch((err) => {
+        clearTimeout(timeout);
+        if (err.name === 'AbortError') {
+          console.warn('Auth request timed out');
+          alert('Connection timed out. The backend may be starting up. Please try again.');
+        } else {
+          console.error('Auth initiation failed', err);
+          alert('Connection unavailable. Please check that the backend is running and try again.');
+        }
+      });
       return;
     }
 
     // Neural Node Platforms (Browser Automation)
-    if (['canva', 'kittl', 'capcut', 'behance', 'artstation', 'redbubble'].includes(activeSetupPlatform || '')) {
+    if (['kittl', 'capcut', 'behance', 'artstation', 'redbubble', 'substack'].includes(activeSetupPlatform || '')) {
       setLinkingStep('keys');
       setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
       onboardingService.startOnboarding(activeSetupPlatform!)

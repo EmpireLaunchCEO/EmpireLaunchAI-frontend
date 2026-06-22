@@ -10,12 +10,12 @@ const getApiUrl = () => {
     
     // 3. If we are on Vercel, go to the Railway production backend
     if (host.includes('vercel.app')) {
-      return 'https://bizrunner-backend-production.up.railway.app';
+      return 'https://empirelaunchai-backend-production.up.railway.app';
     }
   }
 
   // 4. Fallback for build-time or other environments
-  return 'https://bizrunner-backend-production.up.railway.app';
+  return 'https://empirelaunchai-backend-production.up.railway.app';
 };
 
 export const API_URL = getApiUrl();
