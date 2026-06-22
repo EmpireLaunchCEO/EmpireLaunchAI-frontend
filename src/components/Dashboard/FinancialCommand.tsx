@@ -112,7 +112,7 @@ export function FinancialCommand({
           <div className="flex items-center gap-4 px-6 py-3 bg-theme-background border border-theme rounded-[24px]">
             <div className="relative w-10 h-10">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-slate-100/10" strokeWidth="12" />
+                <circle cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-slate-100/10 branded-exception" strokeWidth="12" />
                 <motion.circle
                   cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-primary" strokeWidth="12"
                   strokeDasharray="251.2"

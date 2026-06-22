@@ -120,6 +120,8 @@
 
 /* 2. Unified Border Logic - Everything that should have a box gets a black outline */
 [data-theme='high-contrast-light'] .border,
+[data-theme='high-contrast-light'] .border-2,
+[data-theme='high-contrast-light'] .border-4,
 [data-theme='high-contrast-light'] .border-t,
 [data-theme='high-contrast-light'] .border-b,
 [data-theme='high-contrast-light'] .border-l,
@@ -142,6 +144,19 @@
   border-color: black !important;
 }
 
+/* Explicitly suppress borders on non-container elements that might have inherited them */
+[data-theme='high-contrast-light'] div:not(.border):not(.border-2):not(.border-4):not(.bg-theme-surface):not(.bg-theme-background):not(.bg-slate-900):not(.bg-slate-800),
+[data-theme='high-contrast-light'] span,
+[data-theme='high-contrast-light'] p,
+[data-theme='high-contrast-light'] label,
+[data-theme='high-contrast-light'] h1,
+[data-theme='high-contrast-light'] h2,
+[data-theme='high-contrast-light'] h3,
+[data-theme='high-contrast-light'] h4 {
+  border-width: 0 !important;
+  border-color: transparent !important;
+}
+
 /* 3. Global Text Overrides - No gradients or transparent text allowed */
 [data-theme='high-contrast-light'] h1,
 [data-theme='high-contrast-light'] h2,
@@ -159,6 +174,8 @@
   color: black !important;
   filter: none !important;
   font-weight: 900 !important; /* Make headers extra bold to stand out without color */
+  overflow: visible !important;
+  white-space: normal !important;
 }
 
 /* 4. Icon Logic - Force black except for protected branded icons */
@@ -166,6 +183,7 @@
   color: black !important;
   stroke: black !important;
   fill: none !important;
+  border: none !important; /* Fix small squares around icons */
 }
 [data-theme='high-contrast-light'] svg:not(.branded-exception) * {
   stroke: black !important;

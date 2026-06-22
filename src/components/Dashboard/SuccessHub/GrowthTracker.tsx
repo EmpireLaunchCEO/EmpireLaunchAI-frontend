@@ -67,7 +67,7 @@ export const GrowthTracker = ({
               r="60"
               fill="none"
               stroke="currentColor"
-              className="text-slate-400 opacity-10"
+              className="text-slate-400 opacity-10 branded-exception"
               strokeWidth="10"
             />
             <motion.circle

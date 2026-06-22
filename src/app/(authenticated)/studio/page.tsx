@@ -269,8 +269,9 @@ export default function StudioPage() {
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
                 <div className="absolute top-6 right-6 flex items-center gap-2">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
-                    <span className="text-[10px] font-black text-white">{(typeof usage?.customize?.limit === 'number' ? usage.customize.limit : 0) - (usage?.customize?.remaining ?? 0)}/{usage?.customize?.limit ?? 14}</span>
-                    <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest ml-1">Used</span>
+                    <span className="text-[10px] font-black text-primary">{usage?.customize?.remaining ?? 0}</span>
+                    <span className="text-[9px] font-black text-slate-400">/</span>
+                    <span className="text-[9px] font-black text-slate-500">{usage?.customize?.limit ?? 14}</span>
                   </div>
                   <div className="relative">
                     <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
