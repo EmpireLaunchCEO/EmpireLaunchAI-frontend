@@ -93,99 +93,123 @@
   --surface-rgb: 255 255 255;
   --surface-border-rgb: 0 0 0;
   --theme-gradient: linear-gradient(135deg, #000000 0%, #000000 100%);
-  --border-thickness: 3px; 
+  --border-thickness: 1.5px; 
 }
 
 /* 
-  STRICT PAPER WHITE ENFORCEMENT
-  "EVERYTHING BESIDES THE background needs to be black."
+  PAPER WHITE - TOTAL BLACKOUT ON WHITE
+  "all wording needs to be black. Just the outer/intended outlines."
 */
+
 [data-theme='high-contrast-light'],
-[data-theme='high-contrast-light'] *:not(button.bg-primary):not(.bg-primary):not(button.bg-emerald-500):not(.bg-emerald-500):not(.bg-green-500):not(.bg-amber-500):not(.bg-red-500),
-[data-theme='high-contrast-light'] *::before,
-[data-theme='high-contrast-light'] *::after {
+[data-theme='high-contrast-light'] * {
   background-color: white !important;
+  color: black !important;
+  -webkit-text-fill-color: black !important;
   background-image: none !important;
   box-shadow: none !important;
-  color: black !important;
-  border-color: black !important;
-  opacity: 1 !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-  -webkit-text-fill-color: black !important;
   text-shadow: none !important;
+  opacity: 1 !important;
 }
 
-/* EXCEPTION: Branded Buttons and specific colored elements stay */
-[data-theme='high-contrast-light'] button.bg-primary,
-[data-theme='high-contrast-light'] .bg-primary,
-[data-theme='high-contrast-light'] .bg-primary *,
-[data-theme='high-contrast-light'] button.bg-emerald-500,
-[data-theme='high-contrast-light'] .bg-emerald-500,
-[data-theme='high-contrast-light'] .bg-emerald-500 *,
-[data-theme='high-contrast-light'] .bg-green-500,
-[data-theme='high-contrast-light'] .bg-green-500 *,
-[data-theme='high-contrast-light'] .bg-amber-500,
-[data-theme='high-contrast-light'] .bg-amber-500 *,
-[data-theme='high-contrast-light'] .bg-red-500,
-[data-theme='high-contrast-light'] .bg-red-500 * {
-  background-color: revert !important;
-  color: white !important;
-  -webkit-text-fill-color: white !important;
+/* 1. RESET: Kill all borders by default to remove wireframe clutter */
+[data-theme='high-contrast-light'] *,
+[data-theme='high-contrast-light'] div,
+[data-theme='high-contrast-light'] span,
+[data-theme='high-contrast-light'] section {
+  border-width: 0 !important;
   border-color: transparent !important;
 }
 
-/* Force Borders to be thick black and visible */
-[data-theme='high-contrast-light'] [class*="border"],
+/* 2. RE-ENABLE: Only show borders for ACTUAL components and Outer Cards */
 [data-theme='high-contrast-light'] aside,
 [data-theme='high-contrast-light'] nav,
-[data-theme='high-contrast-light'] div,
-[data-theme='high-contrast-light'] section,
-[data-theme='high-contrast-light'] button:not(.bg-primary):not(.bg-emerald-500) {
-  border-width: 3px !important;
+[data-theme='high-contrast-light'] button,
+[data-theme='high-contrast-light'] input,
+[data-theme='high-contrast-light'] textarea,
+[data-theme='high-contrast-light'] select,
+[data-theme='high-contrast-light'] .border-2,
+[data-theme='high-contrast-light'] .border-4,
+[data-theme='high-contrast-light'] .border-black {
+  border-width: revert !important; /* Keep original width if set */
   border-style: solid !important;
   border-color: black !important;
 }
 
-/* Ensure non-branded icons are black */
-[data-theme='high-contrast-light'] svg:not(.text-primary):not(.text-emerald-500):not(.text-green-500):not(.text-amber-500) {
+/* If it was a 'border' class but not nested, we want it as a card outline */
+/* We target common Card background classes to identify "Outer Boxes" */
+[data-theme='high-contrast-light'] .bg-theme-surface,
+[data-theme='high-contrast-light'] .bg-theme-background,
+[data-theme='high-contrast-light'] .bg-slate-900,
+[data-theme='high-contrast-light'] [class*="bg-slate-900"] {
+  border-width: 1.5px !important;
+  border-style: solid !important;
+  border-color: black !important;
+}
+
+/* 3. NESTED CLEANUP: If a box is inside a box, kill the inner one's border */
+/* This stops the "box around the name" inside the "oval box" */
+[data-theme='high-contrast-light'] .bg-theme-surface *,
+[data-theme='high-contrast-light'] .bg-slate-900 * {
+  border-width: 0 !important;
+}
+
+/* ...But still allow buttons/inputs inside cards to have borders */
+[data-theme='high-contrast-light'] .bg-theme-surface button,
+[data-theme='high-contrast-light'] .bg-theme-surface input,
+[data-theme='high-contrast-light'] .bg-slate-900 button,
+[data-theme='high-contrast-light'] .bg-slate-900 input {
+  border-width: 1.5px !important;
+  border-color: black !important;
+}
+
+/* 4. ICONS & GRAPHICS */
+[data-theme='high-contrast-light'] svg,
+[data-theme='high-contrast-light'] svg * {
   color: black !important;
   stroke: black !important;
-  fill: none !important;
 }
 
-[data-theme='high-contrast-light'] svg:not(.text-primary):not(.text-emerald-500):not(.text-green-500):not(.text-amber-500) path {
-  stroke: black !important;
+/* 5. STATIC COLOR EXCEPTION (Theme bubbles) */
+[data-theme='high-contrast-light'] .static-color,
+[data-theme='high-contrast-light'] .static-color * {
+  background-color: revert !important;
+  color: revert !important;
+  border-width: 1.5px !important;
+  border-color: black !important;
 }
 
-/* Text stroke for headers to match the bold high-contrast look */
-[data-theme='high-contrast-light'] .font-black,
+/* Exception: Only items with .static-color (like theme bubbles) keep their colors */
+[data-theme='high-contrast-light'] .static-color,
+[data-theme='high-contrast-light'] .static-color * {
+  background-color: revert !important;
+  color: revert !important;
+  border-color: black !important;
+}
+
+/* Ensure the "active" or "hover" states don't change to gray or white-on-white */
+[data-theme='high-contrast-light'] *:hover,
+[data-theme='high-contrast-light'] *:active,
+[data-theme='high-contrast-light'] [class*="hover:"],
+[data-theme='high-contrast-light'] [class*="active:"] {
+  background-color: white !important;
+  color: black !important;
+  border-color: black !important;
+}
+
+/* Text boldness for H-tags to ensure they stand out without color */
 [data-theme='high-contrast-light'] h1,
 [data-theme='high-contrast-light'] h2,
 [data-theme='high-contrast-light'] h3,
-[data-theme='high-contrast-light'] button {
-  -webkit-text-stroke: 0.5px black;
+[data-theme='high-contrast-light'] h4,
+[data-theme='high-contrast-light'] .font-black {
   font-weight: 950 !important;
 }
 
-/* Ensure placeholder text is also black/dark */
+/* Ensure placeholder text is visible black */
 [data-theme='high-contrast-light'] ::placeholder {
   color: black !important;
-  opacity: 0.7 !important;
-}
-
-/* Override the gradient text utility to be solid black */
-[data-theme='high-contrast-light'] h1, 
-[data-theme='high-contrast-light'] h2, 
-[data-theme='high-contrast-light'] h3, 
-[data-theme='high-contrast-light'] h4, 
-[data-theme='high-contrast-light'] .text-theme-gradient {
-  background-image: none !important;
-  -webkit-background-clip: initial !important;
-  background-clip: initial !important;
-  -webkit-text-fill-color: black !important;
-  color: black !important;
-  filter: none !important;
+  opacity: 0.5 !important;
 }
 
 /* HIGH CONTRAST LIGHT OVERRIDES */
