@@ -205,6 +205,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
 
   const handleAuth = () => {
     // Empire OAuth via popup
+    // Direct OAuth Platforms (Official APIs)
     const oauthPlatforms: Record<string, { endpoint: string; sessionKey: string; vaultKey: string; label: string }> = {
       etsy: { endpoint: 'etsy', sessionKey: 'etsy_oauth_session_id', vaultKey: 'empire_vault_etsy', label: 'Etsy' },
       tiktok: { endpoint: 'tiktok', sessionKey: 'tiktok_oauth_session_id', vaultKey: 'empire_vault_tiktok', label: 'TikTok' },
@@ -267,7 +268,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       return;
     }
 
-    if (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(activeSetupPlatform || '')) {
+    // Neural Node Platforms (Browser Automation)
+    if (['canva', 'kittl', 'capcut', 'behance', 'artstation', 'redbubble'].includes(activeSetupPlatform || '')) {
       setLinkingStep('keys');
       setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
       onboardingService.startOnboarding(activeSetupPlatform!)
