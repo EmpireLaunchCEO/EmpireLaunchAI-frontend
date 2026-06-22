@@ -52,7 +52,6 @@ function SettingsContent() {
   const { isLinked: isStripeLinked } = useStripeStatus();
 
   const [activeTab, setActiveTab] = useState('financials');
-  const [bgMode, setBgMode] = useState<'dark' | 'light'>('dark');
 
   const ownedSlots = Object.values(slotStatus || {}).filter(Boolean).length;
 
@@ -72,21 +71,8 @@ function SettingsContent() {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    if (theme.endsWith('-light') || theme === 'high-contrast-light') {
-      setBgMode('light');
-    } else {
-      setBgMode('dark');
-    }
-  }, [theme]);
-
-  const handleThemeChange = (schemeId: string, mode: 'dark' | 'light') => {
-    if (schemeId === 'high-contrast') {
-      setTheme('high-contrast-light');
-      return;
-    }
-    const newTheme = mode === 'light' ? `${schemeId}-light` : schemeId;
-    setTheme(newTheme);
+  const handleThemeChange = (schemeId: string) => {
+    setTheme(schemeId);
   };
 
   useEffect(() => {
@@ -116,7 +102,6 @@ function SettingsContent() {
     { id: 'pink', name: 'Electric Pink', primary: '#ff0099', secondary: '#be185d', description: 'High-energy vibrant neon aesthetic.' },
     { id: 'vibrant-cyan', name: 'Cyan Teal', primary: '#00ffff', secondary: '#008080', description: 'Cybernetic and fresh digital appearance.' },
     { id: 'electric-blue', name: 'Neon Blue', primary: '#00a2ff', secondary: '#0369a1', description: 'High-voltage neon sky blue.' },
-    { id: 'high-contrast', name: 'Paper White', primary: '#ffffff', secondary: '#000000', description: 'Pure Black & White contrast.' }
   ];
 
   return (
@@ -291,48 +276,24 @@ function SettingsContent() {
               {activeTab === 'theme-style' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="p-4 md:p-6 rounded-[24px] md:rounded-[32px] bg-theme-surface border-2 border-theme space-y-6">
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                          <Palette className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-black text-foreground tracking-tight uppercase italic">Color Scheme</h3>
-                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest italic">Personalize your aesthetics.</p>
-                        </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                        <Palette className="w-5 h-5" />
                       </div>
-
-                      {/* BG MODE TOGGLE */}
-                      <div className="flex bg-theme-background p-1 rounded-2xl border-2 border-theme gap-1 shrink-0">
-                        <button 
-                          onClick={() => setBgMode('dark')}
-                          className={cn(
-                            "px-4 py-2 rounded-xl font-black text-[9px] uppercase transition-all",
-                            bgMode === 'dark' ? "bg-primary text-white" : "text-muted-foreground hover:text-white"
-                          )}
-                        >
-                          Midnight Black
-                        </button>
-                        <button 
-                          onClick={() => setBgMode('light')}
-                          className={cn(
-                            "px-4 py-2 rounded-xl font-black text-[9px] uppercase transition-all",
-                            bgMode === 'light' ? "bg-white text-black border-2 border-black" : "text-muted-foreground hover:text-black"
-                          )}
-                        >
-                          Pure White
-                        </button>
+                      <div>
+                        <h3 className="text-lg font-black text-foreground tracking-tight uppercase italic">Color Scheme</h3>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest italic">Personalize your aesthetics.</p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                       {colorSchemes.map((scheme) => {
-                        const isSelected = theme === scheme.id || theme === `${scheme.id}-light` || (scheme.id === 'high-contrast' && theme === 'high-contrast-light');
+                        const isSelected = theme === scheme.id;
                         
                         return (
                           <button 
                             key={scheme.id} 
-                            onClick={() => handleThemeChange(scheme.id, bgMode)} 
+                            onClick={() => handleThemeChange(scheme.id)} 
                             className={cn(
                               "p-4 rounded-[24px] border-2 text-left transition-all space-y-3 group", 
                               isSelected ? "border-primary bg-primary/10 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" : "border-theme bg-theme-background hover:border-white/20"
