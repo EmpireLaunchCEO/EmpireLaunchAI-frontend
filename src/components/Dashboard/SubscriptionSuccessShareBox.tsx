@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Diamond,
   DollarSign,
@@ -11,10 +11,6 @@ import {
   Download,
   FileText,
   Zap,
-  Trash2,
-  AlertTriangle,
-  X,
-  ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -29,12 +25,6 @@ interface SubscriptionSuccessShareBoxProps {
   totalFees?: number;
   /** Number of business slots (optional) */
   businessSlots?: number;
-  /** List of user empires for cancellation selection */
-  userEmpires?: any[];
-  /** Callback for cancellation */
-  onCancelSubscription?: (empireId: string) => void;
-  /** Whether to show the cancel button (defaults to true) */
-  showCancelButton?: boolean;
   className?: string;
 }
 
@@ -44,28 +34,9 @@ export function SubscriptionSuccessShareBox({
   totalRevenue = 0,
   totalFees = 0,
   businessSlots = 1,
-  userEmpires = [],
-  onCancelSubscription,
-  showCancelButton = true,
   className,
 }: SubscriptionSuccessShareBoxProps) {
   const [isDownloading, setIsDownloading] = useState(false);
-  const [showCancelModal, setShowCancelModal] = useState(false);
-  const [isCancelling, setIsCancelling] = useState(false);
-
-  const handleCancelClick = (empireId: string) => {
-    if (confirm(`Are you sure you want to cancel the subscription for this business? You will lose access to all workstations and autonomous features for this slot at the end of the billing period.`)) {
-      setIsCancelling(true);
-      if (onCancelSubscription) {
-        onCancelSubscription(empireId);
-      }
-      // Mock completion
-      setTimeout(() => {
-        setIsCancelling(false);
-        setShowCancelModal(false);
-      }, 1000);
-    }
-  };
 
   const handleDownloadAudit = async () => {
     setIsDownloading(true);
@@ -238,19 +209,6 @@ export function SubscriptionSuccessShareBox({
           </p>
         </div>
 
-        {/* Cancel Subscription Button */}
-        {showCancelButton && (
-          <div className="pt-2">
-            <button
-              onClick={() => setShowCancelModal(true)}
-              className="w-full py-4 text-red-500/60 hover:text-red-500 font-black text-[10px] uppercase tracking-widest transition-all border-2 border-theme hover:border-red-500/30 rounded-2xl flex items-center justify-center gap-2 group"
-            >
-              <Trash2 className="w-4 h-4 group-hover:animate-pulse" />
-              Cancel Empire Subscription
-            </button>
-          </div>
-        )}
-
         {/* Protocol Disclosure Section — shown at the very bottom */}
         <div className="pt-6 border-t border-white/5 space-y-4">
           <div className="flex items-center gap-2">
@@ -280,79 +238,6 @@ export function SubscriptionSuccessShareBox({
           </div>
         </div>
       </div>
-
-      {/* Cancellation Selection Modal */}
-      <AnimatePresence>
-        {showCancelModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowCancelModal(false)}
-              className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-lg bg-theme-surface border-2 border-red-500/20 rounded-[40px] p-8 shadow-2xl space-y-8"
-            >
-              <button
-                onClick={() => setShowCancelModal(false)}
-                className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/5 text-muted-foreground transition-all"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="space-y-4">
-                <div className="w-16 h-16 rounded-3xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
-                  <AlertTriangle className="w-8 h-8 text-red-500" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-black text-foreground tracking-tight uppercase italic">Cancel Subscription</h3>
-                  <p className="text-sm text-muted-foreground font-medium">Select the business subscription you wish to terminate.</p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {(userEmpires.length > 0 ? userEmpires : [{ id: '1', name: 'Home Base (Business 1)' }]).map((empire, i) => (
-                  <button
-                    key={empire.id}
-                    onClick={() => handleCancelClick(empire.id)}
-                    disabled={isCancelling}
-                    className="w-full p-6 bg-theme-background border-2 border-theme hover:border-red-500/40 rounded-3xl flex items-center justify-between group transition-all"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center font-black text-xs text-slate-500 group-hover:bg-red-500/20 group-hover:text-red-500">
-                        {i + 1}
-                      </div>
-                      <div className="text-left">
-                        <p className="font-black text-foreground uppercase tracking-tight group-hover:text-red-500 transition-colors">{empire.name || `Business ${i + 1}`}</p>
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{i === 0 ? 'Base Subscription' : 'Expansion Slot'}</p>
-                      </div>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-red-500 group-hover:translate-x-1 transition-all" />
-                  </button>
-                ))}
-              </div>
-
-              <div className="p-6 bg-red-500/5 rounded-3xl border border-red-500/10">
-                <p className="text-[10px] text-red-400/80 italic leading-relaxed font-medium">
-                  Note: Cancellation stops future billing for the selected slot. You will maintain access until the end of your current period. Unsaved data or AI models may be purged after expiration.
-                </p>
-              </div>
-
-              <button
-                onClick={() => setShowCancelModal(false)}
-                className="w-full py-4 font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Go Back
-              </button>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
