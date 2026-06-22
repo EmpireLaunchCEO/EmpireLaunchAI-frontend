@@ -438,8 +438,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       // DYNAMIC STATUS BAR / THEME COLOR UPDATE
       const meta = document.getElementById('theme-color-meta');
       if (meta) {
-        const isLight = newTheme.endsWith('-light') || newTheme === 'high-contrast-light';
-        meta.setAttribute('content', isLight ? '#ffffff' : '#0a0519');
+        meta.setAttribute('content', '#0a0519');
       }
     }
   };
@@ -689,8 +688,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       // DYNAMIC STATUS BAR / THEME COLOR UPDATE ON HYDRATION
       const meta = document.getElementById('theme-color-meta');
       if (meta) {
-        const isLight = theme.endsWith('-light') || theme === 'high-contrast-light';
-        meta.setAttribute('content', isLight ? '#ffffff' : '#0a0519');
+        meta.setAttribute('content', '#0a0519');
       }
     }
   }, [theme]);
