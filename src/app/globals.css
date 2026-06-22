@@ -33,6 +33,7 @@
   --surface: rgb(var(--surface-rgb));
   --surface-border: rgb(var(--surface-border-rgb));
   --theme-gradient: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%);
+  --border-thickness: 1px;
 }
 
 [data-theme='neon-cyan'] {
@@ -85,6 +86,13 @@
   --theme-gradient: linear-gradient(135deg, #00BFFF 0%, #1E90FF 100%);
 }
 
+/* 
+  ============================================================================
+  PAPER WHITE - HIGH CONTRAST LIGHT MODE
+  Owner Mandate: "white background for every box and inner box. all writing is black and all main outlines is black."
+  ============================================================================
+*/
+
 [data-theme='high-contrast-light'] {
   --primary-rgb: 0 0 0; 
   --secondary-rgb: 0 0 0; 
@@ -96,11 +104,7 @@
   --border-thickness: 1.5px; 
 }
 
-/* 
-  PAPER WHITE - TOTAL BLACKOUT ON WHITE
-  Owner Mandate: "white background for every box and inner box. all writing is black and all main outlines is black."
-*/
-
+/* 1. Global Reset to Pure White & Solid Black */
 [data-theme='high-contrast-light'],
 [data-theme='high-contrast-light'] *:not(.branded-exception):not(.branded-exception *) {
   background: white !important;
@@ -112,10 +116,9 @@
   text-shadow: none !important;
   opacity: 1 !important;
   filter: none !important;
-  outline-color: black !important;
 }
 
-/* Force all borders to be visible and black */
+/* 2. Unified Border Logic - Everything that should have a box gets a black outline */
 [data-theme='high-contrast-light'] .border,
 [data-theme='high-contrast-light'] .border-t,
 [data-theme='high-contrast-light'] .border-b,
@@ -127,6 +130,7 @@
 [data-theme='high-contrast-light'] .bg-slate-900,
 [data-theme='high-contrast-light'] .bg-slate-800,
 [data-theme='high-contrast-light'] section,
+[data-theme='high-contrast-light'] article,
 [data-theme='high-contrast-light'] aside,
 [data-theme='high-contrast-light'] nav,
 [data-theme='high-contrast-light'] button,
@@ -138,16 +142,14 @@
   border-color: black !important;
 }
 
-/* Specifically kill any nested border suppression that might have been left over */
-[data-theme='high-contrast-light'] div {
-  border-color: black; /* Default but allow overrides if they have border classes */
-}
-
-/* Kill all transparency and gradients on headers/text */
+/* 3. Global Text Overrides - No gradients or transparent text allowed */
 [data-theme='high-contrast-light'] h1,
 [data-theme='high-contrast-light'] h2,
 [data-theme='high-contrast-light'] h3,
 [data-theme='high-contrast-light'] h4,
+[data-theme='high-contrast-light'] span,
+[data-theme='high-contrast-light'] p,
+[data-theme='high-contrast-light'] label,
 [data-theme='high-contrast-light'] .text-theme-gradient {
   background: none !important;
   background-image: none !important;
@@ -156,20 +158,20 @@
   -webkit-text-fill-color: black !important;
   color: black !important;
   filter: none !important;
+  font-weight: 900 !important; /* Make headers extra bold to stand out without color */
 }
 
-/* Force icons to be black */
+/* 4. Icon Logic - Force black except for protected branded icons */
 [data-theme='high-contrast-light'] svg:not(.branded-exception):not(.branded-exception *) {
   color: black !important;
   stroke: black !important;
   fill: none !important;
 }
-
-[data-theme='high-contrast-light'] svg:not(.branded-exception) path {
+[data-theme='high-contrast-light'] svg:not(.branded-exception) * {
   stroke: black !important;
 }
 
-/* BRANDED EXCEPTIONS: Keep colors for Globe, Primary Buttons, and Growth Tracker Highlights */
+/* 5. BRANDED EXCEPTIONS - Preserve identity where explicitly requested */
 [data-theme='high-contrast-light'] .branded-exception,
 [data-theme='high-contrast-light'] .branded-exception *,
 [data-theme='high-contrast-light'] .bg-primary,
@@ -202,204 +204,34 @@
   fill: revert !important;
   border-color: revert !important;
   border-width: revert !important;
-  opacity: 1 !important; /* Keep it visible */
+  opacity: 1 !important;
   filter: none !important;
 }
 
-/* Ensure placeholder text is visible black */
+/* Specific restoration for static color theme bubbles */
+[data-theme='high-contrast-light'] .static-color,
+[data-theme='high-contrast-light'] .static-color * {
+  background: revert !important;
+  background-color: revert !important;
+  color: revert !important;
+  border: 1.5px solid black !important;
+}
+
+/* 6. Interaction States - Keep them functional (no white-on-white) */
+[data-theme='high-contrast-light'] *:hover:not(.branded-exception),
+[data-theme='high-contrast-light'] *:active:not(.branded-exception) {
+  background-color: #f8fafc !important; /* Very subtle off-white for hover */
+  color: black !important;
+  border-color: black !important;
+}
+
+/* 7. Forms & Inputs */
 [data-theme='high-contrast-light'] ::placeholder {
   color: black !important;
   opacity: 0.5 !important;
 }
 
-/* Force 100% white on body */
-[data-theme='high-contrast-light'] body,
-[data-theme='high-contrast-light'] main {
-  background: white !important;
-  background-color: white !important;
-}
-
-
-/* 5. STATIC COLOR EXCEPTION (Theme bubbles) */
-[data-theme='high-contrast-light'] .static-color,
-[data-theme='high-contrast-light'] .static-color * {
-  background-color: revert !important;
-  color: revert !important;
-  border-width: 1.5px !important;
-  border-color: black !important;
-}
-
-/* Exception: Only items with .static-color (like theme bubbles) keep their colors */
-[data-theme='high-contrast-light'] .static-color,
-[data-theme='high-contrast-light'] .static-color * {
-  background-color: revert !important;
-  color: revert !important;
-  border-color: black !important;
-}
-
-/* Ensure the "active" or "hover" states don't change to gray or white-on-white */
-[data-theme='high-contrast-light'] *:hover,
-[data-theme='high-contrast-light'] *:active,
-[data-theme='high-contrast-light'] [class*="hover:"],
-[data-theme='high-contrast-light'] [class*="active:"] {
-  background-color: white !important;
-  color: black !important;
-  border-color: black !important;
-}
-
-/* Text boldness for H-tags to ensure they stand out without color */
-[data-theme='high-contrast-light'] h1,
-[data-theme='high-contrast-light'] h2,
-[data-theme='high-contrast-light'] h3,
-[data-theme='high-contrast-light'] h4,
-[data-theme='high-contrast-light'] .font-black {
-  font-weight: 950 !important;
-}
-
-/* Ensure placeholder text is visible black */
-[data-theme='high-contrast-light'] ::placeholder {
-  color: black !important;
-  opacity: 0.5 !important;
-}
-
-/* HIGH CONTRAST LIGHT OVERRIDES */
-/* 
-  THEME ARCHITECTURE - LIGHT MODE SUPPORT
-  Every color now has a -light variant.
-*/
-
-:root {
-  --background-rgb: 10 5 25;
-  --foreground-rgb: 255 255 255;
-  --surface-rgb: 12 8 30;
-  --surface-border-rgb: 124 58 237;
-  --border-thickness: 1px;
-}
-
-[data-theme$='-light'] {
-  --background-rgb: 255 255 255;
-  --foreground-rgb: 0 0 0;
-  --surface-rgb: 255 255 255;
-  --surface-border-rgb: 0 0 0;
-  --border-thickness: 2.5px; /* Thicker borders for light mode */
-}
-
-/* Light Theme Definitions */
-[data-theme='blue-light'] { --primary-rgb: 124 58 237; --secondary-rgb: 59 130 246; }
-[data-theme='emerald-light'] { --primary-rgb: 16 185 129; --secondary-rgb: 5 150 105; }
-[data-theme='pink-light'] { --primary-rgb: 255 20 147; --secondary-rgb: 190 24 93; }
-[data-theme='vibrant-cyan-light'] { --primary-rgb: 0 255 255; --secondary-rgb: 0 128 128; }
-[data-theme='electric-blue-light'] { --primary-rgb: 0 162 255; --secondary-rgb: 3 105 161; }
-[data-theme='high-contrast-light'] { 
-  --primary-rgb: 0 0 0; 
-  --secondary-rgb: 0 0 0; 
-  --border-thickness: 3px; /* Extra thick for high contrast */
-}
-
-/* THICKER TEXT FOR LIGHT THEMES */
-[data-theme$='-light'] h1, 
-[data-theme$='-light'] h2, 
-[data-theme$='-light'] h3, 
-[data-theme$='-light'] h4,
-[data-theme$='-light'] button,
-[data-theme$='-light'] .font-black {
-  font-weight: 900 !important;
-  letter-spacing: -0.02em;
-}
-
-/* GLOBAL BORDER OVERRIDE */
-.border-theme, .border, .border-2, .border-4 {
-  border-width: var(--border-thickness) !important;
-  border-color: rgb(var(--foreground-rgb) / 0.8) !important;
-}
-
-[data-theme$='-light'] .bg-theme-surface,
-[data-theme$='-light'] .bg-theme-background,
-[data-theme$='-light'] .bg-slate-900,
-[data-theme$='-light'] .bg-slate-800 {
-  background-color: white !important;
-  box-shadow: none !important;
-}
-
-/* SIDEBAR & NAV COLOR SYNC */
-aside, .mobile-nav {
-  background-color: rgb(var(--surface-rgb)) !important;
-  border-color: rgb(var(--foreground-rgb) / 0.2) !important;
-}
-
-[data-theme$='-light'] aside, 
-[data-theme$='-light'] .mobile-nav {
-  border-right: var(--border-thickness) solid black !important;
-  border-top: var(--border-thickness) solid black !important;
-}
-
-/* BUTTONS IN LIGHT MODE */
-[data-theme$='-light'] .bg-primary {
-  background-color: rgb(var(--primary-rgb)) !important;
-  color: white !important;
-  border: var(--border-thickness) solid rgb(var(--primary-rgb)) !important;
-}
-
-/* Specific override for High Contrast Light to keep it Black/White */
-[data-theme='high-contrast-light'] .bg-primary {
-  background-color: black !important;
-  border-color: black !important;
-}
-
-[data-theme$='-light'] .bg-primary * {
-  color: white !important;
-}
-
-/* PREVENT OVERRIDES ON THEME PREVIEW BUBBLES */
-.static-color {
-  color: inherit !important;
-  -webkit-text-fill-color: initial !important;
-  background-image: none !important;
-  border-width: 1.5px !important;
-  border-color: black !important;
-}
-
-/* 
-   SCROLL ARCHITECTURE v515
-   Total native scroll restoration for mobile PWA.
-   overflow-y: auto with !important to prevent framework override
-*/
-
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 229, 255, 0.1);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 229, 255, 0.3);
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 229, 255, 0.1) transparent;
-}
-
-/* Prevent horizontal scrollbar on mobile — scrollbar-width: thin can cause overflow */
-@media (max-width: 768px) {
-  * {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  ::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-/* Reverting the position:fixed on body as it breaks scrolling */
+/* 8. Global Scroll Restoration & Core Styles */
 html, body {
   background-color: rgb(var(--background-rgb)) !important;
   margin: 0;
@@ -418,39 +250,24 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* 
-   PERFORMANCE FIX: 
-   Gradients only for headers. 
-   Applying background-clip to every p/span/label causes massive scroll lag on iOS.
-*/
-h1 {
-  font-size: clamp(1.5rem, 7vw, 3rem);
-  line-height: 1.1;
-}
-h2 {
-  font-size: clamp(1.2rem, 6vw, 2.2rem);
-  line-height: 1.2;
-}
-h3 {
-  font-size: clamp(1rem, 5vw, 1.8rem);
-  line-height: 1.3;
-}
+h1 { font-size: clamp(1.5rem, 7vw, 3rem); line-height: 1.1; }
+h2 { font-size: clamp(1.2rem, 6vw, 2.2rem); line-height: 1.2; }
+h3 { font-size: clamp(1rem, 5vw, 1.8rem); line-height: 1.3; }
 
-/* THEME GRADIENT UTILITY */
-.bg-theme-gradient {
-  background: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%) !important;
-}
-
-h1, h2, h3, h4, .text-theme-gradient {
+/* GRADIENT TEXT - Default Themes Only */
+:not([data-theme='high-contrast-light']) h1, 
+:not([data-theme='high-contrast-light']) h2, 
+:not([data-theme='high-contrast-light']) h3, 
+:not([data-theme='high-contrast-light']) h4, 
+:not([data-theme='high-contrast-light']) .text-theme-gradient {
   background-image: linear-gradient(135deg, rgb(var(--primary-rgb)) 0%, rgb(var(--secondary-rgb)) 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
-  filter: saturate(1.5) brightness(1.2); /* Enhance vibrancy for all themes */
+  filter: saturate(1.5) brightness(1.2);
 }
 
-/* VIBRANT TEXT - Neutral body text with themed accents */
 p, span, label, div, li, td, th, a {
   color: inherit;
 }
@@ -459,20 +276,8 @@ p, span, label, div, li, td, th, a {
   color: rgb(var(--foreground-rgb) / 0.6);
 }
 
-/* VIBRANT OUTLINES - All UI boxes and nested elements get themed outlines */
 .border-theme, .border-2, .border-4, .border {
   border-color: rgb(var(--primary-rgb) / 0.5) !important;
-}
-
-.bg-theme-surface {
-  border-color: rgb(var(--primary-rgb) / 0.5) !important;
-}
-
-/* Ensure all theme borders and outlines follow the primary theme color */
-.border-theme, .border-2, .border-4, .border, [class*="border-"], [class*="outline-"], [class*="ring-"] {
-  border-color: rgb(var(--primary-rgb) / 0.4) !important;
-  outline-color: rgb(var(--primary-rgb) / 0.4) !important;
-  ring-color: rgb(var(--primary-rgb) / 0.4) !important;
 }
 
 .bg-theme-surface, .bg-theme-background {
@@ -480,28 +285,6 @@ p, span, label, div, li, td, th, a {
   box-shadow: 0 0 20px rgb(var(--primary-rgb) / 0.05), inset 0 0 0 1px rgb(var(--primary-rgb) / 0.15);
 }
 
-.border-theme:hover {
-  border-color: rgb(var(--primary-rgb) / 0.8) !important;
-  box-shadow: 0 0 30px rgb(var(--primary-rgb) / 0.2);
-}
-
-.animate-shimmer-border {
-  animation: shimmer 4s infinite ease-in-out;
-}
-
-/* SHIMMER ANIMATION */
-@keyframes shimmer {
-  0% { border-color: rgb(var(--primary-rgb) / 0.3); box-shadow: 0 0 10px rgb(var(--primary-rgb) / 0.1); }
-  50% { border-color: rgb(var(--secondary-rgb) / 0.5); box-shadow: 0 0 25px rgb(var(--secondary-rgb) / 0.2); }
-  100% { border-color: rgb(var(--primary-rgb) / 0.3); box-shadow: 0 0 10px rgb(var(--primary-rgb) / 0.1); }
-}
-
-/* GLOWING TEXT EFFECT */
-.text-glow {
-  text-shadow: 0 0 15px rgb(var(--primary-rgb) / 0.4);
-}
-
-/* Re-applying core styles */
 h1, h2, h3, h4 {
   letter-spacing: -0.05em;
   text-transform: uppercase;
@@ -509,7 +292,6 @@ h1, h2, h3, h4 {
   font-weight: 900;
 }
 
-/* Fallback Globe Styling */
 .fallback-globe {
   background: radial-gradient(circle at center, rgb(var(--primary-rgb)) 0%, transparent 70%);
   border: 1px solid rgb(var(--primary-rgb) / 0.3);
@@ -525,13 +307,6 @@ button {
   letter-spacing: -0.02em;
 }
 
-/* Mobile scroll container fix */
-main, .scroll-container, [role="main"] {
-  /* overflow-y: auto !important; */
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Mobile touch optimization */
 @media (max-width: 768px) {
   html, body {
     overflow-y: auto !important;
@@ -540,24 +315,13 @@ main, .scroll-container, [role="main"] {
     min-height: 100vh;
     width: 100% !important;
     max-width: 100% !important;
-    overflow-x: hidden !important;
     touch-action: manipulation !important;
   }
-  
-  /* Prevent elastic overscroll on iOS */
   body {
     overscroll-behavior-x: none !important;
     overscroll-behavior-y: auto !important;
   }
-  
-  /* Ensure mobile nav doesn't block content */
-  .pb-24 {
-    padding-bottom: 6rem !important;
-  }
-  .pb-32 {
-    padding-bottom: 8rem !important;
-  }
-  .pb-40 {
-    padding-bottom: 10rem !important;
-  }
+  .pb-24 { padding-bottom: 6rem !important; }
+  .pb-32 { padding-bottom: 8rem !important; }
+  .pb-40 { padding-bottom: 10rem !important; }
 }
