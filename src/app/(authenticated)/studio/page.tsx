@@ -123,6 +123,7 @@ export default function StudioPage() {
   const [usage, setUsage] = useState<{
     neural: { remaining: number; limit: number | string; nextReset?: string };
     customize: { remaining: number; limit: number | string; nextReset?: string };
+    enhanced: { remaining: number | string; limit: number | string };
     design: { remaining: number; limit: number | string; nextReset?: string };
   } | null>(null);
 
@@ -144,6 +145,7 @@ export default function StudioPage() {
         setUsage({
           neural: { ...data.neural, nextReset: formatReset(data.neural.nextReset) },
           customize: { ...data.customize, nextReset: formatReset(data.customize.nextReset) },
+          enhanced: { remaining: data.enhanced?.remaining ?? '∞', limit: data.enhanced?.limit ?? '∞' },
           design: { ...data.design, nextReset: formatReset(data.design.nextReset) }
         });
       }
@@ -325,7 +327,21 @@ export default function StudioPage() {
               </div>
 
               {/* 2. Upload Video Box for Edits */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
+                <div className="absolute top-6 right-6 flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
+                    <span className="text-[10px] font-black text-primary">{usage?.enhanced?.remaining ?? '∞'}</span>
+                    <span className="text-[9px] font-black text-slate-400">/</span>
+                    <span className="text-[9px] font-black text-slate-500">{usage?.enhanced?.limit ?? '∞'}</span>
+                  </div>
+                  <div className="relative">
+                    <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                    <div className="absolute bottom-full right-0 mb-3 w-48 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                      <p className="font-black text-white uppercase tracking-widest mb-1">Video Edits</p>
+                      Unlimited AI video enhancements. No quota restrictions.
+                    </div>
+                  </div>
+                </div>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
                     <Scissors className="w-5 h-5 text-purple-400" />
@@ -350,7 +366,21 @@ export default function StudioPage() {
               </div>
 
               {/* 3. Faceless Content Creation Box */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4">
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
+                <div className="absolute top-6 right-6 flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
+                    <span className="text-[10px] font-black text-primary">{usage?.customize?.remaining ?? 0}</span>
+                    <span className="text-[9px] font-black text-slate-400">/</span>
+                    <span className="text-[9px] font-black text-slate-500">{usage?.customize?.limit ?? 14}</span>
+                  </div>
+                  <div className="relative">
+                    <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                    <div className="absolute bottom-full right-0 mb-3 w-48 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                      <p className="font-black text-white uppercase tracking-widest mb-1">Faceless Videos</p>
+                      Shares weekly video quota with Customize Video. Resets weekly.
+                    </div>
+                  </div>
+                </div>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                     <Clapperboard className="w-5 h-5 text-emerald-400" />
@@ -398,8 +428,9 @@ export default function StudioPage() {
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
                 <div className="absolute top-6 right-6 flex items-center gap-2">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
-                    <span className="text-[10px] font-black text-white">{(typeof usage?.design?.limit === 'number' ? usage.design.limit : 0) - (usage?.design?.remaining ?? 0)}/{usage?.design?.limit ?? 50}</span>
-                    <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest ml-1">Used</span>
+                    <span className="text-[10px] font-black text-primary">{usage?.design?.remaining ?? 0}</span>
+                    <span className="text-[9px] font-black text-slate-400">/</span>
+                    <span className="text-[9px] font-black text-slate-500">{usage?.design?.limit ?? 50}</span>
                   </div>
                   <div className="relative">
                     <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
@@ -468,8 +499,9 @@ export default function StudioPage() {
                 <div className="absolute top-6 right-6 flex items-center gap-3">
                   <div className="flex items-center gap-2">
                     <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
-                      <span className="text-[10px] font-black text-white">{(typeof usage?.neural?.limit === 'number' ? usage.neural.limit : 0) - (usage?.neural?.remaining ?? 0)}/{usage?.neural?.limit ?? 14}</span>
-                      <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest ml-1">Used</span>
+                      <span className="text-[10px] font-black text-primary">{usage?.neural?.remaining ?? 0}</span>
+                      <span className="text-[9px] font-black text-slate-400">/</span>
+                      <span className="text-[9px] font-black text-slate-500">{usage?.neural?.limit ?? 14}</span>
                     </div>
                     <div className="relative">
                       <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
