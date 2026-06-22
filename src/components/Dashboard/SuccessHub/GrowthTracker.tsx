@@ -59,8 +59,8 @@ export const GrowthTracker = ({
 
       <div className="flex flex-col md:flex-row gap-6 items-center">
         {/* Holographic Progress Ring */}
-        <div className="relative w-36 h-36 shrink-0 flex items-center justify-center">
-          <svg className="w-36 h-36 md:w-36 md:h-36 -rotate-90">
+        <div className="relative w-36 h-36 shrink-0 flex items-center justify-center branded-exception">
+          <svg className="w-36 h-36 md:w-36 md:h-36 -rotate-90 branded-exception">
             <circle
               cx="72"
               cy="72"
