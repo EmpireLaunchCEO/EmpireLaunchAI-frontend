@@ -112,7 +112,7 @@
   opacity: 1 !important;
 }
 
-/* 1. RESET: Kill all borders by default to remove wireframe clutter */
+/* 1. RESET: Kill all technical/structural borders by default */
 [data-theme='high-contrast-light'] *,
 [data-theme='high-contrast-light'] div,
 [data-theme='high-contrast-light'] span,
@@ -121,46 +121,43 @@
   border-color: transparent !important;
 }
 
-/* 2. RE-ENABLE: Only show borders for ACTUAL components and Outer Cards */
+/* 2. RE-ENABLE: Target ACTUAL Visible Cards and Components */
+/* These are the primary dashboard cards and layout containers */
+[data-theme='high-contrast-light'] .border,
+[data-theme='high-contrast-light'] .border-2,
+[data-theme='high-contrast-light'] .border-4,
+[data-theme='high-contrast-light'] .bg-theme-surface,
+[data-theme='high-contrast-light'] .bg-theme-background,
+[data-theme='high-contrast-light'] .bg-slate-900,
 [data-theme='high-contrast-light'] aside,
 [data-theme='high-contrast-light'] nav,
 [data-theme='high-contrast-light'] button,
 [data-theme='high-contrast-light'] input,
 [data-theme='high-contrast-light'] textarea,
-[data-theme='high-contrast-light'] select,
-[data-theme='high-contrast-light'] .border-2,
-[data-theme='high-contrast-light'] .border-4,
-[data-theme='high-contrast-light'] .border-black {
-  border-width: revert !important; /* Keep original width if set */
-  border-style: solid !important;
-  border-color: black !important;
-}
-
-/* If it was a 'border' class but not nested, we want it as a card outline */
-/* We target common Card background classes to identify "Outer Boxes" */
-[data-theme='high-contrast-light'] .bg-theme-surface,
-[data-theme='high-contrast-light'] .bg-theme-background,
-[data-theme='high-contrast-light'] .bg-slate-900,
-[data-theme='high-contrast-light'] [class*="bg-slate-900"] {
+[data-theme='high-contrast-light'] select {
   border-width: 1.5px !important;
   border-style: solid !important;
   border-color: black !important;
 }
 
-/* 3. NESTED CLEANUP: If a box is inside a box, kill the inner one's border */
-/* This stops the "box around the name" inside the "oval box" */
-[data-theme='high-contrast-light'] .bg-theme-surface *,
-[data-theme='high-contrast-light'] .bg-slate-900 * {
+/* 3. NESTED SUPPRESSION: If it's a generic div inside a card, keep it borderless */
+/* This stops the clutter inside the main outer box */
+[data-theme='high-contrast-light'] .bg-theme-surface div,
+[data-theme='high-contrast-light'] .bg-slate-900 div,
+[data-theme='high-contrast-light'] section div {
   border-width: 0 !important;
 }
 
-/* ...But still allow buttons/inputs inside cards to have borders */
+/* 4. RE-ENABLE FUNCTIONAL NESTING: Buttons and specific items inside cards MUST have borders */
 [data-theme='high-contrast-light'] .bg-theme-surface button,
 [data-theme='high-contrast-light'] .bg-theme-surface input,
+[data-theme='high-contrast-light'] .bg-theme-surface .border,
 [data-theme='high-contrast-light'] .bg-slate-900 button,
-[data-theme='high-contrast-light'] .bg-slate-900 input {
+[data-theme='high-contrast-light'] .bg-slate-900 input,
+[data-theme='high-contrast-light'] .bg-slate-900 .border {
   border-width: 1.5px !important;
   border-color: black !important;
+  border-style: solid !important;
 }
 
 /* 4. ICONS & GRAPHICS */
