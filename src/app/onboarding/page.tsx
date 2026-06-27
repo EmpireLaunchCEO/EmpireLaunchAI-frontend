@@ -30,8 +30,8 @@ import { Suspense } from 'react';
 
 const steps = [
   { id: 1, title: 'Protocol' },
-  { id: 2, title: 'Neural Identity' },
-  { id: 3, title: 'Authorization' },
+  { id: 2, title: 'Authorization' },
+  { id: 3, title: 'Neural Identity' },
   { id: 4, title: 'Business Identity' },
   { id: 5, title: 'Matrix' },
   { id: 6, title: 'Toolkit' },
@@ -83,6 +83,9 @@ function OnboardingContent() {
   const [showDownloadScreen, setShowDownloadScreen] = useState(false);
   const [isActivating, setIsActivating] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
+  const [accessKey, setAccessKey] = useState('');
+  const [isRedeeming, setIsRedeeming] = useState(false);
+  const [redemptionError, setRedemptionError] = useState<string | null>(null);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
@@ -242,6 +245,32 @@ function OnboardingContent() {
     }
   };
 
+  const handleRedeemKey = async () => {
+    if (!accessKey.trim()) return;
+    setIsRedeeming(true);
+    setRedemptionError(null);
+    try {
+      const response = await fetch(`${API_URL}/api/auth/redeem-key`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ key: accessKey.trim() })
+      });
+      const result = await response.json();
+      if (result.status === 'success') {
+        // Key is valid, proceed to identity creation
+        nextStep();
+      } else {
+        setRedemptionError(result.error || 'Invalid access key.');
+      }
+    } catch (err) {
+      setRedemptionError('Network error. Try again.');
+    } finally {
+      setIsRedeeming(false);
+    }
+  };
+
   // Discovery Log Sequence
   useEffect(() => {
     if (isActivating && data.automationMode === 'empire' && !showDiscoveryReview && isMounted) {
@@ -360,16 +389,7 @@ function OnboardingContent() {
             )}
 
             {currentStep === 2 && (
-              <motion.div key="step2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                <SignUpForm 
-                  initialMode={searchParams.get('mode') === 'login' ? 'login' : 'signup'}
-                  onSuccess={(uid) => { setUserId(uid); nextStep(); }} 
-                />
-              </motion.div>
-            )}
-
-            {currentStep === 3 && (
-              <motion.div key="step3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
+              <motion.div key="step2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
                 <div className="text-center space-y-4">
                   <Stars className="w-16 h-16 text-primary mx-auto" />
                   <h2 className="text-2xl md:text-3xl font-black text-theme-gradient tracking-tight uppercase italic">Authorize Engine.</h2>
@@ -400,12 +420,66 @@ function OnboardingContent() {
                         <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">/Month</span>
                       </div>
                     </div>
-                    <button onClick={handleSecurePayment} disabled={isPaying} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 shadow-xl border-none">
-                      <CreditCard className="w-5 h-5" />
-                      {isPaying ? "Processing..." : "Pay with Credit Card"}
-                    </button>
+                    
+                    <div className="space-y-4 pt-4 border-t border-slate-800/50">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                          <Shield className="w-3 h-3 text-primary" />
+                          Access Key (Optional)
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={accessKey}
+                            onChange={(e) => setAccessKey(e.target.value.toUpperCase())}
+                            placeholder="EMPIRE-XXXX-XXXX"
+                            className="flex-1 bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-[10px] font-black uppercase text-white outline-none focus:border-primary transition-all"
+                          />
+                          <button 
+                            onClick={handleRedeemKey}
+                            disabled={isRedeeming || !accessKey.trim()}
+                            className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white/10 transition-all disabled:opacity-50"
+                          >
+                            {isRedeeming ? "..." : "Apply"}
+                          </button>
+                        </div>
+                        {redemptionError && (
+                          <p className="text-[8px] font-black uppercase text-red-500 ml-1">{redemptionError}</p>
+                        )}
+                      </div>
+
+                      <button onClick={handleSecurePayment} disabled={isPaying} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 shadow-xl border-none">
+                        <CreditCard className="w-5 h-5" />
+                        {isPaying ? "Processing..." : "Pay with Credit Card"}
+                      </button>
+                    </div>
                   </div>
                 </div>
+              </motion.div>
+            )}
+
+            {currentStep === 3 && (
+              <motion.div key="step3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                <SignUpForm 
+                  initialMode={searchParams.get('mode') === 'login' ? 'login' : 'signup'}
+                  onSuccess={async (uid) => { 
+                    setUserId(uid); 
+                    // If we have an access key from the previous step, redeem it now
+                    if (accessKey.trim()) {
+                      try {
+                        await fetch(`${API_URL}/api/auth/redeem-key`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ userId: uid, key: accessKey.trim() })
+                        });
+                        setIsPaid(true);
+                      } catch (err) {
+                        console.error('Failed to auto-redeem key');
+                      }
+                    }
+                    nextStep(); 
+                  }} 
+                />
               </motion.div>
             )}
 
