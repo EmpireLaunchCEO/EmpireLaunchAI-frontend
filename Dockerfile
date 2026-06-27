@@ -1,3 +1,6 @@
+# Cache breaker: bump this to force a fresh build (bypasses Railway's corrupted cache)
+ARG CACHE_BREAKER=v1-cache-purge
+
 FROM node:20-alpine AS base
 
 FROM base AS deps
