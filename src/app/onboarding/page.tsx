@@ -83,6 +83,9 @@ function OnboardingContent() {
   const [showDownloadScreen, setShowDownloadScreen] = useState(false);
   const [isActivating, setIsActivating] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
+  const [accessKey, setAccessKey] = useState('');
+  const [isRedeeming, setIsRedeeming] = useState(false);
+  const [redemptionError, setRedemptionError] = useState<string | null>(null);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
@@ -239,6 +242,33 @@ function OnboardingContent() {
         console.error('Checkout failed');
     } finally {
         setIsPaying(false);
+    }
+  };
+
+  const handleRedeemKey = async () => {
+    if (!accessKey.trim()) return;
+    setIsRedeeming(true);
+    setRedemptionError(null);
+    try {
+      const response = await fetch(`${API_URL}/api/auth/redeem-key`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': userId || ''
+        },
+        body: JSON.stringify({ userId, key: accessKey.trim() })
+      });
+      const result = await response.json();
+      if (result.status === 'success') {
+        setIsPaid(true);
+        nextStep();
+      } else {
+        setRedemptionError(result.error || 'Invalid access key.');
+      }
+    } catch (err) {
+      setRedemptionError('Network error. Try again.');
+    } finally {
+      setIsRedeeming(false);
     }
   };
 
@@ -400,10 +430,39 @@ function OnboardingContent() {
                         <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">/Month</span>
                       </div>
                     </div>
-                    <button onClick={handleSecurePayment} disabled={isPaying} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 shadow-xl border-none">
-                      <CreditCard className="w-5 h-5" />
-                      {isPaying ? "Processing..." : "Pay with Credit Card"}
-                    </button>
+                    
+                    <div className="space-y-4 pt-4 border-t border-slate-800/50">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                          <Shield className="w-3 h-3 text-primary" />
+                          Access Key (Optional)
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={accessKey}
+                            onChange={(e) => setAccessKey(e.target.value.toUpperCase())}
+                            placeholder="EMPIRE-XXXX-XXXX"
+                            className="flex-1 bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-[10px] font-black uppercase text-white outline-none focus:border-primary transition-all"
+                          />
+                          <button 
+                            onClick={handleRedeemKey}
+                            disabled={isRedeeming || !accessKey.trim()}
+                            className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white/10 transition-all disabled:opacity-50"
+                          >
+                            {isRedeeming ? "..." : "Apply"}
+                          </button>
+                        </div>
+                        {redemptionError && (
+                          <p className="text-[8px] font-black uppercase text-red-500 ml-1">{redemptionError}</p>
+                        )}
+                      </div>
+
+                      <button onClick={handleSecurePayment} disabled={isPaying} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 shadow-xl border-none">
+                        <CreditCard className="w-5 h-5" />
+                        {isPaying ? "Processing..." : "Pay with Credit Card"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </motion.div>
