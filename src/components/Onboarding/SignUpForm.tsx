@@ -80,7 +80,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup' }: SignUpFormProp
         <div className="space-y-2">
           <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2 px-1">
             <Lock className="w-3 h-3 text-primary" />
-            Neural Password
+            Secure Access Key
           </label>
           <div className="relative group">
             <input

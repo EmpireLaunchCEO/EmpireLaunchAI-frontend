@@ -52,23 +52,33 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
     }, 2000);
   };
 
-  const handleRedeemKey = () => {
+  const handleRedeemKey = async () => {
     setIsProcessing(true);
     setError('');
 
     const cleanKey = accessKey.trim().toUpperCase();
 
-    // In a real app, this would call /api/auth/redeemKey
-    // For this simulation, we check for the Master Owner key
-    setTimeout(() => {
-      if (cleanKey === 'OWNER-ADMIN-MAX-ACCESS') {
+    try {
+      const response = await fetch('/api/auth/redeem-key', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': localStorage.getItem('empire_userId') || ''
+        },
+        body: JSON.stringify({ userId: localStorage.getItem('empire_userId'), key: cleanKey })
+      });
+      const result = await response.json();
+      if (result.status === 'success') {
         setIsPaid(true);
         setIsProcessing(false);
       } else {
-        setError('Invalid or expired access key.');
+        setError(result.error || 'Invalid or expired access key.');
         setIsProcessing(false);
       }
-    }, 1500);
+    } catch (err) {
+      setError('Connection failed. Try again.');
+      setIsProcessing(false);
+    }
   };
 
   // Ensure first render matches server (which doesn't have isPaid)
