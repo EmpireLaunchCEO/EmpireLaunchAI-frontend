@@ -63,6 +63,15 @@ const availablePlatforms = [
   { id: 'substack', name: 'Substack', icon: Mail, color: 'text-orange-500', bg: 'bg-orange-50' },
   { id: 'godaddy', name: 'GoDaddy', icon: Globe, color: 'text-blue-600', bg: 'bg-blue-50' },
   { id: 'systeme_io', name: 'Systeme.io', icon: Mail, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  // New platforms added by Troubleshooter — OAuth configs live on backend
+  { id: 'amazon', name: 'Amazon', icon: ShoppingBag, color: 'text-yellow-600', bg: 'bg-yellow-50' },
+  { id: 'ebay', name: 'eBay', icon: ShoppingBag, color: 'text-red-500', bg: 'bg-red-50' },
+  { id: 'squarespace', name: 'Squarespace', icon: Globe, color: 'text-slate-700', bg: 'bg-slate-50' },
+  { id: 'wix', name: 'Wix', icon: Globe, color: 'text-blue-500', bg: 'bg-blue-50' },
+  { id: 'gumroad', name: 'Gumroad', icon: Zap, color: 'text-purple-500', bg: 'bg-purple-50' },
+  { id: 'patreon', name: 'Patreon', icon: Zap, color: 'text-orange-600', bg: 'bg-orange-50' },
+  { id: 'linkedin', name: 'LinkedIn', icon: Share2, color: 'text-blue-700', bg: 'bg-blue-50' },
+  { id: 'twitch', name: 'Twitch', icon: Video, color: 'text-purple-700', bg: 'bg-purple-50' },
 ];
 
 interface GuidedLinkingProps {
@@ -103,6 +112,14 @@ const PLATFORM_3D_ICONS: Record<string, string> = {
   cj_dropshipping: '/brands/cj_dropshipping_128.png',
   autods: '/brands/autods_128.png',
   bannerbear: '/brands/bannerbear_128.png',
+  amazon: '/brands/amazon_128.png',
+  ebay: '/brands/ebay_128.png',
+  squarespace: '/brands/squarespace_128.png',
+  wix: '/brands/wix_128.png',
+  gumroad: '/brands/gumroad_128.png',
+  patreon: '/brands/patreon_128.png',
+  linkedin: '/brands/linkedin_128.png',
+  twitch: '/brands/twitch_128.png',
 };
 
 function PlatformIcon({ id, icon: Icon, className, size = 20 }: { id: string, icon: any, className?: string, size?: number }) {
