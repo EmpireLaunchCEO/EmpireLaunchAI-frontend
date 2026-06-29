@@ -245,7 +245,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       printify: { endpoint: 'printify', sessionKey: 'printify_oauth_session_id', vaultKey: 'empire_vault_printify', label: 'Printify' },
       cj_dropshipping: { endpoint: 'cj_dropshipping', sessionKey: 'cj_dropshipping_oauth_session_id', vaultKey: 'empire_vault_cj_dropshipping', label: 'CJ Dropshipping' },
       autods: { endpoint: 'autods', sessionKey: 'autods_oauth_session_id', vaultKey: 'empire_vault_autods', label: 'AutoDS' },
-      canva: { endpoint: 'canva', sessionKey: 'canva_oauth_session_id', vaultKey: 'empire_vault_canva', label: 'Canva' },
       figma: { endpoint: 'figma', sessionKey: 'figma_oauth_session_id', vaultKey: 'empire_vault_figma', label: 'Figma' },
       godaddy: { endpoint: 'godaddy', sessionKey: 'godaddy_oauth_session_id', vaultKey: 'empire_vault_godaddy', label: 'GoDaddy' },
       systeme_io: { endpoint: 'systeme_io', sessionKey: 'systeme_io_oauth_session_id', vaultKey: 'empire_vault_systeme_io', label: 'Systeme.io' },
@@ -320,7 +319,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     }
 
     // Neural Node Platforms (Browser Automation)
-    if (['kittl', 'capcut', 'behance', 'artstation', 'redbubble', 'substack'].includes(activeSetupPlatform || '')) {
+    if (['canva', 'kittl', 'capcut', 'behance', 'artstation', 'redbubble', 'substack'].includes(activeSetupPlatform || '')) {
       setLinkingStep('keys');
       setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
       onboardingService.startOnboarding(activeSetupPlatform!)
