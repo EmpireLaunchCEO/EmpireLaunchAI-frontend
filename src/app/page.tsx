@@ -155,8 +155,6 @@ function LandingPageContent() {
           </div>
         </motion.div>
 
-        {/* Removed TermsModal from landing - it's a mandatory gate at the end of onboarding */}
-
         <div className="grid grid-cols-1 gap-6 pt-24 w-full">
           <div className="bg-theme-surface/5 p-8 rounded-[40px] border border-white/5 text-left space-y-4 hover:bg-theme-surface/[0.07] transition-all">
             <div className="bg-primary/20 p-4 rounded-2xl w-fit">
@@ -173,6 +171,21 @@ function LandingPageContent() {
             <p className="text-xs text-slate-400 font-medium leading-relaxed uppercase tracking-tight">AI intelligence monitors global trends 24/7 to adjust your strategy instantly.</p>
           </div>
         </div>
+
+        {/* Footer with Legal Links */}
+        <footer className="w-full mt-32 pt-8 pb-12 border-t border-white/5 flex flex-col items-center gap-6">
+          <div className="flex gap-8">
+            <Link href="/privacy" className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-primary transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-primary transition-colors">
+              Terms of Service
+            </Link>
+          </div>
+          <p className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-600">
+            © 2026 EmpireLaunch AI Inc. All rights reserved.
+          </p>
+        </footer>
       </main>
     </div>
   );
