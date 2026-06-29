@@ -23,7 +23,7 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         launchOptions: {
-          executablePath: '/opt/browsers/chromium-1223/chrome-linux64/chrome',
+          executablePath: '/opt/browsers/chromium-1228/chrome-linux64/chrome',
           args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
