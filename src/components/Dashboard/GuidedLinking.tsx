@@ -248,6 +248,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       figma: { endpoint: 'figma', sessionKey: 'figma_oauth_session_id', vaultKey: 'empire_vault_figma', label: 'Figma' },
       godaddy: { endpoint: 'godaddy', sessionKey: 'godaddy_oauth_session_id', vaultKey: 'empire_vault_godaddy', label: 'GoDaddy' },
       systeme_io: { endpoint: 'systeme_io', sessionKey: 'systeme_io_oauth_session_id', vaultKey: 'empire_vault_systeme_io', label: 'Systeme.io' },
+      canva: { endpoint: 'canva', sessionKey: 'canva_oauth_session_id', vaultKey: 'empire_vault_canva', label: 'Canva' },
       // ─── NEW 31+ PLATFORMS ───────────────────────────────────────
       linkedin: { endpoint: 'linkedin', sessionKey: 'linkedin_oauth_session_id', vaultKey: 'empire_vault_linkedin', label: 'LinkedIn' },
       twitch: { endpoint: 'twitch', sessionKey: 'twitch_oauth_session_id', vaultKey: 'empire_vault_twitch', label: 'Twitch' },
@@ -319,7 +320,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     }
 
     // Neural Node Platforms (Browser Automation)
-    if (['canva', 'kittl', 'capcut', 'behance', 'artstation', 'redbubble', 'substack'].includes(activeSetupPlatform || '')) {
+    if (['kittl', 'capcut', 'behance', 'artstation', 'redbubble', 'substack'].includes(activeSetupPlatform || '')) {
       setLinkingStep('keys');
       setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
       onboardingService.startOnboarding(activeSetupPlatform!)
@@ -702,15 +703,14 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                               <input type="password" value="••••••••••••••••" readOnly className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold text-foreground" />
                             </div>
                             <button
-                              disabled={!!onboardingSessionId || (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(currentPlatform.id) && !onboardingSessionId)}
+                              disabled={!!onboardingSessionId}
                               onClick={handleLink}
                               className={cn(
                                 "w-full py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-2xl",
-                                (onboardingSessionId || (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(currentPlatform.id) && !onboardingSessionId)) ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
+                                onboardingSessionId ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
                               )}
                             >
-                              {onboardingSessionId ? 'Processing Neural Handshake...' : 
-                               (['canva', 'etsy', 'tiktok', 'fiverr', 'youtube', 'instagram', 'facebook', 'gmail'].includes(currentPlatform.id) ? 'Waking Neural Node...' : 'Finalize Link Center')}
+                              {onboardingSessionId ? 'Processing Neural Handshake...' : 'Finalize Link Center'}
                             </button>
                           </>
                         )}
