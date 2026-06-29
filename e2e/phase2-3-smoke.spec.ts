@@ -114,7 +114,7 @@ test.describe('Phase 3: Creative Loop & Navigation', () => {
 
       // Verify page loaded without crash
       const bodyText = await page.locator('body').innerText().catch(() => '');
-      expect(bodyText.length).withContext(`Route ${route} returned empty on mobile`).toBeGreaterThan(0);
+      expect(bodyText.length).toBeGreaterThan(0);
 
       // Verify no application errors
       const errorEl = page.locator('text=Application error, text=Internal Server Error').first();
