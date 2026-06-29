@@ -249,6 +249,15 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       figma: { endpoint: 'figma', sessionKey: 'figma_oauth_session_id', vaultKey: 'empire_vault_figma', label: 'Figma' },
       godaddy: { endpoint: 'godaddy', sessionKey: 'godaddy_oauth_session_id', vaultKey: 'empire_vault_godaddy', label: 'GoDaddy' },
       systeme_io: { endpoint: 'systeme_io', sessionKey: 'systeme_io_oauth_session_id', vaultKey: 'empire_vault_systeme_io', label: 'Systeme.io' },
+      // ─── NEW 31+ PLATFORMS ───────────────────────────────────────
+      linkedin: { endpoint: 'linkedin', sessionKey: 'linkedin_oauth_session_id', vaultKey: 'empire_vault_linkedin', label: 'LinkedIn' },
+      twitch: { endpoint: 'twitch', sessionKey: 'twitch_oauth_session_id', vaultKey: 'empire_vault_twitch', label: 'Twitch' },
+      patreon: { endpoint: 'patreon', sessionKey: 'patreon_oauth_session_id', vaultKey: 'empire_vault_patreon', label: 'Patreon' },
+      amazon: { endpoint: 'amazon', sessionKey: 'amazon_oauth_session_id', vaultKey: 'empire_vault_amazon', label: 'Amazon' },
+      ebay: { endpoint: 'ebay', sessionKey: 'ebay_oauth_session_id', vaultKey: 'empire_vault_ebay', label: 'eBay' },
+      squarespace: { endpoint: 'squarespace', sessionKey: 'squarespace_oauth_session_id', vaultKey: 'empire_vault_squarespace', label: 'Squarespace' },
+      wix: { endpoint: 'wix', sessionKey: 'wix_oauth_session_id', vaultKey: 'empire_vault_wix', label: 'Wix' },
+      gumroad: { endpoint: 'gumroad', sessionKey: 'gumroad_oauth_session_id', vaultKey: 'empire_vault_gumroad', label: 'Gumroad' },
     };
 
     const oauth = oauthPlatforms[activeSetupPlatform || ''];
