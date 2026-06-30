@@ -1,0 +1,71 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.*
+.yarn/
+
+# Next.js
+.next/
+out/
+
+# Build output
+/build
+dist/
+
+# Logs and debug files
+*.log
+build_output*.txt
+build_output*.log
+build_errors*.txt
+build_attempt_*.log
+build_vercel_debug*.log
+build_full*.log
+full_build*.log
+frontend.log
+dev.log
+dev_logs.txt
+dev_server.log
+last_commit.txt
+REBUILD.txt
+push_err*.txt
+push_out*.txt
+local_build_error*.log
+log_check*.txt
+
+# Agent-generated malformed files
+dusagent-*
+dusgent-*
+all_tasks.json
+EMPIRE_LINK.txt
+ON_FAILURE
+status_debug.txt
+test_results.txt
+tsc_output.txt
+t
+tory
+"h origin main"
+"how "*
+
+# Environment
+.env*
+.vercel
+
+# Git
+.git
+.gitignore
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test reports
+playwright-report/
+coverage/
+e2e/
+
+# Catch single-char and malformed filenames
+?
+??
+???
+[
