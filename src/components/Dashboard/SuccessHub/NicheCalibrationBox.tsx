@@ -89,9 +89,9 @@ export const NicheCalibrationBox = ({ niche, angle, archetype, isOperationsBase 
              </span>
            )}
            <p className="text-[9px] font-bold text-primary uppercase tracking-widest">
-
            </p>
         </div>
+      </div>
 
       {angle && (
         <div className="pt-6 border-t border-theme/20 space-y-4">
