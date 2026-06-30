@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { GrowthTracker } from './GrowthTracker';
 import { NeuralActivityFeed } from './NeuralActivityFeed';
 import { Brain, Zap, Stars, Minus, Maximize2 } from 'lucide-react';
+import { useEmpire } from '@/lib/EmpireContext';
+import { cn } from '@/lib/utils';
 
 interface SuccessHubOverviewProps {
   empireData: any;
@@ -13,6 +15,7 @@ interface SuccessHubOverviewProps {
 }
 
 export const SuccessHubOverview = ({ empireData, pulseData, healthData }: SuccessHubOverviewProps) => {
+  const { connectedPlatforms } = useEmpire();
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
 

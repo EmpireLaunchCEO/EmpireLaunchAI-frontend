@@ -5,6 +5,8 @@ import { Terminal, Cpu, Zap, CheckCircle2, Circle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { io } from 'socket.io-client';
 import { API_URL } from '@/lib/config';
+import { useEmpire } from '@/lib/EmpireContext';
+import { cn } from '@/lib/utils';
 
 const MOCK_THOUGHTS = [
   "Analyzing Etsy trends for 'digital journals'...",

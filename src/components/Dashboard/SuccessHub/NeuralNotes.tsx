@@ -12,6 +12,15 @@ export function NeuralNotes() {
     setMounted(true);
     const saved = localStorage.getItem('minimized-neural-notes');
     if (saved === 'true') setIsMinimized(true);
+
+    const savedNotes = localStorage.getItem('neural_notes');
+    if (savedNotes) {
+      try {
+        setNotes(JSON.parse(savedNotes));
+      } catch (e) {
+        console.error('Failed to parse notes', e);
+      }
+    }
   }, []);
 
   const toggleMinimize = () => {
@@ -19,13 +28,7 @@ export function NeuralNotes() {
     setIsMinimized(newState);
     localStorage.setItem('minimized-neural-notes', String(newState));
   };
-  const [notes, setNotes] = useState<string[]>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('neural_notes');
-      return saved ? JSON.parse(saved) : ["Initial Strategy: Focus on Etsy high-velocity keywords for Q4."];
-    }
-    return ["Initial Strategy: Focus on Etsy high-velocity keywords for Q4."];
-  });
+  const [notes, setNotes] = useState<string[]>(["Initial Strategy: Focus on Etsy high-velocity keywords for Q4."]);
   const [newNote, setNewNote] = useState('');
 
   const saveNotes = (updatedNotes: string[]) => {
