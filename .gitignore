@@ -39,3 +39,32 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ---- Build Artifacts & Logs (prevent wheelhouse cache corruption) ----
+*.log
+build_output*.txt
+build_output*.log
+build_errors*.txt
+build_attempt_*.log
+build_vercel_debug*.log
+build_full*.log
+full_build*.log
+frontend.log
+dev.log
+dev_logs.txt
+dev_server.log
+dev_server*.log
+last_commit.txt
+REBUILD.txt
+push_err*.txt
+push_out*.txt
+local_build_error*.log
+log_check*.txt
+
+# ---- Agent-generated files ----
+dusagent-*
+dusgent-*
+all_tasks.json
+EMPIRE_LINK.txt
+"h origin main"
+"how "*
