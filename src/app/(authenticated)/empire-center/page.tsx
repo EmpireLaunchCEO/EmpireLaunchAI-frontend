@@ -146,8 +146,8 @@ export default function EmpireCenterPage() {
                   <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                     <NicheCalibrationBox 
                       isOperationsBase={true}
-                      niche={isAdmin ? "Done For You Business" : (empireData?.niche || empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
-                      angle={isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : (empireData?.angle || empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
+                      niche={empireData?.niche || (isAdmin ? "Done For You Business" : empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
+                      angle={empireData?.angle || (isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
                     />
                   </motion.div>
 

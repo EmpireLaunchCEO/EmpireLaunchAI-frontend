@@ -170,6 +170,16 @@ export default function Dashboard() {
                       />
                     </motion.div>
 
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                       <SubscriptionSuccessShareBox 
+                         isProtocolAccepted={isProtocolAccepted}
+                         onAcceptProtocol={() => acceptProtocols()}
+                         totalRevenue={healthData?.revenue || 0}
+                         totalFees={healthData?.pendingDues || 0}
+                         businessSlots={ownedSlots}
+                       />
+                    </motion.div>
+
                     {/* Active Subscribers - Owner Only - Restored below Finances */}
                     {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com' || activeEmpireId === '1') && (
                       <motion.div

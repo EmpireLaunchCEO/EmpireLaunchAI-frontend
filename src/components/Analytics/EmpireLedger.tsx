@@ -37,8 +37,12 @@ export function EmpireLedger() {
                 <p className="text-[8px] font-black text-primary uppercase tracking-widest mb-1">Total Success-Shares (4%)</p>
                 <p className="text-lg font-black text-primary">${securedShares.toFixed(2)}</p>
              </div>
-            <button className="text-xs font-bold text-primary flex items-center gap-2 uppercase tracking-widest bg-primary/10 px-4 py-2.5 rounded-xl border border-primary/20 transition-all hover:bg-primary/20">
-              <FileText className="w-4 h-4" /> Download Audit Report
+            <button className="text-xs font-black text-white flex items-center gap-2 uppercase tracking-widest bg-slate-900 px-6 py-3 rounded-2xl border border-white/10 transition-all hover:bg-black hover:border-primary/50 shadow-xl group">
+              <ShieldCheck className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" /> 
+              Success Shares Audit
+            </button>
+            <button className="text-[10px] font-bold text-muted-foreground flex items-center gap-2 uppercase tracking-widest hover:text-foreground transition-colors">
+              <FileText className="w-4 h-4" /> Export Report
             </button>
           </div>
         </div>

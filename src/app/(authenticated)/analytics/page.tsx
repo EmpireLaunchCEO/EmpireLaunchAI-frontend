@@ -24,7 +24,7 @@ import { SubscriptionSuccessShareBox } from '@/components/Dashboard/Subscription
 const tabs = [
   { id: 'growth', name: 'Growth & Trends', icon: TrendingUp },
   { id: 'automation', name: 'Automation Hub', icon: Mail },
-  { id: 'finance', name: 'Empire Analytics', icon: BarChart3 },
+  { id: 'finance', name: 'Empire Finances', icon: BarChart3 },
 ];
 
 export default function AnalyticsPage() {

@@ -96,7 +96,10 @@ export const empireService = {
     try {
       if (!id || id === 'undefined') return this.getLatestEmpire();
       
-      // Neutral naming for Business 2 and 3 if they don't exist yet
+      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+      
+      // Fallback/Default naming for Business 2 and 3 if fetch fails
       if (id === '2') {
         return { id: '2', name: 'Empire 2', description: 'Neural Node standby.', niche: '—', angle: '—' };
       }
@@ -104,9 +107,6 @@ export const empireService = {
         return { id: '3', name: 'Empire 3', description: 'Neural Node standby.', niche: '—', angle: '—' };
       }
 
-      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, { headers: HEADERS });
-      if (res.ok) return await res.json();
-      
       return this.getLatestEmpire();
     } catch (e) {
       console.error('Empire Fetch Error:', e);

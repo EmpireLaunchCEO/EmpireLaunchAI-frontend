@@ -582,6 +582,15 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              if (localPlatformPerms) setPlatformPermissions(JSON.parse(localPlatformPerms));
            }
 
+           if (data.businessSlots) {
+             const nextSlots: Record<number, boolean> = {};
+             for (let i = 0; i < data.businessSlots; i++) {
+               nextSlots[i] = true;
+             }
+             setSlotStatus(nextSlots);
+             localStorage.setItem('slotStatus', JSON.stringify(nextSlots));
+           }
+
            // If the email matches the owner, grant full slot access automatically
            if (data.email === OWNER_EMAIL || data.userId === MASTER_USER_ID) {
              console.log('[Security] Owner Identity Verified. Unlocking all business nodes.');

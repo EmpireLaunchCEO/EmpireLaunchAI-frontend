@@ -23,7 +23,8 @@ import {
   Cpu,
   LogOut,
   AlertCircle,
-  HelpCircle
+  HelpCircle,
+  CreditCard
   } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
@@ -32,6 +33,7 @@ import { onboardingService } from '@/lib/api-service';
 import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 
 const availablePlatforms = [
+  { id: 'stripe', name: 'Stripe', icon: CreditCard, color: 'text-blue-600', bg: 'bg-blue-50' },
   { id: 'gmail', name: 'Gmail', icon: Mail, color: 'text-red-500', bg: 'bg-red-50' },
   { id: 'imap', name: 'Empire Email', icon: Mail, color: 'text-slate-600', bg: 'bg-theme-background' },
   { id: 'etsy', name: 'Etsy', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
@@ -120,6 +122,7 @@ const PLATFORM_3D_ICONS: Record<string, string> = {
   patreon: '/brands/patreon_128.png',
   linkedin: '/brands/linkedin_128.png',
   twitch: '/brands/twitch_128.png',
+  stripe: '/brands/stripe_128.png',
 };
 
 function PlatformIcon({ id, icon: Icon, className, size = 20 }: { id: string, icon: any, className?: string, size?: number }) {
@@ -224,7 +227,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     // Empire OAuth via popup
     // Direct OAuth Platforms (Official APIs)
     const oauthPlatforms: Record<string, { endpoint: string; sessionKey: string; vaultKey: string; label: string }> = {
-      etsy: { endpoint: 'etsy', sessionKey: 'etsy_oauth_session_id', vaultKey: 'empire_vault_etsy', label: 'Etsy' },
       tiktok: { endpoint: 'tiktok', sessionKey: 'tiktok_oauth_session_id', vaultKey: 'empire_vault_tiktok', label: 'TikTok' },
       tiktok_shop: { endpoint: 'tiktok_shop', sessionKey: 'tiktok_shop_oauth_session_id', vaultKey: 'empire_vault_tiktok_shop', label: 'TikTok Shop' },
       meta: { endpoint: 'meta', sessionKey: 'meta_oauth_session_id', vaultKey: 'empire_vault_meta', label: 'Meta' },
@@ -248,7 +250,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       figma: { endpoint: 'figma', sessionKey: 'figma_oauth_session_id', vaultKey: 'empire_vault_figma', label: 'Figma' },
       godaddy: { endpoint: 'godaddy', sessionKey: 'godaddy_oauth_session_id', vaultKey: 'empire_vault_godaddy', label: 'GoDaddy' },
       systeme_io: { endpoint: 'systeme_io', sessionKey: 'systeme_io_oauth_session_id', vaultKey: 'empire_vault_systeme_io', label: 'Systeme.io' },
-      canva: { endpoint: 'canva', sessionKey: 'canva_oauth_session_id', vaultKey: 'empire_vault_canva', label: 'Canva' },
       // ─── NEW 31+ PLATFORMS ───────────────────────────────────────
       linkedin: { endpoint: 'linkedin', sessionKey: 'linkedin_oauth_session_id', vaultKey: 'empire_vault_linkedin', label: 'LinkedIn' },
       twitch: { endpoint: 'twitch', sessionKey: 'twitch_oauth_session_id', vaultKey: 'empire_vault_twitch', label: 'Twitch' },
@@ -258,6 +259,9 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       squarespace: { endpoint: 'squarespace', sessionKey: 'squarespace_oauth_session_id', vaultKey: 'empire_vault_squarespace', label: 'Squarespace' },
       wix: { endpoint: 'wix', sessionKey: 'wix_oauth_session_id', vaultKey: 'empire_vault_wix', label: 'Wix' },
       gumroad: { endpoint: 'gumroad', sessionKey: 'gumroad_oauth_session_id', vaultKey: 'empire_vault_gumroad', label: 'Gumroad' },
+      etsy: { endpoint: 'etsy', sessionKey: 'etsy_oauth_session_id', vaultKey: 'empire_vault_etsy', label: 'Etsy' },
+      canva: { endpoint: 'canva', sessionKey: 'canva_oauth_session_id', vaultKey: 'empire_vault_canva', label: 'Canva' },
+      stripe: { endpoint: 'stripe', sessionKey: 'stripe_oauth_session_id', vaultKey: 'empire_vault_stripe', label: 'Stripe' },
     };
 
     const oauth = oauthPlatforms[activeSetupPlatform || ''];
@@ -302,6 +306,20 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
               }
             }
           }, 500);
+        } else if (data.error === 'MISSING_KEYS') {
+          // Auto-fallback: No OAuth keys configured → use Neural Handshake
+          setLinkingStep('keys');
+          setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
+          onboardingService.startOnboarding(activeSetupPlatform!)
+            .then(data => {
+              if (data.sessionId) {
+                setOnboardingSessionId(data.sessionId);
+              }
+            })
+            .catch(err => {
+              console.error('Failed to start neural onboarding', err);
+              setOnboardingStatus({ status: 'failed', error: 'Failed to wake neural node. Please try again.' });
+            });
         } else if (data.error) {
           alert(`Configuration Notice: ${data.error}. API keys may need to be set in the backend.`);
         }
@@ -319,22 +337,20 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       return;
     }
 
-    // Neural Node Platforms (Browser Automation)
-    if (['kittl', 'capcut', 'behance', 'artstation', 'redbubble', 'substack'].includes(activeSetupPlatform || '')) {
-      setLinkingStep('keys');
-      setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
-      onboardingService.startOnboarding(activeSetupPlatform!)
-        .then(data => {
-          if (data.sessionId) {
-            setOnboardingSessionId(data.sessionId);
-          }
-        })
-        .catch(err => {
-          console.error('Failed to start neural onboarding', err);
-          setOnboardingStatus({ status: 'failed', error: 'Failed to wake neural node. Please try again.' });
-        });
-      return;
-    }
+    // Neural Node Platforms — reached via auto-fallback from MISSING_KEYS
+    setLinkingStep('keys');
+    setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
+    onboardingService.startOnboarding(activeSetupPlatform!)
+      .then(data => {
+        if (data.sessionId) {
+          setOnboardingSessionId(data.sessionId);
+        }
+      })
+      .catch(err => {
+        console.error('Failed to start neural onboarding', err);
+        setOnboardingStatus({ status: 'failed', error: 'Failed to wake neural node. Please try again.' });
+      });
+    return;
 
     setLinkingStep('keys');
   };
