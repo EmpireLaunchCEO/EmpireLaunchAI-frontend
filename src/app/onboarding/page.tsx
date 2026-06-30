@@ -76,6 +76,7 @@ function OnboardingContent() {
     name: '',
     niche: '',
     angle: '',
+    archetype: 'CREATOR' as 'CREATOR' | 'CATALYST',
     connectedPlatforms: [] as string[],
     automationMode: 'co-pilot' as 'co-pilot' | 'empire',
   });
@@ -177,6 +178,7 @@ function OnboardingContent() {
           name: data.name,
           niche: data.niche,
           angle: data.angle,
+          archetype: data.archetype,
           automationMode: data.automationMode
         }),
       });

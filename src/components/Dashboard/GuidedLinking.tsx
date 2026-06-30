@@ -74,6 +74,12 @@ const availablePlatforms = [
   { id: 'patreon', name: 'Patreon', icon: Zap, color: 'text-orange-600', bg: 'bg-orange-50' },
   { id: 'linkedin', name: 'LinkedIn', icon: Share2, color: 'text-blue-700', bg: 'bg-blue-50' },
   { id: 'twitch', name: 'Twitch', icon: Video, color: 'text-purple-700', bg: 'bg-purple-50' },
+  { id: 'external_link', name: 'External Link', icon: Globe, color: 'text-primary', bg: 'bg-primary/10' },
+];
+
+const COMMERCE_PLATFORMS = [
+  'etsy', 'shopify', 'woocommerce', 'amazon', 'ebay', 
+  'squarespace', 'wix', 'gumroad', 'tiktok_shop', 'redbubble'
 ];
 
 interface GuidedLinkingProps {
@@ -173,8 +179,12 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     updatePlatformPermission,
     platformPermissions,
     isProtocolAccepted,
-    disconnectPlatform
+    disconnectPlatform,
+    activeEmpire: empireData
   } = useEmpire();
+
+  const isCatalyst = empireData?.archetype === 'CATALYST';
+  const hasCommercePlatform = connectedPlatforms.some(id => COMMERCE_PLATFORMS.includes(id));
 
   const [searchQuery, setSearchQuery] = useState('');
   const [linkingStep, setLinkingStep] = useState<'auth' | 'keys'>('auth');
@@ -211,10 +221,16 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
   const isGmailLinked = connectedPlatforms.includes('gmail') || connectedPlatforms.includes('imap');
   const hasNoPlatforms = connectedPlatforms.length === 0;
 
-  const filteredPlatforms = availablePlatforms.filter(p =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-    !connectedPlatforms.includes(p.id)
-  );
+  const filteredPlatforms = availablePlatforms.filter(p => {
+    const isCommerce = COMMERCE_PLATFORMS.includes(p.id);
+    const alreadyConnected = connectedPlatforms.includes(p.id);
+    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // If it's a commerce platform and we already have one, hide it from search
+    if (isCommerce && hasCommercePlatform && !alreadyConnected) return false;
+    
+    return matchesSearch && !alreadyConnected;
+  });
 
   const handleSelectPlatform = (platformId: string) => {
     if (!isProtocolAccepted) return;
@@ -469,17 +485,46 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
               </div>
 
               {/* Search Input */}
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                  <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <div className="space-y-4">
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                    <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder={hasNoPlatforms ? "Search for an app to link (e.g. Gmail, Etsy, TikTok)..." : "Search for more apps..."}
+                    className="w-full bg-theme-background border-2 border-theme rounded-2xl py-4 pl-12 pr-6 text-xs font-bold focus:border-primary focus:ring-0 transition-all placeholder:text-muted-foreground/50 text-foreground"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
                 </div>
-                <input
-                  type="text"
-                  placeholder={hasNoPlatforms ? "Search for an app to link (e.g. Gmail, Etsy, TikTok)..." : "Search for more apps..."}
-                  className="w-full bg-theme-background border-2 border-theme rounded-2xl py-4 pl-12 pr-6 text-xs font-bold focus:border-primary focus:ring-0 transition-all placeholder:text-muted-foreground/50 text-foreground"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
+
+                {hasCommercePlatform && (
+                  <div className="flex items-start gap-2 px-4 py-3 bg-amber-500/5 border border-amber-500/20 rounded-2xl">
+                    <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                    <p className="text-[9px] font-bold text-amber-200/60 uppercase tracking-wider leading-relaxed">
+                      Primary Commerce Node Established. To link a different shop (Etsy/Shopify/Amazon), please open a new Empire Expansion slot.
+                    </p>
+                  </div>
+                )}
+
+                {isCatalyst && !connectedPlatforms.includes('external_link') && (
+                  <button
+                    onClick={() => handleSelectPlatform('external_link')}
+                    className="w-full p-4 bg-primary/10 border border-primary/30 rounded-2xl flex items-center justify-between group hover:bg-primary/20 transition-all"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                        <Zap className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="text-left">
+                        <h4 className="text-xs font-black text-white uppercase tracking-widest">Daily Pay / External Link</h4>
+                        <p className="text-[9px] text-slate-500 font-bold uppercase mt-0.5">Link your sales page directly</p>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
+                  </button>
+                )}
               </div>
 
               {/* Quick Action Buttons */}
@@ -608,11 +653,14 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                       {linkingStep === 'keys' && <CheckCircle2 className="w-6 h-6 text-green-500" />}
                     </div>
                     <h3 className="text-lg font-bold text-foreground mb-2">
-                      {currentPlatform.id === 'imap' ? 'Email Credentials' : 'Secure Authorization'}
+                      {currentPlatform.id === 'imap' ? 'Email Credentials' : 
+                       currentPlatform.id === 'external_link' ? 'External Sales Link' : 'Secure Authorization'}
                     </h3>
                     <p className="text-xs font-medium text-muted-foreground leading-relaxed mb-6">
                       {currentPlatform.id === 'imap'
                         ? "Enter your email and App Password to allow IMAP access."
+                        : currentPlatform.id === 'external_link'
+                        ? "Enter the primary URL for this business (e.g. your Daily Pay sales page)."
                         : `Connect your ${currentPlatform.name} account via encrypted OAuth.`
                       }
                     </p>
@@ -632,11 +680,19 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                             />
                           </>
                         )}
+                        {currentPlatform.id === 'external_link' && (
+                          <input
+                            type="url"
+                            placeholder="https://your-sales-page.com/offer"
+                            className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
+                          />
+                        )}
                         <button
-                          onClick={handleAuth}
+                          onClick={currentPlatform.id === 'external_link' ? handleLink : handleAuth}
                           className="w-full py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-primary/20"
                         >
-                          {currentPlatform.id === 'imap' ? 'Authenticate IMAP' : `Authorize ${currentPlatform.name}`}
+                          {currentPlatform.id === 'imap' ? 'Authenticate IMAP' : 
+                           currentPlatform.id === 'external_link' ? 'Establish Link' : `Authorize ${currentPlatform.name}`}
                         </button>
                       </div>
                     )}

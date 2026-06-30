@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Stars, MessageSquareQuote } from 'lucide-react';
+import { Stars, MessageSquareQuote, ShoppingBag, Zap as ZapIcon } from 'lucide-react';
 import wisdomData from '@/data/business_wisdom.json';
 
 interface EmpireIdentityProps {
@@ -10,6 +10,7 @@ interface EmpireIdentityProps {
     name: string;
     niche: string;
     angle: string;
+    archetype: 'CREATOR' | 'CATALYST';
   };
   updateData: (updates: any) => void;
 }
@@ -22,28 +23,77 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
       // Simulate AI insight based on niche
       const timer = setTimeout(() => {
         const etsyFee = (wisdomData.platform_fees as any).Etsy.listing_fee;
-        setAiInsight(`I love that angle. Based on current trends, '${data.niche}' is seeing a 15% increase in Etsy searches this month. Plus, at just ${etsyFee} per listing, we can scale fast.`);
+        if (data.archetype === 'CREATOR') {
+          setAiInsight(`I love that angle. Based on current trends, '${data.niche}' is seeing a 15% increase in Etsy searches this month. Plus, at just ${etsyFee} per listing, we can scale fast.`);
+        } else {
+          setAiInsight(`A Catalyst approach for '${data.niche}' is high-leverage. I'll focus on viral hooks and objection handling to maximize your Daily Pay conversions.`);
+        }
       }, 1000);
       return () => clearTimeout(timer);
     } else {
       setAiInsight("");
     }
-  }, [data.niche]);
+  }, [data.niche, data.archetype]);
 
   return (
     <div className="space-y-10 max-w-md mx-auto">
       <div className="text-center space-y-4">
-        <h2 className="text-3xl md:text-4xl font-black text-theme-gradient tracking-tight uppercase italic">Name your Empire.</h2>
-        <p className="text-muted-foreground text-sm md:text-lg font-medium italic">"Define the soul of your business. This is how the market will perceive your intelligence."</p>
+        <h2 className="text-3xl md:text-4xl font-black text-theme-gradient tracking-tight uppercase italic">Define the Core.</h2>
+        <p className="text-muted-foreground text-sm md:text-lg font-medium italic">"How will this Empire generate wealth?"</p>
       </div>
 
-      <div className="space-y-4 md:space-y-6">
+      {/* Archetype Selection */}
+      <div className="grid grid-cols-2 gap-4">
+        <button
+          onClick={() => updateData({ archetype: 'CREATOR' })}
+          className={cn(
+            "p-5 rounded-3xl border-2 transition-all text-left flex flex-col gap-3 group relative overflow-hidden",
+            data.archetype === 'CREATOR' 
+              ? "bg-primary/10 border-primary shadow-[0_0_20px_rgba(0,229,255,0.2)]" 
+              : "bg-slate-900 border-slate-800 hover:border-slate-700"
+          )}
+        >
+          <div className={cn(
+            "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
+            data.archetype === 'CREATOR' ? "bg-primary text-slate-900" : "bg-slate-800 text-slate-400 group-hover:text-primary"
+          )}>
+            <ShoppingBag className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className={cn("font-black text-xs uppercase tracking-widest", data.archetype === 'CREATOR' ? "text-primary" : "text-slate-400")}>The Creator</h3>
+            <p className="text-[9px] text-slate-500 font-bold uppercase mt-1 leading-tight">Product-Led. Etsy, Shopify, Prototyping.</p>
+          </div>
+        </button>
+
+        <button
+          onClick={() => updateData({ archetype: 'CATALYST' })}
+          className={cn(
+            "p-5 rounded-3xl border-2 transition-all text-left flex flex-col gap-3 group relative overflow-hidden",
+            data.archetype === 'CATALYST' 
+              ? "bg-primary/10 border-primary shadow-[0_0_20px_rgba(0,229,255,0.2)]" 
+              : "bg-slate-900 border-slate-800 hover:border-slate-700"
+          )}
+        >
+          <div className={cn(
+            "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
+            data.archetype === 'CATALYST' ? "bg-primary text-slate-900" : "bg-slate-800 text-slate-400 group-hover:text-primary"
+          )}>
+            <ZapIcon className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className={cn("font-black text-xs uppercase tracking-widest", data.archetype === 'CATALYST' ? "text-primary" : "text-slate-400")}>The Catalyst</h3>
+            <p className="text-[9px] text-slate-500 font-bold uppercase mt-1 leading-tight">Link-Led. Daily Pay, Lead Gen, Viral Hooks.</p>
+          </div>
+        </button>
+      </div>
+
+      <div className="space-y-4 md:space-y-6 pt-4 border-t border-slate-800/50">
         <div className="space-y-2">
           <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">Empire Name</label>
           <input
             id="empire-name"
             type="text"
-            placeholder="e.g. Boho Luxe Prints"
+            placeholder={data.archetype === 'CREATOR' ? "e.g. Boho Luxe Prints" : "e.g. Daily Pay Mastery"}
             value={data.name}
             onChange={(e) => updateData({ name: e.target.value })}
             className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-900 border-2 border-slate-800 focus:border-primary focus:bg-slate-950 outline-none transition-all text-lg md:text-xl font-bold text-white shadow-sm placeholder:text-slate-700"
@@ -55,7 +105,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
           <input
             id="empire-niche"
             type="text"
-            placeholder="e.g. Digital Planners"
+            placeholder={data.archetype === 'CREATOR' ? "e.g. Digital Planners" : "e.g. Digital Marketing Education"}
             value={data.niche}
             onChange={(e) => updateData({ niche: e.target.value })}
             className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-900 border-2 border-slate-800 focus:border-primary focus:bg-slate-950 outline-none transition-all text-lg md:text-xl font-bold text-white shadow-sm placeholder:text-slate-700"
@@ -66,7 +116,7 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
           <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">Business Angle</label>
           <textarea
             id="empire-angle"
-            placeholder="What makes your brand unique?"
+            placeholder={data.archetype === 'CREATOR' ? "What makes your brand unique?" : "What is the primary link or offer?"}
             rows={3}
             value={data.angle}
             onChange={(e) => updateData({ angle: e.target.value })}

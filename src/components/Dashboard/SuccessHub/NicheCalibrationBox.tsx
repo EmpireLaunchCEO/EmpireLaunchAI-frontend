@@ -6,10 +6,11 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 interface NicheBoxProps {
   niche?: string;
   angle?: string;
+  archetype?: string;
   isOperationsBase?: boolean;
 }
 
-export const NicheCalibrationBox = ({ niche, angle, isOperationsBase }: NicheBoxProps) => {
+export const NicheCalibrationBox = ({ niche, angle, archetype, isOperationsBase }: NicheBoxProps) => {
   const isPending = !niche;
   const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -78,15 +79,20 @@ export const NicheCalibrationBox = ({ niche, angle, isOperationsBase }: NicheBox
               </p>
            </div>
         </div>
-        <div className="text-right">
-           <p className={`text-sm font-black uppercase italic ${isPending ? "text-primary animate-pulse" : "text-foreground"}`}>
+        <div className="text-right flex flex-col items-end gap-2">
+           <p className={`text-sm font-black uppercase italic \${isPending ? "text-primary animate-pulse" : "text-foreground"}`}>
              {nicheDisplay}
            </p>
+           {archetype && (
+             <span className="text-[7px] font-black text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full uppercase tracking-widest">
+               {archetype === 'CREATOR' ? 'The Creator' : 'The Catalyst'}
+             </span>
+           )}
            <p className="text-[9px] font-bold text-primary uppercase tracking-widest">
 
            </p>
         </div>
-      </div>
+
       {angle && (
         <div className="pt-6 border-t border-theme/20 space-y-4">
           <div>

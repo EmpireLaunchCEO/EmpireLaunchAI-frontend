@@ -31,6 +31,8 @@ export default function StudioPage() {
   const [isDemoMode, setIsDemoMode] = useState(false);
   const { activeEmpire: empireData, registerRefreshHandler } = useEmpire();
 
+  const isCatalyst = empireData?.archetype === 'CATALYST';
+
   const handleRefresh = React.useCallback(async () => {
     await new Promise(r => setTimeout(r, 1000));
   }, []);
@@ -288,9 +290,9 @@ export default function StudioPage() {
                     <MonitorPlay className="w-5 h-5 text-slate-400" />
                   </div>
                   <div>
-                    <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Customize Video</h3>
+                    <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">{isCatalyst ? "High-Conversion Video" : "Customize Video"}</h3>
                     <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
-                      Direct the AI — define your style, pace, and visual narrative
+                      {isCatalyst ? "Direct the AI — define your hooks, calls-to-action, and marketing flow" : "Direct the AI — define your style, pace, and visual narrative"}
                     </p>
                   </div>
                 </div>
@@ -299,7 +301,7 @@ export default function StudioPage() {
                   <textarea
                     value={customVideoIdea}
                     onChange={(e) => setCustomVideoIdea(e.target.value)}
-                    placeholder="e.g. A 15-second high-energy product reveal for TikTok, fast cuts, vibrant neon overlays, focused on the 'Midnight Black' edition..."
+                    placeholder={isCatalyst ? "e.g. A 15-second high-energy hook for my Daily Pay offer, emphasizing $300/day potential, fast cuts, urgent CTA..." : "e.g. A 15-second high-energy product reveal for TikTok, fast cuts, vibrant neon overlays..."}
                     disabled={isSubmittingVideo}
                     className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                   />
@@ -319,11 +321,11 @@ export default function StudioPage() {
                 {videoIdeaSubmitted && (
                   <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Video directive received — generating visual storyboard</span>
+                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">{isCatalyst ? "Marketing directive received — generating sales-focused storyboard" : "Video directive received — generating visual storyboard"}</span>
                   </motion.div>
                 )}
 
-                <InlineConsultant context="video" />
+                <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} />
               </div>
 
               {/* 2. Upload Video Box for Edits */}
@@ -388,7 +390,7 @@ export default function StudioPage() {
                   <div>
                     <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Faceless Empire Builder</h3>
                     <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
-                      Generate viral faceless videos — you provide the niche, I provide the vision
+                      {isCatalyst ? "Generate viral faceless marketing — speak to their pain points" : "Generate viral faceless videos — you provide the niche, I provide the vision"}
                     </p>
                   </div>
                 </div>
@@ -397,7 +399,7 @@ export default function StudioPage() {
                   <textarea
                     value={facelessIdea}
                     onChange={(e) => setFacelessIdea(e.target.value)}
-                    placeholder="e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts, stock footage background, lo-fi beats, clean minimal captions..."
+                    placeholder={isCatalyst ? "e.g. 3 reasons why most 9-5s are a trap, high-impact b-roll, professional voiceover, strong 'Link in Bio' CTA..." : "e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts..."}
                     disabled={isSubmittingFaceless}
                     className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                   />
@@ -425,7 +427,18 @@ export default function StudioPage() {
               </div>
 
               {/* Custom Design Input — Free-text Idea Entry */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
+              <div className={cn(
+                "bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group",
+                isCatalyst ? "opacity-40 grayscale pointer-events-none overflow-hidden" : ""
+              )}>
+                {isCatalyst && (
+                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-950/40 backdrop-blur-[1px]">
+                    <div className="bg-slate-900 border border-white/10 px-4 py-2 rounded-full flex items-center gap-2 shadow-2xl">
+                      <Shield className="w-3 h-3 text-primary" />
+                      <span className="text-[10px] font-black text-white uppercase tracking-widest">Locked for Catalyst Archetype</span>
+                    </div>
+                  </div>
+                )}
                 <div className="absolute top-6 right-6 flex items-center gap-2">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
                     <span className="text-[10px] font-black text-primary">{usage?.design?.remaining ?? 0}</span>
