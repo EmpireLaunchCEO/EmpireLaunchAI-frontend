@@ -80,7 +80,7 @@ export const NicheCalibrationBox = ({ niche, angle, archetype, isOperationsBase 
            </div>
         </div>
         <div className="text-right flex flex-col items-end gap-2">
-           <p className={`text-sm font-black uppercase italic \${isPending ? "text-primary animate-pulse" : "text-foreground"}`}>
+           <p className={`text-sm font-black uppercase italic ${isPending ? "text-primary animate-pulse" : "text-foreground"}`}>
              {nicheDisplay}
            </p>
            {archetype && (
