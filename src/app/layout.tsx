@@ -44,7 +44,6 @@ export default function RootLayout({
             __html: `
               (function() {
                 // SERVICE WORKER TERMINATOR - Prevent cached service workers from conflicting with new builds
-                // Only run once per session to maintain stability
                 if ('serviceWorker' in navigator && !sessionStorage.getItem('empire_sw_cleaned')) {
                   navigator.serviceWorker.getRegistrations().then(function(registrations) {
                     for(let registration of registrations) {
@@ -52,6 +51,20 @@ export default function RootLayout({
                     }
                     sessionStorage.setItem('empire_sw_cleaned', 'true');
                   });
+                }
+
+                // SELF-HEALING CACHE - Clear legacy keys that cause hydration mismatches
+                if (!sessionStorage.getItem('empire_cache_purged_v1')) {
+                   const legacyKeys = ['platformPermissions', 'spendingPermissions', 'slotStatus', 'onboardedByEmpire'];
+                   legacyKeys.forEach(key => {
+                     try {
+                       const val = localStorage.getItem(key);
+                       if (val && (val === 'undefined' || val === 'null' || val.includes('mismatch'))) {
+                         localStorage.removeItem(key);
+                       }
+                     } catch(e) {}
+                   });
+                   sessionStorage.setItem('empire_cache_purged_v1', 'true');
                 }
 
                 // RELOAD LOOP GUARD - Prevents rapid refresh cycles

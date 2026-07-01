@@ -748,10 +748,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('empire:new-user-feedback', handleNewFeedback);
   }, []);
 
-  if (!hasHydrated) {
-    return null;
-  }
-
   return (
     <EmpireContext.Provider value={{
       activeEmpireId,
@@ -815,7 +811,9 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       updateSpendingPermission,
       disconnectPlatform
     }}>
-      {children}
+      <div className={!hasHydrated ? "opacity-0" : "opacity-100 transition-opacity duration-300"}>
+        {hasHydrated ? children : null}
+      </div>
     </EmpireContext.Provider>
   );
 }
