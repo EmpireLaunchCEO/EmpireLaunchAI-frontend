@@ -11,6 +11,8 @@ import { Suspense } from "react";
 import { PullToRefresh } from "@/components/Dashboard/PullToRefresh";
 import { useEmpire } from "@/lib/EmpireContext";
 
+import { DashboardErrorBoundary } from "@/components/DashboardErrorBoundary";
+
 export default function AuthenticatedLayout({
   children,
 }: Readonly<{
@@ -19,7 +21,7 @@ export default function AuthenticatedLayout({
   const { triggerRefresh } = useEmpire();
 
   return (
-    <>
+    <DashboardErrorBoundary>
       <div className="flex bg-theme-background min-h-screen relative max-w-full overflow-x-hidden">
         {/* Sidebar - Desktop Only */}
         <Sidebar />
@@ -60,6 +62,6 @@ export default function AuthenticatedLayout({
          Absolute highest priority.
       */}
       <MobileNav />
-    </>
+    </DashboardErrorBoundary>
   );
 }

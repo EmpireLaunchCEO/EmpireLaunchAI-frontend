@@ -1,5 +1,5 @@
 # Multi-stage Dockerfile for Railway - bypasses nixpacks auto-detection
-ARG CACHE_BREAKER=v1-docker-revival
+ARG CACHE_BREAKER=v1-docker-revival-v2
 FROM node:20-alpine AS base
 FROM base AS deps
 RUN apk add --no-cache libc6-compat

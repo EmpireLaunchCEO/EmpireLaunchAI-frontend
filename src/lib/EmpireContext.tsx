@@ -116,7 +116,12 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [autoSendRetention, setAutoSendRetentionState] = useState(false);
   const [isProtocolAccepted, setIsProtocolAccepted] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [hasHydrated, setHasHydrated] = useState(false);
   const [isDashboardLoaded, setDashboardLoaded] = useState(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
   const [userEmpires, setUserEmpires] = useState<any[]>([]);
   const [activeEmpire, setActiveEmpire] = useState<any | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -742,6 +747,10 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     window.addEventListener('empire:new-user-feedback', handleNewFeedback);
     return () => window.removeEventListener('empire:new-user-feedback', handleNewFeedback);
   }, []);
+
+  if (!hasHydrated) {
+    return null;
+  }
 
   return (
     <EmpireContext.Provider value={{
