@@ -9,6 +9,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Ensure root is never treated as a 404 by the internal matcher
+  if (pathname === '' || pathname === '/') {
+     return NextResponse.next();
+  }
+
   return NextResponse.next();
 }
 
