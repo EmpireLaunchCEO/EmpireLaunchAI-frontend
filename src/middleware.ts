@@ -15,6 +15,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Skip all internal files (_next/static, _next/image, favicon, etc.)
-    '/((?!_next/static|_next/image|favicon.ico|apple-icon.png|icon.png|branded-globe.png|vibrant-globe.png|manifest.json).*)',
+    '/((?!_next/static|_next/image|favicon.ico|apple-icon.png|icon.png|branded-globe.png|vibrant-globe.png|manifest.json|build_timestamp.txt).*)',
   ],
 };
