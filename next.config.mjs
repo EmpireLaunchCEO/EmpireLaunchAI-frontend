@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: 'standalone', // Disabled for Vercel native build optimization
+  output: 'standalone',
   typescript: {
     ignoreBuildErrors: true,
   },
