@@ -1,8 +1,6 @@
 [build]
-builder = "docker"
 
 [deploy]
 healthcheckPath = "/"
 restartPolicyType = "ON_FAILURE"
 maxRestartRetries = 10
-startCommand = "node server.js"
