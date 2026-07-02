@@ -41,10 +41,6 @@ ON_FAILURE
 status_debug.txt
 test_results.txt
 tsc_output.txt
-t
-tory
-"h origin main"
-"how "*
 
 # Environment
 .env*
@@ -63,8 +59,3 @@ Thumbs.db
 playwright-report/
 coverage/
 e2e/
-
-# Catch single-char and malformed filenames
-?
-??
-???
