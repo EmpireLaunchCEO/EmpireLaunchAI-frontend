@@ -64,9 +64,9 @@ export function FeedbackBox({ className }: FeedbackBoxProps) {
           <MessageSquare className="w-4 h-4" />
         </div>
         <div>
-          <h3 className="text-sm font-black text-foreground uppercase tracking-tight italic">Feedback Counsel</h3>
+          <h3 className="text-sm font-black text-foreground uppercase tracking-tight italic">Feedback</h3>
           <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
-             Send us feedback or feature requests.
+             Your feedback goes directly to the owner.
           </p>
         </div>
       </div>
