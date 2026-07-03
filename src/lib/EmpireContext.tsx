@@ -127,9 +127,11 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [refreshHandlers, setRefreshHandlers] = useState<(() => Promise<void>)[]>([]);
 
-  // Constants
-  const MASTER_USER_ID = '00000000-0000-0000-0000-000000000000';
-  const OWNER_EMAIL = 'stacipeabody@gmail.com';
+  // Session helper — get the actual logged-in user from localStorage
+  const getStoredUserId = () => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('empire_userId');
+  };
 
   const getOwnerBrandingForId = (id: string) => {
     if (id === '2') {
@@ -208,8 +210,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer mock-mobile-token',
-            'x-user-id': '00000000-0000-0000-0000-000000000000'
+            'x-user-id': getStoredUserId()
           },
           body: JSON.stringify({ value: next })
         }).catch(err => console.error('Failed to sync platform permissions', err));
@@ -227,8 +228,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer mock-mobile-token',
-            'x-user-id': '00000000-0000-0000-0000-000000000000'
+            'x-user-id': getStoredUserId()
           },
           body: JSON.stringify({ value: next })
         }).catch(err => console.error('Failed to sync spending permissions', err));
@@ -259,8 +259,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token',
-          'x-user-id': '00000000-0000-0000-0000-000000000000'
+          'x-user-id': getStoredUserId()
         },
         body: JSON.stringify({ value: paid })
       }).catch(err => console.error('Failed to sync payment status', err));
@@ -327,7 +326,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer mock-mobile-token',
-          'x-user-id': '00000000-0000-0000-0000-000000000000'
+          'x-user-id': getStoredUserId()
         },
         body: JSON.stringify({ value: true })
       }).catch(err => console.error('Failed to sync onboarding status', err));
@@ -347,8 +346,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token',
-          'x-user-id': '00000000-0000-0000-0000-000000000000'
+          'x-user-id': getStoredUserId()
         },
         body: JSON.stringify({ value: true })
       }).catch(err => console.error('Failed to sync linking status', err));
@@ -394,8 +392,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         fetch(`${API_URL}/api/integrations/${platform}`, {
           method: 'DELETE',
           headers: {
-            'Authorization': 'Bearer mock-mobile-token',
-            'x-user-id': MASTER_USER_ID
+            'x-user-id': getStoredUserId()
           }
         }).catch(err => console.error('Failed to notify backend of disconnect', err));
       }
@@ -472,8 +469,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token',
-          'x-user-id': '00000000-0000-0000-0000-000000000000'
+          'x-user-id': getStoredUserId()
         },
         body: JSON.stringify({ value: true })
       }).catch(err => console.error('Failed to sync protocol acceptance', err));
@@ -527,98 +523,60 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
         // EMERGENCY BYPASS: Only if the user has manually entered the Master ID or it's saved from a previous session
         const storedUserId = localStorage.getItem('empire_userId');
-        const storedIsAdmin = localStorage.getItem('isAdmin') === 'true';
+                    const storedIsAdmin = localStorage.getItem('isAdmin') === 'true';
+                    if (storedIsAdmin) {
+                         setIsAdmin(true);
+                    }
+                    if (localStorage.getItem('isPaid') === 'true') {
+                         setIsPaidState(true);
+                    }
 
-        if (storedUserId === MASTER_USER_ID || storedIsAdmin) {
-             console.log('[Security] Verified Owner Session Active.');
-             setIsAdmin(true);
-             setIsPaidState(true);
-             if (localStorage.getItem('isProtocolAccepted') === 'true') {
-               setIsProtocolAccepted(true);
-             }
-             setSlotStatus({ 0: true, 1: true, 2: true });
-             
-             // HARD-INJECTION OF OWNER DATA based on slot id
-             const ownerBranding = getOwnerBrandingForId(localActiveId);
-             setActiveEmpire(ownerBranding);
-             
-             const savedPlatforms = localStorage.getItem('platformsByEmpire');
-             if (!savedPlatforms) {
-               setPlatformsByEmpire({ '1': [] });
-               setLinkingCompleteByEmpire({ '1': false });
-             }
-        }
+                    // Fetch user settings from backend using the actual stored userId
+                    if (storedUserId) {
+                      const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
+                        headers: {
+                          'x-user-id': storedUserId
+                        }
+                      }).catch(() => null);
 
-        // Auto-detect Owner Admin Status
-        const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
-          headers: { 
-            'Authorization': 'Bearer mock-mobile-token',
-            'x-user-id': MASTER_USER_ID
-          }
-        }).catch(() => null);
+                      if (settingsRes && settingsRes.ok) {
+                         const data = await settingsRes.json();
 
-        if (settingsRes && settingsRes.ok) {
-           const data = await settingsRes.json();
-           
-           // Apply standard settings from backend
-           if (data.isPaid) setIsPaidState(true);
-           if (data.theme) setTheme(data.theme);
-           if (data.aiMode) setAiModeState(data.aiMode);
-           if (data.email) setUserEmail(data.email);
-           if (data.protocolAccepted) setIsProtocolAccepted(true);
-           if (data.spendingPermissions) {
-             setSpendingPermissions(data.spendingPermissions);
-             localStorage.setItem('spendingPermissions', JSON.stringify(data.spendingPermissions));
-           } else {
-             const localSpending = localStorage.getItem('spendingPermissions');
-             if (localSpending) setSpendingPermissions(JSON.parse(localSpending));
-           }
-           
-           if (data.platformPermissions) {
-             setPlatformPermissions(data.platformPermissions);
-             localStorage.setItem('platformPermissions', JSON.stringify(data.platformPermissions));
-           } else {
-             const localPlatformPerms = localStorage.getItem('platformPermissions');
-             if (localPlatformPerms) setPlatformPermissions(JSON.parse(localPlatformPerms));
-           }
+                         // Apply standard settings from backend
+                         if (data.isPaid) setIsPaidState(true);
+                         if (data.theme) setTheme(data.theme);
+                         if (data.aiMode) setAiModeState(data.aiMode);
+                         if (data.email) setUserEmail(data.email);
+                         if (data.protocolAccepted) setIsProtocolAccepted(true);
+                         if (data.spendingPermissions) {
+                           setSpendingPermissions(data.spendingPermissions);
+                           localStorage.setItem('spendingPermissions', JSON.stringify(data.spendingPermissions));
+                         } else {
+                           const localSpending = localStorage.getItem('spendingPermissions');
+                           if (localSpending) setSpendingPermissions(JSON.parse(localSpending));
+                         }
 
-           // If the email matches the owner, grant full slot access automatically
-           if (data.email === OWNER_EMAIL || data.userId === MASTER_USER_ID) {
-             console.log('[Security] Owner Identity Verified. Unlocking all business nodes.');
-             setIsAdmin(true);
-             setIsPaidState(true);
-             setSlotStatus({ 0: true, 1: true, 2: true });
-             
-             // Sync state maps for the active empire
-             const newOnboarded = { ...onboardedByEmpire, [localActiveId]: true };
-             const newLinking = { ...linkingCompleteByEmpire, [localActiveId]: true };
-             
-             setOnboardedByEmpire(newOnboarded);
-             setLinkingCompleteByEmpire(newLinking);
-             
-             // FORCE THE BRANDING
-             const ownerBranding = getOwnerBrandingForId(localActiveId);
-             setActiveEmpire(ownerBranding);
-             
-             // Persist locally to avoid flickers on refresh
-             localStorage.setItem('isPaid', 'true');
-             localStorage.setItem('slotStatus', JSON.stringify({ 0: true, 1: true, 2: true }));
-             localStorage.setItem('onboardedByEmpire', JSON.stringify(newOnboarded));
-             localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(newLinking));
-           } else {
-             // Standard user sync
-             if (data.onboardingComplete) {
-               const nextOnboarded = { ...onboardedByEmpire, [localActiveId]: true };
-               setOnboardedByEmpire(nextOnboarded);
-               localStorage.setItem('onboardedByEmpire', JSON.stringify(nextOnboarded));
-             }
-             if (data.linkingComplete) {
-               const nextLinking = { ...linkingCompleteByEmpire, [localActiveId]: true };
-               setLinkingCompleteByEmpire(nextLinking);
-               localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(nextLinking));
-             }
-           }
-        }
+                         if (data.platformPermissions) {
+                           setPlatformPermissions(data.platformPermissions);
+                           localStorage.setItem('platformPermissions', JSON.stringify(data.platformPermissions));
+                         } else {
+                           const localPlatformPerms = localStorage.getItem('platformPermissions');
+                           if (localPlatformPerms) setPlatformPermissions(JSON.parse(localPlatformPerms));
+                         }
+
+                         // Standard user sync — no hardcoded owner checks
+                         if (data.onboardingComplete) {
+                           const nextOnboarded = { ...onboardedByEmpire, [localActiveId]: true };
+                           setOnboardedByEmpire(nextOnboarded);
+                           localStorage.setItem('onboardedByEmpire', JSON.stringify(nextOnboarded));
+                         }
+                         if (data.linkingComplete) {
+                           const nextLinking = { ...linkingCompleteByEmpire, [localActiveId]: true };
+                           setLinkingCompleteByEmpire(nextLinking);
+                           localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(nextLinking));
+                         }
+                      }
+                    }
 
         // Fetch empire data
         const empire = await empireService.getEmpire(localActiveId).catch(() => null);
@@ -660,14 +618,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     if (!isInitialized) return;
     
     const updateActiveEmpireData = async () => {
-      // Slot hard-injection for Owner
-      const storedUserId = localStorage.getItem('empire_userId');
-      if (storedUserId === MASTER_USER_ID || userEmail === OWNER_EMAIL) {
-        setActiveEmpire(getOwnerBrandingForId(activeEmpireId));
-        return;
-      }
-
-      // Standard fetch for all slots
+      // Standard fetch for the active empire
       const empire = await empireService.getEmpire(activeEmpireId).catch(() => null);
       if (empire) {
         setActiveEmpire(empire);
@@ -698,8 +649,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       // Fetch real notifications from backend
       fetch(`${API_URL}/api/notifications`, {
         headers: {
-          'Authorization': 'Bearer mock-mobile-token',
-          'x-user-id': MASTER_USER_ID
+          'x-user-id': getStoredUserId()
         }
       })
       .then(res => res.json())

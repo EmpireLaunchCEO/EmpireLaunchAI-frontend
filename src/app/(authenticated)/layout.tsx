@@ -12,6 +12,8 @@ import { PullToRefresh } from "@/components/Dashboard/PullToRefresh";
 import { useEmpire } from "@/lib/EmpireContext";
 
 import { DashboardErrorBoundary } from "@/components/DashboardErrorBoundary";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function AuthenticatedLayout({
   children,
@@ -19,6 +21,28 @@ export default function AuthenticatedLayout({
   children: React.ReactNode;
 }>) {
   const { triggerRefresh } = useEmpire();
+  const router = useRouter();
+  const [isAuthed, setIsAuthed] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const userId = localStorage.getItem('empire_userId');
+    if (!userId) {
+      router.replace('/onboarding');
+    } else {
+      setIsAuthed(true);
+    }
+  }, [router]);
+
+  if (!isAuthed) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-white animate-pulse">
+          <span className="text-xs font-black">EL</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <DashboardErrorBoundary>

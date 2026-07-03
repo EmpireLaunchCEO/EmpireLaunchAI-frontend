@@ -36,13 +36,14 @@ function LandingPageContent() {
     setIsMounted(true);
   }, []);
 
-  // AUTO-REDIRECT: Re-enabled for persistence on known devices
+  // AUTO-REDIRECT: Only if there's a valid logged-in user session
   useEffect(() => {
     // Only redirect if NOT in a forced preview state
     const isForcedPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
     const isAlreadyOnDashboard = typeof window !== 'undefined' && window.location.pathname === '/dashboard';
+    const hasSession = typeof window !== 'undefined' && !!localStorage.getItem('empire_userId');
     
-    if (isMounted && isInitialized && isOnboarded && isPaid && !isForcedPreview && !isAlreadyOnDashboard) {
+    if (isMounted && isInitialized && isOnboarded && isPaid && hasSession && !isForcedPreview && !isAlreadyOnDashboard) {
       // Use replace to avoid polluting history with multiple landing page entries
       console.log('[Auth] Persistent session detected. Fast-tracking to Command Center.');
       router.replace('/dashboard');
