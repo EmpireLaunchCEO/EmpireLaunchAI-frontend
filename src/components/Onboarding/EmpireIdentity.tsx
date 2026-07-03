@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Stars, MessageSquareQuote, ShoppingBag, Zap as ZapIcon } from 'lucide-react';
+import { Stars, MessageSquareQuote, ShoppingBag, Zap as ZapIcon, Video, Camera, Globe, Share2, Mail } from 'lucide-react';
 import wisdomData from '@/data/business_wisdom.json';
 
 interface EmpireIdentityProps {
@@ -12,9 +12,23 @@ interface EmpireIdentityProps {
     niche: string;
     angle: string;
     archetype: 'CREATOR' | 'CATALYST';
+    platform?: string;
   };
   updateData: (updates: any) => void;
 }
+
+const platformOptions = [
+  { id: 'tiktok', name: 'TikTok', icon: Video },
+  { id: 'instagram', name: 'Instagram', icon: Camera },
+  { id: 'youtube', name: 'YouTube', icon: Video },
+  { id: 'facebook', name: 'Facebook', icon: Share2 },
+  { id: 'pinterest', name: 'Pinterest', icon: Camera },
+  { id: 'shopify', name: 'Shopify', icon: Globe },
+  { id: 'etsy', name: 'Etsy', icon: ShoppingBag },
+  { id: 'amazon', name: 'Amazon', icon: ShoppingBag },
+  { id: 'fiverr', name: 'Fiverr', icon: ZapIcon },
+  { id: 'gmail', name: 'Email (Gmail)', icon: Mail },
+];
 
 export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
   const [aiInsight, setAiInsight] = useState("");
@@ -124,6 +138,44 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
             className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-900 border-2 border-slate-800 focus:border-primary focus:bg-slate-950 outline-none transition-all text-base md:text-lg font-medium text-white shadow-sm resize-none placeholder:text-slate-700"
           />
         </div>
+
+        {/* Platform Selector */}
+        <div className="space-y-2 pt-2">
+          <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">What platform do you use?</label>
+          <div className="grid grid-cols-2 gap-2">
+            {platformOptions.map((p) => {
+              const Icon = p.icon;
+              const isSelected = data.platform === p.id;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => updateData({ platform: p.id })}
+                  className={cn(
+                    "flex items-center gap-2 p-3 rounded-xl border-2 transition-all text-left",
+                    isSelected
+                      ? "bg-primary/10 border-primary shadow-[0_0_10px_rgba(0,229,255,0.15)]"
+                      : "bg-slate-900 border-slate-800 hover:border-slate-700"
+                  )}
+                >
+                  <div className={cn(
+                    "w-7 h-7 rounded-lg flex items-center justify-center shrink-0",
+                    isSelected ? "bg-primary text-slate-900" : "bg-slate-800 text-slate-400"
+                  )}>
+                    <Icon className="w-3.5 h-3.5" />
+                  </div>
+                  <span className={cn(
+                    "text-[10px] font-bold uppercase tracking-tight",
+                    isSelected ? "text-primary" : "text-slate-300"
+                  )}>
+                    {p.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
       </div>
 
       <AnimatePresence>
