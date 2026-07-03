@@ -66,10 +66,10 @@ function LandingPageContent() {
 
   const handleMainAction = () => {
     if (isFastTrack) {
-      router.push('/dashboard');
+      router.replace('/dashboard');
       return;
     }
-    window.location.href = '/onboarding';
+    window.location.replace('/onboarding');
   };
 
   return (
