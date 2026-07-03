@@ -44,6 +44,7 @@ export default function StudioPage() {
   // Upload states
   const [facialDnaUpload, setFacialDnaUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [rawVideoUpload, setRawVideoUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
+  const [designUpload, setDesignUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [renderLogs, setRenderLogs] = useState<RenderLogEntry[]>([]);
   const [isRendering, setIsRendering] = useState(false);
   const [activeRenderType, setActiveRenderType] = useState<'facial-dna' | 'raw-video'>('facial-dna');
@@ -119,6 +120,18 @@ export default function StudioPage() {
   const handleRawVideoRemove = () => {
     if (rawVideoUpload.preview) URL.revokeObjectURL(rawVideoUpload.preview);
     setRawVideoUpload({ file: null, preview: null, status: 'idle', progress: 0 });
+  };
+
+  // Handle Design Image file selection
+  const handleDesignSelect = async (file: File) => {
+    const preview = URL.createObjectURL(file);
+    setDesignUpload({ file, preview, status: 'selected', progress: 0 });
+  };
+
+  // Remove Design Image file
+  const handleDesignRemove = () => {
+    if (designUpload.preview) URL.revokeObjectURL(designUpload.preview);
+    setDesignUpload({ file: null, preview: null, status: 'idle', progress: 0 });
   };
 
   // Usage state
@@ -465,11 +478,31 @@ export default function StudioPage() {
                   </div>
                 </div>
 
+                {/* Design Image Upload */}
+                <div className="space-y-3">
+                  <FileUploadDropZone
+                    type="facial-dna"
+                    state={designUpload}
+                    onFileSelect={handleDesignSelect}
+                    onRemove={handleDesignRemove}
+                    disabled={designUpload.status === 'uploading'}
+                  />
+                  {designUpload.preview && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-amber-500/30 mx-auto"
+                    >
+                      <img src={designUpload.preview} alt="Uploaded design" className="w-full h-full object-cover" />
+                    </motion.div>
+                  )}
+                </div>
+
                 <div className="relative">
                   <textarea
                     value={customIdea}
                     onChange={(e) => setCustomIdea(e.target.value)}
-                    placeholder="e.g. A minimalist sage-green yoga mat with gold mandala print, 72x24 inches, boho-luxe aesthetic..."
+                    placeholder={designUpload.preview ? "Tell me what changes you want, or ask me to create 5 unique variations based on this design" : "e.g. A minimalist sage-green yoga mat with gold mandala print, 72x24 inches, boho-luxe aesthetic..."}
                     disabled={isSubmittingIdea}
                     className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-amber-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                   />
