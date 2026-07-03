@@ -1,5 +1,6 @@
 # Multi-stage Dockerfile for Railway - bypasses nixpacks auto-detection
-ARG CACHE_BREAKER=v1-docker-revival-v4-wheelhouse-purge
+# Dynamic cache bust: RAILWAY_GIT_COMMIT_SHA changes on every git push, busting Docker layer cache
+ARG CACHE_BREAKER=${RAILWAY_GIT_COMMIT_SHA:-v1-docker-revival-v4-wheelhouse-purge}
 FROM node:20-alpine AS base
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
