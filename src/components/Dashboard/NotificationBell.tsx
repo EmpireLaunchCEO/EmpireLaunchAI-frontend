@@ -1,118 +1,90 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Bell, CheckCircle2, ShoppingBag, Bot, Info, X } from 'lucide-react';
-import { useEmpire } from '@/lib/EmpireContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { Bell, MessageSquare, Star, X, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatDistanceToNow } from 'date-fns';
+import { API_URL } from '@/lib/config';
 
-export function NotificationBell({ id }: { id?: string }) {
-  const { notifications, unreadCount, markAsRead, markAllAsRead } = useEmpire();
-  const [isOpen, setIsOpen] = useState(false);
+export function NotificationBell() {
+  const [feedbacks, setFeedbacks] = useState<any[]>([]);
+  const [unread, setUnread] = useState(0);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/reviews/inbox`);
+        if (res.ok) {
+          const data = await res.json();
+          setFeedbacks(data || []);
+          setUnread((data || []).length);
+        }
+      } catch {}
+    };
+    fetch();
+    const interval = setInterval(fetch, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   return (
-    <div className="relative">
+    <div ref={ref} className="relative">
       <button
-        id={id}
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative p-3 rounded-2xl bg-theme-surface border-2 border-theme hover:border-white transition-all group shadow-sm"
+        onClick={() => setOpen(!open)}
+        className="relative w-10 h-10 rounded-xl bg-theme-surface border border-theme flex items-center justify-center hover:border-primary/50 transition-all"
       >
-        <Bell className={cn("w-6 h-6 transition-colors", unreadCount > 0 ? "text-primary" : "text-muted-foreground group-hover:text-primary")} />
-        {unreadCount > 0 && (
-          <span className="absolute top-2 right-2 w-4 h-4 bg-primary text-foreground text-[10px] font-black rounded-full flex items-center justify-center border-2 border-theme-surface animate-in zoom-in duration-300">
-            {unreadCount}
+        <Bell className="w-5 h-5 text-foreground" />
+        {unread > 0 && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center text-[8px] font-black text-white shadow-lg">
+            {unread > 9 ? '9+' : unread}
           </span>
         )}
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="absolute right-0 mt-4 w-80 md:w-96 bg-theme-surface rounded-[32px] shadow-2xl border-2 border-theme z-50 overflow-hidden"
-            >
-              <div className="p-6 border-b border-theme flex items-center justify-between bg-theme-background/50">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-black text-foreground tracking-tight">Notifications</h3>
-                  {unreadCount > 0 && (
-                    <span className="bg-primary text-foreground text-[10px] px-2 py-0.5 rounded-full font-black">
-                      {unreadCount} NEW
-                    </span>
-                  )}
-                </div>
-                <button
-                  onClick={markAllAsRead}
-                  className="text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-80 transition-colors"
-                >
-                  Clear All
-                </button>
-              </div>
-
-              <div className="max-h-[400px] overflow-y-auto no-scrollbar">
-                {notifications.length === 0 ? (
-                  <div className="p-12 text-center space-y-4">
-                    <div className="w-16 h-16 bg-theme-background rounded-full flex items-center justify-center mx-auto">
-                      <Bell className="w-8 h-8 text-muted-foreground/20" />
+      {open && (
+        <div className="absolute right-0 top-12 w-80 md:w-96 bg-theme-surface border-2 border-theme rounded-2xl shadow-2xl z-50 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-theme">
+            <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Notifications</span>
+            <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          
+          <div className="max-h-80 overflow-y-auto p-2 space-y-1">
+            {feedbacks.length === 0 ? (
+              <p className="text-xs text-muted-foreground/50 font-bold text-center py-8">No notifications yet</p>
+            ) : (
+              feedbacks.slice(0, 20).map((fb: any) => (
+                <div key={fb.id} className="p-3 rounded-xl hover:bg-theme-background transition-all space-y-1">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
+                      <User className="w-2.5 h-2.5" />
+                      {fb.userEmail || fb.userId?.slice(0, 8)}
                     </div>
-                    <p className="text-sm font-bold text-muted-foreground">Your empire is quiet. No new alerts.</p>
+                    <div className="flex items-center gap-0.5">
+                      {[1,2,3,4,5].map(s => (
+                        <Star key={s} className={cn('w-2 h-2', s <= fb.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-600')} />
+                      ))}
+                    </div>
                   </div>
-                ) : (
-                  <div className="divide-y divide-theme">
-                    {notifications.map((n) => (
-                      <div
-                        key={n.id}
-                        className={cn(
-                          "p-5 hover:bg-theme-background transition-colors relative group",
-                          !n.read && "bg-primary/5"
-                        )}
-                        onClick={() => markAsRead(n.id)}
-                      >
-                        <div className="flex gap-4">
-                          <div className={cn(
-                            "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
-                            n.type === 'sale' ? "bg-emerald-500/20 text-emerald-500" :
-                            n.type === 'approval' ? "bg-primary/20 text-primary" :
-                            "bg-theme-background text-muted-foreground"
-                          )}>
-                            {n.type === 'sale' ? <ShoppingBag className="w-5 h-5" /> :
-                             n.type === 'approval' ? <Bot className="w-5 h-5" /> :
-                             <Info className="w-5 h-5" />}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-black text-foreground text-sm truncate">{n.title}</h4>
-                            <p className="text-xs font-medium text-muted-foreground line-clamp-2 mt-0.5">
-                              {n.message}
-                            </p>
-                            <span className="text-[10px] font-bold text-muted-foreground/60 mt-2 block">
-                              {formatDistanceToNow(n.timestamp)} ago
-                            </span>
-                          </div>
-                          {!n.read && (
-                            <div className="w-2 h-2 rounded-full bg-primary mt-1" />
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {notifications.length > 0 && (
-                <div className="p-4 bg-theme-background/50 border-t border-theme text-center">
-                  <button className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
-                    View All History
-                  </button>
+                  {fb.comment && (
+                    <p className="text-[11px] text-foreground/80 font-medium leading-relaxed line-clamp-2">{fb.comment}</p>
+                  )}
+                  <p className="text-[7px] text-muted-foreground/40 font-bold">{new Date(fb.createdAt).toLocaleDateString()}</p>
                 </div>
-              )}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -19,6 +19,7 @@ import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { DisclaimerAgreementBox } from '@/components/Dashboard/DisclaimerAgreementBox';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FeedbackInbox } from '@/components/Dashboard/FeedbackInbox';
+import { NotificationBell } from '@/components/Dashboard/NotificationBell';
 
 
 export default function Dashboard() {
@@ -132,11 +133,16 @@ export default function Dashboard() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center space-y-4"
+                    className="text-center space-y-4 relative"
                   >
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
                       {activeEmpireId === '1' ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || `Empire ${activeEmpireId}`)}
                     </h1>
+                    {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com') && (
+                      <div className="absolute top-0 right-0">
+                        <NotificationBell />
+                      </div>
+                    )}
                   </motion.div>
 
                   {/* 2. Operations Column */}
