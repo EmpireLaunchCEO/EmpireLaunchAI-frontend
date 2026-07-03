@@ -18,6 +18,7 @@ import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { DisclaimerAgreementBox } from '@/components/Dashboard/DisclaimerAgreementBox';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
+import { FeedbackInbox } from '@/components/Dashboard/FeedbackInbox';
 
 
 export default function Dashboard() {
@@ -195,6 +196,17 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <p className="text-xs text-muted-foreground font-medium italic">Live recurring revenue stream tracking enabled for EmpireLaunch AI.</p>
+                      </motion.div>
+                    )}
+
+                    {/* Feedback Inbox - Owner Only */}
+                    {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com') && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                      >
+                        <FeedbackInbox />
                       </motion.div>
                     )}
 
