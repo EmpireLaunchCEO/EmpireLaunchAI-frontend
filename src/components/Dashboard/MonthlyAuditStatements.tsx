@@ -46,20 +46,23 @@ export function MonthlyAuditStatements() {
     fetchStatements();
   }, []);
 
-  const getUserId = () => {
+  const getAuthHeaders = () => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('empire_userId');
+      const userId = localStorage.getItem('empire_userId');
+      return userId ? {
+        'Authorization': 'Bearer mock-mobile-token',
+        'x-user-id': userId,
+      } : {};
     }
-    return null;
+    return {};
   };
 
   const fetchStatements = async () => {
     setLoading(true);
     setError(null);
     try {
-      const userId = getUserId();
       const res = await fetch(`${API_URL}/api/audit/statements`, {
-        headers: userId ? { 'x-user-id': userId } : {}
+        headers: getAuthHeaders()
       });
       if (!res.ok) {
         if (res.status === 401) {
@@ -84,12 +87,9 @@ export function MonthlyAuditStatements() {
   const handleDownload = async (statement: AuditStatement) => {
     setDownloadingId(statement.id);
     try {
-      const userId = getUserId();
       const res = await fetch(
         `${API_URL}/api/audit/statement/download?statementId=${statement.id}`,
-        {
-          headers: userId ? { 'x-user-id': userId } : {}
-        }
+        { headers: getAuthHeaders() }
       );
       if (!res.ok) throw new Error('Download failed');
       
