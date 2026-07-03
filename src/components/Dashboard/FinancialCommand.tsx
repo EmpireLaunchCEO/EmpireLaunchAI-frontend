@@ -6,6 +6,7 @@ import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calend
 import { cn } from '@/lib/utils';
 import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
 import { useEmpire } from '@/lib/EmpireContext';
+import { API_URL } from '@/lib/config';
 
 interface FinancialCommandProps {
   withholdableEarnings?: number;
@@ -26,9 +27,26 @@ export function FinancialCommand({
   const [mounted, setMounted] = useState(false);
   
   const [isDownloading, setIsDownloading] = useState(false);
+  const [auditData, setAuditData] = useState<any>(null);
+  
+  const fetchAuditData = async () => {
+    try {
+      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
+      const res = await fetch(`${API_URL}/api/audit/success-share`, {
+        headers: userId ? { 'x-user-id': userId } : {}
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAuditData(data);
+      }
+    } catch (e) {
+      console.warn('Audit fetch failed, using fallback');
+    }
+  };
   
   useEffect(() => {
     setMounted(true);
+    fetchAuditData();
 
     const loadInfra = async () => {
       const bals = await infrastructureService.getBalances();
@@ -40,10 +58,11 @@ export function FinancialCommand({
   const handleDownloadAudit = () => {
     setIsDownloading(true);
     setTimeout(() => {
-      const revenueCents = withholdableEarnings;
-      const shareCents = Math.floor(revenueCents * 0.04);
+      const ad = auditData || {};
+      const revenueCents = ad.totalRevenue ?? withholdableEarnings;
+      const shareCents = ad.successShareDue ?? Math.floor(revenueCents * 0.04);
       
-      const auditContent = `EMPIRELAUNCH AI - SUCCESS-SHARE AUDIT\nGenerated: ${new Date().toLocaleString()}\n\nBusiness Tracking:\n- Content Generated: 0 Assets\n- Marketing Campaigns: 0\n- Revenue Attributed to AI: ${(revenueCents / 100).toFixed(2)}\n- Success-Share Rate: 4% (40/1k)\n- Success-Share Due: ${(shareCents / 100).toFixed(2)}\n\nAll tracking verified via Neural Sync.`;
+      const auditContent = `EMPIRELAUNCH AI - SUCCESS-SHARE AUDIT\nGenerated: ${new Date().toLocaleString()}\n\nBusiness Tracking:\n- AI Content Generated: ${ad.contentCreated ?? 0} Assets\n- Active Campaigns: ${ad.activeCampaigns ?? 0}\n- Revenue Attributed to AI: ${((ad.aiAttributedRevenue ?? revenueCents) / 100).toFixed(2)}\n- Success-Share Rate: 4% ($40 per $1k)\n- Success-Share Due: ${(shareCents / 100).toFixed(2)}\n- Total Revenue Tracked: ${((ad.totalRevenue ?? revenueCents) / 100).toFixed(2)}\n- Lifetime Success-Shares Paid: ${((ad.lifetimeSurchargesPaid ?? 0) / 100).toFixed(2)}\n\nAll tracking verified via Neural Sync.`;
       const blob = new Blob([auditContent], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
