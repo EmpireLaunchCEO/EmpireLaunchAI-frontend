@@ -23,6 +23,7 @@ import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 import { SupportHub } from '@/components/Settings/SupportHub';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { SubscriptionSuccessShareBox } from '@/components/Dashboard/SubscriptionSuccessShareBox';
+import { MonthlyAuditStatements } from '@/components/Dashboard/MonthlyAuditStatements';
 
 export default function SettingsPage() {
   return (
@@ -338,6 +339,10 @@ function SettingsContent() {
                     onCancelSubscription={handleCancelSubscription}
                     showCancelButton={true}
                   />
+
+                  <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme">
+                    <MonthlyAuditStatements />
+                  </div>
                 </div>
               )}
 
