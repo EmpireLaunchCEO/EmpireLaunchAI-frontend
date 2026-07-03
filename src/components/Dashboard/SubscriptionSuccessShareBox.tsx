@@ -11,7 +11,6 @@ import {
   Download,
   FileText,
   Zap,
-  CreditCard,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -143,48 +142,9 @@ export function SubscriptionSuccessShareBox({
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{businessSlots - 1} Slot{businessSlots - 1 !== 1 ? 's' : ''}</span>
             </div>
             <div className="space-y-1">
-              <h4 className="text-2xl font-black text-foreground">${((businessSlots - 1) * 40).toFixed(2)}<span className="text-xs text-muted-foreground font-bold italic">/mo</span></h4>
+              <h4 className="text-2xl font-black text-foreground">$40.00<span className="text-xs text-muted-foreground font-bold italic">/mo</span></h4>
               <p className="text-[10px] text-muted-foreground font-medium leading-relaxed italic">$40 one-time unlock + $40/mo per additional empire.</p>
             </div>
-            {businessSlots < 3 && (
-               <button 
-                onClick={async () => {
-                  try {
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stripe/checkout/expansion`, {
-                      method: 'POST',
-                      headers: { 
-                        'Content-Type': 'application/json',
-                        'x-user-id': localStorage.getItem('empire_user_id') || ''
-                      },
-                      body: JSON.stringify({ returnUrl: window.location.origin + '/financial-command' })
-                    });
-                    const data = await res.json();
-                    if (data.url) window.location.href = data.url;
-                  } catch (e) {
-                    console.error('Expansion checkout failed', e);
-                  }
-                }}
-                className="w-full py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-xl text-[8px] font-black uppercase tracking-[0.2em] transition-all"
-               >
-                 Unlock New Slot ($40)
-               </button>
-            )}
-          </div>
-        </div>
-
-        {/* Total Monthly Subscription Section */}
-        <div className="p-6 bg-theme-background border-2 border-primary/20 rounded-[24px] flex items-center justify-between">
-          <div className="flex items-center gap-3">
-             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <CreditCard className="w-5 h-5 text-primary" />
-             </div>
-             <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Monthly Subscription</p>
-                <h4 className="text-xl font-black text-foreground">${(businessSlots * 40).toFixed(2)}<span className="text-xs text-muted-foreground font-bold italic">/mo</span></h4>
-             </div>
-          </div>
-          <div className="text-right">
-             <p className="text-[8px] font-black text-primary uppercase tracking-widest italic">Partner Rate Locked</p>
           </div>
         </div>
 

@@ -116,12 +116,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [autoSendRetention, setAutoSendRetentionState] = useState(false);
   const [isProtocolAccepted, setIsProtocolAccepted] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [hasHydrated, setHasHydrated] = useState(false);
   const [isDashboardLoaded, setDashboardLoaded] = useState(false);
-
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
   const [userEmpires, setUserEmpires] = useState<any[]>([]);
   const [activeEmpire, setActiveEmpire] = useState<any | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -587,15 +582,6 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
              if (localPlatformPerms) setPlatformPermissions(JSON.parse(localPlatformPerms));
            }
 
-           if (data.businessSlots) {
-             const nextSlots: Record<number, boolean> = {};
-             for (let i = 0; i < data.businessSlots; i++) {
-               nextSlots[i] = true;
-             }
-             setSlotStatus(nextSlots);
-             localStorage.setItem('slotStatus', JSON.stringify(nextSlots));
-           }
-
            // If the email matches the owner, grant full slot access automatically
            if (data.email === OWNER_EMAIL || data.userId === MASTER_USER_ID) {
              console.log('[Security] Owner Identity Verified. Unlocking all business nodes.');
@@ -811,9 +797,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       updateSpendingPermission,
       disconnectPlatform
     }}>
-      <div className={!hasHydrated ? "opacity-0" : "opacity-100 transition-opacity duration-300"}>
-        {hasHydrated ? children : null}
-      </div>
+      {children}
     </EmpireContext.Provider>
   );
 }
