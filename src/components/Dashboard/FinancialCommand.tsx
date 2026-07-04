@@ -89,6 +89,27 @@ export function FinancialCommand({
     { name: "Success-Shares (40/1k Protocol)", amount: 0, date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }), type: "app", successShare: "40/1k" },
   ];
 
+  // Connected subscription platform costs
+  const platformSubscriptions: Record<string, { name: string; cost: number }> = {
+    canva: { name: 'Canva Pro', cost: 1299 },
+    kittl: { name: 'Kittl Pro', cost: 1500 },
+    capcut: { name: 'CapCut Pro', cost: 799 },
+    figma: { name: 'Figma Professional', cost: 1200 },
+  };
+
+  if (connectedPlatforms) {
+    Object.entries(platformSubscriptions).forEach(([id, info]) => {
+      if (connectedPlatforms.includes(id)) {
+        subscriptions.push({
+          name: info.name,
+          amount: info.cost,
+          date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }),
+          type: "app"
+        });
+      }
+    });
+  }
+
   const dues: any[] = [];
   
   if (connectedPlatforms.includes('Etsy')) {
