@@ -435,9 +435,9 @@ function OnboardingContent() {
                   </div>
                   <div className="pt-6 border-t border-slate-800 space-y-6">
                     <div className="flex justify-between items-center">
-                      <h3 className="text-xl font-black text-white uppercase italic">Empire Master</h3>
+                      <h3 className="text-lg font-black text-white uppercase italic">Empire Master</h3>
                       <div className="text-right">
-                        <span className="text-2xl font-black text-white">0</span>
+                        <span className="text-2xl font-black text-white">$40</span>
                         <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">/Month</span>
                       </div>
                     </div>
