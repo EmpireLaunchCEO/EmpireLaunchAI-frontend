@@ -53,28 +53,28 @@ export function OnboardingTour() {
     },
     {
       title: "Operations Base",
-      description: "This is where we manage your actual business operations — listings, orders, fulfillment tracking, and day-to-day workflow.",
+      description: "This is your Operations Base. Here is where you approve all of the videos, edits and designs. You also pick what platforms you want each posted to.",
       target: "nav-ec",
       icon: ClipboardList,
       page: "/empire-center"
     },
     {
       title: "Empire Studio",
-      description: "Our production powerhouse. I generate original videos, PDFs, and marketing assets for your brand using AI — no design skills needed.",
+      description: "This is your production powerhouse. Here is where videos, edits, and designs are created to grow and scale your business. It also shows you how many videos and designs you have left. All video and twin (your AI double) videos. Videos reset every 7 days, designs reset monthly.",
       target: "nav-studio",
       icon: Video,
       page: "/studio"
     },
     {
       title: "Link Center (LC)",
-      description: "Connect all your platforms here — Etsy, Shopify, TikTok, Instagram, and more. The more we link, the faster your empire scales.",
+      description: "This is where you connect new platforms. The more outlets we link, the faster your empire scales. Each app linked will default to Co-Pilot. They can change it to Auto-Pilot if they prefer later on this page.",
       target: "nav-lc",
       icon: PlusCircle,
       page: "/link-center"
     },
     {
       title: "Settings & Configuration",
-      description: "Here you manage your account, bank info for payouts, and most importantly, my AI intelligence levels.",
+      description: "Here you manage your account, bank info for payouts.",
       target: "nav-settings",
       icon: SettingsIcon,
       page: "/settings"
