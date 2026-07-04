@@ -2,7 +2,7 @@
   "name": "EmpireLaunch AI",
   "short_name": "EmpireLaunch AI",
   "description": "High-Intelligence AI Business Partner",
-  "start_url": "/dashboard?pwa=true&v=1020",
+  "start_url": "/dashboard?pwa=true&v=1021",
   "display": "standalone",
   "background_color": "#0a0519",
   "theme_color": "#0a0519",
