@@ -28,7 +28,28 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=1024" />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              // PWA CACHE BUSTER - Force fresh load if cached version is stale
+              try {
+                if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.getRegistrations().then(function(regs) {
+                    regs.forEach(function(reg) { reg.unregister(); });
+                  });
+                }
+                // Clear all caches
+                if ('caches' in window) {
+                  caches.keys().then(function(names) {
+                    names.forEach(function(name) { caches.delete(name); });
+                  });
+                }
+              } catch(e) {}
+            })();
+          `
+        }} />
+      </head>
+        <link rel="manifest" href="/manifest.json?v=1025" />
         <link rel="apple-touch-icon" href="/apple-touch-icon-v1024.png" />
         <link rel="icon" href="/favicon.ico?v=1024" />
         <link rel="apple-touch-startup-image" href="/apple-touch-icon-v1024.png" />
