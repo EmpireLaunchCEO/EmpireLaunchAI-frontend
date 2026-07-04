@@ -52,22 +52,22 @@ export function OnboardingTour() {
       page: "/dashboard"
     },
     {
-      title: "Empire Center (EC)",
-      description: "The Empire Center is where we manage your actual business operations—listings, orders, and fulfillment tracking.",
+      title: "Operations Base",
+      description: "This is where we manage your actual business operations — listings, orders, fulfillment tracking, and day-to-day workflow.",
       target: "nav-ec",
       icon: ClipboardList,
       page: "/empire-center"
     },
     {
       title: "Empire Studio",
-      description: "This is our production powerhouse. Here I generate original videos, PDFs, and marketing assets for your brand using my native rendering engine.",
+      description: "Our production powerhouse. I generate original videos, PDFs, and marketing assets for your brand using AI — no design skills needed.",
       target: "nav-studio",
       icon: Video,
       page: "/studio"
     },
     {
       title: "Link Center (LC)",
-      description: "This is where you connect new platforms. The more outlets we link, the faster your empire scales.",
+      description: "Connect all your platforms here — Etsy, Shopify, TikTok, Instagram, and more. The more we link, the faster your empire scales.",
       target: "nav-lc",
       icon: PlusCircle,
       page: "/link-center"
@@ -78,13 +78,6 @@ export function OnboardingTour() {
       target: "nav-settings",
       icon: SettingsIcon,
       page: "/settings"
-    },
-    {
-      title: "Link Center (Settings)",
-      description: "Within Settings, the Link Center tab lets you perform the deep API handshakes with Etsy, TikTok, and more.",
-      target: "tab-link-center",
-      icon: PlusCircle,
-      page: "/settings?tab=link-center"
     },
     {
       title: "Real-Time Alerts",
