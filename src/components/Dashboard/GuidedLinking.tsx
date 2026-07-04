@@ -351,18 +351,26 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       })
       .catch((err) => {
         clearTimeout(timeout);
-        if (err.name === 'AbortError') {
-          console.warn('Auth request timed out');
-          alert('Connection timed out. The backend may be starting up. Please try again.');
-        } else {
-          console.error('Auth initiation failed', err);
-          alert('Connection unavailable. Please check that the backend is running and try again.');
-        }
+        // OAuth fetch failed (network error, no endpoint, etc.)
+        // Fall through to Neural Handshake below
+        console.warn('OAuth URL fetch failed, falling back to neural handshake', err.message);
+        setLinkingStep('keys');
+        setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
+        onboardingService.startOnboarding(activeSetupPlatform!)
+          .then(data => {
+            if (data.sessionId) {
+              setOnboardingSessionId(data.sessionId);
+            }
+          })
+          .catch(err => {
+            console.error('Failed to start neural onboarding', err);
+            setOnboardingStatus({ status: 'failed', error: 'Failed to wake neural node. Please try again.' });
+          });
       });
-      return;
+      return; // Exit — OAuth or fallback initiated
     }
 
-    // Neural Node Platforms — reached via auto-fallback from MISSING_KEYS
+    // No OAuth config for this platform — use direct Neural Handshake
     setLinkingStep('keys');
     setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
     onboardingService.startOnboarding(activeSetupPlatform!)
