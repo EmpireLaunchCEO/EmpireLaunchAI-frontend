@@ -297,6 +297,14 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== 'undefined') {
       localStorage.setItem('activeEmpireId', id);
     }
+    // Ensure each empire keeps its own locked name when switching
+    const branding = getOwnerBrandingForId(id);
+    setActiveEmpire(prev => {
+      if (!prev || prev.id !== id) {
+        return { ...prev, id, name: branding.name, title: branding.title, niche: branding.niche, description: branding.description };
+      }
+      return { ...prev, name: branding.name, title: branding.title, niche: branding.niche, description: branding.description };
+    });
   };
 
   const setHandoverComplete = (complete: boolean) => {

@@ -12,26 +12,13 @@ export function GlobalEmpireHeader() {
   const { activeEmpireId, setActiveEmpireId, isAdmin, activeEmpire, isInitialized } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
 
-  // State to persist discovered names for tabs
-  const [discoveredNames, setDiscoveredNames] = React.useState<Record<string, string>>({
-    '1': isAdmin ? "EmpireLaunch AI" : "Empire 1",
-    '2': "Empire 2",
-    '3': "Empire 3"
-  });
-
-  // Update names as they are discovered
-  React.useEffect(() => {
-    if (activeEmpire && activeEmpireId === '1') {
-      const name = activeEmpire.name || activeEmpire.title;
-      const isGeneric = !name || name === 'HOME BASE' || name === 'Business 1' || name === 'Empire 1';
-      
-      if (!isGeneric) {
-        setDiscoveredNames(prev => ({ ...prev, '1': name }));
-      } else if (isAdmin) {
-        setDiscoveredNames(prev => ({ ...prev, '1': "EmpireLaunch AI" }));
-      }
-    }
-  }, [activeEmpire, activeEmpireId, isAdmin]);
+  // Empire names are maintained by EmpireContext — use them directly
+  const getEmpireLabel = (empireId: string): string => {
+    if (empireId === '1') return "EmpireLaunch AI";
+    if (empireId === '2') return "Empire 2";
+    if (empireId === '3') return "Empire 3";
+    return `Empire ${empireId}`;
+  };
 
   if (!isInitialized) return null;
 
@@ -67,7 +54,7 @@ export function GlobalEmpireHeader() {
         {[0, 1, 2].map((idx) => {
           const empireId = (idx + 1).toString();
           const isActive = activeBusinessIndex === idx;
-          const label = discoveredNames[empireId] || (idx === 0 ? "EmpireLaunch AI" : `Empire ${idx + 1}`);
+          const label = getEmpireLabel(empireId);
 
           return (
             <button
