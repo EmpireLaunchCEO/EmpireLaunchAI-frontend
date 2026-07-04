@@ -134,6 +134,17 @@ function OnboardingContent() {
       
       const savedUserId = localStorage.getItem('empire_userId');
       if (savedUserId) setUserId(savedUserId);
+
+      // Restore onboarding data from localStorage
+      const savedData = localStorage.getItem('onboarding_data');
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          setData(prev => ({ ...prev, ...parsed }));
+        } catch (e) {
+          console.warn('Failed to restore onboarding data');
+        }
+      }
     }
   }, [searchParams]);
 
@@ -150,6 +161,7 @@ function OnboardingContent() {
     if (isMounted && typeof window !== 'undefined') {
       localStorage.setItem('onboarding_step', currentStep.toString());
       if (userId) localStorage.setItem('empire_userId', userId);
+      localStorage.setItem('onboarding_data', JSON.stringify(data));
       
       // Update URL silently without adding history entries if possible, or just keep it sync'd
       const url = new URL(window.location.href);
@@ -162,7 +174,7 @@ function OnboardingContent() {
       
       window.scrollTo(0, 0);
     }
-  }, [currentStep, isMounted, userId]);
+  }, [currentStep, isMounted, userId, data]);
 
   const isPreview = searchParams.get('preview') === 'true';
 
@@ -390,6 +402,9 @@ function OnboardingContent() {
                    </section>
                 </div>
                 <button onClick={() => { acceptProtocols(); nextStep(); }} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none">Accept Protocols <CheckCircle2 className="w-4 h-4" /></button>
+                <button onClick={() => setCurrentStep(3)} className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2">
+                  Already have an account? Log In
+                </button>
               </motion.div>
             )}
 
