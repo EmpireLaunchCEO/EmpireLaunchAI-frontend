@@ -24,7 +24,8 @@ import {
   LogOut,
   AlertCircle,
   HelpCircle,
-  CreditCard
+  CreditCard,
+  DollarSign
   } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
@@ -182,6 +183,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     completeLinkingPhase,
     updatePlatformPermission,
     platformPermissions,
+    spendingPermissions,
+    updateSpendingPermission,
     isProtocolAccepted,
     disconnectPlatform,
     activeEmpire: empireData
@@ -431,6 +434,24 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                          "group-hover:text-white"
                        )}>
                          {platformPermissions[id] === 'empire' ? 'Auto-Pilot' : 'Co-Pilot'}
+                       </span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                       <PermissionToggle 
+                         permission={spendingPermissions[id] ? 'empire' : 'co-pilot'} 
+                         onToggle={(allowed) => updateSpendingPermission(id, allowed === 'empire')} 
+                       />
+                       <DollarSign className={cn(
+                         "w-3 h-3 transition-colors",
+                         spendingPermissions[id] ? "text-green-500" : "text-slate-500",
+                         "group-hover:text-white"
+                       )} />
+                       <span className={cn(
+                         "text-[7px] font-black uppercase tracking-widest transition-colors",
+                         spendingPermissions[id] ? "text-green-500" : "text-slate-500",
+                         "group-hover:text-white"
+                       )}>
+                         {spendingPermissions[id] ? 'Spending On' : 'Spending Off'}
                        </span>
                     </div>
                   </div>
