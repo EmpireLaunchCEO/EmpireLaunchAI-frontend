@@ -236,7 +236,11 @@ export const infrastructureService = {
   async getBalances(): Promise<InfrastructureBalance[]> {
     try {
       const res = await fetch(`${API_URL}/api/revenue/infrastructure`, { headers: HEADERS });
-      if (res.ok) return await res.json();
+      if (res.ok) {
+        const data = await res.json();
+        // Backend returns { balances: [...], subscriptions: [...] } — extract the array
+        return Array.isArray(data) ? data : (data.balances || []);
+      }
     } catch (e) {
       console.error('Failed to fetch infrastructure balances', e);
     }
