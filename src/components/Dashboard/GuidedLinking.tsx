@@ -754,11 +754,11 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                           <div className="space-y-3">
                             <div className="p-3 bg-primary/10 rounded-xl border border-primary/30">
                               <p className="text-[8px] font-black uppercase tracking-widest text-primary mb-0.5">Session Status</p>
-                              <p className="text-[10px] font-bold text-foreground capitalize">{onboardingStatus.status.replace('_', ' ')}</p>
+                              <p className="text-[10px] font-bold text-foreground capitalize">{onboardingStatus.status?.replace('_', ' ') || '...'}</p>
                             </div>
                             <div className="p-3 bg-theme-background border border-theme rounded-xl">
                               <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Current Task</p>
-                              <p className="text-[10px] font-bold text-foreground">{onboardingStatus.currentState.replace('_', ' ')}</p>
+                              <p className="text-[10px] font-bold text-foreground">{onboardingStatus.currentState?.replace('_', ' ') || 'Connecting...'}</p>
                             </div>
                             
                             {onboardingStatus.status === 'hitl_required' && (
