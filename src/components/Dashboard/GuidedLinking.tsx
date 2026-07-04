@@ -289,7 +289,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       google_studio: { endpoint: 'google_studio', sessionKey: 'google_studio_oauth_session_id', vaultKey: 'empire_vault_google_studio', label: 'Google Studio' },
     };
 
-    const oauth = null; // Skip OAuth — all apps use Browser Link (Neural Handshake)
+    const oauth = activeSetupPlatform ? oauthPlatforms[activeSetupPlatform] : null;
 
     if (oauth) {
       const controller = new AbortController();
