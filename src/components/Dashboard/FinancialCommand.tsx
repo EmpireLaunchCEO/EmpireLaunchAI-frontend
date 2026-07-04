@@ -161,7 +161,7 @@ export function FinancialCommand({
                 initial={{ strokeDashoffset: 251.2 }}
                 animate={{ strokeDashoffset: 251.2 * (1 - growthScore / 100) }}
                 strokeLinecap="round"
-                transition={{ duration: 1.5, ease: "easeOut" }}
+                transition={{ duration: 0, ease: "easeOut" }}
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
