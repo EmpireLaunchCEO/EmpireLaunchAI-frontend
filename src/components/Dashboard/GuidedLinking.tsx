@@ -198,7 +198,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
   const [selectedTier, setSelectedTier] = useState<'co-pilot' | 'empire'>('co-pilot');
   const [onboardingSessionId, setOnboardingSessionId] = useState<string | null>(null);
   const [onboardingStatus, setOnboardingStatus] = useState<any>(null);
-  const [canvaToken, setCanvaToken] = useState('');
 
   useEffect(() => {
     let interval: any;
@@ -395,15 +394,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       updatePlatformPermission(activeSetupPlatform, selectedTier);
       finishSetup();
     }
-  };
-
-  const handleCanvaLink = () => {
-    if (!canvaToken.trim() || !activeSetupPlatform) return;
-    localStorage.setItem('empire_vault_canva', canvaToken.trim());
-    connectPlatform('canva');
-    updatePlatformPermission('canva', selectedTier);
-    finishSetup();
-    setCanvaToken('');
   };
 
   const currentPlatform = availablePlatforms.find(p => p.id === activeSetupPlatform);
@@ -685,38 +675,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
             </div>
 
             <div className="mt-8">
-              {currentPlatform.id === 'canva' ? (
-                <div className="w-full max-w-lg mx-auto">
-                  <div className="p-6 rounded-3xl border-2 border-primary bg-primary/5 ring-4 ring-primary/10">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="w-10 h-10 rounded-xl bg-theme-background shadow-sm flex items-center justify-center text-primary">
-                        <Lock className="w-5 h-5" />
-                      </div>
-                    </div>
-                    <h3 className="text-lg font-bold text-foreground mb-2">Personal Access Token</h3>
-                    <p className="text-xs font-medium text-muted-foreground leading-relaxed mb-6">
-                      Generate a Personal Access Token from Canva: Settings → Developer Settings → Personal Access Tokens → Create New Token
-                    </p>
-                    <div className="space-y-3">
-                      <input
-                        type="password"
-                        placeholder="Paste your Canva Personal Access Token here..."
-                        value={canvaToken}
-                        onChange={(e) => setCanvaToken(e.target.value)}
-                        className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
-                      />
-                      <button
-                        onClick={handleCanvaLink}
-                        disabled={!canvaToken.trim()}
-                        className="w-full py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        Link Canva
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Auth Step */}
                   <div className={cn(
                     "p-6 rounded-3xl border-2 transition-all relative",
