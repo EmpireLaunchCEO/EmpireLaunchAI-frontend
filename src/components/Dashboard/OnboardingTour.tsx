@@ -60,7 +60,7 @@ export function OnboardingTour() {
     },
     {
       title: "Empire Studio",
-      description: "This is your production powerhouse. Here is where videos, edits, and designs are created to grow and scale your business. It also shows you how many videos and designs you have left. All video and twin (your AI double) videos. Videos reset every 7 days, designs reset monthly.",
+      description: "This is your production powerhouse. Here is where videos, edits, and designs are created to grow and scale your business. It also shows you how many videos and designs you have left, including twin (your AI double) videos. Videos reset every 7 days, designs reset monthly.",
       target: "nav-studio",
       icon: Video,
       page: "/studio"
