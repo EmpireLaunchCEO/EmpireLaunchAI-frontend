@@ -144,12 +144,11 @@ function LandingPageContent() {
 
             <button 
               onClick={() => {
-                localStorage.clear();
-                window.location.href = '/onboarding?step=2&mode=login';
+                window.location.replace('/onboarding?step=3&mode=login');
               }}
               className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2"
             >
-              Returning Owner? Neural Log In
+              Already have an account? Log In
             </button>
           </div>
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-20 pointer-events-none">
