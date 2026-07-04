@@ -497,7 +497,7 @@ function OnboardingContent() {
 
             {currentStep === 5 && (
               <motion.div key="step5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                <PlatformMatrix selectedPlatforms={data.platforms} onConnect={handleConnect} />
+                <PlatformMatrix selectedPlatforms={data.platforms} />
               </motion.div>
             )}
 
