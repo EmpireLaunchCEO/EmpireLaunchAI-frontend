@@ -76,7 +76,7 @@ function OnboardingContent() {
     name: '',
     niche: '',
     angle: '',
-    platform: '',
+    platforms: [] as string[],
     archetype: 'CREATOR' as 'CREATOR' | 'CATALYST',
     connectedPlatforms: [] as string[],
     automationMode: 'co-pilot' as 'co-pilot' | 'empire',
@@ -179,7 +179,8 @@ function OnboardingContent() {
           name: data.name,
           niche: data.niche,
           angle: data.angle,
-          platform: data.platform,
+          platform: data.platforms[0] || '',
+          platforms: data.platforms,
           archetype: data.archetype,
           automationMode: data.automationMode
         }),
@@ -496,7 +497,7 @@ function OnboardingContent() {
 
             {currentStep === 5 && (
               <motion.div key="step5" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                <PlatformMatrix selectedPlatform={data.platform} onConnect={handleConnect} />
+                <PlatformMatrix selectedPlatforms={data.platforms} onConnect={handleConnect} />
               </motion.div>
             )}
 

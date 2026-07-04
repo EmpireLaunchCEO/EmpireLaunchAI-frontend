@@ -30,45 +30,50 @@ const platformData: Record<string, { name: string; icon: any; color: string }> =
 };
 
 interface PlatformMatrixProps {
-  selectedPlatform: string;
+  selectedPlatforms: string[];
   onConnect: (id: string) => void;
 }
 
-export function PlatformMatrix({ selectedPlatform, onConnect }: PlatformMatrixProps) {
-  const platform = platformData[selectedPlatform];
-  if (!platform) return null;
-
-  const Icon = platform.icon;
+export function PlatformMatrix({ selectedPlatforms, onConnect }: PlatformMatrixProps) {
+  if (!selectedPlatforms || selectedPlatforms.length === 0) return null;
 
   return (
     <div className="space-y-10 max-w-md mx-auto pb-20">
       <div className="text-center space-y-4">
-        <h2 className="text-3xl md:text-4xl font-black text-theme-gradient tracking-tight uppercase italic">Link Your Account.</h2>
-        <p className="text-muted-foreground text-sm md:text-lg font-medium italic">"Connect your platform to let your AI partner manage growth."</p>
+        <h2 className="text-3xl md:text-4xl font-black text-theme-gradient tracking-tight uppercase italic">Link Your Accounts.</h2>
+        <p className="text-muted-foreground text-sm md:text-lg font-medium italic">"Connect your platforms to let your AI partner manage growth."</p>
       </div>
 
-      <div className="flex justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="p-8 rounded-[32px] border-2 border-primary/30 bg-slate-900 text-center space-y-6 max-w-sm"
-        >
-          <div className={cn("p-5 rounded-2xl mx-auto w-fit", platform.color.replace('text-', 'bg-') + '/10')}>
-            <Icon className={cn("w-10 h-10", platform.color)} />
-          </div>
-          <div>
-            <h3 className="text-2xl font-black text-white uppercase italic">{platform.name}</h3>
-            <p className="text-xs text-slate-400 font-medium mt-2">Your selected platform for this business</p>
-          </div>
-          <button
-            onClick={() => onConnect(selectedPlatform)}
-            className="w-full bg-primary text-slate-900 py-4 rounded-2xl font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-primary/90 transition-all"
-          >
-            <ExternalLink className="w-4 h-4" />
-            Link Your {platform.name} Account
-          </button>
-          <p className="text-[9px] text-slate-500 font-medium">You can manage connections later in your Dashboard.</p>
-        </motion.div>
+      <div className="flex flex-col items-center gap-4">
+        {selectedPlatforms.map((id) => {
+          const platform = platformData[id];
+          if (!platform) return null;
+          const Icon = platform.icon;
+
+          return (
+            <motion.div
+              key={id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="p-6 rounded-[32px] border-2 border-primary/30 bg-slate-900 text-center space-y-4 max-w-sm w-full"
+            >
+              <div className={cn("p-4 rounded-2xl mx-auto w-fit", platform.color.replace('text-', 'bg-') + '/10')}>
+                <Icon className={cn("w-8 h-8", platform.color)} />
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-white uppercase italic">{platform.name}</h3>
+              </div>
+              <button
+                onClick={() => onConnect(id)}
+                className="w-full bg-primary text-slate-900 py-4 rounded-2xl font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-primary/90 transition-all"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Link Your {platform.name} Account
+              </button>
+            </motion.div>
+          );
+        })}
+        <p className="text-[9px] text-slate-500 font-medium mt-4">You can manage connections later in your Dashboard.</p>
       </div>
     </div>
   );

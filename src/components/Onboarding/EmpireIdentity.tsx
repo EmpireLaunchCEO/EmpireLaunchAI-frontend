@@ -12,22 +12,26 @@ interface EmpireIdentityProps {
     niche: string;
     angle: string;
     archetype: 'CREATOR' | 'CATALYST';
-    platform?: string;
+    platforms: string[];
   };
   updateData: (updates: any) => void;
 }
 
+const storePlatforms = ['shopify', 'etsy', 'amazon'];
+const socialPlatforms = ['tiktok', 'instagram', 'youtube', 'facebook', 'pinterest'];
+const otherPlatforms = ['fiverr', 'gmail'];
+
 const platformOptions = [
-  { id: 'tiktok', name: 'TikTok', icon: Video },
-  { id: 'instagram', name: 'Instagram', icon: Camera },
-  { id: 'youtube', name: 'YouTube', icon: Video },
-  { id: 'facebook', name: 'Facebook', icon: Share2 },
-  { id: 'pinterest', name: 'Pinterest', icon: Camera },
-  { id: 'shopify', name: 'Shopify', icon: Globe },
-  { id: 'etsy', name: 'Etsy', icon: ShoppingBag },
-  { id: 'amazon', name: 'Amazon', icon: ShoppingBag },
-  { id: 'fiverr', name: 'Fiverr', icon: ZapIcon },
-  { id: 'gmail', name: 'Email (Gmail)', icon: Mail },
+  { id: 'tiktok', name: 'TikTok', icon: Video, category: 'social' },
+  { id: 'instagram', name: 'Instagram', icon: Camera, category: 'social' },
+  { id: 'youtube', name: 'YouTube', icon: Video, category: 'social' },
+  { id: 'facebook', name: 'Facebook', icon: Share2, category: 'social' },
+  { id: 'pinterest', name: 'Pinterest', icon: Camera, category: 'social' },
+  { id: 'shopify', name: 'Shopify', icon: Globe, category: 'store' },
+  { id: 'etsy', name: 'Etsy', icon: ShoppingBag, category: 'store' },
+  { id: 'amazon', name: 'Amazon', icon: ShoppingBag, category: 'store' },
+  { id: 'fiverr', name: 'Fiverr', icon: ZapIcon, category: 'other' },
+  { id: 'gmail', name: 'Email (Gmail)', icon: Mail, category: 'other' },
 ];
 
 export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
@@ -35,9 +39,8 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
 
   useEffect(() => {
     if (data.niche.length > 3) {
-      // Simulate AI insight based on niche
       const timer = setTimeout(() => {
-        const etsyFee = (wisdomData.platform_fees as any).Etsy.listing_fee;
+        const etsyFee = (wisdomData.platform_fees as any).Etsy?.listing_fee || '0.20';
         if (data.archetype === 'CREATOR') {
           setAiInsight(`I love that angle. Based on current trends, '${data.niche}' is seeing a 15% increase in Etsy searches this month. Plus, at just ${etsyFee} per listing, we can scale fast.`);
         } else {
@@ -49,6 +52,34 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
       setAiInsight("");
     }
   }, [data.niche, data.archetype]);
+
+  const togglePlatform = (id: string) => {
+    const current = data.platforms || [];
+    const isSelected = current.includes(id);
+
+    // If it's a store platform, only allow one at a time
+    if (storePlatforms.includes(id)) {
+      // Remove any existing store platforms, then add this one
+      const withoutStores = current.filter(p => !storePlatforms.includes(p));
+      if (isSelected) {
+        // Deselecting the store
+        updateData({ platforms: withoutStores });
+      } else {
+        // Selecting a new store
+        updateData({ platforms: [...withoutStores, id] });
+      }
+      return;
+    }
+
+    // Social and other platforms: toggle
+    if (isSelected) {
+      updateData({ platforms: current.filter(p => p !== id) });
+    } else {
+      updateData({ platforms: [...current, id] });
+    }
+  };
+
+  const isStoreSelected = data.platforms?.some(p => storePlatforms.includes(p));
 
   return (
     <div className="space-y-10 max-w-md mx-auto">
@@ -139,18 +170,20 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
           />
         </div>
 
-        {/* Platform Selector */}
+        {/* Social Platforms - Multi Select */}
         <div className="space-y-2 pt-2">
-          <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">What platform do you use?</label>
+          <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">
+            Social Platforms <span className="text-primary">(select all that apply)</span>
+          </label>
           <div className="grid grid-cols-2 gap-2">
-            {platformOptions.map((p) => {
+            {platformOptions.filter(p => p.category === 'social').map((p) => {
               const Icon = p.icon;
-              const isSelected = data.platform === p.id;
+              const isSelected = (data.platforms || []).includes(p.id);
               return (
                 <button
                   key={p.id}
                   type="button"
-                  onClick={() => updateData({ platform: p.id })}
+                  onClick={() => togglePlatform(p.id)}
                   className={cn(
                     "flex items-center gap-2 p-3 rounded-xl border-2 transition-all text-left",
                     isSelected
@@ -176,6 +209,84 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
           </div>
         </div>
 
+        {/* Store Platform - Single Select */}
+        <div className="space-y-2">
+          <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">
+            Store Platform <span className="text-amber-400">(choose one)</span>
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            {platformOptions.filter(p => p.category === 'store').map((p) => {
+              const Icon = p.icon;
+              const isSelected = (data.platforms || []).includes(p.id);
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => togglePlatform(p.id)}
+                  className={cn(
+                    "flex items-center gap-2 p-3 rounded-xl border-2 transition-all text-left",
+                    isSelected
+                      ? "bg-amber-500/10 border-amber-500 shadow-[0_0_10px_rgba(251,191,36,0.15)]"
+                      : "bg-slate-900 border-slate-800 hover:border-slate-700"
+                  )}
+                >
+                  <div className={cn(
+                    "w-7 h-7 rounded-lg flex items-center justify-center shrink-0",
+                    isSelected ? "bg-amber-500 text-slate-900" : "bg-slate-800 text-slate-400"
+                  )}>
+                    <Icon className="w-3.5 h-3.5" />
+                  </div>
+                  <span className={cn(
+                    "text-[10px] font-bold uppercase tracking-tight",
+                    isSelected ? "text-amber-400" : "text-slate-300"
+                  )}>
+                    {p.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {!isStoreSelected && (
+            <p className="text-[8px] text-slate-600 font-bold uppercase tracking-widest pt-1">Optional — you can add one later</p>
+          )}
+        </div>
+
+        {/* Other Platforms */}
+        <div className="space-y-2">
+          <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">Other</label>
+          <div className="grid grid-cols-2 gap-2">
+            {platformOptions.filter(p => p.category === 'other').map((p) => {
+              const Icon = p.icon;
+              const isSelected = (data.platforms || []).includes(p.id);
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => togglePlatform(p.id)}
+                  className={cn(
+                    "flex items-center gap-2 p-3 rounded-xl border-2 transition-all text-left",
+                    isSelected
+                      ? "bg-primary/10 border-primary shadow-[0_0_10px_rgba(0,229,255,0.15)]"
+                      : "bg-slate-900 border-slate-800 hover:border-slate-700"
+                  )}
+                >
+                  <div className={cn(
+                    "w-7 h-7 rounded-lg flex items-center justify-center shrink-0",
+                    isSelected ? "bg-primary text-slate-900" : "bg-slate-800 text-slate-400"
+                  )}>
+                    <Icon className="w-3.5 h-3.5" />
+                  </div>
+                  <span className={cn(
+                    "text-[10px] font-bold uppercase tracking-tight",
+                    isSelected ? "text-primary" : "text-slate-300"
+                  )}>
+                    {p.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       <AnimatePresence>
