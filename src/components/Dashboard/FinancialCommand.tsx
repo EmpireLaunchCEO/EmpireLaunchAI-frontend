@@ -89,12 +89,30 @@ export function FinancialCommand({
     { name: "Success-Shares (40/1k Protocol)", amount: 0, date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }), type: "app", successShare: "40/1k" },
   ];
 
-  // Connected subscription platform costs
+  // Connected subscription platform costs — only shows if user has platform linked
   const platformSubscriptions: Record<string, { name: string; cost: number }> = {
     canva: { name: 'Canva Pro', cost: 1299 },
     kittl: { name: 'Kittl Pro', cost: 1500 },
     capcut: { name: 'CapCut Pro', cost: 799 },
     figma: { name: 'Figma Professional', cost: 1200 },
+    shopify: { name: 'Shopify Basic', cost: 2900 },
+    squarespace: { name: 'Squarespace Personal', cost: 1600 },
+    wix: { name: 'Wix Combo', cost: 1600 },
+    godaddy: { name: 'GoDaddy Business', cost: 1499 },
+    systeme_io: { name: 'Systeme.io Starter', cost: 2700 },
+    substack: { name: 'Substack Pro', cost: 1000 },
+    linkedin: { name: 'LinkedIn Premium', cost: 2999 },
+    patreon: { name: 'Patreon Creator', cost: 599 },
+    shipstation: { name: 'ShipStation Starter', cost: 999 },
+    spocket: { name: 'Spocket Starter', cost: 2499 },
+    zendrop: { name: 'Zendrop Pro', cost: 1999 },
+    autods: { name: 'AutoDS Starter', cost: 1990 },
+    bannerbear: { name: 'Bannerbear Pro', cost: 900 },
+    amazon: { name: 'Amazon Seller', cost: 3999 },
+    ebay: { name: 'eBay Store', cost: 2199 },
+    gumroad: { name: 'Gumroad Premium', cost: 999 },
+    printful: { name: 'Printful Growth', cost: 999 },
+    printify: { name: 'Printify Premium', cost: 2499 },
   };
 
   if (connectedPlatforms) {
