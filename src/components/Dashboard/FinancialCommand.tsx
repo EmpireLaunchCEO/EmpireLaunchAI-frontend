@@ -159,7 +159,7 @@ export function FinancialCommand({
                 cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" className="text-primary" strokeWidth="12"
                 strokeDasharray="251.2"
                 initial={{ strokeDashoffset: 251.2 }}
-                animate={{ strokeDashoffset: 251.2 * (1 - 0.75) }}
+                animate={{ strokeDashoffset: 251.2 * (1 - growthScore / 100) }}
                 strokeLinecap="round"
                 transition={{ duration: 1.5, ease: "easeOut" }}
               />
