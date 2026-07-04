@@ -514,7 +514,7 @@ function OnboardingContent() {
             <ChevronLeft className="w-4 h-4" /> Previous
           </button>
           {currentStep !== 2 && currentStep !== 3 && currentStep < steps.length && (
-            <button onClick={nextStep} className="bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl group w-full md:w-auto justify-center">
+            <button onClick={nextStep} disabled={currentStep === 4 && (!data.platforms || data.platforms.length === 0)} className="bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl group w-full md:w-auto justify-center disabled:opacity-30 disabled:cursor-not-allowed">
               Next Phase <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           )}
