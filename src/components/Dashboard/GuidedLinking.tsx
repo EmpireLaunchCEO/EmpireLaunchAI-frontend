@@ -829,7 +829,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                     )}
                   </div>
                 </div>
-              )}
             </div>
 
             <div className="absolute -right-32 -bottom-32 w-96 h-96 bg-theme-background rounded-full -z-10" />
