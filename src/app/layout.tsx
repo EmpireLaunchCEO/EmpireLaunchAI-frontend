@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json?v=1025" />
+        <link rel="manifest" href="/manifest.json?v=9999" />
         <link rel="apple-touch-icon" href="/apple-touch-icon-v1024.png" />
         <link rel="icon" href="/favicon.ico?v=1024" />
         <link rel="apple-touch-startup-image" href="/apple-touch-icon-v1024.png" />
