@@ -2,7 +2,6 @@
 
 import { Sidebar } from "@/components/Sidebar";
 import { MobileNav } from "@/components/MobileNav";
-import { SubscriptionGuard } from "@/components/SubscriptionGuard";
 import { OnboardingTour } from "@/components/Dashboard/OnboardingTour";
 import { NotificationBell } from "@/components/Dashboard/NotificationBell";
 import { GlobalEmpireHeader } from "@/components/Dashboard/GlobalEmpireHeader";
@@ -56,8 +55,7 @@ export default function AuthenticatedLayout({
               <NotificationBell id="notification-bell-desktop" />
             </div>
 
-            <SubscriptionGuard>
-              <PullToRefresh onRefresh={triggerRefresh}>
+            <PullToRefresh onRefresh={triggerRefresh}>
                 <div className="flex-1 flex flex-col min-h-screen">
                   <GlobalEmpireHeader />
                   <div className="flex-1 pb-32 relative z-[2]">
@@ -67,7 +65,6 @@ export default function AuthenticatedLayout({
                   </div>
                 </div>
               </PullToRefresh>
-            </SubscriptionGuard>
         </main>
 
         {/* Floating elements - High Z-Index */}
