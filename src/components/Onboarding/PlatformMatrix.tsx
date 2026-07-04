@@ -32,8 +32,6 @@ interface PlatformMatrixProps {
 }
 
 export function PlatformMatrix({ selectedPlatforms }: PlatformMatrixProps) {
-  if (!selectedPlatforms || selectedPlatforms.length === 0) return null;
-
   return (
     <div className="space-y-10 max-w-md mx-auto pb-20">
       <div className="text-center space-y-4">
@@ -41,8 +39,14 @@ export function PlatformMatrix({ selectedPlatforms }: PlatformMatrixProps) {
         <p className="text-muted-foreground text-sm md:text-lg font-medium italic">"You can link your accounts in the Link Center from your Dashboard."</p>
       </div>
 
-      <div className="flex flex-col items-center gap-3">
-        {selectedPlatforms.map((id) => {
+      {(!selectedPlatforms || selectedPlatforms.length === 0) ? (
+        <div className="text-center py-12">
+          <p className="text-sm text-slate-500 font-medium">No platforms selected yet.</p>
+          <p className="text-[10px] text-slate-600 mt-1">Go back to the previous step to choose your platforms.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center gap-3">
+          {selectedPlatforms.map((id) => {
           const platform = platformData[id];
           if (!platform) return null;
           const Icon = platform.icon;
