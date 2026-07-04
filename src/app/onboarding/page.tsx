@@ -177,6 +177,7 @@ function OnboardingContent() {
   }, [currentStep, isMounted, userId, data]);
 
   const isPreview = searchParams.get('preview') === 'true';
+  const [isLoginMode, setIsLoginMode] = useState(searchParams.get('mode') === 'login');
 
   const finalizeActivation = useCallback(async () => {
     try {
@@ -379,7 +380,7 @@ function OnboardingContent() {
     <div className="min-h-screen bg-theme-surface flex flex-col items-center overflow-x-hidden relative">
       <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} onAccept={handleAcceptTerms} />
       <div className="w-full max-w-md px-6 py-8 md:py-16 flex flex-col mx-auto flex-grow">
-        <ProgressConstellation currentStep={currentStep} totalSteps={steps.length} />
+        {!isLoginMode && <ProgressConstellation currentStep={currentStep} totalSteps={steps.length} />}
         <div className="flex-1">
           <AnimatePresence mode="wait">
             {currentStep === 1 && (
@@ -402,7 +403,7 @@ function OnboardingContent() {
                    </section>
                 </div>
                 <button onClick={() => { acceptProtocols(); nextStep(); }} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none">Accept Protocols <CheckCircle2 className="w-4 h-4" /></button>
-                <button onClick={() => setCurrentStep(3)} className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2">
+                <button onClick={() => { setIsLoginMode(true); setCurrentStep(3); }} className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2">
                   Already have an account? Log In
                 </button>
               </motion.div>
@@ -480,12 +481,15 @@ function OnboardingContent() {
 
             {currentStep === 3 && (
               <motion.div key="step3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                <SignUpForm 
-                  initialMode={searchParams.get('mode') === 'login' ? 'login' : 'signup'}
+                <SignUpForm
+                  initialMode={isLoginMode ? 'login' : 'signup'}
                   masterKey={accessKey.trim()}
-                  onSuccess={async (uid) => { 
-                    setUserId(uid); 
-                    // If we have an access key from the previous step, redeem it now
+                  onSuccess={async (uid) => {
+                    setUserId(uid);
+                    if (isLoginMode) {
+                      window.location.href = '/dashboard';
+                      return;
+                    }
                     if (accessKey.trim()) {
                       try {
                         await fetch(`${API_URL}/api/auth/redeem-key`, {

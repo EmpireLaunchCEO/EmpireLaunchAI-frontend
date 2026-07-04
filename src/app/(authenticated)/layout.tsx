@@ -28,7 +28,7 @@ export default function AuthenticatedLayout({
     if (typeof window === 'undefined') return;
     const userId = localStorage.getItem('empire_userId');
     if (!userId) {
-      router.replace('/onboarding');
+      router.replace('/onboarding?step=3&mode=login');
     } else {
       setIsAuthed(true);
     }
