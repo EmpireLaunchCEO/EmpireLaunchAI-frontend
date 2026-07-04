@@ -2,21 +2,23 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Mail, Lock, ArrowRight, ShieldCheck, AlertCircle, Key } from 'lucide-react';
 import { API_URL } from '@/lib/config';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface SignUpFormProps {
   onSuccess: (userId: string, email: string) => void;
   initialMode?: 'signup' | 'login';
+  masterKey?: string;
 }
 
-export const SignUpForm = ({ onSuccess, initialMode = 'signup' }: SignUpFormProps) => {
+export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: SignUpFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLogin, setIsLogin] = useState(initialMode === 'login');
+  const [useMasterKey, setUseMasterKey] = useState(!!masterKey);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,11 +26,24 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup' }: SignUpFormProp
     setError(null);
 
     try {
-      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+      let endpoint: string;
+      let body: any;
+
+      if (useMasterKey) {
+        endpoint = '/api/auth/master-login';
+        body = { email, key: masterKey || password };
+      } else if (isLogin) {
+        endpoint = '/api/auth/login';
+        body = { email, password };
+      } else {
+        endpoint = '/api/auth/register';
+        body = { email, password };
+      }
+
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(body),
       });
 
       const data = await response.json();
@@ -49,12 +64,14 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup' }: SignUpFormProp
       <div className="text-center space-y-4">
         <BrandedGlobe size="2xl" className="mx-auto" />
         <h2 className="text-2xl md:text-3xl font-black text-theme-gradient tracking-tight uppercase italic">
-          {isLogin ? 'Neural Access.' : 'Neural Identity.'}
+          {useMasterKey ? 'Master Access.' : isLogin ? 'Neural Access.' : 'Neural Identity.'}
         </h2>
         <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
-          {isLogin 
-            ? '"Re-establish your connection to the Empire Matrix."'
-            : '"Create your secure access point to the Empire Matrix."'
+          {useMasterKey 
+            ? '"Authorize with your Empire Master Key."'
+            : isLogin 
+              ? '"Re-establish your connection to the Empire Matrix."'
+              : '"Create your secure access point to the Empire Matrix."'
           }
         </p>
       </div>
@@ -79,16 +96,16 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup' }: SignUpFormProp
 
         <div className="space-y-2">
           <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2 px-1">
-            <Lock className="w-3 h-3 text-primary" />
-            Secure Access Key
+            {useMasterKey ? <Key className="w-3 h-3 text-primary" /> : <Lock className="w-3 h-3 text-primary" />}
+            {useMasterKey ? 'Master Key' : 'Secure Access Key'}
           </label>
           <div className="relative group">
             <input
               type="password"
-              required
+              required={!useMasterKey}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
+              placeholder={useMasterKey ? "••••••••••••" : "••••••••••••"}
               className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white shadow-inner"
             />
           </div>
@@ -112,17 +129,19 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup' }: SignUpFormProp
                 <BrandedGlobe size="sm" spinning className="bg-transparent shadow-none border-none" />
                 Synchronizing...
               </>
-            ) : (isLogin ? 'Access Command Center' : 'Initialize Identity')}
+            ) : (useMasterKey ? 'Authorize Master Access' : isLogin ? 'Access Command Center' : 'Initialize Identity')}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
 
-          <button
-            type="button"
-            onClick={() => setIsLogin(!isLogin)}
-            className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2"
-          >
-            {isLogin ? "Need to create a new empire? Sign Up" : "Already have an empire? Log In"}
-          </button>
+          {!useMasterKey && (
+            <button
+              type="button"
+              onClick={() => setIsLogin(!isLogin)}
+              className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2"
+            >
+              {isLogin ? "Need to create a new empire? Sign Up" : "Already have an empire? Log In"}
+            </button>
+          )}
         </div>
       </form>
     </div>

@@ -466,6 +466,7 @@ function OnboardingContent() {
               <motion.div key="step3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
                 <SignUpForm 
                   initialMode={searchParams.get('mode') === 'login' ? 'login' : 'signup'}
+                  masterKey={accessKey.trim()}
                   onSuccess={async (uid) => { 
                     setUserId(uid); 
                     // If we have an access key from the previous step, redeem it now
