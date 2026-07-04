@@ -74,6 +74,8 @@ const availablePlatforms = [
   { id: 'patreon', name: 'Patreon', icon: Zap, color: 'text-orange-600', bg: 'bg-orange-50' },
   { id: 'linkedin', name: 'LinkedIn', icon: Share2, color: 'text-blue-700', bg: 'bg-blue-50' },
   { id: 'twitch', name: 'Twitch', icon: Video, color: 'text-purple-700', bg: 'bg-purple-50' },
+  { id: 'railway', name: 'Railway', icon: Globe, color: 'text-slate-700', bg: 'bg-slate-50' },
+  { id: 'google_studio', name: 'Google Studio', icon: Camera, color: 'text-blue-500', bg: 'bg-blue-50' },
   { id: 'external_link', name: 'External Link', icon: Globe, color: 'text-primary', bg: 'bg-primary/10' },
 ];
 
@@ -129,6 +131,8 @@ const PLATFORM_3D_ICONS: Record<string, string> = {
   linkedin: '/brands/linkedin_128.png',
   twitch: '/brands/twitch_128.png',
   stripe: '/brands/stripe_128.png',
+  railway: '/brands/railway_128.png',
+  google_studio: '/brands/google_studio_128.png',
 };
 
 function PlatformIcon({ id, icon: Icon, className, size = 20 }: { id: string, icon: any, className?: string, size?: number }) {
@@ -278,9 +282,11 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       etsy: { endpoint: 'etsy', sessionKey: 'etsy_oauth_session_id', vaultKey: 'empire_vault_etsy', label: 'Etsy' },
       canva: { endpoint: 'canva', sessionKey: 'canva_oauth_session_id', vaultKey: 'empire_vault_canva', label: 'Canva' },
       stripe: { endpoint: 'stripe', sessionKey: 'stripe_oauth_session_id', vaultKey: 'empire_vault_stripe', label: 'Stripe' },
+      railway: { endpoint: 'railway', sessionKey: 'railway_oauth_session_id', vaultKey: 'empire_vault_railway', label: 'Railway' },
+      google_studio: { endpoint: 'google_studio', sessionKey: 'google_studio_oauth_session_id', vaultKey: 'empire_vault_google_studio', label: 'Google Studio' },
     };
 
-    const oauth = oauthPlatforms[activeSetupPlatform || ''];
+    const oauth = null; // Skip OAuth — all apps use Browser Link (Neural Handshake)
 
     if (oauth) {
       const controller = new AbortController();
