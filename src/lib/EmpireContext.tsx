@@ -584,7 +584,29 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
                            localStorage.setItem('linkingCompleteByEmpire', JSON.stringify(nextLinking));
                          }
                       }
-                    }
+        }
+
+        // Fetch actual connected platforms from backend and populate platformsByEmpire
+        if (storedUserId) {
+          const integRes = await fetch(`${API_URL}/api/integrations/status`, {
+            headers: { 'x-user-id': storedUserId }
+          }).catch(() => null);
+
+          if (integRes && integRes.ok) {
+            const integData = await integRes.json();
+            const connected: string[] = (integData.integrations || [])
+              .filter((i: any) => i.isConnected !== false)
+              .map((i: any) => i.platform);
+
+            if (connected.length > 0) {
+              setPlatformsByEmpire(prev => {
+                const next = { ...prev, [localActiveId]: connected };
+                localStorage.setItem('platformsByEmpire', JSON.stringify(next));
+                return next;
+              });
+            }
+          }
+        }
 
         // Fetch empire data
         const empire = await empireService.getEmpire(localActiveId).catch(() => null);
