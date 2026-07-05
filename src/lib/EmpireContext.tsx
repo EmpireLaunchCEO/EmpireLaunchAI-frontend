@@ -543,6 +543,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
                     if (storedUserId) {
                       const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
                         headers: {
+                          'Authorization': 'Bearer mock-mobile-token',
                           'x-user-id': storedUserId
                         }
                       }).catch(() => null);

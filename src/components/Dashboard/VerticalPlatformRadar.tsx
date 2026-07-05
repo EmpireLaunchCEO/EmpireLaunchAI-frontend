@@ -165,7 +165,7 @@ export function VerticalPlatformRadar() {
       <div className="flex flex-col gap-2 md:gap-3">
         {displayData.map((platform) => {
           const id = platform.id;
-          const tier = platformPermissions[id] || 'read-only';
+          const tier = platformPermissions[id] || 'co-pilot';
           const isSpendingEnabled = spendingPermissions[id] || false;
 
           return (
