@@ -198,8 +198,10 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
   const [selectedTier, setSelectedTier] = useState<'co-pilot' | 'empire'>('co-pilot');
   const [onboardingSessionId, setOnboardingSessionId] = useState<string | null>(null);
   const [onboardingStatus, setOnboardingStatus] = useState<any>(null);
-  const [canvaEmail, setCanvaEmail] = useState('');
-  const [canvaPassword, setCanvaPassword] = useState('');
+  const [credentials, setCredentials] = useState<{ email: string; password: string } | null>(null);
+  const [credentialEmail, setCredentialEmail] = useState('');
+  const [credentialPassword, setCredentialPassword] = useState('');
+  const [pendingPlatformName, setPendingPlatformName] = useState('');
 
   useEffect(() => {
     let interval: any;
@@ -334,20 +336,10 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
             }
           }, 500);
         } else if (data.error === 'MISSING_KEYS') {
-          // Auto-fallback: No OAuth keys configured → use Neural Handshake
+          // Auto-fallback: No OAuth keys configured → show credential form
           setLinkingStep('keys');
-          setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
-          const creds = activeSetupPlatform === 'canva' ? { email: canvaEmail, password: canvaPassword } : undefined;
-          onboardingService.startOnboarding(activeSetupPlatform!, creds)
-            .then(data => {
-              if (data.sessionId) {
-                setOnboardingSessionId(data.sessionId);
-              }
-            })
-            .catch(err => {
-              console.error('Failed to start neural onboarding', err);
-              setOnboardingStatus({ status: 'failed', error: 'Failed to wake neural node. Please try again.' });
-            });
+          setOnboardingStatus(null);
+          setPendingPlatformName(currentPlatform?.name || '');
         } else if (data.error) {
           alert(`Configuration Notice: ${data.error}. API keys may need to be set in the backend.`);
         }
@@ -355,30 +347,36 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       .catch((err) => {
         clearTimeout(timeout);
         // OAuth fetch failed (network error, no endpoint, etc.)
-        // Fall through to Neural Handshake below
-        console.warn('OAuth URL fetch failed, falling back to neural handshake', err.message);
+        // Fall through to credential form
+        console.warn('OAuth URL fetch failed, falling back to credential form', err.message);
         setLinkingStep('keys');
-        setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
-        const fallbackCreds = activeSetupPlatform === 'canva' ? { email: canvaEmail, password: canvaPassword } : undefined;
-        onboardingService.startOnboarding(activeSetupPlatform!, fallbackCreds)
-          .then(data => {
-            if (data.sessionId) {
-              setOnboardingSessionId(data.sessionId);
-            }
-          })
-          .catch(err => {
-            console.error('Failed to start neural onboarding', err);
-            setOnboardingStatus({ status: 'failed', error: 'Failed to wake neural node. Please try again.' });
-          });
+        setOnboardingStatus(null);
+        setPendingPlatformName(currentPlatform?.name || '');
       });
       return; // Exit — OAuth or fallback initiated
     }
 
-    // No OAuth config for this platform — use direct Neural Handshake
+    // No OAuth config for this platform — show credential form
     setLinkingStep('keys');
+    setOnboardingStatus(null);
+    setPendingPlatformName(currentPlatform?.name || '');
+    return;
+  };
+
+  const handleLink = () => {
+    if (activeSetupPlatform) {
+      connectPlatform(activeSetupPlatform);
+      updatePlatformPermission(activeSetupPlatform, selectedTier);
+      finishSetup();
+    }
+  };
+
+  const handleSubmitCredentials = () => {
+    if (!activeSetupPlatform || !credentialEmail || !credentialPassword) return;
+    const creds = { email: credentialEmail, password: credentialPassword };
+    setCredentials(creds);
     setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
-    const directCreds = activeSetupPlatform === 'canva' ? { email: canvaEmail, password: canvaPassword } : undefined;
-    onboardingService.startOnboarding(activeSetupPlatform!, directCreds)
+    onboardingService.startOnboarding(activeSetupPlatform!, creds)
       .then(data => {
         if (data.sessionId) {
           setOnboardingSessionId(data.sessionId);
@@ -388,17 +386,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
         console.error('Failed to start neural onboarding', err);
         setOnboardingStatus({ status: 'failed', error: 'Failed to wake neural node. Please try again.' });
       });
-    return;
-
-    setLinkingStep('keys');
-  };
-
-  const handleLink = () => {
-    if (activeSetupPlatform) {
-      connectPlatform(activeSetupPlatform);
-      updatePlatformPermission(activeSetupPlatform, selectedTier);
-      finishSetup();
-    }
   };
 
   const currentPlatform = availablePlatforms.find(p => p.id === activeSetupPlatform);
@@ -694,14 +681,11 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                     </div>
                     <h3 className="text-lg font-bold text-foreground mb-2">
                       {currentPlatform.id === 'imap' ? 'Email Credentials' : 
-                       currentPlatform.id === 'canva' ? 'Canva Login' :
                        currentPlatform.id === 'external_link' ? 'External Sales Link' : 'Secure Authorization'}
                     </h3>
                     <p className="text-xs font-medium text-muted-foreground leading-relaxed mb-6">
                       {currentPlatform.id === 'imap'
                         ? "Enter your email and App Password to allow IMAP access."
-                        : currentPlatform.id === 'canva'
-                        ? "Enter your Canva email and password. The AI will log in and extract your designs."
                         : currentPlatform.id === 'external_link'
                         ? "Enter the primary URL for this business (e.g. your Daily Pay sales page)."
                         : `Connect your ${currentPlatform.name} account via encrypted OAuth.`
@@ -709,24 +693,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                     </p>
                     {linkingStep === 'auth' && (
                       <div className="space-y-3">
-                        {currentPlatform.id === 'canva' && (
-                          <>
-                            <input
-                              type="email"
-                              placeholder="Canva Email"
-                              value={canvaEmail}
-                              onChange={(e) => setCanvaEmail(e.target.value)}
-                              className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
-                            />
-                            <input
-                              type="password"
-                              placeholder="Canva Password"
-                              value={canvaPassword}
-                              onChange={(e) => setCanvaPassword(e.target.value)}
-                              className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
-                            />
-                          </>
-                        )}
                         {currentPlatform.id === 'imap' && (
                           <>
                             <input
@@ -753,7 +719,6 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                           className="w-full py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-primary/20"
                         >
                           {currentPlatform.id === 'imap' ? 'Authenticate IMAP' : 
-                           currentPlatform.id === 'canva' ? 'Log In to Canva' :
                            currentPlatform.id === 'external_link' ? 'Establish Link' : `Authorize ${currentPlatform.name}`}
                         </button>
                       </div>
@@ -795,13 +760,13 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                                   <p className="text-[10px] font-black uppercase tracking-widest text-amber-500">Action Required</p>
                                 </div>
                                 <p className="text-[9px] font-bold text-muted-foreground leading-relaxed">
-                                  Our Neural Node has reached the login screen. Please log in to your {currentPlatform.name} account in the window that just opened (or on your device) to allow the AI to continue.
+                                  Our Neural Node has reached the login screen. Please log in to your {currentPlatform?.name || 'platform'} account in the window that just opened (or on your device) to allow the AI to continue.
                                 </p>
                                 <button
-                                  onClick={() => window.open(currentPlatform.id === 'canva' ? 'https://www.canva.com/login' : '#', '_blank')}
+                                  onClick={() => window.open(currentPlatform?.id === 'canva' ? 'https://www.canva.com/login' : '#', '_blank')}
                                   className="w-full py-2.5 bg-amber-500 text-slate-950 rounded-lg font-black text-[9px] uppercase tracking-widest hover:opacity-90 transition-all"
                                 >
-                                  Open {currentPlatform.name} Login
+                                  Open {currentPlatform?.name || 'Platform'} Login
                                 </button>
                               </div>
                             )}
@@ -826,6 +791,38 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                               </div>
                             </div>
                           </div>
+                        ) : !credentials ? (
+                          <>
+                            <p className="text-xs font-bold text-muted-foreground mb-3">
+                              Provide login credentials for <span className="text-primary">{pendingPlatformName || activeSetupPlatform}</span> to establish the Neural Handshake.
+                            </p>
+                            <div className="space-y-3">
+                              <input
+                                type="email"
+                                placeholder="Email or Username"
+                                value={credentialEmail}
+                                onChange={(e) => setCredentialEmail(e.target.value)}
+                                className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
+                              />
+                              <input
+                                type="password"
+                                placeholder="Password"
+                                value={credentialPassword}
+                                onChange={(e) => setCredentialPassword(e.target.value)}
+                                className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
+                              />
+                              <button
+                                onClick={handleSubmitCredentials}
+                                disabled={!credentialEmail || !credentialPassword}
+                                className={cn(
+                                  "w-full py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-2xl",
+                                  (!credentialEmail || !credentialPassword) ? "opacity-50 cursor-not-allowed" : "hover:opacity-90"
+                                )}
+                              >
+                                Connect {pendingPlatformName || activeSetupPlatform}
+                              </button>
+                            </div>
+                          </>
                         ) : (
                           <>
                             <div className="space-y-1">
