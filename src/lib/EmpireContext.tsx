@@ -589,7 +589,10 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         // Fetch actual connected platforms from backend and populate platformsByEmpire
         if (storedUserId) {
           const integRes = await fetch(`${API_URL}/api/integrations/status`, {
-            headers: { 'x-user-id': storedUserId }
+            headers: {
+                'Authorization': 'Bearer mock-mobile-token',
+                'x-user-id': storedUserId
+              }
           }).catch(() => null);
 
           if (integRes && integRes.ok) {
