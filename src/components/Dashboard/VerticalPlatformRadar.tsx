@@ -162,7 +162,7 @@ export function VerticalPlatformRadar() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 md:gap-6">
+      <div className="flex flex-col gap-2 md:gap-3">
         {displayData.map((platform) => {
           const id = platform.id;
           const tier = platformPermissions[id] || 'read-only';
@@ -174,94 +174,94 @@ export function VerticalPlatformRadar() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               whileHover={{ y: -2 }}
-              className="group relative bg-theme-surface border-2 border-theme rounded-[24px] md:rounded-[40px] overflow-hidden transition-all shadow-xl"
+              className="group relative bg-theme-surface border-2 border-theme rounded-[16px] md:rounded-[20px] overflow-hidden transition-all shadow-xl"
             >
               {/* Background Glow */}
-              <div className={cn("absolute top-0 right-0 w-[400px] h-[400px] blur-[100px] -z-10 opacity-10 transition-opacity group-hover:opacity-20", platform.bgSecondary)} />
+              <div className={cn("absolute top-0 right-0 w-[200px] h-[200px] blur-[80px] -z-10 opacity-10 transition-opacity group-hover:opacity-20", platform.bgSecondary)} />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 relative z-10 min-h-[180px] md:min-h-[220px]">
+              <div className="grid grid-cols-1 md:grid-cols-2 relative z-10 min-h-[100px] md:min-h-[120px]">
                 {/* LEFT SIDE: Linked App Identity & Performance Metrics */}
-                <div className="p-4 md:p-8 flex flex-col justify-center gap-4 bg-primary/5 border-b md:border-b-0 md:border-r border-theme/30">
-                  <div className="flex items-center gap-5">
-                    <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-[18px] md:rounded-[24px] bg-white p-2.5 border-2 border-theme shadow-xl transition-all duration-700">
+                <div className="p-2 md:p-3 flex flex-col justify-center gap-2 bg-primary/5 border-b md:border-b-0 md:border-r border-theme/30">
+                  <div className="flex items-center gap-3">
+                    <div className="relative w-8 h-8 md:w-10 md:h-10 rounded-[12px] md:rounded-[14px] bg-white p-1.5 border-2 border-theme shadow-xl transition-all duration-700">
                       <Image 
                         src={platform.logo} 
                         alt={platform.name} 
                         fill 
-                        className="object-contain p-2.5"
+                        className="object-contain p-1.5"
                       />
                     </div>
-                    <div className="space-y-0.5 min-w-0 flex-1">
-                      <h3 className="text-xl md:text-2xl font-black text-foreground uppercase tracking-tighter italic leading-none truncate pr-2">{platform.name}</h3>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="flex items-center gap-1.5 text-[8px] md:text-[10px] font-black text-green-500 uppercase tracking-widest">
+                    <div className="space-y-0 min-w-0 flex-1">
+                      <h3 className="text-sm md:text-base font-black text-foreground uppercase tracking-tighter italic leading-none truncate pr-2">{platform.name}</h3>
+                      <div className="flex flex-col gap-0">
+                        <span className="flex items-center gap-1 text-[7px] md:text-[8px] font-black text-green-500 uppercase tracking-widest">
                           <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
                           Optimal
                         </span>
-                        <span className="text-[8px] md:text-[9px] font-black text-slate-500 uppercase tracking-widest">Sync: 124ms</span>
+                        <span className="text-[7px] md:text-[8px] font-black text-slate-500 uppercase tracking-widest">Sync: 124ms</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Performance Metrics - EMPIRE LINKS */}
-                  <div className="grid grid-cols-2 gap-3 pt-1">
-                    <div className="p-2.5 md:p-3.5 rounded-[16px] bg-theme-background/40 border border-theme/30 backdrop-blur-sm">
-                      <div className="text-[7px] font-black text-slate-500 uppercase tracking-widest mb-0.5">{platform.metricLabel}</div>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    <div className="p-1.5 md:p-2 rounded-[10px] md:rounded-[12px] bg-theme-background/40 border border-theme/30 backdrop-blur-sm">
+                      <div className="text-[6px] font-black text-slate-500 uppercase tracking-widest mb-px">{platform.metricLabel}</div>
                       <div className="flex items-end gap-1">
-                        <span className="text-lg md:text-xl font-black text-foreground leading-none">{platform.followers}</span>
-                        <span className="text-[8px] font-black text-green-500 mb-0.5 flex items-center gap-0.5">
+                        <span className="text-xs md:text-sm font-black text-foreground leading-none">{platform.followers}</span>
+                        <span className="text-[7px] font-black text-green-500 mb-px flex items-center gap-0.5">
                           <TrendingUp className="w-2 h-2" />
                           {platform.growth}
                         </span>
                       </div>
                     </div>
-                    <div className="p-2.5 md:p-3.5 rounded-[16px] bg-theme-background/40 border border-theme/30 backdrop-blur-sm">
-                      <div className="text-[7px] font-black text-slate-500 uppercase tracking-widest mb-0.5">{platform.secondaryMetricLabel}</div>
-                      <div className="text-lg md:text-xl font-black text-foreground leading-none">{platform.likes}</div>
+                    <div className="p-1.5 md:p-2 rounded-[10px] md:rounded-[12px] bg-theme-background/40 border border-theme/30 backdrop-blur-sm">
+                      <div className="text-[6px] font-black text-slate-500 uppercase tracking-widest mb-px">{platform.secondaryMetricLabel}</div>
+                      <div className="text-xs md:text-sm font-black text-foreground leading-none">{platform.likes}</div>
                     </div>
                   </div>
                 </div>
 
                 {/* RIGHT SIDE: Governance Toggles (AI Capabilities) */}
-                <div className="p-4 md:p-8 space-y-3 md:space-y-4 flex flex-col justify-center bg-theme-surface/30">
-                  <div className="space-y-0.5">
+                <div className="p-2 md:p-3 space-y-1 md:space-y-2 flex flex-col justify-center bg-theme-surface/30">
+                  <div className="space-y-0">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-[9px] md:text-[11px] font-black text-primary uppercase tracking-[0.2em]">AI Governance</h4>
+                      <h4 className="text-[8px] md:text-[9px] font-black text-primary uppercase tracking-[0.2em]">AI Governance</h4>
                       <div className="px-1 py-0.5 bg-slate-900 border border-white/10 rounded-md">
-                        <span className="text-[6px] font-black text-slate-500 uppercase tracking-tighter">Manual Only</span>
+                        <span className="text-[5px] font-black text-slate-500 uppercase tracking-tighter">Manual Only</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-2 md:space-y-3">
+                  <div className="space-y-1 md:space-y-1.5">
                     {/* Toggle 1: Co-Pilot */}
                     <button 
                       onClick={() => updatePlatformPermission(id, (tier === 'co-pilot' || tier === 'empire') ? 'read-only' : 'co-pilot')}
                       className={cn(
-                        "w-full flex items-center justify-between p-2.5 md:p-3 rounded-[14px] md:rounded-[20px] border-2 transition-all group/toggle shadow-lg",
+                        "w-full flex items-center justify-between p-1.5 md:p-2 rounded-[10px] md:rounded-[12px] border-2 transition-all group/toggle shadow-lg",
                         (tier === 'co-pilot' || tier === 'empire') 
                           ? "bg-primary/10 border-primary shadow-primary/10" 
                           : "bg-theme-background border-theme hover:border-primary/50"
                       )}
                     >
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-1.5">
                         <div className={cn(
-                          "w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center transition-colors",
+                          "w-5 h-5 md:w-6 md:h-6 rounded-lg flex items-center justify-center transition-colors",
                           (tier === 'co-pilot' || tier === 'empire') ? "bg-primary text-slate-950" : "bg-slate-800 text-slate-400"
                         )}>
-                          <Zap className="w-3.5 h-3.5 md:w-4 h-4" />
+                          <Zap className="w-2.5 h-2.5 md:w-3 md:h-3" />
                         </div>
                         <div className="flex flex-col text-left">
-                          <span className={cn("text-[9px] md:text-[11px] font-black uppercase tracking-tight", (tier === 'co-pilot' || tier === 'empire') ? "text-primary" : "text-foreground")}>Co-Pilot</span>
-                          <span className="text-[7px] md:text-[8px] font-bold text-slate-500 italic">AI drafts for approval</span>
+                          <span className={cn("text-[8px] md:text-[9px] font-black uppercase tracking-tight", (tier === 'co-pilot' || tier === 'empire') ? "text-primary" : "text-foreground")}>Co-Pilot</span>
+                          <span className="text-[6px] md:text-[7px] font-bold text-slate-500 italic">AI drafts for approval</span>
                         </div>
                       </div>
                       <div className={cn(
-                        "w-8 h-4 rounded-full relative transition-all border-2",
+                        "w-6 h-3 rounded-full relative transition-all border-2",
                         (tier === 'co-pilot' || tier === 'empire') ? "bg-primary border-primary" : "bg-slate-800 border-slate-700"
                       )}>
                         <div className={cn(
-                          "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.5 transition-all shadow-xl",
+                          "w-2 h-2 bg-slate-950 rounded-full absolute top-0.5 transition-all shadow-xl",
                           (tier === 'co-pilot' || tier === 'empire') ? "right-0.5" : "left-0.5"
                         )} />
                       </div>
@@ -271,30 +271,30 @@ export function VerticalPlatformRadar() {
                     <button 
                       onClick={() => updatePlatformPermission(id, tier === 'empire' ? 'co-pilot' : 'empire')}
                       className={cn(
-                        "w-full flex items-center justify-between p-2.5 md:p-3 rounded-[14px] md:rounded-[20px] border-2 transition-all group/toggle shadow-lg",
+                        "w-full flex items-center justify-between p-1.5 md:p-2 rounded-[10px] md:rounded-[12px] border-2 transition-all group/toggle shadow-lg",
                         tier === 'empire' 
                           ? "bg-cyan-400/10 border-cyan-400 shadow-cyan-400/10" 
                           : "bg-theme-background border-theme hover:border-cyan-400/50"
                       )}
                     >
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-1.5">
                         <div className={cn(
-                          "w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center transition-colors",
+                          "w-5 h-5 md:w-6 md:h-6 rounded-lg flex items-center justify-center transition-colors",
                           tier === 'empire' ? "bg-cyan-400 text-slate-950" : "bg-slate-800 text-slate-400"
                         )}>
-                          <Cpu className="w-3.5 h-3.5 md:w-4 h-4" />
+                          <Cpu className="w-2.5 h-2.5 md:w-3 md:h-3" />
                         </div>
                         <div className="flex flex-col text-left">
-                          <span className={cn("text-[9px] md:text-[11px] font-black uppercase tracking-tight", tier === 'empire' ? "text-cyan-400" : "text-foreground")}>Auto-Pilot</span>
-                          <span className="text-[7px] md:text-[8px] font-bold text-slate-500 italic">Grant power to post automatically</span>
+                          <span className={cn("text-[8px] md:text-[9px] font-black uppercase tracking-tight", tier === 'empire' ? "text-cyan-400" : "text-foreground")}>Auto-Pilot</span>
+                          <span className="text-[6px] md:text-[7px] font-bold text-slate-500 italic">Grant power to post automatically</span>
                         </div>
                       </div>
                       <div className={cn(
-                        "w-8 h-4 rounded-full relative transition-all border-2",
+                        "w-6 h-3 rounded-full relative transition-all border-2",
                         tier === 'empire' ? "bg-cyan-400 border-cyan-400" : "bg-slate-800 border-slate-700"
                       )}>
                         <div className={cn(
-                          "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.5 transition-all shadow-xl",
+                          "w-2 h-2 bg-slate-950 rounded-full absolute top-0.5 transition-all shadow-xl",
                           tier === 'empire' ? "right-0.5" : "left-0.5"
                         )} />
                       </div>
@@ -304,30 +304,30 @@ export function VerticalPlatformRadar() {
                     <button 
                       onClick={() => updateSpendingPermission(id, !isSpendingEnabled)}
                       className={cn(
-                        "w-full flex items-center justify-between p-2.5 md:p-3 rounded-[14px] md:rounded-[20px] border-2 transition-all group/toggle shadow-lg",
+                        "w-full flex items-center justify-between p-1.5 md:p-2 rounded-[10px] md:rounded-[12px] border-2 transition-all group/toggle shadow-lg",
                         isSpendingEnabled 
                           ? "bg-emerald-500/10 border-emerald-500 shadow-emerald-500/10" 
                           : "bg-theme-background border-theme hover:border-emerald-500/50"
                       )}
                     >
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-1.5">
                         <div className={cn(
-                          "w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center transition-colors",
+                          "w-5 h-5 md:w-6 md:h-6 rounded-lg flex items-center justify-center transition-colors",
                           isSpendingEnabled ? "bg-emerald-500 text-slate-950" : "bg-slate-800 text-slate-400"
                         )}>
-                          <ShoppingBag className="w-3.5 h-3.5 md:w-4 h-4" />
+                          <ShoppingBag className="w-2.5 h-2.5 md:w-3 md:h-3" />
                         </div>
                         <div className="flex flex-col text-left">
-                          <span className={cn("text-[9px] md:text-[11px] font-black uppercase tracking-tight", isSpendingEnabled ? "text-emerald-500" : "text-foreground")}>Financial Power</span>
-                          <span className="text-[7px] md:text-[8px] font-bold text-slate-500 italic">Grant power to manage ads</span>
+                          <span className={cn("text-[8px] md:text-[9px] font-black uppercase tracking-tight", isSpendingEnabled ? "text-emerald-500" : "text-foreground")}>Financial Power</span>
+                          <span className="text-[6px] md:text-[7px] font-bold text-slate-500 italic">Grant power to manage ads</span>
                         </div>
                       </div>
                       <div className={cn(
-                        "w-8 h-4 rounded-full relative transition-all border-2",
+                        "w-6 h-3 rounded-full relative transition-all border-2",
                         isSpendingEnabled ? "bg-emerald-500 border-emerald-500" : "bg-slate-800 border-slate-700"
                       )}>
                         <div className={cn(
-                          "w-2.5 h-2.5 bg-slate-950 rounded-full absolute top-0.5 transition-all shadow-xl",
+                          "w-2 h-2 bg-slate-950 rounded-full absolute top-0.5 transition-all shadow-xl",
                           isSpendingEnabled ? "right-0.5" : "left-0.5"
                         )} />
                       </div>
