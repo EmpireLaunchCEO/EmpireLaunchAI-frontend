@@ -86,6 +86,19 @@ const PLATFORM_STATUS_DATA: PlatformStatus[] = [
     bgSecondary: 'bg-red-500/5',
     metricLabel: 'Subs',
     secondaryMetricLabel: 'Views'
+  },
+  {
+    id: 'canva',
+    name: 'Canva',
+    logo: '/brands/canva_128.png',
+    followers: '0',
+    likes: '0',
+    messages: 0,
+    growth: '0%',
+    color: 'text-cyan-500',
+    bgSecondary: 'bg-cyan-500/5',
+    metricLabel: 'Designs',
+    secondaryMetricLabel: 'Templates'
   }
 ];
 
