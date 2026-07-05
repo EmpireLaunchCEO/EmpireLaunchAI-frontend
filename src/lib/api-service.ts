@@ -606,13 +606,14 @@ export const paymentService = {
 };
 
 export const onboardingService = {
-  async startOnboarding(platform: string): Promise<any> {
+  async startOnboarding(platform: string, credentials?: { email?: string; password?: string }): Promise<any> {
     const res = await fetch(`${API_URL}/api/onboarding/start`, {
       method: 'POST',
       headers: HEADERS,
       body: JSON.stringify({
         userId: '00000000-0000-0000-0000-000000000000',
-        platform
+        platform,
+        credentials
       }),
     });
     if (!res.ok) throw new Error('Onboarding failed to start');
