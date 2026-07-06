@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Video, 
   Edit3, 
@@ -44,14 +44,50 @@ export function NeuralDispatchCenter() {
   const [view, setView] = useState<'grid' | 'review'>('grid');
   const [draftNumber, setDraftNumber] = useState(1);
   const [feedback, setFeedback] = useState('');
+  const [pendingCounts, setPendingCounts] = useState<Record<string, number>>({});
+  const [approvalItems, setApprovalItems] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch real pending approvals from backend
+  useEffect(() => {
+    const fetchApprovals = async () => {
+      try {
+        const userId = typeof window !== 'undefined' ? localStorage.getItem('empireUserId') : null;
+        if (!userId) { setIsLoading(false); return; }
+        const res = await fetch(`/api/approval/pending`, {
+          headers: {
+            'Authorization': 'Bearer mock-mobile-token',
+            'x-user-id': userId
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const items = data.approvals || [];
+          setApprovalItems(items);
+          // Group counts by type
+          const counts: Record<string, number> = {};
+          items.forEach((item: any) => {
+            const type = item.type?.toLowerCase() || 'other';
+            counts[type] = (counts[type] || 0) + 1;
+          });
+          setPendingCounts(counts);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch approvals:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchApprovals();
+  }, []);
 
   const hasLinks = connectedPlatforms.length > 0;
 
   const categories = [
-    { id: 'videos', label: 'Videos', icon: Video, count: hasLinks ? 5 : 0 },
-    { id: 'edits', label: 'Edits', icon: Edit3, count: hasLinks ? 3 : 0 },
-    { id: 'faceless', label: 'Faceless', icon: UserSquare2, count: hasLinks ? 2 : 0 },
-    { id: 'designs', label: 'Designs', icon: Palette, count: hasLinks ? 4 : 0 },
+    { id: 'videos', label: 'Videos', icon: Video, count: pendingCounts['video'] || pendingCounts['videos'] || (hasLinks && !isLoading ? 0 : 0) },
+    { id: 'edits', label: 'Edits', icon: Edit3, count: pendingCounts['edit'] || pendingCounts['edits'] || (hasLinks && !isLoading ? 0 : 0) },
+    { id: 'faceless', label: 'Faceless', icon: UserSquare2, count: pendingCounts['faceless'] || pendingCounts['twin'] || (hasLinks && !isLoading ? 0 : 0) },
+    { id: 'designs', label: 'Designs', icon: Palette, count: pendingCounts['design'] || pendingCounts['designs'] || (hasLinks && !isLoading ? 0 : 0) },
   ];
 
   const handleAppToggle = (platform: string) => {
