@@ -8,10 +8,8 @@ import { cn } from '@/lib/utils';
 interface SongSuggestion {
   id: string;
   title: string;
-  artist: string;
   mood: string;
-  duration: string;
-  bpm: number;
+  searchTerm: string;
 }
 
 const MOODS = [
@@ -23,45 +21,45 @@ const MOODS = [
   { id: 'upbeat', label: 'Upbeat', emoji: '🎵', color: 'text-pink-500', bg: 'bg-pink-500/10 border-pink-500/30' },
 ];
 
-// AI-generated song suggestions per mood
+// TikTok music search terms per mood — uses TikTok's native library
 const SONG_DATABASE: Record<string, SongSuggestion[]> = {
   happy: [
-    { id: 'happy1', title: 'Sunshine Day', artist: 'AI Composer', mood: 'happy', duration: '2:30', bpm: 120 },
-    { id: 'happy2', title: 'Good Vibes', artist: 'AI Composer', mood: 'happy', duration: '3:00', bpm: 110 },
-    { id: 'happy3', title: 'Joyful Morning', artist: 'AI Composer', mood: 'happy', duration: '2:45', bpm: 115 },
-    { id: 'happy4', title: 'Smile Wave', artist: 'AI Composer', mood: 'happy', duration: '2:15', bpm: 125 },
+    { id: 'happy1', title: 'Happy Pop', mood: 'happy', searchTerm: 'happy pop trending' },
+    { id: 'happy2', title: 'Feel Good', mood: 'happy', searchTerm: 'feel good vibes' },
+    { id: 'happy3', title: 'Sunny Day', mood: 'happy', searchTerm: 'sunny day music' },
+    { id: 'happy4', title: 'Joyful Beats', mood: 'happy', searchTerm: 'joyful upbeat' },
   ],
   sad: [
-    { id: 'sad1', title: 'Gentle Rain', artist: 'AI Composer', mood: 'sad', duration: '3:15', bpm: 70 },
-    { id: 'sad2', title: 'Fading Light', artist: 'AI Composer', mood: 'sad', duration: '2:50', bpm: 65 },
-    { id: 'sad3', title: 'Quiet Reflection', artist: 'AI Composer', mood: 'sad', duration: '3:30', bpm: 60 },
+    { id: 'sad1', title: 'Melancholy Piano', mood: 'sad', searchTerm: 'sad piano emotional' },
+    { id: 'sad2', title: 'Rainy Day', mood: 'sad', searchTerm: 'rainy day sad' },
+    { id: 'sad3', title: 'Heartfelt', mood: 'sad', searchTerm: 'heartfelt slow' },
   ],
   energetic: [
-    { id: 'energy1', title: 'Power Surge', artist: 'AI Composer', mood: 'energetic', duration: '2:20', bpm: 140 },
-    { id: 'energy2', title: 'Thunder Strike', artist: 'AI Composer', mood: 'energetic', duration: '2:40', bpm: 150 },
-    { id: 'energy3', title: 'Blaze Through', artist: 'AI Composer', mood: 'energetic', duration: '2:10', bpm: 145 },
+    { id: 'energy1', title: 'High Energy', mood: 'energetic', searchTerm: 'high energy workout' },
+    { id: 'energy2', title: 'Power Up', mood: 'energetic', searchTerm: 'powerful energetic' },
+    { id: 'energy3', title: 'Turbo Beats', mood: 'energetic', searchTerm: 'fast beat electronic' },
   ],
   calm: [
-    { id: 'calm1', title: 'Ocean Breeze', artist: 'AI Composer', mood: 'calm', duration: '4:00', bpm: 80 },
-    { id: 'calm2', title: 'Soft Piano', artist: 'AI Composer', mood: 'calm', duration: '3:20', bpm: 75 },
-    { id: 'calm3', title: 'Twilight Glow', artist: 'AI Composer', mood: 'calm', duration: '3:45', bpm: 70 },
+    { id: 'calm1', title: 'Peaceful', mood: 'calm', searchTerm: 'calm peaceful ambient' },
+    { id: 'calm2', title: 'Soft Waves', mood: 'calm', searchTerm: 'soft relaxing' },
+    { id: 'calm3', title: 'Gentle Flow', mood: 'calm', searchTerm: 'gentle piano calm' },
   ],
   dramatic: [
-    { id: 'drama1', title: 'Epic Journey', artist: 'AI Composer', mood: 'dramatic', duration: '3:10', bpm: 130 },
-    { id: 'drama2', title: 'Shadow Realm', artist: 'AI Composer', mood: 'dramatic', duration: '2:55', bpm: 135 },
-    { id: 'drama3', title: 'Climax Rising', artist: 'AI Composer', mood: 'dramatic', duration: '3:40', bpm: 125 },
+    { id: 'drama1', title: 'Epic Cinematic', mood: 'dramatic', searchTerm: 'epic cinematic dramatic' },
+    { id: 'drama2', title: 'Mysterious', mood: 'dramatic', searchTerm: 'mysterious dark' },
+    { id: 'drama3', title: 'Climax', mood: 'dramatic', searchTerm: 'climax build up' },
   ],
   upbeat: [
-    { id: 'upbeat1', title: 'Bouncy Beats', artist: 'AI Composer', mood: 'upbeat', duration: '2:35', bpm: 128 },
-    { id: 'upbeat2', title: 'Party Pop', artist: 'AI Composer', mood: 'upbeat', duration: '2:50', bpm: 132 },
-    { id: 'upbeat3', title: 'Groove Time', artist: 'AI Composer', mood: 'upbeat', duration: '3:05', bpm: 120 },
+    { id: 'upbeat1', title: 'Bouncy', mood: 'upbeat', searchTerm: 'bouncy happy pop' },
+    { id: 'upbeat2', title: 'Party Mix', mood: 'upbeat', searchTerm: 'party dance viral' },
+    { id: 'upbeat3', title: 'Groove', mood: 'upbeat', searchTerm: 'groovy funky' },
   ],
 };
 
 interface MusicSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: (song: SongSuggestion | null) => void;
+  onSelect: (music: { mood: string; searchTerm: string } | null) => void;
   platformName?: string;
 }
 
@@ -72,7 +70,9 @@ export function MusicSelectionModal({ isOpen, onClose, onSelect, platformName }:
   const songs = selectedMood ? SONG_DATABASE[selectedMood] || [] : [];
 
   const handleConfirm = () => {
-    onSelect(selectedSong);
+    if (selectedSong) {
+      onSelect({ mood: selectedSong.mood, searchTerm: selectedSong.searchTerm });
+    }
     setSelectedMood(null);
     setSelectedSong(null);
     onClose();
@@ -117,7 +117,7 @@ export function MusicSelectionModal({ isOpen, onClose, onSelect, platformName }:
                 <div>
                   <h2 className="text-lg font-black text-foreground uppercase tracking-tight">Background Music</h2>
                   <p className="text-[10px] font-bold text-muted-foreground">
-                    {platformName ? `Add music to your ${platformName} video` : 'Enhance your video with AI-suggested tracks'}
+                    {platformName ? `AI will search TikTok's music library for your ${platformName} video` : 'AI will search TikTok\'s music library for the perfect track'}
                   </p>
                 </div>
               </div>
@@ -192,7 +192,7 @@ export function MusicSelectionModal({ isOpen, onClose, onSelect, platformName }:
                             "text-xs font-black truncate",
                             selectedSong?.id === song.id ? 'text-primary' : 'text-foreground'
                           )}>{song.title}</p>
-                          <p className="text-[9px] font-bold text-muted-foreground">{song.artist} · {song.duration} · {song.bpm} BPM</p>
+                          <p className="text-[9px] font-bold text-muted-foreground">Search TikTok · {song.mood} mood</p>
                         </div>
                         {selectedSong?.id === song.id && (
                           <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
