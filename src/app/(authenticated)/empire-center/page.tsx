@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   ClipboardList,
@@ -19,7 +19,10 @@ import {
   Trash2,
   CreditCard,
   ShieldCheck,
-  BarChart3
+  BarChart3,
+  Video,
+  Palette,
+  FileText
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -51,6 +54,30 @@ import { NeuralDispatchCenter } from '@/components/Dashboard/NeuralDispatchCente
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'pending' | 'intel'>('pending');
   const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
+  const [createdAssets, setCreatedAssets] = useState<any[]>([]);
+
+  // Fetch created content from Empire Studio
+  useEffect(() => {
+    const fetchAssets = async () => {
+      try {
+        const userId = typeof window !== 'undefined' ? localStorage.getItem('empireUserId') : null;
+        if (!userId) return;
+        const res = await fetch(`/api/studio/assets`, {
+          headers: {
+            'Authorization': 'Bearer mock-mobile-token',
+            'x-user-id': userId
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setCreatedAssets(Array.isArray(data) ? data : data.assets || []);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch created assets:', err);
+      }
+    };
+    fetchAssets();
+  }, []);
 
   const isPlatformConnected = (platform: string) => {
     return connectedPlatforms.some(p => p.toLowerCase() === platform.toLowerCase());
@@ -155,6 +182,47 @@ export default function EmpireCenterPage() {
                   <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                     <SocialMediaRadar />
                   </motion.div>
+
+                  {/* Recent Creations from Empire Studio */}
+                  {createdAssets.length > 0 && (
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+                      <section className="space-y-4">
+                        <div className="flex items-center justify-between px-2">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                              <History className="w-4 h-4" />
+                            </div>
+                            <h3 className="text-lg font-black text-foreground uppercase tracking-tight italic">Recent Creations</h3>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 gap-3">
+                          {createdAssets.slice(0, 5).map((asset: any, i: number) => (
+                            <div key={asset.id || i} className="flex items-center gap-3 p-3 rounded-2xl bg-theme-background border border-theme">
+                              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                                {asset.type === 'video' ? <Video className="w-4 h-4 text-primary" /> : 
+                                 asset.type === 'design' ? <Palette className="w-4 h-4 text-primary" /> : 
+                                 <FileText className="w-4 h-4 text-primary" />}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-bold text-foreground truncate">{asset.title || asset.name || `Creation ${i + 1}`}</p>
+                                <p className="text-[9px] font-medium text-muted-foreground">
+                                  {asset.platform || 'Studio'} · {asset.createdAt ? new Date(asset.createdAt).toLocaleDateString() : 'Recently'}
+                                </p>
+                              </div>
+                              <span className={cn(
+                                "text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full",
+                                asset.status === 'approved' ? 'bg-green-500/10 text-green-500' :
+                                asset.status === 'pending' ? 'bg-amber-500/10 text-amber-500' :
+                                'bg-slate-500/10 text-slate-500'
+                              )}>
+                                {asset.status || 'created'}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </section>
+                    </motion.div>
+                  )}
                 </div>
 
                 {/* Sidebar Context */}
