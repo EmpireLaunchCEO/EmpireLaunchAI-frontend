@@ -63,6 +63,7 @@ interface EmpireContextType {
   triggerRefresh: () => Promise<void>;
   registerRefreshHandler: (handler: () => Promise<void>) => () => void;
   disconnectPlatform: (platform: string) => void;
+  platformHandles: Record<string, string>;
 
   // Notifications
   notifications: Notification[];
@@ -97,6 +98,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   
   // Scoped Data Maps
   const [platformsByEmpire, setPlatformsByEmpire] = useState<Record<string, string[]>>({});
+  const [platformHandles, setPlatformHandles] = useState<Record<string, string>>({});
   const [notesByEmpire, setNotesByEmpire] = useState<Record<string, string>>({});
   const [onboardedByEmpire, setOnboardedByEmpire] = useState<Record<string, boolean>>({});
   const [linkingCompleteByEmpire, setLinkingCompleteByEmpire] = useState<Record<string, boolean>>({});
@@ -602,6 +604,15 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
               .filter((i: any) => i.isConnected !== false)
               .map((i: any) => i.platform);
 
+            // Extract handles for each connected platform
+            const handles: Record<string, string> = {};
+            (integData.integrations || [])
+              .filter((i: any) => i.isConnected !== false && i.handle)
+              .forEach((i: any) => {
+                handles[i.platform] = i.handle;
+              });
+            setPlatformHandles(handles);
+
             if (connected.length > 0) {
               setPlatformsByEmpire(prev => {
                 const next = { ...prev, [localActiveId]: connected };
@@ -779,7 +790,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       removeToast,
       spendingPermissions,
       updateSpendingPermission,
-      disconnectPlatform
+      disconnectPlatform,
+      platformHandles
     }}>
       {children}
     </EmpireContext.Provider>

@@ -108,7 +108,8 @@ export function VerticalPlatformRadar() {
     platformPermissions,
     updatePlatformPermission,
     spendingPermissions,
-    updateSpendingPermission
+    updateSpendingPermission,
+    platformHandles
   } = useEmpire();
 
   // Filter based on connected platforms
@@ -194,6 +195,9 @@ export function VerticalPlatformRadar() {
                     <div className="space-y-0 min-w-0 flex-1">
                       <h3 className="text-sm md:text-base font-black text-foreground uppercase tracking-tighter italic leading-none truncate pr-2">{platform.name}</h3>
                       <div className="flex flex-col gap-0">
+                        {platformHandles[id] && (
+                          <span className="text-[7px] md:text-[8px] font-bold text-slate-400 truncate">@{platformHandles[id]}</span>
+                        )}
                         <span className="flex items-center gap-1 text-[7px] md:text-[8px] font-black text-green-500 uppercase tracking-widest">
                           <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
                           Optimal
