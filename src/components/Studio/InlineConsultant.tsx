@@ -29,11 +29,11 @@ export function InlineConsultant({ context, initialMessage, className }: InlineC
     } else {
       // Default initial messages based on context
       const defaults = {
-        video: "I'm ready to storyboard your video. Any specific tone or visual style you're aiming for?",
-        editor: "Upload your clips and I'll start the synthesis. Should I prioritize fast cuts or cinematic transitions?",
-        faceless: "What niche should we dominate today? I can pull trending stock footage for almost anything.",
-        design: "Describe your product vision. I'll cross-reference it with current market-winning DNA.",
-        'neural-twin': "Once your photo is uploaded, I can script your twin. What's the main goal of this video?"
+        video: "Let's design your video together. What visuals are you imagining? Tell me about backgrounds, effects (sparkles, transitions, overlays), color schemes, and any specific elements you want. I'll refine the script around your vision.",
+        editor: "Upload your clips and tell me how you want it to look. Any specific background style, effects, or on-screen graphics? Should I prioritize fast cuts or cinematic transitions?",
+        faceless: "What niche should we dominate? Describe the vibe — backgrounds, motion graphics, overlays, text styles. I'll pull trending footage and build the visuals around your preferences.",
+        design: "Describe your product vision in detail — colors, materials, backgrounds, sparkles or effects, layout style. I'll cross-reference it with current market-winning DNA and suggest refinements.",
+        'neural-twin': "Once your photo is uploaded, I can script your twin. What's the main goal? Also, what background setting, effects, or visual style do you want for the video?"
       };
       setMessages([{ role: 'assistant', content: defaults[context] }]);
     }
