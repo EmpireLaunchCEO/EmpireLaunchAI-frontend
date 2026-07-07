@@ -591,7 +591,7 @@ export function SocialMediaRadar() {
                       <p className="text-[10px] font-black uppercase text-primary tracking-widest">AI Strategic Counsel</p>
                     </div>
                     <p className="text-xs text-slate-300 font-medium italic leading-relaxed">
-                      "Market velocity is favoring high-contrast 'Sage Green' aesthetics. I recommend creating an 'ADHD Planner' listing variant immediately to capture current search volume."
+                      "Market velocity is favoring high-contrast 'Sage Green' aesthetics. I recommend creating a campaign variant immediately to capture current search volume."
                     </p>
                     <button className="w-full py-3 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 transition-all">
                       Execute All Optimizations
@@ -651,7 +651,13 @@ export function SocialMediaRadar() {
             <div className="p-6 bg-theme-background border-2 border-theme rounded-[32px] space-y-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-black text-foreground pr-2">AI Active Research</h3>
-                <button className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all">New Request +</button>
+                <button 
+                  onClick={() => {
+                    const el = document.querySelector('[data-consultant-input]') as HTMLInputElement;
+                    if (el) { el.focus(); el.scrollIntoView({ behavior: 'smooth' }); }
+                  }}
+                  className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all cursor-pointer"
+                >New Request +</button>
               </div>
 
               <div className="space-y-4">
@@ -659,7 +665,7 @@ export function SocialMediaRadar() {
                   <ResearchPanel displayNiche={displayNiche} connectedPlatforms={connectedPlatforms} onSyncStateChange={handleSyncStateChange} />
                 ) : (
                   <div className="p-8 text-center text-muted-foreground font-medium text-xs italic bg-theme-background rounded-3xl border border-theme">
-                    Link a marketplace in the Link Center to initialize research protocols.
+                    Link a platform in the Link Center to initialize research protocols.
                   </div>
                 )}
               </div>
@@ -668,7 +674,7 @@ export function SocialMediaRadar() {
             <div className="p-6 bg-gradient-to-br from-indigo-900/20 to-blue-900/20 border-2 border-indigo-500/20 rounded-[32px] space-y-4">
                <h4 className="text-sm font-black text-indigo-300 uppercase tracking-widest">Research Roadmap</h4>
                <p className="text-xs text-slate-400 font-medium leading-relaxed">
-                 The AI is currently hunting for high-velocity keywords. Once synthesis is complete, a new "Product Blueprint" will appear in your Pending Approvals.
+                 The AI is currently hunting for high-velocity keywords. Once synthesis is complete, a new "Campaign Blueprint" will appear in your Pending Approvals.
                </p>
             </div>
           </motion.div>
