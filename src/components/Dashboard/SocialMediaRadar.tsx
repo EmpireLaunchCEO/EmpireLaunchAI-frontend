@@ -34,6 +34,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
+import { API_URL } from '@/lib/config';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { ViralSignalsPanel, generateMockSignals } from '@/components/Dashboard/MarketHeatMeter';
 
@@ -247,6 +248,105 @@ function SignalCard({ signal }: { signal: any }) {
           {signal.change}
         </span>
       </div>
+    </div>
+  );
+}
+
+// ─── Research Panel ────────────────────────────────────────────────────
+function ResearchPanel({ displayNiche, connectedPlatforms }: { displayNiche: string; connectedPlatforms: string[] }) {
+  const [researchText, setResearchText] = useState("Initializing research protocols...");
+  const [researchPhase, setResearchPhase] = useState("Connecting to platforms...");
+  const [progress, setProgress] = useState(0);
+  const [platformIntels, setPlatformIntels] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Fetch real research data from backend
+    const fetchIntel = async () => {
+      setResearchText(\`Analyzing trending content in '\${displayNiche}'...\`);
+      setResearchPhase("Gathering platform intelligence");
+      setProgress(25);
+
+      try {
+        const userId = localStorage.getItem('empire_userId');
+        if (!userId) return;
+
+        // Fetch global DNA/market research data
+        const dnaRes = await fetch(\`\${API_URL}/api/market-dna/global?limit=10\`, {
+          headers: { 'x-user-id': userId }
+        });
+        
+        if (dnaRes.ok) {
+          const dnaData = await dnaRes.json();
+          if (dnaData.strands && dnaData.strands.length > 0) {
+            // Group strands by source platform
+            const byPlatform: Record<string, any[]> = {};
+            dnaData.strands.forEach((s: any) => {
+              const p = s.sourcePlatform || 'unknown';
+              if (!byPlatform[p]) byPlatform[p] = [];
+              byPlatform[p].push(s);
+            });
+            
+            const intels = Object.entries(byPlatform).map(([platform, strands]) => ({
+              platform,
+              strandCount: strands.length,
+              topCategories: [...new Set(strands.map((s: any) => s.subCategory).filter(Boolean))].slice(0, 3),
+              avgScore: Math.round(strands.reduce((a: number, s: any) => a + s.performanceScore, 0) / strands.length),
+            }));
+            
+            setPlatformIntels(intels);
+            setResearchText(\`Market intelligence gathered for \${connectedPlatforms.length} connected platforms\`);
+            setResearchPhase("Analysis complete");
+            setProgress(100);
+            return;
+          }
+        }
+      } catch {
+        // Fallback: use niche-based research text
+      }
+
+      // Fallback: platform-specific research
+      const platformNames = connectedPlatforms.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(', ');
+      setResearchText(\`Monitoring \${connectedPlatforms.length} platforms for \${displayNiche} trends\`);
+      setResearchPhase("AI analysis active");
+      setProgress(85);
+    };
+
+    fetchIntel();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchIntel, 30000);
+    return () => clearInterval(interval);
+  }, [displayNiche, connectedPlatforms]);
+
+  return (
+    <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4 bg-theme-surface/50">
+      <div className="flex items-center gap-3">
+        <BrandedGlobe size="sm" spinning />
+        <div className="flex-1 min-w-0">
+          <p className="font-bold text-foreground italic text-sm truncate">"{researchText}"</p>
+        </div>
+      </div>
+      <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ width: "0%" }}
+          animate={{ width: progress + "%" }}
+          className="bg-primary h-full shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"
+        />
+      </div>
+      <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
+        <span>{researchPhase}</span>
+        <span>{progress}% Complete</span>
+      </div>
+      {platformIntels.length > 0 && (
+        <div className="grid grid-cols-2 gap-2 pt-2">
+          {platformIntels.map((intel) => (
+            <div key={intel.platform} className="p-2 bg-theme-background/50 rounded-xl border border-theme/50">
+              <p className="text-[9px] font-black uppercase text-primary">{intel.platform}</p>
+              <p className="text-[10px] font-bold text-foreground">{intel.strandCount} patterns</p>
+              <p className="text-[8px] text-muted-foreground">Score: {intel.avgScore}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -557,23 +657,7 @@ export function SocialMediaRadar() {
 
               <div className="space-y-4">
                 {connectedPlatforms.length > 0 ? (
-                  <div className="p-6 border-2 border-dashed border-theme rounded-3xl space-y-4 bg-theme-surface/50">
-                    <div className="flex items-center gap-3">
-                      <BrandedGlobe size="sm" spinning />
-                      <p className="font-bold text-foreground italic text-sm">"Analyzing top 50 best-sellers in 'Digital Planners'..."</p>
-                    </div>
-                    <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: "0%" }}
-                        animate={{ width: "65%" }}
-                        className="bg-primary h-full shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"
-                      />
-                    </div>
-                    <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
-                      <span>Phase: Data Synthesis</span>
-                      <span>65% Complete</span>
-                    </div>
-                  </div>
+                  <ResearchPanel displayNiche={displayNiche} connectedPlatforms={connectedPlatforms} />
                 ) : (
                   <div className="p-8 text-center text-muted-foreground font-medium text-xs italic bg-theme-background rounded-3xl border border-theme">
                     Link a marketplace in the Link Center to initialize research protocols.
