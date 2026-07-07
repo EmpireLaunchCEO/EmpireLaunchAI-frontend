@@ -425,6 +425,7 @@ export default function StudioPage() {
                   <textarea
                     value={customVideoIdea}
                     onChange={(e) => setCustomVideoIdea(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleCustomVideoSubmit(); } }}
                     placeholder={isCatalyst ? "e.g. A 15-second high-energy hook for my Daily Pay offer, emphasizing $300/day potential, fast cuts, urgent CTA..." : "e.g. A 15-second high-energy product reveal for TikTok, fast cuts, vibrant neon overlays..."}
                     disabled={isSubmittingVideo}
                     className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
@@ -509,6 +510,7 @@ export default function StudioPage() {
                   <textarea
                     value={facelessIdea}
                     onChange={(e) => setFacelessIdea(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleFacelessSubmit(); } }}
                     placeholder={isCatalyst ? "e.g. 3 reasons why most 9-5s are a trap, high-impact b-roll, professional voiceover, strong 'Link in Bio' CTA..." : "e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts..."}
                     disabled={isSubmittingFaceless}
                     className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
@@ -599,6 +601,7 @@ export default function StudioPage() {
                   <textarea
                     value={customIdea}
                     onChange={(e) => setCustomIdea(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleCustomIdeaSubmit(); } }}
                     placeholder={designUpload.preview ? "Tell me what changes you want, or ask me to create 5 unique variations based on this design" : "e.g. A minimalist sage-green yoga mat with gold mandala print, 72x24 inches, boho-luxe aesthetic..."}
                     disabled={isSubmittingIdea}
                     className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-amber-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
