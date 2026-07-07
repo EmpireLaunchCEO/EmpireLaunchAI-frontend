@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, Send, User, Bot, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { API_URL } from '@/lib/config';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -54,9 +55,13 @@ export function InlineConsultant({ context, initialMessage, className }: InlineC
     setIsTyping(true);
 
     try {
-      const response = await fetch('/api/studio/chat', {
+      const userId = typeof window !== 'undefined' ? localStorage.getItem('empireUserId') : null;
+      const response = await fetch(`${API_URL}/api/studio/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(userId ? { 'Authorization': 'Bearer mock-mobile-token', 'x-user-id': userId } : {})
+        },
         body: JSON.stringify({ 
           message: `[CONTEXT: ${context}] ${userMessage}` 
         })
