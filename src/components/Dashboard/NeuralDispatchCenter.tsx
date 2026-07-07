@@ -48,39 +48,58 @@ export function NeuralDispatchCenter() {
   const [pendingCounts, setPendingCounts] = useState<Record<string, number>>({});
   const [approvalItems, setApprovalItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentApproval, setCurrentApproval] = useState<any | null>(null);
+
+  const queueTypeMap: Record<string, string> = {
+    videos: 'video',
+    edits: 'edit',
+    faceless: 'faceless',
+    designs: 'design'
+  };
 
   // Fetch real pending approvals from backend
-  useEffect(() => {
-    const fetchApprovals = async () => {
-      try {
-        const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-        if (!userId) { setIsLoading(false); return; }
-        const res = await fetch(`${API_URL}/api/approval/pending`, {
-          headers: {
-            'Authorization': 'Bearer mock-mobile-token',
-            'x-user-id': userId
-          }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          const items = data.approvals || [];
-          setApprovalItems(items);
-          // Group counts by type
-          const counts: Record<string, number> = {};
-          items.forEach((item: any) => {
-            const type = item.type?.toLowerCase() || 'other';
-            counts[type] = (counts[type] || 0) + 1;
-          });
-          setPendingCounts(counts);
+  const fetchApprovals = async () => {
+    try {
+      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
+      if (!userId) { setIsLoading(false); return; }
+      const res = await fetch(`${API_URL}/api/approval/pending`, {
+        headers: {
+          'Authorization': 'Bearer mock-mobile-token',
+          'x-user-id': userId
         }
-      } catch (err) {
-        console.warn('Failed to fetch approvals:', err);
-      } finally {
-        setIsLoading(false);
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const items = data.approvals || [];
+        setApprovalItems(items);
+        // Group counts by type
+        const counts: Record<string, number> = {};
+        items.forEach((item: any) => {
+          const type = item.type?.toLowerCase() || 'other';
+          counts[type] = (counts[type] || 0) + 1;
+        });
+        setPendingCounts(counts);
       }
-    };
+    } catch (err) {
+      console.warn('Failed to fetch approvals:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchApprovals();
   }, []);
+
+  // When entering review, find matching approval for this queue
+  useEffect(() => {
+    if (view === 'review' && activeQueue) {
+      const approvalType = queueTypeMap[activeQueue];
+      const match = approvalItems.find((item: any) => item.type?.toLowerCase() === approvalType);
+      setCurrentApproval(match || null);
+      setDraftNumber(1);
+    }
+  }, [view, activeQueue, approvalItems]);
 
   const hasLinks = connectedPlatforms.length > 0;
 
@@ -100,9 +119,30 @@ export function NeuralDispatchCenter() {
     );
   };
 
-  const handleApprove = () => {
-    setIsApproved(true);
-    setView('grid');
+  const handleApprove = async () => {
+    if (!currentApproval) return;
+    try {
+      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
+      const res = await fetch(`${API_URL}/api/approval/respond`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer mock-mobile-token',
+          'x-user-id': userId || ''
+        },
+        body: JSON.stringify({
+          requestId: currentApproval.id,
+          status: 'approved'
+        })
+      });
+      if (res.ok) {
+        setIsApproved(true);
+        setView('grid');
+        fetchApprovals();
+      }
+    } catch (err) {
+      console.error('Failed to approve:', err);
+    }
   };
 
   const handleSyncFeedback = () => {
@@ -136,13 +176,34 @@ export function NeuralDispatchCenter() {
 
         {/* LARGE PLAYER AREA */}
         <div className="flex-1 bg-black/40 flex items-center justify-center relative group p-8">
-           <div className="aspect-video w-full max-w-4xl bg-slate-900 rounded-[32px] border border-white/10 shadow-2xl flex items-center justify-center relative overflow-hidden">
+          {currentApproval ? (
+            <div className="w-full max-w-4xl bg-slate-900 rounded-[32px] border border-white/10 shadow-2xl flex flex-col relative overflow-hidden p-8">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest">Pending Review</span>
+              </div>
+              <div className="flex-1 space-y-4">
+                <div className="p-4 bg-slate-950/50 rounded-2xl border border-white/5">
+                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">Idea Description</p>
+                  <p className="text-sm text-white font-medium leading-relaxed">{currentApproval.description}</p>
+                </div>
+                {currentApproval.type && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] font-black text-primary uppercase tracking-widest px-2 py-1 rounded-lg bg-primary/10">{currentApproval.type}</span>
+                    <span className="text-[9px] text-slate-500">submitted {new Date(currentApproval.createdAt).toLocaleString()}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="aspect-video w-full max-w-4xl bg-slate-900 rounded-[32px] border border-white/10 shadow-2xl flex items-center justify-center relative overflow-hidden">
               <Video className="w-12 h-12 text-white/10" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-8">
-                 <p className="text-white font-black uppercase tracking-widest text-xs">Creation Preview</p>
-                 <p className="text-white/40 text-[10px] uppercase font-bold">Neural Engine v4.2</p>
+                <p className="text-white font-black uppercase tracking-widest text-xs">Creation Preview</p>
+                <p className="text-white/40 text-[10px] uppercase font-bold">Neural Engine v4.2</p>
               </div>
-           </div>
+            </div>
+          )}
         </div>
 
         {/* NEURAL EDIT BOX */}
