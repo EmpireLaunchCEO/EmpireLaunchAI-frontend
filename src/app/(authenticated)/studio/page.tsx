@@ -24,6 +24,7 @@ import { InlineConsultant } from '@/components/Studio/InlineConsultant';
 import { AIRenderLog, generateMockRenderLogs, RenderLogEntry } from '@/components/Dashboard/AIRenderLog';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
+import { API_URL } from '@/lib/config';
 
 import { BarChart3, PenSquare, Lightbulb, SendHorizonal, Scissors, MonitorPlay, Clapperboard, Info } from 'lucide-react';
 
@@ -60,7 +61,7 @@ export default function StudioPage() {
     try {
       setFacialDnaUpload(prev => ({ ...prev, status: 'uploading', progress: 10 }));
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/cinema/upload-photo`, {
+      const response = await fetch(`${API_URL}/api/cinema/upload-photo`, {
         method: 'POST',
         body: formData,
       });
@@ -70,9 +71,33 @@ export default function StudioPage() {
       const data = await response.json();
       setFacialDnaUpload(prev => ({ ...prev, status: 'complete', progress: 100, metadata: data }));
       
-      // Trigger render logs
-      setActiveRenderType('facial-dna');
-      setRenderLogs(generateMockRenderLogs('facial-dna'));
+      // Fetch real creations from backend instead of mock logs
+      try {
+        const creationsRes = await fetch(`${API_URL}/api/cinema/creations?userId=${localStorage.getItem('empire_userId')}`, {
+          headers: { 'x-user-id': localStorage.getItem('empire_userId') || '' }
+        });
+        if (creationsRes.ok) {
+          const creationsData = await creationsRes.json();
+          if (creationsData.creations?.length > 0) {
+            const realLogs = creationsData.creations.map((c: any, i: number) => ({
+              id: c.id,
+              timestamp: new Date(c.createdAt).toLocaleTimeString(),
+              action: c.type === 'facial_dna' ? 'Facial Photo Upload' : c.type === 'raw_video' ? 'Video Upload' : 'Creation',
+              status: c.status === 'completed' ? 'success' as const : c.status === 'processing' ? 'processing' as const : 'error' as const,
+              details: c.title || c.type,
+              type: c.type,
+              creationId: c.id,
+            }));
+            setRenderLogs(realLogs);
+          } else {
+            setRenderLogs(generateMockRenderLogs('facial-dna'));
+          }
+        } else {
+          setRenderLogs(generateMockRenderLogs('facial-dna'));
+        }
+      } catch {
+        setRenderLogs(generateMockRenderLogs('facial-dna'));
+      }
       setIsRendering(true);
     } catch (error) {
       console.error('Facial DNA upload error:', error);
@@ -91,7 +116,7 @@ export default function StudioPage() {
     try {
       setRawVideoUpload(prev => ({ ...prev, status: 'uploading', progress: 10 }));
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/cinema/upload-video`, {
+      const response = await fetch(`${API_URL}/api/cinema/upload-video`, {
         method: 'POST',
         body: formData,
       });
@@ -126,6 +151,26 @@ export default function StudioPage() {
   const handleDesignSelect = async (file: File) => {
     const preview = URL.createObjectURL(file);
     setDesignUpload({ file, preview, status: 'selected', progress: 0 });
+    
+    const formData = new FormData();
+    formData.append('photo', file);
+
+    try {
+      setDesignUpload(prev => ({ ...prev, status: 'uploading', progress: 10 }));
+      
+      const response = await fetch(`${API_URL}/api/cinema/upload-photo`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Upload failed');
+      
+      const data = await response.json();
+      setDesignUpload(prev => ({ ...prev, status: 'complete', progress: 100, metadata: data }));
+    } catch (error) {
+      console.error('Design upload error:', error);
+      setDesignUpload(prev => ({ ...prev, status: 'error' }));
+    }
   };
 
   // Remove Design Image file
@@ -144,7 +189,7 @@ export default function StudioPage() {
 
   const fetchUsage = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/cinema/usage`);
+      const response = await fetch(`${API_URL}/api/cinema/usage`);
       if (response.ok) {
         const data = await response.json();
         // Format dates for display
@@ -182,7 +227,7 @@ export default function StudioPage() {
     setActiveRenderType('facial-dna');
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/cinema/create-twin`, {
+      const response = await fetch(`${API_URL}/api/cinema/create-twin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -229,33 +274,99 @@ export default function StudioPage() {
   const handleCustomVideoSubmit = async () => {
     if (!customVideoIdea.trim()) return;
     setIsSubmittingVideo(true);
-    await new Promise(r => setTimeout(r, 2000));
-    setIsSubmittingVideo(false);
-    setVideoIdeaSubmitted(true);
-    setCustomVideoIdea('');
-    setTimeout(() => setVideoIdeaSubmitted(false), 5000);
+    try {
+      const userId = localStorage.getItem('empire_userId');
+      const res = await fetch(`${API_URL}/api/approval/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userId}`,
+          'x-user-id': userId || ''
+        },
+        body: JSON.stringify({
+          type: 'video',
+          description: customVideoIdea.trim(),
+          payload: { category: 'custom-video', isCatalyst: isCatalyst }
+        })
+      });
+      if (!res.ok) throw new Error('Approval creation failed');
+      const data = await res.json();
+      console.log('Video approval created:', data);
+      setIsSubmittingVideo(false);
+      setVideoIdeaSubmitted(true);
+      setCustomVideoIdea('');
+      setTimeout(() => setVideoIdeaSubmitted(false), 5000);
+    } catch (error) {
+      console.error('Video approval error:', error);
+      setIsSubmittingVideo(false);
+    }
   };
 
   const handleFacelessSubmit = async () => {
     if (!facelessIdea.trim()) return;
     setIsSubmittingFaceless(true);
-    await new Promise(r => setTimeout(r, 2000));
-    setIsSubmittingFaceless(false);
-    setFacelessSubmitted(true);
-    setFacelessIdea('');
-    setTimeout(() => setFacelessSubmitted(false), 5000);
+    try {
+      const userId = localStorage.getItem('empire_userId');
+      const res = await fetch(`${API_URL}/api/approval/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userId}`,
+          'x-user-id': userId || ''
+        },
+        body: JSON.stringify({
+          type: 'faceless',
+          description: facelessIdea.trim(),
+          payload: { category: 'faceless-video', isCatalyst: isCatalyst }
+        })
+      });
+      if (!res.ok) throw new Error('Approval creation failed');
+      const data = await res.json();
+      console.log('Faceless approval created:', data);
+      setIsSubmittingFaceless(false);
+      setFacelessSubmitted(true);
+      setFacelessIdea('');
+      setTimeout(() => setFacelessSubmitted(false), 5000);
+    } catch (error) {
+      console.error('Faceless approval error:', error);
+      setIsSubmittingFaceless(false);
+    }
   };
 
   const handleCustomIdeaSubmit = async () => {
     if (!customIdea.trim()) return;
     setIsSubmittingIdea(true);
-    // Simulate AI processing custom design concept
-    await new Promise(r => setTimeout(r, 2000));
-    setIsSubmittingIdea(false);
-    setIdeaSubmitted(true);
-    setCustomIdea('');
-    fetchUsage();
-    setTimeout(() => setIdeaSubmitted(false), 5000);
+    try {
+      const userId = localStorage.getItem('empire_userId');
+      const res = await fetch(`${API_URL}/api/approval/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userId}`,
+          'x-user-id': userId || ''
+        },
+        body: JSON.stringify({
+          type: 'design',
+          description: customIdea.trim(),
+          payload: {
+            category: 'custom-design',
+            hasUpload: designUpload.status === 'complete' || designUpload.status === 'selected',
+            uploadPreview: designUpload.preview
+          }
+        })
+      });
+      if (!res.ok) throw new Error('Approval creation failed');
+      const data = await res.json();
+      console.log('Design approval created:', data);
+      setIsSubmittingIdea(false);
+      setIdeaSubmitted(true);
+      setCustomIdea('');
+      fetchUsage();
+      setTimeout(() => setIdeaSubmitted(false), 5000);
+    } catch (error) {
+      console.error('Design approval error:', error);
+      setIsSubmittingIdea(false);
+    }
   };
 
   const handleSuggestion = (suggestion: string) => {

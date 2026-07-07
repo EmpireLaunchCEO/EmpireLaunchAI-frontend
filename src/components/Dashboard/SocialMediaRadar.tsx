@@ -253,7 +253,7 @@ function SignalCard({ signal }: { signal: any }) {
 }
 
 // ─── Research Panel ────────────────────────────────────────────────────
-function ResearchPanel({ displayNiche, connectedPlatforms }: { displayNiche: string; connectedPlatforms: string[] }) {
+function ResearchPanel({ displayNiche, connectedPlatforms, onSyncStateChange }: { displayNiche: string; connectedPlatforms: string[]; onSyncStateChange?: (syncing: boolean) => void }) {
   const [researchText, setResearchText] = useState("Initializing research protocols...");
   const [researchPhase, setResearchPhase] = useState("Connecting to platforms...");
   const [progress, setProgress] = useState(0);
@@ -262,16 +262,20 @@ function ResearchPanel({ displayNiche, connectedPlatforms }: { displayNiche: str
   useEffect(() => {
     // Fetch real research data from backend
     const fetchIntel = async () => {
-      setResearchText(\`Analyzing trending content in '\${displayNiche}'...\`);
+      onSyncStateChange?.(true);
+      setResearchText(`Analyzing trending content in '${displayNiche}'...`);
       setResearchPhase("Gathering platform intelligence");
       setProgress(25);
 
       try {
         const userId = localStorage.getItem('empire_userId');
-        if (!userId) return;
+        if (!userId) {
+          onSyncStateChange?.(false);
+          return;
+        }
 
         // Fetch global DNA/market research data
-        const dnaRes = await fetch(\`\${API_URL}/api/market-dna/global?limit=10\`, {
+        const dnaRes = await fetch(`${API_URL}/api/market-dna/global?limit=10`, {
           headers: { 'x-user-id': userId }
         });
         
@@ -294,9 +298,10 @@ function ResearchPanel({ displayNiche, connectedPlatforms }: { displayNiche: str
             }));
             
             setPlatformIntels(intels);
-            setResearchText(\`Market intelligence gathered for \${connectedPlatforms.length} connected platforms\`);
+            setResearchText(`Market intelligence gathered for ${connectedPlatforms.length} connected platforms`);
             setResearchPhase("Analysis complete");
             setProgress(100);
+            onSyncStateChange?.(false);
             return;
           }
         }
@@ -306,9 +311,10 @@ function ResearchPanel({ displayNiche, connectedPlatforms }: { displayNiche: str
 
       // Fallback: platform-specific research
       const platformNames = connectedPlatforms.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(', ');
-      setResearchText(\`Monitoring \${connectedPlatforms.length} platforms for \${displayNiche} trends\`);
+      setResearchText(`Monitoring ${connectedPlatforms.length} platforms for ${displayNiche} trends`);
       setResearchPhase("AI analysis active");
       setProgress(85);
+      onSyncStateChange?.(false);
     };
 
     fetchIntel();
@@ -375,17 +381,10 @@ export function SocialMediaRadar() {
     localStorage.setItem('minimized-social-media-radar', String(newState));
   };
 
-  // Simulate AI thinking pulse
-  useEffect(() => {
-    if (!isLinkingComplete) {
-      setIsThinking(false);
-      return;
-    }
-    const timer = setInterval(() => {
-      setIsThinking(prev => !prev);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, [isLinkingComplete]);
+  // Sync state is controlled by ResearchPanel's real data fetching
+  const handleSyncStateChange = (syncing: boolean) => {
+    setIsThinking(syncing);
+  };
 
   if (!mounted) return null;
 
@@ -657,7 +656,7 @@ export function SocialMediaRadar() {
 
               <div className="space-y-4">
                 {connectedPlatforms.length > 0 ? (
-                  <ResearchPanel displayNiche={displayNiche} connectedPlatforms={connectedPlatforms} />
+                  <ResearchPanel displayNiche={displayNiche} connectedPlatforms={connectedPlatforms} onSyncStateChange={handleSyncStateChange} />
                 ) : (
                   <div className="p-8 text-center text-muted-foreground font-medium text-xs italic bg-theme-background rounded-3xl border border-theme">
                     Link a marketplace in the Link Center to initialize research protocols.

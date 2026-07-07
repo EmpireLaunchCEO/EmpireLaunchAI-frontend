@@ -23,6 +23,7 @@ import {
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
+import { API_URL } from '@/lib/config';
 
 const platformIcons: Record<string, any> = {
   TikTok: Smartphone,
@@ -52,11 +53,10 @@ export function NeuralDispatchCenter() {
   useEffect(() => {
     const fetchApprovals = async () => {
       try {
-        const userId = typeof window !== 'undefined' ? localStorage.getItem('empireUserId') : null;
+        const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
         if (!userId) { setIsLoading(false); return; }
-        const res = await fetch(`/api/approval/pending`, {
+        const res = await fetch(`${API_URL}/api/approval/pending`, {
           headers: {
-            'Authorization': 'Bearer mock-mobile-token',
             'x-user-id': userId
           }
         });
