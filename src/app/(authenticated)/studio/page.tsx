@@ -281,6 +281,7 @@ export default function StudioPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer mock-mobile-token',
           'x-user-id': userId || ''
         },
         body: JSON.stringify({
