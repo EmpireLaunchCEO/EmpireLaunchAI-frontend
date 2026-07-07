@@ -57,6 +57,7 @@ export function NeuralDispatchCenter() {
         if (!userId) { setIsLoading(false); return; }
         const res = await fetch(`${API_URL}/api/approval/pending`, {
           headers: {
+            'Authorization': 'Bearer mock-mobile-token',
             'x-user-id': userId
           }
         });
