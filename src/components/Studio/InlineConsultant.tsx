@@ -147,21 +147,21 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       className
     )}>
       {/* Mini Header */}
-      <div className="px-3 py-2 border-b border-theme bg-theme-background/60 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <Sparkles className="w-3 h-3 text-slate-400" />
-          <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Consultant: {context.replace('-', ' ')}</span>
+      <div className="px-2 py-1.5 border-b border-theme bg-theme-background/60 flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <Sparkles className="w-2.5 h-2.5 text-slate-400" />
+          <span className="text-[7px] font-black uppercase tracking-widest text-slate-400">Consultant: {context.replace('-', ' ')}</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[7px] font-bold text-emerald-500/70 uppercase">Online</span>
+          <div className="w-0.5 h-0.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[6px] font-bold text-emerald-500/70 uppercase">Online</span>
         </div>
       </div>
 
       {/* Message Area */}
       <div 
         ref={scrollRef}
-        className="flex-1 min-h-[80px] max-h-[160px] overflow-y-auto p-3 space-y-3 no-scrollbar"
+        className="flex-1 min-h-[60px] max-h-[100px] overflow-y-auto p-2 space-y-2 no-scrollbar"
       >
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
@@ -170,18 +170,18 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               className={cn(
-                "flex items-start gap-2",
+                "flex items-start gap-1.5",
                 msg.role === 'user' ? "flex-row-reverse" : "flex-row"
               )}
             >
               <div className={cn(
-                "w-5 h-5 rounded-lg flex items-center justify-center shrink-0 border border-theme",
+                "w-4 h-4 rounded-lg flex items-center justify-center shrink-0 border border-theme",
                 msg.role === 'user' ? "bg-white/10" : "bg-slate-500/10"
               )}>
-                {msg.role === 'user' ? <User className="w-2.5 h-2.5 text-white" /> : <Bot className="w-2.5 h-2.5 text-slate-400" />}
+                {msg.role === 'user' ? <User className="w-2 h-2 text-white" /> : <Bot className="w-2 h-2 text-slate-400" />}
               </div>
               <div className={cn(
-                "px-3 py-2 rounded-xl text-[10px] leading-relaxed max-w-[85%]",
+                "px-2 py-1.5 rounded-xl text-[9px] leading-relaxed max-w-[85%]",
                 msg.role === 'user' 
                   ? "bg-white text-slate-950 rounded-tr-none font-medium" 
                   : "bg-theme-surface border border-theme text-slate-300 rounded-tl-none italic"
@@ -192,12 +192,12 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           ))}
         </AnimatePresence>
         {isTyping && (
-          <div className="flex items-start gap-2">
-            <div className="w-5 h-5 rounded-lg bg-slate-500/10 flex items-center justify-center border border-theme">
-              <Bot className="w-2.5 h-2.5 text-slate-400" />
+          <div className="flex items-start gap-1.5">
+            <div className="w-4 h-4 rounded-lg bg-slate-500/10 flex items-center justify-center border border-theme">
+              <Bot className="w-2 h-2 text-slate-400" />
             </div>
-            <div className="px-3 py-2 rounded-xl bg-theme-surface border border-theme">
-              <Loader2 className="w-3 h-3 text-white animate-spin" />
+            <div className="px-2 py-1.5 rounded-xl bg-theme-surface border border-theme">
+              <Loader2 className="w-2.5 h-2.5 text-white animate-spin" />
             </div>
           </div>
         )}
@@ -207,13 +207,13 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="pt-2"
+            className="pt-1"
           >
             <button
               onClick={handleGenerate}
-              className="w-full py-3 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
+              className="w-full py-2 bg-primary text-slate-950 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-primary/20"
             >
-              <Wand2 className="w-3.5 h-3.5" />
+              <Wand2 className="w-3 h-3" />
               Generate Video
             </button>
           </motion.div>
@@ -221,21 +221,21 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       </div>
 
       {/* Mini Input */}
-      <form onSubmit={handleSend} className="p-2 border-t border-theme bg-theme-background/40">
+      <form onSubmit={handleSend} className="p-1.5 border-t border-theme bg-theme-background/40">
         <div className="relative">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask your consultant..."
-            className="w-full bg-theme-surface/50 border border-theme rounded-xl px-3 py-2 text-[10px] focus:outline-none focus:border-white/40 transition-all placeholder:text-slate-600 pr-10"
+            placeholder="Ask..."
+            className="w-full bg-theme-surface/50 border border-theme rounded-xl px-2 py-1.5 text-[9px] focus:outline-none focus:border-white/40 transition-all placeholder:text-slate-600 pr-9"
           />
           <button
             type="submit"
             disabled={!input.trim() || isTyping}
-            className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-all disabled:opacity-30"
+            className="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-all disabled:opacity-30"
           >
-            <Send className="w-3 h-3" />
+            <Send className="w-2.5 h-2.5" />
           </button>
         </div>
       </form>
