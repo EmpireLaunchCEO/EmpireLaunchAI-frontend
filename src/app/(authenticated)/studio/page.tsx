@@ -287,7 +287,6 @@ export default function StudioPage() {
   // Called by InlineConsultant's "Generate Video" button after refinement
   const handleGenerateVideo = async (finalIdea: string) => {
     setIsGeneratingVideo(true);
-    setSharedVideoIdea('');
     try {
       const userId = localStorage.getItem('empire_userId');
       // Fire the full pipeline
