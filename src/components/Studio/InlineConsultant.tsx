@@ -58,12 +58,13 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
           const response = await fetch(`${API_URL}/api/studio/chat`, {
             method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json',
-              ...(userId ? { 'x-user-id': userId } : {})
-            },
-            body: JSON.stringify({ 
-              message: `[CONTEXT: ${context}] The user wants to create a video based on this idea: "${idea}". Review this concept. Ask them 3-4 specific questions about: 1) Visual style and backgrounds, 2) Effects/sparkles/transitions, 3) Color schemes, 4) Pacing and duration. Then offer to generate the video once they confirm.` 
+            headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': 'Bearer mock-mobile-token',
+                          ...(userId ? { 'x-user-id': userId } : {})
+                        },
+                        body: JSON.stringify({
+                          message: `[CONTEXT: ${context}] The user wants to create a video based on this idea: "${idea}". Review this concept. Ask them 3-4 specific questions about: 1) Visual style and backgrounds, 2) Effects/sparkles/transitions, 3) Color schemes, 4) Pacing and duration. Then offer to generate the video once they confirm.`
             })
           });
 
@@ -108,8 +109,9 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       const response = await fetch(`${API_URL}/api/studio/chat`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer mock-mobile-token',
           ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 
