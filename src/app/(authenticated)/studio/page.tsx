@@ -264,7 +264,6 @@ export default function StudioPage() {
 
   // New Content Creation States
   const [customVideoIdea, setCustomVideoIdea] = useState('');
-  const [isSubmittingVideo, setIsSubmittingVideo] = useState(false);
   const [videoIdeaSubmitted, setVideoIdeaSubmitted] = useState(false);
 
   const [facelessIdea, setFacelessIdea] = useState('');
@@ -465,20 +464,9 @@ export default function StudioPage() {
                     onChange={(e) => setCustomVideoIdea(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleCustomVideoSubmit(); } }}
                     placeholder={isCatalyst ? "e.g. A 15-second high-energy hook for my Daily Pay offer, emphasizing $300/day potential, fast cuts, urgent CTA..." : "e.g. A 15-second high-energy product reveal for TikTok, fast cuts, vibrant neon overlays..."}
-                    disabled={isSubmittingVideo}
-                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                    disabled={isGeneratingVideo}
+                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                   />
-                  <button
-                    onClick={handleCustomVideoSubmit}
-                    disabled={!customVideoIdea.trim() || isGeneratingVideo}
-                    className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    {isGeneratingVideo ? (
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <SendHorizonal className="w-4 h-4" />
-                    )}
-                  </button>
                 </div>
 
                 {videoGenerated && (
