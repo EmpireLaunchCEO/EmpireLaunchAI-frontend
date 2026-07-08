@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Send, User, Bot, Loader2, Wand2 } from 'lucide-react';
+import { Sparkles, Send, User, Bot, Loader2, Wand2, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { API_URL } from '@/lib/config';
@@ -202,6 +202,18 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
               <Loader2 className="w-2.5 h-2.5 text-white animate-spin" />
             </div>
           </div>
+        )}
+
+        {/* Reply hint — shown after the first assistant response when user hasn't replied yet */}
+        {!isTyping && messages.length >= 2 && messages.every(m => m.role !== 'user' || m.content.startsWith("Here's my video idea:")) && (
+          <motion.div
+            initial={{ opacity: 0, y: 3 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10"
+          >
+            <ArrowDown className="w-2.5 h-2.5 text-primary" />
+            <span className="text-[7px] font-bold text-primary uppercase tracking-widest">Reply below to refine — then say &quot;ready&quot; to generate</span>
+          </motion.div>
         )}
 
         {/* Generate Video Button - shown when user confirms idea */}
