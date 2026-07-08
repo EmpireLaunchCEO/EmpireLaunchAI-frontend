@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, Send, User, Bot, Loader2 } from 'lucide-react';
+import { Sparkles, Send, User, Bot, Loader2, Wand2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { API_URL } from '@/lib/config';
@@ -15,12 +15,16 @@ interface InlineConsultantProps {
   context: 'video' | 'editor' | 'faceless' | 'design' | 'neural-twin';
   initialMessage?: string;
   className?: string;
+  idea?: string;
+  onGenerate?: (finalIdea: string) => void;
 }
 
-export function InlineConsultant({ context, initialMessage, className }: InlineConsultantProps) {
+export function InlineConsultant({ context, initialMessage, className, idea, onGenerate }: InlineConsultantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [userConfirmed, setUserConfirmed] = useState(false);
+  const [lastIdea, setLastIdea] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,16 +32,55 @@ export function InlineConsultant({ context, initialMessage, className }: InlineC
       setMessages([{ role: 'assistant', content: initialMessage }]);
     } else {
       // Default initial messages based on context
-      const defaults = {
+      const defaults: Record<string, string> = {
         video: "Let's design your video together. What visuals are you imagining? Tell me about backgrounds, effects (sparkles, transitions, overlays), color schemes, and any specific elements you want. I'll refine the script around your vision.",
         editor: "Upload your clips and tell me how you want it to look. Any specific background style, effects, or on-screen graphics? Should I prioritize fast cuts or cinematic transitions?",
         faceless: "What niche should we dominate? Describe the vibe — backgrounds, motion graphics, overlays, text styles. I'll pull trending footage and build the visuals around your preferences.",
         design: "Describe your product vision in detail — colors, materials, backgrounds, sparkles or effects, layout style. I'll cross-reference it with current market-winning DNA and suggest refinements.",
         'neural-twin': "Once your photo is uploaded, I can script your twin. What's the main goal? Also, what background setting, effects, or visual style do you want for the video?"
       };
-      setMessages([{ role: 'assistant', content: defaults[context] }]);
+      setMessages([{ role: 'assistant', content: defaults[context] || defaults.video }]);
     }
   }, [context, initialMessage]);
+
+  // When a new idea is shared from the parent (Enter pressed in textarea), send it to Gemini
+  useEffect(() => {
+    if (idea && idea !== lastIdea && idea.trim()) {
+      setLastIdea(idea);
+      setUserConfirmed(false);
+      
+      // Auto-send the idea to the Consultant/Gemini for review
+      const sendIdeaToConsultant = async () => {
+        setMessages(prev => [...prev, { role: 'user', content: `Here's my video idea: ${idea}` }]);
+        setIsTyping(true);
+        
+        try {
+          const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
+          const response = await fetch(`${API_URL}/api/studio/chat`, {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              ...(userId ? { 'x-user-id': userId } : {})
+            },
+            body: JSON.stringify({ 
+              message: `[CONTEXT: ${context}] The user wants to create a video based on this idea: "${idea}". Review this concept. Ask them 3-4 specific questions about: 1) Visual style and backgrounds, 2) Effects/sparkles/transitions, 3) Color schemes, 4) Pacing and duration. Then offer to generate the video once they confirm.` 
+            })
+          });
+
+          if (!response.ok) throw new Error('Failed to consult AI');
+          const data = await response.json();
+          setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+        } catch (error) {
+          console.error('Consultation error:', error);
+          setMessages(prev => [...prev, { role: 'assistant', content: "Great idea! Let's refine it. What visual style are you thinking — energetic and fast-paced, or cinematic and slow? Any specific colors or effects you want?" }]);
+        } finally {
+          setIsTyping(false);
+        }
+      };
+      
+      sendIdeaToConsultant();
+    }
+  }, [idea, context, lastIdea]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -54,13 +97,20 @@ export function InlineConsultant({ context, initialMessage, className }: InlineC
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsTyping(true);
 
+    // Check if user is confirming readiness
+    const lower = userMessage.toLowerCase();
+    const isConfirming = lower.includes('generate') || lower.includes('ready') || lower.includes('yes') || lower.includes('let\'s do it') || lower.includes('go ahead');
+    if (isConfirming) {
+      setUserConfirmed(true);
+    }
+
     try {
-      const userId = typeof window !== 'undefined' ? localStorage.getItem('empireUserId') : null;
+      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       const response = await fetch(`${API_URL}/api/studio/chat`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          ...(userId ? { 'Authorization': 'Bearer mock-mobile-token', 'x-user-id': userId } : {})
+          ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 
           message: `[CONTEXT: ${context}] ${userMessage}` 
@@ -71,11 +121,23 @@ export function InlineConsultant({ context, initialMessage, className }: InlineC
       const data = await response.json();
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+      
+      // Check if the assistant response suggests the idea is ready
+      const responseLower = data.message.toLowerCase();
+      if (responseLower.includes('generate') || responseLower.includes('ready to create') || responseLower.includes('let me create')) {
+        setUserConfirmed(true);
+      }
     } catch (error) {
       console.error('Consultation error:', error);
       setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the Neural Link. Please try again." }]);
     } finally {
       setIsTyping(false);
+    }
+  };
+
+  const handleGenerate = () => {
+    if (onGenerate && idea) {
+      onGenerate(idea);
     }
   };
 
@@ -138,6 +200,23 @@ export function InlineConsultant({ context, initialMessage, className }: InlineC
               <Loader2 className="w-3 h-3 text-white animate-spin" />
             </div>
           </div>
+        )}
+
+        {/* Generate Video Button - shown when user confirms idea */}
+        {userConfirmed && onGenerate && idea && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="pt-2"
+          >
+            <button
+              onClick={handleGenerate}
+              className="w-full py-3 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
+            >
+              <Wand2 className="w-3.5 h-3.5" />
+              Generate Video
+            </button>
+          </motion.div>
         )}
       </div>
 

@@ -271,21 +271,35 @@ export default function StudioPage() {
   const [isSubmittingFaceless, setIsSubmittingFaceless] = useState(false);
   const [facelessSubmitted, setFacelessSubmitted] = useState(false);
 
-  const handleCustomVideoSubmit = async () => {
+  // Shared idea for Consultant review flow
+  const [sharedVideoIdea, setSharedVideoIdea] = useState('');
+  const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
+  const [videoGenerated, setVideoGenerated] = useState(false);
+
+  // Handle Custom Video: Send idea to Consultant for review instead of directly generating
+  const handleCustomVideoSubmit = () => {
     if (!customVideoIdea.trim()) return;
-    setIsSubmittingVideo(true);
+    // Send the idea to the Consultant for review/refinement
+    setSharedVideoIdea(customVideoIdea.trim());
+    setCustomVideoIdea('');
+    setVideoGenerated(false);
+  };
+
+  // Called by InlineConsultant's "Generate Video" button after refinement
+  const handleGenerateVideo = async (finalIdea: string) => {
+    setIsGeneratingVideo(true);
+    setSharedVideoIdea('');
     try {
       const userId = localStorage.getItem('empire_userId');
-      // Try the full pipeline first
+      // Fire the full pipeline
       const res = await fetch(`${API_URL}/api/cinema/generate-video`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token',
           'x-user-id': userId || ''
         },
         body: JSON.stringify({
-          idea: customVideoIdea.trim(),
+          idea: finalIdea,
           niche: activeEmpire?.niche
         })
       });
@@ -293,10 +307,9 @@ export default function StudioPage() {
       if (res.ok) {
         const data = await res.json();
         console.log('Video generated:', data);
-        setIsSubmittingVideo(false);
-        setVideoIdeaSubmitted(true);
-        setCustomVideoIdea('');
-        setTimeout(() => setVideoIdeaSubmitted(false), 8000);
+        setIsGeneratingVideo(false);
+        setVideoGenerated(true);
+        setTimeout(() => setVideoGenerated(false), 8000);
         return;
       }
 
@@ -304,10 +317,9 @@ export default function StudioPage() {
       throw new Error('Pipeline unavailable, using fallback');
     } catch (error) {
       console.warn('Video pipeline failed, using fallback:', error);
-      // Fallback: create approval record so it shows in Operations queue
       try {
         const userId = localStorage.getItem('empire_userId');
-        const fallbackRes = await fetch(`${API_URL}/api/approval/create`, {
+        await fetch(`${API_URL}/api/approval/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -315,20 +327,16 @@ export default function StudioPage() {
           },
           body: JSON.stringify({
             type: 'video',
-            description: customVideoIdea.trim(),
+            description: finalIdea,
             payload: { category: 'custom-video', isCatalyst: isCatalyst, fallback: true }
           })
         });
-        if (fallbackRes.ok) {
-          console.log('Video approval created (fallback)');
-        }
       } catch (fallbackErr) {
         console.error('Fallback also failed:', fallbackErr);
       }
-      setIsSubmittingVideo(false);
-      setVideoIdeaSubmitted(true);
-      setCustomVideoIdea('');
-      setTimeout(() => setVideoIdeaSubmitted(false), 5000);
+      setIsGeneratingVideo(false);
+      setVideoGenerated(true);
+      setTimeout(() => setVideoGenerated(false), 5000);
     }
   };
 
@@ -462,10 +470,10 @@ export default function StudioPage() {
                   />
                   <button
                     onClick={handleCustomVideoSubmit}
-                    disabled={!customVideoIdea.trim() || isSubmittingVideo}
+                    disabled={!customVideoIdea.trim() || isGeneratingVideo}
                     className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   >
-                    {isSubmittingVideo ? (
+                    {isGeneratingVideo ? (
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
                       <SendHorizonal className="w-4 h-4" />
@@ -473,14 +481,14 @@ export default function StudioPage() {
                   </button>
                 </div>
 
-                {videoIdeaSubmitted && (
+                {videoGenerated && (
                   <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                     <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">{isCatalyst ? "Marketing directive received — generating sales-focused storyboard" : "Video directive received — generating visual storyboard"}</span>
                   </motion.div>
                 )}
 
-                <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} />
+                <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} />
               </div>
 
               {/* 2. Upload Video Box for Edits */}
