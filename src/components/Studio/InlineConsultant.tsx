@@ -64,13 +64,15 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
                           ...(userId ? { 'x-user-id': userId } : {})
                         },
                         body: JSON.stringify({
-                          message: `[CONTEXT: ${context}] The user wants to create a video based on this idea: "${idea}". Review this concept. Ask them 3-4 specific questions about: 1) Visual style and backgrounds, 2) Effects/sparkles/transitions, 3) Color schemes, 4) Pacing and duration. Then offer to generate the video once they confirm.`
+                          message: `[CONTEXT: ${context}] The user wants a video based on this idea: "${idea}". You are an expert creative director with deep knowledge of what performs best on each platform (TikTok, Instagram, YouTube Shorts) — pacing, hooks, color psychology, trending effects. Propose a COMPLETE, READY-TO-GO video concept based on market research. Keep your response VERY SHORT — 2-3 sentences max. Then ask ONE single question to refine (pacing, colors, or hook). Do not list multiple questions. If the user confirms or says "ready", "yes", or "go ahead", respond with "[GENERATE]" at the end. If the user changes direction, adapt — research what works but ultimately do what the user wants.`
             })
           });
 
           if (!response.ok) throw new Error('Failed to consult AI');
           const data = await response.json();
-          setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+          // Strip [GENERATE] tag from display but still trigger confirmation
+          const cleanMessage = data.message.replace(/\[GENERATE\]/gi, '').trim();
+          setMessages(prev => [...prev, { role: 'assistant', content: cleanMessage }]);
         } catch (error) {
           console.error('Consultation error:', error);
           setMessages(prev => [...prev, { role: 'assistant', content: "Great idea! Let's refine it. What visual style are you thinking — energetic and fast-paced, or cinematic and slow? Any specific colors or effects you want?" }]);
@@ -122,11 +124,11 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       if (!response.ok) throw new Error('Failed to consult AI');
       const data = await response.json();
 
-      setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: data.message.replace(/\[GENERATE\]/gi, '').trim() }]);
       
       // Check if the assistant response suggests the idea is ready
       const responseLower = data.message.toLowerCase();
-      if (responseLower.includes('generate') || responseLower.includes('ready to create') || responseLower.includes('let me create')) {
+      if (responseLower.includes('generate') || responseLower.includes('[generate]') || responseLower.includes('ready to create') || responseLower.includes('let me create')) {
         setUserConfirmed(true);
       }
     } catch (error) {
