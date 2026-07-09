@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles,
@@ -287,43 +288,84 @@ export default function StudioPage() {
   // Called by InlineConsultant's "Generate Video" button after refinement
   const handleGenerateVideo = async (finalIdea: string) => {
     setIsGeneratingVideo(true);
+    setRenderLogs([]);
+    setIsRendering(true);
+    setActiveRenderType('facial-dna');
+
+    // Add initial render log
+    const addLog = (action: string, status: 'processing' | 'success' | 'error' = 'processing', details?: string) => {
+      setRenderLogs(prev => [...prev, {
+        id: `log-${Date.now()}-${Math.random()}`,
+        timestamp: new Date().toLocaleTimeString(),
+        action,
+        status,
+        details: details || '',
+        type: 'creation',
+      }]);
+    };
+
+    addLog('Consultant Review', 'processing', 'Refining creative direction...');
+    await new Promise(r => setTimeout(r, 1000));
+
     try {
-      const userId = localStorage.getItem('empire_userId');
-      // Fire the full pipeline
-      const res = await fetch(`${API_URL}/api/cinema/generate-video`, {
+      const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
+      const niche = activeEmpire?.niche || 'general';
+      const angle = activeEmpire?.angle || 'trending';
+
+      addLog('Concept Finalization', 'processing', `Finalizing: ${finalIdea.substring(0, 60)}...`);
+      await new Promise(r => setTimeout(r, 800));
+
+      // Call the full creation pipeline
+      addLog('AI Content Generation', 'processing', 'Generating visuals and script...');
+      const res = await fetch(`${API_URL}/api/studio/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer mock-mobile-token',
-          'x-user-id': userId || ''
+          'x-user-id': userId
         },
         body: JSON.stringify({
-          idea: finalIdea,
-          niche: activeEmpire?.niche
+          niche,
+          angle,
+          styleDna: {
+            colors: ['#FF6B6B', '#4ECDC4', '#FFFFFF', '#2C3E50'],
+            fonts: { headline: 'Montserrat Bold', body: 'Open Sans Regular' },
+            hooks: ['Trending Now', 'You Need To See This', 'Game Changer'],
+            keywords: [niche, 'viral', 'trending', 'creative'],
+            tone: 'energetic_persuasive'
+          },
+          platforms: ['tiktok', 'instagram'],
+          title: finalIdea.substring(0, 80),
+          description: finalIdea
         })
       });
 
       if (res.ok) {
         const data = await res.json();
-        console.log('Video generated:', data);
+        addLog('Creation Complete', 'success', data.assetId ? `Asset: ${data.assetId}` : 'Video created successfully');
         setIsGeneratingVideo(false);
         setVideoGenerated(true);
-        setTimeout(() => setVideoGenerated(false), 8000);
+        setCreatedAssetId(data.assetId || null);
+        setTimeout(() => {
+          setVideoGenerated(false);
+          setIsRendering(false);
+        }, 12000);
         return;
       }
 
-      // Fallback: create approval record directly
+      // Fallback: create approval record
       throw new Error('Pipeline unavailable, using fallback');
     } catch (error) {
       console.warn('Video pipeline failed, using fallback:', error);
+      addLog('Pipeline Fallback', 'processing', 'Creating approval request...');
       try {
-        const userId = localStorage.getItem('empire_userId');
+        const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
         await fetch(`${API_URL}/api/approval/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer mock-mobile-token',
-            'x-user-id': userId || ''
+            'x-user-id': userId
           },
           body: JSON.stringify({
             type: 'video',
@@ -331,14 +373,22 @@ export default function StudioPage() {
             payload: { category: 'custom-video', isCatalyst: isCatalyst, fallback: true }
           })
         });
+        addLog('Approval Created', 'success', 'Submitted for review');
       } catch (fallbackErr) {
         console.error('Fallback also failed:', fallbackErr);
+        addLog('Creation Failed', 'error', 'All pipelines unavailable');
       }
       setIsGeneratingVideo(false);
       setVideoGenerated(true);
-      setTimeout(() => setVideoGenerated(false), 5000);
+      setTimeout(() => {
+        setVideoGenerated(false);
+        setIsRendering(false);
+      }, 8000);
     }
   };
+
+  // State for tracking created asset
+  const [createdAssetId, setCreatedAssetId] = useState<string | null>(null);
 
   const handleFacelessSubmit = async () => {
     if (!facelessIdea.trim()) return;
@@ -478,9 +528,17 @@ export default function StudioPage() {
                 </div>
 
                 {videoGenerated && (
-                  <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">{isCatalyst ? "Marketing directive received — generating sales-focused storyboard" : "Video directive received — generating visual storyboard"}</span>
+                  <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">{isCatalyst ? "Marketing directive received — generating sales-focused storyboard" : "Video directive received — generating visual storyboard"}</span>
+                    </div>
+                    {createdAssetId && (
+                      <Link href="/empire-center" className="flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
+                        <ChevronRight className="w-3 h-3 text-primary" />
+                        <span className="text-[9px] font-bold text-primary uppercase tracking-wider">View in Operations Base</span>
+                      </Link>
+                    )}
                   </motion.div>
                 )}
 
