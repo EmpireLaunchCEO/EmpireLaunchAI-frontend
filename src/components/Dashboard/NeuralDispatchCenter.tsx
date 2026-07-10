@@ -238,13 +238,6 @@ export function NeuralDispatchCenter() {
                 placeholder="e.g. 'Change the last sentence to mention free shipping'..."
                 className="w-full bg-slate-950 border border-white/10 rounded-2xl p-5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all"
               />
-              <button 
-                disabled={!feedback.trim()}
-                onClick={handleSyncFeedback}
-                className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all disabled:opacity-30"
-              >
-                Re-Sync AI
-              </button>
             </div>
           </div>
 
