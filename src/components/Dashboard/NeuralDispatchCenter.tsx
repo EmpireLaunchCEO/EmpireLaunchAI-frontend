@@ -180,7 +180,7 @@ export function NeuralDispatchCenter() {
             currentApproval.payload?.videoUrl ? (
               <div className="aspect-video w-full max-w-4xl bg-slate-900 rounded-[32px] border border-white/10 shadow-2xl overflow-hidden relative">
                 <video
-                  src={currentApproval.payload.videoUrl}
+                  src={currentApproval.payload.videoUrl?.startsWith('http') ? currentApproval.payload.videoUrl : `${API_URL}${currentApproval.payload.videoUrl}`}
                   controls
                   className="w-full h-full object-contain"
                   poster="/brands/video-placeholder.png"
