@@ -176,8 +176,7 @@ export function NeuralDispatchCenter() {
 
         {/* LARGE PLAYER AREA */}
         <div className="flex-1 bg-black/40 flex items-center justify-center relative group p-8">
-          {currentApproval ? (
-            currentApproval.payload?.videoUrl ? (
+          {currentApproval?.payload?.videoUrl ? (
               <div className="aspect-video w-full max-w-4xl bg-slate-900 rounded-[32px] border border-white/10 shadow-2xl overflow-hidden relative">
                 <video
                   src={currentApproval.payload.videoUrl?.startsWith('http') ? currentApproval.payload.videoUrl : `${API_URL}${currentApproval.payload.videoUrl}`}
@@ -193,26 +192,6 @@ export function NeuralDispatchCenter() {
                 </div>
               </div>
             ) : (
-              <div className="w-full max-w-4xl bg-slate-900 rounded-[32px] border border-white/10 shadow-2xl flex flex-col relative overflow-hidden p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                  <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest">Pending Review</span>
-                </div>
-                <div className="flex-1 space-y-4">
-                  <div className="p-4 bg-slate-950/50 rounded-2xl border border-white/5">
-                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-2">Idea Description</p>
-                    <p className="text-sm text-white font-medium leading-relaxed">{currentApproval.description}</p>
-                  </div>
-                  {currentApproval.type && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-black text-primary uppercase tracking-widest px-2 py-1 rounded-lg bg-primary/10">{currentApproval.type}</span>
-                      <span className="text-[9px] text-slate-500">submitted {new Date(currentApproval.createdAt).toLocaleString()}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )
-          ) : (
             <div className="aspect-video w-full max-w-4xl bg-slate-900 rounded-[32px] border border-white/10 shadow-2xl flex items-center justify-center relative overflow-hidden">
               <Video className="w-12 h-12 text-white/10" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-8">
