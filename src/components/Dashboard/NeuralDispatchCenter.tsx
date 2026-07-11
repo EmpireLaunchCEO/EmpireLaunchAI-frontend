@@ -18,8 +18,7 @@ import {
   Globe,
   Zap,
   AlertCircle,
-  ThumbsUp,
-  Trash2
+  ThumbsUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -158,24 +157,6 @@ export function NeuralDispatchCenter() {
     setFeedback('');
   };
 
-  const handleClearAll = async () => {
-    try {
-      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-      if (!userId) return;
-      await fetch(`${API_URL}/api/approval/clear`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': 'Bearer mock-mobile-token',
-          'x-user-id': userId
-        }
-      });
-      setPendingCounts({});
-      setApprovalItems([]);
-    } catch (err) {
-      console.warn('Failed to clear approvals:', err);
-    }
-  };
-
   if (view === 'review') {
     return (
       <motion.div 
@@ -267,19 +248,9 @@ export function NeuralDispatchCenter() {
         
         {/* ── LEFT: CREATION QUEUES ─────────────────────── */}
         <div className="space-y-6">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <Sparkles className="w-5 h-5 text-primary" />
-              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] truncate">Queues</h4>
-            </div>
-            <button
-              onClick={handleClearAll}
-              className="text-[8px] font-black text-red-400/60 hover:text-red-400 uppercase tracking-widest flex items-center gap-1 transition-colors"
-              title="Clear all pending approvals"
-            >
-              <Trash2 className="w-3 h-3" />
-              Clear
-            </button>
+          <div className="flex items-center gap-3">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] truncate">Queues</h4>
           </div>
           
           <div className="space-y-3">
