@@ -32,8 +32,32 @@ import { BarChart3, PenSquare, Lightbulb, SendHorizonal, Scissors, MonitorPlay, 
 export default function StudioPage() {
   const [isDemoMode, setIsDemoMode] = useState(false);
   const { activeEmpire: empireData, registerRefreshHandler } = useEmpire();
+  const [userNiche, setUserNiche] = useState<string>('');
 
   const isCatalyst = empireData?.archetype === 'CATALYST';
+
+  // Fetch user's business niche from onboarding settings
+  useEffect(() => {
+    const fetchUserNiche = async () => {
+      try {
+        const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
+        if (!userId) return;
+        const res = await fetch(`${API_URL}/api/settings/`, {
+          headers: {
+            'Authorization': 'Bearer mock-mobile-token',
+            'x-user-id': userId
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setUserNiche(data.businessNiche || data.niche || data.business_angle || '');
+        }
+      } catch (e) {
+        // Silently fail
+      }
+    };
+    fetchUserNiche();
+  }, []);
 
   const handleRefresh = React.useCallback(async () => {
     await new Promise(r => setTimeout(r, 1000));
@@ -309,7 +333,7 @@ export default function StudioPage() {
 
     try {
       const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
-      const niche = activeEmpire?.niche || 'general';
+      const niche = userNiche || activeEmpire?.niche || 'general';
       const angle = activeEmpire?.angle || 'trending';
 
       addLog('Concept Finalization', 'processing', `Finalizing: ${finalIdea.substring(0, 60)}...`);
