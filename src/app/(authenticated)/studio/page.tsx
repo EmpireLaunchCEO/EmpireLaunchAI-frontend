@@ -377,38 +377,14 @@ export default function StudioPage() {
         return;
       }
 
-      // Fallback: create approval record
-      throw new Error('Pipeline unavailable, using fallback');
+      // Pipeline failed — show error, no placeholder
+      throw new Error(data?.error || 'Pipeline unavailable');
     } catch (error) {
-      console.warn('Video pipeline failed, using fallback:', error);
-      addLog('Pipeline Fallback', 'processing', 'Creating approval request...');
-      try {
-        const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
-        await fetch(`${API_URL}/api/approval/create`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer mock-mobile-token',
-            'x-user-id': userId
-          },
-          body: JSON.stringify({
-            type: 'video',
-            description: finalIdea,
-            payload: { category: 'custom-video', isCatalyst: isCatalyst, fallback: true }
-          })
-        });
-        addLog('Approval Created', 'success', 'Submitted for review');
-      } catch (fallbackErr) {
-        console.error('Fallback also failed:', fallbackErr);
-        addLog('Creation Failed', 'error', 'All pipelines unavailable');
-      }
+      console.error('Video pipeline failed:', error);
+      addLog('Creation Failed', 'error', 'Video generation could not complete. Please try again.');
       setIsGeneratingVideo(false);
-      setVideoGenerated(true);
-      setTimeout(() => {
-        setVideoGenerated(false);
-        setIsRendering(false);
-      }, 8000);
-    }
+      setVideoGenerated(false);
+      setIsRendering(false);
   };
 
   // State for tracking created asset
