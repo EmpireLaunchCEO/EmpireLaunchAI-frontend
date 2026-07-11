@@ -95,7 +95,14 @@ export function NeuralDispatchCenter() {
   useEffect(() => {
     if (view === 'review' && activeQueue) {
       const approvalType = queueTypeMap[activeQueue];
-      const match = approvalItems.find((item: any) => item.type?.toLowerCase() === approvalType);
+      // For video queue, only match approvals that actually have a videoUrl
+      const match = approvalItems.find((item: any) => {
+        const typeMatch = item.type?.toLowerCase() === approvalType;
+        if (approvalType === 'video') {
+          return typeMatch && item.payload?.videoUrl;
+        }
+        return typeMatch;
+      });
       setCurrentApproval(match || null);
       setDraftNumber(1);
     }
