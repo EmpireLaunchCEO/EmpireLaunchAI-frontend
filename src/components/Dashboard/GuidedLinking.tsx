@@ -456,7 +456,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-500 group-hover:text-white shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -464,7 +464,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                           disconnectPlatform(id);
                         }
                       }}
-                      className="p-1.5 rounded-lg hover:bg-red-500/20 text-muted-foreground hover:text-red-500 transition-all opacity-0 group-hover:opacity-100"
+                      className="p-1.5 rounded-lg hover:bg-red-500/20 text-muted-foreground hover:text-red-500 transition-all"
                       title="Disconnect Platform"
                     >
                       <LogOut className="w-3.5 h-3.5" />
