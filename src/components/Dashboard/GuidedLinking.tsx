@@ -470,10 +470,11 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                           disconnectPlatform(id);
                         }
                       }}
-                      className="p-1.5 rounded-lg hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-all"
+                      className="px-2 py-1 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-400 hover:text-red-200 transition-all flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider"
                       title="Disconnect Platform"
                     >
-                      <LogOut className="w-3.5 h-3.5" />
+                      <LogOut className="w-3 h-3" />
+                      <span>Unlink</span>
                     </button>
                   </div>
                 </motion.div>
