@@ -183,6 +183,7 @@ export function VerticalPlatformRadar() {
               <div className="grid grid-cols-1 md:grid-cols-2 relative z-10 min-h-[100px] md:min-h-[120px]">
                 {/* LEFT SIDE: Linked App Identity & Performance Metrics */}
                 <div className="p-2 md:p-3 flex flex-col justify-center gap-2 bg-primary/5 border-b md:border-b-0 md:border-r border-theme/30">
+                  {/* Platform identity — simple, no fake metrics */}
                   <div className="flex items-center gap-3">
                     <div className="relative w-8 h-8 md:w-10 md:h-10 rounded-[12px] md:rounded-[14px] bg-white p-1.5 border-2 border-theme shadow-xl transition-all duration-700">
                       <Image 
@@ -200,28 +201,9 @@ export function VerticalPlatformRadar() {
                         )}
                         <span className="flex items-center gap-1 text-[7px] md:text-[8px] font-black text-green-500 uppercase tracking-widest">
                           <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
-                          Optimal
-                        </span>
-                        <span className="text-[7px] md:text-[8px] font-black text-slate-500 uppercase tracking-widest">Sync: 124ms</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Performance Metrics - EMPIRE LINKS */}
-                  <div className="grid grid-cols-2 gap-1.5">
-                    <div className="p-1.5 md:p-2 rounded-[10px] md:rounded-[12px] bg-theme-background/40 border border-theme/30 backdrop-blur-sm">
-                      <div className="text-[6px] font-black text-slate-500 uppercase tracking-widest mb-px">{platform.metricLabel}</div>
-                      <div className="flex items-end gap-1">
-                        <span className="text-xs md:text-sm font-black text-foreground leading-none">{platform.followers}</span>
-                        <span className="text-[7px] font-black text-green-500 mb-px flex items-center gap-0.5">
-                          <TrendingUp className="w-2 h-2" />
-                          {platform.growth}
+                          Linked
                         </span>
                       </div>
-                    </div>
-                    <div className="p-1.5 md:p-2 rounded-[10px] md:rounded-[12px] bg-theme-background/40 border border-theme/30 backdrop-blur-sm">
-                      <div className="text-[6px] font-black text-slate-500 uppercase tracking-widest mb-px">{platform.secondaryMetricLabel}</div>
-                      <div className="text-xs md:text-sm font-black text-foreground leading-none">{platform.likes}</div>
                     </div>
                   </div>
                 </div>
