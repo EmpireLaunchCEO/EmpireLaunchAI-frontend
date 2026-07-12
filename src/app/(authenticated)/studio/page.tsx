@@ -529,15 +529,20 @@ export default function StudioPage() {
                 </div>
 
                 {videoGenerated && (
-                  <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">{isCatalyst ? "Marketing directive received — generating sales-focused storyboard" : "Video directive received — generating visual storyboard"}</span>
+                  <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 shadow-lg shadow-emerald-500/5">
+                      <div className="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-black text-emerald-400 uppercase tracking-wider">Video Generation Started</p>
+                        <p className="text-[9px] font-bold text-emerald-500/70 uppercase tracking-wider mt-0.5">Ready in ~2 minutes — check Operations</p>
+                      </div>
                     </div>
                     {createdAssetId && (
-                      <Link href="/empire-center" className="flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
-                        <ChevronRight className="w-3 h-3 text-primary" />
-                        <span className="text-[9px] font-bold text-primary uppercase tracking-wider">View in Operations Base</span>
+                      <Link href="/empire-center" className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
+                        <ChevronRight className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
                       </Link>
                     )}
                   </motion.div>
