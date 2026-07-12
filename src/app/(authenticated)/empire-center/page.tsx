@@ -174,7 +174,7 @@ export default function EmpireCenterPage() {
                     <NicheCalibrationBox 
                       isOperationsBase={true}
                       archetype={empireData?.archetype}
-                      niche={empireData?.niche || (isAdmin ? "Done For You Business" : empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
+                      niche={empireData?.niche || (isAdmin ? "All in One Business Runner" : empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1])} 
                       angle={empireData?.angle || (isAdmin ? "High-intelligence autonomous research and trend-driven asset generation." : empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1])}
                     />
                   </motion.div>

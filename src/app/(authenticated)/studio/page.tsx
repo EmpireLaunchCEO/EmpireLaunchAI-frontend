@@ -333,8 +333,8 @@ export default function StudioPage() {
 
     try {
       const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
-      const niche = userNiche || activeEmpire?.niche || 'general';
-      const angle = activeEmpire?.angle || 'trending';
+      const niche = userNiche || empireData?.niche || 'general';
+      const angle = empireData?.angle || 'trending';
 
       addLog('Concept Finalization', 'processing', `Finalizing: ${finalIdea.substring(0, 60)}...`);
       await new Promise(r => setTimeout(r, 800));
