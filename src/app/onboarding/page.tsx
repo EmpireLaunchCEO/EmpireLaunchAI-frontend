@@ -27,6 +27,7 @@ import { SignUpForm } from '@/components/Onboarding/SignUpForm';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { Suspense } from 'react';
+import { detectLocale, setLocale, t, formatPrice, getCurrencyInfo, getAmountInCents, SUPPORTED_LOCALES, type LocaleCode } from '@/lib/i18n';
 
 const steps = [
   { id: 1, title: 'Protocol' },
@@ -91,6 +92,10 @@ function OnboardingContent() {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
+  const [selectedLocale, setSelectedLocale] = useState<LocaleCode>(detectLocale());
+
+  const currentT = (key: string) => t(key as any, selectedLocale);
+  const currencyInfo = getCurrencyInfo(selectedLocale);
 
   const discoveryLogs = useMemo(() => [
     "Scanning linked email accounts...",
@@ -244,13 +249,20 @@ function OnboardingContent() {
   const handleSecurePayment = async () => {
     setIsPaying(true);
     try {
+        const locale = selectedLocale;
+        const currency = getCurrencyInfo(locale).code;
+        const amountInCents = getAmountInCents(40, locale);
         const response = await fetch(`${API_URL}/api/stripe/checkout/platform`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-user-id': userId || ''
             },
-            body: JSON.stringify({ returnUrl: window.location.href })
+            body: JSON.stringify({
+              returnUrl: window.location.href,
+              currency,
+              amountInCents
+            })
         });
         const result = await response.json();
         if (result.url) {
@@ -435,13 +447,36 @@ function OnboardingContent() {
                   </div>
                   <div className="pt-6 border-t border-slate-800 space-y-6">
                     <div className="flex justify-between items-center">
-                      <h3 className="text-lg font-black text-white uppercase italic">Empire Master</h3>
+                      <h3 className="text-lg font-black text-white uppercase italic">{currentT('empirePlan')}</h3>
                       <div className="text-right">
-                        <span className="text-2xl font-black text-white">$40</span>
-                        <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">/Month</span>
+                        <span className="text-2xl font-black text-white">{formatPrice(40, selectedLocale)}</span>
+                        <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">{currentT('perMonth')}</span>
                       </div>
                     </div>
-                    
+
+                    {/* Language Selector */}
+                    <div className="flex items-center justify-end gap-2">
+                      <label className="text-[8px] font-black uppercase tracking-widest text-slate-500">{currentT('languageLabel')}:</label>
+                      <select
+                        value={selectedLocale}
+                        onChange={(e) => {
+                          const newLocale = e.target.value as LocaleCode;
+                          setSelectedLocale(newLocale);
+                          setLocale(newLocale);
+                        }}
+                        className="bg-slate-950 border border-slate-800 rounded-lg py-1 px-2 text-[9px] font-bold uppercase text-white appearance-none outline-none"
+                      >
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                        <option value="es">Español</option>
+                        <option value="de">Deutsch</option>
+                        <option value="pt">Português</option>
+                        <option value="ja">日本語</option>
+                        <option value="zh">中文</option>
+                        <option value="ko">한국어</option>
+                      </select>
+                    </div>
+
                     <div className="space-y-4 pt-4 border-t border-slate-800/50">
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
@@ -471,7 +506,7 @@ function OnboardingContent() {
 
                       <button onClick={handleSecurePayment} disabled={isPaying} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 shadow-xl border-none">
                         <CreditCard className="w-5 h-5" />
-                        {isPaying ? "Processing..." : "Pay with Credit Card"}
+                        {isPaying ? "Processing..." : currentT('securePayment')}
                       </button>
                     </div>
                   </div>
