@@ -548,7 +548,9 @@ export default function StudioPage() {
                   </motion.div>
                 )}
 
-                <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} />
+                {!videoGenerated && (
+                  <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} />
+                )}
               </div>
 
               {/* 2. Upload Video Box for Edits */}
