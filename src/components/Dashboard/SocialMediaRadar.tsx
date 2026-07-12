@@ -361,7 +361,35 @@ function ResearchPanel({ displayNiche, connectedPlatforms, onSyncStateChange }: 
 
 export function SocialMediaRadar() {
   const { activeEmpire, isAdmin, isLinkingComplete, connectedPlatforms } = useEmpire();
-  const displayNiche = (isAdmin && (!activeEmpire?.niche || activeEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (activeEmpire?.niche || 'business');
+  const [userBusinessNiche, setUserBusinessNiche] = useState<string>('');
+  const [userBusinessAngle, setUserBusinessAngle] = useState<string>('');
+
+  // Fetch user's actual business niche from backend settings
+  useEffect(() => {
+    const fetchNiche = async () => {
+      try {
+        const userId = typeof window !== 'undefined' ? localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') : null;
+        if (!userId) return;
+        const res = await fetch(`${API_URL}/api/settings/`, {
+          headers: {
+            'Authorization': 'Bearer mock-mobile-token',
+            'x-user-id': userId
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.businessNiche) setUserBusinessNiche(data.businessNiche);
+          if (data.businessAngle) setUserBusinessAngle(data.businessAngle);
+        }
+      } catch (e) {
+        // Silently fail — fall back to empire/context niche
+      }
+    };
+    fetchNiche();
+  }, []);
+
+  const displayNiche = userBusinessNiche || activeEmpire?.niche || (isAdmin ? "All in One Business Runner" : 'business');
+  const displayAngle = userBusinessAngle || activeEmpire?.angle || '';
 
   const [isThinking, setIsThinking] = useState(false);
   const [activePanel, setActivePanel] = useState<'overview' | 'signals' | 'metrics'>('overview');
