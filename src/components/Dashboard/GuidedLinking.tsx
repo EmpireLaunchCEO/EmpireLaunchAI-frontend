@@ -187,7 +187,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     updateSpendingPermission,
     isProtocolAccepted,
     disconnectPlatform,
-    activeEmpire: empireData
+    activeEmpire: empireData,
+    platformHandles
   } = useEmpire();
 
   const isCatalyst = empireData?.archetype === 'CATALYST';
@@ -423,6 +424,11 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                   </div>
                   <div className="flex flex-col flex-1 min-w-0">
                     <span className="font-bold text-foreground text-xs group-hover:text-white transition-colors truncate">{platform.name}</span>
+                    {platformHandles[id] && (
+                      <span className="text-[9px] font-mono text-muted-foreground/70 truncate mt-0.5 group-hover:text-white/50 transition-colors">
+                        {platformHandles[id]}
+                      </span>
+                    )}
                     <div className="flex items-center gap-2 mt-0.5">
                        <PermissionToggle 
                          permission={platformPermissions[id] || 'co-pilot'} 
