@@ -386,6 +386,7 @@ export default function StudioPage() {
       setIsGeneratingVideo(false);
       setVideoGenerated(false);
       setIsRendering(false);
+    }
   };
 
   // State for tracking created asset
