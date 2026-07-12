@@ -15,7 +15,8 @@ import {
   MessageCircle,
   Eye,
   ShoppingBag,
-  Cpu
+  Cpu,
+  LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
@@ -109,7 +110,8 @@ export function VerticalPlatformRadar() {
     updatePlatformPermission,
     spendingPermissions,
     updateSpendingPermission,
-    platformHandles
+    platformHandles,
+    disconnectPlatform
   } = useEmpire();
 
   // Filter based on connected platforms
@@ -317,6 +319,19 @@ export function VerticalPlatformRadar() {
                           isSpendingEnabled ? "right-0.5" : "left-0.5"
                         )} />
                       </div>
+                    </button>
+                  </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (confirm(`Sever the neural link with ${platform.name}? This will stop all autonomous actions for this platform.`)) {
+                          disconnectPlatform(id);
+                        }
+                      }}
+                      className="w-full mt-2 px-2 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-400 hover:text-red-200 transition-all flex items-center justify-center gap-1 text-[8px] font-bold uppercase tracking-wider"
+                    >
+                      <LogOut className="w-3 h-3" />
+                      <span>Unlink</span>
                     </button>
                   </div>
                 </div>
