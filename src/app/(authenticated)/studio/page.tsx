@@ -378,7 +378,8 @@ export default function StudioPage() {
       }
 
       // Pipeline failed — show error, no placeholder
-      throw new Error(data?.error || 'Pipeline unavailable');
+      const errorText = await res.text().catch(() => 'Pipeline error');
+      throw new Error(errorText);
     } catch (error) {
       console.error('Video pipeline failed:', error);
       addLog('Creation Failed', 'error', 'Video generation could not complete. Please try again.');
