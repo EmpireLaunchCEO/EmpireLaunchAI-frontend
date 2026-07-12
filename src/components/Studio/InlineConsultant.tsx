@@ -97,7 +97,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
     const userMessage = input.trim();
     setInput('');
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    const updatedMessages = [...messages, { role: 'user' as const, content: userMessage }];
+    setMessages(updatedMessages);
     setIsTyping(true);
 
     // Check if user is confirming readiness
@@ -109,6 +110,10 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
     try {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
+      
+      // Build conversation history from last 6 messages (3 exchanges)
+      const recentMessages = updatedMessages.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
+      
       const response = await fetch(`${API_URL}/api/studio/chat`, {
         method: 'POST',
         headers: {
@@ -117,7 +122,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 
-          message: `[CONTEXT: ${context}] ${userMessage}` 
+          message: `[CONTEXT: ${context}] You are a creative director for short-form video. Keep responses VERY SHORT — 2-3 sentences max. Ask ONE question at a time. If the user confirms with "yes", "ready", "go ahead", or "generate", end with "[GENERATE]". If they change direction, adapt.\n\nConversation so far:\n${recentMessages}\n\nUser's latest message: ${userMessage}`
         })
       });
 
@@ -206,8 +211,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           </div>
         )}
 
-        {/* Reply hint — shown after the first assistant response when user hasn't replied yet */}
-        {!isTyping && messages.length >= 2 && messages.every(m => m.role !== 'user' || m.content.startsWith("Here's my video idea:")) && (
+        {/* Reply hint — shows whenever waiting for input and not yet confirmed */}
+        {!isTyping && messages.length >= 2 && !userConfirmed && (
           <motion.div
             initial={{ opacity: 0, y: 3 }}
             animate={{ opacity: 1, y: 0 }}
