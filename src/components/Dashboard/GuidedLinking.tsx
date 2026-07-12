@@ -470,7 +470,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                           disconnectPlatform(id);
                         }
                       }}
-                      className="p-1.5 rounded-lg hover:bg-red-500/20 text-muted-foreground hover:text-red-500 transition-all"
+                      className="p-1.5 rounded-lg hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-all"
                       title="Disconnect Platform"
                     >
                       <LogOut className="w-3.5 h-3.5" />
