@@ -51,7 +51,7 @@ export default function LinkCenterPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <GuidedLinking isReturning={isLinkingComplete} hideEstablished={true} />
+            <GuidedLinking isReturning={isLinkingComplete} />
           </motion.div>
 
           {/* Combined EMPIRE LINKS & Governance */}
