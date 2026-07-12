@@ -8,9 +8,9 @@ const getApiUrl = () => {
       return 'https://e2b.local-3001.e2b.dev';
     }
     
-    // 3. If we are on Vercel, use relative paths (vercel.json rewrites proxy to Railway)
+    // 3. If we are on Vercel, go to the Railway production backend
     if (host.includes('vercel.app')) {
-      return '';
+      return 'https://backend-production-56123.up.railway.app';
     }
   }
 

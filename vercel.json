@@ -1,11 +1,5 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build && echo $(date) > build_timestamp.txt",
-  "outputDirectory": ".next",
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://backend-production-56123.up.railway.app/api/:path*"
-    }
-  ]
+  "outputDirectory": ".next"
 }
