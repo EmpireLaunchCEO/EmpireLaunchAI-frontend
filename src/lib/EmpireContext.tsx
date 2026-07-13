@@ -617,6 +617,15 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Fetch actual connected platforms from backend and populate platformsByEmpire
+        // First, restore from localStorage as instant fallback
+        const localPlatforms = localStorage.getItem('platformsByEmpire');
+        if (localPlatforms) {
+          try {
+            const parsed = JSON.parse(localPlatforms);
+            setPlatformsByEmpire(parsed);
+          } catch {}
+        }
+
         if (storedUserId) {
           const integRes = await fetch(`${API_URL}/api/integrations/status`, {
             headers: {
