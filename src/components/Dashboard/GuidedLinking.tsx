@@ -188,7 +188,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     isProtocolAccepted,
     disconnectPlatform,
     activeEmpire: empireData,
-    platformHandles
+    platformHandles,
+    refreshHandles
   } = useEmpire();
 
   const isCatalyst = empireData?.archetype === 'CATALYST';
@@ -215,6 +216,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
             clearInterval(interval);
             connectPlatform(status.session.platform);
             updatePlatformPermission(status.session.platform, selectedTier);
+            refreshHandles();
             finishSetup();
             setLinkingStep('auth');
             setOnboardingSessionId(null);
@@ -332,6 +334,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
               if (stored) {
                 connectPlatform(activeSetupPlatform!);
                 updatePlatformPermission(activeSetupPlatform!, selectedTier);
+                refreshHandles();
                 finishSetup();
               }
             }
@@ -368,6 +371,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     if (activeSetupPlatform) {
       connectPlatform(activeSetupPlatform);
       updatePlatformPermission(activeSetupPlatform, selectedTier);
+      refreshHandles();
       finishSetup();
     }
   };
@@ -424,9 +428,13 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                   </div>
                   <div className="flex flex-col flex-1 min-w-0">
                     <span className="font-bold text-foreground text-xs group-hover:text-white transition-colors truncate">{platform.name}</span>
-                    {platformHandles[id] && (
+                    {platformHandles[id] && !['account', 'user', 'profile', 'name', 'username'].includes(platformHandles[id].toLowerCase().trim()) ? (
                       <span className="text-[9px] font-mono text-muted-foreground/70 truncate mt-0.5 group-hover:text-white/50 transition-colors">
-                        {platformHandles[id]}
+                        @{platformHandles[id]}
+                      </span>
+                    ) : (
+                      <span className="text-[9px] font-mono text-muted-foreground/50 truncate mt-0.5 italic">
+                        {platform.name}
                       </span>
                     )}
                     <div className="flex items-center gap-2 mt-0.5">

@@ -63,7 +63,8 @@ interface EmpireContextType {
   triggerRefresh: () => Promise<void>;
   registerRefreshHandler: (handler: () => Promise<void>) => () => void;
   disconnectPlatform: (platform: string) => void;
-  platformHandles: Record<string, string>;
+        platformHandles: Record<string, string>;
+        refreshHandles: () => Promise<void>;
 
   // Notifications
   notifications: Notification[];
@@ -389,6 +390,31 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       return next;
     });
   };
+
+  const refreshHandles = useCallback(async () => {
+    const storedUserId = getStoredUserId();
+    if (!storedUserId) return;
+    try {
+      const res = await fetch(`${API_URL}/api/integrations/status`, {
+        headers: {
+          'Authorization': 'Bearer mock-mobile-token',
+          'x-user-id': storedUserId
+        }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const handles: Record<string, string> = {};
+        (data.integrations || [])
+          .filter((i: any) => i.isConnected !== false && i.handle)
+          .forEach((i: any) => {
+            handles[i.platform] = i.handle;
+          });
+        setPlatformHandles(handles);
+      }
+    } catch (e) {
+      console.error('Failed to refresh platform handles', e);
+    }
+  }, []);
 
   const disconnectPlatform = (platform: string) => {
     setPlatformsByEmpire(prev => {
@@ -791,7 +817,8 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       spendingPermissions,
       updateSpendingPermission,
       disconnectPlatform,
-      platformHandles
+                platformHandles,
+                refreshHandles
     }}>
       {children}
     </EmpireContext.Provider>
