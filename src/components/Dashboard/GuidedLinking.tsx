@@ -834,7 +834,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                                 type="text"
                                 placeholder="Handle / Username / Shop Name (optional)"
                                 value={credentialHandle}
-                                onChange={(e) => setCredentialHandle(e.target.value)}
+                                onChange={(e) => setCredentialHandle(e.target.value.replace(/^@+/, ''))}
                                 className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
                               />
                               <button
