@@ -199,7 +199,7 @@ export function VerticalPlatformRadar() {
                       <h3 className="text-sm md:text-base font-black text-foreground uppercase tracking-tighter italic leading-none truncate pr-2">{platform.name}</h3>
                       <div className="flex flex-col gap-0">
                         {platformHandles[id] && !['account', 'user', 'profile', 'name', 'username'].some(w => platformHandles[id].toLowerCase().trim() === w || platformHandles[id].toLowerCase().trim() === `${platform.name.toLowerCase()} ${w}`) ? (
-                          <span className="text-[7px] md:text-[8px] font-bold text-slate-400 truncate">@{platformHandles[id]}</span>
+                          <span className="text-[7px] md:text-[8px] font-bold text-slate-400 truncate">@{platformHandles[id].replace(/^@+/, '')}</span>
                         ) : (
                           <span className="text-[7px] md:text-[8px] font-bold text-slate-500 truncate italic">{platform.name}</span>
                         )}

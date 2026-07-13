@@ -434,7 +434,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                     <span className="font-bold text-foreground text-xs group-hover:text-white transition-colors truncate">{platform.name}</span>
                     {platformHandles[id] && !['account', 'user', 'profile', 'name', 'username'].includes(platformHandles[id].toLowerCase().trim()) ? (
                       <span className="text-[9px] font-mono text-muted-foreground/70 truncate mt-0.5 group-hover:text-white/50 transition-colors">
-                        @{platformHandles[id]}
+                        @{platformHandles[id].replace(/^@+/, '')}
                       </span>
                     ) : (
                       <span className="text-[9px] font-mono text-muted-foreground/50 truncate mt-0.5 italic">
