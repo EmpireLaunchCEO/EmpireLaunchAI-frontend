@@ -335,7 +335,6 @@ export function VerticalPlatformRadar() {
                     </button>
                   </div>
                 </div>
-              </div>
             </motion.div>
           );
         })}
