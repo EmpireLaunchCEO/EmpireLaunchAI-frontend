@@ -428,6 +428,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         fetch(`${API_URL}/api/integrations/${platform}`, {
           method: 'DELETE',
           headers: {
+            'Authorization': 'Bearer mock-mobile-token',
             'x-user-id': getStoredUserId()
           }
         }).catch(err => console.error('Failed to notify backend of disconnect', err));
