@@ -606,7 +606,7 @@ export const paymentService = {
 };
 
 export const onboardingService = {
-  async startOnboarding(platform: string, credentials?: { email?: string; password?: string }): Promise<any> {
+  async startOnboarding(platform: string, credentials?: { email?: string; password?: string; handle?: string }): Promise<any> {
     const res = await fetch(`${API_URL}/api/onboarding/start`, {
       method: 'POST',
       headers: HEADERS,

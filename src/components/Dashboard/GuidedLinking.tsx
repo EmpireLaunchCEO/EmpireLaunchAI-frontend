@@ -200,9 +200,10 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
   const [selectedTier, setSelectedTier] = useState<'co-pilot' | 'empire'>('co-pilot');
   const [onboardingSessionId, setOnboardingSessionId] = useState<string | null>(null);
   const [onboardingStatus, setOnboardingStatus] = useState<any>(null);
-  const [credentials, setCredentials] = useState<{ email: string; password: string } | null>(null);
+  const [credentials, setCredentials] = useState<{ email: string; password: string; handle?: string } | null>(null);
   const [credentialEmail, setCredentialEmail] = useState('');
   const [credentialPassword, setCredentialPassword] = useState('');
+  const [credentialHandle, setCredentialHandle] = useState('');
   const [pendingPlatformName, setPendingPlatformName] = useState('');
 
   useEffect(() => {
@@ -378,7 +379,10 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
 
   const handleSubmitCredentials = () => {
     if (!activeSetupPlatform || !credentialEmail || !credentialPassword) return;
-    const creds = { email: credentialEmail, password: credentialPassword };
+    const creds: any = { email: credentialEmail, password: credentialPassword };
+    if (credentialHandle.trim()) {
+      creds.handle = credentialHandle.trim();
+    }
     setCredentials(creds);
     setOnboardingStatus({ status: 'initializing', currentState: 'WAKING_NEURAL_NODE' });
     onboardingService.startOnboarding(activeSetupPlatform!, creds)
@@ -824,6 +828,13 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                                 placeholder="Password"
                                 value={credentialPassword}
                                 onChange={(e) => setCredentialPassword(e.target.value)}
+                                className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Handle / Username / Shop Name (optional)"
+                                value={credentialHandle}
+                                onChange={(e) => setCredentialHandle(e.target.value)}
                                 className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground"
                               />
                               <button
