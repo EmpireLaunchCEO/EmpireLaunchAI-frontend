@@ -205,6 +205,9 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
   const [credentialPassword, setCredentialPassword] = useState('');
   const [credentialHandle, setCredentialHandle] = useState('');
   const [pendingPlatformName, setPendingPlatformName] = useState('');
+  const [qrCode, setQrCode] = useState<string | null>(null);
+  const [qrSessionId, setQrSessionId] = useState<string | null>(null);
+  const [showQRLogin, setShowQRLogin] = useState(false);
 
   useEffect(() => {
     let interval: any;
@@ -232,6 +235,36 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     }
     return () => clearInterval(interval);
   }, [onboardingSessionId, connectPlatform, finishSetup, selectedTier, updatePlatformPermission]);
+
+  // QR code polling
+  useEffect(() => {
+    let interval: any;
+    if (qrSessionId) {
+      interval = setInterval(async () => {
+        try {
+          const status = await onboardingService.getStatus(qrSessionId);
+          if (status.session.status === 'completed') {
+            clearInterval(interval);
+            connectPlatform('tiktok');
+            updatePlatformPermission('tiktok', selectedTier);
+            refreshHandles();
+            finishSetup();
+            setQrCode(null);
+            setQrSessionId(null);
+            setShowQRLogin(false);
+          } else if (status.session.status === 'failed') {
+            clearInterval(interval);
+            setQrCode(null);
+            setQrSessionId(null);
+            setShowQRLogin(false);
+          }
+        } catch (e) {
+          console.error('QR polling error:', e);
+        }
+      }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [qrSessionId, connectPlatform, finishSetup, selectedTier, updatePlatformPermission]);
 
   const isGmailLinked = connectedPlatforms.includes('gmail') || connectedPlatforms.includes('imap');
   const hasNoPlatforms = connectedPlatforms.length === 0;
@@ -395,6 +428,30 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
         console.error('Failed to start neural onboarding', err);
         setOnboardingStatus({ status: 'failed', error: 'Failed to wake neural node. Please try again.' });
       });
+  };
+
+  const handleTikTokQR = async () => {
+    if (!activeSetupPlatform) return;
+    setShowQRLogin(true);
+    setOnboardingStatus({ status: 'initializing', currentState: 'LOADING_QR_CODE' });
+    try {
+      const res = await fetch(`${API_URL}/api/onboarding/tiktok-qr`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: '00000000-0000-0000-0000-000000000000' })
+      });
+      const data = await res.json();
+      if (data.qrCode) {
+        setQrCode(data.qrCode);
+        setQrSessionId(data.sessionId);
+        setOnboardingStatus({ status: 'awaiting_qr_scan', currentState: 'SCAN_QR_CODE' });
+      } else {
+        setOnboardingStatus({ status: 'failed', error: data.error || 'Failed to load QR code' });
+      }
+    } catch (err: any) {
+      console.error('QR code error:', err);
+      setOnboardingStatus({ status: 'failed', error: 'Failed to connect. Try credentials instead.' });
+    }
   };
 
   const currentPlatform = availablePlatforms.find(p => p.id === activeSetupPlatform);
@@ -810,8 +867,24 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                               </div>
                             </div>
                           </div>
-                        ) : !credentials ? (
+                        ) : !credentials && !showQRLogin ? (
                           <>
+                            {/* TikTok QR code option */}
+                            {activeSetupPlatform === 'tiktok' && (
+                              <div className="mb-4">
+                                <button
+                                  onClick={handleTikTokQR}
+                                  className="w-full py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl mb-4"
+                                >
+                                  Scan QR Code with TikTok App
+                                </button>
+                                <div className="relative flex items-center gap-3 mb-4">
+                                  <div className="flex-1 h-px bg-theme"></div>
+                                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">or use credentials</span>
+                                  <div className="flex-1 h-px bg-theme"></div>
+                                </div>
+                              </div>
+                            )}
                             <p className="text-xs font-bold text-muted-foreground mb-3">
                               Provide login credentials for <span className="text-primary">{pendingPlatformName || activeSetupPlatform}</span> to establish the Neural Handshake.
                             </p>
@@ -849,6 +922,38 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                               </button>
                             </div>
                           </>
+                        ) : showQRLogin ? (
+                          <div className="space-y-4">
+                            {qrCode ? (
+                              <>
+                                <div className="p-4 bg-white rounded-2xl flex items-center justify-center mx-auto max-w-[200px] border-2 border-primary/30">
+                                  <img src={`data:image/png;base64,${qrCode}`} alt="TikTok QR Code" className="w-full h-auto" />
+                                </div>
+                                <p className="text-xs font-bold text-center text-muted-foreground">
+                                  Open TikTok on your phone → Profile → <span className="text-primary">Scan QR code</span>
+                                </p>
+                                <div className="flex items-center justify-center gap-2">
+                                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-primary">Waiting for scan...</span>
+                                </div>
+                              </>
+                            ) : (
+                              <div className="p-6 text-center">
+                                <div className="flex justify-center gap-1 mb-4">
+                                  {[1,2,3].map(i => (
+                                    <motion.div key={i} animate={{ scale: [1,1.2,1], opacity: [0.3,1,0.3] }}
+                                      transition={{ duration: 1.5, repeat: Infinity, delay: i*0.2 }}
+                                      className="w-2 h-2 rounded-full bg-primary" />
+                                  ))}
+                                </div>
+                                <p className="text-xs font-bold text-muted-foreground">Loading QR code...</p>
+                              </div>
+                            )}
+                            <button onClick={() => { setShowQRLogin(false); setQrCode(null); setOnboardingStatus(null); }}
+                              className="w-full py-3 border border-theme rounded-xl text-xs font-bold text-muted-foreground hover:text-foreground transition-all">
+                              Cancel
+                            </button>
+                          </div>
                         ) : (
                           <>
                             <div className="space-y-1">
