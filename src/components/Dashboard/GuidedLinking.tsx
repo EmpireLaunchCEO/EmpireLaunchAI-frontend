@@ -818,7 +818,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
 
                     {linkingStep === 'keys' ? (
                       <div className="space-y-4">
-                        {onboardingStatus ? (
+                        {onboardingStatus && !showQRLogin ? (
                           <div className="space-y-3">
                             <div className="p-3 bg-primary/10 rounded-xl border border-primary/30">
                               <p className="text-[8px] font-black uppercase tracking-widest text-primary mb-0.5">Session Status</p>
