@@ -445,7 +445,11 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
       if (data.screenshot) {
         setQrCode(data.screenshot);
         setQrSessionId(data.sessionId);
-        setOnboardingStatus({ status: 'awaiting_credentials', currentState: 'TIKTOK_LOGIN' });
+        if (data.qrFound) {
+          setOnboardingStatus({ status: 'awaiting_qr_scan', currentState: 'SCAN_QR_CODE' });
+        } else {
+          setOnboardingStatus({ status: 'awaiting_credentials', currentState: 'TIKTOK_LOGIN' });
+        }
       } else {
         setOnboardingStatus({ status: 'failed', error: data.error || 'Failed to load TikTok login page' });
       }
@@ -950,31 +954,48 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                           <div className="space-y-4">
                             {qrCode ? (
                               <>
-                                <div className="p-2 bg-white rounded-2xl flex items-center justify-center mx-auto max-w-[320px] border-2 border-primary/30">
-                                  <img src={`data:image/png;base64,${qrCode}`} alt="TikTok Login Page" className="w-full h-auto rounded-xl" />
-                                </div>
-                                <p className="text-[9px] font-black uppercase tracking-widest text-center text-muted-foreground mt-2">
-                                  STEP 2: Enter your TikTok credentials below
-                                </p>
-                                <div className="space-y-2">
-                                  <input type="email" placeholder="Email / Phone / Username" value={credentialEmail} onChange={(e) => setCredentialEmail(e.target.value)} className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground" />
-                                  <input type="password" placeholder="Password" value={credentialPassword} onChange={(e) => setCredentialPassword(e.target.value)} className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground" />
-                                  <button onClick={handleSubmitTikTokCredentials} disabled={!credentialEmail || !credentialPassword || submittingCredentials} className={cn("w-full py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-2xl", (!credentialEmail || !credentialPassword || submittingCredentials) ? "opacity-50 cursor-not-allowed" : "hover:opacity-90")}>
-                                    {submittingCredentials ? 'Logging in...' : 'Log In to TikTok'}
-                                  </button>
-                                  {onboardingStatus?.status === 'logged_in' && (
-                                    <div className="flex items-center justify-center gap-2 mt-2">
-                                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                      <span className="text-[9px] font-black uppercase tracking-widest text-green-500">Logged in! Saving session...</span>
+                                {onboardingStatus?.currentState === 'SCAN_QR_CODE' ? (
+                                  <>
+                                    <div className="p-4 bg-white rounded-2xl flex items-center justify-center mx-auto max-w-[200px] border-2 border-primary/30">
+                                      <img src={`data:image/png;base64,${qrCode}`} alt="TikTok QR Code" className="w-full h-auto" />
                                     </div>
-                                  )}
-                                  {onboardingStatus?.status === 'failed' && (
-                                    <p className="text-[9px] font-black text-center text-red-500 mt-1">{onboardingStatus.error}</p>
-                                  )}
-                                  <p className="text-[8px] font-mono text-center text-muted-foreground/50 mt-2">
-                                    Your credentials are sent directly to TikTok via our secure browser. The login session is saved afterward.
-                                  </p>
-                                </div>
+                                    <p className="text-xs font-bold text-center text-muted-foreground">
+                                      Open TikTok → <span className="text-primary">3 lines top right</span> → Your QR code → <span className="text-primary">small box top right</span> → Scan QR code
+                                    </p>
+                                    <div className="flex items-center justify-center gap-2">
+                                      <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                                      <span className="text-[9px] font-black uppercase tracking-widest text-primary">Waiting for scan...</span>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="p-2 bg-white rounded-2xl flex items-center justify-center mx-auto max-w-[320px] border-2 border-primary/30">
+                                      <img src={`data:image/png;base64,${qrCode}`} alt="TikTok Login Page" className="w-full h-auto rounded-xl" />
+                                    </div>
+                                    <p className="text-[9px] font-black uppercase tracking-widest text-center text-muted-foreground mt-2">
+                                      STEP 2: Enter your TikTok credentials below
+                                    </p>
+                                    <div className="space-y-2">
+                                      <input type="email" placeholder="Email / Phone / Username" value={credentialEmail} onChange={(e) => setCredentialEmail(e.target.value)} className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground" />
+                                      <input type="password" placeholder="Password" value={credentialPassword} onChange={(e) => setCredentialPassword(e.target.value)} className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground" />
+                                      <button onClick={handleSubmitTikTokCredentials} disabled={!credentialEmail || !credentialPassword || submittingCredentials} className={cn("w-full py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-2xl", (!credentialEmail || !credentialPassword || submittingCredentials) ? "opacity-50 cursor-not-allowed" : "hover:opacity-90")}>
+                                        {submittingCredentials ? 'Logging in...' : 'Log In to TikTok'}
+                                      </button>
+                                      {onboardingStatus?.status === 'logged_in' && (
+                                        <div className="flex items-center justify-center gap-2 mt-2">
+                                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                          <span className="text-[9px] font-black uppercase tracking-widest text-green-500">Logged in! Saving session...</span>
+                                        </div>
+                                      )}
+                                      {onboardingStatus?.status === 'failed' && (
+                                        <p className="text-[9px] font-black text-center text-red-500 mt-1">{onboardingStatus.error}</p>
+                                      )}
+                                      <p className="text-[8px] font-mono text-center text-muted-foreground/50 mt-2">
+                                        Your credentials are sent directly to TikTok via our secure browser. The login session is saved afterward.
+                                      </p>
+                                    </div>
+                                  </>
+                                )}
                               </>
                             ) : (
                               <div className="p-6 text-center">
