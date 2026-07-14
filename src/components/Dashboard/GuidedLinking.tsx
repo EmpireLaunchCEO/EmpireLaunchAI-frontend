@@ -869,23 +869,16 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                           </div>
                         ) : !credentials && !showQRLogin ? (
                           <>
-                            {/* TikTok QR code option */}
-                            {activeSetupPlatform === 'tiktok' && (
-                              <div className="mb-4">
-                                <button
-                                  onClick={handleTikTokQR}
-                                  className="w-full py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl mb-4"
-                                >
-                                  Scan QR Code with TikTok App
-                                </button>
-                                <div className="relative flex items-center gap-3 mb-4">
-                                  <div className="flex-1 h-px bg-theme"></div>
-                                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">or use credentials</span>
-                                  <div className="flex-1 h-px bg-theme"></div>
-                                </div>
-                              </div>
-                            )}
-                            <p className="text-xs font-bold text-muted-foreground mb-3">
+                            {/* TikTok QR code option — only option, no credentials fallback */}
+                            {activeSetupPlatform === 'tiktok' ? (
+                              <button
+                                onClick={handleTikTokQR}
+                                className="w-full py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl"
+                              >
+                                Scan QR Code with TikTok App
+                              </button>
+                            ) : (
+                              <><p className="text-xs font-bold text-muted-foreground mb-3">
                               Provide login credentials for <span className="text-primary">{pendingPlatformName || activeSetupPlatform}</span> to establish the Neural Handshake.
                             </p>
                             <div className="space-y-3">
