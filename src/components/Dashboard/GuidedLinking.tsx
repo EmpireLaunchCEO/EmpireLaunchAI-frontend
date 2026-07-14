@@ -437,7 +437,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     try {
       const res = await fetch(`${API_URL}/api/onboarding/tiktok-qr`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Authorization': 'Bearer mock-mobile-token', 'x-user-id': '00000000-0000-0000-0000-000000000000', 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: '00000000-0000-0000-0000-000000000000' })
       });
       const data = await res.json();
