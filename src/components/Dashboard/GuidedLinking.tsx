@@ -208,6 +208,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [qrSessionId, setQrSessionId] = useState<string | null>(null);
   const [showQRLogin, setShowQRLogin] = useState(false);
+  const [submittingCredentials, setSubmittingCredentials] = useState(false);
 
   useEffect(() => {
     let interval: any;
@@ -441,16 +442,44 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
         body: JSON.stringify({ userId: '00000000-0000-0000-0000-000000000000' })
       });
       const data = await res.json();
-      if (data.qrCode) {
-        setQrCode(data.qrCode);
+      if (data.screenshot) {
+        setQrCode(data.screenshot);
         setQrSessionId(data.sessionId);
-        setOnboardingStatus({ status: 'awaiting_qr_scan', currentState: 'SCAN_QR_CODE' });
+        setOnboardingStatus({ status: 'awaiting_credentials', currentState: 'TIKTOK_LOGIN' });
       } else {
-        setOnboardingStatus({ status: 'failed', error: data.error || 'Failed to load QR code' });
+        setOnboardingStatus({ status: 'failed', error: data.error || 'Failed to load TikTok login page' });
       }
     } catch (err: any) {
-      console.error('QR code error:', err);
-      setOnboardingStatus({ status: 'failed', error: 'Failed to connect. Try credentials instead.' });
+      console.error('TikTok login page error:', err);
+      setOnboardingStatus({ status: 'failed', error: 'Failed to connect. Try again.' });
+    }
+  };
+
+  const handleSubmitTikTokCredentials = async () => {
+    if (!qrSessionId || !credentialEmail || !credentialPassword) return;
+    setSubmittingCredentials(true);
+    try {
+      const res = await fetch(`${API_URL}/api/onboarding/tiktok-credentials`, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer mock-mobile-token', 'x-user-id': '00000000-0000-0000-0000-000000000000', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          userId: '00000000-0000-0000-0000-000000000000',
+          sessionId: qrSessionId,
+          email: credentialEmail,
+          password: credentialPassword
+        })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        setOnboardingStatus({ status: 'logged_in', currentState: 'MONITORING' });
+      } else {
+        setOnboardingStatus({ status: 'failed', error: data.message || 'Login failed. Check credentials and try again.' });
+      }
+    } catch (err: any) {
+      console.error('TikTok credentials error:', err);
+      setOnboardingStatus({ status: 'failed', error: 'Failed to submit credentials.' });
+    } finally {
+      setSubmittingCredentials(false);
     }
   };
 
@@ -869,13 +898,13 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                           </div>
                         ) : !credentials && !showQRLogin ? (
                           <>
-                            {/* TikTok QR code option — only option, no credentials fallback */}
+                            {/* TikTok login — shows screenshot of login page, user enters credentials */}
                             {activeSetupPlatform === 'tiktok' ? (
                               <button
                                 onClick={handleTikTokQR}
                                 className="w-full py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl"
                               >
-                                Scan QR Code with TikTok App
+                                Log In with TikTok
                               </button>
                             ) : (
                               <><p className="text-xs font-bold text-muted-foreground mb-3">
@@ -921,15 +950,30 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                           <div className="space-y-4">
                             {qrCode ? (
                               <>
-                                <div className="p-4 bg-white rounded-2xl flex items-center justify-center mx-auto max-w-[200px] border-2 border-primary/30">
-                                  <img src={`data:image/png;base64,${qrCode}`} alt="TikTok QR Code" className="w-full h-auto" />
+                                <div className="p-2 bg-white rounded-2xl flex items-center justify-center mx-auto max-w-[320px] border-2 border-primary/30">
+                                  <img src={`data:image/png;base64,${qrCode}`} alt="TikTok Login Page" className="w-full h-auto rounded-xl" />
                                 </div>
-                                <p className="text-xs font-bold text-center text-muted-foreground">
-                                  Open TikTok → <span className="text-primary">3 lines top right</span> → Your QR code → <span className="text-primary">small box top right</span> → Scan QR code
+                                <p className="text-[9px] font-black uppercase tracking-widest text-center text-muted-foreground mt-2">
+                                  STEP 2: Enter your TikTok credentials below
                                 </p>
-                                <div className="flex items-center justify-center gap-2">
-                                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                                  <span className="text-[9px] font-black uppercase tracking-widest text-primary">Waiting for scan...</span>
+                                <div className="space-y-2">
+                                  <input type="email" placeholder="Email / Phone / Username" value={credentialEmail} onChange={(e) => setCredentialEmail(e.target.value)} className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground" />
+                                  <input type="password" placeholder="Password" value={credentialPassword} onChange={(e) => setCredentialPassword(e.target.value)} className="w-full bg-theme-background border-2 border-theme rounded-xl p-3 text-xs font-bold outline-none focus:border-primary transition-colors text-foreground" />
+                                  <button onClick={handleSubmitTikTokCredentials} disabled={!credentialEmail || !credentialPassword || submittingCredentials} className={cn("w-full py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-2xl", (!credentialEmail || !credentialPassword || submittingCredentials) ? "opacity-50 cursor-not-allowed" : "hover:opacity-90")}>
+                                    {submittingCredentials ? 'Logging in...' : 'Log In to TikTok'}
+                                  </button>
+                                  {onboardingStatus?.status === 'logged_in' && (
+                                    <div className="flex items-center justify-center gap-2 mt-2">
+                                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                      <span className="text-[9px] font-black uppercase tracking-widest text-green-500">Logged in! Saving session...</span>
+                                    </div>
+                                  )}
+                                  {onboardingStatus?.status === 'failed' && (
+                                    <p className="text-[9px] font-black text-center text-red-500 mt-1">{onboardingStatus.error}</p>
+                                  )}
+                                  <p className="text-[8px] font-mono text-center text-muted-foreground/50 mt-2">
+                                    Your credentials are sent directly to TikTok via our secure browser. The login session is saved afterward.
+                                  </p>
                                 </div>
                               </>
                             ) : (
@@ -941,10 +985,10 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                                       className="w-2 h-2 rounded-full bg-primary" />
                                   ))}
                                 </div>
-                                <p className="text-xs font-bold text-muted-foreground">Loading QR code...</p>
+                                <p className="text-xs font-bold text-muted-foreground">Loading TikTok login page...</p>
                               </div>
                             )}
-                            <button onClick={() => { setShowQRLogin(false); setQrCode(null); setOnboardingStatus(null); }}
+                            <button onClick={() => { setShowQRLogin(false); setQrCode(null); setQrSessionId(null); setOnboardingStatus(null); }}
                               className="w-full py-3 border border-theme rounded-xl text-xs font-bold text-muted-foreground hover:text-foreground transition-all">
                               Cancel
                             </button>
