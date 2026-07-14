@@ -914,6 +914,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                                 Connect {pendingPlatformName || activeSetupPlatform}
                               </button>
                             </div>
+                            </>
+                          )}
                           </>
                         ) : showQRLogin ? (
                           <div className="space-y-4">
