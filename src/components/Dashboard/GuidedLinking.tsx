@@ -925,7 +925,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                                   <img src={`data:image/png;base64,${qrCode}`} alt="TikTok QR Code" className="w-full h-auto" />
                                 </div>
                                 <p className="text-xs font-bold text-center text-muted-foreground">
-                                  Open TikTok on your phone → Profile → <span className="text-primary">Scan QR code</span>
+                                  Open TikTok → <span className="text-primary">3 lines top right</span> → Your QR code → <span className="text-primary">small box top right</span> → Scan QR code
                                 </p>
                                 <div className="flex items-center justify-center gap-2">
                                   <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
