@@ -127,7 +127,7 @@ export default function Dashboard() {
                     className="text-center space-y-4 relative"
                   >
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-                      {activeEmpireId === '1' ? "EmpireLaunch AI" : (empireData?.name || empireData?.title || `Empire ${activeEmpireId}`)}
+                      {empireData?.name || empireData?.title || `Empire ${activeEmpireId}`}
                     </h1>
                     {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com') && (
                       <div className="absolute top-0 right-0">

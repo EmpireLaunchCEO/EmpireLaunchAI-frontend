@@ -602,6 +602,36 @@ export const paymentService = {
       }
     } catch (e) {}
     return [];
+  },
+  
+  async getIntelTrends(params: { niche?: string; angle?: string; targetCustomers?: string; businessGoals?: string }): Promise<{
+    trendingThemes: string[];
+    seasonalOpportunities: string[];
+    hotSellingItems: string[];
+    lowCompetitionItems: string[];
+    contentIdeas: string[];
+  }> {
+    try {
+      const query = new URLSearchParams();
+      if (params.niche) query.set('niche', params.niche);
+      if (params.angle) query.set('angle', params.angle);
+      if (params.targetCustomers) query.set('targetCustomers', params.targetCustomers);
+      if (params.businessGoals) query.set('businessGoals', params.businessGoals);
+      const res = await fetch(`${API_URL}/api/intel/trends?${query.toString()}`, { headers: HEADERS });
+      if (res.ok) {
+        const data = await res.json();
+        return {
+          trendingThemes: data.trendingThemes || [],
+          seasonalOpportunities: data.seasonalOpportunities || [],
+          hotSellingItems: data.hotSellingItems || [],
+          lowCompetitionItems: data.lowCompetitionItems || [],
+          contentIdeas: data.contentIdeas || [],
+        };
+      }
+    } catch (e) {
+      console.error('Failed to fetch intel trends', e);
+    }
+    return { trendingThemes: [], seasonalOpportunities: [], hotSellingItems: [], lowCompetitionItems: [], contentIdeas: [] };
   }
 };
 
