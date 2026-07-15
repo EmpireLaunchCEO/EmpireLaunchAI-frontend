@@ -125,10 +125,10 @@ export const empireService = {
     }
   },
 
-  async updateEmpire(id: string, data: { title?: string; description?: string; name?: string; niche?: string; angle?: string }): Promise<any> {
+  async updateEmpire(id: string, data: { title?: string; description?: string; name?: string; niche?: string; angle?: string; targetCustomers?: string; businessGoals?: string; archetype?: string }): Promise<any> {
     try {
-      const res = await fetch(`${API_URL}/api/agent/goal/${id}`, {
-        method: 'PATCH',
+      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
+        method: 'PUT',
         headers: HEADERS,
         body: JSON.stringify(data)
       });

@@ -16,6 +16,7 @@ import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FeedbackInbox } from '@/components/Dashboard/FeedbackInbox';
 import { NotificationBell } from '@/components/Dashboard/NotificationBell';
+import { EmpireIdentityCard } from '@/components/Dashboard/EmpireIdentityCard';
 
 
 export default function Dashboard() {
@@ -142,6 +143,18 @@ export default function Dashboard() {
                     {/* GrowthTracker removed per owner direction */}
 
                     {/* Empire Finances removed per owner direction */}
+
+                    {/* Empire Identity Card - Onboarding Info with Inline Editing */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                    >
+                      <EmpireIdentityCard
+                        empireData={empireData}
+                        onUpdate={() => fetchData()}
+                      />
+                    </motion.div>
 
                     {/* Active Subscribers - Owner Only - Restored below Finances */}
                     {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com' || activeEmpireId === '1') && (
