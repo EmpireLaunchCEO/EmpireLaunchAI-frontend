@@ -27,9 +27,9 @@ interface Props {
 const typeConfig = {
   'facial-dna': {
     icon: Image,
-    label: 'Upload Facial DNA (Photo)',
-    accept: 'image/png,image/jpeg,image/webp',
-    hint: 'PNG, JPG or WebP — Clear, well-lit face photo',
+    label: 'Upload Photo',
+    accept: 'image/png,image/jpeg,image/webp,application/pdf',
+    hint: 'PNG, JPG, WebP or PDF',
     maxSize: '10MB',
     color: 'purple',
   },
