@@ -12,8 +12,6 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 import { LockedSlotView } from '@/components/Dashboard/LockedSlotView';
-import { FinancialCommand } from '@/components/Dashboard/FinancialCommand';
-import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FeedbackInbox } from '@/components/Dashboard/FeedbackInbox';
@@ -21,7 +19,7 @@ import { NotificationBell } from '@/components/Dashboard/NotificationBell';
 
 
 export default function Dashboard() {
-  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler, isProtocolAccepted, acceptProtocols, userEmpires, userEmail } = useEmpire();
+  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler, userEmail } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
@@ -31,12 +29,6 @@ export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
   const [isGrowthGateOpen, setIsGrowthProtocolGateOpen] = useState(false);
   const [growthGateProduct, setGrowthProtocolGateProduct] = useState('');
-
-  const ownedSlots = Object.values(slotStatus || {}).filter(Boolean).length;
-
-  const handleCancelSubscription = (empireId: string) => {
-    console.log(`[Subscription] Cancelling subscription for empire: ${empireId}`);
-  };
 
   useEffect(() => {
     setMounted(true);
@@ -147,25 +139,9 @@ export default function Dashboard() {
                   <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
                     
                     {/* Primary Results Section */}
-                    {/* GrowthTracker removed per owner direction (Goals Box) */}
+                    {/* GrowthTracker removed per owner direction */}
 
-                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                      <FinancialCommand
-                        withholdableEarnings={(healthData?.revenue || 0) * 100}
-                        securedDues={(healthData?.pendingDues || 0) * 100}
-                        growthScore={healthData?.growthScore}
-                        isProtocolAccepted={isProtocolAccepted}
-                        onAcceptProtocol={() => acceptProtocols()}
-                        businessSlots={ownedSlots}
-                        userEmpires={userEmpires}
-                        onCancelSubscription={handleCancelSubscription}
-                        onActivateGrowthProtocol={(name) => {
-                          setGrowthProtocolGateProduct(name);
-                          setIsGrowthProtocolGateOpen(true);
-                        }}
-                      />
-                    </motion.div>
-
+                    {/* Empire Finances removed per owner direction */}
 
                     {/* Active Subscribers - Owner Only - Restored below Finances */}
                     {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com' || activeEmpireId === '1') && (
