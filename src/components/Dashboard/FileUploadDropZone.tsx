@@ -30,7 +30,7 @@ const typeConfig = {
     label: 'Upload Photo',
     accept: 'image/png,image/jpeg,image/webp,application/pdf',
     hint: 'PNG, JPG, WebP or PDF',
-    maxSize: '10MB',
+    maxSize: '90MB',
     color: 'purple',
   },
   'raw-video': {
