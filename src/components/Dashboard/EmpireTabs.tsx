@@ -23,7 +23,7 @@ export function EmpireTabs({ empireData, onDataUpdate }: EmpireTabsProps) {
   return (
     <div className="space-y-6">
       {/* Tab Navigation */}
-      <div className="flex bg-theme-background p-1 rounded-2xl border-2 border-theme w-full max-w-md mx-auto">
+      <div className="flex bg-theme-background p-1.5 rounded-[24px] border-2 border-theme w-full max-w-md mx-auto gap-1.5">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -32,9 +32,9 @@ export function EmpireTabs({ empireData, onDataUpdate }: EmpireTabsProps) {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all",
+                "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-[18px] font-black text-[9px] uppercase tracking-tighter transition-all",
                 isActive
-                  ? "bg-primary text-white shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]"
+                  ? "bg-primary text-white shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] border-white/20"
                   : "text-foreground/40 hover:text-foreground hover:bg-theme-surface/50"
               )}
             >
