@@ -19,7 +19,6 @@ import {
   Trash2,
   CreditCard,
   ShieldCheck,
-  BarChart3,
   Video,
   Palette,
   FileText
@@ -41,18 +40,16 @@ const postHistory = [
 ];
 
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
-import { SocialMediaRadar } from '@/components/Dashboard/SocialMediaRadar';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 import { OmniApprovalHub as PendingApprovals } from '@/components/OmniApprovalHub';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { EmpireAIChatBox } from '@/components/Dashboard/EmpireAIChatBox';
 
-import { NicheCalibrationBox } from '@/components/Dashboard/SuccessHub/NicheCalibrationBox';
 import { AutoPilotStatusBadge } from '@/components/Dashboard/GlobalDnaPoolPanel';
 import { NeuralDispatchCenter } from '@/components/Dashboard/NeuralDispatchCenter';
 
 export default function EmpireCenterPage() {
-  const [activeTab, setActiveTab] = useState<'pending' | 'intel'>('pending');
+  const [activeTab, setActiveTab] = useState<'pending'>('pending');
   const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
   const [createdAssets, setCreatedAssets] = useState<any[]>([]);
 
@@ -121,7 +118,6 @@ export default function EmpireCenterPage() {
           <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border !border-white/10 sticky top-0 z-20 gap-1">
             {[
               { id: 'pending', label: 'Pending', icon: Zap },
-              { id: 'intel', label: 'Intel', icon: BarChart3 },
               ].map((tab) => (
               <button
                 key={tab.id}
