@@ -19,7 +19,6 @@ import { VideoPerformance } from '@/components/Dashboard/SuccessHub/VideoPerform
 import { TrendRadar } from '@/components/Analytics/TrendRadar';
 import { AutomationCenter } from '@/components/Automation/AutomationCenter';
 import { EmpireLedger } from '@/components/Analytics/EmpireLedger';
-import { SubscriptionSuccessShareBox } from '@/components/Dashboard/SubscriptionSuccessShareBox';
 
 const tabs = [
   { id: 'growth', name: 'Growth & Trends', icon: TrendingUp },
@@ -119,13 +118,6 @@ export default function AnalyticsPage() {
             </div>
 
             <EmpireLedger />
-
-            <SubscriptionSuccessShareBox
-              isProtocolAccepted={true}
-              totalRevenue={12450}
-              totalFees={498}
-              businessSlots={1}
-            />
           </div>
         )}
       </main>
