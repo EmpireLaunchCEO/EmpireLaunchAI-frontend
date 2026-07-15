@@ -12,11 +12,11 @@ export function GlobalEmpireHeader() {
   const { activeEmpireId, setActiveEmpireId, isAdmin, activeEmpire, isInitialized } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
 
-  // Empire names are maintained by EmpireContext — use them directly
+  // Empire names — Tab 1 shows brand name from data, Tabs 2/3 are expansion slots
   const getEmpireLabel = (empireId: string): string => {
-    if (empireId === '1') return "EmpireLaunch AI";
-    if (empireId === '2') return "Empire 2";
-    if (empireId === '3') return "Empire 3";
+    if (empireId === '1') return activeEmpire?.name || "EmpireLaunch AI";
+    if (empireId === '2') return "Empire Brand 2";
+    if (empireId === '3') return "Empire Brand 3";
     return `Empire ${empireId}`;
   };
 

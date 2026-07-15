@@ -166,8 +166,8 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
         />
         <BusinessSlot 
           id="2" 
-          name="Empty" 
-          niche="Empty" 
+          name="Empire Brand 2" 
+          niche="Expansion Slot" 
           status={slotStatus[1] || isAdmin ? 'active' : 'locked'} 
           onClick={() => {
             if (slotStatus[1] || isAdmin) window.location.href = '/dashboard?slot=2';
@@ -175,8 +175,8 @@ export function BusinessSlots({ currentEmpire }: { currentEmpire?: any }) {
         />
         <BusinessSlot 
           id="3" 
-          name="Empty" 
-          niche="Empty" 
+          name="Empire Brand 3" 
+          niche="Expansion Slot" 
           status={slotStatus[2] || isAdmin ? 'active' : 'locked'} 
           onClick={() => {
             if (slotStatus[2] || isAdmin) window.location.href = '/dashboard?slot=3';
