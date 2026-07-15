@@ -13,7 +13,6 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 import { LockedSlotView } from '@/components/Dashboard/LockedSlotView';
 import { FinancialCommand } from '@/components/Dashboard/FinancialCommand';
-import { GrowthTracker } from '@/components/Dashboard/SuccessHub/GrowthTracker';
 import { NeuralNotes } from '@/components/Dashboard/SuccessHub/NeuralNotes';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
@@ -148,12 +147,7 @@ export default function Dashboard() {
                   <div className="max-w-6xl mx-auto space-y-12 md:space-y-16">
                     
                     {/* Primary Results Section */}
-                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                      <GrowthTracker
-                        allTimeEarnings={(healthData?.revenue || 0) * 100}
-                        progress={healthData?.growthScore}
-                      />
-                    </motion.div>
+                    {/* GrowthTracker removed per owner direction (Goals Box) */}
 
                     <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                       <FinancialCommand
