@@ -43,7 +43,6 @@ import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { SocialProofApproval } from '@/components/Dashboard/SocialProofApproval';
 import { OmniApprovalHub as PendingApprovals } from '@/components/OmniApprovalHub';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
-import { EmpireAIChatBox } from '@/components/Dashboard/EmpireAIChatBox';
 
 import { AutoPilotStatusBadge } from '@/components/Dashboard/GlobalDnaPoolPanel';
 import { NeuralDispatchCenter } from '@/components/Dashboard/NeuralDispatchCenter';
@@ -110,10 +109,6 @@ export default function EmpireCenterPage() {
 
         <div className="max-w-6xl mx-auto space-y-12 md:space-y-16 animate-in fade-in duration-1000" style={{ contentVisibility: 'auto' }}>
           
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <EmpireAIChatBox className="max-w-6xl mx-auto" />
-          </motion.div>
-
           {/* Primary Tabs - Optimized for mobile visibility */}
           <div className="flex flex-wrap bg-theme-background p-1.5 rounded-[24px] w-full border !border-white/10 sticky top-0 z-20 gap-1">
             {[
