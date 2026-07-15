@@ -71,6 +71,7 @@ export default function StudioPage() {
   const [facialDnaUpload, setFacialDnaUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [rawVideoUpload, setRawVideoUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [designUpload, setDesignUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
+  const [facelessVideoUpload, setFacelessVideoUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [renderLogs, setRenderLogs] = useState<RenderLogEntry[]>([]);
   const [isRendering, setIsRendering] = useState(false);
   const [activeRenderType, setActiveRenderType] = useState<'facial-dna' | 'raw-video'>('facial-dna');
@@ -157,6 +158,32 @@ export default function StudioPage() {
     } catch (error) {
       console.error('Raw video upload error:', error);
       setRawVideoUpload(prev => ({ ...prev, status: 'error' }));
+    }
+  };
+
+  // Handle Faceless Video file selection
+  const handleFacelessVideoSelect = async (file: File) => {
+    const preview = URL.createObjectURL(file);
+    setFacelessVideoUpload({ file, preview, status: 'selected', progress: 0 });
+
+    const formData = new FormData();
+    formData.append('video', file);
+
+    try {
+      setFacelessVideoUpload(prev => ({ ...prev, status: 'uploading', progress: 10 }));
+
+      const response = await fetch(`${API_URL}/api/cinema/upload-video`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Upload failed');
+
+      const data = await response.json();
+      setFacelessVideoUpload(prev => ({ ...prev, status: 'complete', progress: 100, metadata: data }));
+    } catch (error) {
+      console.error('Faceless video upload error:', error);
+      setFacelessVideoUpload(prev => ({ ...prev, status: 'error' }));
     }
   };
 
@@ -635,6 +662,18 @@ export default function StudioPage() {
                     <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Faceless concept received — sourcing viral stock material</span>
                   </motion.div>
                 )}
+
+                {/* Upload video for faceless */}
+                <div className="pt-2">
+                  <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider mb-2">Or upload your own video footage</p>
+                  <FileUploadDropZone
+                    type="raw-video"
+                    onFileSelect={handleFacelessVideoSelect}
+                    onRemove={() => setFacelessVideoUpload({ file: null, preview: null, status: 'idle', progress: 0 })}
+                    state={facelessVideoUpload}
+                    disabled={isSubmittingFaceless}
+                  />
+                </div>
 
                 <InlineConsultant context="faceless" />
               </div>
