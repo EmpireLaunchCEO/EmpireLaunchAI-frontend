@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Activity, Minus, Maximize2, Stars } from 'lucide-react';
+import { ShoppingBasket as Bucket, ShieldCheck, ArrowUpRight, TrendingUp, Calendar, CreditCard, AppWindow, Cpu, Zap, Minus, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { infrastructureService, InfrastructureBalance } from '@/lib/api-service';
 import { useEmpire } from '@/lib/EmpireContext';
@@ -28,53 +28,13 @@ export function FinancialCommand({
   
   const [isDownloading, setIsDownloading] = useState(false);
   const [auditData, setAuditData] = useState<any>(null);
-  
-  const fetchAuditData = async () => {
-    try {
-      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-      const res = await fetch(`${API_URL}/api/audit/success-share`, {
-        headers: userId ? { 'x-user-id': userId } : {}
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setAuditData(data);
-      }
-    } catch (e) {
-      console.warn('Audit fetch failed, using fallback');
-    }
-  };
-  
-  useEffect(() => {
-    setMounted(true);
-    fetchAuditData();
 
-    const loadInfra = async () => {
+  const loadInfra = async () => {
       const bals = await infrastructureService.getBalances();
       setInfraBalances(bals);
     };
     loadInfra();
   }, []);
-
-  const handleDownloadAudit = () => {
-    setIsDownloading(true);
-    setTimeout(() => {
-      const ad = auditData || {};
-      const revenueCents = ad.totalRevenue ?? withholdableEarnings;
-      const shareCents = ad.successShareDue ?? Math.floor(revenueCents * 0.04);
-      
-      const auditContent = `EMPIRELAUNCH AI - SUCCESS-SHARE AUDIT\nGenerated: ${new Date().toLocaleString()}\n\nBusiness Tracking:\n- AI Content Generated: ${ad.contentCreated ?? 0} Assets\n- Active Campaigns: ${ad.activeCampaigns ?? 0}\n- Revenue Attributed to AI: ${((ad.aiAttributedRevenue ?? revenueCents) / 100).toFixed(2)}\n- Success-Share Rate: 4% ($40 per $1k)\n- Success-Share Due: ${(shareCents / 100).toFixed(2)}\n- Total Revenue Tracked: ${((ad.totalRevenue ?? revenueCents) / 100).toFixed(2)}\n- Lifetime Success-Shares Paid: ${((ad.lifetimeSurchargesPaid ?? 0) / 100).toFixed(2)}\n\nAll tracking verified via Neural Sync.`;
-      const blob = new Blob([auditContent], { type: 'text/plain' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Empire_Success_Audit_${new Date().toISOString().split('T')[0]}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      setIsDownloading(false);
-    }, 1000);
-  };
 
   if (!mounted) return null;
 
@@ -86,7 +46,6 @@ export function FinancialCommand({
 
   const subscriptions = [
     { name: "Empire Subscription", amount: 4000, date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }), type: "app" },
-    { name: "Success-Shares (40/1k Protocol)", amount: 0, date: new Date().toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }), type: "app", successShare: "40/1k" },
   ];
 
   // Connected subscription platform costs — only shows if user has platform linked
@@ -242,43 +201,7 @@ export function FinancialCommand({
                   </div>
                 </div>
 
-                {/* 2. Success-Shares */}
-                <div className="pt-6 border-t border-white/5 flex items-center justify-between w-full">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-primary">
-                      <Stars className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-black uppercase italic">Success-Shares (40/1k)</p>
-                      <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-bold">
-                        <ShieldCheck className="w-2.5 h-2.5" /> Verified Protocol
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-black italic">{formatCurrency(0)}</p>
-                    <span className="text-[8px] font-black text-primary uppercase">Platform Due</span>
-                  </div>
-                </div>
-
-                {/* 3. Action Button */}
-                <div className="pt-2">
-                  <button 
-                    onClick={handleDownloadAudit}
-                    disabled={isDownloading}
-                    className="w-full flex items-center justify-center gap-2 py-4 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-2xl transition-all active:scale-95 disabled:opacity-50"
-                  >
-                    <Activity className={cn("w-4 h-4 text-primary", isDownloading && "animate-spin")} />
-                    <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                      {isDownloading ? "Generating Audit..." : "Download Shares Audit"}
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Dues Section */}
+                {/* 2. Dues Section */}
           {dues.length > 0 && (
             <div className="space-y-6">
               <div className="flex items-center gap-2 text-amber-500 font-black text-[10px] uppercase tracking-widest">

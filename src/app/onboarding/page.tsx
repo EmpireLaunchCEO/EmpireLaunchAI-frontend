@@ -77,6 +77,8 @@ function OnboardingContent() {
     name: '',
     niche: '',
     angle: '',
+    targetCustomers: '',
+    businessGoals: '',
     platforms: [] as string[],
     archetype: 'CREATOR' as 'CREATOR' | 'CATALYST',
     connectedPlatforms: [] as string[],
@@ -197,6 +199,8 @@ function OnboardingContent() {
           name: data.name,
           niche: data.niche,
           angle: data.angle,
+          targetCustomers: data.targetCustomers,
+          businessGoals: data.businessGoals,
           platform: data.platforms[0] || '',
           platforms: data.platforms,
           archetype: data.archetype,
@@ -251,7 +255,7 @@ function OnboardingContent() {
     try {
         const locale = selectedLocale;
         const currency = getCurrencyInfo(locale).code;
-        const amountInCents = getAmountInCents(40, locale);
+        const amountInCents = getAmountInCents(50, locale);
         const response = await fetch(`${API_URL}/api/stripe/checkout/platform`, {
             method: 'POST',
             headers: {
@@ -449,7 +453,7 @@ function OnboardingContent() {
                     <div className="flex justify-between items-center">
                       <h3 className="text-lg font-black text-white uppercase italic">{currentT('empirePlan')}</h3>
                       <div className="text-right">
-                        <span className="text-2xl font-black text-white">{formatPrice(40, selectedLocale)}</span>
+                        <span className="text-2xl font-black text-white">{formatPrice(50, selectedLocale)}</span>
                         <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">{currentT('perMonth')}</span>
                       </div>
                     </div>

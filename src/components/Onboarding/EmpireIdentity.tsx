@@ -11,6 +11,8 @@ interface EmpireIdentityProps {
     name: string;
     niche: string;
     angle: string;
+    targetCustomers: string;
+    businessGoals: string;
     archetype: 'CREATOR' | 'CATALYST';
     platforms: string[];
   };
@@ -166,6 +168,30 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
             rows={3}
             value={data.angle}
             onChange={(e) => updateData({ angle: e.target.value })}
+            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-900 border-2 border-slate-800 focus:border-primary focus:bg-slate-950 outline-none transition-all text-base md:text-lg font-medium text-white shadow-sm resize-none placeholder:text-slate-700"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">Target Customer(s)</label>
+          <textarea
+            id="empire-target-customers"
+            placeholder={data.archetype === 'CREATOR' ? "e.g. Wedding planners looking for digital invites" : "e.g. Entrepreneurs who want to automate their income"}
+            rows={2}
+            value={data.targetCustomers}
+            onChange={(e) => updateData({ targetCustomers: e.target.value })}
+            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-900 border-2 border-slate-800 focus:border-primary focus:bg-slate-950 outline-none transition-all text-base md:text-lg font-medium text-white shadow-sm resize-none placeholder:text-slate-700"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500">Business Goals</label>
+          <textarea
+            id="empire-business-goals"
+            placeholder="e.g. Reach $5k/mo in Etsy sales, grow IG to 10k followers, build email list"
+            rows={2}
+            value={data.businessGoals}
+            onChange={(e) => updateData({ businessGoals: e.target.value })}
             className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-900 border-2 border-slate-800 focus:border-primary focus:bg-slate-950 outline-none transition-all text-base md:text-lg font-medium text-white shadow-sm resize-none placeholder:text-slate-700"
           />
         </div>

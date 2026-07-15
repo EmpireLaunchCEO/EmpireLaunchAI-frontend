@@ -22,8 +22,6 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 import { SupportHub } from '@/components/Settings/SupportHub';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
-import { SubscriptionSuccessShareBox } from '@/components/Dashboard/SubscriptionSuccessShareBox';
-import { MonthlyAuditStatements } from '@/components/Dashboard/MonthlyAuditStatements';
 
 export default function SettingsPage() {
   return (
@@ -329,19 +327,16 @@ function SettingsContent() {
 
               {activeTab === 'subscription' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <SubscriptionSuccessShareBox
-                    isProtocolAccepted={isProtocolAccepted}
-                    onAcceptProtocol={() => acceptProtocols()}
-                    totalRevenue={0}
-                    totalFees={0}
-                    businessSlots={ownedSlots}
-                    userEmpires={userEmpires}
-                    onCancelSubscription={handleCancelSubscription}
-                    showCancelButton={true}
-                  />
-
                   <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme">
-                    <MonthlyAuditStatements />
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                        <CreditCard className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-black text-foreground tracking-tight uppercase italic">Subscription</h3>
+                        <p className="text-sm font-medium text-muted-foreground">Your EmpireLaunch AI plan is active.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
