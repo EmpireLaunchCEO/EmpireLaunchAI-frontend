@@ -31,7 +31,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
     { key: 'angle', label: 'Angle', icon: Compass, value: empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1] || empireData?.angle || '', type: 'text' },
     { key: 'targetCustomers', label: 'Target Customers', icon: Users, value: empireData?.targetCustomers || '', type: 'textarea' },
     { key: 'businessGoals', label: 'Business Goals', icon: Goal, value: empireData?.businessGoals || '', type: 'textarea' },
-    { key: 'archetype', label: 'Archetype', icon: Cpu, value: empireData?.archetype || 'CREATOR', type: 'select', options: ['CREATOR', 'CATALYST'] },
+    { key: 'archetype', label: 'Archetype', icon: Cpu, value: empireData?.archetype || 'SELLER', type: 'select', options: ['SELLER', 'CONTENT_CREATOR'] },
   ];
 
   const startEditing = (field: EditableField) => {

@@ -43,10 +43,10 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
     if (data.niche.length > 3) {
       const timer = setTimeout(() => {
         const etsyFee = (wisdomData.platform_fees as any).Etsy?.listing_fee || '0.20';
-        if (data.archetype === 'CREATOR') {
+        if (data.archetype === 'SELLER') {
           setAiInsight(`I love that angle. Based on current trends, '${data.niche}' is seeing a 15% increase in Etsy searches this month. Plus, at just ${etsyFee} per listing, we can scale fast.`);
         } else {
-          setAiInsight(`A Catalyst approach for '${data.niche}' is high-leverage. I'll focus on viral hooks and objection handling to maximize your Daily Pay conversions.`);
+          setAiInsight(`A Content Creator approach for '${data.niche}' is high-leverage. I'll focus on viral hooks and objection handling to maximize reach and engagement.`);
         }
       }, 1000);
       return () => clearTimeout(timer);
@@ -93,44 +93,44 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
       {/* Archetype Selection */}
       <div className="grid grid-cols-2 gap-4">
         <button
-          onClick={() => updateData({ archetype: 'CREATOR' })}
+          onClick={() => updateData({ archetype: 'SELLER' })}
           className={cn(
             "p-5 rounded-3xl border-2 transition-all text-left flex flex-col gap-3 group relative overflow-hidden",
-            data.archetype === 'CREATOR' 
+            data.archetype === 'SELLER' 
               ? "bg-primary/10 border-primary shadow-[0_0_20px_rgba(0,229,255,0.2)]" 
               : "bg-slate-900 border-slate-800 hover:border-slate-700"
           )}
         >
           <div className={cn(
             "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
-            data.archetype === 'CREATOR' ? "bg-primary text-slate-900" : "bg-slate-800 text-slate-400 group-hover:text-primary"
+            data.archetype === 'SELLER' ? "bg-primary text-slate-900" : "bg-slate-800 text-slate-400 group-hover:text-primary"
           )}>
             <ShoppingBag className="w-5 h-5" />
           </div>
           <div>
-            <h3 className={cn("font-black text-xs uppercase tracking-widest", data.archetype === 'CREATOR' ? "text-primary" : "text-slate-400")}>The Creator</h3>
-            <p className="text-[9px] text-slate-500 font-bold uppercase mt-1 leading-tight">Product-Led. Etsy, Shopify, Prototyping.</p>
+            <h3 className={cn("font-black text-xs uppercase tracking-widest", data.archetype === 'SELLER' ? "text-primary" : "text-slate-400")}>Seller</h3>
+            <p className="text-[9px] text-slate-500 font-bold uppercase mt-1 leading-tight">Sell products, designs, or digital goods. Etsy, Shopify, Print-on-Demand.</p>
           </div>
         </button>
 
         <button
-          onClick={() => updateData({ archetype: 'CATALYST' })}
+          onClick={() => updateData({ archetype: 'CONTENT_CREATOR' })}
           className={cn(
             "p-5 rounded-3xl border-2 transition-all text-left flex flex-col gap-3 group relative overflow-hidden",
-            data.archetype === 'CATALYST' 
+            data.archetype === 'CONTENT_CREATOR' 
               ? "bg-primary/10 border-primary shadow-[0_0_20px_rgba(0,229,255,0.2)]" 
               : "bg-slate-900 border-slate-800 hover:border-slate-700"
           )}
         >
           <div className={cn(
             "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
-            data.archetype === 'CATALYST' ? "bg-primary text-slate-900" : "bg-slate-800 text-slate-400 group-hover:text-primary"
+            data.archetype === 'CONTENT_CREATOR' ? "bg-primary text-slate-900" : "bg-slate-800 text-slate-400 group-hover:text-primary"
           )}>
             <ZapIcon className="w-5 h-5" />
           </div>
           <div>
-            <h3 className={cn("font-black text-xs uppercase tracking-widest", data.archetype === 'CATALYST' ? "text-primary" : "text-slate-400")}>The Catalyst</h3>
-            <p className="text-[9px] text-slate-500 font-bold uppercase mt-1 leading-tight">Link-Led. Daily Pay, Lead Gen, Viral Hooks.</p>
+            <h3 className={cn("font-black text-xs uppercase tracking-widest", data.archetype === 'CONTENT_CREATOR' ? "text-primary" : "text-slate-400")}>Content Creator</h3>
+            <p className="text-[9px] text-slate-500 font-bold uppercase mt-1 leading-tight">Create content for a living. Social media, viral hooks, lead gen.</p>
           </div>
         </button>
       </div>
