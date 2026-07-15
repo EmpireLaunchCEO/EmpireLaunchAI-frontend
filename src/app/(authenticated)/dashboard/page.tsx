@@ -15,7 +15,6 @@ import { LockedSlotView } from '@/components/Dashboard/LockedSlotView';
 import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FeedbackInbox } from '@/components/Dashboard/FeedbackInbox';
-import { NotificationBell } from '@/components/Dashboard/NotificationBell';
 import { EmpireTabs } from '@/components/Dashboard/EmpireTabs';
 
 
@@ -129,11 +128,6 @@ export default function Dashboard() {
                     <h1 className="text-4xl md:text-8xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
                       {empireData?.name || empireData?.title || "EmpireLaunch AI"}
                     </h1>
-                    {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com') && (
-                      <div className="absolute top-0 right-0">
-                        <NotificationBell />
-                      </div>
-                    )}
                   </motion.div>
 
                   {/* 2. Operations Column */}
