@@ -16,7 +16,7 @@ import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FeedbackInbox } from '@/components/Dashboard/FeedbackInbox';
 import { NotificationBell } from '@/components/Dashboard/NotificationBell';
-import { EmpireIdentityCard } from '@/components/Dashboard/EmpireIdentityCard';
+import { EmpireTabs } from '@/components/Dashboard/EmpireTabs';
 
 
 export default function Dashboard() {
@@ -144,15 +144,15 @@ export default function Dashboard() {
 
                     {/* Empire Finances removed per owner direction */}
 
-                    {/* Empire Identity Card - Onboarding Info with Inline Editing */}
+                    {/* Empire Identity + Intel Tabs */}
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                     >
-                      <EmpireIdentityCard
+                      <EmpireTabs
                         empireData={empireData}
-                        onUpdate={() => fetchData()}
+                        onDataUpdate={() => fetchData()}
                       />
                     </motion.div>
 
