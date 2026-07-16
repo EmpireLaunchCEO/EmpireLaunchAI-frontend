@@ -22,7 +22,6 @@ import { DNAVaultCounter } from '@/components/Dashboard/DNAVaultCounter';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FileUploadDropZone, UploadState } from '@/components/Dashboard/FileUploadDropZone';
 import { InlineConsultant } from '@/components/Studio/InlineConsultant';
-import { AIRenderLog, generateMockRenderLogs, RenderLogEntry } from '@/components/Dashboard/AIRenderLog';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
@@ -71,8 +70,6 @@ export default function StudioPage() {
   const [facialDnaUpload, setFacialDnaUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [rawVideoUpload, setRawVideoUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [designUpload, setDesignUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
-  const [renderLogs, setRenderLogs] = useState<RenderLogEntry[]>([]);
-  const [isRendering, setIsRendering] = useState(false);
   const [activeRenderType, setActiveRenderType] = useState<'facial-dna' | 'raw-video'>('facial-dna');
 
   // Handle Facial DNA file selection
@@ -95,35 +92,6 @@ export default function StudioPage() {
       
       const data = await response.json();
       setFacialDnaUpload(prev => ({ ...prev, status: 'complete', progress: 100, metadata: data }));
-      
-      // Fetch real creations from backend instead of mock logs
-      try {
-        const creationsRes = await fetch(`${API_URL}/api/cinema/creations?userId=${localStorage.getItem('empire_userId')}`, {
-          headers: { 'x-user-id': localStorage.getItem('empire_userId') || '' }
-        });
-        if (creationsRes.ok) {
-          const creationsData = await creationsRes.json();
-          if (creationsData.creations?.length > 0) {
-            const realLogs = creationsData.creations.map((c: any, i: number) => ({
-              id: c.id,
-              timestamp: new Date(c.createdAt).toLocaleTimeString(),
-              action: c.type === 'facial_dna' ? 'Facial Photo Upload' : c.type === 'raw_video' ? 'Video Upload' : 'Creation',
-              status: c.status === 'completed' ? 'success' as const : c.status === 'processing' ? 'processing' as const : 'error' as const,
-              details: c.title || c.type,
-              type: c.type,
-              creationId: c.id,
-            }));
-            setRenderLogs(realLogs);
-          } else {
-            setRenderLogs(generateMockRenderLogs('facial-dna'));
-          }
-        } else {
-          setRenderLogs(generateMockRenderLogs('facial-dna'));
-        }
-      } catch {
-        setRenderLogs(generateMockRenderLogs('facial-dna'));
-      }
-      setIsRendering(true);
     } catch (error) {
       console.error('Facial DNA upload error:', error);
       setFacialDnaUpload(prev => ({ ...prev, status: 'error' }));
@@ -152,8 +120,6 @@ export default function StudioPage() {
       setRawVideoUpload(prev => ({ ...prev, status: 'complete', progress: 100, metadata: data }));
       
       setActiveRenderType('raw-video');
-      setRenderLogs(generateMockRenderLogs('raw-video'));
-      setIsRendering(true);
     } catch (error) {
       console.error('Raw video upload error:', error);
       setRawVideoUpload(prev => ({ ...prev, status: 'error' }));
@@ -247,8 +213,6 @@ export default function StudioPage() {
   const handleSynthesizeTwin = async () => {
     if (facialDnaUpload.status !== 'complete') return;
     
-    setRenderLogs(generateMockRenderLogs('facial-dna'));
-    setIsRendering(true);
     setActiveRenderType('facial-dna');
 
     try {
@@ -269,12 +233,6 @@ export default function StudioPage() {
     } catch (error) {
       console.error('Twin synthesis error:', error);
     }
-  };
-
-  // Clear logs
-  const handleClearLogs = () => {
-    setRenderLogs([]);
-    setIsRendering(false);
   };
 
   const startDemo = () => {
@@ -811,13 +769,6 @@ export default function StudioPage() {
                 <InlineConsultant context="neural-twin" />
               </div>
 
-              {/* Production Logs Section */}
-              <AIRenderLog
-                logs={renderLogs}
-                isProcessing={isRendering}
-                type={activeRenderType}
-                onClear={handleClearLogs}
-              />
             </motion.div>
           </div>
 
