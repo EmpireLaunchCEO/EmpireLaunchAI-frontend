@@ -13,8 +13,8 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "HOME", id: "home", href: "/dashboard", icon: Home },
-  { label: "OB", id: "ec", href: "/empire-center", icon: ClipboardCheck },
   { label: "EMPIRE STUDIO", id: "studio", href: "/studio", icon: Video },
+  { label: "OB", id: "ec", href: "/empire-center", icon: ClipboardCheck },
   { label: "LC", id: "lc", href: "/link-center", icon: Stars },
   { label: "Settings", id: "settings", href: "/settings", icon: Settings },
 ];
