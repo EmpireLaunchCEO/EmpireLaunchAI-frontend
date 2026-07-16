@@ -447,13 +447,13 @@ export default function StudioPage() {
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
                     <span className="text-[10px] font-black text-primary">{usage?.customize?.remaining ?? 0}</span>
                     <span className="text-[9px] font-black text-slate-400">/</span>
-                    <span className="text-[9px] font-black text-slate-500">{usage?.customize?.limit ?? 14}</span>
+                    <span className="text-[9px] font-black text-slate-500">{usage?.customize?.limit ?? 7}</span>
                   </div>
                   <div className="relative">
                     <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
                     <div className="absolute bottom-full right-0 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
                       <p className="font-black text-white uppercase tracking-widest mb-1">Weekly Video Quota</p>
-                      Your 14 weekly video slots reset every {usage?.customize?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
+                      Your 7 weekly video slots reset every {usage?.customize?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
                     </div>
                   </div>
                 </div>
@@ -706,13 +706,13 @@ export default function StudioPage() {
                     <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
                       <span className="text-[10px] font-black text-primary">{usage?.neural?.remaining ?? 0}</span>
                       <span className="text-[9px] font-black text-slate-400">/</span>
-                      <span className="text-[9px] font-black text-slate-500">{usage?.neural?.limit ?? 14}</span>
+                      <span className="text-[9px] font-black text-slate-500">{usage?.neural?.limit ?? 7}</span>
                     </div>
                     <div className="relative">
                       <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
                       <div className="absolute bottom-full right-0 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
                         <p className="font-black text-white uppercase tracking-widest mb-1">Neural Twin Quota</p>
-                        Your 14 weekly Neural Twin slots reset every {usage?.neural?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
+                        Your 7 weekly Neural Twin slots reset every {usage?.neural?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
                       </div>
                     </div>
                   </div>
