@@ -97,6 +97,14 @@ export const empireService = {
       const res = await fetch(`${API_URL}/api/agent/empire/${id}`, { headers: HEADERS });
       if (res.ok) return await res.json();
     } catch (e) {}
+    return this.getLatestEmpire();
+  },
+
+  async getLatestEmpire(): Promise<any> {
+    try {
+      const res = await fetch(`${API_URL}/api/agent/goal/latest`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) {}
     return null;
   },
 

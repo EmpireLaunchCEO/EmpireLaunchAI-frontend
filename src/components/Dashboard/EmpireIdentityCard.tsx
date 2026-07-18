@@ -46,19 +46,33 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
 
   const handleSave = useCallback(async (fieldKey: string) => {
     const newValue = editValues[fieldKey]?.trim() ?? '';
-    if (!empireData?.id) return;
+    
+    // Try to get a valid empire ID — fallback to fetching latest
+    let empireId = empireData?.id;
+    if (!empireId) {
+      const latest = await empireService.getLatestEmpire();
+      if (latest?.id) empireId = latest.id;
+    }
+    if (!empireId) {
+      console.error('[EmpireIdentity] No empire ID available — cannot save');
+      return;
+    }
 
     setSaving(true);
     try {
       const updateData: any = {};
       updateData[fieldKey] = newValue;
-      await empireService.updateEmpire(empireData.id, updateData);
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-      setEditingField(null);
-      onUpdate();
+      const success = await empireService.updateEmpire(empireId, updateData);
+      if (success) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+        setEditingField(null);
+        onUpdate();
+      } else {
+        console.error('[EmpireIdentity] Save failed — API returned error');
+      }
     } catch (e) {
-      console.error('Failed to update empire', e);
+      console.error('[EmpireIdentity] Failed to update empire', e);
     } finally {
       setSaving(false);
     }
