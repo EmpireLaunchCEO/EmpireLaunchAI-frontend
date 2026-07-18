@@ -1,19 +1,19 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Video, UserSquare2, Edit3, Palette, Layout, Search, X, ChevronLeft, ChevronRight, ExternalLink, FileText, Image, Film, PenSquare } from 'lucide-react';
+import { Video, UserSquare2, Edit3, Palette, Layout, Search, X, ChevronLeft, ChevronRight, ExternalLink, FileText, Image, Film, PenSquare, AlertTriangle, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { analyticsService } from '@/lib/api-service';
+import { libraryService } from '@/lib/api-service';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ITEMS_PER_PAGE = 8;
 
 const CATEGORIES = [
-  { id: 'video', label: 'Videos', icon: Video, color: 'text-purple-400', bgColor: 'bg-purple-500/10' },
-  { id: 'neural_twin', label: 'Neural Twins', icon: UserSquare2, color: 'text-cyan-400', bgColor: 'bg-cyan-500/10' },
-  { id: 'edit', label: 'Edits', icon: Edit3, color: 'text-amber-400', bgColor: 'bg-amber-500/10' },
-  { id: 'design', label: 'Designs', icon: Palette, color: 'text-pink-400', bgColor: 'bg-pink-500/10' },
-  { id: 'template', label: 'Templates', icon: Layout, color: 'text-emerald-400', bgColor: 'bg-emerald-500/10' },
+  { id: 'video', label: 'Videos', icon: Video, color: 'text-purple-400', bgColor: 'bg-purple-500/10', borderExpired: 'border-purple-500/30' },
+  { id: 'neural_twin', label: 'Neural Twins', icon: UserSquare2, color: 'text-cyan-400', bgColor: 'bg-cyan-500/10', borderExpired: 'border-cyan-500/30' },
+  { id: 'edit', label: 'Edits', icon: Edit3, color: 'text-amber-400', bgColor: 'bg-amber-500/10', borderExpired: 'border-amber-500/30' },
+  { id: 'design', label: 'Designs', icon: Palette, color: 'text-pink-400', bgColor: 'bg-pink-500/10', borderExpired: 'border-pink-500/30' },
+  { id: 'template', label: 'Templates', icon: Layout, color: 'text-emerald-400', bgColor: 'bg-emerald-500/10', borderExpired: 'border-emerald-500/30' },
 ];
 
 export function LibraryTab() {
@@ -24,22 +24,28 @@ export function LibraryTab() {
   const [selectedAsset, setSelectedAsset] = useState<any | null>(null);
   const [renameAssetId, setRenameAssetId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
+  const [expirationCounts, setExpirationCounts] = useState<Record<string, { expired: number; expiringSoon: number }>>({});
+  const [counts, setCounts] = useState<Record<string, number>>({});
 
-  const fetchAssets = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await analyticsService.fetchLibraryAssets();
-      setAssets(data);
+      const [countData, expData] = await Promise.all([
+        libraryService.getCounts(),
+        libraryService.getExpirationCounts(),
+      ]);
+      setCounts(countData);
+      setExpirationCounts(expData);
     } catch (e) {
-      console.error('Failed to fetch assets', e);
+      console.error('Failed to fetch library data', e);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchAssets();
-  }, [fetchAssets]);
+    fetchData();
+  }, [fetchData]);
 
   const getAssetType = (asset: any): string => {
     const type = (asset.assetType || asset.type || '').toLowerCase();
@@ -73,7 +79,7 @@ export function LibraryTab() {
 
   const handleRename = async () => {
     if (!renameAssetId || !renameValue.trim()) return;
-    await analyticsService.updateAssetName(renameAssetId, renameValue.trim());
+    await libraryService.renameAsset(renameAssetId, renameValue.trim());
     setAssets(prev => prev.map(a => a.id === renameAssetId ? { ...a, title: renameValue.trim() } : a));
     if (selectedAsset?.id === renameAssetId) {
       setSelectedAsset({ ...selectedAsset, title: renameValue.trim() });
@@ -108,7 +114,10 @@ export function LibraryTab() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {CATEGORIES.map((cat) => {
               const Icon = cat.icon;
-              const count = getCategoryCount(cat.id);
+              const count = counts[cat.id] || 0;
+              const exp = expirationCounts[cat.id];
+              const hasExpired = exp?.expired > 0;
+              const hasExpiringSoon = exp?.expiringSoon > 0;
               return (
                 <button
                   key={cat.id}
@@ -116,6 +125,23 @@ export function LibraryTab() {
                   className="bg-theme-surface border-2 border-theme rounded-2xl p-6 space-y-4 relative overflow-hidden hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] transition-all text-left group"
                 >
                   <div className={cn("absolute top-0 right-0 w-32 h-32 blur-[60px] -z-10 opacity-20", cat.bgColor)} />
+
+                  {/* Expiration badges */}
+                  <div className="absolute top-3 right-3 flex flex-col gap-1 z-10">
+                    {hasExpired && (
+                      <div className="flex items-center gap-1 px-2 py-0.5 bg-red-500/20 border border-red-500/40 rounded-md">
+                        <AlertTriangle className="w-2.5 h-2.5 text-red-400" />
+                        <span className="text-[7px] font-black text-red-400 uppercase tracking-wider">{exp!.expired} expired</span>
+                      </div>
+                    )}
+                    {hasExpiringSoon && (
+                      <div className="flex items-center gap-1 px-2 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-md">
+                        <Clock className="w-2.5 h-2.5 text-amber-400" />
+                        <span className="text-[7px] font-black text-amber-400 uppercase tracking-wider">{exp!.expiringSoon} expiring</span>
+                      </div>
+                    )}
+                  </div>
+
                   <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center", cat.bgColor)}>
                     <Icon className={cn("w-6 h-6", cat.color)} />
                   </div>
@@ -131,7 +157,7 @@ export function LibraryTab() {
           </div>
         )}
 
-        {!loading && assets.length === 0 && (
+        {!loading && Object.values(counts).reduce((sum, c) => sum + c, 0) === 0 && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 mb-4">
               <FileText className="w-8 h-8 text-primary/50" />

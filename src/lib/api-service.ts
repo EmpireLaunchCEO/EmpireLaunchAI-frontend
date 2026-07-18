@@ -662,6 +662,95 @@ export const paymentService = {
   }
 };
 
+// ─── Library Service ─────────────────────────────────────────────────────────
+const MOCK_LIB_BRAND_ID = 'brand-001';
+
+const NOW = Date.now();
+const DAY_MS = 86400000;
+
+// Mock assets with expiration dates for testing
+const MOCK_LIB_ASSETS: Record<string, any[]> = {
+  video: Array.from({ length: 14 }, (_, i) => ({
+    id: `vid-${i + 1}`, name: `Video Project ${i + 1}`, type: 'video',
+    thumbnailPath: '', filePath: '', mimeType: 'video/mp4',
+    createdAt: new Date(NOW - i * DAY_MS).toISOString(),
+    expiresAt: new Date(NOW + (90 - i) * DAY_MS).toISOString(),
+    expired: i > 10,
+  })),
+  neural_twin: Array.from({ length: 6 }, (_, i) => ({
+    id: `twin-${i + 1}`, name: `Neural Twin ${i + 1}`, type: 'neural_twin',
+    thumbnailPath: '', filePath: '', mimeType: 'video/mp4',
+    createdAt: new Date(NOW - i * DAY_MS).toISOString(),
+    expiresAt: new Date(NOW + (90 - i * 10) * DAY_MS).toISOString(),
+    expired: i > 4,
+  })),
+  edit: Array.from({ length: 9 }, (_, i) => ({
+    id: `edit-${i + 1}`, name: `Edit Session ${i + 1}`, type: 'edit',
+    thumbnailPath: '', filePath: '', mimeType: 'video/mp4',
+    createdAt: new Date(NOW - i * DAY_MS).toISOString(),
+    expiresAt: new Date(NOW + (90 - i * 5) * DAY_MS).toISOString(),
+    expired: i > 6,
+  })),
+  design: Array.from({ length: 22 }, (_, i) => ({
+    id: `design-${i + 1}`, name: `Design Asset ${i + 1}`, type: 'design',
+    thumbnailPath: '', filePath: '', mimeType: 'image/png',
+    createdAt: new Date(NOW - i * DAY_MS).toISOString(),
+    expiresAt: new Date(NOW + (90 - i * 3) * DAY_MS).toISOString(),
+    expired: i > 18,
+  })),
+  template: Array.from({ length: 7 }, (_, i) => ({
+    id: `tmpl-${i + 1}`, name: `Template ${i + 1}`, type: 'template',
+    thumbnailPath: '', filePath: '', mimeType: 'image/png',
+    createdAt: new Date(NOW - i * DAY_MS).toISOString(),
+    expiresAt: new Date(NOW + (90 - i * 7) * DAY_MS).toISOString(),
+    expired: i > 5,
+  })),
+};
+
+function calcExpirationCounts(categoryAssets: any[]): { expired: number; expiringSoon: number } {
+  const sevenDays = 7 * DAY_MS;
+  let expired = 0;
+  let expiringSoon = 0;
+  for (const a of categoryAssets) {
+    if (a.expired || (a.expiresAt && new Date(a.expiresAt).getTime() < NOW)) {
+      expired++;
+    } else if (a.expiresAt && new Date(a.expiresAt).getTime() - NOW < sevenDays) {
+      expiringSoon++;
+    }
+  }
+  return { expired, expiringSoon };
+}
+
+function computeAllExpirationCounts(): Record<string, { expired: number; expiringSoon: number }> {
+  const counts: Record<string, { expired: number; expiringSoon: number }> = {};
+  for (const [cat, assets] of Object.entries(MOCK_LIB_ASSETS)) {
+    counts[cat] = calcExpirationCounts(assets);
+  }
+  return counts;
+}
+
+export const libraryService = {
+  async getExpirationCounts(brandId?: string): Promise<Record<string, { expired: number; expiringSoon: number }>> {
+    try {
+      const res = await fetch(`${API_URL}/api/library/expiration-counts?brandId=${brandId || MOCK_LIB_BRAND_ID}`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) { /* fall through to mock */ }
+    return computeAllExpirationCounts();
+  },
+
+  async getCounts(brandId?: string): Promise<Record<string, number>> {
+    try {
+      const res = await fetch(`${API_URL}/api/library/counts?brandId=${brandId || MOCK_LIB_BRAND_ID}`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) { /* fall through to mock */ }
+    const counts: Record<string, number> = {};
+    for (const [cat, assets] of Object.entries(MOCK_LIB_ASSETS)) {
+      counts[cat] = assets.length;
+    }
+    return counts;
+  },
+};
+
 export const onboardingService = {
   async startOnboarding(platform: string, credentials?: { email?: string; password?: string; handle?: string }): Promise<any> {
     const res = await fetch(`${API_URL}/api/onboarding/start`, {
