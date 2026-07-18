@@ -26,7 +26,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
   const [saved, setSaved] = useState(false);
 
   const fields: EditableField[] = [
-    { key: 'title', label: 'Business Name', icon: Building2, value: empireData?.title || '', type: 'text' },
+    { key: 'name', label: 'Business Name', icon: Building2, value: empireData?.title || '', type: 'text' },
     { key: 'niche', label: 'Niche', icon: Target, value: empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || empireData?.niche || '', type: 'text' },
     { key: 'angle', label: 'Angle', icon: Compass, value: empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1] || empireData?.angle || '', type: 'text' },
     { key: 'targetCustomers', label: 'Target Customers', icon: Users, value: empireData?.targetCustomers || '', type: 'textarea' },
