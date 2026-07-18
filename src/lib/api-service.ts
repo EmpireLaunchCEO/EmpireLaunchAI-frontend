@@ -632,6 +632,33 @@ export const paymentService = {
       console.error('Failed to fetch intel trends', e);
     }
     return { trendingThemes: [], seasonalOpportunities: [], hotSellingItems: [], lowCompetitionItems: [], contentIdeas: [] };
+  },
+  
+  async fetchLibraryAssets(): Promise<any[]> {
+    try {
+      const res = await fetch(`${API_URL}/api/studio/assets`, { headers: HEADERS });
+      if (res.ok) {
+        const data = await res.json();
+        return Array.isArray(data) ? data : data.assets || [];
+      }
+    } catch (e) {
+      console.error('Failed to fetch library assets', e);
+    }
+    return [];
+  },
+  
+  async updateAssetName(assetId: string, name: string): Promise<boolean> {
+    try {
+      const res = await fetch(`${API_URL}/api/studio/assets/${assetId}`, {
+        method: 'PATCH',
+        headers: HEADERS,
+        body: JSON.stringify({ title: name })
+      });
+      return res.ok;
+    } catch (e) {
+      console.error('Failed to update asset name', e);
+      return false;
+    }
   }
 };
 
