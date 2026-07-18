@@ -662,6 +662,136 @@ export const paymentService = {
   }
 };
 
+// ─── Library Service ─────────────────────────────────────────────────────────
+const MOCK_BRAND_ID = 'brand-001';
+
+const MOCK_COUNTS = {
+  video: 14,
+  twin_video: 6,
+  edit: 9,
+  faceless: 4,
+  design: 22,
+};
+
+const MOCK_ASSETS: Record<string, any[]> = {
+  video: Array.from({ length: 14 }, (_, i) => ({
+    id: `vid-${i + 1}`,
+    name: `Video Project ${i + 1}`,
+    type: 'video',
+    thumbnailPath: '',
+    filePath: '',
+    mimeType: 'video/mp4',
+    createdAt: new Date(Date.now() - i * 86400000).toISOString(),
+    expiresAt: new Date(Date.now() + (90 - i) * 86400000).toISOString(),
+    expired: i > 10,
+  })),
+  twin_video: Array.from({ length: 6 }, (_, i) => ({
+    id: `twin-${i + 1}`,
+    name: `Neural Twin ${i + 1}`,
+    type: 'twin_video',
+    thumbnailPath: '',
+    filePath: '',
+    mimeType: 'video/mp4',
+    createdAt: new Date(Date.now() - i * 86400000).toISOString(),
+    expiresAt: new Date(Date.now() + (90 - i * 10) * 86400000).toISOString(),
+    expired: false,
+  })),
+  edit: Array.from({ length: 9 }, (_, i) => ({
+    id: `edit-${i + 1}`,
+    name: `Edit Session ${i + 1}`,
+    type: 'edit',
+    thumbnailPath: '',
+    filePath: '',
+    mimeType: 'video/mp4',
+    createdAt: new Date(Date.now() - i * 86400000).toISOString(),
+    expiresAt: new Date(Date.now() + (90 - i * 5) * 86400000).toISOString(),
+    expired: i > 6,
+  })),
+  faceless: Array.from({ length: 4 }, (_, i) => ({
+    id: `faceless-${i + 1}`,
+    name: `Faceless Video ${i + 1}`,
+    type: 'faceless',
+    thumbnailPath: '',
+    filePath: '',
+    mimeType: 'video/mp4',
+    createdAt: new Date(Date.now() - i * 86400000).toISOString(),
+    expiresAt: new Date(Date.now() + (90 - i * 15) * 86400000).toISOString(),
+    expired: false,
+  })),
+  design: Array.from({ length: 22 }, (_, i) => ({
+    id: `design-${i + 1}`,
+    name: `Design Asset ${i + 1}`,
+    type: 'design',
+    thumbnailPath: '',
+    filePath: '',
+    mimeType: 'image/png',
+    createdAt: new Date(Date.now() - i * 86400000).toISOString(),
+    expiresAt: new Date(Date.now() + (90 - i * 3) * 86400000).toISOString(),
+    expired: i > 15,
+  })),
+};
+
+export const libraryService = {
+  async getCounts(brandId?: string): Promise<Record<string, number>> {
+    try {
+      const res = await fetch(`${API_URL}/api/library/counts?brandId=${brandId || MOCK_BRAND_ID}`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) { /* fall through to mock */ }
+    return { ...MOCK_COUNTS };
+  },
+
+  async getAssets(type: string, page = 1, limit = 20, brandId?: string): Promise<{ assets: any[]; total: number; page: number; limit: number }> {
+    try {
+      const res = await fetch(`${API_URL}/api/library?type=${type}&page=${page}&limit=${limit}&brandId=${brandId || MOCK_BRAND_ID}`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) { /* fall through to mock */ }
+    const all = MOCK_ASSETS[type] || [];
+    const start = (page - 1) * limit;
+    return { assets: all.slice(start, start + limit), total: all.length, page, limit };
+  },
+
+  async getAsset(id: string): Promise<any | null> {
+    try {
+      const res = await fetch(`${API_URL}/api/library/${id}`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) { /* fall through to mock */ }
+    for (const arr of Object.values(MOCK_ASSETS)) {
+      const found = arr.find((a: any) => a.id === id);
+      if (found) return found;
+    }
+    return null;
+  },
+
+  async renameAsset(id: string, name: string): Promise<boolean> {
+    try {
+      const res = await fetch(`${API_URL}/api/library/${id}/rename`, {
+        method: 'PUT', headers: HEADERS,
+        body: JSON.stringify({ name }),
+      });
+      return res.ok;
+    } catch (e) { return true; } // mock success
+  },
+
+  async deleteAsset(id: string): Promise<boolean> {
+    try {
+      const res = await fetch(`${API_URL}/api/library/${id}`, {
+        method: 'DELETE', headers: HEADERS,
+      });
+      return res.ok;
+    } catch (e) { return true; } // mock success
+  },
+
+  async setName(id: string, name?: string): Promise<boolean> {
+    try {
+      const res = await fetch(`${API_URL}/api/library/${id}/name`, {
+        method: 'POST', headers: HEADERS,
+        body: JSON.stringify({ name: name || `Video Design - ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` }),
+      });
+      return res.ok;
+    } catch (e) { return true; } // mock success
+  },
+};
+
 export const onboardingService = {
   async startOnboarding(platform: string, credentials?: { email?: string; password?: string; handle?: string }): Promise<any> {
     const res = await fetch(`${API_URL}/api/onboarding/start`, {

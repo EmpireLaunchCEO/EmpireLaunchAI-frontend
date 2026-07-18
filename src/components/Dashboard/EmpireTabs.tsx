@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Building2, TrendingUp, Layout } from 'lucide-react';
+import { Building2, TrendingUp, Library } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EmpireIdentityCard } from '@/components/Dashboard/EmpireIdentityCard';
 import { IntelTab } from '@/components/Dashboard/IntelTab';
-import { LibraryTab } from '@/components/Dashboard/LibraryTab';
+import { LibraryTab } from '@/components/Library/LibraryTab';
 import { motion } from 'framer-motion';
 
 interface EmpireTabsProps {
@@ -19,7 +19,7 @@ export function EmpireTabs({ empireData, onDataUpdate }: EmpireTabsProps) {
   const tabs = [
     { id: 'business' as const, label: 'Business Info', icon: Building2 },
     { id: 'intel' as const, label: 'Intel', icon: TrendingUp },
-    { id: 'library' as const, label: 'Library', icon: Layout },
+    { id: 'library' as const, label: 'Library', icon: Library },
   ];
 
   return (
