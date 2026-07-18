@@ -94,49 +94,22 @@ const HEADERS = {
 export const empireService = {
   async getEmpire(id: string): Promise<any> {
     try {
-      if (!id || id === 'undefined') return this.getLatestEmpire();
-      
-      // Neutral naming for Business 2 and 3 if they don't exist yet
-      if (id === '2') {
-        return { id: '2', name: 'Empire 2', description: 'Neural Node standby.', niche: '—', angle: '—' };
-      }
-      if (id === '3') {
-        return { id: '3', name: 'Empire 3', description: 'Neural Node standby.', niche: '—', angle: '—' };
-      }
-
       const res = await fetch(`${API_URL}/api/agent/empire/${id}`, { headers: HEADERS });
       if (res.ok) return await res.json();
-      
-      return this.getLatestEmpire();
-    } catch (e) {
-      console.error('Empire Fetch Error:', e);
-      return this.getLatestEmpire();
-    }
+    } catch (e) {}
+    return null;
   },
 
-  async getLatestEmpire(): Promise<any> {
-    try {
-      const res = await fetch(`${API_URL}/api/agent/goal/latest`, { headers: HEADERS });
-      if (res.ok) return await res.json();
-      return null;
-    } catch (e) {
-      console.error('Latest Empire Fetch Error:', e);
-      return null;
-    }
-  },
-
-  async updateEmpire(id: string, data: { title?: string; description?: string; name?: string; niche?: string; angle?: string; targetCustomers?: string; businessGoals?: string; archetype?: string }): Promise<any> {
+  async updateEmpire(id: string, data: Record<string, string>): Promise<boolean> {
     try {
       const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
         method: 'PUT',
         headers: HEADERS,
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
-      if (res.ok) return await res.json();
-      return null;
+      return res.ok;
     } catch (e) {
-      console.error('Empire Update Error:', e);
-      return null;
+      return false;
     }
   }
 };
