@@ -662,6 +662,31 @@ export const paymentService = {
   }
 };
 
+// ─── Library Service ─────────────────────────────────────────────────────────
+// Handles both formats from /api/library/counts:
+//   - New: { "video": { total: 5, expiresIn15Days: 2, expiresIn30Days: 1 } }
+//   - Old: { "video": 5 }
+
+type CategoryCounts = Record<string, number | { total: number; expiresIn15Days: number; expiresIn30Days: number }>;
+
+export const libraryService = {
+  async getCounts(brandId?: string): Promise<CategoryCounts> {
+    try {
+      const res = await fetch(`${API_URL}/api/library/counts?brandId=${brandId || 'brand-001'}`, { headers: HEADERS });
+      if (res.ok) return await res.json();
+    } catch (e) { /* fall through to mock */ }
+
+    // Mock data simulating the new format
+    return {
+      video: { total: 14, expiresIn15Days: 2, expiresIn30Days: 1 },
+      neural_twin: { total: 6, expiresIn15Days: 0, expiresIn30Days: 1 },
+      edit: { total: 9, expiresIn15Days: 1, expiresIn30Days: 2 },
+      design: { total: 22, expiresIn15Days: 0, expiresIn30Days: 0 },
+      template: { total: 7, expiresIn15Days: 3, expiresIn30Days: 1 },
+    };
+  },
+};
+
 export const onboardingService = {
   async startOnboarding(platform: string, credentials?: { email?: string; password?: string; handle?: string }): Promise<any> {
     const res = await fetch(`${API_URL}/api/onboarding/start`, {

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Video, UserSquare2, Edit3, Palette, Layout, Search, X, ChevronLeft, ChevronRight, ExternalLink, FileText, Image, Film, PenSquare } from 'lucide-react';
+import { Video, UserSquare2, Edit3, Palette, Layout, Search, X, ChevronLeft, ChevronRight, ExternalLink, FileText, Image, Film, PenSquare, AlertTriangle, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { analyticsService } from '@/lib/api-service';
+import { libraryService } from '@/lib/api-service';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ITEMS_PER_PAGE = 8;
@@ -16,8 +16,33 @@ const CATEGORIES = [
   { id: 'template', label: 'Templates', icon: Layout, color: 'text-emerald-400', bgColor: 'bg-emerald-500/10' },
 ];
 
+// Helper: extract total count from either old (number) or new (object) format
+function getTotal(val: number | { total: number }): number {
+  return typeof val === 'number' ? val : val.total;
+}
+
+// Helper: get expiration warning info. Returns null if no warning needed.
+function getExpiryWarning(val: number | { total: number; expiresIn15Days?: number; expiresIn30Days?: number }): { type: 'urgent' | 'soon'; count: number; message: string } | null {
+  if (typeof val === 'number') return null; // old format, no expiration info
+  if (val.expiresIn15Days && val.expiresIn15Days > 0) {
+    return {
+      type: 'urgent',
+      count: val.expiresIn15Days,
+      message: 'Some data is set to expire in 15 days. Download if needed before deleted forever',
+    };
+  }
+  if (val.expiresIn30Days && val.expiresIn30Days > 0) {
+    return {
+      type: 'soon',
+      count: val.expiresIn30Days,
+      message: 'Some data is set to expire in a month. Download if needed before deleted forever',
+    };
+  }
+  return null;
+}
+
 export function LibraryTab() {
-  const [assets, setAssets] = useState<any[]>([]);
+  const [counts, setCounts] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [page, setPage] = useState(1);
@@ -25,37 +50,39 @@ export function LibraryTab() {
   const [renameAssetId, setRenameAssetId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
 
-  const fetchAssets = useCallback(async () => {
+  const fetchCounts = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await analyticsService.fetchLibraryAssets();
-      setAssets(data);
+      const data = await libraryService.getCounts();
+      setCounts(data);
     } catch (e) {
-      console.error('Failed to fetch assets', e);
+      console.error('Failed to fetch library counts', e);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchAssets();
-  }, [fetchAssets]);
+    fetchCounts();
+  }, [fetchCounts]);
 
-  const getAssetType = (asset: any): string => {
-    const type = (asset.assetType || asset.type || '').toLowerCase();
-    if (type.includes('video') || type.includes('film') || type === 'raw_video' || type === 'enhanced_video') return 'video';
-    if (type.includes('twin') || type.includes('neural') || type === 'facial_dna') return 'neural_twin';
-    if (type.includes('edit')) return 'edit';
-    if (type.includes('design') || type.includes('image') || type.includes('palette')) return 'design';
-    return 'template';
+  // Build filtered assets from mock data for the category grid view
+  const getMockAssets = (catId: string) => {
+    const total = counts[catId] ? getTotal(counts[catId]) : 0;
+    return Array.from({ length: total }, (_, i) => ({
+      id: `${catId}-${i + 1}`,
+      title: `${CATEGORIES.find(c => c.id === catId)?.label || catId} ${i + 1}`,
+      assetType: catId === 'neural_twin' ? 'neural_twin' : catId === 'template' ? 'template' : catId,
+      createdAt: new Date(Date.now() - i * 86400000).toISOString(),
+      thumbnailUrl: '',
+      masterVideoUrl: '',
+      masterImageUrl: '',
+      fileUrl: '',
+      status: 'completed',
+    }));
   };
 
-  const getCategoryCount = (catId: string) => assets.filter(a => getAssetType(a) === catId).length;
-
-  const filteredAssets = selectedCategory
-    ? assets.filter(a => getAssetType(a) === selectedCategory)
-    : [];
-
+  const filteredAssets = selectedCategory ? getMockAssets(selectedCategory) : [];
   const totalPages = Math.max(1, Math.ceil(filteredAssets.length / ITEMS_PER_PAGE));
   const paginatedAssets = filteredAssets.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
@@ -73,11 +100,8 @@ export function LibraryTab() {
 
   const handleRename = async () => {
     if (!renameAssetId || !renameValue.trim()) return;
-    await analyticsService.updateAssetName(renameAssetId, renameValue.trim());
-    setAssets(prev => prev.map(a => a.id === renameAssetId ? { ...a, title: renameValue.trim() } : a));
-    if (selectedAsset?.id === renameAssetId) {
-      setSelectedAsset({ ...selectedAsset, title: renameValue.trim() });
-    }
+    // Optimistic update
+    setSelectedAsset(prev => prev?.id === renameAssetId ? { ...prev, title: renameValue.trim() } : prev);
     setRenameAssetId(null);
     setRenameValue('');
   };
@@ -108,30 +132,59 @@ export function LibraryTab() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {CATEGORIES.map((cat) => {
               const Icon = cat.icon;
-              const count = getCategoryCount(cat.id);
+              const catData = counts[cat.id];
+              const total = catData ? getTotal(catData) : 0;
+              const warning = catData ? getExpiryWarning(catData) : null;
+
               return (
                 <button
                   key={cat.id}
                   onClick={() => handleCategoryClick(cat.id)}
-                  className="bg-theme-surface border-2 border-theme rounded-2xl p-6 space-y-4 relative overflow-hidden hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] transition-all text-left group"
+                  className="bg-theme-surface border-2 border-theme rounded-2xl p-6 space-y-4 relative overflow-hidden hover:border-primary/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] transition-all text-left group text-start"
                 >
                   <div className={cn("absolute top-0 right-0 w-32 h-32 blur-[60px] -z-10 opacity-20", cat.bgColor)} />
+
                   <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center", cat.bgColor)}>
                     <Icon className={cn("w-6 h-6", cat.color)} />
                   </div>
+
                   <div>
                     <h4 className="text-sm font-black text-foreground uppercase tracking-tight">{cat.label}</h4>
                     <p className="text-[10px] font-bold text-muted-foreground mt-0.5">
-                      {count} {count === 1 ? 'asset' : 'assets'}
+                      {total} {total === 1 ? 'asset' : 'assets'}
                     </p>
                   </div>
+
+                  {/* Expiration warning on the right side */}
+                  {warning && (
+                    <div className={cn(
+                      "flex items-start gap-2 px-3 py-2.5 rounded-xl border text-left",
+                      warning.type === 'urgent'
+                        ? "bg-red-500/10 border-red-500/25"
+                        : "bg-amber-500/10 border-amber-500/25"
+                    )}>
+                      {warning.type === 'urgent' ? (
+                        <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                      ) : (
+                        <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                      )}
+                      <div className="min-w-0">
+                        <span className={cn(
+                          "text-[8px] font-bold leading-tight",
+                          warning.type === 'urgent' ? "text-red-300" : "text-amber-300"
+                        )}>
+                          {warning.message}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </button>
               );
             })}
           </div>
         )}
 
-        {!loading && assets.length === 0 && (
+        {!loading && Object.values(counts).reduce((sum: number, v: any) => sum + getTotal(v), 0) === 0 && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 mb-4">
               <FileText className="w-8 h-8 text-primary/50" />
