@@ -44,7 +44,7 @@ export default function Dashboard() {
     if (isLoading && retryCount === 0) return;
     setIsLoading(true);
     try {
-      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Fetch timeout')), 4500));
+      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Fetch timeout')), 12000));
       const fetchPromise = Promise.all([
         empireService.getEmpire(activeEmpireId).catch(() => null),
         analyticsService.getEmpirePulse().catch(() => ({ score: 0, logs: [] })),

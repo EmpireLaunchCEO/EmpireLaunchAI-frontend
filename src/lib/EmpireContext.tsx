@@ -14,7 +14,7 @@ const getAuthHeader = (): string => {
     }
     return `Bearer ${token}`;
   }
-  return getAuthHeader(); // SSR fallback
+  return 'Bearer '; // SSR fallback (no token available server-side)
 };
 
 interface Notification {

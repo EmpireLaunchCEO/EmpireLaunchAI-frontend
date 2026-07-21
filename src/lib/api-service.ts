@@ -1,5 +1,34 @@
 import { API_URL } from '@/lib/config';
 
+// --- Retry helper with exponential backoff for 429 responses ---
+async function fetchWithRetry(url: string, options: RequestInit = {}, maxRetries = 3): Promise<Response> {
+  let lastResponse: Response | undefined;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const res = await fetch(url, options);
+    if (res.status !== 429) return res;
+    lastResponse = res;
+    if (attempt < maxRetries) {
+      const delay = Math.min(Math.pow(2, attempt) * 1000 + Math.random() * 1000, 8000);
+      console.warn(`[fetchWithRetry] 429 rate limited, retrying in ${Math.round(delay)}ms (attempt ${attempt + 1}/${maxRetries})`);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+  // Exhausted retries — return the last 429 response so callers can handle it
+  return lastResponse!;
+}
+
+async function fetchJSON(url: string, options: RequestInit = {}): Promise<any> {
+  const res = await fetchWithRetry(url, options);
+  if (!res.ok) {
+    // For 429, throw so callers can handle rate-limiting explicitly
+    if (res.status === 429) {
+      throw new Error('Rate limited');
+    }
+    return null;
+  }
+  return res.json();
+}
+
 export interface RevenueTransaction {
   id: string;
   amount: number;
@@ -119,23 +148,28 @@ const getHeaders = (): Record<string, string> => ({
 export const empireService = {
   async getEmpire(id: string): Promise<any> {
     try {
-      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, { headers: getHeaders() });
-      if (res.ok) return await res.json();
-    } catch (e) {}
+      const data = await fetchJSON(`${API_URL}/api/agent/empire/${id}`, { headers: getHeaders() });
+      if (data) return data;
+    } catch (e) {
+      console.warn('[empireService.getEmpire] fetch failed, falling back to getLatestEmpire', e);
+    }
+    // Only fall back if primary endpoint returned nothing useful
     return this.getLatestEmpire();
   },
 
   async getLatestEmpire(): Promise<any> {
     try {
-      const res = await fetch(`${API_URL}/api/agent/goal/latest`, { headers: getHeaders() });
-      if (res.ok) return await res.json();
-    } catch (e) {}
+      const data = await fetchJSON(`${API_URL}/api/agent/goal/latest`, { headers: getHeaders() });
+      if (data) return data;
+    } catch (e) {
+      console.warn('[empireService.getLatestEmpire] fetch failed', e);
+    }
     return null;
   },
 
   async updateEmpire(id: string, data: Record<string, string>): Promise<boolean> {
     try {
-      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
+      const res = await fetchWithRetry(`${API_URL}/api/agent/empire/${id}`, {
         method: 'PUT',
         headers: getHeaders(),
         body: JSON.stringify(data),
