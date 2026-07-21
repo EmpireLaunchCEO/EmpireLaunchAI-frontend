@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Edit2, Check, X, Building2, Target, Compass, Users, Goal, Cpu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { empireService } from '@/lib/api-service';
@@ -23,6 +23,7 @@ interface EditableField {
 export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardProps) {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValues, setEditValues] = useState<Record<string, string>>({});
+  const editValuesRef = useRef<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,54 +39,66 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
   ];
 
   const startEditing = (field: EditableField) => {
+    setError(null);
     setEditingField(field.key);
-    setEditValues(prev => ({ ...prev, [field.key]: field.value }));
+    setEditValues(prev => {
+      const next = { ...prev, [field.key]: field.value };
+      editValuesRef.current = next;
+      return next;
+    });
+  };
+
+  const updateEditValue = (fieldKey: string, value: string) => {
+    setEditValues(prev => {
+      const next = { ...prev, [fieldKey]: value };
+      editValuesRef.current = next;
+      return next;
+    });
   };
 
   const cancelEditing = () => {
     setEditingField(null);
     setEditValues({});
+    editValuesRef.current = {};
+    setError(null);
   };
 
   const handleSave = useCallback(async (fieldKey: string) => {
-    const newValue = editValues[fieldKey]?.trim() ?? '';
+    // Always read from ref to avoid stale closure
+    const newValue = (editValuesRef.current[fieldKey] ?? '').trim();
     setError(null);
     
-    // Try empireData prop first, then context fallback, then API, then activeEmpireId as hard fallback
+    // Resolve empire ID — try prop, then context, then API, then hard fallback
     let empireId = empireData?.id || activeEmpire?.id;
     if (!empireId) {
       try {
         const latest = await empireService.getLatestEmpire();
         if (latest?.id) empireId = latest.id;
-      } catch (e) {
-        // API unreachable — proceed to hard fallback
-      }
+      } catch (e) { /* fall through */ }
     }
     if (!empireId) {
-      // Hard fallback: use the active empire ID from context (e.g. '1')
-      // This ensures saves work even when the backend is temporarily down
       empireId = activeEmpireId || '1';
     }
 
     setSaving(true);
     try {
-      const updateData: any = {};
-      updateData[fieldKey] = newValue;
-      const result = await empireService.updateEmpire(empireId, updateData);
+      const result = await empireService.updateEmpire(empireId, { [fieldKey]: newValue });
       if (result.ok) {
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
         setEditingField(null);
+        setEditValues({});
+        editValuesRef.current = {};
         onUpdate();
       } else {
         setError(`Failed to save ${fieldKey}. Server returned ${result.status}: ${result.body || '(empty)'}`);
       }
-    } catch (e) {
+    } catch (e: any) {
       setError(`Connection error while saving ${fieldKey}. Please try again.`);
     } finally {
       setSaving(false);
     }
-  }, [editValues, empireData, activeEmpire, activeEmpireId, onUpdate]);
+  }, [empireData?.id, activeEmpire?.id, activeEmpireId, onUpdate]);
 
   const handleKeyDown = (e: React.KeyboardEvent, fieldKey: string) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -143,7 +156,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
                       field.type === 'select' ? (
                         <select
                           value={currentValue}
-                          onChange={(e) => setEditValues(prev => ({ ...prev, [field.key]: e.target.value }))}
+                          onChange={(e) => updateEditValue(field.key, e.target.value)}
                           onKeyDown={(e) => handleKeyDown(e, field.key)}
                           className="w-full bg-theme-background border border-theme rounded-lg p-2 text-xs font-bold text-foreground outline-none focus:border-primary transition-colors"
                           autoFocus
@@ -155,7 +168,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
                       ) : field.type === 'textarea' ? (
                         <textarea
                           value={currentValue}
-                          onChange={(e) => setEditValues(prev => ({ ...prev, [field.key]: e.target.value }))}
+                          onChange={(e) => updateEditValue(field.key, e.target.value)}
                           onKeyDown={(e) => handleKeyDown(e, field.key)}
                           className="w-full bg-theme-background border border-theme rounded-lg p-2 text-xs font-bold text-foreground outline-none focus:border-primary transition-colors resize-none min-h-[60px]"
                           autoFocus
@@ -164,7 +177,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
                         <input
                           type="text"
                           value={currentValue}
-                          onChange={(e) => setEditValues(prev => ({ ...prev, [field.key]: e.target.value }))}
+                          onChange={(e) => updateEditValue(field.key, e.target.value)}
                           onKeyDown={(e) => handleKeyDown(e, field.key)}
                           className="w-full bg-theme-background border border-theme rounded-lg p-2 text-xs font-bold text-foreground outline-none focus:border-primary transition-colors"
                           autoFocus
