@@ -56,6 +56,11 @@ export default function Dashboard() {
       if (eData) {
         let finalData = eData;
         
+        // Persist empire ID to localStorage so saves never depend on component state
+        if (finalData?.id && typeof window !== 'undefined') {
+          localStorage.setItem('empire_active_id', finalData.id);
+        }
+        
         setEmpireDataState(finalData);
         setActiveEmpire(finalData);
         setPulseData(pulse);

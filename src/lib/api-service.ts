@@ -187,8 +187,10 @@ export const empireService = {
 
   async updateEmpire(id: string, data: Record<string, string>): Promise<{ ok: boolean; status: number; body: string }> {
     try {
-      const res = await authFetch(`${API_URL}/api/agent/empire/${id}`, {
+      // Cache-busting query param prevents PWA/service-worker from returning stale responses
+      const res = await authFetch(`${API_URL}/api/agent/empire/${id}?_t=${Date.now()}`, {
         method: 'POST',
+        cache: 'no-store',
         headers: { 'Authorization': `Bearer ${getAuthToken()}` },
         body: JSON.stringify(data),
       });

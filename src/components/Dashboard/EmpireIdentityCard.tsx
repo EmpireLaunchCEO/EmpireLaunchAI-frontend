@@ -69,13 +69,16 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
     setSaving(true);
 
     try {
-      // Always resolve empire ID fresh from the API — never trust props
-      let empireId = '';
-      try {
-        const latest = await empireService.getLatestEmpire();
-        if (latest?.id) empireId = latest.id;
-      } catch (e) { /* fall through */ }
-      if (!empireId) empireId = '1'; // hard fallback
+      // Read empire ID from localStorage (persisted by dashboard on every fetch)
+      let empireId = (typeof window !== 'undefined' && localStorage.getItem('empire_active_id')) || '';
+      // Fallback: resolve from API
+      if (!empireId) {
+        try {
+          const latest = await empireService.getLatestEmpire();
+          if (latest?.id) empireId = latest.id;
+        } catch (e) { /* fall through */ }
+      }
+      if (!empireId) empireId = '1';
 
       // Save with single retry on failure
       let result = await empireService.updateEmpire(empireId, { [fieldKey]: newValue });
