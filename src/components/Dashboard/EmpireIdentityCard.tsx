@@ -64,41 +64,44 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
   };
 
   const handleSave = useCallback(async (fieldKey: string) => {
-    // Always read from ref to avoid stale closure
     const newValue = (editValuesRef.current[fieldKey] ?? '').trim();
     setError(null);
-    
-    // Resolve empire ID — try prop, then context, then API, then hard fallback
-    let empireId = empireData?.id || activeEmpire?.id;
-    if (!empireId) {
+    setSaving(true);
+
+    try {
+      // Always resolve empire ID fresh from the API — never trust props
+      let empireId = '';
       try {
         const latest = await empireService.getLatestEmpire();
         if (latest?.id) empireId = latest.id;
       } catch (e) { /* fall through */ }
-    }
-    if (!empireId) {
-      empireId = activeEmpireId || '1';
-    }
+      if (!empireId) empireId = '1'; // hard fallback
 
-    setSaving(true);
-    try {
-      const result = await empireService.updateEmpire(empireId, { [fieldKey]: newValue });
+      // Save with single retry on failure
+      let result = await empireService.updateEmpire(empireId, { [fieldKey]: newValue });
+      if (!result.ok) {
+        // Wait 500ms and retry once
+        await new Promise(r => setTimeout(r, 500));
+        result = await empireService.updateEmpire(empireId, { [fieldKey]: newValue });
+      }
+
       if (result.ok) {
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
         setEditingField(null);
         setEditValues({});
         editValuesRef.current = {};
+        // Trigger parent refresh
         onUpdate();
       } else {
-        setError(`Failed to save ${fieldKey}. Server returned ${result.status}: ${result.body || '(empty)'}`);
+        setError(`Save failed. HTTP ${result.status}: ${result.body || 'no body'}`);
       }
     } catch (e: any) {
-      setError(`Connection error while saving ${fieldKey}. Please try again.`);
+      setError(`Network error: ${e.message || 'unknown'}`);
     } finally {
       setSaving(false);
     }
-  }, [empireData?.id, activeEmpire?.id, activeEmpireId, onUpdate]);
+  }, [onUpdate]);
 
   const handleKeyDown = (e: React.KeyboardEvent, fieldKey: string) => {
     if (e.key === 'Enter' && !e.shiftKey) {
