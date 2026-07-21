@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Stars, LayoutDashboard, Globe, Briefcase, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
@@ -23,7 +23,7 @@ export default function Dashboard() {
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const isLoadingRef = useRef(false);
   const [isCelebrating, setIsCelebrating] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isGrowthGateOpen, setIsGrowthProtocolGateOpen] = useState(false);
@@ -41,8 +41,8 @@ export default function Dashboard() {
   }, [empireData, setDashboardLoaded]);
 
   const fetchData = useCallback(async (retryCount = 0) => {
-    if (isLoading && retryCount === 0) return;
-    setIsLoading(true);
+    if (isLoadingRef.current && retryCount === 0) return;
+    isLoadingRef.current = true;
     try {
       const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Fetch timeout')), 12000));
       const fetchPromise = Promise.all([
@@ -68,10 +68,10 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Sync Error:', error);
     } finally {
-      setIsLoading(false);
+      isLoadingRef.current = false;
       setDashboardLoaded(true);
     }
-  }, [activeEmpireId, isLoading, setDashboardLoaded, setActiveEmpire, isAdmin]);
+  }, [activeEmpireId, setDashboardLoaded, setActiveEmpire]);
 
   useEffect(() => {
     if (mounted && isInitialized) {
