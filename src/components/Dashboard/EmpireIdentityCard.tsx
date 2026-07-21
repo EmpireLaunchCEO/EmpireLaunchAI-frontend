@@ -27,15 +27,14 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { activeEmpire, activeEmpireId } = useEmpire();
-  const [savedValues, setSavedValues] = useState<Record<string, string>>({} as Record<string, string>);
 
   const fields: EditableField[] = [
-    { key: 'name', label: 'Business Name', icon: Building2, value: savedValues['name'] ?? empireData?.title || '', type: 'text' },
-    { key: 'niche', label: 'Niche', icon: Target, value: savedValues['niche'] ?? empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || empireData?.niche || '', type: 'text' },
-    { key: 'angle', label: 'Angle', icon: Compass, value: savedValues['angle'] ?? empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1] || empireData?.angle || '', type: 'text' },
-    { key: 'targetCustomers', label: 'Target Customers', icon: Users, value: savedValues['targetCustomers'] ?? empireData?.targetCustomers || '', type: 'textarea' },
-    { key: 'businessGoals', label: 'Business Goals', icon: Goal, value: savedValues['businessGoals'] ?? empireData?.businessGoals || '', type: 'textarea' },
-    { key: 'archetype', label: 'Archetype', icon: Cpu, value: savedValues['archetype'] ?? empireData?.archetype || 'SELLER', type: 'select', options: ['SELLER', 'CONTENT_CREATOR'] },
+    { key: 'name', label: 'Business Name', icon: Building2, value: empireData?.title || '', type: 'text' },
+    { key: 'niche', label: 'Niche', icon: Target, value: empireData?.description?.match(/Empire Niche:\s*(.*?)(?:\.|$)/)?.[1] || empireData?.niche || '', type: 'text' },
+    { key: 'angle', label: 'Angle', icon: Compass, value: empireData?.description?.match(/Angle:\s*(.*?)(?:\.|$)/)?.[1] || empireData?.angle || '', type: 'text' },
+    { key: 'targetCustomers', label: 'Target Customers', icon: Users, value: empireData?.targetCustomers || '', type: 'textarea' },
+    { key: 'businessGoals', label: 'Business Goals', icon: Goal, value: empireData?.businessGoals || '', type: 'textarea' },
+    { key: 'archetype', label: 'Archetype', icon: Cpu, value: empireData?.archetype || 'SELLER', type: 'select', options: ['SELLER', 'CONTENT_CREATOR'] },
   ];
 
   const startEditing = (field: EditableField) => {
@@ -74,7 +73,6 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
       updateData[fieldKey] = newValue;
       const success = await empireService.updateEmpire(empireId, updateData);
       if (success) {
-        setSavedValues(prev => ({ ...prev, [fieldKey]: newValue }));
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
         setEditingField(null);
