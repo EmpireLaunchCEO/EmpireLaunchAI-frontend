@@ -148,19 +148,22 @@ const getHeaders = (): Record<string, string> => ({
 export const empireService = {
   async getEmpire(id: string): Promise<any> {
     try {
-      const data = await fetchJSON(`${API_URL}/api/agent/empire/${id}`, { headers: getHeaders() });
-      if (data) return data;
+      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
+        headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+      });
+      if (res.ok) return res.json();
     } catch (e) {
       console.warn('[empireService.getEmpire] fetch failed, falling back to getLatestEmpire', e);
     }
-    // Only fall back if primary endpoint returned nothing useful
     return this.getLatestEmpire();
   },
 
   async getLatestEmpire(): Promise<any> {
     try {
-      const data = await fetchJSON(`${API_URL}/api/agent/goal/latest`, { headers: getHeaders() });
-      if (data) return data;
+      const res = await fetch(`${API_URL}/api/agent/goal/latest`, {
+        headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+      });
+      if (res.ok) return res.json();
     } catch (e) {
       console.warn('[empireService.getLatestEmpire] fetch failed', e);
     }
