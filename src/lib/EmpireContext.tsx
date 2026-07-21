@@ -4,6 +4,19 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { API_URL } from '@/lib/config';
 import { empireService } from '@/lib/api-service';
 
+// Auth token helper — mirrors api-service.ts getAuthToken() pattern
+const getAuthHeader = (): string => {
+  if (typeof window !== 'undefined') {
+    let token = localStorage.getItem('empire_auth_token');
+    if (!token) {
+      token = crypto.randomUUID();
+      localStorage.setItem('empire_auth_token', token);
+    }
+    return `Bearer ${token}`;
+  }
+  return getAuthHeader(); // SSR fallback
+};
+
 interface Notification {
   id: string;
   title: string;
@@ -336,7 +349,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token',
+          'Authorization': getAuthHeader(),
           'x-user-id': getStoredUserId()
         },
         body: JSON.stringify({ value: true })
@@ -397,7 +410,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`${API_URL}/api/integrations/status`, {
         headers: {
-          'Authorization': 'Bearer mock-mobile-token',
+          'Authorization': getAuthHeader(),
           'x-user-id': storedUserId
         }
       });
@@ -428,7 +441,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         fetch(`${API_URL}/api/integrations/${platform}`, {
           method: 'DELETE',
           headers: {
-            'Authorization': 'Bearer mock-mobile-token',
+            'Authorization': getAuthHeader(),
             'x-user-id': getStoredUserId()
           }
         }).catch(err => console.error('Failed to notify backend of disconnect', err));
@@ -572,7 +585,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
                     if (storedUserId) {
                       const settingsRes = await fetch(`${API_URL}/api/settings/hydrate`, {
                         headers: {
-                          'Authorization': 'Bearer mock-mobile-token',
+                          'Authorization': getAuthHeader(),
                           'x-user-id': storedUserId
                         }
                       }).catch(() => null);
@@ -629,7 +642,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         if (storedUserId) {
           const integRes = await fetch(`${API_URL}/api/integrations/status`, {
             headers: {
-                'Authorization': 'Bearer mock-mobile-token',
+                'Authorization': getAuthHeader(),
                 'x-user-id': storedUserId
               }
           }).catch(() => null);
