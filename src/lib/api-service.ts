@@ -173,13 +173,13 @@ export const empireService = {
   async updateEmpire(id: string, data: Record<string, string>): Promise<boolean> {
     try {
       const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Authorization': `Bearer ${getAuthToken()}` },
         body: JSON.stringify(data),
       });
       return res.ok;
     } catch (e: any) {
-      alert(`PUT threw: ${e.message}`);
+      alert(`POST threw: ${e.message}`);
       return false;
     }
   }
