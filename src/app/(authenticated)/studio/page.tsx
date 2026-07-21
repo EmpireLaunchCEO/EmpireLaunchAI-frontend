@@ -28,6 +28,15 @@ import { API_URL } from '@/lib/config';
 
 import { BarChart3, PenSquare, Lightbulb, SendHorizonal, Scissors, MonitorPlay, Clapperboard, Info } from 'lucide-react';
 
+const getAuthHeader = (): string => {
+  if (typeof window !== 'undefined') {
+    let token = localStorage.getItem('empire_auth_token');
+    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
+    return `Bearer ${token}`;
+  }
+  return 'Bearer ';
+};
+
 export default function StudioPage() {
   const [isDemoMode, setIsDemoMode] = useState(false);
   const { activeEmpire: empireData, registerRefreshHandler } = useEmpire();
@@ -43,7 +52,7 @@ export default function StudioPage() {
         if (!userId) return;
         const res = await fetch(`${API_URL}/api/settings/`, {
           headers: {
-            'Authorization': 'Bearer mock-mobile-token',
+            'Authorization': getAuthHeader(),
             'x-user-id': userId
           }
         });
@@ -303,7 +312,7 @@ export default function StudioPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token',
+          'Authorization': getAuthHeader(),
           'x-user-id': userId
         },
         body: JSON.stringify({
@@ -359,7 +368,7 @@ export default function StudioPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token',
+          'Authorization': getAuthHeader(),
           'x-user-id': userId || ''
         },
         body: JSON.stringify({
@@ -390,7 +399,7 @@ export default function StudioPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token',
+          'Authorization': getAuthHeader(),
           'x-user-id': userId || ''
         },
         body: JSON.stringify({

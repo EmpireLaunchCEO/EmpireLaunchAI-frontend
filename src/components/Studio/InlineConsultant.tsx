@@ -6,6 +6,15 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { API_URL } from '@/lib/config';
 
+const getAuthHeader = (): string => {
+  if (typeof window !== 'undefined') {
+    let token = localStorage.getItem('empire_auth_token');
+    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
+    return `Bearer ${token}`;
+  }
+  return 'Bearer ';
+};
+
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -60,7 +69,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             method: 'POST',
             headers: {
                           'Content-Type': 'application/json',
-                          'Authorization': 'Bearer mock-mobile-token',
+                          'Authorization': getAuthHeader(),
                           ...(userId ? { 'x-user-id': userId } : {})
                         },
                         body: JSON.stringify({
@@ -118,7 +127,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token',
+          'Authorization': getAuthHeader(),
           ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 

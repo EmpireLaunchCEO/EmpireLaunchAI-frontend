@@ -47,6 +47,15 @@ import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { AutoPilotStatusBadge } from '@/components/Dashboard/GlobalDnaPoolPanel';
 import { NeuralDispatchCenter } from '@/components/Dashboard/NeuralDispatchCenter';
 
+const getAuthHeader = (): string => {
+  if (typeof window !== 'undefined') {
+    let token = localStorage.getItem('empire_auth_token');
+    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
+    return `Bearer ${token}`;
+  }
+  return 'Bearer ';
+};
+
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'pending'>('pending');
   const { empireNotes, setEmpireNotes, connectedPlatforms, isAdmin, activeEmpire: empireData, registerRefreshHandler } = useEmpire();
@@ -60,7 +69,7 @@ export default function EmpireCenterPage() {
         if (!userId) return;
         const res = await fetch(`/api/studio/assets`, {
           headers: {
-            'Authorization': 'Bearer mock-mobile-token',
+            'Authorization': getAuthHeader(),
             'x-user-id': userId
           }
         });

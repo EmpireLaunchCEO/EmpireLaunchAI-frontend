@@ -8,6 +8,15 @@ import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 
+const getAuthHeader = (): string => {
+  if (typeof window !== 'undefined') {
+    let token = localStorage.getItem('empire_auth_token');
+    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
+    return `Bearer ${token}`;
+  }
+  return 'Bearer ';
+};
+
 interface NotificationOnboardingProps {
   onComplete?: () => void;
 }
@@ -84,7 +93,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token' // In real app, use actual user token
+          'Authorization': getAuthHeader() // In real app, use actual user token
         },
         body: JSON.stringify({
           subscription,

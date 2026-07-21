@@ -25,6 +25,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 
+const getAuthHeader = (): string => {
+  if (typeof window !== 'undefined') {
+    let token = localStorage.getItem('empire_auth_token');
+    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
+    return `Bearer ${token}`;
+  }
+  return 'Bearer ';
+};
+
 const platformIcons: Record<string, any> = {
   TikTok: Smartphone,
   Instagram: Instagram,
@@ -64,7 +73,7 @@ export function NeuralDispatchCenter() {
       if (!userId) { setIsLoading(false); return; }
       const res = await fetch(`${API_URL}/api/approval/pending`, {
         headers: {
-          'Authorization': 'Bearer mock-mobile-token',
+          'Authorization': getAuthHeader(),
           'x-user-id': userId
         }
       });
@@ -134,7 +143,7 @@ export function NeuralDispatchCenter() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token',
+          'Authorization': getAuthHeader(),
           'x-user-id': userId || ''
         },
         body: JSON.stringify({

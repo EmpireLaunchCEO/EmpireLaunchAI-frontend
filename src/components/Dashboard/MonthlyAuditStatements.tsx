@@ -50,7 +50,7 @@ export function MonthlyAuditStatements() {
     if (typeof window !== 'undefined') {
       const userId = localStorage.getItem('empire_userId');
       return userId ? {
-        'Authorization': 'Bearer mock-mobile-token',
+        'Authorization': getAuthHeader(),
         'x-user-id': userId,
       } : {};
     }

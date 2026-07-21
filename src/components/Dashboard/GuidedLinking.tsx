@@ -31,6 +31,15 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { onboardingService } from '@/lib/api-service';
 
+const getAuthHeader = (): string => {
+  if (typeof window !== 'undefined') {
+    let token = localStorage.getItem('empire_auth_token');
+    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
+    return `Bearer ${token}`;
+  }
+  return 'Bearer ';
+};
+
 import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 
 const availablePlatforms = [
@@ -438,7 +447,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     try {
       const res = await fetch(`${API_URL}/api/onboarding/tiktok-qr`, {
         method: 'POST',
-        headers: { 'Authorization': 'Bearer mock-mobile-token', 'x-user-id': '00000000-0000-0000-0000-000000000000', 'Content-Type': 'application/json' },
+        headers: { 'Authorization': getAuthHeader(), 'x-user-id': '00000000-0000-0000-0000-000000000000', 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: '00000000-0000-0000-0000-000000000000' })
       });
       const data = await res.json();
@@ -465,7 +474,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     try {
       const res = await fetch(`${API_URL}/api/onboarding/tiktok-credentials`, {
         method: 'POST',
-        headers: { 'Authorization': 'Bearer mock-mobile-token', 'x-user-id': '00000000-0000-0000-0000-000000000000', 'Content-Type': 'application/json' },
+        headers: { 'Authorization': getAuthHeader(), 'x-user-id': '00000000-0000-0000-0000-000000000000', 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           userId: '00000000-0000-0000-0000-000000000000',
           sessionId: qrSessionId,

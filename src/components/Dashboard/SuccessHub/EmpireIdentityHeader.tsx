@@ -25,6 +25,15 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
 
+const getAuthHeader = (): string => {
+  if (typeof window !== 'undefined') {
+    let token = localStorage.getItem('empire_auth_token');
+    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
+    return `Bearer ${token}`;
+  }
+  return 'Bearer ';
+};
+
 export default function EmpireIdentityHeader() {
   const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, setDashboardLoaded, isAdmin, isDashboardLoaded, registerRefreshHandler } = useEmpire();
   const [empireData, setEmpireData] = useState<any>(null);
@@ -150,7 +159,7 @@ export default function EmpireIdentityHeader() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer mock-mobile-token'
+          'Authorization': getAuthHeader()
         },
         body: JSON.stringify({
           goal,

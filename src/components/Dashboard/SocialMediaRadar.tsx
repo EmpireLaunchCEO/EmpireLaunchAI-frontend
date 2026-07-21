@@ -38,6 +38,15 @@ import { API_URL } from '@/lib/config';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { ViralSignalsPanel, generateMockSignals } from '@/components/Dashboard/MarketHeatMeter';
 
+const getAuthHeader = (): string => {
+  if (typeof window !== 'undefined') {
+    let token = localStorage.getItem('empire_auth_token');
+    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
+    return `Bearer ${token}`;
+  }
+  return 'Bearer ';
+};
+
 // ─── Platform Data & Config ──────────────────────────────────────────────────
 
 const MOCK_PLATFORM_DATA: Record<string, any> = {
@@ -372,7 +381,7 @@ export function SocialMediaRadar() {
         if (!userId) return;
         const res = await fetch(`${API_URL}/api/settings/`, {
           headers: {
-            'Authorization': 'Bearer mock-mobile-token',
+            'Authorization': getAuthHeader(),
             'x-user-id': userId
           }
         });
