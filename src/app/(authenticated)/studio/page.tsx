@@ -562,6 +562,20 @@ export default function StudioPage() {
 
               {/* 3. Faceless Content Creation Box */}
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
+                <div className="absolute top-6 right-6 flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
+                    <span className="text-[10px] font-black text-primary">∞</span>
+                    <span className="text-[9px] font-black text-slate-400">/</span>
+                    <span className="text-[9px] font-black text-slate-500">∞</span>
+                  </div>
+                  <div className="relative">
+                    <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                    <div className="absolute bottom-full right-0 mb-3 w-48 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                      <p className="font-black text-white uppercase tracking-widest mb-1">Faceless Videos</p>
+                      Unlimited faceless content generation. No quota restrictions.
+                    </div>
+                  </div>
+                </div>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                     <Clapperboard className="w-5 h-5 text-emerald-400" />
