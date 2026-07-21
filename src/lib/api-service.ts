@@ -177,8 +177,13 @@ export const empireService = {
         headers: { 'Authorization': `Bearer ${getAuthToken()}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        alert(`PUT failed: HTTP ${res.status}\n${text.slice(0,200)}\nempireId: ${id}`);
+      }
       return res.ok;
-    } catch (e) {
+    } catch (e: any) {
+      alert(`PUT threw: ${e.message}`);
       return false;
     }
   }
