@@ -31,14 +31,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     setMounted(true);
-    // Safety fallback: show content after 15s even if data hasn't loaded
-    const timer = setTimeout(() => {
-      if (!empireData) {
-        setDashboardLoaded(true);
-      }
-    }, 15000);
-    return () => clearTimeout(timer);
-  }, [empireData, setDashboardLoaded]);
+  }, []);
 
   const fetchData = useCallback(async (retryCount = 0) => {
     if (isLoadingRef.current && retryCount === 0) return;
@@ -53,12 +46,26 @@ export default function Dashboard() {
       const results = await Promise.race([fetchPromise, timeoutPromise]) as any[];
       const [eData, pulse] = results;
 
+      // Always try to load from cache first for instant display
+      if (!eData && typeof window !== 'undefined') {
+        const cached = localStorage.getItem('empire_data_cache');
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached);
+            setEmpireDataState(parsed);
+            setActiveEmpire(parsed);
+          } catch (e) { /* ignore corrupt cache */ }
+        }
+      }
+
       if (eData) {
         let finalData = eData;
         
         // Persist empire ID to localStorage so saves never depend on component state
         if (finalData?.id && typeof window !== 'undefined') {
           localStorage.setItem('empire_active_id', finalData.id);
+          // Cache full empire data for instant reload
+          localStorage.setItem('empire_data_cache', JSON.stringify(finalData));
         }
         
         setEmpireDataState(finalData);
@@ -114,6 +121,15 @@ export default function Dashboard() {
               <h2 className="text-white font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
                 Syncing Neural Node {activeEmpireId}
               </h2>
+            </div>
+          ) : !empireData ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-6">
+              <h2 className="text-red-400 font-black uppercase tracking-[0.3em] text-[10px]">
+                Failed to load empire data
+              </h2>
+              <button onClick={() => fetchData()} className="px-6 py-3 bg-primary text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-primary/80 transition-colors">
+                Retry
+              </button>
             </div>
           ) : (
             <>

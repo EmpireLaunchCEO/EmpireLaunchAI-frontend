@@ -91,6 +91,34 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
       }
 
       if (result.ok) {
+        // Update localStorage cache immediately so edits survive page reloads
+        try {
+          if (typeof window !== 'undefined') {
+            const cached = JSON.parse(localStorage.getItem('empire_data_cache') || 'null');
+            if (cached) {
+              // Map frontend field keys to backend response fields
+              const fieldMap: Record<string, string> = {
+                name: 'title',
+                targetCustomers: 'targetCustomers',
+                businessGoals: 'businessGoals',
+                archetype: 'archetype',
+              };
+              const mappedKey = fieldMap[fieldKey] || fieldKey;
+              if (fieldKey === 'niche' || fieldKey === 'angle') {
+                // Update the description field for niche/angle
+                if (fieldKey === 'niche') {
+                  cached.description = cached.description?.replace(/Empire Niche:\s*(.*?)(?:\.|$)/, `Empire Niche: ${newValue}.`) || `Empire Niche: ${newValue}.`;
+                } else {
+                  cached.description = cached.description?.replace(/Angle:\s*(.*?)(?:\.|$)/, `Angle: ${newValue}.`) || `Angle: ${newValue}.`;
+                }
+              } else {
+                cached[mappedKey] = newValue;
+              }
+              localStorage.setItem('empire_data_cache', JSON.stringify(cached));
+            }
+          }
+        } catch (e) { /* cache update failed — non-critical */ }
+        
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
         setEditingField(null);
