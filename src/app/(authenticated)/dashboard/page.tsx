@@ -32,13 +32,14 @@ export default function Dashboard() {
 
   useEffect(() => {
     setMounted(true);
+    // Safety fallback: show content after 15s even if data hasn't loaded
     const timer = setTimeout(() => {
-      if (mounted && !isDashboardLoaded) {
+      if (!empireData) {
         setDashboardLoaded(true);
       }
-    }, 4000);
+    }, 15000);
     return () => clearTimeout(timer);
-  }, [mounted, isDashboardLoaded, setDashboardLoaded]);
+  }, [empireData, setDashboardLoaded]);
 
   const fetchData = useCallback(async (retryCount = 0) => {
     if (isLoading && retryCount === 0) return;
@@ -105,7 +106,7 @@ export default function Dashboard() {
             productName={growthGateProduct}
           />
           
-          {!isDashboardLoaded ? (
+          {!empireData && !isDashboardLoaded ? (
             <div className="flex flex-col items-center justify-center py-20 gap-6">
               <BrandedGlobe size="lg" spinning />
               <h2 className="text-white font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
