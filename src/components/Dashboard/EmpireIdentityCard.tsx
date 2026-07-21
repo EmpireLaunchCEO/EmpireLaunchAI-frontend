@@ -78,7 +78,6 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
         setEditingField(null);
         onUpdate();
       } else {
-        alert(`DEBUG: updateEmpire returned false\nempireId: ${empireId}\nfieldKey: ${fieldKey}\nvalue: ${newValue}`);
         setError(`Failed to save ${fieldKey}. The server rejected the request.`);
       }
     } catch (e) {
