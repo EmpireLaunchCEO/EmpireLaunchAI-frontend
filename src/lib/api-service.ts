@@ -172,22 +172,13 @@ export const empireService = {
 
   async updateEmpire(id: string, data: Record<string, string>): Promise<boolean> {
     try {
-      const url = `${API_URL}/api/agent/empire/${id}`;
-      const res = await fetch(url, {
+      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${getAuthToken()}`,
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Authorization': `Bearer ${getAuthToken()}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      if (!res.ok) {
-        const text = await res.text().catch(() => '');
-        console.error('[updateEmpire] FAILED', res.status, text, 'URL:', url);
-      }
       return res.ok;
-    } catch (e: any) {
-      console.error('[updateEmpire] THREW:', e.message || e);
+    } catch (e) {
       return false;
     }
   }
