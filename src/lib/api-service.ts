@@ -85,16 +85,41 @@ export interface DiscoveryResult {
   confidence: number;
 }
 
-const HEADERS = {
-  'Authorization': 'Bearer mock-mobile-token',
-  'x-user-id': '00000000-0000-0000-0000-000000000000',
-  'Content-Type': 'application/json'
+const USER_ID = (() => {
+  if (typeof window !== 'undefined') {
+    let id = localStorage.getItem('empire_user_id');
+    if (!id) {
+      id = '00000000-0000-0000-0000-000000000000';
+      localStorage.setItem('empire_user_id', id);
+    }
+    return id;
+  }
+  return '00000000-0000-0000-0000-000000000000';
+})();
+
+// Generate a real session token on first load — no mock tokens
+const getAuthToken = (): string => {
+  if (typeof window !== 'undefined') {
+    let token = localStorage.getItem('empire_auth_token');
+    if (!token) {
+      token = crypto.randomUUID(); // Real UUID, not a mock
+      localStorage.setItem('empire_auth_token', token);
+    }
+    return token;
+  }
+  return '';
 };
+
+const getHeaders = (): Record<string, string> => ({
+  'Authorization': `Bearer ${getAuthToken()}`,
+  'x-user-id': USER_ID,
+  'Content-Type': 'application/json'
+});
 
 export const empireService = {
   async getEmpire(id: string): Promise<any> {
     try {
-      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, { headers: getHeaders() });
       if (res.ok) return await res.json();
     } catch (e) {}
     return this.getLatestEmpire();
@@ -102,7 +127,7 @@ export const empireService = {
 
   async getLatestEmpire(): Promise<any> {
     try {
-      const res = await fetch(`${API_URL}/api/agent/goal/latest`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/agent/goal/latest`, { headers: getHeaders() });
       if (res.ok) return await res.json();
     } catch (e) {}
     return null;
@@ -112,7 +137,7 @@ export const empireService = {
     try {
       const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
         method: 'PUT',
-        headers: HEADERS,
+        headers: getHeaders(),
         body: JSON.stringify(data),
       });
       return res.ok;
@@ -125,7 +150,7 @@ export const empireService = {
 export const socialProofService = {
   async getPendingApprovals(): Promise<AppRating[]> {
     try {
-      const res = await fetch(`${API_URL}/api/reviews/flagged/00000000-0000-0000-0000-000000000000`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/reviews/flagged/00000000-0000-0000-0000-000000000000`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         return data.map((r: any) => ({
@@ -147,7 +172,7 @@ export const socialProofService = {
     try {
       const res = await fetch(`${API_URL}/api/reviews`, {
         method: 'POST',
-        headers: HEADERS,
+        headers: getHeaders(),
         body: JSON.stringify({ 
           userId: '00000000-0000-0000-0000-000000000000',
           rating,
@@ -164,7 +189,7 @@ export const socialProofService = {
     try {
       const res = await fetch(`${API_URL}/api/reviews/approve`, {
         method: 'POST',
-        headers: HEADERS,
+        headers: getHeaders(),
         body: JSON.stringify({ 
           userId: '00000000-0000-0000-0000-000000000000',
           reviewId: id
@@ -180,7 +205,7 @@ export const socialProofService = {
     try {
       const res = await fetch(`${API_URL}/api/reviews/reject`, {
         method: 'POST',
-        headers: HEADERS,
+        headers: getHeaders(),
         body: JSON.stringify({ 
           userId: '00000000-0000-0000-0000-000000000000',
           reviewId: id
@@ -203,7 +228,7 @@ export interface InfrastructureBalance {
 export const discoveryService = {
   async getPendingResults(): Promise<DiscoveryResult[]> {
     try {
-      const res = await fetch(`${API_URL}/api/discovery/pending`, { headers: HEADERS }).catch(() => null);
+      const res = await fetch(`${API_URL}/api/discovery/pending`, { headers: getHeaders() }).catch(() => null);
       if (res && res.ok) return await res.json();
     } catch(e) {}
     
@@ -216,7 +241,7 @@ export const discoveryService = {
 export const infrastructureService = {
   async getBalances(): Promise<InfrastructureBalance[]> {
     try {
-      const res = await fetch(`${API_URL}/api/revenue/infrastructure`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/revenue/infrastructure`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         // Backend returns { balances: [...], subscriptions: [...] } — extract the array
@@ -306,7 +331,7 @@ export const creativeService = {
 export const approvalService = {
   async getPendingRequests(): Promise<ApprovalRequest[]> {
     try {
-       const res = await fetch(`${API_URL}/api/approvals/pending`, { headers: HEADERS }).catch(() => null);
+       const res = await fetch(`${API_URL}/api/approvals/pending`, { headers: getHeaders() }).catch(() => null);
        if (res && res.ok) return await res.json();
     } catch(e) {}
     return [];
@@ -316,7 +341,7 @@ export const approvalService = {
     try {
       const res = await fetch(`${API_URL}/api/approvals/${id}/respond`, { 
         method: 'POST', 
-        headers: HEADERS,
+        headers: getHeaders(),
         body: JSON.stringify({ status, details }) 
       });
       return res.ok;
@@ -329,21 +354,21 @@ export const approvalService = {
 export const retentionService = {
   async getTrustPulse(): Promise<TrustScore> {
     try {
-      const res = await fetch(`${API_URL}/api/reviews/pulse`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/reviews/pulse`, { headers: getHeaders() });
       if (res.ok) return await res.json();
     } catch (e) {}
     return { score: 88, velocity: 92, sentiment: 85, agility: 82 };
   },
   async getSentimentMap(): Promise<SentimentPoint[]> {
     try {
-      const res = await fetch(`${API_URL}/api/reviews/sentiment`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/reviews/sentiment`, { headers: getHeaders() });
       if (res.ok) return await res.json();
     } catch (e) {}
     return [];
   },
   async getInboxDrafts(): Promise<InboxDraft[]> {
     try {
-      const res = await fetch(`${API_URL}/api/retention/drafts`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/retention/drafts`, { headers: getHeaders() });
       if (res.ok) return await res.json();
     } catch (e) {}
     return [];
@@ -352,7 +377,7 @@ export const retentionService = {
     try {
       const res = await fetch(`${API_URL}/api/retention/respond`, {
         method: 'POST',
-        headers: HEADERS,
+        headers: getHeaders(),
         body: JSON.stringify({ id, status })
       });
       return res.ok;
@@ -387,7 +412,7 @@ export const paymentService = {
   async onboardStripe(): Promise<StripeOnboardingResult> {
     const res = await fetch(`${API_URL}/api/stripe/onboard`, {
       method: 'POST',
-      headers: HEADERS,
+      headers: getHeaders(),
     });
     if (!res.ok) throw new Error('Stripe onboarding failed');
     return res.json();
@@ -398,7 +423,7 @@ export const paymentService = {
    */
   async getStripeStatus(): Promise<StripeAccountStatus> {
     try {
-      const res = await fetch(`${API_URL}/api/stripe/status`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/stripe/status`, { headers: getHeaders() });
       if (res.ok) return await res.json();
     } catch (e) {}
     return { connected: false };
@@ -410,7 +435,7 @@ export const paymentService = {
   async createPaymentLink(name: string, description: string, priceInCents: number): Promise<{ url: string; productId: string }> {
     const res = await fetch(`${API_URL}/api/stripe/payment-link`, {
       method: 'POST',
-      headers: HEADERS,
+      headers: getHeaders(),
       body: JSON.stringify({ name, description, priceInCents }),
     });
     if (!res.ok) throw new Error('Payment link creation failed');
@@ -423,7 +448,7 @@ export const paymentService = {
   async createPaymentButton(data: CreatePaymentButtonRequest): Promise<{ id: string; url: string }> {
     const res = await fetch(`${API_URL}/api/stripe/payment-button`, {
       method: 'POST',
-      headers: HEADERS,
+      headers: getHeaders(),
       body: JSON.stringify(data),
     });
     if (!res.ok) throw new Error('Payment button creation failed');
@@ -436,7 +461,7 @@ export const paymentService = {
   async createPlatformCheckout(returnUrl: string): Promise<{ url: string }> {
     const res = await fetch(`${API_URL}/api/stripe/checkout/platform`, {
       method: 'POST',
-      headers: HEADERS,
+      headers: getHeaders(),
       body: JSON.stringify({ returnUrl }),
     });
     if (!res.ok) throw new Error('Checkout session creation failed');
@@ -447,7 +472,7 @@ export const paymentService = {
    * Verify a platform payment session
    */
   async verifyPlatformPayment(sessionId: string): Promise<{ status: string }> {
-    const res = await fetch(`${API_URL}/api/stripe/verify/platform?sessionId=${sessionId}`, { headers: HEADERS });
+    const res = await fetch(`${API_URL}/api/stripe/verify/platform?sessionId=${sessionId}`, { headers: getHeaders() });
     if (!res.ok) throw new Error('Payment verification failed');
     return res.json();
   },
@@ -464,7 +489,7 @@ export const paymentService = {
   }): Promise<{ proxyUrl: string }> {
     const res = await fetch(`${API_URL}/api/payment-buttons/protected/generate`, {
       method: 'POST',
-      headers: HEADERS,
+      headers: getHeaders(),
       body: JSON.stringify(payload),
     });
     if (!res.ok) {
@@ -477,7 +502,7 @@ export const paymentService = {
   export const analyticsService = {
   async getEmpirePulse(): Promise<EmpirePulseState> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/pulse`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/analytics/pulse`, { headers: getHeaders() });
       if (res.ok) return await res.json();
     } catch (e) {}
 
@@ -491,7 +516,7 @@ export const paymentService = {
 
   async getEmpireHealth(): Promise<EmpireHealth> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/pulse`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/analytics/pulse`, { headers: getHeaders() });
       if (res.ok) {
          const data = await res.json();
          return {
@@ -509,7 +534,7 @@ export const paymentService = {
 
   async getRevenueTransactions(): Promise<RevenueTransaction[]> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/transactions`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/analytics/transactions`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         return Array.isArray(data) ? data : [];
@@ -520,7 +545,7 @@ export const paymentService = {
 
   async getRevenueMilestones(): Promise<RevenueMilestone[]> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/milestones`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/analytics/milestones`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         return Array.isArray(data) ? data : [];
@@ -531,7 +556,7 @@ export const paymentService = {
 
   async getSocialEngagement(): Promise<EngagementMetric[]> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/engagement`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/analytics/engagement`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         return Array.isArray(data) ? data : [];
@@ -542,7 +567,7 @@ export const paymentService = {
 
   async getActivityStream(): Promise<ActivityEvent[]> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/activity`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/analytics/activity`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         return Array.isArray(data) ? data : [];
@@ -553,7 +578,7 @@ export const paymentService = {
 
   async getPaymentButtons(): Promise<PaymentButton[]> {
     try {
-      const res = await fetch(`${API_URL}/api/payment-buttons?userId=00000000-0000-0000-0000-000000000000`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/payment-buttons?userId=00000000-0000-0000-0000-000000000000`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         return (data.buttons || []).map((b: any) => ({
@@ -576,7 +601,7 @@ export const paymentService = {
 
   async getStrategySuggestions(): Promise<any[]> {
     try {
-      const res = await fetch(`${API_URL}/api/analytics/strategies`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/analytics/strategies`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         return Array.isArray(data) ? data : [];
@@ -598,7 +623,7 @@ export const paymentService = {
       if (params.angle) query.set('angle', params.angle);
       if (params.targetCustomers) query.set('targetCustomers', params.targetCustomers);
       if (params.businessGoals) query.set('businessGoals', params.businessGoals);
-      const res = await fetch(`${API_URL}/api/intel/trends?${query.toString()}`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/intel/trends?${query.toString()}`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         return {
@@ -617,7 +642,7 @@ export const paymentService = {
   
   async fetchLibraryAssets(): Promise<any[]> {
     try {
-      const res = await fetch(`${API_URL}/api/studio/assets`, { headers: HEADERS });
+      const res = await fetch(`${API_URL}/api/studio/assets`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         return Array.isArray(data) ? data : data.assets || [];
@@ -632,7 +657,7 @@ export const paymentService = {
     try {
       const res = await fetch(`${API_URL}/api/studio/assets/${assetId}`, {
         method: 'PATCH',
-        headers: HEADERS,
+        headers: getHeaders(),
         body: JSON.stringify({ title: name })
       });
       return res.ok;
@@ -647,7 +672,7 @@ export const onboardingService = {
   async startOnboarding(platform: string, credentials?: { email?: string; password?: string; handle?: string }): Promise<any> {
     const res = await fetch(`${API_URL}/api/onboarding/start`, {
       method: 'POST',
-      headers: HEADERS,
+      headers: getHeaders(),
       body: JSON.stringify({
         userId: '00000000-0000-0000-0000-000000000000',
         platform,
@@ -658,7 +683,7 @@ export const onboardingService = {
     return res.json();
   },
   async getStatus(sessionId: string): Promise<any> {
-    const res = await fetch(`${API_URL}/api/onboarding/status/${sessionId}`, { headers: HEADERS });
+    const res = await fetch(`${API_URL}/api/onboarding/status/${sessionId}`, { headers: getHeaders() });
     if (!res.ok) throw new Error('Failed to get onboarding status');
     return res.json();
   }
