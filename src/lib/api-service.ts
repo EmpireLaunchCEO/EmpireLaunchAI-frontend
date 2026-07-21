@@ -139,6 +139,21 @@ const getAuthToken = (): string => {
   return '';
 };
 
+// Update stored token when backend issues a new session token
+const saveSessionToken = (res: Response) => {
+  const newToken = res.headers.get('X-Session-Token');
+  if (newToken && typeof window !== 'undefined') {
+    localStorage.setItem('empire_auth_token', newToken);
+  }
+};
+
+// Authenticated fetch that tracks the session token handshake
+const authFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
+  const res = await fetch(url, options);
+  saveSessionToken(res);
+  return res;
+};
+
 const getHeaders = (): Record<string, string> => ({
   'Authorization': `Bearer ${getAuthToken()}`,
   'x-user-id': USER_ID,
@@ -148,7 +163,7 @@ const getHeaders = (): Record<string, string> => ({
 export const empireService = {
   async getEmpire(id: string): Promise<any> {
     try {
-      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
+      const res = await authFetch(`${API_URL}/api/agent/empire/${id}`, {
         headers: { 'Authorization': `Bearer ${getAuthToken()}` }
       });
       if (res.ok) return res.json();
@@ -160,7 +175,7 @@ export const empireService = {
 
   async getLatestEmpire(): Promise<any> {
     try {
-      const res = await fetch(`${API_URL}/api/agent/goal/latest`, {
+      const res = await authFetch(`${API_URL}/api/agent/goal/latest`, {
         headers: { 'Authorization': `Bearer ${getAuthToken()}` }
       });
       if (res.ok) return res.json();
@@ -172,7 +187,7 @@ export const empireService = {
 
   async updateEmpire(id: string, data: Record<string, string>): Promise<{ ok: boolean; status: number; body: string }> {
     try {
-      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
+      const res = await authFetch(`${API_URL}/api/agent/empire/${id}`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${getAuthToken()}` },
         body: JSON.stringify(data),
