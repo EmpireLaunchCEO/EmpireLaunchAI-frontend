@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Edit2, Check, X, Building2, Target, Compass, Users, Goal, Cpu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { empireService } from '@/lib/api-service';
@@ -27,7 +27,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { activeEmpire, activeEmpireId } = useEmpire();
+  const { activeEmpire } = useEmpire();
 
   const fields: EditableField[] = [
     { key: 'name', label: 'Business Name', icon: Building2, value: empireData?.title || '', type: 'text' },
@@ -63,6 +63,10 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
     setError(null);
   };
 
+  // Stable save handler — uses refs so it never goes stale between renders
+  const onUpdateRef = useRef(onUpdate);
+  useEffect(() => { onUpdateRef.current = onUpdate; }, [onUpdate]);
+
   const handleSave = useCallback(async (fieldKey: string) => {
     const newValue = (editValuesRef.current[fieldKey] ?? '').trim();
     setError(null);
@@ -71,7 +75,6 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
     try {
       // Read empire ID from localStorage (persisted by dashboard on every fetch)
       let empireId = (typeof window !== 'undefined' && localStorage.getItem('empire_active_id')) || '';
-      // Fallback: resolve from API
       if (!empireId) {
         try {
           const latest = await empireService.getLatestEmpire();
@@ -83,7 +86,6 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
       // Save with single retry on failure
       let result = await empireService.updateEmpire(empireId, { [fieldKey]: newValue });
       if (!result.ok) {
-        // Wait 500ms and retry once
         await new Promise(r => setTimeout(r, 500));
         result = await empireService.updateEmpire(empireId, { [fieldKey]: newValue });
       }
@@ -94,8 +96,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
         setEditingField(null);
         setEditValues({});
         editValuesRef.current = {};
-        // Trigger parent refresh
-        onUpdate();
+        onUpdateRef.current();
       } else {
         setError(`Save failed. HTTP ${result.status}: ${result.body || 'no body'}`);
       }
@@ -104,7 +105,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
     } finally {
       setSaving(false);
     }
-  }, [onUpdate]);
+  }, []); // Empty deps — all dynamic values come from refs
 
   const handleKeyDown = (e: React.KeyboardEvent, fieldKey: string) => {
     if (e.key === 'Enter' && !e.shiftKey) {
