@@ -24,6 +24,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
   const [editValues, setEditValues] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fields: EditableField[] = [
     { key: 'name', label: 'Business Name', icon: Building2, value: empireData?.title || '', type: 'text' },
@@ -46,6 +47,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
 
   const handleSave = useCallback(async (fieldKey: string) => {
     const newValue = editValues[fieldKey]?.trim() ?? '';
+    setError(null);
     
     // Try to get a valid empire ID — fallback to fetching latest
     let empireId = empireData?.id;
@@ -54,7 +56,7 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
       if (latest?.id) empireId = latest.id;
     }
     if (!empireId) {
-      console.error('[EmpireIdentity] No empire ID available — cannot save');
+      setError('No empire session found. Please refresh the page.');
       return;
     }
 
@@ -69,10 +71,10 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
         setEditingField(null);
         onUpdate();
       } else {
-        console.error('[EmpireIdentity] Save failed — API returned error');
+        setError(`Failed to save ${fieldKey}. The server rejected the request.`);
       }
     } catch (e) {
-      console.error('[EmpireIdentity] Failed to update empire', e);
+      setError(`Connection error while saving ${fieldKey}. Please try again.`);
     } finally {
       setSaving(false);
     }
@@ -213,6 +215,13 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
         <div className="flex items-center gap-2 px-3 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
           <Check className="w-3.5 h-3.5 text-emerald-400" />
           <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Empire Identity Updated</span>
+        </div>
+      )}
+
+      {/* Error display */}
+      {error && (
+        <div className="flex items-center gap-2 px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-xl">
+          <span className="text-[9px] font-black uppercase tracking-widest text-red-400">{error}</span>
         </div>
       )}
     </div>
