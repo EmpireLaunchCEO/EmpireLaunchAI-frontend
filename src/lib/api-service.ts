@@ -169,13 +169,17 @@ export const empireService = {
 
   async updateEmpire(id: string, data: Record<string, string>): Promise<boolean> {
     try {
-      const res = await fetchWithRetry(`${API_URL}/api/agent/empire/${id}`, {
+      const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
         method: 'PUT',
         headers: getHeaders(),
         body: JSON.stringify(data),
       });
+      if (!res.ok) {
+        console.error('[updateEmpire] Server returned', res.status, await res.text().catch(() => ''));
+      }
       return res.ok;
     } catch (e) {
+      console.error('[updateEmpire] Fetch failed:', e);
       return false;
     }
   }
