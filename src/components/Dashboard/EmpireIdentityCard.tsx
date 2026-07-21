@@ -71,14 +71,14 @@ export function EmpireIdentityCard({ empireData, onUpdate }: EmpireIdentityCardP
     try {
       const updateData: any = {};
       updateData[fieldKey] = newValue;
-      const success = await empireService.updateEmpire(empireId, updateData);
-      if (success) {
+      const result = await empireService.updateEmpire(empireId, updateData);
+      if (result.ok) {
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
         setEditingField(null);
         onUpdate();
       } else {
-        setError(`Failed to save ${fieldKey}. The server rejected the request.`);
+        setError(`Failed to save ${fieldKey}. Server returned ${result.status}: ${result.body || '(empty)'}`);
       }
     } catch (e) {
       setError(`Connection error while saving ${fieldKey}. Please try again.`);

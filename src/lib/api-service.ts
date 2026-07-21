@@ -170,17 +170,17 @@ export const empireService = {
     return null;
   },
 
-  async updateEmpire(id: string, data: Record<string, string>): Promise<boolean> {
+  async updateEmpire(id: string, data: Record<string, string>): Promise<{ ok: boolean; status: number; body: string }> {
     try {
       const res = await fetch(`${API_URL}/api/agent/empire/${id}`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${getAuthToken()}` },
         body: JSON.stringify(data),
       });
-      return res.ok;
+      const body = await res.text().catch(() => '');
+      return { ok: res.ok, status: res.status, body };
     } catch (e: any) {
-      alert(`POST threw: ${e.message}`);
-      return false;
+      return { ok: false, status: 0, body: e.message || 'Network error' };
     }
   }
 };
