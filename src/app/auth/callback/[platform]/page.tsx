@@ -6,6 +6,7 @@ import { CheckCircle2, XCircle } from 'lucide-react';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
+import { getEmpireUserId } from '@/lib/api-service';
 
 import { Suspense } from 'react';
 
@@ -47,7 +48,7 @@ function AuthCallbackContent() {
             code,
             state,
             sessionId,
-            userId: '00000000-0000-0000-0000-000000000000', // Mock user ID for now
+            userId: getEmpireUserId(),
           }),
         });
 

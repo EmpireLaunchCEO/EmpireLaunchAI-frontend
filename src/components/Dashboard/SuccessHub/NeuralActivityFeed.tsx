@@ -5,6 +5,7 @@ import { Terminal, Cpu, Zap, CheckCircle2, Circle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { io } from 'socket.io-client';
 import { API_URL } from '@/lib/config';
+import { getEmpireUserId } from '@/lib/api-service';
 
 const MOCK_THOUGHTS = [
   "Analyzing Etsy trends for 'digital journals'...",
@@ -34,7 +35,7 @@ export const NeuralActivityFeed = ({ logs: initialLogs, status: initialStatus }:
   useEffect(() => {
     // Connect to WebSocket
     const socket = io(API_URL);
-    const userId = '00000000-0000-0000-0000-000000000000'; // Real apps would use auth
+    const userId = getEmpireUserId();
 
     socket.on('connect', () => {
       console.log('Connected to Neural Pulse');

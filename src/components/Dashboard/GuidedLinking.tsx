@@ -29,7 +29,7 @@ import {
   } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
-import { onboardingService } from '@/lib/api-service';
+import { onboardingService, getEmpireUserId } from '@/lib/api-service';
 
 const getAuthHeader = (): string => {
   if (typeof window !== 'undefined') {
@@ -352,7 +352,7 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
         signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: '00000000-0000-0000-0000-000000000000',
+          userId: getEmpireUserId(),
           redirectUri: `${window.location.origin}/auth/callback/${oauth.endpoint}`
         })
       })
@@ -447,8 +447,8 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     try {
       const res = await fetch(`${API_URL}/api/onboarding/tiktok-qr`, {
         method: 'POST',
-        headers: { 'Authorization': getAuthHeader(), 'x-user-id': '00000000-0000-0000-0000-000000000000', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: '00000000-0000-0000-0000-000000000000' })
+        headers: { 'Authorization': getAuthHeader(), 'x-user-id': getEmpireUserId(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: getEmpireUserId() })
       });
       const data = await res.json();
       if (data.screenshot) {
@@ -474,9 +474,9 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
     try {
       const res = await fetch(`${API_URL}/api/onboarding/tiktok-credentials`, {
         method: 'POST',
-        headers: { 'Authorization': getAuthHeader(), 'x-user-id': '00000000-0000-0000-0000-000000000000', 'Content-Type': 'application/json' },
+        headers: { 'Authorization': getAuthHeader(), 'x-user-id': getEmpireUserId(), 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          userId: '00000000-0000-0000-0000-000000000000',
+          userId: getEmpireUserId(),
           sessionId: qrSessionId,
           email: credentialEmail,
           password: credentialPassword

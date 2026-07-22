@@ -7,6 +7,7 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
+import { getEmpireUserId } from '@/lib/api-service';
 
 const getAuthHeader = (): string => {
   if (typeof window !== 'undefined') {
@@ -97,7 +98,7 @@ export function NotificationOnboarding({ onComplete }: NotificationOnboardingPro
         },
         body: JSON.stringify({
           subscription,
-          userId: '00000000-0000-0000-0000-000000000000' // Mock user ID
+          userId: getEmpireUserId()
         })
       });
 

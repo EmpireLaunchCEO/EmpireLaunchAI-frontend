@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import { API_URL } from '@/lib/config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
-import { analyticsService, empireService } from '@/lib/api-service';
+import { analyticsService, empireService, getEmpireUserId } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
@@ -163,7 +163,7 @@ export default function EmpireIdentityHeader() {
         },
         body: JSON.stringify({
           goal,
-          userId: '00000000-0000-0000-0000-000000000000',
+          userId: getEmpireUserId(),
           empireId: activeEmpireId
         }),
       });

@@ -17,6 +17,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getEmpireUserId } from '@/lib/api-service';
 
 interface ProductData {
   id: string;
@@ -168,7 +169,7 @@ export default function PublicListingPage() {
     description: product.description,
     directUrl: product.stripeUrl,
     productId: product.id,
-    userId: '00000000-0000-0000-0000-000000000000',
+    userId: getEmpireUserId(),
     platform: product.platform || 'general',
     postId: id,
   };

@@ -114,17 +114,26 @@ export interface DiscoveryResult {
   confidence: number;
 }
 
-const USER_ID = (() => {
+// Multi-tenant: every device gets a unique empire_user_id
+// Existing beta accounts (00000000-...) are preserved
+export const getEmpireUserId = (): string => {
   if (typeof window !== 'undefined') {
+    // 1. Primary key — return whatever is stored (including legacy beta UUID)
     let id = localStorage.getItem('empire_user_id');
-    if (!id) {
-      id = '00000000-0000-0000-0000-000000000000';
-      localStorage.setItem('empire_user_id', id);
+    if (id) return id;
+    // 2. Backward compatibility: check camelCase key (EmpireContext legacy)
+    const legacyId = localStorage.getItem('empire_userId');
+    if (legacyId) {
+      localStorage.setItem('empire_user_id', legacyId);
+      return legacyId;
     }
+    // 3. Generate new device UUID for new users
+    id = crypto.randomUUID();
+    localStorage.setItem('empire_user_id', id);
     return id;
   }
-  return '00000000-0000-0000-0000-000000000000';
-})();
+  return ''; // SSR fallback — no user context
+};
 
 // Generate a real session token on first load — no mock tokens
 const getAuthToken = (): string => {
@@ -156,7 +165,7 @@ const authFetch = async (url: string, options: RequestInit = {}): Promise<Respon
 
 const getHeaders = (): Record<string, string> => ({
   'Authorization': `Bearer ${getAuthToken()}`,
-  'x-user-id': USER_ID,
+  'x-user-id': getEmpireUserId(),
   'Content-Type': 'application/json'
 });
 
