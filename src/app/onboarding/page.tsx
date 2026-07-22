@@ -28,6 +28,7 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { Suspense } from 'react';
 import { detectLocale, setLocale, t, formatPrice, getCurrencyInfo, getAmountInCents, SUPPORTED_LOCALES, type LocaleCode } from '@/lib/i18n';
+import { SUBSCRIPTION_LINK } from '@/lib/payment-links';
 
 const steps = [
   { id: 1, title: 'Protocol' },
@@ -251,32 +252,7 @@ function OnboardingContent() {
   };
 
   const handleSecurePayment = async () => {
-    setIsPaying(true);
-    try {
-        const locale = selectedLocale;
-        const currency = getCurrencyInfo(locale).code;
-        const amountInCents = getAmountInCents(50, locale);
-        const response = await fetch(`${API_URL}/api/stripe/checkout/platform`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-user-id': userId || ''
-            },
-            body: JSON.stringify({
-              returnUrl: window.location.href,
-              currency,
-              amountInCents
-            })
-        });
-        const result = await response.json();
-        if (result.url) {
-            window.location.href = result.url;
-        }
-    } catch (err) {
-        console.error('Checkout failed');
-    } finally {
-        setIsPaying(false);
-    }
+    window.location.href = SUBSCRIPTION_LINK;
   };
 
   const handleRedeemKey = async () => {

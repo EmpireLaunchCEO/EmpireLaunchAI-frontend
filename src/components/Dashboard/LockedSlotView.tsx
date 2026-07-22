@@ -6,6 +6,7 @@ import { CreditCard, ArrowRight, ShieldCheck, Zap, Globe, Sparkles } from 'lucid
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
+import { EXPANSION_SLOT_LINK } from '@/lib/payment-links';
 
 interface LockedSlotViewProps {
   slotIndex: number;
@@ -16,13 +17,8 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
   const [isPaying, setIsPaying] = useState(false);
   const [accessKey, setAccessKey] = useState('');
 
-  const handleSecurePayment = async () => {
-    setIsPaying(true);
-    // Simulate payment processing
-    await new Promise(r => setTimeout(r, 2000));
-    unlockSlot(slotIndex);
-    setIsPaying(false);
-    // After payment, the parent should re-render and show the dashboard content (which will be blank since no data exists for ID '2' or '3')
+  const handleSecurePayment = () => {
+    window.location.href = EXPANSION_SLOT_LINK;
   };
 
   return (
