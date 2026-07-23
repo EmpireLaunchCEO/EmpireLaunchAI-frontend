@@ -49,7 +49,7 @@ function SettingsContent() {
   } = useEmpire();
   const { isLinked: isStripeLinked } = useStripeStatus();
 
-  const [activeTab, setActiveTab] = useState('financials');
+  const [activeTab, setActiveTab] = useState(isAdmin ? 'financials' : 'subscription');
 
   const ownedSlots = Object.values(slotStatus || {}).filter(Boolean).length;
 
@@ -77,13 +77,19 @@ function SettingsContent() {
     return registerRefreshHandler(async () => { await new Promise(r => setTimeout(r, 1000)); });
   }, [registerRefreshHandler]);
 
-  const tabs = [
-    { id: 'financials', name: 'Financials', icon: CreditCard },
-    { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
-    { id: 'theme-style', name: 'Theme & Style', icon: Palette },
+  const baseTabs = [
     { id: 'subscription', name: 'Subscription', icon: Zap },
+    { id: 'theme-style', name: 'Theme & Style', icon: Palette },
+    { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
     { id: 'security', name: 'Security', icon: ShieldCheck }
   ];
+
+  const ownerTabs = [
+    { id: 'financials', name: 'Financials', icon: CreditCard },
+    ...baseTabs
+  ];
+
+  const tabs = isAdmin ? ownerTabs : baseTabs;
 
   const handleLogout = () => {
     if (confirm("Disconnect neural session? You will need to log back in to access your Command Center.")) {
