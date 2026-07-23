@@ -24,6 +24,9 @@ export function FeedbackInbox() {
       }
     };
     fetchFeedback();
+    // Auto-refresh every 30 seconds so new client messages appear
+    const interval = setInterval(fetchFeedback, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) return null;

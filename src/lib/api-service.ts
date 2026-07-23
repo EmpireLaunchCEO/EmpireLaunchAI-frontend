@@ -136,7 +136,7 @@ export const getEmpireUserId = (): string => {
 };
 
 // Generate a real session token on first load — no mock tokens
-const getAuthToken = (): string => {
+export const getAuthToken = (): string => {
   if (typeof window !== 'undefined') {
     let token = localStorage.getItem('empire_auth_token');
     if (!token) {

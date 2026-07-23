@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Send, Sparkles, CheckCircle2, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { API_URL } from '@/lib/config';
+import { getEmpireUserId, getAuthToken } from '@/lib/api-service';
 
 interface FeedbackBoxProps {
   className?: string;
@@ -23,14 +25,13 @@ export function FeedbackBox({ className }: FeedbackBoxProps) {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/reviews`, {
+      const response = await fetch(`${API_URL}/api/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': 'system' // In a real scenario, this is handled by auth middleware
+          'Authorization': `Bearer ${getAuthToken()}`,
         },
         body: JSON.stringify({
-          userId: 'system', // Mock user for now, backend will identify
           rating,
           comment: message
         }),
