@@ -7,8 +7,8 @@ import { RateApp } from './RateApp';
 
 const faqContent: Record<string, string> = {
   "Understanding Pricing": "EmpireLaunch AI charges a flat $50/month subscription for full platform access. Additional brand expansion slots are $50 one-time each. There are no hidden fees or success-share charges — you keep 100% of your revenue.",
-  "AI Video Posting Schedules": "Our Neural Dispatch Center monitors real-time engagement data across platforms. When a video is ready, we suggest 'Golden Windows'—the specific hours when your target audience is most active and algorithms are most receptive to new content.",
-  "Connecting Your Platforms": "Use the Neural Link Center in your dashboard to connect Etsy, TikTok, Shopify, and other platforms via secure OAuth. All API tokens and credentials are encrypted with AES-256-GCM military-grade encryption.",
+  "How AI Content Creation Works": "Describe your business, niche, and goals in the Empire Identity card. Our AI pipeline automatically generates designs, videos, and content tailored to your brand. You review and approve everything in the Neural Dispatch Center before anything goes live.",
+  "Managing Your Account": "Your empire identity, brand details, and business goals can be edited anytime from the dashboard. All changes save instantly and are encrypted at rest with AES-256-GCM encryption. Connected platforms are managed through the Link Center.",
   "Scaling with Expansion Slots": "Expansion slots allow you to run multiple brands from one account. Each slot gets its own brand workspace with separate analytics, style DNA, and AI configuration. Unlock additional slots for $50 each."
 };
 
@@ -35,8 +35,8 @@ export function SupportHub() {
         <div className="space-y-3">
           {[
             "Understanding Pricing",
-            "AI Video Posting Schedules",
-            "Connecting Your Platforms",
+            "How AI Content Creation Works",
+            "Managing Your Account",
             "Scaling with Expansion Slots"
           ].map((item) => (
             <button 
