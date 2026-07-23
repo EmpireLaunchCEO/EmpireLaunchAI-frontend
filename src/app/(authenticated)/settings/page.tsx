@@ -4,7 +4,6 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Bell, 
   Palette, 
   Diamond, 
   CheckCircle2, 
@@ -80,7 +79,6 @@ function SettingsContent() {
 
   const tabs = [
     { id: 'financials', name: 'Financials', icon: CreditCard },
-    { id: 'notifications', name: 'Notifications', icon: Bell },
     { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
     { id: 'theme-style', name: 'Theme & Style', icon: Palette },
     { id: 'subscription', name: 'Subscription', icon: Zap },
@@ -233,40 +231,6 @@ function SettingsContent() {
                         <ShieldCheck className="w-3 h-3" />
                         <span className="text-[8px] font-black uppercase tracking-widest">Secure Bank Bridge</span>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'notifications' && (
-                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-8">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                        <Bell className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-black text-foreground tracking-tight uppercase italic">Intelligence Pulse</h3>
-                        <p className="text-sm font-medium text-muted-foreground">Configure how your Empire alerts of critical events.</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      {[
-                        { id: 'sales', name: 'New Revenue Milestones', desc: 'Notify when customers click your social "Buy" buttons.' },
-                        { id: 'content', name: 'Content Ready for Review', desc: 'Alert when a high-converting video is drafted and ready.' },
-                        { id: 'trends', name: 'Market Pivot Detected', desc: 'AI found a new trend your empire should capitalize on.' }
-                      ].map((n) => (
-                        <div key={n.id} className="flex items-center justify-between p-6 bg-theme-background border-2 border-theme rounded-3xl group hover:border-white/50 transition-all">
-                          <div className="space-y-1">
-                            <h4 className="font-bold text-white">{n.name}</h4>
-                            <p className="text-xs text-white/40">{n.desc}</p>
-                          </div>
-                          <div className="w-14 h-8 bg-primary/20 rounded-full flex items-center px-1 shadow-inner relative border border-primary/30">
-                             <div className="w-6 h-6 bg-white rounded-full shadow-lg absolute right-1" />
-                          </div>
-                        </div>
-                      ))}
                     </div>
                   </div>
                 </div>

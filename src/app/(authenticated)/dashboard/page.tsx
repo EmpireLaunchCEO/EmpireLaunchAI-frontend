@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService, empireService } from '@/lib/api-service';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
-import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboarding';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
@@ -196,8 +195,6 @@ export default function Dashboard() {
             </>
           )}
         </div>
-
-        <NotificationOnboarding />
 
         <AnimatePresence>
           {isCelebrating && (
