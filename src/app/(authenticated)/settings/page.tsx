@@ -21,6 +21,7 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { useStripeStatus } from '@/lib/hooks/useStripeStatus';
 import { SupportHub } from '@/components/Settings/SupportHub';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
+import { SubscriptionCard } from '@/components/Settings/SubscriptionCard';
 
 export default function SettingsPage() {
   return (
@@ -297,16 +298,52 @@ function SettingsContent() {
 
               {activeTab === 'subscription' && (
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme">
+                  <div className="p-6 md:p-8 rounded-[32px] md:rounded-[40px] bg-theme-surface border-2 border-theme space-y-6">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                        <CreditCard className="w-6 h-6" />
+                        <Zap className="w-6 h-6" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-black text-foreground tracking-tight uppercase italic">Subscription</h3>
-                        <p className="text-sm font-medium text-muted-foreground">Your EmpireLaunch AI plan is active.</p>
+                        <h3 className="text-xl font-black text-foreground tracking-tight uppercase italic">Active Subscriptions</h3>
+                        <p className="text-sm font-medium text-muted-foreground">Your monthly plans and renewal dates.</p>
                       </div>
                     </div>
+
+                    {/* Brand 1 */}
+                    <SubscriptionCard
+                      brandName={empireData?.title || empireData?.name || 'Brand 1'}
+                      price="$50.00/month"
+                      renewsIn="30 days"
+                      isActive={true}
+                    />
+
+                    {/* Brand 2 */}
+                    {slotStatus?.[1] && (
+                      <SubscriptionCard
+                        brandName={userEmpires?.[1]?.name || 'Brand 2'}
+                        price="$50.00/month"
+                        renewsIn="30 days"
+                        isActive={true}
+                      />
+                    )}
+
+                    {/* Brand 3 */}
+                    {slotStatus?.[2] && (
+                      <SubscriptionCard
+                        brandName={userEmpires?.[2]?.name || 'Brand 3'}
+                        price="$50.00/month"
+                        renewsIn="30 days"
+                        isActive={true}
+                      />
+                    )}
+
+                    {Object.values(slotStatus || {}).filter(Boolean).length <= 1 && (
+                      <div className="p-5 bg-theme-background border-2 border-dashed border-theme rounded-2xl text-center">
+                        <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">
+                          Unlock additional brands in your Dashboard
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
