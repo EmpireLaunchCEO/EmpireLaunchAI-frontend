@@ -250,6 +250,9 @@ export function NeuralDispatchCenter() {
               onClick={async () => {
                 const url = currentApproval?.payload?.videoUrl;
                 if (!url) return;
+                // Save to Library first
+                handleApprove();
+                // Then download to phone
                 try {
                   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
                   const res = await fetch(fullUrl);
