@@ -124,6 +124,11 @@ export default function Dashboard() {
     const checkSubscription = async () => {
       try {
         const userId = getEmpireUserId();
+        // Auto-bypass for legacy admin (zero UUID) — treat as active
+        if (userId === '00000000-0000-0000-0000-000000000000') {
+          setSubscriptionStatus('active');
+          return;
+        }
         const res = await fetch(`${API_URL}/api/subscriptions/${userId}`);
         if (res.ok) {
           const data = await res.json();
