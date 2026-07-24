@@ -198,6 +198,18 @@ export default function Dashboard() {
                 Syncing Neural Node {activeEmpireId}
               </h2>
             </div>
+          ) : !empireData && activeEmpireId !== '1' && slotStatus?.[activeBusinessIndex] ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-6 text-center px-4">
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                <Briefcase className="w-8 h-8 text-primary" />
+              </div>
+              <h2 className="text-white font-black uppercase tracking-[0.2em] text-sm">
+                Brand {activeEmpireId} Ready
+              </h2>
+              <p className="text-slate-400 text-xs font-medium max-w-md">
+                This brand workspace is unlocked. Switch to the <span className="text-primary font-bold">Home</span> tab and fill in your Brand Info to get started.
+              </p>
+            </div>
           ) : !empireData ? (
             <div className="flex flex-col items-center justify-center py-20 gap-6">
               <h2 className="text-red-400 font-black uppercase tracking-[0.3em] text-[10px]">
