@@ -27,14 +27,14 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
       });
       const data = await res.json();
       if (data.url) {
-        localStorage.setItem('pending_payment', 'true');
+        localStorage.setItem('pending_payment', 'expansion');
         window.location.href = data.url;
         return;
       }
     } catch (e) {
       // fallback to static link
     }
-    localStorage.setItem('pending_payment', 'true');
+    localStorage.setItem('pending_payment', 'expansion');
     window.location.href = EXPANSION_SLOT_LINK;
   };
 

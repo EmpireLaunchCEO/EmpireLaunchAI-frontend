@@ -261,12 +261,12 @@ function OnboardingContent() {
       });
       const data = await res.json();
       if (data.url) {
-        localStorage.setItem('pending_payment', 'true');
+        localStorage.setItem('pending_payment', 'subscription');
         window.location.href = data.url;
       }
     } catch (e) {
       // fallback to static link
-      localStorage.setItem('pending_payment', 'true');
+      localStorage.setItem('pending_payment', 'subscription');
       window.location.href = SUBSCRIPTION_LINK;
     } finally {
       setIsPaying(false);

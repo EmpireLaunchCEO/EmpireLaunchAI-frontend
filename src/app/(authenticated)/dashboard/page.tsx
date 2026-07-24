@@ -19,7 +19,7 @@ import { EmpireTabs } from '@/components/Dashboard/EmpireTabs';
 
 
 export default function Dashboard() {
-  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler, userEmail } = useEmpire();
+  const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler, userEmail, unlockSlot } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
   const [empireData, setEmpireDataState] = useState<any>(null);
   const [pulseData, setPulseData] = useState<any>(null);
@@ -71,15 +71,29 @@ export default function Dashboard() {
         }
 
         // Check for pending payment verification (user returning from Stripe checkout)
-        if (typeof window !== 'undefined' && localStorage.getItem('pending_payment') === 'true') {
-          try {
-            await fetch(`${API_URL || 'https://backend-production-56123.up.railway.app'}/api/stripe/verify-subscription`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}` },
-              body: JSON.stringify({ type: 'subscription' }),
-            });
-            localStorage.removeItem('pending_payment');
-          } catch (e) { /* non-critical */ }
+        if (typeof window !== 'undefined') {
+          const pendingType = localStorage.getItem('pending_payment');
+          if (pendingType === 'subscription' || pendingType === 'expansion') {
+            try {
+              await fetch(`${API_URL || 'https://backend-production-56123.up.railway.app'}/api/stripe/verify-subscription`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}` },
+                body: JSON.stringify({ type: pendingType }),
+              });
+              localStorage.removeItem('pending_payment');
+              // Auto-unlock next slot for expansion payments
+              if (pendingType === 'expansion') {
+                const activeSlots = Object.values(slotStatus || {}).filter(Boolean).length;
+                // Slot indices: 0=brand1, 1=brand2, 2=brand3 — find next locked slot
+                for (let i = 0; i < 3; i++) {
+                  if (!slotStatus?.[i]) {
+                    unlockSlot(i);
+                    break;
+                  }
+                }
+              }
+            } catch (e) { /* non-critical */ }
+          }
         }
         
         setEmpireDataState(finalData);
