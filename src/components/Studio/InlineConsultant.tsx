@@ -32,7 +32,6 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [userConfirmed, setUserConfirmed] = useState(false);
   const [lastIdea, setLastIdea] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -110,13 +109,6 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
     setMessages(updatedMessages);
     setIsTyping(true);
 
-    // Check if user is confirming readiness
-    const lower = userMessage.toLowerCase();
-    const isConfirming = lower.includes('generate') || lower.includes('ready') || lower.includes('yes') || lower.includes('let\'s do it') || lower.includes('go ahead');
-    if (isConfirming) {
-      setUserConfirmed(true);
-    }
-
     try {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       
@@ -139,12 +131,6 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       const data = await response.json();
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.message.replace(/\[GENERATE\]/gi, '').trim() }]);
-      
-      // Check if the assistant response suggests the idea is ready
-      const responseLower = data.message.toLowerCase();
-      if (responseLower.includes('generate') || responseLower.includes('[generate]') || responseLower.includes('ready to create') || responseLower.includes('let me create')) {
-        setUserConfirmed(true);
-      }
     } catch (error) {
       console.error('Consultation error:', error);
       setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the Neural Link. Please try again." }]);
@@ -220,20 +206,20 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           </div>
         )}
 
-        {/* Reply hint — shows whenever waiting for input and not yet confirmed */}
-        {!isTyping && messages.length >= 2 && !userConfirmed && (
+        {/* Reply hint — always visible after conversation starts */}
+        {!isTyping && messages.length >= 1 && (
           <motion.div
             initial={{ opacity: 0, y: 3 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10"
           >
             <ArrowDown className="w-2.5 h-2.5 text-primary" />
-            <span className="text-[7px] font-bold text-primary uppercase tracking-widest">Reply below to refine — then say &quot;ready&quot; to generate</span>
+            <span className="text-[7px] font-bold text-primary uppercase tracking-widest">Refine your idea with Gemini, then hit Generate</span>
           </motion.div>
         )}
 
-        {/* Generate Video Button - shown when user confirms idea */}
-        {userConfirmed && onGenerate && idea && (
+        {/* Generate Button — always visible below the conversation */}
+        {onGenerate && idea && messages.length >= 1 && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -244,7 +230,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
               className="w-full py-2 bg-primary text-slate-950 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-primary/20"
             >
               <Wand2 className="w-3 h-3" />
-              Generate Video
+              Generate {context === 'design' ? 'Design' : 'Video'}
             </button>
           </motion.div>
         )}
