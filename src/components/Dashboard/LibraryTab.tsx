@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Video, UserSquare2, Edit3, Palette, Layout, Search, X, ChevronLeft, ChevronRight, ExternalLink, FileText, Image, Film, PenSquare } from 'lucide-react';
+import { Video, UserSquare2, Edit3, Palette, Layout, Search, X, ChevronLeft, ChevronRight, ExternalLink, FileText, Image, Film, PenSquare, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { analyticsService } from '@/lib/api-service';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -80,6 +80,29 @@ export function LibraryTab() {
     }
     setRenameAssetId(null);
     setRenameValue('');
+  };
+
+  const handleDownload = async (asset: any) => {
+    const url = asset.masterVideoUrl || asset.fileUrl || asset.masterImageUrl || asset.thumbnailUrl;
+    if (!url) return;
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const file = new File([blob], asset.title || 'empirelaunch-asset.mp4', { type: blob.type });
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: asset.title || 'EmpireLaunch Asset' });
+      } else {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = asset.title || 'empirelaunch-asset.mp4';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+    } catch (e: any) {
+      console.warn('Download failed:', e.message);
+      window.open(url, '_blank');
+    }
   };
 
   // Category selection view
@@ -278,6 +301,13 @@ export function LibraryTab() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => handleDownload(selectedAsset)}
+                    className="w-8 h-8 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 flex items-center justify-center transition-all"
+                    title="Download to Photos"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                  </button>
                   <button
                     onClick={() => { setRenameAssetId(selectedAsset.id); setRenameValue(selectedAsset.title || ''); }}
                     className="w-8 h-8 rounded-lg bg-slate-800/50 text-slate-400 hover:bg-primary/20 hover:text-primary flex items-center justify-center transition-all"
