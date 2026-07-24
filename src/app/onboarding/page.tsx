@@ -252,6 +252,7 @@ function OnboardingContent() {
   };
 
   const handleSecurePayment = async () => {
+    localStorage.setItem('pending_payment', 'true');
     window.location.href = SUBSCRIPTION_LINK;
   };
 

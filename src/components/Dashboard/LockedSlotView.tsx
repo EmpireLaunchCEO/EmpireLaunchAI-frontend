@@ -18,6 +18,7 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
   const [accessKey, setAccessKey] = useState('');
 
   const handleSecurePayment = () => {
+    localStorage.setItem('pending_payment', 'true');
     window.location.href = EXPANSION_SLOT_LINK;
   };
 

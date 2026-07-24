@@ -66,6 +66,18 @@ export default function Dashboard() {
           // Cache full empire data for instant reload
           localStorage.setItem('empire_data_cache', JSON.stringify(finalData));
         }
+
+        // Check for pending payment verification (user returning from Stripe checkout)
+        if (typeof window !== 'undefined' && localStorage.getItem('pending_payment') === 'true') {
+          try {
+            await fetch(`${API_URL || 'https://backend-production-56123.up.railway.app'}/api/stripe/verify-subscription`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}` },
+              body: JSON.stringify({ type: 'subscription' }),
+            });
+            localStorage.removeItem('pending_payment');
+          } catch (e) { /* non-critical */ }
+        }
         
         setEmpireDataState(finalData);
         setActiveEmpire(finalData);
