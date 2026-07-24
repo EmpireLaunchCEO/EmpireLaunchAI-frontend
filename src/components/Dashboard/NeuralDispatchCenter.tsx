@@ -137,6 +137,20 @@ export function NeuralDispatchCenter() {
     );
   };
 
+  const handleDelete = async () => {
+    if (!currentApproval?.id) return;
+    try {
+      await fetch(`${API_URL}/api/approvals/${currentApproval.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': getAuthHeader() },
+      });
+    } catch (e) {
+      console.error('Failed to delete approval:', e);
+    }
+    setIsApproved(false);
+    setView('select');
+  };
+
   const handleApprove = async () => {
     if (!currentApproval) return;
     try {
@@ -277,10 +291,7 @@ export function NeuralDispatchCenter() {
               Download
             </button>
             <button 
-              onClick={() => {
-                setIsApproved(false);
-                setView('select');
-              }}
+              onClick={handleDelete}
               className="py-5 px-6 bg-red-500/10 text-red-400 border border-red-500/20 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-red-500/20 transition-all flex items-center justify-center gap-2"
             >
               <X className="w-4 h-4" />
