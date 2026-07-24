@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Database, Shield, Sparkles, Lock, Cpu, ChevronRight } from 'lucide-react';
+import { API_URL } from '@/lib/config';
 import { cn } from '@/lib/utils';
 
 // ─── DNA Vault Counter ──────────────────────────────────────────────────────
@@ -16,7 +17,7 @@ export function DNAVaultCounter() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/vault/stats`);
+        const response = await fetch(`${API_URL}/api/vault/stats`);
         const data = await response.json();
         if (data.totalStrands !== undefined) {
           setCount(data.totalStrands);
