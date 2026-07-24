@@ -140,9 +140,10 @@ export function NeuralDispatchCenter() {
   const handleDelete = async () => {
     if (!currentApproval?.id) return;
     try {
-      await fetch(`${API_URL}/api/approvals/${currentApproval.id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': getAuthHeader() },
+      await fetch(`${API_URL}/api/approval/respond`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': getAuthHeader() },
+        body: JSON.stringify({ approvalId: currentApproval.id, status: 'rejected' }),
       });
     } catch (e) {
       console.error('Failed to delete approval:', e);
