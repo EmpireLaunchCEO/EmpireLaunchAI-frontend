@@ -573,6 +573,11 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
 
         // EMERGENCY BYPASS: Only if the user has manually entered the Master ID or it's saved from a previous session
         const storedUserId = localStorage.getItem('empire_userId');
+                    // Legacy admin zero UUID — always grant admin + paid status
+                    if (storedUserId === '00000000-0000-0000-0000-000000000000') {
+                         setIsAdmin(true);
+                         setIsPaidState(true);
+                    }
                     const storedIsAdmin = localStorage.getItem('isAdmin') === 'true';
                     if (storedIsAdmin) {
                          setIsAdmin(true);
