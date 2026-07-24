@@ -5,7 +5,8 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Stars, LayoutDashboard, Globe, Briefcase, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
-import { analyticsService, empireService } from '@/lib/api-service';
+import { analyticsService, empireService, getEmpireUserId } from '@/lib/api-service';
+import { API_URL } from '@/lib/config';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
@@ -27,6 +28,8 @@ export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
   const [isGrowthGateOpen, setIsGrowthProtocolGateOpen] = useState(false);
   const [growthGateProduct, setGrowthProtocolGateProduct] = useState('');
+  const [subscriptionStatus, setSubscriptionStatus] = useState<'loading' | 'active' | 'none'>('loading');
+  const [subscribing, setSubscribing] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -101,6 +104,54 @@ export default function Dashboard() {
     return registerRefreshHandler(fetchData);
   }, [registerRefreshHandler, fetchData]);
 
+  // Check subscription status after data loads
+  useEffect(() => {
+    if (!isDashboardLoaded || !mounted) return;
+    const checkSubscription = async () => {
+      try {
+        const userId = getEmpireUserId();
+        const res = await fetch(`${API_URL}/api/subscriptions/${userId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.count > 0) {
+            setSubscriptionStatus('active');
+            return;
+          }
+        }
+      } catch (e) {
+        console.error('Subscription check failed', e);
+      }
+      setSubscriptionStatus('none');
+    };
+    checkSubscription();
+  }, [isDashboardLoaded, mounted]);
+
+  // Subscribe handler — creates Stripe checkout session
+  const handleSubscribe = async () => {
+    setSubscribing(true);
+    try {
+      const res = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}`,
+        },
+        body: JSON.stringify({ type: 'subscription' }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.url) {
+          localStorage.setItem('pending_payment', 'true');
+          window.location.href = data.url;
+          return;
+        }
+      }
+    } catch (e) {
+      console.error('Subscribe error', e);
+    }
+    setSubscribing(false);
+  };
+
   if (!mounted || !isInitialized) {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-6">
@@ -141,6 +192,37 @@ export default function Dashboard() {
               <button onClick={() => fetchData()} className="px-6 py-3 bg-primary text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-primary/80 transition-colors">
                 Retry
               </button>
+            </div>
+          ) : subscriptionStatus === 'loading' ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-6">
+              <BrandedGlobe size="lg" spinning />
+              <h2 className="text-white font-black uppercase tracking-[0.3em] text-[10px] animate-pulse">
+                Verifying Subscription...
+              </h2>
+            </div>
+          ) : subscriptionStatus === 'none' && !isAdmin ? (
+            /* Payment Gate — block dashboard until subscription verified */
+            <div className="flex flex-col items-center justify-center py-16 gap-8 max-w-md mx-auto text-center">
+              <div className="w-20 h-20 rounded-3xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center">
+                <Stars className="w-10 h-10 text-primary" />
+              </div>
+              <div className="space-y-3">
+                <h2 className="text-2xl font-black text-foreground uppercase tracking-tight">Subscribe to Continue</h2>
+                <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                  Your EmpireLaunch AI subscription is required to access the command center.
+                  Unlock full autonomous business automation for $50/month.
+                </p>
+              </div>
+              <button
+                onClick={handleSubscribe}
+                disabled={subscribing}
+                className="px-10 py-4 bg-gradient-to-r from-primary to-amber-600 text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl shadow-primary/40 disabled:opacity-50"
+              >
+                {subscribing ? 'Redirecting to Stripe...' : 'Subscribe Now — $50/mo'}
+              </button>
+              <p className="text-[9px] text-muted-foreground/50 font-medium">
+                Secure checkout powered by Stripe. Cancel anytime.
+              </p>
             </div>
           ) : (
             <>

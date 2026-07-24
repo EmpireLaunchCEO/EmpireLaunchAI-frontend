@@ -1,7 +1,9 @@
 "use client";
 
-import React from 'react';
-import { CheckCircle2, Clock } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { CheckCircle2, Clock, Loader2 } from 'lucide-react';
+import { getEmpireUserId } from '@/lib/api-service';
+import { API_URL } from '@/lib/config';
 
 interface SubscriptionCardProps {
   brandName: string;
@@ -11,9 +13,39 @@ interface SubscriptionCardProps {
 }
 
 export function SubscriptionCard({ brandName, price, renewsIn, isActive }: SubscriptionCardProps) {
-  const renewalDate = new Date();
-  renewalDate.setDate(renewalDate.getDate() + 30);
-  const formattedDate = renewalDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const [renewalDate, setRenewalDate] = useState<Date | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      try {
+        const userId = getEmpireUserId();
+        const res = await fetch(`${API_URL}/api/subscriptions/${userId}`);
+        if (res.ok) {
+          const data = await res.json();
+          const subs = data.subscriptions || [];
+          if (subs.length > 0) {
+            const latest = subs[0]; // ordered by createdAt desc
+            const paidDate = new Date(latest.paidAt);
+            paidDate.setDate(paidDate.getDate() + 30);
+            setRenewalDate(paidDate);
+            return;
+          }
+        }
+      } catch (e) {
+        console.error('Failed to fetch subscription', e);
+      } finally {
+        setLoading(false);
+      }
+      // Fallback: 30 days from now
+      const fallback = new Date();
+      fallback.setDate(fallback.getDate() + 30);
+      setRenewalDate(fallback);
+    };
+    fetchSubscription();
+  }, []);
+
+  const formattedDate = renewalDate?.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) || '...';
 
   return (
     <div className="p-5 bg-theme-background border-2 border-theme rounded-2xl space-y-3">
@@ -27,7 +59,11 @@ export function SubscriptionCard({ brandName, price, renewsIn, isActive }: Subsc
       <div className="flex items-center justify-between text-xs">
         <span className="font-bold text-foreground">{price}</span>
         <span className="flex items-center gap-1 text-muted-foreground font-medium">
-          <Clock className="w-3 h-3" />
+          {loading ? (
+            <Loader2 className="w-3 h-3 animate-spin" />
+          ) : (
+            <Clock className="w-3 h-3" />
+          )}
           Renews {formattedDate}
         </span>
       </div>
