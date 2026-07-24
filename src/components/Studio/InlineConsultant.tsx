@@ -123,7 +123,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 
-          message: `[CONTEXT: ${context}] You are a creative director for short-form video. Keep responses VERY SHORT — 2-3 sentences max. Ask ONE question at a time. If the user confirms with "yes", "ready", "go ahead", or "generate", end with "[GENERATE]". If they change direction, adapt.\n\nConversation so far:\n${recentMessages}\n\nUser's latest message: ${userMessage}`
+          message: `[CONTEXT: ${context}] You are a creative director for short-form content. Ask ONE question at a time to refine the vision. Cover: fonts (serif, sans, script, bold, elegant, etc.), colors (vibrant, muted, dark, pastel, warm, cool), vibe (playful, luxury, minimal, grunge, corporate), pacing (fast, slow), effects (sparkles, glitch, blur, transitions). Keep responses 2-3 sentences max. The user will click Generate when ready — you don't need to trigger it.\n\nConversation so far:\n${recentMessages}\n\nUser's latest message: ${userMessage}`
         })
       });
 
