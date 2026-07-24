@@ -19,7 +19,8 @@ import {
   Zap,
   AlertCircle,
   ThumbsUp,
-  Download
+  Download,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -206,33 +207,6 @@ export function NeuralDispatchCenter() {
                 <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
                   <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest">Pending Review</span>
-                  <button
-                    onClick={async () => {
-                      const url = currentApproval?.payload?.videoUrl;
-                      if (!url) return;
-                      try {
-                        const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
-                        const res = await fetch(fullUrl);
-                        const blob = await res.blob();
-                        const file = new File([blob], 'empirelaunch-video.mp4', { type: blob.type });
-                        if (navigator.share && navigator.canShare?.({ files: [file] })) {
-                          await navigator.share({ files: [file], title: 'EmpireLaunch Video' });
-                        } else {
-                          const a = document.createElement('a');
-                          a.href = URL.createObjectURL(blob);
-                          a.download = 'empirelaunch-video.mp4';
-                          a.click();
-                          URL.revokeObjectURL(a.href);
-                        }
-                      } catch (e: any) {
-                        window.open(fullUrl, '_blank');
-                      }
-                    }}
-                    className="ml-auto px-3 py-1.5 bg-primary/30 text-primary rounded-lg font-black text-[9px] uppercase tracking-widest hover:bg-primary/50 transition-all flex items-center gap-1.5"
-                  >
-                    <Download className="w-3 h-3" />
-                    Save
-                  </button>
                 </div>
               </div>
             ) : (
@@ -264,13 +238,49 @@ export function NeuralDispatchCenter() {
             </div>
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             <button 
               onClick={handleApprove}
-              className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
+              className="flex-1 py-5 bg-emerald-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2"
             >
-              <ThumbsUp className="w-4 h-4" />
-              Approve Draft #{draftNumber}
+              <CheckCircle2 className="w-4 h-4" />
+              Save
+            </button>
+            <button 
+              onClick={async () => {
+                const url = currentApproval?.payload?.videoUrl;
+                if (!url) return;
+                try {
+                  const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+                  const res = await fetch(fullUrl);
+                  const blob = await res.blob();
+                  const file = new File([blob], `empirelaunch-${draftNumber}.mp4`, { type: blob.type });
+                  if (navigator.share && navigator.canShare?.({ files: [file] })) {
+                    await navigator.share({ files: [file], title: `EmpireLaunch Draft #${draftNumber}` });
+                  } else {
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = `empirelaunch-${draftNumber}.mp4`;
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                  }
+                } catch (e: any) {
+                  window.open(fullUrl, '_blank');
+                }
+              }}
+              className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              Download
+            </button>
+            <button 
+              onClick={() => {
+                setIsApproved(false);
+                setView('select');
+              }}
+              className="py-5 px-6 bg-red-500/10 text-red-400 border border-red-500/20 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-red-500/20 transition-all flex items-center justify-center gap-2"
+            >
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
