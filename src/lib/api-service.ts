@@ -173,7 +173,7 @@ export const empireService = {
   async getEmpire(id: string): Promise<any> {
     try {
       const res = await authFetch(`${API_URL}/api/agent/empire/${id}`, {
-        headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+        headers: { 'Authorization': `Bearer ${getAuthToken()}`, 'x-user-id': getEmpireUserId() }
       });
       if (res.ok) return res.json();
     } catch (e) {
@@ -185,7 +185,7 @@ export const empireService = {
   async getLatestEmpire(): Promise<any> {
     try {
       const res = await authFetch(`${API_URL}/api/agent/goal/latest`, {
-        headers: { 'Authorization': `Bearer ${getAuthToken()}` }
+        headers: { 'Authorization': `Bearer ${getAuthToken()}`, 'x-user-id': getEmpireUserId() }
       });
       if (res.ok) return res.json();
     } catch (e) {
@@ -200,7 +200,7 @@ export const empireService = {
       const res = await authFetch(`${API_URL}/api/agent/empire/${id}?_t=${Date.now()}`, {
         method: 'POST',
         cache: 'no-store',
-        headers: { 'Authorization': `Bearer ${getAuthToken()}` },
+        headers: { 'Authorization': `Bearer ${getAuthToken()}`, 'x-user-id': getEmpireUserId() },
         body: JSON.stringify(data),
       });
       const body = await res.text().catch(() => '');
