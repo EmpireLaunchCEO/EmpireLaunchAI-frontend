@@ -252,8 +252,25 @@ function OnboardingContent() {
   };
 
   const handleSecurePayment = async () => {
-    localStorage.setItem('pending_payment', 'true');
-    window.location.href = SUBSCRIPTION_LINK;
+    setIsPaying(true);
+    try {
+      const res = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}` },
+        body: JSON.stringify({ type: 'subscription' }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        localStorage.setItem('pending_payment', 'true');
+        window.location.href = data.url;
+      }
+    } catch (e) {
+      // fallback to static link
+      localStorage.setItem('pending_payment', 'true');
+      window.location.href = SUBSCRIPTION_LINK;
+    } finally {
+      setIsPaying(false);
+    }
   };
 
   const handleRedeemKey = async () => {

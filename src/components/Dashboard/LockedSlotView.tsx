@@ -17,7 +17,23 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
   const [isPaying, setIsPaying] = useState(false);
   const [accessKey, setAccessKey] = useState('');
 
-  const handleSecurePayment = () => {
+  const handleSecurePayment = async () => {
+    try {
+      const token = localStorage.getItem('empire_auth_token') || '';
+      const res = await fetch('https://backend-production-56123.up.railway.app/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ type: 'expansion' }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        localStorage.setItem('pending_payment', 'true');
+        window.location.href = data.url;
+        return;
+      }
+    } catch (e) {
+      // fallback to static link
+    }
     localStorage.setItem('pending_payment', 'true');
     window.location.href = EXPANSION_SLOT_LINK;
   };
