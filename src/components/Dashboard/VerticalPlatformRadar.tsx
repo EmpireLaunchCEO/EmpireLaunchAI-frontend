@@ -37,19 +37,6 @@ interface PlatformStatus {
 
 const PLATFORM_STATUS_DATA: PlatformStatus[] = [
   {
-    id: 'tiktok',
-    name: 'TikTok',
-    logo: '/brands/tiktok_128.png',
-    followers: '0',
-    likes: '0',
-    messages: 0,
-    growth: '0%',
-    color: 'text-pink-500',
-    bgSecondary: 'bg-pink-500/5',
-    metricLabel: 'Followers',
-    secondaryMetricLabel: 'Likes'
-  },
-  {
     id: 'instagram',
     name: 'Instagram',
     logo: '/brands/instagram_128.png',
@@ -63,44 +50,18 @@ const PLATFORM_STATUS_DATA: PlatformStatus[] = [
     secondaryMetricLabel: 'Likes'
   },
   {
-    id: 'etsy',
-    name: 'Etsy',
-    logo: '/brands/etsy_128.png',
+    id: 'facebook',
+    name: 'Facebook',
+    logo: '/brands/facebook_128.png',
     followers: '0',
     likes: '0',
     messages: 0,
     growth: '0%',
-    color: 'text-orange-500',
-    bgSecondary: 'bg-orange-500/5',
-    metricLabel: 'Visits',
-    secondaryMetricLabel: 'Orders'
+    color: 'text-blue-500',
+    bgSecondary: 'bg-blue-500/5',
+    metricLabel: 'Followers',
+    secondaryMetricLabel: 'Likes'
   },
-  {
-    id: 'youtube',
-    name: 'YouTube',
-    logo: '/brands/youtube_128.png',
-    followers: '0',
-    likes: '0',
-    messages: 0,
-    growth: '0%',
-    color: 'text-red-500',
-    bgSecondary: 'bg-red-500/5',
-    metricLabel: 'Subs',
-    secondaryMetricLabel: 'Views'
-  },
-  {
-    id: 'canva',
-    name: 'Canva',
-    logo: '/brands/canva_128.png',
-    followers: '0',
-    likes: '0',
-    messages: 0,
-    growth: '0%',
-    color: 'text-cyan-500',
-    bgSecondary: 'bg-cyan-500/5',
-    metricLabel: 'Designs',
-    secondaryMetricLabel: 'Templates'
-  }
 ];
 
 export function VerticalPlatformRadar() {
