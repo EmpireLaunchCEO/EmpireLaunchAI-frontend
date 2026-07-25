@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { HelpCircle, FileText, ChevronRight, X, Info } from 'lucide-react';
+import { HelpCircle, FileText, ChevronRight, X, Info, Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RateApp } from './RateApp';
 
@@ -20,7 +20,24 @@ export function SupportHub() {
       {/* 1. Rate the App */}
       <RateApp />
 
-      {/* 2. FAQ */}
+      {/* 2. Email Support */}
+      <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-4 shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-theme-background flex items-center justify-center text-primary">
+            <Mail className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="text-xl font-black text-foreground tracking-tight">Email Support</h3>
+            <p className="text-sm font-medium text-muted-foreground">Contact our team directly for help.</p>
+          </div>
+        </div>
+        <div className="p-5 rounded-2xl bg-theme-background border-2 border-theme space-y-2">
+          <a href="mailto:EmpireLaunchAI@gmail.com" className="text-lg font-black text-primary hover:underline">EmpireLaunchAI@gmail.com</a>
+          <p className="text-xs font-medium text-muted-foreground">Response time is typically within 48 hours.</p>
+        </div>
+      </div>
+
+      {/* 3. FAQ */}
       <div className="p-8 rounded-[40px] bg-theme-surface border-2 border-theme space-y-8 shadow-sm">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-theme-background flex items-center justify-center text-primary">
