@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { CheckCircle2, Clock, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
+import { CheckCircle2, Clock, Loader2, AlertCircle, RefreshCw, XCircle } from 'lucide-react';
 import { getEmpireUserId, getAuthToken } from '@/lib/api-service';
 import { API_URL } from '@/lib/config';
 
@@ -22,6 +22,8 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
   const [loading, setLoading] = useState(true);
   const [isActive, setIsActive] = useState(true);
   const [isGracePeriod, setIsGracePeriod] = useState(false);
+  const [isCanceled, setIsCanceled] = useState(false);
+  const [canceling, setCanceling] = useState(false);
 
   useEffect(() => {
     const fetchSubscription = async () => {
@@ -74,7 +76,35 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
 
   const formattedDate = renewalDate?.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) || '...';
 
-  const statusBadge = isGracePeriod ? (
+  const handleCancel = async () => {
+    const confirmed = confirm(
+      `Are you sure? Your access will continue until ${formattedDate}, then your subscription will be canceled.`
+    );
+    if (!confirmed) return;
+    
+    setCanceling(true);
+    try {
+      const res = await fetch(`${API_URL}/api/subscriptions/cancel`, {
+        method: 'POST',
+        headers: authHeaders(),
+      });
+      if (res.ok) {
+        setIsCanceled(true);
+        setIsActive(false);
+      }
+    } catch (e) {
+      console.error('Cancel failed', e);
+    } finally {
+      setCanceling(false);
+    }
+  };
+
+  const statusBadge = isCanceled ? (
+    <span className="flex items-center gap-1 px-2 py-0.5 bg-red-500/10 border border-red-500/20 rounded-full shrink-0">
+      <XCircle className="w-2.5 h-2.5 text-red-400" />
+      <span className="text-[8px] font-black uppercase tracking-wider text-red-400">Canceled</span>
+    </span>
+  ) : isGracePeriod ? (
     <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded-full shrink-0">
       <RefreshCw className="w-2.5 h-2.5 text-amber-400 animate-spin" />
       <span className="text-[8px] font-black uppercase tracking-wider text-amber-400">Processing</span>
@@ -108,6 +138,17 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
           Renews {formattedDate}
         </span>
       </div>
+      {isActive && !isCanceled && !isGracePeriod && (
+        <div className="flex justify-end">
+          <button
+            onClick={handleCancel}
+            disabled={canceling}
+            className="text-[10px] font-medium text-red-400 hover:text-red-300 transition-colors disabled:opacity-50"
+          >
+            {canceling ? 'Canceling...' : 'Cancel Subscription'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
