@@ -108,8 +108,8 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
       });
       if (res.ok) {
         const data = await res.json();
-        if (data.status === 'new_checkout' && data.url) {
-          window.location.href = data.url;
+        if (data.status === 'requires_payment' && data.checkoutUrl) {
+          window.location.href = data.checkoutUrl;
           return;
         }
         // reactivated — subscription still active, cancel reversed
