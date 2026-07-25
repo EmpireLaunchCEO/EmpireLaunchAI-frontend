@@ -31,7 +31,6 @@ export default function Dashboard() {
   const [growthGateProduct, setGrowthProtocolGateProduct] = useState('');
   const [subscriptionStatus, setSubscriptionStatus] = useState<'loading' | 'active' | 'none' | 'grace_period' | 'past_due'>('loading');
   const [subscribing, setSubscribing] = useState(false);
-  const [graceEndDate, setGraceEndDate] = useState<string | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
@@ -155,7 +154,6 @@ export default function Dashboard() {
           
           if (status === 'grace_period') {
             setSubscriptionStatus('grace_period');
-            setGraceEndDate(data.graceEndsAt || null);
             // Start 15-min polling
             if (pollingRef.current) clearInterval(pollingRef.current);
             pollingRef.current = setInterval(async () => {
@@ -284,7 +282,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-3 px-4 py-3 bg-amber-500/10 border-2 border-amber-500/20 rounded-2xl animate-in fade-in">
               <AlertCircle className="w-5 h-5 text-amber-400 shrink-0" />
               <p className="text-sm font-medium text-amber-200">
-                Your payment is processing. Grace period ends <span className="font-black text-amber-400">{graceEndDate ? new Date(graceEndDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'soon'}</span>. If payment fails, access will be restricted.
+                Your payment is processing. Stripe is retrying your payment method.
               </p>
             </div>
           )}
