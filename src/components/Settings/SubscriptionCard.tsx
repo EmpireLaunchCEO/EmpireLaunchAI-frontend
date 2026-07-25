@@ -2,8 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { CheckCircle2, Clock, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
-import { getEmpireUserId } from '@/lib/api-service';
+import { getEmpireUserId, getAuthToken } from '@/lib/api-service';
 import { API_URL } from '@/lib/config';
+
+const authHeaders = () => ({
+  'Authorization': `Bearer ${getAuthToken()}`,
+  'x-user-id': getEmpireUserId(),
+  'Content-Type': 'application/json',
+});
 
 interface SubscriptionCardProps {
   brandName: string;
@@ -23,9 +29,7 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
         const userId = getEmpireUserId();
         // Try renewal check first
         const renewalRes = await fetch(`${API_URL}/api/subscriptions/check-renewal`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId }),
+          headers: authHeaders(),
         }).catch(() => null);
         
         if (renewalRes?.ok) {
@@ -42,7 +46,7 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
         }
         
         // Fetch real subscription for date
-        const res = await fetch(`${API_URL}/api/subscriptions/${userId}`);
+        const res = await fetch(`${API_URL}/api/subscriptions/${userId}`, { headers: authHeaders() });
         if (res.ok) {
           const data = await res.json();
           const subs = data.subscriptions || [];
