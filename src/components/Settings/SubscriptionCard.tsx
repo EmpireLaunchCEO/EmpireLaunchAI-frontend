@@ -78,7 +78,7 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
 
   const handleCancel = async () => {
     const confirmed = confirm(
-      `Are you sure? Your access will continue until ${formattedDate}, then your subscription will be canceled.`
+      `Are you sure? Your access will continue until ${formattedDate}, then your subscription will be canceled. After cancellation, you have up to 30 days to reactivate and keep all your empire data. After 30 days, you'll need to sign up again.`
     );
     if (!confirmed) return;
     
