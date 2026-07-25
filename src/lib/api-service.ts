@@ -687,7 +687,7 @@ export const paymentService = {
       if (params.angle) query.set('angle', params.angle);
       if (params.targetCustomers) query.set('targetCustomers', params.targetCustomers);
       if (params.businessGoals) query.set('businessGoals', params.businessGoals);
-      const res = await fetch(`${API_URL}/api/intel/trends?${query.toString()}`, { headers: getHeaders() });
+      const res = await fetch(`${API_URL}/api/agent/intel/trends?${query.toString()}`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
         return {
