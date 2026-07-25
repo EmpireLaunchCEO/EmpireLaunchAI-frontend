@@ -314,7 +314,6 @@ function SettingsContent() {
                       brandName={empireData?.title || empireData?.name || 'Brand 1'}
                       price="$50.00/month"
                       renewsIn="30 days"
-                      isActive={true}
                     />
 
                     {/* Brand 2 */}
@@ -323,7 +322,6 @@ function SettingsContent() {
                         brandName={userEmpires?.[1]?.name || 'Brand 2'}
                         price="$50.00/month"
                         renewsIn="30 days"
-                        isActive={true}
                       />
                     )}
 
@@ -333,7 +331,6 @@ function SettingsContent() {
                         brandName={userEmpires?.[2]?.name || 'Brand 3'}
                         price="$50.00/month"
                         renewsIn="30 days"
-                        isActive={true}
                       />
                     )}
 
