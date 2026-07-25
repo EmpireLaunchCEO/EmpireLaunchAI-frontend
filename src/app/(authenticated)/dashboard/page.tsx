@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { Stars, LayoutDashboard, Globe, Briefcase, ChevronRight } from 'lucide-react';
+import { Stars, LayoutDashboard, Globe, Briefcase, ChevronRight, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService, empireService, getEmpireUserId } from '@/lib/api-service';
@@ -16,6 +16,7 @@ import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FeedbackInbox } from '@/components/Dashboard/FeedbackInbox';
 import { EmpireTabs } from '@/components/Dashboard/EmpireTabs';
+import { PaymentDueModal } from '@/components/Dashboard/PaymentDueModal';
 
 
 export default function Dashboard() {
@@ -28,8 +29,12 @@ export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
   const [isGrowthGateOpen, setIsGrowthProtocolGateOpen] = useState(false);
   const [growthGateProduct, setGrowthProtocolGateProduct] = useState('');
-  const [subscriptionStatus, setSubscriptionStatus] = useState<'loading' | 'active' | 'none'>('loading');
+  const [subscriptionStatus, setSubscriptionStatus] = useState<'loading' | 'active' | 'none' | 'grace_period' | 'past_due'>('loading');
   const [subscribing, setSubscribing] = useState(false);
+  const [graceEndDate, setGraceEndDate] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [processingPayment, setProcessingPayment] = useState(false);
+  const pollingRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -121,6 +126,7 @@ export default function Dashboard() {
   // Check subscription status after data loads
   useEffect(() => {
     if (!isDashboardLoaded || !mounted) return;
+    
     const checkSubscription = async () => {
       try {
         const userId = getEmpireUserId();
@@ -129,21 +135,109 @@ export default function Dashboard() {
           setSubscriptionStatus('active');
           return;
         }
-        const res = await fetch(`${API_URL}/api/subscriptions/${userId}`);
+        
+        // Call renewal check endpoint for accurate status
+        const res = await fetch(`${API_URL}/api/subscriptions/check-renewal`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId }),
+        });
+        
         if (res.ok) {
           const data = await res.json();
-          if (data.count > 0) {
-            setSubscriptionStatus('active');
+          const status = data.status; // 'active' | 'grace_period' | 'past_due'
+          
+          if (status === 'past_due') {
+            setSubscriptionStatus('past_due');
+            setShowPaymentModal(true);
             return;
           }
+          
+          if (status === 'grace_period') {
+            setSubscriptionStatus('grace_period');
+            setGraceEndDate(data.graceEndsAt || null);
+            // Start 15-min polling
+            if (pollingRef.current) clearInterval(pollingRef.current);
+            pollingRef.current = setInterval(async () => {
+              try {
+                const pollRes = await fetch(`${API_URL}/api/subscriptions/poll-renewal`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ userId }),
+                });
+                if (pollRes.ok) {
+                  const pollData = await pollRes.json();
+                  if (pollData.status === 'active') {
+                    setSubscriptionStatus('active');
+                    setShowPaymentModal(false);
+                    if (pollingRef.current) {
+                      clearInterval(pollingRef.current);
+                      pollingRef.current = null;
+                    }
+                  } else if (pollData.status === 'past_due') {
+                    setSubscriptionStatus('past_due');
+                    setShowPaymentModal(true);
+                    if (pollingRef.current) {
+                      clearInterval(pollingRef.current);
+                      pollingRef.current = null;
+                    }
+                  }
+                }
+              } catch (e) { /* polling error — retry next cycle */ }
+            }, 900000); // 15 minutes
+            return;
+          }
+          
+          // active or fallback
+          setSubscriptionStatus('active');
+          return;
+        }
+        
+        // Fallback: check old subscriptions endpoint
+        const fallbackRes = await fetch(`${API_URL}/api/subscriptions/${userId}`);
+        if (fallbackRes.ok) {
+          const fallbackData = await fallbackRes.json();
+          setSubscriptionStatus(fallbackData.count > 0 ? 'active' : 'none');
+          return;
         }
       } catch (e) {
         console.error('Subscription check failed', e);
       }
       setSubscriptionStatus('none');
     };
+    
     checkSubscription();
+    
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+    };
   }, [isDashboardLoaded, mounted]);
+
+  // Process payment for past_due — same Stripe flow
+  const handleProcessPayment = async () => {
+    setProcessingPayment(true);
+    try {
+      const res = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}`,
+        },
+        body: JSON.stringify({ type: 'subscription' }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.url) {
+          localStorage.setItem('pending_payment', 'true');
+          window.location.href = data.url;
+          return;
+        }
+      }
+    } catch (e) {
+      console.error('Payment error', e);
+    }
+    setProcessingPayment(false);
+  };
 
   // Subscribe handler — creates Stripe checkout session
   const handleSubscribe = async () => {
@@ -185,6 +279,15 @@ export default function Dashboard() {
   return (
     <DashboardErrorBoundary>
         <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-16 overflow-x-hidden">
+          {/* Grace Period Banner */}
+          {subscriptionStatus === 'grace_period' && (
+            <div className="flex items-center gap-3 px-4 py-3 bg-amber-500/10 border-2 border-amber-500/20 rounded-2xl animate-in fade-in">
+              <AlertCircle className="w-5 h-5 text-amber-400 shrink-0" />
+              <p className="text-sm font-medium text-amber-200">
+                Your payment is processing. Grace period ends <span className="font-black text-amber-400">{graceEndDate ? new Date(graceEndDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'soon'}</span>. If payment fails, access will be restricted.
+              </p>
+            </div>
+          )}
           <GrowthProtocolGate
             isOpen={isGrowthGateOpen}
             onClose={() => setIsGrowthProtocolGateOpen(false)}
@@ -343,6 +446,13 @@ export default function Dashboard() {
             </motion.div>
           )}
         </AnimatePresence>
+        {/* Payment Due Modal — locks entire dashboard */}
+        {showPaymentModal && (
+          <PaymentDueModal
+            onProcessPayment={handleProcessPayment}
+            processing={processingPayment}
+          />
+        )}
     </DashboardErrorBoundary>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { CheckCircle2, Clock, Loader2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, Clock, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { getEmpireUserId } from '@/lib/api-service';
 import { API_URL } from '@/lib/config';
 
@@ -15,21 +15,43 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
   const [renewalDate, setRenewalDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(true);
   const [isActive, setIsActive] = useState(true);
+  const [isGracePeriod, setIsGracePeriod] = useState(false);
 
   useEffect(() => {
     const fetchSubscription = async () => {
       try {
         const userId = getEmpireUserId();
+        // Try renewal check first
+        const renewalRes = await fetch(`${API_URL}/api/subscriptions/check-renewal`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId }),
+        }).catch(() => null);
+        
+        if (renewalRes?.ok) {
+          const renewalData = await renewalRes.json();
+          if (renewalData.status === 'grace_period') {
+            setIsGracePeriod(true);
+            setIsActive(false);
+          } else if (renewalData.status === 'active') {
+            setIsActive(true);
+            setIsGracePeriod(false);
+          } else {
+            setIsActive(false);
+          }
+        }
+        
+        // Fetch real subscription for date
         const res = await fetch(`${API_URL}/api/subscriptions/${userId}`);
         if (res.ok) {
           const data = await res.json();
           const subs = data.subscriptions || [];
           if (subs.length > 0) {
-            const latest = subs[0]; // ordered by createdAt desc
+            const latest = subs[0];
             const paidDate = new Date(latest.paidAt);
             paidDate.setDate(paidDate.getDate() + 30);
             setRenewalDate(paidDate);
-            setIsActive(paidDate > new Date());
+            if (paidDate > new Date() && !isGracePeriod) setIsActive(true);
             setLoading(false);
             return;
           }
@@ -39,7 +61,6 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
       }
       setLoading(false);
       setIsActive(false);
-      // Fallback: 30 days from now
       const fallback = new Date();
       fallback.setDate(fallback.getDate() + 30);
       setRenewalDate(fallback);
@@ -49,7 +70,12 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
 
   const formattedDate = renewalDate?.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) || '...';
 
-  const statusBadge = isActive ? (
+  const statusBadge = isGracePeriod ? (
+    <span className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full">
+      <RefreshCw className="w-3 h-3 text-amber-400 animate-spin" />
+      <span className="text-[9px] font-black uppercase tracking-widest text-amber-400">Processing</span>
+    </span>
+  ) : isActive ? (
     <span className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
       <CheckCircle2 className="w-3 h-3 text-emerald-400" />
       <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Active</span>
