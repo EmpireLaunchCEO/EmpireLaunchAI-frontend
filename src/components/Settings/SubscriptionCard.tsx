@@ -75,27 +75,27 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
   const formattedDate = renewalDate?.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) || '...';
 
   const statusBadge = isGracePeriod ? (
-    <span className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full">
-      <RefreshCw className="w-3 h-3 text-amber-400 animate-spin" />
-      <span className="text-[9px] font-black uppercase tracking-widest text-amber-400">Processing</span>
+    <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded-full shrink-0">
+      <RefreshCw className="w-2.5 h-2.5 text-amber-400 animate-spin" />
+      <span className="text-[8px] font-black uppercase tracking-wider text-amber-400">Processing</span>
     </span>
   ) : isActive ? (
-    <span className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
-      <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-      <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Active</span>
+    <span className="flex items-center gap-1 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full shrink-0">
+      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+      <span className="text-[8px] font-black uppercase tracking-wider text-emerald-400">Active</span>
     </span>
   ) : (
-    <span className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/20 rounded-full">
-      <AlertCircle className="w-3 h-3 text-amber-400" />
-      <span className="text-[9px] font-black uppercase tracking-widest text-amber-400">Inactive</span>
+    <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-500/10 border border-amber-500/20 rounded-full shrink-0">
+      <AlertCircle className="w-2.5 h-2.5 text-amber-400" />
+      <span className="text-[8px] font-black uppercase tracking-wider text-amber-400">Inactive</span>
     </span>
   );
 
   return (
     <div className="p-5 bg-theme-background border-2 border-theme rounded-2xl space-y-3">
       <div className="flex items-center justify-between">
-        <h4 className="font-black text-foreground uppercase tracking-tight text-sm truncate min-w-0 mr-2">{brandName}</h4>
-        {statusBadge}
+        <h4 className="font-black text-foreground uppercase tracking-tight text-sm">{brandName}</h4>
+        <div className="shrink-0">{statusBadge}</div>
       </div>
       <div className="flex items-center justify-between text-xs">
         <span className="font-bold text-foreground">{price}</span>
