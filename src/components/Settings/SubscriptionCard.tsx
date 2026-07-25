@@ -99,6 +99,24 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
     }
   };
 
+  const handleReactivate = async () => {
+    setCanceling(true);
+    try {
+      const res = await fetch(`${API_URL}/api/subscriptions/reactivate`, {
+        method: 'POST',
+        headers: authHeaders(),
+      });
+      if (res.ok) {
+        setIsCanceled(false);
+        setIsActive(true);
+      }
+    } catch (e) {
+      console.error('Reactivate failed', e);
+    } finally {
+      setCanceling(false);
+    }
+  };
+
   const statusBadge = isCanceled ? (
     <span className="flex items-center gap-1 px-2 py-0.5 bg-red-500/10 border border-red-500/20 rounded-full shrink-0">
       <XCircle className="w-2.5 h-2.5 text-red-400" />
@@ -146,6 +164,17 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
             className="text-[10px] font-medium text-red-400 hover:text-red-300 transition-colors disabled:opacity-50"
           >
             {canceling ? 'Canceling...' : 'Cancel Subscription'}
+          </button>
+        </div>
+      )}
+      {isCanceled && (
+        <div className="flex justify-end">
+          <button
+            onClick={handleReactivate}
+            disabled={canceling}
+            className="text-[10px] font-medium text-emerald-400 hover:text-emerald-300 transition-colors disabled:opacity-50"
+          >
+            {canceling ? 'Reactivating...' : 'Reactivate Subscription'}
           </button>
         </div>
       )}
