@@ -43,50 +43,8 @@ const getAuthHeader = (): string => {
 import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 
 const availablePlatforms = [
-  { id: 'stripe', name: 'Stripe', icon: CreditCard, color: 'text-blue-600', bg: 'bg-blue-50' },
-  { id: 'gmail', name: 'Gmail', icon: Mail, color: 'text-red-500', bg: 'bg-red-50' },
-  { id: 'imap', name: 'Empire Email', icon: Mail, color: 'text-slate-600', bg: 'bg-theme-background' },
-  { id: 'etsy', name: 'Etsy', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
-  { id: 'tiktok', name: 'TikTok', icon: Video, color: 'text-pink-600', bg: 'bg-pink-50' },
-  { id: 'shopify', name: 'Shopify', icon: Globe, color: 'text-green-600', bg: 'bg-green-50' },
-  { id: 'woocommerce', name: 'WooCommerce', icon: ShoppingBag, color: 'text-purple-700', bg: 'bg-purple-50' },
   { id: 'instagram', name: 'Instagram', icon: Camera, color: 'text-purple-600', bg: 'bg-purple-50' },
   { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-blue-600', bg: 'bg-blue-50' },
-  { id: 'youtube', name: 'YouTube', icon: Video, color: 'text-red-600', bg: 'bg-red-50' },
-  { id: 'fiverr', name: 'Fiverr', icon: Zap, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  { id: 'pinterest', name: 'Pinterest', icon: Share2, color: 'text-red-600', bg: 'bg-red-50' },
-  { id: 'tiktok_shop', name: 'TikTok Shop', icon: ShoppingBag, color: 'text-pink-600', bg: 'bg-pink-50' },
-  { id: 'shipstation', name: 'ShipStation', icon: ShoppingBag, color: 'text-blue-700', bg: 'bg-blue-50' },
-  { id: 'dsers', name: 'DSers', icon: ShoppingBag, color: 'text-orange-500', bg: 'bg-orange-50' },
-  { id: 'zendrop', name: 'Zendrop', icon: ShoppingBag, color: 'text-blue-400', bg: 'bg-blue-50' },
-  { id: 'spocket', name: 'Spocket', icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50' },
-  { id: 'printful', name: 'Printful', icon: Palette, color: 'text-red-500', bg: 'bg-red-50' },
-  { id: 'printify', name: 'Printify', icon: Palette, color: 'text-green-500', bg: 'bg-green-50' },
-  { id: 'cj_dropshipping', name: 'CJ Dropshipping', icon: ShoppingBag, color: 'text-red-700', bg: 'bg-red-50' },
-  { id: 'autods', name: 'AutoDS', icon: ShoppingBag, color: 'text-blue-800', bg: 'bg-blue-50' },
-  { id: 'kittl', name: 'Kittl', icon: Palette, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-  { id: 'capcut', name: 'CapCut', icon: Video, color: 'text-blue-500', bg: 'bg-blue-50' },
-  { id: 'canva', name: 'Canva', icon: Stars, color: 'text-cyan-500', bg: 'bg-cyan-50' },
-  { id: 'bannerbear', name: 'Bannerbear', icon: Stars, color: 'text-blue-900', bg: 'bg-slate-100' },
-  { id: 'figma', name: 'Figma', icon: Palette, color: 'text-purple-600', bg: 'bg-purple-50' },
-  { id: 'behance', name: 'Behance', icon: Palette, color: 'text-blue-600', bg: 'bg-blue-50' },
-  { id: 'redbubble', name: 'Redbubble', icon: ShoppingBag, color: 'text-red-500', bg: 'bg-red-50' },
-  { id: 'artstation', name: 'ArtStation', icon: Palette, color: 'text-sky-500', bg: 'bg-sky-50' },
-  { id: 'substack', name: 'Substack', icon: Mail, color: 'text-orange-500', bg: 'bg-orange-50' },
-  { id: 'godaddy', name: 'GoDaddy', icon: Globe, color: 'text-blue-600', bg: 'bg-blue-50' },
-  { id: 'systeme_io', name: 'Systeme.io', icon: Mail, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  // New platforms added by Troubleshooter — OAuth configs live on backend
-  { id: 'amazon', name: 'Amazon', icon: ShoppingBag, color: 'text-yellow-600', bg: 'bg-yellow-50' },
-  { id: 'ebay', name: 'eBay', icon: ShoppingBag, color: 'text-red-500', bg: 'bg-red-50' },
-  { id: 'squarespace', name: 'Squarespace', icon: Globe, color: 'text-slate-700', bg: 'bg-slate-50' },
-  { id: 'wix', name: 'Wix', icon: Globe, color: 'text-blue-500', bg: 'bg-blue-50' },
-  { id: 'gumroad', name: 'Gumroad', icon: Zap, color: 'text-purple-500', bg: 'bg-purple-50' },
-  { id: 'patreon', name: 'Patreon', icon: Zap, color: 'text-orange-600', bg: 'bg-orange-50' },
-  { id: 'linkedin', name: 'LinkedIn', icon: Share2, color: 'text-blue-700', bg: 'bg-blue-50' },
-  { id: 'twitch', name: 'Twitch', icon: Video, color: 'text-purple-700', bg: 'bg-purple-50' },
-  { id: 'railway', name: 'Railway', icon: Globe, color: 'text-slate-700', bg: 'bg-slate-50' },
-  { id: 'google_studio', name: 'Google Studio', icon: Camera, color: 'text-blue-500', bg: 'bg-blue-50' },
-  { id: 'external_link', name: 'External Link', icon: Globe, color: 'text-primary', bg: 'bg-primary/10' },
 ];
 
 const COMMERCE_PLATFORMS = [
@@ -676,16 +634,16 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
               {hasNoPlatforms && !searchQuery && (
                 <div className="flex flex-wrap gap-2">
                   <button
-                    onClick={() => { setSearchQuery('gmail'); handleSelectPlatform('gmail'); }}
+                    onClick={() => { setSearchQuery('instagram'); handleSelectPlatform('instagram'); }}
                     className="px-4 py-2.5 bg-primary/10 border border-primary/30 rounded-xl font-black text-[8px] uppercase tracking-widest text-primary hover:bg-primary/20 transition-all flex items-center gap-2"
                   >
-                    <Mail className="w-3 h-3" /> Start with Gmail
+                    <Camera className="w-3 h-3" /> Start with Instagram
                   </button>
                   <button
-                    onClick={handleImapStart}
+                    onClick={() => { setSearchQuery('facebook'); handleSelectPlatform('facebook'); }}
                     className="px-4 py-2.5 bg-theme-background border border-theme rounded-xl font-black text-[8px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all flex items-center gap-2"
                   >
-                    <Mail className="w-3 h-3" /> Other Email (IMAP)
+                    <Share2 className="w-3 h-3" /> Start with Facebook
                   </button>
                 </div>
               )}
