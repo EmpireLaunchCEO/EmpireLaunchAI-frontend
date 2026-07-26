@@ -223,7 +223,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         )}
 
         {/* Generate Button — always visible below the conversation */}
-        {onGenerate && idea && messages.length >= 1 && (
+        {onGenerate && messages.length >= 1 && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
