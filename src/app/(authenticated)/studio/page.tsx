@@ -517,7 +517,7 @@ export default function StudioPage() {
                 )}
 
                 {!videoGenerated && (
-                  <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} />
+                  <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
                 )}
               </div>
 
@@ -557,7 +557,7 @@ export default function StudioPage() {
                   disabled={rawVideoUpload.status === 'uploading' || rawVideoUpload.status === 'processing'}
                 />
 
-                <InlineConsultant context="editor" />
+                <InlineConsultant context="editor" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
 
               {/* 3. Faceless Content Creation Box */}
@@ -617,7 +617,7 @@ export default function StudioPage() {
                   </motion.div>
                 )}
 
-                <InlineConsultant context="faceless" />
+                <InlineConsultant context="faceless" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
 
               {/* Custom Design Input — Free-text Idea Entry */}
@@ -719,7 +719,7 @@ export default function StudioPage() {
                   <span>Tip: Be specific about colors, materials, dimensions, and target platform</span>
                 </div>
 
-                <InlineConsultant context="design" />
+                <InlineConsultant context="design" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
 
               {/* Neural Twin Section - Single Box with Active Badge */}
@@ -789,7 +789,7 @@ export default function StudioPage() {
                   </button>
                 </div>
 
-                <InlineConsultant context="neural-twin" />
+                <InlineConsultant context="neural-twin" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
 
             </motion.div>
