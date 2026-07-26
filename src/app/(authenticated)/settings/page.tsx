@@ -82,11 +82,11 @@ function SettingsContent() {
     { id: 'subscription', name: 'Subscription', icon: Zap },
     { id: 'theme-style', name: 'Theme & Style', icon: Palette },
     { id: 'support-hub', name: 'Support Hub', icon: LifeBuoy },
-    { id: 'security', name: 'Security', icon: ShieldCheck }
   ];
 
   const ownerTabs = [
     { id: 'financials', name: 'Financials', icon: CreditCard },
+    { id: 'security', name: 'Security', icon: ShieldCheck },
     ...baseTabs
   ];
 
