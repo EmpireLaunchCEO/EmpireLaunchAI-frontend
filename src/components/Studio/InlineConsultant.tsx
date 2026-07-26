@@ -55,7 +55,6 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   useEffect(() => {
     if (idea && idea !== lastIdea && idea.trim()) {
       setLastIdea(idea);
-      setUserConfirmed(false);
       
       // Auto-send the idea to the Consultant/Gemini for review
       const sendIdeaToConsultant = async () => {
