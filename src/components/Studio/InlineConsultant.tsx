@@ -71,15 +71,13 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
                           ...(userId ? { 'x-user-id': userId } : {})
                         },
                         body: JSON.stringify({
-                          message: `You are a creative director helping someone create a short-form video. They want a ${context === 'design' ? 'design' : 'video'} based on this idea: "${idea}". Respond naturally — acknowledge their idea, suggest ONE specific improvement based on what performs best on social media (hooks, pacing, color psychology, trending effects), and ask ONE follow-up question. Be conversational, not robotic. Keep it to 2-3 sentences max. If they say "ready", "yes", or "go ahead", respond naturally and end with "[GENERATE]".`
+                          message: `You're a creative director helping someone brainstorm a short-form ${context === 'design' ? 'design' : 'video'}. Their idea: "${idea}". Have a natural conversation — acknowledge what they shared, offer creative input based on what performs well on social media, and help them refine their vision. Be yourself.`
             })
           });
 
           if (!response.ok) throw new Error('Failed to consult AI');
           const data = await response.json();
-          // Strip [GENERATE] tag from display but still trigger confirmation
-          const cleanMessage = data.message.replace(/\[GENERATE\]/gi, '').trim();
-          setMessages(prev => [...prev, { role: 'assistant', content: cleanMessage }]);
+          setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
         } catch (error) {
           console.error('Consultation error:', error);
           setMessages(prev => [...prev, { role: 'assistant', content: "Great concept! What kind of visual vibe are you going for — bold and energetic, or clean and cinematic? Any specific colors you have in mind?" }]);
@@ -122,14 +120,14 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 
-          message: `You are a creative director helping with short-form content. Be conversational and natural. Ask ONE question at a time about fonts, colors, vibe, pacing, or effects based on what the user has shared. Keep responses brief and friendly — 2-3 sentences max. If they say "ready", "yes", or "go ahead", respond naturally and end with "[GENERATE]".\n\nConversation so far:\n${recentMessages}\n\nUser's latest message: ${userMessage}`
+          message: `You're a creative director helping with short-form content. Be conversational and helpful — offer creative direction, ask questions when you need clarity, and guide them toward a great final concept.\n\nConversation so far:\n${recentMessages}\n\nUser's latest message: ${userMessage}`
         })
       });
 
       if (!response.ok) throw new Error('Failed to consult AI');
       const data = await response.json();
 
-      setMessages(prev => [...prev, { role: 'assistant', content: data.message.replace(/\[GENERATE\]/gi, '').trim() }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
     } catch (error) {
       console.error('Consultation error:', error);
       setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the Neural Link. Please try again." }]);
