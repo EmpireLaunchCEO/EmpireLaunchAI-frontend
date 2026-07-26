@@ -33,6 +33,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [lastIdea, setLastIdea] = useState('');
+  const [readyToGenerate, setReadyToGenerate] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -78,6 +79,10 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           if (!response.ok) throw new Error('Failed to consult AI');
           const data = await response.json();
           setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+          // Detect if AI is signaling readiness
+          if (/ready|go ahead|let'?s create|shall we|sound(s)? good/i.test(data.message)) {
+            setReadyToGenerate(true);
+          }
         } catch (error) {
           console.error('Consultation error:', error);
           setMessages(prev => [...prev, { role: 'assistant', content: "Great concept! What kind of visual vibe are you going for — bold and energetic, or clean and cinematic? Any specific colors you have in mind?" }]);
@@ -128,6 +133,10 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       const data = await response.json();
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+      // Detect if AI is signaling readiness
+      if (/ready|go ahead|let'?s create|shall we|sound(s)? good/i.test(data.message)) {
+        setReadyToGenerate(true);
+      }
     } catch (error) {
       console.error('Consultation error:', error);
       setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the Neural Link. Please try again." }]);
@@ -216,7 +225,9 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10"
           >
             <ArrowDown className="w-2.5 h-2.5 text-primary" />
-            <span className="text-[7px] font-bold text-primary uppercase tracking-widest">Refine your idea, then hit Generate</span>
+            <span className="text-[7px] font-bold text-primary uppercase tracking-widest">
+              {readyToGenerate ? "Ready to create — hit Generate!" : "Refine your idea, then hit Generate"}
+            </span>
           </motion.div>
         )}
 
@@ -229,7 +240,10 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           >
             <button
               onClick={handleGenerate}
-              className="w-full py-2 bg-primary text-slate-950 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-primary/20"
+              className={cn(
+                "w-full py-2 bg-primary text-slate-950 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-primary/20",
+                readyToGenerate && "animate-pulse ring-2 ring-primary/50"
+              )}
             >
               <Wand2 className="w-3 h-3" />
               Generate {context === 'design' ? 'Design' : 'Video'}
