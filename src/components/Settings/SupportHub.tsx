@@ -8,7 +8,7 @@ import { RateApp } from './RateApp';
 const faqContent: Record<string, string> = {
   "Understanding Pricing": "EmpireLaunch AI charges a flat $50/month subscription for full platform access. Additional brand expansion slots are $50/month each. No extra or hidden fees — you keep 100% of your revenue.",
   "How AI Content Creation Works": "Describe your business, niche, and goals in the Empire Identity card. Use the AI Studio to generate designs, videos, and content tailored to your brand. Review and approve everything on the Operations Page before anything goes live.",
-  "Managing Your Account": "Your empire identity, brand details, and business goals can be edited anytime from the dashboard. All changes save instantly and are encrypted at rest with AES-256-GCM encryption. Connected platforms are managed through the Link Center.",
+  "Managing Your Account": "Brand identity can be changed once every 90 days. We understand that as a business grows some things change, but each slot is designed to manage one brand. If you change all your brand information, previous info will be erased. To add an additional brand, purchase an expansion slot for $50/month. Connected platforms are managed through the Link Center.",
   "Scaling with Expansion Slots": "Expansion slots allow you to run multiple brands from one account. Each slot gets its own brand workspace with separate analytics, style DNA, and AI configuration. Unlock additional slots for $50/month each."
 };
 
