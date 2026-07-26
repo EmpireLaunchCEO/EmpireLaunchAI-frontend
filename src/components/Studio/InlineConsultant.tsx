@@ -51,12 +51,12 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
     }
   }, [context, initialMessage]);
 
-  // When a new idea is shared from the parent (Enter pressed in textarea), send it to Gemini
+  // When a new idea is shared from the parent (Enter pressed in textarea), send it to the AI
   useEffect(() => {
     if (idea && idea !== lastIdea && idea.trim()) {
       setLastIdea(idea);
       
-      // Auto-send the idea to the Consultant/Gemini for review
+      // Auto-send the idea to the AI consultant for review
       const sendIdeaToConsultant = async () => {
         setMessages(prev => [...prev, { role: 'user', content: `Here's my video idea: ${idea}` }]);
         setIsTyping(true);
@@ -71,7 +71,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
                           ...(userId ? { 'x-user-id': userId } : {})
                         },
                         body: JSON.stringify({
-                          message: `[CONTEXT: ${context}] The user wants a video based on this idea: "${idea}". You are an expert creative director with deep knowledge of what performs best on each platform (TikTok, Instagram, YouTube Shorts) — pacing, hooks, color psychology, trending effects. Propose a COMPLETE, READY-TO-GO video concept based on market research. Keep your response VERY SHORT — 2-3 sentences max. Then ask ONE single question to refine (pacing, colors, or hook). Do not list multiple questions. If the user confirms or says "ready", "yes", or "go ahead", respond with "[GENERATE]" at the end. If the user changes direction, adapt — research what works but ultimately do what the user wants.`
+                          message: `You are a creative director helping someone create a short-form video. They want a ${context === 'design' ? 'design' : 'video'} based on this idea: "${idea}". Respond naturally — acknowledge their idea, suggest ONE specific improvement based on what performs best on social media (hooks, pacing, color psychology, trending effects), and ask ONE follow-up question. Be conversational, not robotic. Keep it to 2-3 sentences max. If they say "ready", "yes", or "go ahead", respond naturally and end with "[GENERATE]".`
             })
           });
 
@@ -82,7 +82,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           setMessages(prev => [...prev, { role: 'assistant', content: cleanMessage }]);
         } catch (error) {
           console.error('Consultation error:', error);
-          setMessages(prev => [...prev, { role: 'assistant', content: "Great idea! Let's refine it. What visual style are you thinking — energetic and fast-paced, or cinematic and slow? Any specific colors or effects you want?" }]);
+          setMessages(prev => [...prev, { role: 'assistant', content: "Great concept! What kind of visual vibe are you going for — bold and energetic, or clean and cinematic? Any specific colors you have in mind?" }]);
         } finally {
           setIsTyping(false);
         }
@@ -122,7 +122,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 
-          message: `[CONTEXT: ${context}] You are a creative director for short-form content. Ask ONE question at a time to refine the vision. Cover: fonts (serif, sans, script, bold, elegant, etc.), colors (vibrant, muted, dark, pastel, warm, cool), vibe (playful, luxury, minimal, grunge, corporate), pacing (fast, slow), effects (sparkles, glitch, blur, transitions). Keep responses 2-3 sentences max. The user will click Generate when ready — you don't need to trigger it.\n\nConversation so far:\n${recentMessages}\n\nUser's latest message: ${userMessage}`
+          message: `You are a creative director helping with short-form content. Be conversational and natural. Ask ONE question at a time about fonts, colors, vibe, pacing, or effects based on what the user has shared. Keep responses brief and friendly — 2-3 sentences max. If they say "ready", "yes", or "go ahead", respond naturally and end with "[GENERATE]".\n\nConversation so far:\n${recentMessages}\n\nUser's latest message: ${userMessage}`
         })
       });
 
@@ -139,8 +139,13 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   };
 
   const handleGenerate = () => {
-    if (onGenerate && idea) {
-      onGenerate(idea);
+    if (onGenerate) {
+      // Build the final concept from the full conversation, not just the initial idea
+      const conversationSummary = messages
+        .filter(m => m.role === 'user' || m.role === 'assistant')
+        .map(m => m.content)
+        .join(' ');
+      onGenerate(conversationSummary || idea || '');
     }
   };
 
@@ -213,7 +218,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10"
           >
             <ArrowDown className="w-2.5 h-2.5 text-primary" />
-            <span className="text-[7px] font-bold text-primary uppercase tracking-widest">Refine your idea with Gemini, then hit Generate</span>
+            <span className="text-[7px] font-bold text-primary uppercase tracking-widest">Refine your idea, then hit Generate</span>
           </motion.div>
         )}
 
