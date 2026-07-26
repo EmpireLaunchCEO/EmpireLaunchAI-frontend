@@ -156,9 +156,9 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
 
   return (
     <div className="p-5 bg-theme-background border-2 border-theme rounded-2xl space-y-3">
-      <div className="flex items-center justify-between">
-        <h4 className="font-black text-foreground uppercase tracking-tight text-sm">{brandName}</h4>
-        <div className="shrink-0">{statusBadge}</div>
+      <div className="flex items-center gap-3">
+        <h4 className="font-black text-foreground uppercase tracking-tight text-sm whitespace-nowrap overflow-visible">{brandName}</h4>
+        <div className="shrink-0 ml-auto">{statusBadge}</div>
       </div>
       <div className="flex items-center justify-between text-xs">
         <span className="font-bold text-foreground">{price}</span>
