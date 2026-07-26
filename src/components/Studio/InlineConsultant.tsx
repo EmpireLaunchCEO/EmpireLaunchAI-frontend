@@ -73,8 +73,9 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
                           ...(userId ? { 'x-user-id': userId } : {})
                         },
                         body: JSON.stringify({
-                          message: `You're a creative director helping someone brainstorm a short-form ${context === 'design' ? 'design' : 'video'}. Their business: ${empireContext?.niche || 'a brand'} — ${empireContext?.angle || 'unique approach'}. Target audience: ${empireContext?.targetCustomers || 'general audience'}. Their idea: "${idea}". Have a natural conversation — acknowledge what they shared, offer creative input based on what performs well on social media, and help them refine their vision. Be yourself.`
-            })
+                          message: `You're a creative director helping someone brainstorm a short-form ${context === 'design' ? 'design' : 'video'}. Their business: ${empireContext?.niche || 'a brand'} — ${empireContext?.angle || 'unique approach'}. Target audience: ${empireContext?.targetCustomers || 'general audience'}. Their idea: "${idea}". Have a natural conversation — acknowledge what they shared, offer creative input based on what performs well on social media, and help them refine their vision. Be yourself.`,
+                          niche: empireContext?.niche || undefined
+                        })
           });
 
           if (!response.ok) throw new Error('Failed to consult AI');
@@ -126,7 +127,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 
-          message: `You're a creative director helping with short-form content. The business is: ${empireContext?.niche || 'a brand'} — ${empireContext?.angle || 'unique approach'}. Target audience: ${empireContext?.targetCustomers || 'general audience'}. Be conversational and helpful — offer creative direction, ask questions when you need clarity, and guide them toward a great final concept.\n\nConversation so far:\n${recentMessages}\n\nUser's latest message: ${userMessage}`
+          message: `You're a creative director helping with short-form content. The business is: ${empireContext?.niche || 'a brand'} — ${empireContext?.angle || 'unique approach'}. Target audience: ${empireContext?.targetCustomers || 'general audience'}. Be conversational and helpful — offer creative direction, ask questions when you need clarity, and guide them toward a great final concept.\n\nConversation so far:\n${recentMessages}\n\nUser's latest message: ${userMessage}`,
+          niche: empireContext?.niche || undefined
         })
       });
 
