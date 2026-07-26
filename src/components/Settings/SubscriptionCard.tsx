@@ -42,6 +42,15 @@ export function SubscriptionCard({ brandName, price, renewsIn }: SubscriptionCar
           } else if (renewalData.status === 'active') {
             setIsActive(true);
             setIsGracePeriod(false);
+            setLoading(false);
+            // Admin or active user — skip the subscription fetch, we already know status
+            if (!renewalData.renewsAt) {
+              // Admin bypass — no real sub, use fallback date
+              const fallback = new Date();
+              fallback.setDate(fallback.getDate() + 30);
+              setRenewalDate(fallback);
+            }
+            return;
           } else {
             setIsActive(false);
           }
