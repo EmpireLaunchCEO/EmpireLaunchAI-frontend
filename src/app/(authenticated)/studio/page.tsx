@@ -341,6 +341,8 @@ export default function StudioPage() {
         setTimeout(() => {
           setVideoGenerated(false);
           setIsRendering(false);
+          setSharedVideoIdea('');
+          setCreatedAssetId(null);
         }, 12000);
         return;
       }
@@ -516,6 +518,17 @@ export default function StudioPage() {
                         <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
                       </Link>
                     )}
+                    <button
+                      onClick={() => {
+                        setVideoGenerated(false);
+                        setSharedVideoIdea('');
+                        setCreatedAssetId(null);
+                        setGenerationError(null);
+                      }}
+                      className="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-white/30 text-xs font-bold uppercase tracking-widest transition-all"
+                    >
+                      Create Another Video
+                    </button>
                   </motion.div>
                 )}
 
