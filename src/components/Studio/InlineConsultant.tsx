@@ -103,11 +103,14 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
     }
   }, [messages, isTyping]);
 
+  // Once conversation has started (≥2 messages), user can generate anytime
+  const canGenerate = messages.length >= 2 && !!onGenerate;
+
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // If AI says we're ready AND input is empty, Generate
-    if (readyToGenerate && onGenerate && !input.trim()) {
+    // Empty Enter when conversation started = Generate
+    if (canGenerate && !input.trim()) {
       const conversationSummary = messages
         .filter(m => m.role === 'user' || m.role === 'assistant')
         .map(m => m.content)
@@ -255,25 +258,25 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={readyToGenerate ? "Press Enter to generate..." : "Ask..."}
+            placeholder={canGenerate ? "Press Enter to generate..." : "Ask..."}
             className={cn(
               "w-full bg-theme-surface/50 border rounded-xl px-2.5 py-2 text-xs focus:outline-none transition-all pr-10",
-              readyToGenerate 
+              canGenerate 
                 ? "border-primary/50 focus:border-primary placeholder:text-primary/50 text-primary" 
                 : "border-theme focus:border-white/40 placeholder:text-slate-600"
             )}
           />
           <button
             type="submit"
-            disabled={isTyping || (!readyToGenerate && !input.trim())}
+            disabled={isTyping || (!canGenerate && !input.trim())}
             className={cn(
               "absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg flex items-center justify-center transition-all",
-              readyToGenerate
-                ? "bg-primary text-slate-950 animate-pulse"
+              canGenerate
+                ? `bg-primary text-slate-950${readyToGenerate ? ' animate-pulse' : ''}`
                 : "bg-white/10 text-white hover:bg-white/20 disabled:opacity-30"
             )}
           >
-            {readyToGenerate ? <Wand2 className="w-3 h-3" /> : <Send className="w-2.5 h-2.5" />}
+            {canGenerate ? <Wand2 className="w-3 h-3" /> : <Send className="w-2.5 h-2.5" />}
           </button>
         </div>
       </form>
@@ -283,7 +286,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         <div className="flex items-center gap-1.5 px-2 py-1 mx-1.5 mb-1.5 rounded-lg bg-primary/5 border border-primary/10">
           <ArrowDown className="w-2.5 h-2.5 text-primary" />
           <span className="text-[9px] font-bold text-primary uppercase tracking-widest">
-            {readyToGenerate ? "Ready — press Enter or tap the wand!" : messages.length >= 2 ? "Happy with your idea? Hit Enter when ready" : "Chat with the AI to refine your idea"}
+            {readyToGenerate ? "Ready — press Enter or tap the wand!" : canGenerate ? "Happy with your idea? Hit Enter when ready" : "Chat with the AI to refine your idea"}
           </span>
         </div>
       )}
