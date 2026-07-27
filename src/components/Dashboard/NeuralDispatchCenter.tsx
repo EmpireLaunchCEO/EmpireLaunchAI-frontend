@@ -149,7 +149,7 @@ export function NeuralDispatchCenter() {
       console.error('Failed to delete approval:', e);
     }
     setIsApproved(false);
-    setView('select');
+    setView('grid');
   };
 
   const handleSaveToLibrary = async () => {
@@ -169,7 +169,6 @@ export function NeuralDispatchCenter() {
       });
       if (res.ok) {
         setIsApproved(true);
-        setView('grid');
         fetchApprovals();
       }
     } catch (err) {
