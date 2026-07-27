@@ -66,25 +66,35 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         
         try {
           const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-          const response = await fetch(`${API_URL}/api/studio/chat`, {
+          const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
+          const response = await fetch(`${API_URL}/api/studio/process`, {
             method: 'POST',
             headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': getAuthHeader(),
-                          ...(userId ? { 'x-user-id': userId } : {})
-                        },
-                        body: JSON.stringify({
-                          message: `My video idea: ${idea}`,
-                          niche: empireContext?.niche || undefined
-                        })
+              'Content-Type': 'application/json',
+              'Authorization': getAuthHeader(),
+              ...(userId ? { 'x-user-id': userId } : {})
+            },
+            body: JSON.stringify({
+              request: `My video idea: ${idea}`,
+              brandId: brandId || undefined,
+              conversationHistory: [{ role: 'user' as const, content: `My video idea: ${idea}` }]
+            })
           });
 
           if (!response.ok) throw new Error('Failed to consult AI');
           const data = await response.json();
-          setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
-          // Detect if AI is signaling readiness
-          if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(data.message)) {
+          
+          if (data.status === 'completed') {
+            setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Generation complete!' }]);
             setReadyToGenerate(true);
+            if (data.assets?.length > 0 && onGenerate) {
+              onGenerate(data.response || idea);
+            }
+          } else if (data.status === 'error') {
+            setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Something went wrong. Please try again.' }]);
+          } else {
+            // ai_response or needs_refinement
+            setMessages(prev => [...prev, { role: 'assistant', content: data.response || data.message || '' }]);
           }
         } catch (error) {
           console.error('Consultation error:', error);
@@ -119,9 +129,10 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
     try {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-      const recentMessages = updatedMessages.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
+      const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
+      const conversationHistory = updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }));
       
-      const response = await fetch(`${API_URL}/api/studio/chat`, {
+      const response = await fetch(`${API_URL}/api/studio/process`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,17 +140,26 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 
-          message: userMessage,
-          niche: empireContext?.niche || undefined,
-          history: updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }))
+          request: userMessage,
+          brandId: brandId || undefined,
+          conversationHistory
         })
       });
 
       if (!response.ok) throw new Error('Failed to consult AI');
       const data = await response.json();
-      setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
-      if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(data.message)) {
+      
+      if (data.status === 'completed') {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Generation complete!' }]);
         setReadyToGenerate(true);
+        if (data.assets?.length > 0 && onGenerate) {
+          onGenerate(data.response || userMessage);
+        }
+      } else if (data.status === 'error') {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Something went wrong. Please try again.' }]);
+      } else {
+        // ai_response or needs_refinement
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response || data.message || '' }]);
       }
     } catch (error) {
       console.error('Consultation error:', error);
