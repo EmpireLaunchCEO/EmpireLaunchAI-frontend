@@ -66,40 +66,25 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         
         try {
           const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-          const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
-          const conversationHistory = [{ role: 'user' as const, content: `My video idea: ${idea}` }];
-          const response = await fetch(`${API_URL}/api/studio/process`, {
+          const response = await fetch(`${API_URL}/api/studio/chat`, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': getAuthHeader(),
-              ...(userId ? { 'x-user-id': userId } : {})
-            },
-            body: JSON.stringify({
-              userId,
-              brandId: brandId || null,
-              request: `My video idea: ${idea}`,
-              conversationHistory
-            })
+                          'Content-Type': 'application/json',
+                          'Authorization': getAuthHeader(),
+                          ...(userId ? { 'x-user-id': userId } : {})
+                        },
+                        body: JSON.stringify({
+                          message: `My video idea: ${idea}`,
+                          niche: empireContext?.niche || undefined
+                        })
           });
 
           if (!response.ok) throw new Error('Failed to consult AI');
           const data = await response.json();
-          
-          if (data.status === 'completed') {
-            setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Generation complete! Reviewing output...' }]);
-            if (data.assets && data.assets.length > 0 && onGenerate) {
-              onGenerate(data.response || idea);
-            }
-          } else if (data.status === 'error') {
-            setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Something went wrong. Please try rephrasing your idea.' }]);
-          } else {
-            // ai_response or needs_refinement
-            const responseText = data.response || data.message || '';
-            setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
-            if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(responseText)) {
-              setReadyToGenerate(true);
-            }
+          setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+          // Detect if AI is signaling readiness
+          if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(data.message)) {
+            setReadyToGenerate(true);
           }
         } catch (error) {
           console.error('Consultation error:', error);
@@ -134,10 +119,9 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
     try {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-      const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
-      const conversationHistory = updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }));
+      const recentMessages = updatedMessages.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
       
-      const response = await fetch(`${API_URL}/api/studio/process`, {
+      const response = await fetch(`${API_URL}/api/studio/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,32 +129,17 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 
-          userId,
-          brandId: brandId || null,
-          request: userMessage,
-          conversationHistory
+          message: userMessage,
+          niche: empireContext?.niche || undefined,
+          history: updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }))
         })
       });
 
       if (!response.ok) throw new Error('Failed to consult AI');
       const data = await response.json();
-      
-      if (data.status === 'completed') {
-        const responseText = data.response || 'Generation complete!';
-        setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+      if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(data.message)) {
         setReadyToGenerate(true);
-        if (data.assets && data.assets.length > 0 && onGenerate) {
-          onGenerate(data.response || userMessage);
-        }
-      } else if (data.status === 'error') {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Something went wrong. Please try again.' }]);
-      } else {
-        // ai_response or needs_refinement
-        const responseText = data.response || data.message || '';
-        setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
-        if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(responseText)) {
-          setReadyToGenerate(true);
-        }
       }
     } catch (error) {
       console.error('Consultation error:', error);
@@ -180,57 +149,14 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
     }
   };
 
-  const handleGenerate = async () => {
-    if (!onGenerate || isGenerating) return;
-    
-    setIsGenerating(true);
-    try {
-      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-      const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
-      const conversationHistory = messages
-        .filter(m => m.role === 'user' || m.role === 'assistant')
-        .map(m => ({ role: m.role, content: m.content }));
-      const requestSummary = messages
+  const handleGenerate = () => {
+    if (onGenerate && !isGenerating) {
+      setIsGenerating(true);
+      const conversationSummary = messages
         .filter(m => m.role === 'user' || m.role === 'assistant')
         .map(m => m.content)
         .join(' ');
-      
-      const response = await fetch(`${API_URL}/api/studio/process`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': getAuthHeader(),
-          ...(userId ? { 'x-user-id': userId } : {})
-        },
-        body: JSON.stringify({
-          userId,
-          brandId: brandId || null,
-          request: requestSummary || idea || '',
-          conversationHistory,
-          action: 'generate'
-        })
-      });
-
-      if (!response.ok) throw new Error('Generation failed');
-      const data = await response.json();
-      
-      if (data.status === 'completed') {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Your content has been generated! Check Operations for the result.' }]);
-        setReadyToGenerate(true);
-        onGenerate(requestSummary || idea || '');
-      } else if (data.status === 'error') {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Generation failed. Please try refining your idea.' }]);
-      } else {
-        // ai_response or needs_refinement — show the response but also call generate
-        const responseText = data.response || data.message || '';
-        setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
-        onGenerate(requestSummary || idea || '');
-      }
-    } catch (error) {
-      console.error('Generation error:', error);
-      setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble generating your content. Please try again." }]);
-    } finally {
-      setIsGenerating(false);
+      onGenerate(conversationSummary || idea || '');
     }
   };
 
