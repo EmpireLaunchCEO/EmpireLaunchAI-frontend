@@ -118,18 +118,18 @@ export interface DiscoveryResult {
 // Existing beta accounts (00000000-...) are preserved
 export const getEmpireUserId = (): string => {
   if (typeof window !== 'undefined') {
-    // 1. Primary key — return whatever is stored (including legacy beta UUID)
-    let id = localStorage.getItem('empire_user_id');
+    // 1. Primary key — camelCase (set by onboarding signup/login)
+    let id = localStorage.getItem('empire_userId');
     if (id) return id;
-    // 2. Backward compatibility: check camelCase key (EmpireContext legacy)
-    const legacyId = localStorage.getItem('empire_userId');
+    // 2. Backward compatibility: snake_case (older versions)
+    const legacyId = localStorage.getItem('empire_user_id');
     if (legacyId) {
-      localStorage.setItem('empire_user_id', legacyId);
+      localStorage.setItem('empire_userId', legacyId);
       return legacyId;
     }
     // 3. Generate new device UUID for new users
     id = crypto.randomUUID();
-    localStorage.setItem('empire_user_id', id);
+    localStorage.setItem('empire_userId', id);
     return id;
   }
   return ''; // SSR fallback — no user context
