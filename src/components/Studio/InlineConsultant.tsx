@@ -179,7 +179,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       {/* Message Area */}
       <div 
         ref={scrollRef}
-        className="flex-1 min-h-[60px] max-h-[100px] overflow-y-auto p-2 space-y-2 no-scrollbar"
+        className="flex-1 min-h-[120px] max-h-[280px] overflow-y-auto p-3 space-y-2 no-scrollbar"
       >
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
@@ -199,7 +199,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
                 {msg.role === 'user' ? <User className="w-2 h-2 text-white" /> : <Bot className="w-2 h-2 text-slate-400" />}
               </div>
               <div className={cn(
-                "px-2 py-1.5 rounded-xl text-[9px] leading-relaxed max-w-[85%]",
+                "px-2.5 py-2 rounded-xl text-xs leading-relaxed max-w-[85%]",
                 msg.role === 'user' 
                   ? "bg-white text-slate-950 rounded-tr-none font-medium" 
                   : "bg-theme-surface border border-theme text-slate-300 rounded-tl-none italic"
@@ -228,7 +228,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10"
           >
             <ArrowDown className="w-2.5 h-2.5 text-primary" />
-            <span className="text-[7px] font-bold text-primary uppercase tracking-widest">
+            <span className="text-[9px] font-bold text-primary uppercase tracking-widest">
               {readyToGenerate ? "Ready to create — hit Generate!" : messages.length >= 2 ? "Happy with your idea? Hit Generate" : "Chat with the AI to refine your idea"}
             </span>
           </motion.div>
@@ -244,7 +244,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask..."
-            className="w-full bg-theme-surface/50 border border-theme rounded-xl px-2 py-1.5 text-[9px] focus:outline-none focus:border-white/40 transition-all placeholder:text-slate-600 pr-9"
+            className="w-full bg-theme-surface/50 border border-theme rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-white/40 transition-all placeholder:text-slate-600 pr-9"
           />
           <button
             type="submit"
