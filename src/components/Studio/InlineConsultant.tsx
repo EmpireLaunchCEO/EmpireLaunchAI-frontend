@@ -35,6 +35,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   const [isTyping, setIsTyping] = useState(false);
   const [lastIdea, setLastIdea] = useState('');
   const [readyToGenerate, setReadyToGenerate] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -148,7 +149,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   };
 
   const handleGenerate = () => {
-    if (onGenerate) {
+    if (onGenerate && !isGenerating) {
+      setIsGenerating(true);
       const conversationSummary = messages
         .filter(m => m.role === 'user' || m.role === 'assistant')
         .map(m => m.content)
@@ -249,13 +251,14 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             <button
               type="button"
               onClick={handleGenerate}
-              disabled={isTyping}
+              disabled={isTyping || isGenerating}
               className={cn(
                 "w-8 h-8 rounded-lg bg-primary text-slate-950 flex items-center justify-center shrink-0 transition-all",
-                readyToGenerate && "animate-pulse ring-2 ring-primary/50"
+                isGenerating && "opacity-50 scale-90",
+                !isGenerating && readyToGenerate && "animate-pulse ring-2 ring-primary/50"
               )}
             >
-              <Wand2 className="w-3.5 h-3.5" />
+              {isGenerating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
             </button>
           )}
           {/* Send — always present */}
