@@ -259,22 +259,30 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
       {/* Generate Button — below the chat input */}
       {onGenerate && messages.length >= 1 && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="px-1.5 pb-1.5"
-        >
+        <div className="px-1.5 pb-1.5">
           <button
-            onClick={handleGenerate}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('[InlineConsultant] Generate button clicked directly');
+              if (onGenerate) {
+                const conversationSummary = messages
+                  .filter(m => m.role === 'user' || m.role === 'assistant')
+                  .map(m => m.content)
+                  .join(' ');
+                onGenerate(conversationSummary || idea || '');
+              }
+            }}
             className={cn(
-              "w-full py-2 bg-primary text-slate-950 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-primary/20",
+              "w-full py-2.5 bg-primary text-slate-950 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-primary/90 active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-primary/20 cursor-pointer",
               readyToGenerate && "animate-pulse ring-2 ring-primary/50"
             )}
           >
-            <Wand2 className="w-3 h-3" />
+            <Wand2 className="w-3.5 h-3.5" />
             Generate {context === 'design' ? 'Design' : 'Video'}
           </button>
-        </motion.div>
+        </div>
       )}
     </div>
   );
