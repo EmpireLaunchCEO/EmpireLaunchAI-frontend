@@ -307,6 +307,10 @@ export default function StudioPage() {
 
       // Call the full creation pipeline
       addLog('AI Content Generation', 'processing', 'Generating visuals and script...');
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      
       const res = await fetch(`${API_URL}/api/studio/create`, {
         method: 'POST',
         headers: {
@@ -327,8 +331,10 @@ export default function StudioPage() {
           platforms: ['tiktok', 'instagram'],
           title: finalIdea.substring(0, 80),
           description: finalIdea
-        })
+        }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       if (res.ok) {
         const data = await res.json();
@@ -527,8 +533,8 @@ export default function StudioPage() {
                 {isGeneratingVideo && !videoGenerated && (
                   <div className="flex flex-col items-center justify-center py-16 gap-4">
                     <BrandedGlobe size="md" spinning={true} className="animate-pulse" />
-                    <p className="text-sm font-black text-foreground uppercase tracking-widest animate-pulse">Generating your video...</p>
-                    <p className="text-[10px] text-muted-foreground">This may take up to 2 minutes</p>
+                    <p className="text-sm font-black text-foreground uppercase tracking-widest animate-pulse">Sending to AI Studio...</p>
+                    <p className="text-[10px] text-muted-foreground">Video will render in the background</p>
                   </div>
                 )}
                 {generationError && !isGeneratingVideo && (
