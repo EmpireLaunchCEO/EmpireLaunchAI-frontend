@@ -149,12 +149,13 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   };
 
   const handleGenerate = () => {
+    console.log('[InlineConsultant] Generate clicked, messages:', messages.length, 'onGenerate:', !!onGenerate);
     if (onGenerate) {
-      // Build the final concept from the full conversation, not just the initial idea
       const conversationSummary = messages
         .filter(m => m.role === 'user' || m.role === 'assistant')
         .map(m => m.content)
         .join(' ');
+      console.log('[InlineConsultant] Calling onGenerate with:', conversationSummary?.substring(0, 80));
       onGenerate(conversationSummary || idea || '');
     }
   };

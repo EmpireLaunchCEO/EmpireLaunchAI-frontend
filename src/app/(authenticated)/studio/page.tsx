@@ -298,16 +298,14 @@ export default function StudioPage() {
       }]);
     };
 
+    console.log('[Studio] handleGenerateVideo called with:', finalIdea?.substring(0, 80));
     addLog('Consultant Review', 'processing', 'Refining creative direction...');
-    await new Promise(r => setTimeout(r, 1000));
 
     try {
       const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
       const niche = userNiche || empireData?.niche || 'general';
       const angle = empireData?.angle || 'trending';
-
-      addLog('Concept Finalization', 'processing', `Finalizing: ${finalIdea.substring(0, 60)}...`);
-      await new Promise(r => setTimeout(r, 800));
+      console.log('[Studio] Sending to /api/studio/create:', { niche, angle, userId: userId?.substring(0, 8) });
 
       // Call the full creation pipeline
       addLog('AI Content Generation', 'processing', 'Generating visuals and script...');
