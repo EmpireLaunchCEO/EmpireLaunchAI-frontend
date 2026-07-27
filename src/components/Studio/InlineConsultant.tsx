@@ -105,6 +105,17 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // If AI says we're ready, Generate instead of sending another message
+    if (readyToGenerate && onGenerate) {
+      const conversationSummary = messages
+        .filter(m => m.role === 'user' || m.role === 'assistant')
+        .map(m => m.content)
+        .join(' ');
+      onGenerate(conversationSummary || idea || '');
+      return;
+    }
+
     if (!input.trim() || isTyping) return;
 
     const userMessage = input.trim();
@@ -237,51 +248,43 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
       </div>
 
-      {/* Mini Input */}
+      {/* Mini Input + Generate */}
       <form onSubmit={handleSend} className="p-1.5 border-t border-theme bg-theme-background/40">
         <div className="relative">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask..."
-            className="w-full bg-theme-surface/50 border border-theme rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-white/40 transition-all placeholder:text-slate-600 pr-9"
+            placeholder={readyToGenerate ? "Press Enter to generate..." : "Ask..."}
+            className={cn(
+              "w-full bg-theme-surface/50 border rounded-xl px-2.5 py-2 text-xs focus:outline-none transition-all pr-10",
+              readyToGenerate 
+                ? "border-primary/50 focus:border-primary placeholder:text-primary/50 text-primary" 
+                : "border-theme focus:border-white/40 placeholder:text-slate-600"
+            )}
           />
           <button
             type="submit"
-            disabled={!input.trim() || isTyping}
-            className="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-all disabled:opacity-30"
+            disabled={isTyping || (!readyToGenerate && !input.trim())}
+            className={cn(
+              "absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg flex items-center justify-center transition-all",
+              readyToGenerate
+                ? "bg-primary text-slate-950 animate-pulse"
+                : "bg-white/10 text-white hover:bg-white/20 disabled:opacity-30"
+            )}
           >
-            <Send className="w-2.5 h-2.5" />
+            {readyToGenerate ? <Wand2 className="w-3 h-3" /> : <Send className="w-2.5 h-2.5" />}
           </button>
         </div>
       </form>
 
-      {/* Generate Button — below the chat input */}
-      {onGenerate && messages.length >= 1 && (
-        <div className="px-1.5 pb-1.5">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              console.log('[InlineConsultant] Generate button clicked directly');
-              if (onGenerate) {
-                const conversationSummary = messages
-                  .filter(m => m.role === 'user' || m.role === 'assistant')
-                  .map(m => m.content)
-                  .join(' ');
-                onGenerate(conversationSummary || idea || '');
-              }
-            }}
-            className={cn(
-              "w-full py-2.5 bg-primary text-slate-950 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-primary/90 active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-primary/20 cursor-pointer",
-              readyToGenerate && "animate-pulse ring-2 ring-primary/50"
-            )}
-          >
-            <Wand2 className="w-3.5 h-3.5" />
-            Generate {context === 'design' ? 'Design' : 'Video'}
-          </button>
+      {/* Hint bar */}
+      {!isTyping && messages.length >= 1 && (
+        <div className="flex items-center gap-1.5 px-2 py-1 mx-1.5 mb-1.5 rounded-lg bg-primary/5 border border-primary/10">
+          <ArrowDown className="w-2.5 h-2.5 text-primary" />
+          <span className="text-[9px] font-bold text-primary uppercase tracking-widest">
+            {readyToGenerate ? "Ready — press Enter or tap the wand!" : messages.length >= 2 ? "Happy with your idea? Hit Enter when ready" : "Chat with the AI to refine your idea"}
+          </span>
         </div>
       )}
     </div>
