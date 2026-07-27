@@ -106,8 +106,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // If AI says we're ready, Generate instead of sending another message
-    if (readyToGenerate && onGenerate) {
+    // If AI says we're ready AND input is empty, Generate
+    if (readyToGenerate && onGenerate && !input.trim()) {
       const conversationSummary = messages
         .filter(m => m.role === 'user' || m.role === 'assistant')
         .map(m => m.content)
