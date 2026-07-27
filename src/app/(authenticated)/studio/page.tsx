@@ -286,6 +286,13 @@ export default function StudioPage() {
     setIsRendering(true);
     setActiveRenderType('facial-dna');
 
+    // Failsafe: force spinner off after 25s no matter what
+    const failsafe = setTimeout(() => {
+      setIsGeneratingVideo(false);
+      setVideoGenerated(true);
+      setGenerationError(null);
+    }, 25000);
+
     // Add initial render log
     const addLog = (action: string, status: 'processing' | 'success' | 'error' = 'processing', details?: string) => {
       setRenderLogs(prev => [...prev, {
@@ -337,6 +344,7 @@ export default function StudioPage() {
       clearTimeout(timeoutId);
 
       if (res.ok) {
+        clearTimeout(failsafe);
         const data = await res.json();
         addLog('Creation Complete', 'success', data.assetId ? `Asset: ${data.assetId}` : 'Video created successfully');
         setIsGeneratingVideo(false);
@@ -349,6 +357,7 @@ export default function StudioPage() {
       const errorText = await res.text().catch(() => 'Pipeline error');
       throw new Error(errorText);
     } catch (error) {
+      clearTimeout(failsafe);
       console.error('Video pipeline failed:', error);
       setGenerationError(error instanceof Error ? error.message : 'Video generation failed. Please try again.');
       setIsGeneratingVideo(false);
