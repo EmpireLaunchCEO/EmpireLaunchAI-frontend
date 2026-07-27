@@ -130,7 +130,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         },
         body: JSON.stringify({ 
           message: userMessage,
-          niche: empireContext?.niche || undefined
+          niche: empireContext?.niche || undefined,
+          history: updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }))
         })
       });
 
