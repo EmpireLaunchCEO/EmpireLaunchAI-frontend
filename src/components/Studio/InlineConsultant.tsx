@@ -108,55 +108,42 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Enter with text = send message (always)
-    if (input.trim() && !isTyping) {
-      const userMessage = input.trim();
-      setInput('');
-      const updatedMessages = [...messages, { role: 'user' as const, content: userMessage }];
-      setMessages(updatedMessages);
-      setIsTyping(true);
+    if (!input.trim() || isTyping) return;
 
-      try {
-        const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-        const recentMessages = updatedMessages.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
-        
-        const response = await fetch(`${API_URL}/api/studio/chat`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': getAuthHeader(),
-            ...(userId ? { 'x-user-id': userId } : {})
-          },
-          body: JSON.stringify({ 
-            message: userMessage,
-            niche: empireContext?.niche || undefined
-          })
-        });
+    const userMessage = input.trim();
+    setInput('');
+    const updatedMessages = [...messages, { role: 'user' as const, content: userMessage }];
+    setMessages(updatedMessages);
+    setIsTyping(true);
 
-        if (!response.ok) throw new Error('Failed to consult AI');
-        const data = await response.json();
-        setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
-        if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(data.message)) {
-          setReadyToGenerate(true);
-        }
-      } catch (error) {
-        console.error('Consultation error:', error);
-        setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the Neural Link. Please try again." }]);
-      } finally {
-        setIsTyping(false);
+    try {
+      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
+      const recentMessages = updatedMessages.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
+      
+      const response = await fetch(`${API_URL}/api/studio/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
+          ...(userId ? { 'x-user-id': userId } : {})
+        },
+        body: JSON.stringify({ 
+          message: userMessage,
+          niche: empireContext?.niche || undefined
+        })
+      });
+
+      if (!response.ok) throw new Error('Failed to consult AI');
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+      if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(data.message)) {
+        setReadyToGenerate(true);
       }
-      return;
-    }
-
-    // Empty Enter when conversation started = Generate
-    if (canGenerate && !input.trim()) {
-      const conversationSummary = messages
-        .filter(m => m.role === 'user' || m.role === 'assistant')
-        .map(m => m.content)
-        .join(' ');
-      onGenerate(conversationSummary || idea || '');
-      return;
+    } catch (error) {
+      console.error('Consultation error:', error);
+      setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the Neural Link. Please try again." }]);
+    } finally {
+      setIsTyping(false);
     }
   };
 
@@ -249,31 +236,35 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
       {/* Mini Input + Generate */}
       <form onSubmit={handleSend} className="p-1.5 border-t border-theme bg-theme-background/40">
-        <div className="relative">
+        <div className="flex items-center gap-1.5">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={canGenerate ? "Press Enter to generate..." : "Ask..."}
-            className={cn(
-              "w-full bg-theme-surface/50 border rounded-xl px-2.5 py-2 text-xs focus:outline-none transition-all pr-10",
-              canGenerate 
-                ? "border-primary/50 focus:border-primary placeholder:text-primary/50 text-primary" 
-                : "border-theme focus:border-white/40 placeholder:text-slate-600"
-            )}
+            placeholder={canGenerate ? "Type to refine, or tap the wand..." : "Ask..."}
+            className="flex-1 bg-theme-surface/50 border border-theme rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-white/40 transition-all placeholder:text-slate-600"
           />
+          {/* Wand — appears once conversation started */}
+          {canGenerate && (
+            <button
+              type="button"
+              onClick={handleGenerate}
+              disabled={isTyping}
+              className={cn(
+                "w-8 h-8 rounded-lg bg-primary text-slate-950 flex items-center justify-center shrink-0 transition-all",
+                readyToGenerate && "animate-pulse ring-2 ring-primary/50"
+              )}
+            >
+              <Wand2 className="w-3.5 h-3.5" />
+            </button>
+          )}
+          {/* Send — always present */}
           <button
-            type="button"
-            onClick={handleGenerate}
-            disabled={isTyping}
-            className={cn(
-              "absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg flex items-center justify-center transition-all",
-              canGenerate
-                ? `bg-primary text-slate-950${readyToGenerate ? ' animate-pulse' : ''}`
-                : "bg-white/10 text-white hover:bg-white/20 disabled:opacity-30"
-            )}
+            type="submit"
+            disabled={isTyping || !input.trim()}
+            className="w-8 h-8 rounded-lg bg-white/10 text-white flex items-center justify-center shrink-0 hover:bg-white/20 transition-all disabled:opacity-30"
           >
-            {canGenerate ? <Wand2 className="w-3 h-3" /> : <Send className="w-2.5 h-2.5" />}
+            <Send className="w-3 h-3" />
           </button>
         </div>
       </form>
@@ -283,7 +274,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         <div className="flex items-center gap-1.5 px-2 py-1 mx-1.5 mb-1.5 rounded-lg bg-primary/5 border border-primary/10">
           <ArrowDown className="w-2.5 h-2.5 text-primary" />
           <span className="text-[9px] font-bold text-primary uppercase tracking-widest">
-            {readyToGenerate ? "Ready — tap the wand to create!" : canGenerate ? "Tap the wand when you're ready to create" : "Chat with the AI to refine your idea"}
+            {readyToGenerate ? "Ready — tap the wand!" : canGenerate ? "Tap the wand when ready, or keep chatting" : "Chat with the AI to refine your idea"}
           </span>
         </div>
       )}
