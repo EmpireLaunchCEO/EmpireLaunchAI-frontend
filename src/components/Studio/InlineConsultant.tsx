@@ -109,6 +109,46 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Enter with text = send message (always)
+    if (input.trim() && !isTyping) {
+      const userMessage = input.trim();
+      setInput('');
+      const updatedMessages = [...messages, { role: 'user' as const, content: userMessage }];
+      setMessages(updatedMessages);
+      setIsTyping(true);
+
+      try {
+        const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
+        const recentMessages = updatedMessages.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
+        
+        const response = await fetch(`${API_URL}/api/studio/chat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': getAuthHeader(),
+            ...(userId ? { 'x-user-id': userId } : {})
+          },
+          body: JSON.stringify({ 
+            message: userMessage,
+            niche: empireContext?.niche || undefined
+          })
+        });
+
+        if (!response.ok) throw new Error('Failed to consult AI');
+        const data = await response.json();
+        setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+        if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(data.message)) {
+          setReadyToGenerate(true);
+        }
+      } catch (error) {
+        console.error('Consultation error:', error);
+        setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the Neural Link. Please try again." }]);
+      } finally {
+        setIsTyping(false);
+      }
+      return;
+    }
+
     // Empty Enter when conversation started = Generate
     if (canGenerate && !input.trim()) {
       const conversationSummary = messages
@@ -118,58 +158,14 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       onGenerate(conversationSummary || idea || '');
       return;
     }
-
-    if (!input.trim() || isTyping) return;
-
-    const userMessage = input.trim();
-    setInput('');
-    const updatedMessages = [...messages, { role: 'user' as const, content: userMessage }];
-    setMessages(updatedMessages);
-    setIsTyping(true);
-
-    try {
-      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-      
-      // Build conversation history from last 6 messages (3 exchanges)
-      const recentMessages = updatedMessages.slice(-6).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
-      
-      const response = await fetch(`${API_URL}/api/studio/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': getAuthHeader(),
-          ...(userId ? { 'x-user-id': userId } : {})
-        },
-        body: JSON.stringify({ 
-          message: userMessage,
-          niche: empireContext?.niche || undefined
-        })
-      });
-
-      if (!response.ok) throw new Error('Failed to consult AI');
-      const data = await response.json();
-
-      setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
-      // Detect if AI is signaling readiness
-      if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(data.message)) {
-        setReadyToGenerate(true);
-      }
-    } catch (error) {
-      console.error('Consultation error:', error);
-      setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the Neural Link. Please try again." }]);
-    } finally {
-      setIsTyping(false);
-    }
   };
 
   const handleGenerate = () => {
-    console.log('[InlineConsultant] Generate clicked, messages:', messages.length, 'onGenerate:', !!onGenerate);
     if (onGenerate) {
       const conversationSummary = messages
         .filter(m => m.role === 'user' || m.role === 'assistant')
         .map(m => m.content)
         .join(' ');
-      console.log('[InlineConsultant] Calling onGenerate with:', conversationSummary?.substring(0, 80));
       onGenerate(conversationSummary || idea || '');
     }
   };
@@ -267,8 +263,9 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             )}
           />
           <button
-            type="submit"
-            disabled={isTyping || (!canGenerate && !input.trim())}
+            type="button"
+            onClick={handleGenerate}
+            disabled={isTyping}
             className={cn(
               "absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg flex items-center justify-center transition-all",
               canGenerate
@@ -286,7 +283,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         <div className="flex items-center gap-1.5 px-2 py-1 mx-1.5 mb-1.5 rounded-lg bg-primary/5 border border-primary/10">
           <ArrowDown className="w-2.5 h-2.5 text-primary" />
           <span className="text-[9px] font-bold text-primary uppercase tracking-widest">
-            {readyToGenerate ? "Ready — press Enter or tap the wand!" : canGenerate ? "Happy with your idea? Hit Enter when ready" : "Chat with the AI to refine your idea"}
+            {readyToGenerate ? "Ready — tap the wand to create!" : canGenerate ? "Tap the wand when you're ready to create" : "Chat with the AI to refine your idea"}
           </span>
         </div>
       )}
