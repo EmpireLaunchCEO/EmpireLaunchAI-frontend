@@ -342,13 +342,20 @@ export default function StudioPage() {
       if (res.ok) {
         clearTimeout(failsafe);
         const data = await res.json();
-        const assetId = data.assetId || data.assets?.[0]?.id || null;
+        const firstAsset = data.assets?.[0];
+        const assetId = data.assetId || firstAsset?.url || null;
+        const assetType = firstAsset?.type || 'video';
         if (data.status === 'completed') {
-          addLog('Creation Complete', 'success', assetId ? `Asset: ${assetId}` : 'Video created successfully');
+          addLog('Creation Complete', 'success', assetId ? `${assetType}: ${assetId}` : 'Video created successfully');
+        } else if (data.status === 'error') {
+          addLog('Pipeline Error', 'error', data.response || 'Unknown error from AI router');
+          setGenerationError(data.response || 'Generation pipeline returned an error.');
+          setIsGeneratingVideo(false);
+          return;
         } else if (data.status === 'ai_response' || data.status === 'needs_refinement') {
           addLog('AI Response', 'processing', (data.response || '').substring(0, 100) || 'Refining creative direction...');
         } else {
-          addLog('Creation Complete', 'success', assetId ? `Asset: ${assetId}` : 'Video created successfully');
+          addLog('Creation Complete', 'success', assetId ? `${assetType}: ${assetId}` : 'Video created successfully');
         }
         setIsGeneratingVideo(false);
         setVideoGenerated(true);

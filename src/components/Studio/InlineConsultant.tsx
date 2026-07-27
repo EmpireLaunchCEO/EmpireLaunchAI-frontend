@@ -91,6 +91,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             if (data.assets && data.assets.length > 0 && onGenerate) {
               onGenerate(data.response || idea);
             }
+          } else if (data.status === 'error') {
+            setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Something went wrong. Please try rephrasing your idea.' }]);
           } else {
             // ai_response or needs_refinement
             const responseText = data.response || data.message || '';
@@ -160,6 +162,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         if (data.assets && data.assets.length > 0 && onGenerate) {
           onGenerate(data.response || userMessage);
         }
+      } else if (data.status === 'error') {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Something went wrong. Please try again.' }]);
       } else {
         // ai_response or needs_refinement
         const responseText = data.response || data.message || '';
@@ -214,6 +218,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Your content has been generated! Check Operations for the result.' }]);
         setReadyToGenerate(true);
         onGenerate(requestSummary || idea || '');
+      } else if (data.status === 'error') {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Generation failed. Please try refining your idea.' }]);
       } else {
         // ai_response or needs_refinement — show the response but also call generate
         const responseText = data.response || data.message || '';
