@@ -338,12 +338,6 @@ export default function StudioPage() {
         setIsGeneratingVideo(false);
         setVideoGenerated(true);
         setCreatedAssetId(data.assetId || null);
-        setTimeout(() => {
-          setVideoGenerated(false);
-          setIsRendering(false);
-          setSharedVideoIdea('');
-          setCreatedAssetId(null);
-        }, 12000);
         return;
       }
 
