@@ -318,8 +318,8 @@ export default function StudioPage() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000);
       
-      console.log('[Studio] Fetching', `${API_URL}/api/studio/create`);
-      const res = await fetch(`${API_URL}/api/studio/create`, {
+      console.log('[Studio] Fetching', `${API_URL}/api/studio/process`);
+      const res = await fetch(`${API_URL}/api/studio/process`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -327,18 +327,12 @@ export default function StudioPage() {
           'x-user-id': userId
         },
         body: JSON.stringify({
-          niche,
-          angle,
-          styleDna: {
-            colors: ['#FF6B6B', '#4ECDC4', '#FFFFFF', '#2C3E50'],
-            fonts: { headline: 'Montserrat Bold', body: 'Open Sans Regular' },
-            hooks: ['Trending Now', 'You Need To See This', 'Game Changer'],
-            keywords: [niche, 'viral', 'trending', 'creative'],
-            tone: 'energetic_persuasive'
-          },
-          platforms: ['tiktok', 'instagram'],
-          title: finalIdea.substring(0, 80),
-          description: finalIdea
+          userId,
+          brandId: localStorage.getItem('empire_brandId') || null,
+          request: finalIdea,
+          conversationHistory: [],
+          action: 'generate',
+          context: { niche, angle }
         }),
         signal: controller.signal
       });
@@ -348,10 +342,24 @@ export default function StudioPage() {
       if (res.ok) {
         clearTimeout(failsafe);
         const data = await res.json();
-        addLog('Creation Complete', 'success', data.assetId ? `Asset: ${data.assetId}` : 'Video created successfully');
+        const firstAsset = data.assets?.[0];
+        const assetId = data.assetId || firstAsset?.url || null;
+        const assetType = firstAsset?.type || 'video';
+        if (data.status === 'completed') {
+          addLog('Creation Complete', 'success', assetId ? `${assetType}: ${assetId}` : 'Video created successfully');
+        } else if (data.status === 'error') {
+          addLog('Pipeline Error', 'error', data.response || 'Unknown error from AI router');
+          setGenerationError(data.response || 'Generation pipeline returned an error.');
+          setIsGeneratingVideo(false);
+          return;
+        } else if (data.status === 'ai_response' || data.status === 'needs_refinement') {
+          addLog('AI Response', 'processing', (data.response || '').substring(0, 100) || 'Refining creative direction...');
+        } else {
+          addLog('Creation Complete', 'success', assetId ? `${assetType}: ${assetId}` : 'Video created successfully');
+        }
         setIsGeneratingVideo(false);
         setVideoGenerated(true);
-        setCreatedAssetId(data.assetId || null);
+        setCreatedAssetId(assetId);
         return;
       }
 
