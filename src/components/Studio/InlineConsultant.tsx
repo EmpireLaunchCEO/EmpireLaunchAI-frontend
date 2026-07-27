@@ -135,7 +135,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
     try {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
-      const conversationHistory = updatedMessages.slice(-11, -1).map(m => ({ role: m.role, content: m.content }));
+      // Exclude default greeting (index 0) and current user message (last) from history
+      const conversationHistory = updatedMessages.slice(1, -1).map(m => ({ role: m.role, content: m.content }));
       
       const response = await fetch(`${API_URL}/api/studio/process`, {
         method: 'POST',
@@ -188,6 +189,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
       const conversationHistory = messages
+        .slice(1) // Exclude default greeting
         .filter(m => m.role === 'user' || m.role === 'assistant')
         .map(m => ({ role: m.role, content: m.content }));
       const requestSummary = messages
