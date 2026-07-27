@@ -152,11 +152,11 @@ export function NeuralDispatchCenter() {
     setView('select');
   };
 
-  const handleApprove = async () => {
+  const handleSaveToLibrary = async () => {
     if (!currentApproval) return;
     try {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-      const res = await fetch(`${API_URL}/api/approval/respond`, {
+      const res = await fetch(`${API_URL}/api/approval/save-to-library`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -164,8 +164,7 @@ export function NeuralDispatchCenter() {
           'x-user-id': userId || ''
         },
         body: JSON.stringify({
-          requestId: currentApproval.id,
-          status: 'approved'
+          approvalId: currentApproval.id
         })
       });
       if (res.ok) {
@@ -174,7 +173,7 @@ export function NeuralDispatchCenter() {
         fetchApprovals();
       }
     } catch (err) {
-      console.error('Failed to approve:', err);
+      console.error('Failed to save to library:', err);
     }
   };
 
@@ -255,7 +254,7 @@ export function NeuralDispatchCenter() {
 
           <div className="flex gap-3">
             <button 
-              onClick={handleApprove}
+              onClick={handleSaveToLibrary}
               className="flex-1 py-5 bg-emerald-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" />
@@ -265,9 +264,7 @@ export function NeuralDispatchCenter() {
               onClick={async () => {
                 const url = currentApproval?.payload?.videoUrl;
                 if (!url) return;
-                // Save to Library first
-                handleApprove();
-                // Then download to phone
+                // Download to phone only — no library save
                 try {
                   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
                   const res = await fetch(fullUrl);
