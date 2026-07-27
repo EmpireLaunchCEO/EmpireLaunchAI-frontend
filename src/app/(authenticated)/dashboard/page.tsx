@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { Stars, LayoutDashboard, Globe, Briefcase, ChevronRight, AlertCircle } from 'lucide-react';
+import { Stars, LayoutDashboard, Globe, Briefcase, ChevronRight, AlertCircle, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService, empireService, getEmpireUserId } from '@/lib/api-service';
@@ -317,12 +317,18 @@ export default function Dashboard() {
               </p>
             </div>
           ) : !empireData ? (
-            <div className="flex flex-col items-center justify-center py-20 gap-6">
-              <h2 className="text-red-400 font-black uppercase tracking-[0.3em] text-[10px]">
-                Failed to load empire data
+            <div className="flex flex-col items-center justify-center py-20 gap-6 text-center px-4">
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                <Sparkles className="w-8 h-8 text-primary" />
+              </div>
+              <h2 className="text-white font-black uppercase tracking-[0.2em] text-sm">
+                Welcome to EmpireLaunch AI
               </h2>
-              <button onClick={() => fetchData()} className="px-6 py-3 bg-primary text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-primary/80 transition-colors">
-                Retry
+              <p className="text-slate-400 text-xs font-medium max-w-md">
+                Let's get your brand set up. Switch to the <span className="text-primary font-bold">Home</span> tab and fill in your Brand Info to get started.
+              </p>
+              <button onClick={() => fetchData()} className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/50 text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all">
+                Check Again
               </button>
             </div>
           ) : subscriptionStatus === 'loading' ? (
