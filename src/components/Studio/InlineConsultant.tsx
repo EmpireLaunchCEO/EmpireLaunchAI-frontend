@@ -67,7 +67,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         try {
           const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
           const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
-          const conversationHistory = [{ role: 'user' as const, content: `My video idea: ${idea}` }];
+          const conversationHistory: Array<{ role: string; content: string }> = [];
           const response = await fetch(`${API_URL}/api/studio/process`, {
             method: 'POST',
             headers: {
@@ -135,7 +135,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
     try {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
-      const conversationHistory = updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }));
+      const conversationHistory = updatedMessages.slice(-11, -1).map(m => ({ role: m.role, content: m.content }));
       
       const response = await fetch(`${API_URL}/api/studio/process`, {
         method: 'POST',
