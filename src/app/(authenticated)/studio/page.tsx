@@ -318,6 +318,7 @@ export default function StudioPage() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000);
       
+      console.log('[Studio] Fetching', `${API_URL}/api/studio/create`);
       const res = await fetch(`${API_URL}/api/studio/create`, {
         method: 'POST',
         headers: {
@@ -341,6 +342,7 @@ export default function StudioPage() {
         }),
         signal: controller.signal
       });
+      console.log('[Studio] Response:', res.status);
       clearTimeout(timeoutId);
 
       if (res.ok) {
