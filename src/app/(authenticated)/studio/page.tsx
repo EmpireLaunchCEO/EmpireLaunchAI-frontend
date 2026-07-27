@@ -23,6 +23,7 @@ import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FileUploadDropZone, UploadState } from '@/components/Dashboard/FileUploadDropZone';
 import { InlineConsultant } from '@/components/Studio/InlineConsultant';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
+import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 
@@ -516,7 +517,14 @@ export default function StudioPage() {
                   </motion.div>
                 )}
 
-                {!videoGenerated && (
+                {isGeneratingVideo && !videoGenerated && (
+                  <div className="flex flex-col items-center justify-center py-16 gap-4">
+                    <BrandedGlobe size="md" spinning={true} className="animate-pulse" />
+                    <p className="text-sm font-black text-foreground uppercase tracking-widest animate-pulse">Generating your video...</p>
+                    <p className="text-[10px] text-muted-foreground">This may take up to 2 minutes</p>
+                  </div>
+                )}
+                {!isGeneratingVideo && !videoGenerated && (
                   <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
                 )}
               </div>
