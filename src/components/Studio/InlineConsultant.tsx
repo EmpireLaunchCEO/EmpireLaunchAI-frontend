@@ -82,7 +82,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           const data = await response.json();
           setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
           // Detect if AI is signaling readiness
-          if (/ready|go ahead|let'?s create|shall we|sound(s)? good/i.test(data.message)) {
+          if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(data.message)) {
             setReadyToGenerate(true);
           }
         } catch (error) {
@@ -137,7 +137,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
       // Detect if AI is signaling readiness
-      if (/ready|go ahead|let'?s create|shall we|sound(s)? good/i.test(data.message)) {
+      if (/ready|go ahead|let'?s (create|do|make|build)|shall we|sound(s)? (good|great)|look(s)? (good|great|solid)|happy with|ready to/i.test(data.message)) {
         setReadyToGenerate(true);
       }
     } catch (error) {
@@ -229,7 +229,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           >
             <ArrowDown className="w-2.5 h-2.5 text-primary" />
             <span className="text-[7px] font-bold text-primary uppercase tracking-widest">
-              {readyToGenerate ? "Ready to create — hit Generate!" : "Refine your idea, then hit Generate"}
+              {readyToGenerate ? "Ready to create — hit Generate!" : messages.length >= 2 ? "Happy with your idea? Hit Generate" : "Chat with the AI to refine your idea"}
             </span>
           </motion.div>
         )}
