@@ -267,6 +267,7 @@ export default function StudioPage() {
   const [sharedVideoIdea, setSharedVideoIdea] = useState('');
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const [videoGenerated, setVideoGenerated] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
   // Handle Custom Video: Send idea to Consultant for review instead of directly generating
   const handleCustomVideoSubmit = () => {
@@ -280,6 +281,7 @@ export default function StudioPage() {
   // Called by InlineConsultant's "Generate Video" button after refinement
   const handleGenerateVideo = async (finalIdea: string) => {
     setIsGeneratingVideo(true);
+    setGenerationError(null);
     setRenderLogs([]);
     setIsRendering(true);
     setActiveRenderType('facial-dna');
@@ -350,7 +352,7 @@ export default function StudioPage() {
       throw new Error(errorText);
     } catch (error) {
       console.error('Video pipeline failed:', error);
-      addLog('Creation Failed', 'error', 'Video generation could not complete. Please try again.');
+      setGenerationError(error instanceof Error ? error.message : 'Video generation failed. Please try again.');
       setIsGeneratingVideo(false);
       setVideoGenerated(false);
       setIsRendering(false);
@@ -524,7 +526,13 @@ export default function StudioPage() {
                     <p className="text-[10px] text-muted-foreground">This may take up to 2 minutes</p>
                   </div>
                 )}
-                {!isGeneratingVideo && !videoGenerated && (
+                {generationError && !isGeneratingVideo && (
+                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center space-y-2">
+                    <p className="text-xs font-bold text-red-400">{generationError}</p>
+                    <button onClick={() => setGenerationError(null)} className="text-[10px] text-red-400 underline">Dismiss</button>
+                  </div>
+                )}
+                {!isGeneratingVideo && !videoGenerated && !generationError && (
                   <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
                 )}
               </div>
