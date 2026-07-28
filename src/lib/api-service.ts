@@ -129,7 +129,10 @@ export const getEmpireUserId = (): string => {
   if (typeof window !== 'undefined') {
     // 1. Primary key — camelCase (set by onboarding signup/login)
     let id = localStorage.getItem('empire_userId');
-    if (id) return id;
+    if (id) {
+      setEmpireUserIdCookie(id); // ensure cookie exists for PWA
+      return id;
+    }
     // 2. Backward compatibility: snake_case (older versions)
     const legacyId = localStorage.getItem('empire_user_id');
     if (legacyId) {

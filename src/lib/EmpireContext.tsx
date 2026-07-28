@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { API_URL } from '@/lib/config';
-import { empireService } from '@/lib/api-service';
+import { empireService, getEmpireUserId } from '@/lib/api-service';
 
 // Auth token helper — mirrors api-service.ts getAuthToken() pattern
 const getAuthHeader = (): string => {
@@ -146,7 +146,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   // Session helper — get the actual logged-in user from localStorage
   const getStoredUserId = () => {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem('empire_userId');
+    return getEmpireUserId() || null;
   };
 
   const getOwnerBrandingForId = (id: string) => {
@@ -572,7 +572,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         setActiveEmpireId(localActiveId);
 
         // EMERGENCY BYPASS: Only if the user has manually entered the Master ID or it's saved from a previous session
-        const storedUserId = localStorage.getItem('empire_userId');
+        const storedUserId = getEmpireUserId();
                     // Legacy admin zero UUID — always grant admin + paid status
                     if (storedUserId === '00000000-0000-0000-0000-000000000000') {
                          setIsAdmin(true);
