@@ -168,7 +168,10 @@ function OnboardingContent() {
   useEffect(() => {
     if (isMounted && typeof window !== 'undefined') {
       localStorage.setItem('onboarding_step', currentStep.toString());
-      if (userId) localStorage.setItem('empire_userId', userId);
+      if (userId) {
+        localStorage.setItem('empire_userId', userId);
+        document.cookie = `empire_userId=${userId}; path=/; max-age=31536000; SameSite=Lax`;
+      }
       localStorage.setItem('onboarding_data', JSON.stringify(data));
       
       // Update URL silently without adding history entries if possible, or just keep it sync'd

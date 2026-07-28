@@ -116,6 +116,15 @@ export interface DiscoveryResult {
 
 // Multi-tenant: every device gets a unique empire_user_id
 // Existing beta accounts (00000000-...) are preserved
+
+// PWA cookie helper — iOS isolates localStorage from Safari, so we
+// mirror empire_userId to a cookie for cross-environment persistence
+const setEmpireUserIdCookie = (id: string) => {
+  if (typeof document !== 'undefined') {
+    document.cookie = `empire_userId=${id}; path=/; max-age=31536000; SameSite=Lax`;
+  }
+};
+
 export const getEmpireUserId = (): string => {
   if (typeof window !== 'undefined') {
     // 1. Primary key — camelCase (set by onboarding signup/login)
@@ -125,11 +134,19 @@ export const getEmpireUserId = (): string => {
     const legacyId = localStorage.getItem('empire_user_id');
     if (legacyId) {
       localStorage.setItem('empire_userId', legacyId);
+      setEmpireUserIdCookie(legacyId);
       return legacyId;
     }
-    // 3. Generate new device UUID for new users
+    // 3. PWA fallback: check cookie (iOS isolates localStorage from Safari)
+    const cookieId = document.cookie.split('; ').find(row => row.startsWith('empire_userId='))?.split('=')[1];
+    if (cookieId) {
+      localStorage.setItem('empire_userId', cookieId);
+      return cookieId;
+    }
+    // 4. Generate new device UUID for new users
     id = crypto.randomUUID();
     localStorage.setItem('empire_userId', id);
+    setEmpireUserIdCookie(id);
     return id;
   }
   return ''; // SSR fallback — no user context
