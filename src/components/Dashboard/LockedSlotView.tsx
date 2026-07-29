@@ -18,7 +18,7 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
   const [accessKey, setAccessKey] = useState('');
 
   const handleSecurePayment = async () => {
-    const slotLink = slotIndex === 0 ? EXPANSION_SLOT_LINK : BRAND_3_EXPANSION_LINK;
+    const slotLink = slotIndex === 1 ? EXPANSION_SLOT_LINK : BRAND_3_EXPANSION_LINK;
     try {
       const token = localStorage.getItem('empire_auth_token') || '';
       const res = await fetch('https://backend-production-56123.up.railway.app/api/stripe/create-checkout-session', {
