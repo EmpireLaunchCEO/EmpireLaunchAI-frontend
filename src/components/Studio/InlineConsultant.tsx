@@ -81,7 +81,14 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             })
           });
 
-          if (!response.ok) throw new Error('Failed to consult AI');
+          if (!response.ok) {
+            let errorMsg = 'Failed to consult AI';
+            try {
+              const errData = await response.json();
+              errorMsg = errData.response || errData.error || errorMsg;
+            } catch {}
+            throw new Error(errorMsg);
+          }
           const data = await response.json();
           
           if (data.status === 'completed') {
@@ -98,7 +105,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           }
         } catch (error) {
           console.error('Consultation error:', error);
-          setMessages(prev => [...prev, { role: 'assistant', content: "Great concept! What kind of visual vibe are you going for — bold and energetic, or clean and cinematic? Any specific colors you have in mind?" }]);
+          setMessages(prev => [...prev, { role: 'assistant', content: error instanceof Error ? error.message : 'Failed to consult AI.' }]);
         } finally {
           setIsTyping(false);
         }
@@ -146,7 +153,14 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         })
       });
 
-      if (!response.ok) throw new Error('Failed to consult AI');
+      if (!response.ok) {
+        let errorMsg = 'Failed to consult AI';
+        try {
+          const errData = await response.json();
+          errorMsg = errData.response || errData.error || errorMsg;
+        } catch {}
+        throw new Error(errorMsg);
+      }
       const data = await response.json();
       
       if (data.status === 'completed') {
@@ -163,7 +177,12 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       }
     } catch (error) {
       console.error('Consultation error:', error);
-      setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the Neural Link. Please try again." }]);
+      const isNetworkError = error instanceof TypeError || (error instanceof Error && error.message.includes('fetch'));
+      setMessages(prev => [...prev, { role: 'assistant', content: 
+        isNetworkError
+          ? "I'm having trouble connecting to the Neural Link. Please try again."
+          : (error instanceof Error ? error.message : 'Something went wrong. Please try again.')
+      }]);
     } finally {
       setIsTyping(false);
     }
