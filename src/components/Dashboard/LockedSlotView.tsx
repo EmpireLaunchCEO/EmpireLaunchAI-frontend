@@ -6,7 +6,7 @@ import { CreditCard, ArrowRight, ShieldCheck, Zap, Globe, Sparkles } from 'lucid
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
-import { EXPANSION_SLOT_LINK } from '@/lib/payment-links';
+import { EXPANSION_SLOT_LINK, BRAND_3_EXPANSION_LINK } from '@/lib/payment-links';
 
 interface LockedSlotViewProps {
   slotIndex: number;
@@ -18,12 +18,13 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
   const [accessKey, setAccessKey] = useState('');
 
   const handleSecurePayment = async () => {
+    const slotLink = slotIndex === 0 ? EXPANSION_SLOT_LINK : BRAND_3_EXPANSION_LINK;
     try {
       const token = localStorage.getItem('empire_auth_token') || '';
       const res = await fetch('https://backend-production-56123.up.railway.app/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ type: 'expansion' }),
+        body: JSON.stringify({ type: 'expansion', slotIndex }),
       });
       const data = await res.json();
       if (data.url) {
@@ -35,7 +36,7 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
       // fallback to static link
     }
     localStorage.setItem('pending_payment', 'expansion');
-    window.location.href = EXPANSION_SLOT_LINK;
+    window.location.href = slotLink;
   };
 
   return (
@@ -70,8 +71,8 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
               <p className="text-[10px] font-black uppercase tracking-widest text-primary">Priority Link Center</p>
             </div>
             <div className="text-right">
-              <span className="text-3xl font-black text-foreground">$40</span>
-              <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">One-Time Activation</span>
+              <span className="text-3xl font-black text-foreground">$50</span>
+              <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">per month</span>
             </div>
           </div>
 
