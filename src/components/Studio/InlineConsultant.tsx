@@ -26,10 +26,11 @@ interface InlineConsultantProps {
   className?: string;
   idea?: string;
   onGenerate?: (finalIdea: string) => void;
+  isParentGenerating?: boolean;
   empireContext?: { niche?: string; angle?: string; targetCustomers?: string; businessGoals?: string };
 }
 
-export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, empireContext }: InlineConsultantProps) {
+export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext }: InlineConsultantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -37,6 +38,15 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   const [readyToGenerate, setReadyToGenerate] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Reset local generating state when parent's pipeline finishes
+  const prevParentGenerating = useRef(isParentGenerating);
+  useEffect(() => {
+    if (prevParentGenerating.current && !isParentGenerating) {
+      setIsGenerating(false);
+    }
+    prevParentGenerating.current = isParentGenerating;
+  }, [isParentGenerating]);
 
   useEffect(() => {
     if (initialMessage) {
@@ -67,6 +77,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         try {
           const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
           const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 15000);
           const response = await fetch(`${API_URL}/api/studio/process`, {
             method: 'POST',
             headers: {
@@ -77,9 +89,12 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             body: JSON.stringify({
               request: `My video idea: ${idea}`,
               brandId: brandId || undefined,
-              conversationHistory: [{ role: 'user' as const, content: `My video idea: ${idea}` }]
-            })
+              conversationHistory: [{ role: 'user' as const, content: `My video idea: ${idea}` }],
+              mode: 'consult'
+            }),
+            signal: controller.signal
           });
+          clearTimeout(timeout);
 
           if (!response.ok) {
             let errorMsg = 'Failed to consult AI';
@@ -94,9 +109,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           if (data.status === 'completed') {
             setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Generation complete!' }]);
             setReadyToGenerate(true);
-            if (data.assets?.length > 0 && onGenerate) {
-              onGenerate(data.response || idea);
-            }
+            // User must explicitly tap the wand — do NOT auto-trigger onGenerate
           } else if (data.status === 'error') {
             setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Something went wrong. Please try again.' }]);
           } else {
@@ -105,7 +118,12 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           }
         } catch (error) {
           console.error('Consultation error:', error);
-          setMessages(prev => [...prev, { role: 'assistant', content: error instanceof Error ? error.message : 'Failed to consult AI.' }]);
+          const isTimeout = error instanceof DOMException && error.name === 'AbortError';
+          setMessages(prev => [...prev, { role: 'assistant', content: 
+            isTimeout 
+              ? 'AI is taking too long. Please try a simpler description or tap the wand to generate directly.'
+              : (error instanceof Error ? error.message : 'Failed to consult AI.')
+          }]);
         } finally {
           setIsTyping(false);
         }
@@ -139,6 +157,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
       const conversationHistory = updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }));
       
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
       const response = await fetch(`${API_URL}/api/studio/process`, {
         method: 'POST',
         headers: {
@@ -149,9 +169,12 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         body: JSON.stringify({ 
           request: userMessage,
           brandId: brandId || undefined,
-          conversationHistory
-        })
+          conversationHistory,
+          mode: 'consult'
+        }),
+        signal: controller.signal
       });
+      clearTimeout(timeout);
 
       if (!response.ok) {
         let errorMsg = 'Failed to consult AI';
@@ -166,9 +189,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       if (data.status === 'completed') {
         setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Generation complete!' }]);
         setReadyToGenerate(true);
-        if (data.assets?.length > 0 && onGenerate) {
-          onGenerate(data.response || userMessage);
-        }
+        // User must explicitly tap the wand — do NOT auto-trigger onGenerate
       } else if (data.status === 'error') {
         setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Something went wrong. Please try again.' }]);
       } else {
@@ -177,9 +198,12 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       }
     } catch (error) {
       console.error('Consultation error:', error);
-      const isNetworkError = error instanceof TypeError || (error instanceof Error && error.message.includes('fetch'));
+      const isTimeout = error instanceof DOMException && error.name === 'AbortError';
+      const isNetworkError = !isTimeout && (error instanceof TypeError || (error instanceof Error && error.message.includes('fetch')));
       setMessages(prev => [...prev, { role: 'assistant', content: 
-        isNetworkError
+        isTimeout
+          ? 'AI is taking too long. Please try a simpler description or tap the wand to generate directly.'
+          : isNetworkError
           ? "I'm having trouble connecting to the Neural Link. Please try again."
           : (error instanceof Error ? error.message : 'Something went wrong. Please try again.')
       }]);
