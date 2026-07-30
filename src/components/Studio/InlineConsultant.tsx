@@ -77,6 +77,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         try {
           const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
           const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 15000);
           const response = await fetch(`${API_URL}/api/studio/process`, {
             method: 'POST',
             headers: {
@@ -87,9 +89,12 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             body: JSON.stringify({
               request: `My video idea: ${idea}`,
               brandId: brandId || undefined,
-              conversationHistory: [{ role: 'user' as const, content: `My video idea: ${idea}` }]
-            })
+              conversationHistory: [{ role: 'user' as const, content: `My video idea: ${idea}` }],
+              mode: 'consult'
+            }),
+            signal: controller.signal
           });
+          clearTimeout(timeout);
 
           if (!response.ok) {
             let errorMsg = 'Failed to consult AI';
@@ -146,20 +151,25 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
       const conversationHistory = updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }));
-      
-      const response = await fetch(`${API_URL}/api/studio/process`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': getAuthHeader(),
-          ...(userId ? { 'x-user-id': userId } : {})
-        },
-        body: JSON.stringify({ 
-          request: userMessage,
-          brandId: brandId || undefined,
-          conversationHistory
-        })
-      });
+
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 15000);
+          const response = await fetch(`${API_URL}/api/studio/process`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': getAuthHeader(),
+              ...(userId ? { 'x-user-id': userId } : {})
+            },
+            body: JSON.stringify({
+              request: userMessage,
+              brandId: brandId || undefined,
+              conversationHistory,
+              mode: 'consult'
+            }),
+            signal: controller.signal
+          });
+          clearTimeout(timeout);
 
       if (!response.ok) {
         let errorMsg = 'Failed to consult AI';
