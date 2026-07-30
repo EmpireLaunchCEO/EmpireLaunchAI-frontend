@@ -26,10 +26,11 @@ interface InlineConsultantProps {
   className?: string;
   idea?: string;
   onGenerate?: (finalIdea: string) => void;
+  isParentGenerating?: boolean;
   empireContext?: { niche?: string; angle?: string; targetCustomers?: string; businessGoals?: string };
 }
 
-export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, empireContext }: InlineConsultantProps) {
+export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext }: InlineConsultantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -37,6 +38,15 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   const [readyToGenerate, setReadyToGenerate] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Reset local generating state when parent's pipeline finishes
+  const prevParentGenerating = useRef(isParentGenerating);
+  useEffect(() => {
+    if (prevParentGenerating.current && !isParentGenerating) {
+      setIsGenerating(false);
+    }
+    prevParentGenerating.current = isParentGenerating;
+  }, [isParentGenerating]);
 
   useEffect(() => {
     if (initialMessage) {
@@ -94,9 +104,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           if (data.status === 'completed') {
             setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Generation complete!' }]);
             setReadyToGenerate(true);
-            if (data.assets?.length > 0 && onGenerate) {
-              onGenerate(data.response || idea);
-            }
+            // User must explicitly tap the wand — do NOT auto-trigger onGenerate
           } else if (data.status === 'error') {
             setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Something went wrong. Please try again.' }]);
           } else {
@@ -166,9 +174,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       if (data.status === 'completed') {
         setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Generation complete!' }]);
         setReadyToGenerate(true);
-        if (data.assets?.length > 0 && onGenerate) {
-          onGenerate(data.response || userMessage);
-        }
+        // User must explicitly tap the wand — do NOT auto-trigger onGenerate
       } else if (data.status === 'error') {
         setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Something went wrong. Please try again.' }]);
       } else {

@@ -268,6 +268,17 @@ export default function StudioPage() {
   const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
   const [videoGenerated, setVideoGenerated] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  // Progress timer — ticks every 5s while generating (pipeline takes 70-100s)
+  useEffect(() => {
+    if (!isGeneratingVideo) { setElapsedSeconds(0); return; }
+    setElapsedSeconds(0);
+    const interval = setInterval(() => {
+      setElapsedSeconds(prev => Math.min(prev + 5, 120));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isGeneratingVideo]);
 
   // Handle Custom Video: Send idea to Consultant for review instead of directly generating
   const handleCustomVideoSubmit = () => {
@@ -285,13 +296,6 @@ export default function StudioPage() {
     setRenderLogs([]);
     setIsRendering(true);
     setActiveRenderType('facial-dna');
-
-    // Failsafe: force spinner off after 25s no matter what
-    const failsafe = setTimeout(() => {
-      setIsGeneratingVideo(false);
-      setVideoGenerated(true);
-      setGenerationError(null);
-    }, 25000);
 
     // Add initial render log
     const addLog = (action: string, status: 'processing' | 'success' | 'error' = 'processing', details?: string) => {
@@ -337,7 +341,6 @@ export default function StudioPage() {
       clearTimeout(timeoutId);
 
       if (res.ok) {
-        clearTimeout(failsafe);
         const data = await res.json();
         const firstAsset = data.assets?.[0];
         const assetId = firstAsset?.url || data.assetId || null;
@@ -365,7 +368,6 @@ export default function StudioPage() {
       const errorText = await res.text().catch(() => 'Pipeline error');
       throw new Error(errorText);
     } catch (error) {
-      clearTimeout(failsafe);
       console.error('Video pipeline failed:', error);
       setGenerationError(error instanceof Error ? error.message : 'Video generation failed. Please try again.');
       setIsGeneratingVideo(false);
@@ -527,12 +529,10 @@ export default function StudioPage() {
                         <p className="text-[9px] font-bold text-emerald-500/70 uppercase tracking-wider mt-0.5">Ready in ~2 minutes — check Operations</p>
                       </div>
                     </div>
-                    {createdAssetId && (
-                      <Link href="/empire-center" className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
-                        <ChevronRight className="w-4 h-4 text-primary" />
-                        <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
-                      </Link>
-                    )}
+                    <Link href="/empire-center" className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
+                      <ChevronRight className="w-4 h-4 text-primary" />
+                      <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
+                    </Link>
                     <button
                       onClick={() => {
                         setVideoGenerated(false);
@@ -550,8 +550,8 @@ export default function StudioPage() {
                 {isGeneratingVideo && !videoGenerated && (
                   <div className="flex flex-col items-center justify-center py-16 gap-4">
                     <BrandedGlobe size="md" spinning={true} className="animate-pulse" />
-                    <p className="text-sm font-black text-foreground uppercase tracking-widest animate-pulse">Sending to AI Studio...</p>
-                    <p className="text-[10px] text-muted-foreground">Video will render in the background</p>
+                    <p className="text-sm font-black text-foreground uppercase tracking-widest animate-pulse">Generating Video...</p>
+                    <p className="text-[10px] text-muted-foreground">{elapsedSeconds}s elapsed — video pipeline runs ~70-100s</p>
                   </div>
                 )}
                 {generationError && !isGeneratingVideo && (
