@@ -316,7 +316,7 @@ export default function StudioPage() {
       addLog('AI Content Generation', 'processing', 'Generating visuals and script...');
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 min for Sora + FFmpeg
       
       console.log('[Studio] Fetching', `${API_URL}/api/studio/process`);
       const res = await fetch(`${API_URL}/api/studio/process`, {
