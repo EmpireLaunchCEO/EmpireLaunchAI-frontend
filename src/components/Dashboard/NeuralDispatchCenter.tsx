@@ -68,29 +68,63 @@ export function NeuralDispatchCenter() {
     designs: 'design'
   };
 
-  // Fetch real pending approvals from backend
+  // Fetch real pending approvals + completed video assets from backend
   const fetchApprovals = async () => {
     try {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       if (!userId) { setIsLoading(false); return; }
-      const res = await fetch(`${API_URL}/api/approval/pending`, {
-        headers: {
-          'Authorization': getAuthHeader(),
-          'x-user-id': userId
-        }
+
+      // Fetch pending approvals
+      const approvalsRes = await fetch(`${API_URL}/api/approval/pending`, {
+        headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
       });
-      if (res.ok) {
-        const data = await res.json();
-        const items = data.approvals || [];
-        setApprovalItems(items);
-        // Group counts by type
-        const counts: Record<string, number> = {};
-        items.forEach((item: any) => {
-          const type = item.type?.toLowerCase() || 'other';
-          counts[type] = (counts[type] || 0) + 1;
-        });
-        setPendingCounts(counts);
+      let approvalItems: any[] = [];
+      if (approvalsRes.ok) {
+        const data = await approvalsRes.json();
+        approvalItems = data.approvals || [];
       }
+
+      // Fetch completed video assets from Library
+      try {
+        const assetsRes = await fetch(`${API_URL}/api/studio/assets`, {
+          headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
+        });
+        if (assetsRes.ok) {
+          const assetsData = await assetsRes.json();
+          const completedVideos = (assetsData.assets || []).filter(
+            (a: any) => a.type === 'video' && a.status !== 'processing'
+          );
+          // Map to approval-item shape and merge
+          const videoItems = completedVideos.map((asset: any) => ({
+            id: asset.id,
+            type: 'video',
+            status: asset.status || 'completed',
+            payload: {
+              title: asset.title || 'Generated Video',
+              videoUrl: asset.fileUrl,
+              assetId: asset.id,
+              status: asset.status || 'completed'
+            }
+          }));
+          // Prepend library videos so they appear first; avoid duplicates by id
+          const existingIds = new Set(approvalItems.map((i: any) => i.id));
+          for (const vi of videoItems) {
+            if (!existingIds.has(vi.id)) {
+              approvalItems.unshift(vi);
+              existingIds.add(vi.id);
+            }
+          }
+        }
+      } catch {}
+
+      setApprovalItems(approvalItems);
+      // Group counts by type
+      const counts: Record<string, number> = {};
+      approvalItems.forEach((item: any) => {
+        const type = item.type?.toLowerCase() || 'other';
+        counts[type] = (counts[type] || 0) + 1;
+      });
+      setPendingCounts(counts);
     } catch (err) {
       console.warn('Failed to fetch approvals:', err);
     } finally {
