@@ -26,6 +26,7 @@ import {
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
+import { API_URL } from '@/lib/config';
 
 const duties = [
   { id: 1, title: 'Approve TikTok Script', status: 'pending', platform: 'tiktok', type: 'approval' },
@@ -67,7 +68,7 @@ export default function EmpireCenterPage() {
       try {
         const userId = typeof window !== 'undefined' ? localStorage.getItem('empireUserId') : null;
         if (!userId) return;
-        const res = await fetch(`/api/studio/assets`, {
+        const res = await fetch(`${API_URL}/api/studio/assets`, {
           headers: {
             'Authorization': getAuthHeader(),
             'x-user-id': userId
