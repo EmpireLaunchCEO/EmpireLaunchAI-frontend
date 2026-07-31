@@ -283,7 +283,7 @@ export default function StudioPage() {
     if (!isGeneratingVideo) { setElapsedSeconds(0); return; }
     setElapsedSeconds(0);
     const interval = setInterval(() => {
-      setElapsedSeconds(prev => Math.min(prev + 5, 120));
+      setElapsedSeconds(prev => prev + 5);
     }, 5000);
     return () => clearInterval(interval);
   }, [isGeneratingVideo]);
@@ -380,7 +380,7 @@ export default function StudioPage() {
                 setIsGeneratingVideo(false);
                 setVideoGenerated(true);
                 setCreatedAssetId(pollData.fileUrl || pollData.id || null);
-              } else if (pollData.status === 'failed') {
+              } else if (pollData.status === 'error') {
                 if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
                 const errMsg = pollData.metadata?.error || 'Video generation failed';
                 addLog('Pipeline Error', 'error', errMsg);
@@ -606,7 +606,7 @@ export default function StudioPage() {
                   <div className="flex flex-col items-center justify-center py-16 gap-4">
                     <BrandedGlobe size="md" spinning={true} className="animate-pulse" />
                     <p className="text-sm font-black text-foreground uppercase tracking-widest animate-pulse">Generating Video...</p>
-                    <p className="text-[10px] text-muted-foreground">{elapsedSeconds}s elapsed — video pipeline runs ~70-100s</p>
+                    <p className="text-[10px] text-muted-foreground">{elapsedSeconds}s elapsed — pipeline typically 1-3 minutes</p>
                   </div>
                 )}
                 {generationError && !isGeneratingVideo && (
