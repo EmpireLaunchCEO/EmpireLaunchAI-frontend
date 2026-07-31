@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -269,6 +269,14 @@ export default function StudioPage() {
   const [videoGenerated, setVideoGenerated] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const pollingRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+    };
+  }, []);
 
   // Progress timer — ticks every 5s while generating (pipeline takes 70-100s)
   useEffect(() => {
@@ -350,6 +358,43 @@ export default function StudioPage() {
           setIsGeneratingVideo(false);
           setVideoGenerated(true);
           setCreatedAssetId(assetId);
+          return;
+        } else if (data.status === 'processing' && data.creationId) {
+          // Async pipeline — poll every 3s until done
+          addLog('Video Generation Started', 'processing', 'Pipeline running — polling every 3s...');
+          
+          const pollForCompletion = async () => {
+            try {
+              const pollRes = await fetch(`${API_URL}/api/studio/creation/${data.creationId}`, {
+                headers: {
+                  'Authorization': getAuthHeader(),
+                  'x-user-id': userId
+                }
+              });
+              if (!pollRes.ok) return;
+              const pollData = await pollRes.json();
+              
+              if (pollData.status === 'completed') {
+                if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
+                addLog('Creation Complete', 'success', pollData.fileUrl ? 'Video ready' : 'Video created successfully');
+                setIsGeneratingVideo(false);
+                setVideoGenerated(true);
+                setCreatedAssetId(pollData.fileUrl || pollData.id || null);
+              } else if (pollData.status === 'failed') {
+                if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
+                const errMsg = pollData.metadata?.error || 'Video generation failed';
+                addLog('Pipeline Error', 'error', errMsg);
+                setGenerationError(errMsg);
+                setIsGeneratingVideo(false);
+              }
+            } catch {
+              // Poll failed silently — retry next interval
+            }
+          };
+          
+          // Poll immediately, then every 3s
+          pollForCompletion();
+          pollingRef.current = setInterval(pollForCompletion, 3000);
           return;
         } else if (data.status === 'error') {
           addLog('Pipeline Error', 'error', data.response || 'Unknown error from AI router');
