@@ -150,7 +150,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
     try {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
-      const conversationHistory = updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }));
+      const conversationHistory = updatedMessages.slice(-20).map(m => ({ role: m.role, content: m.content }));
 
           const controller = new AbortController();
           const timeout = setTimeout(() => controller.abort(), 15000);
