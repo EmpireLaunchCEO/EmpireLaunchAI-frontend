@@ -364,8 +364,18 @@ export default function StudioPage() {
         }
       }
 
-      // Pipeline failed — show error, no placeholder
-      const errorText = await res.text().catch(() => 'Pipeline error');
+      // Pipeline failed — parse error for user-friendly message
+      let errorText = 'Pipeline error';
+      try {
+        const errData = await res.json();
+        errorText = errData.response || errData.error || 'Pipeline error';
+        // Clean up Sora billing errors
+        if (errorText.includes('billing') || errorText.includes('Billing')) {
+          errorText = 'OpenAI billing limit reached. Please top up your OpenAI account to generate videos.';
+        }
+      } catch {
+        errorText = await res.text().catch(() => 'Pipeline error');
+      }
       throw new Error(errorText);
     } catch (error) {
       console.error('Video pipeline failed:', error);
