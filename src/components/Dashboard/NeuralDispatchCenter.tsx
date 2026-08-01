@@ -295,9 +295,9 @@ export function NeuralDispatchCenter() {
             </button>
             <button 
               onClick={() => {
-                const url = currentApproval?.payload?.videoUrl;
-                if (!url) return;
-                window.open(url.startsWith('http') ? url : `${API_URL}${url}`, '_blank');
+                const id = currentApproval?.payload?.assetId || currentApproval?.id;
+                if (!id) return;
+                window.open(`${API_URL}/api/studio/download/${id}`, '_blank');
               }}
               className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
             >
