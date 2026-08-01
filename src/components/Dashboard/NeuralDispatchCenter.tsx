@@ -92,7 +92,7 @@ export function NeuralDispatchCenter() {
         if (assetsRes.ok) {
           const assetsData = await assetsRes.json();
           const completedVideos = (assetsData.assets || []).filter(
-            (a: any) => a.type === 'video' && a.status !== 'processing'
+            (a: any) => (a.type === 'video' || a.type === 'enhanced_video') && a.status !== 'processing'
           );
           // Map to approval-item shape and merge
           const videoItems = completedVideos.map((asset: any) => ({
