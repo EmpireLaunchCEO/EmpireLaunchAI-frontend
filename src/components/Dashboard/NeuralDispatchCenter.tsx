@@ -294,27 +294,10 @@ export function NeuralDispatchCenter() {
               Save
             </button>
             <button 
-              onClick={async () => {
+              onClick={() => {
                 const url = currentApproval?.payload?.videoUrl;
                 if (!url) return;
-                // Download to phone only — no library save
-                try {
-                  const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
-                  const res = await fetch(fullUrl);
-                  const blob = await res.blob();
-                  const file = new File([blob], `empirelaunch-${draftNumber}.mp4`, { type: blob.type });
-                  if (navigator.share && navigator.canShare?.({ files: [file] })) {
-                    await navigator.share({ files: [file], title: `EmpireLaunch Draft #${draftNumber}` });
-                  } else {
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = `empirelaunch-${draftNumber}.mp4`;
-                    a.click();
-                    URL.revokeObjectURL(a.href);
-                  }
-                } catch (e: any) {
-                  window.open(fullUrl, '_blank');
-                }
+                window.open(url.startsWith('http') ? url : `${API_URL}${url}`, '_blank');
               }}
               className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
             >
