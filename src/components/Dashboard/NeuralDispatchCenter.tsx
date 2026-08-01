@@ -89,11 +89,14 @@ export function NeuralDispatchCenter() {
         const assetsRes = await fetch(`${API_URL}/api/studio/assets`, {
           headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
         });
+        console.log('[NDC] /api/studio/assets status:', assetsRes.status);
         if (assetsRes.ok) {
           const assetsData = await assetsRes.json();
+          console.log('[NDC] Assets response keys:', Object.keys(assetsData), 'asset count:', assetsData.assets?.length);
           const completedVideos = (assetsData.assets || []).filter(
             (a: any) => (a.type === 'video' || a.type === 'enhanced_video') && a.status !== 'processing'
           );
+          console.log('[NDC] Filtered video assets:', completedVideos.length, completedVideos.map((a: any) => ({ id: a.id, type: a.type, status: a.status, fileUrl: a.fileUrl?.substring(0, 50) })));
           // Map to approval-item shape and merge
           const videoItems = completedVideos.map((asset: any) => ({
             id: asset.id,
@@ -135,6 +138,11 @@ export function NeuralDispatchCenter() {
   useEffect(() => {
     fetchApprovals();
   }, []);
+
+  // Re-fetch approvals when returning to grid (catches newly created videos)
+  useEffect(() => {
+    if (view === 'grid') fetchApprovals();
+  }, [view]);
 
   // When entering review, find matching approval for this queue
   useEffect(() => {
@@ -294,27 +302,11 @@ export function NeuralDispatchCenter() {
               Save
             </button>
             <button 
-              onClick={async () => {
+              onClick={() => {
                 const url = currentApproval?.payload?.videoUrl;
                 if (!url) return;
-                // Download to phone only — no library save
-                try {
-                  const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
-                  const res = await fetch(fullUrl);
-                  const blob = await res.blob();
-                  const file = new File([blob], `empirelaunch-${draftNumber}.mp4`, { type: blob.type });
-                  if (navigator.share && navigator.canShare?.({ files: [file] })) {
-                    await navigator.share({ files: [file], title: `EmpireLaunch Draft #${draftNumber}` });
-                  } else {
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = `empirelaunch-${draftNumber}.mp4`;
-                    a.click();
-                    URL.revokeObjectURL(a.href);
-                  }
-                } catch (e: any) {
-                  window.open(fullUrl, '_blank');
-                }
+                const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+                window.open(fullUrl, '_blank');
               }}
               className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
             >
