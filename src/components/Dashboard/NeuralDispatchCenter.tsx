@@ -172,18 +172,21 @@ export function NeuralDispatchCenter() {
   };
 
   const handleDelete = async () => {
-    if (!currentApproval?.id) return;
+    // Use the creation ID (payload.assetId) for proper DB+R2 deletion
+    const creationId = currentApproval?.payload?.assetId || currentApproval?.id;
+    if (!creationId) return;
     try {
-      await fetch(`${API_URL}/api/approval/respond`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': getAuthHeader() },
-        body: JSON.stringify({ approvalId: currentApproval.id, status: 'rejected' }),
+      const res = await fetch(`${API_URL}/api/studio/creation/${creationId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': getAuthHeader() },
       });
+      if (!res.ok) console.error('Delete failed:', await res.text());
     } catch (e) {
-      console.error('Failed to delete approval:', e);
+      console.error('Failed to delete creation:', e);
     }
     setIsApproved(false);
     setView('grid');
+    fetchApprovals();
   };
 
   const handleSaveToLibrary = async () => {
