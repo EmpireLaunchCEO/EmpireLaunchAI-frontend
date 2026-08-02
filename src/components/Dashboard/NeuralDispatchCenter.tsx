@@ -84,34 +84,40 @@ export function NeuralDispatchCenter() {
         approvalItems = data.approvals || [];
       }
 
-      // Fetch completed video assets from Library
+      // Fetch completed assets from Library — all types, map to correct queue
       try {
         const assetsRes = await fetch(`${API_URL}/api/studio/assets`, {
           headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
         });
+        // Map creation types to queue types for tab routing
+        const typeToQueue: Record<string, string> = {
+          video: 'video', enhanced_video: 'video', neural_twin: 'video',
+          edit: 'edit', video_edit: 'edit', raw_video: 'edit',
+          faceless: 'faceless',
+          design: 'design',
+        };
         if (assetsRes.ok) {
           const assetsData = await assetsRes.json();
-          const completedVideos = (assetsData.assets || []).filter(
-            (a: any) => (a.type === 'video' || a.type === 'enhanced_video' || a.type === 'neural_twin') && a.status !== 'processing'
+          const completedAssets = (assetsData.assets || []).filter(
+            (a: any) => a.status !== 'processing'
           );
-          // Map to approval-item shape and merge
-          const videoItems = completedVideos.map((asset: any) => ({
+          const assetItems = completedAssets.map((asset: any) => ({
             id: asset.id,
-            type: 'video',
+            type: typeToQueue[asset.type] || 'video',
             status: asset.status || 'completed',
             payload: {
-              title: asset.title || 'Generated Video',
+              title: asset.title || 'Generated Asset',
               videoUrl: asset.fileUrl,
               assetId: asset.id,
               status: asset.status || 'completed'
             }
           }));
-          // Prepend library videos so they appear first; avoid duplicates by id
+          // Merge assets, avoiding duplicates by id
           const existingIds = new Set(approvalItems.map((i: any) => i.id));
-          for (const vi of videoItems) {
-            if (!existingIds.has(vi.id)) {
-              approvalItems.unshift(vi);
-              existingIds.add(vi.id);
+          for (const ai of assetItems) {
+            if (!existingIds.has(ai.id)) {
+              approvalItems.unshift(ai);
+              existingIds.add(ai.id);
             }
           }
         }
