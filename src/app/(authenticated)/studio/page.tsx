@@ -362,6 +362,8 @@ export default function StudioPage() {
         } else if (data.status === 'processing' && data.creationId) {
           // Async pipeline — poll every 3s until done
           addLog('Video Generation Started', 'processing', 'Pipeline running — polling every 3s...');
+          let pollCount = 0;
+          const MAX_POLLS = 100; // 100 × 3s = 5 minutes
           
           const pollForCompletion = async () => {
             try {
@@ -385,6 +387,11 @@ export default function StudioPage() {
                 const errMsg = pollData.metadata?.error || 'Video generation failed';
                 addLog('Pipeline Error', 'error', errMsg);
                 setGenerationError(errMsg);
+                setIsGeneratingVideo(false);
+              } else if (pollCount >= MAX_POLLS) {
+                if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
+                addLog('Pipeline Timeout', 'error', 'Video generation timed out after 5 minutes');
+                setGenerationError('Video generation timed out after 5 minutes');
                 setIsGeneratingVideo(false);
               }
             } catch {
