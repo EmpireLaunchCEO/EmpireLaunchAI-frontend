@@ -270,6 +270,69 @@ export default function StudioPage() {
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
+  const ACTIVE_CREATION_KEY = 'empire_active_creation';
+
+  // Resume polling if user closed/reopened app during generation
+  useEffect(() => {
+    const storedCreationId = localStorage.getItem(ACTIVE_CREATION_KEY);
+    if (!storedCreationId) return;
+
+    const resumePolling = async () => {
+      try {
+        const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
+        const pollRes = await fetch(`${API_URL}/api/studio/creation/${storedCreationId}`, {
+          headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
+        });
+        if (!pollRes.ok) { localStorage.removeItem(ACTIVE_CREATION_KEY); return; }
+        const pollData = await pollRes.json();
+
+        if (pollData.status === 'completed') {
+          localStorage.removeItem(ACTIVE_CREATION_KEY);
+          setIsGeneratingVideo(false);
+          setVideoGenerated(true);
+          setCreatedAssetId(pollData.fileUrl || pollData.id || null);
+        } else if (pollData.status === 'error') {
+          localStorage.removeItem(ACTIVE_CREATION_KEY);
+          const errMsg = pollData.metadata?.error || 'Video generation failed';
+          setGenerationError(errMsg);
+          setIsGeneratingVideo(false);
+        } else if (pollData.status === 'processing') {
+          // Resume polling — same logic as new generation
+          setIsGeneratingVideo(true);
+          setVideoGenerated(false);
+          setGenerationError(null);
+
+          const pollForCompletion = async () => {
+            try {
+              const pRes = await fetch(`${API_URL}/api/studio/creation/${storedCreationId}`, {
+                headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
+              });
+              if (!pRes.ok) return;
+              const pData = await pRes.json();
+              if (pData.status === 'completed') {
+                if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
+                localStorage.removeItem(ACTIVE_CREATION_KEY);
+                setIsGeneratingVideo(false);
+                setVideoGenerated(true);
+                setCreatedAssetId(pData.fileUrl || pData.id || null);
+              } else if (pData.status === 'error') {
+                if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
+                localStorage.removeItem(ACTIVE_CREATION_KEY);
+                setGenerationError(pData.metadata?.error || 'Video generation failed');
+                setIsGeneratingVideo(false);
+              }
+            } catch { /* silent retry */ }
+          };
+          pollForCompletion();
+          pollingRef.current = setInterval(pollForCompletion, 3000);
+        }
+      } catch {
+        localStorage.removeItem(ACTIVE_CREATION_KEY);
+      }
+    };
+
+    resumePolling();
+  }, []);
 
   // Cleanup polling on unmount
   useEffect(() => {
@@ -378,12 +441,14 @@ export default function StudioPage() {
               
               if (pollData.status === 'completed') {
                 if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
+                localStorage.removeItem(ACTIVE_CREATION_KEY);
                 addLog('Creation Complete', 'success', pollData.fileUrl ? 'Video ready' : 'Video created successfully');
                 setIsGeneratingVideo(false);
                 setVideoGenerated(true);
                 setCreatedAssetId(pollData.fileUrl || pollData.id || null);
               } else if (pollData.status === 'error') {
                 if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
+                localStorage.removeItem(ACTIVE_CREATION_KEY);
                 const errMsg = pollData.metadata?.error || 'Video generation failed';
                 addLog('Pipeline Error', 'error', errMsg);
                 setGenerationError(errMsg);
@@ -400,6 +465,7 @@ export default function StudioPage() {
           };
           
           // Poll immediately, then every 3s
+          localStorage.setItem(ACTIVE_CREATION_KEY, data.creationId);
           pollForCompletion();
           pollingRef.current = setInterval(pollForCompletion, 3000);
           return;
@@ -431,6 +497,7 @@ export default function StudioPage() {
       throw new Error(errorText);
     } catch (error) {
       console.error('Video pipeline failed:', error);
+      localStorage.removeItem(ACTIVE_CREATION_KEY);
       setGenerationError(error instanceof Error ? error.message : 'Video generation failed. Please try again.');
       setIsGeneratingVideo(false);
       setVideoGenerated(false);
