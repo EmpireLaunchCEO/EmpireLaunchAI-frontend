@@ -302,6 +302,7 @@ export default function StudioPage() {
           setVideoGenerated(false);
           setGenerationError(null);
 
+          let lastTrace = '';
           const pollForCompletion = async () => {
             try {
               const pRes = await fetch(`${API_URL}/api/studio/creation/${storedCreationId}`, {
@@ -428,6 +429,7 @@ export default function StudioPage() {
           let pollCount = 0;
           const MAX_POLLS = 100; // 100 × 3s = 5 minutes
           
+          let lastTrace = '';
           const pollForCompletion = async () => {
             try {
               const pollRes = await fetch(`${API_URL}/api/studio/creation/${data.creationId}`, {
