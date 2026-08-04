@@ -425,7 +425,7 @@ export default function StudioPage() {
           return;
         } else if (data.status === 'processing' && data.creationId) {
           // Async pipeline — poll every 3s until done
-          addLog('Video Generation Started', 'processing', 'Pipeline running — polling every 3s...');
+          addLog('Video Generation Started', 'processing', 'Polling every 3s — trace: pending...');
           let pollCount = 0;
           const MAX_POLLS = 100; // 100 × 3s = 5 minutes
           
