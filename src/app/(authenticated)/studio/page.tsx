@@ -440,7 +440,12 @@ export default function StudioPage() {
               });
               if (!pollRes.ok) return;
               const pollData = await pollRes.json();
-              
+              // Show pipeline trace in logs when it changes
+              const trace = pollData.metadata?.pipeline_trace;
+              if (trace && trace !== lastTrace) {
+                lastTrace = trace;
+                addLog('Pipeline Trace', 'processing', trace);
+              }
               if (pollData.status === 'completed') {
                 if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
                 localStorage.removeItem(ACTIVE_CREATION_KEY);
