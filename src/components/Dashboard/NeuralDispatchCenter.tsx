@@ -99,7 +99,7 @@ export function NeuralDispatchCenter() {
         if (assetsRes.ok) {
           const assetsData = await assetsRes.json();
           const completedAssets = (assetsData.assets || []).filter(
-            (a: any) => a.status !== 'processing'
+            (a: any) => a.status !== 'processing' && a.status !== 'failed'
           );
           const assetItems = completedAssets.map((asset: any) => ({
             id: asset.id,

@@ -126,9 +126,30 @@ const setEmpireUserIdCookie = (id: string) => {
 };
 
 export const getEmpireUserId = (): string => {
-  // SINGLE-USER BRIDGE: All traffic maps to hardcoded owner UUID until backend deploy
-  // catches up with the multi-tenant fix. Remove this line once Railway deploys 2111de4+.
-  return '00000000-0000-0000-0000-000000000001';
+  if (typeof window !== 'undefined') {
+    // 1. Primary key — camelCase (set by onboarding signup/login)
+    let id = localStorage.getItem('empire_userId');
+    if (id) return id;
+    // 2. Backward compatibility: snake_case (older versions)
+    const legacyId = localStorage.getItem('empire_user_id');
+    if (legacyId) {
+      localStorage.setItem('empire_userId', legacyId);
+      setEmpireUserIdCookie(legacyId);
+      return legacyId;
+    }
+    // 3. PWA fallback: check cookie (iOS isolates localStorage from Safari)
+    const cookieId = document.cookie.split('; ').find(row => row.startsWith('empire_userId='))?.split('=')[1];
+    if (cookieId) {
+      localStorage.setItem('empire_userId', cookieId);
+      return cookieId;
+    }
+    // 4. Generate new device UUID for new users
+    id = crypto.randomUUID();
+    localStorage.setItem('empire_userId', id);
+    setEmpireUserIdCookie(id);
+    return id;
+  }
+  return ''; // SSR fallback — no user context
 };
 
 // Generate a real session token on first load — no mock tokens
