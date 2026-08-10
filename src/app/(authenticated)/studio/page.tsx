@@ -15,13 +15,15 @@ import {
   ChevronRight,
   Palette,
   Film,
-  CheckCircle2
+  CheckCircle2,
+  Loader2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DNAVaultCounter } from '@/components/Dashboard/DNAVaultCounter';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FileUploadDropZone, UploadState } from '@/components/Dashboard/FileUploadDropZone';
 import { InlineConsultant } from '@/components/Studio/InlineConsultant';
+import { VideoProjectProgress } from '@/components/Studio/VideoProjectProgress';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useEmpire } from '@/lib/EmpireContext';
@@ -269,6 +271,14 @@ export default function StudioPage() {
   const [videoGenerated, setVideoGenerated] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  // Scene-based video project
+  const [projectTitle, setProjectTitle] = useState('');
+  const [projectIdea, setProjectIdea] = useState('');
+  const [projectDuration, setProjectDuration] = useState('');
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
+  const [isSubmittingProject, setIsSubmittingProject] = useState(false);
+
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const ACTIVE_CREATION_KEY = 'empire_active_creation';
 
@@ -359,6 +369,36 @@ export default function StudioPage() {
     setSharedVideoIdea(customVideoIdea.trim());
     setCustomVideoIdea('');
     setVideoGenerated(false);
+  };
+
+  // Submit scene-based video project
+  const handleSubmitProject = async () => {
+    if (!projectIdea.trim() || isSubmittingProject) return;
+    setIsSubmittingProject(true);
+    try {
+      const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
+      const res = await fetch(`${API_URL}/api/studio/video-project`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
+          'x-user-id': userId
+        },
+        body: JSON.stringify({
+          title: projectTitle.trim() || 'Untitled Project',
+          idea: projectIdea.trim(),
+          duration: projectDuration ? parseInt(projectDuration) : undefined
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setActiveProjectId(data.projectId || data.id);
+      }
+    } catch (err) {
+      console.error('Failed to create video project:', err);
+    } finally {
+      setIsSubmittingProject(false);
+    }
   };
 
   // Called by InlineConsultant's "Generate Video" button after refinement
@@ -698,6 +738,72 @@ export default function StudioPage() {
                 )}
                 {!isGeneratingVideo && !videoGenerated && !generationError && (
                   <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                )}
+              </div>
+
+              {/* Scene-Based Video Project */}
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Film className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Scene-Based Video</h3>
+                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                      Multi-scene AI pipeline — define your vision, I'll storyboard it
+                    </p>
+                  </div>
+                </div>
+
+                {!activeProjectId ? (
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      value={projectTitle}
+                      onChange={(e) => setProjectTitle(e.target.value)}
+                      placeholder="Project title (optional)"
+                      className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
+                    />
+                    <textarea
+                      value={projectIdea}
+                      onChange={(e) => setProjectIdea(e.target.value)}
+                      placeholder="Describe your video idea in detail — scenes, style, tone, target audience..."
+                      rows={3}
+                      className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30 resize-none"
+                    />
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="number"
+                        value={projectDuration}
+                        onChange={(e) => setProjectDuration(e.target.value)}
+                        placeholder="Duration (seconds, optional)"
+                        className="flex-1 bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
+                      />
+                      <button
+                        onClick={handleSubmitProject}
+                        disabled={!projectIdea.trim() || isSubmittingProject}
+                        className="px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 whitespace-nowrap"
+                      >
+                        {isSubmittingProject ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          'Launch Project'
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <VideoProjectProgress
+                    projectId={activeProjectId}
+                    onComplete={(finalVideoUrl) => {
+                      // Store completed project for NeuralDispatchCenter
+                      const completed = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
+                      completed.push({ id: activeProjectId, url: finalVideoUrl, ts: Date.now() });
+                      // Keep last 10
+                      localStorage.setItem('empire_completed_projects', JSON.stringify(completed.slice(-10)));
+                      console.log('[Studio] Project complete:', finalVideoUrl);
+                    }}
+                  />
                 )}
               </div>
 
