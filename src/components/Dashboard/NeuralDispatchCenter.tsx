@@ -123,6 +123,29 @@ export function NeuralDispatchCenter() {
         }
       } catch {}
 
+      // Fetch completed scene-based video projects from localStorage
+      try {
+        const completedProjects = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
+        const videoProjects = completedProjects.filter((p: any) => p.url);
+        const existingIds = new Set(approvalItems.map((i: any) => i.id));
+        for (const proj of videoProjects) {
+          if (!existingIds.has(proj.id)) {
+            approvalItems.unshift({
+              id: proj.id,
+              type: 'video',
+              status: 'completed',
+              payload: {
+                title: 'Scene-Based Video Project',
+                videoUrl: proj.url,
+                assetId: proj.id,
+                status: 'completed'
+              }
+            });
+            existingIds.add(proj.id);
+          }
+        }
+      } catch {}
+
       setApprovalItems(approvalItems);
       // Group counts by type
       const counts: Record<string, number> = {};
