@@ -312,7 +312,6 @@ export default function StudioPage() {
           setVideoGenerated(false);
           setGenerationError(null);
 
-          let lastTrace = '';
           const pollForCompletion = async () => {
             try {
               const pRes = await fetch(`${API_URL}/api/studio/creation/${storedCreationId}`, {
@@ -351,13 +350,12 @@ export default function StudioPage() {
       if (pollingRef.current) clearInterval(pollingRef.current);
     };
   }, []);
-
   // Progress timer — ticks every 5s while generating (pipeline takes 70-100s)
   useEffect(() => {
     if (!isGeneratingVideo) { setElapsedSeconds(0); return; }
     setElapsedSeconds(0);
     const interval = setInterval(() => {
-      setElapsedSeconds(prev => prev + 5);
+      setElapsedSeconds(prev => Math.min(prev + 5, 120));
     }, 5000);
     return () => clearInterval(interval);
   }, [isGeneratingVideo]);
@@ -727,7 +725,7 @@ export default function StudioPage() {
                   <div className="flex flex-col items-center justify-center py-16 gap-4">
                     <BrandedGlobe size="md" spinning={true} className="animate-pulse" />
                     <p className="text-sm font-black text-foreground uppercase tracking-widest animate-pulse">Generating Video...</p>
-                    <p className="text-[10px] text-muted-foreground">{elapsedSeconds}s elapsed — pipeline typically 1-3 minutes</p>
+                    <p className="text-[10px] text-muted-foreground">{elapsedSeconds}s elapsed — video pipeline runs ~70-100s</p>
                   </div>
                 )}
                 {generationError && !isGeneratingVideo && (

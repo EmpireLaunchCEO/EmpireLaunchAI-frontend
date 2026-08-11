@@ -118,7 +118,12 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           }
         } catch (error) {
           console.error('Consultation error:', error);
-          setMessages(prev => [...prev, { role: 'assistant', content: error instanceof Error ? error.message : 'Failed to consult AI.' }]);
+          const isTimeout = error instanceof DOMException && error.name === 'AbortError';
+          setMessages(prev => [...prev, { role: 'assistant', content: 
+            isTimeout 
+              ? 'AI is taking too long. Please try a simpler description or tap the wand to generate directly.'
+              : (error instanceof Error ? error.message : 'Failed to consult AI.')
+          }]);
         } finally {
           setIsTyping(false);
         }
@@ -150,26 +155,26 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
     try {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       const brandId = typeof window !== 'undefined' ? localStorage.getItem('empire_brandId') : null;
-      const conversationHistory = updatedMessages.slice(-20).map(m => ({ role: m.role, content: m.content }));
-
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 15000);
-          const response = await fetch(`${API_URL}/api/studio/process`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': getAuthHeader(),
-              ...(userId ? { 'x-user-id': userId } : {})
-            },
-            body: JSON.stringify({
-              request: userMessage,
-              brandId: brandId || undefined,
-              conversationHistory,
-              mode: 'consult'
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(timeout);
+      const conversationHistory = updatedMessages.slice(-10).map(m => ({ role: m.role, content: m.content }));
+      
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      const response = await fetch(`${API_URL}/api/studio/process`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
+          ...(userId ? { 'x-user-id': userId } : {})
+        },
+        body: JSON.stringify({ 
+          request: userMessage,
+          brandId: brandId || undefined,
+          conversationHistory,
+          mode: 'consult'
+        }),
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
 
       if (!response.ok) {
         let errorMsg = 'Failed to consult AI';
@@ -193,9 +198,12 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       }
     } catch (error) {
       console.error('Consultation error:', error);
-      const isNetworkError = error instanceof TypeError || (error instanceof Error && error.message.includes('fetch'));
+      const isTimeout = error instanceof DOMException && error.name === 'AbortError';
+      const isNetworkError = !isTimeout && (error instanceof TypeError || (error instanceof Error && error.message.includes('fetch')));
       setMessages(prev => [...prev, { role: 'assistant', content: 
-        isNetworkError
+        isTimeout
+          ? 'AI is taking too long. Please try a simpler description or tap the wand to generate directly.'
+          : isNetworkError
           ? "I'm having trouble connecting to the Neural Link. Please try again."
           : (error instanceof Error ? error.message : 'Something went wrong. Please try again.')
       }]);
