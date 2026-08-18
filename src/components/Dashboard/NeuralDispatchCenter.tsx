@@ -329,7 +329,18 @@ export function NeuralDispatchCenter() {
               onClick={() => {
                 const id = currentApproval?.payload?.assetId || currentApproval?.id;
                 if (!id) return;
-                window.open(`${API_URL}/api/studio/download/${id}`, '_blank');
+                // Scene-based projects and completed creations both carry an
+                // absolute R2 media URL — open it directly so downloads are
+                // never blocked by the user-scoped proxy needing a header.
+                const mediaUrl = currentApproval?.payload?.videoUrl;
+                if (typeof mediaUrl === 'string' && mediaUrl.startsWith('http')) {
+                  window.open(mediaUrl, '_blank');
+                  return;
+                }
+                // Fallback (legacy rows / non-video queue items): user-scoped
+                // download proxy — /api/studio/download requires the userId.
+                const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
+                window.open(`${API_URL}/api/studio/download/${id}?userId=${encodeURIComponent(userId)}`, '_blank');
               }}
               className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
             >

@@ -21,6 +21,7 @@ interface Scene {
   status: 'pending' | 'processing' | 'completed' | 'error';
   videoUrl?: string;
   errorMessage?: string;
+  metadata?: any;
 }
 
 interface ProjectData {
@@ -52,13 +53,43 @@ export function VideoProjectProgress({ projectId, onComplete }: VideoProjectProg
       });
       if (!res.ok) return;
       const data = await res.json();
-      setProject(data);
+      // Backend contract: { project: {...}, scenes: [...], progress } — normalize
+      // into the flat shape this component renders (id/title/status/scenes/etc).
+      const raw = data.project || data;
+      const rawScenes = Array.isArray(data.scenes) ? data.scenes : (raw.scenes || []);
+      const scenes: Scene[] = rawScenes.map((s: any, i: number) => {
+        const meta = s.metadata || {};
+        return {
+          id: s.id,
+          index: s.scene_number ?? i + 1,
+          description: s.narration || s.visual_prompt || '',
+          status: s.status === 'completed' ? 'completed'
+            : s.status === 'failed' || s.status === 'error' ? 'error'
+            : s.status === 'processing' ? 'processing' : 'pending',
+          videoUrl: s.asset_url || undefined,
+          errorMessage: meta.error || meta.errorMessage || undefined,
+          metadata: meta,
+        };
+      });
+      const failed = raw.status === 'failed' || raw.status === 'error';
+      const norm: ProjectData = {
+        id: raw.id || projectId,
+        title: raw.title || 'Video Project',
+        status: failed ? 'error' : raw.status === 'completed' ? 'completed' : 'processing',
+        scenes,
+        finalVideoUrl: raw.finalVideoUrl || undefined,
+        progress: typeof data.progress === 'number' ? data.progress : 0,
+        error: failed
+          ? (raw.metadata && raw.metadata.error) || scenes.find(s => s.status === 'error')?.errorMessage || 'Project failed — tap Regenerate on a scene to retry'
+          : undefined,
+      };
+      setProject(norm);
       setLoading(false);
 
-      if (data.status === 'completed' && data.finalVideoUrl) {
+      if (norm.status === 'completed' && norm.finalVideoUrl) {
         if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
-        onComplete?.(data.finalVideoUrl);
-      } else if (data.status === 'error') {
+        onComplete?.(norm.finalVideoUrl);
+      } else if (norm.status === 'error') {
         if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
       }
     } catch {
@@ -170,8 +201,10 @@ export function VideoProjectProgress({ projectId, onComplete }: VideoProjectProg
                   <RefreshCw className={`w-3 h-3 ${regeneratingScene === scene.id ? 'animate-spin' : ''}`} /> Regenerate
                 </button>
               )}
-              {scene.status === 'error' && scene.errorMessage && (
-                <p className="text-[9px] text-red-400 truncate">{scene.errorMessage}</p>
+              {scene.status === 'error' && (
+                <p className="text-[9px] text-red-400 truncate">
+                  {scene.errorMessage || (scene.metadata && (scene.metadata.error || scene.metadata.errorMessage)) || 'Scene failed'}
+                </p>
               )}
             </motion.div>
           ))}
@@ -198,10 +231,12 @@ export function VideoProjectProgress({ projectId, onComplete }: VideoProjectProg
         </motion.div>
       )}
 
-      {/* Error state */}
-      {project.status === 'error' && (
+      {/* Error state — backend reports project failure as status 'failed' */}
+      {(project.status === 'error' || project.status === 'failed') && (
         <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center">
-          <p className="text-xs font-bold text-red-400">{project.error || 'Project failed'}</p>
+          <p className="text-xs font-bold text-red-400">
+            {project.error || (project.metadata && project.metadata.error) || 'Project failed — tap Regenerate on a scene to retry'}
+          </p>
         </div>
       )}
     </motion.div>
