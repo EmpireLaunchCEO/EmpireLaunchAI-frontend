@@ -222,28 +222,94 @@ export default function StudioPage() {
   }, []);
 
   // Synthesize Twin
+  const [twinStatus, setTwinStatus] = useState<'idle' | 'synthesizing' | 'done' | 'error'>('idle');
+  const [twinError, setTwinError] = useState<string | null>(null);
+
   const handleSynthesizeTwin = async () => {
     if (facialDnaUpload.status !== 'complete') return;
-    
+
     setActiveRenderType('facial-dna');
+    setTwinStatus('synthesizing');
+    setTwinError(null);
 
     try {
+      const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
+      // upload-photo returns the stored path under `photoUrl` (not `path`) — the
+      // backend requires photoPath OR photoUrl, so send whichever is present.
+      const photoRef = facialDnaUpload.metadata?.photoUrl || facialDnaUpload.metadata?.path || facialDnaUpload.metadata?.fileUrl;
       const response = await fetch(`${API_URL}/api/cinema/create-twin`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
+          'x-user-id': userId
+        },
         body: JSON.stringify({
-          userId: 'system', // In a real app, this would be the actual user ID
-          photoPath: facialDnaUpload.metadata?.path,
+          userId, // Real user — twin must land in THIS user's Library/Operations
+          photoUrl: photoRef,
+          photoPath: photoRef,
           script: "Welcome to my Empire! This is my Neural Twin double, ready to market 24/7.",
         }),
       });
 
-      if (!response.ok) throw new Error('Synthesis failed');
+      if (!response.ok) {
+        const errData = await response.json().catch(() => null);
+        throw new Error(errData?.error || 'Synthesis failed');
+      }
       const data = await response.json();
       console.log('Twin created:', data);
+      if (data?.asset?.status === 'failed' && data?.asset?.error) {
+        throw new Error(data.asset.error);
+      }
       fetchUsage();
+      setTwinStatus('done');
     } catch (error) {
       console.error('Twin synthesis error:', error);
+      setTwinError(error instanceof Error ? error.message : 'Neural Twin synthesis failed. Please try again.');
+      setTwinStatus('error');
+    }
+  };
+
+  // AI Video Editor — Empire Polish (Cuts, Captions, Music)
+  const [editStatus, setEditStatus] = useState<'idle' | 'processing' | 'done' | 'error'>('idle');
+  const [editError, setEditError] = useState<string | null>(null);
+
+  const handleEnhanceVideo = async (_finalIdea: string) => {
+    if (rawVideoUpload.status !== 'complete' || !rawVideoUpload.metadata?.videoUrl) {
+      setEditError('Upload a raw video clip first — then tap the wand to apply the Empire Polish.');
+      setEditStatus('error');
+      return;
+    }
+    setEditStatus('processing');
+    setEditError(null);
+    try {
+      const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
+      const res = await fetch(`${API_URL}/api/cinema/enhance-video`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
+          'x-user-id': userId
+        },
+        body: JSON.stringify({
+          userId,
+          videoPath: rawVideoUpload.metadata.videoUrl
+        })
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        throw new Error(errData?.error || 'Enhancement failed');
+      }
+      const data = await res.json();
+      if (data?.asset?.status === 'failed' && data?.asset?.error) {
+        throw new Error(data.asset.error);
+      }
+      setEditStatus('done');
+      fetchUsage();
+    } catch (error) {
+      console.error('Enhance error:', error);
+      setEditError(error instanceof Error ? error.message : 'Video enhancement failed. Please try again.');
+      setEditStatus('error');
     }
   };
 
@@ -271,6 +337,12 @@ export default function StudioPage() {
   const [videoGenerated, setVideoGenerated] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  // Render log + rendering state — used by handleGenerateVideo's live pipeline
+  // log (addLog) and the elapsed render timer. Declared here so the Customize
+  // Video wand path never throws on undefined setters.
+  const [renderLogs, setRenderLogs] = useState<{ id: string; timestamp: string; action: string; status: 'processing' | 'success' | 'error'; details?: string; type?: string }[]>([]);
+  const [isRendering, setIsRendering] = useState(false);
 
   // Scene-based video project
   const [projectTitle, setProjectTitle] = useState('');
@@ -841,7 +913,42 @@ export default function StudioPage() {
                   disabled={rawVideoUpload.status === 'uploading' || rawVideoUpload.status === 'processing'}
                 />
 
-                <InlineConsultant context="editor" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                {editStatus === 'processing' && (
+                  <div className="flex flex-col items-center justify-center py-10 gap-3">
+                    <BrandedGlobe size="md" spinning={true} className="animate-pulse" />
+                    <p className="text-xs font-black text-foreground uppercase tracking-widest animate-pulse">Applying Empire Polish...</p>
+                    <p className="text-[10px] text-muted-foreground">Color grading, cuts, captions & music</p>
+                  </div>
+                )}
+                {editStatus === 'done' && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                      <div>
+                        <p className="text-xs font-black text-emerald-400 uppercase tracking-wider">Edit Complete</p>
+                        <p className="text-[9px] font-bold text-emerald-500/70 uppercase tracking-wider mt-0.5">Ready to view on Operations</p>
+                      </div>
+                    </div>
+                    <Link href="/empire-center" className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
+                      <ChevronRight className="w-4 h-4 text-primary" />
+                      <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
+                    </Link>
+                    <button
+                      onClick={() => { setEditStatus('idle'); setRawVideoUpload(p => ({ ...p, status: 'idle', file: null, preview: null, metadata: null })); }}
+                      className="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-white/30 text-xs font-bold uppercase tracking-widest transition-all"
+                    >
+                      Edit Another Video
+                    </button>
+                  </div>
+                )}
+                {editStatus === 'error' && (
+                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center space-y-2">
+                    <p className="text-xs font-bold text-red-400">{editError || 'Enhancement failed'}</p>
+                    <button onClick={() => setEditStatus('idle')} className="text-[10px] text-red-400 underline">Dismiss</button>
+                  </div>
+                )}
+
+                <InlineConsultant context="editor" onGenerate={handleEnhanceVideo} isParentGenerating={editStatus === 'processing'} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
 
               {/* 3. Faceless Content Creation Box */}
@@ -1066,11 +1173,38 @@ export default function StudioPage() {
 
                   <button
                     onClick={handleSynthesizeTwin}
-                    disabled={facialDnaUpload.status !== 'complete'}
-                    className="w-full max-w-sm mx-auto flex justify-center py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    disabled={facialDnaUpload.status !== 'complete' || twinStatus === 'synthesizing'}
+                    className="w-full max-w-sm mx-auto flex justify-center items-center gap-2 py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   >
-                    {facialDnaUpload.status === 'complete' ? 'Synthesize Twin Double' : 'Upload a photo first'}
+                    {twinStatus === 'synthesizing' ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Synthesizing...
+                      </>
+                    ) : facialDnaUpload.status === 'complete' ? 'Synthesize Twin Double' : 'Upload a photo first'}
                   </button>
+
+                  {twinStatus === 'done' && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="max-w-sm mx-auto space-y-3">
+                      <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                        <div>
+                          <p className="text-xs font-black text-emerald-400 uppercase tracking-wider">Neural Twin Ready</p>
+                          <p className="text-[9px] font-bold text-emerald-500/70 uppercase tracking-wider mt-0.5">Saved to your Library — view on Operations</p>
+                        </div>
+                      </div>
+                      <Link href="/empire-center" className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
+                        <ChevronRight className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
+                      </Link>
+                    </motion.div>
+                  )}
+                  {twinStatus === 'error' && (
+                    <div className="max-w-sm mx-auto p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center space-y-2">
+                      <p className="text-xs font-bold text-red-400">{twinError || 'Neural Twin synthesis failed. Please try again.'}</p>
+                      <button onClick={() => setTwinStatus('idle')} className="text-[10px] text-red-400 underline">Dismiss</button>
+                    </div>
+                  )}
                 </div>
 
                 <InlineConsultant context="neural-twin" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
