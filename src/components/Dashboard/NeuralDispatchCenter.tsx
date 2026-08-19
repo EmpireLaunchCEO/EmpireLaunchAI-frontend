@@ -123,7 +123,7 @@ export function NeuralDispatchCenter() {
         }
       } catch {}
 
-      // Fetch completed scene-based video projects from localStorage
+      // Fetch completed scene-based video projects from localStorage (fast path)
       try {
         const completedProjects = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
         const videoProjects = completedProjects.filter((p: any) => p.url);
@@ -142,6 +142,37 @@ export function NeuralDispatchCenter() {
               }
             });
             existingIds.add(proj.id);
+          }
+        }
+      } catch {}
+
+      // Fetch completed video projects from the backend list endpoint — this is
+      // the source of truth so projects completed while the browser was closed
+      // (restart-safe scene pipeline) still surface on Operations with fresh R2
+      // URLs /api/studio/video-projects regenerates signed URLs on read.
+      try {
+        const projectsRes = await fetch(`${API_URL}/api/studio/video-projects`, {
+          headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
+        });
+        if (projectsRes.ok) {
+          const projectsData = await projectsRes.json();
+          const completedProjects = (projectsData.projects || []).filter((p: any) => p.status === 'completed' && p.finalVideoUrl);
+          const existingIds = new Set(approvalItems.map((i: any) => i.id));
+          for (const proj of completedProjects) {
+            if (!existingIds.has(proj.id)) {
+              approvalItems.unshift({
+                id: proj.id,
+                type: 'video',
+                status: 'completed',
+                payload: {
+                  title: proj.title || 'Scene-Based Video Project',
+                  videoUrl: proj.finalVideoUrl,
+                  assetId: proj.id,
+                  status: 'completed'
+                }
+              });
+              existingIds.add(proj.id);
+            }
           }
         }
       } catch {}
