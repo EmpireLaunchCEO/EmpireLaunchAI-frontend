@@ -83,6 +83,15 @@ export default function StudioPage() {
   const [rawVideoUpload, setRawVideoUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [designUpload, setDesignUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [activeRenderType, setActiveRenderType] = useState<'facial-dna' | 'raw-video'>('facial-dna');
+  // Shared voiceover + duration + screenshot controls (Customize / Faceless / Scene).
+  // Backend-supported: gender female|male, tone enthusiastic|calm|serious|warm|auto.
+  const [customizeDuration, setCustomizeDuration] = useState('');
+  const [customizeVoice, setCustomizeVoice] = useState<'female' | 'male' | 'auto'>('auto');
+  const [customizeTone, setCustomizeTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto'>('auto');
+  const [customizeUpload, setCustomizeUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
+  const [facelessVoice, setFacelessVoice] = useState<'female' | 'male' | 'auto'>('auto');
+  const [facelessTone, setFacelessTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto'>('auto');
+  const [facelessUpload, setFacelessUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
 
   // Handle Facial DNA file selection
   const handleFacialDnaSelect = async (file: File) => {
@@ -182,6 +191,33 @@ export default function StudioPage() {
     setDesignUpload({ file: null, preview: null, status: 'idle', progress: 0 });
   };
 
+  // Generic source-image (screenshot) upload shared by Customize / Faceless / Scene.
+  const handleSourceImageSelect = async (file: File, setter: (s: UploadState) => void) => {
+    const preview = URL.createObjectURL(file);
+    setter({ file, preview, status: 'selected', progress: 0 });
+    const formData = new FormData();
+    formData.append('photo', file);
+    try {
+      setter(prev => ({ ...prev, status: 'uploading', progress: 10 }));
+      const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
+      const res = await fetch(`${API_URL}/api/cinema/upload-photo`, {
+        method: 'POST',
+        headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId },
+        body: formData,
+      });
+      if (!res.ok) throw new Error('Upload failed');
+      const data = await res.json();
+      const photoUrl = data?.photoUrl || data?.fileUrl || data?.url || '';
+      setter(prev => ({ ...prev, status: 'complete', progress: 100, metadata: { ...data, photoUrl } }));
+    } catch (error) {
+      console.error('Source image upload error:', error);
+      setter(prev => ({ ...prev, status: 'error' }));
+    }
+  };
+  const handleSourceImageRemove = (setter: (s: UploadState) => void, state: UploadState) => {
+    if (state.preview) URL.revokeObjectURL(state.preview);
+    setter({ file: null, preview: null, status: 'idle', progress: 0 });
+  };
   // Usage state
   const [usage, setUsage] = useState<{
     neural: { remaining: number; limit: number | string; nextReset?: string };
@@ -348,6 +384,8 @@ export default function StudioPage() {
   const [projectTitle, setProjectTitle] = useState('');
   const [projectIdea, setProjectIdea] = useState('');
   const [projectDuration, setProjectDuration] = useState('');
+  const [projectVoice, setProjectVoice] = useState<'female' | 'male' | ''>('');
+  const [projectTone, setProjectTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto' | ''>('');
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [isSubmittingProject, setIsSubmittingProject] = useState(false);
 
@@ -457,7 +495,9 @@ export default function StudioPage() {
         body: JSON.stringify({
           title: projectTitle.trim() || 'Untitled Project',
           idea: projectIdea.trim(),
-          duration: projectDuration ? parseInt(projectDuration) : undefined
+          duration: projectDuration ? parseInt(projectDuration) : undefined,
+          voice: projectVoice || undefined,
+          tone: projectTone || undefined
         })
       });
       if (res.ok) {
@@ -515,7 +555,11 @@ export default function StudioPage() {
         body: JSON.stringify({
           request: finalIdea,
           brandId: localStorage.getItem('empire_brandId') || undefined,
-          conversationHistory: []
+          conversationHistory: [],
+          duration: customizeDuration ? Number(customizeDuration) : undefined,
+          voice: customizeVoice === 'auto' ? undefined : customizeVoice,
+          tone: customizeTone,
+          sourceImages: customizeUpload.metadata?.photoUrl ? [customizeUpload.metadata.photoUrl] : []
         }),
         signal: controller.signal
       });
@@ -640,7 +684,10 @@ export default function StudioPage() {
         body: JSON.stringify({
           type: 'faceless',
           description: facelessIdea.trim(),
-          payload: { category: 'faceless-video', isCatalyst: isCatalyst }
+          payload: { category: 'faceless-video', isCatalyst: isCatalyst },
+          voice: facelessVoice === 'auto' ? undefined : facelessVoice,
+          tone: facelessTone === 'auto' ? undefined : facelessTone,
+          sourceImages: facelessUpload.metadata?.photoUrl ? [facelessUpload.metadata.photoUrl] : []
         })
       });
       if (!res.ok) throw new Error('Approval creation failed');
@@ -745,6 +792,60 @@ export default function StudioPage() {
                 </div>
 
                 {!sharedVideoIdea && (
+                  <div className="space-y-4">
+                  {/* Duration + voiceover (shared control) */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Duration &amp; Voiceover (optional)</span>
+                    <div className="flex flex-wrap gap-2">
+                      <input
+                        type="number"
+                        value={customizeDuration}
+                        onChange={(e) => setCustomizeDuration(e.target.value)}
+                        placeholder="Duration (sec, optional)"
+                        min={5}
+                        className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
+                      />
+                      <select
+                        value={customizeVoice}
+                        onChange={(e) => setCustomizeVoice(e.target.value as 'female' | 'male' | 'auto')}
+                        className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                      >
+                        <option value="auto">Auto gender</option>
+                        <option value="female">Female</option>
+                        <option value="male">Male</option>
+                      </select>
+                      <select
+                        value={customizeTone}
+                        onChange={(e) => setCustomizeTone(e.target.value as any)}
+                        className="flex-1 min-w-[110px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                      >
+                        <option value="auto">Auto tone</option>
+                        <option value="enthusiastic">Enthusiastic</option>
+                        <option value="calm">Calm</option>
+                        <option value="serious">Serious</option>
+                        <option value="warm">Warm</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/* Source image (screenshot) upload */}
+                  <div className="space-y-3">
+                    <FileUploadDropZone
+                      type="source-image"
+                      state={customizeUpload}
+                      onFileSelect={(file) => handleSourceImageSelect(file, setCustomizeUpload)}
+                      onRemove={() => handleSourceImageRemove(setCustomizeUpload, customizeUpload)}
+                      disabled={customizeUpload.status === 'uploading'}
+                    />
+                    {customizeUpload.preview && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-slate-400/30 mx-auto"
+                      >
+                        <img src={customizeUpload.preview} alt="Uploaded source" className="w-full h-full object-cover" />
+                      </motion.div>
+                    )}
+                  </div>
                   <div className="relative">
                     <textarea
                       value={customVideoIdea}
@@ -761,6 +862,7 @@ export default function StudioPage() {
                     >
                       <SendHorizonal className="w-4 h-4" />
                     </button>
+                  </div>
                   </div>
                 )}
 
@@ -847,20 +949,45 @@ export default function StudioPage() {
                         value={projectDuration}
                         onChange={(e) => setProjectDuration(e.target.value)}
                         placeholder="Duration (seconds, optional)"
-                        className="flex-1 bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
+                        className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
                       />
-                      <button
-                        onClick={handleSubmitProject}
-                        disabled={!projectIdea.trim() || isSubmittingProject}
-                        className="px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 whitespace-nowrap"
-                      >
-                        {isSubmittingProject ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          'Launch Project'
-                        )}
-                      </button>
                     </div>
+                    <div className="flex flex-col gap-2">
+                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Voiceover (optional)</span>
+                      <div className="flex flex-wrap gap-2">
+                        <select
+                          value={projectVoice}
+                          onChange={(e) => setProjectVoice(e.target.value as 'female' | 'male' | '')}
+                          className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                        >
+                          <option value="">Auto gender</option>
+                          <option value="female">Female</option>
+                          <option value="male">Male</option>
+                        </select>
+                        <select
+                          value={projectTone}
+                          onChange={(e) => setProjectTone(e.target.value as any)}
+                          className="flex-1 min-w-[110px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                        >
+                          <option value="">Auto tone</option>
+                          <option value="enthusiastic">Enthusiastic</option>
+                          <option value="calm">Calm</option>
+                          <option value="serious">Serious</option>
+                          <option value="warm">Warm</option>
+                        </select>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleSubmitProject}
+                      disabled={!projectIdea.trim() || isSubmittingProject}
+                      className="px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 whitespace-nowrap"
+                    >
+                      {isSubmittingProject ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        'Launch Project'
+                      )}
+                    </button>
                   </div>
                 ) : (
                   <VideoProjectProgress
@@ -979,6 +1106,51 @@ export default function StudioPage() {
                   </div>
                 </div>
 
+                {/* Voiceover (shared control) */}
+                <div className="flex flex-col gap-2">
+                  <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Voiceover (optional)</span>
+                  <div className="flex flex-wrap gap-2">
+                    <select
+                      value={facelessVoice}
+                      onChange={(e) => setFacelessVoice(e.target.value as 'female' | 'male' | 'auto')}
+                      className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                    >
+                      <option value="auto">Auto gender</option>
+                      <option value="female">Female</option>
+                      <option value="male">Male</option>
+                    </select>
+                    <select
+                      value={facelessTone}
+                      onChange={(e) => setFacelessTone(e.target.value as any)}
+                      className="flex-1 min-w-[110px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                    >
+                      <option value="auto">Auto tone</option>
+                      <option value="enthusiastic">Enthusiastic</option>
+                      <option value="calm">Calm</option>
+                      <option value="serious">Serious</option>
+                      <option value="warm">Warm</option>
+                    </select>
+                  </div>
+                </div>
+                {/* Source image (screenshot) upload */}
+                <div className="space-y-3">
+                  <FileUploadDropZone
+                    type="source-image"
+                    state={facelessUpload}
+                    onFileSelect={(file) => handleSourceImageSelect(file, setFacelessUpload)}
+                    onRemove={() => handleSourceImageRemove(setFacelessUpload, facelessUpload)}
+                    disabled={facelessUpload.status === 'uploading'}
+                  />
+                  {facelessUpload.preview && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-emerald-500/30 mx-auto"
+                    >
+                      <img src={facelessUpload.preview} alt="Uploaded source" className="w-full h-full object-cover" />
+                    </motion.div>
+                  )}
+                </div>
                 <div className="relative">
                   <textarea
                     value={facelessIdea}

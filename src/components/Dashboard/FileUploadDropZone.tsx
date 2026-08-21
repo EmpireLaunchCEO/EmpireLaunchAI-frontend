@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Image, FileVideo, CheckCircle2, AlertCircle, Loader2, X, Film } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export type UploadType = 'facial-dna' | 'raw-video';
+export type UploadType = 'facial-dna' | 'raw-video' | 'source-image';
 export type UploadStatus = 'idle' | 'selected' | 'uploading' | 'processing' | 'complete' | 'error';
 
 export interface UploadState {
@@ -40,6 +40,14 @@ const typeConfig = {
     hint: 'MP4, MOV or WebM — Raw footage for AI editing',
     maxSize: '500MB',
     color: 'blue',
+  },
+  'source-image': {
+    icon: Image,
+    label: 'Add Screenshot / Image',
+    accept: 'image/png,image/jpeg,image/webp,application/pdf',
+    hint: 'Screenshot or image to use as source visuals',
+    maxSize: '10MB',
+    color: 'purple',
   },
 };
 
