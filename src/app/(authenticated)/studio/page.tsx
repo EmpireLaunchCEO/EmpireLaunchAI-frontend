@@ -348,6 +348,8 @@ export default function StudioPage() {
   const [projectTitle, setProjectTitle] = useState('');
   const [projectIdea, setProjectIdea] = useState('');
   const [projectDuration, setProjectDuration] = useState('');
+  const [projectVoice, setProjectVoice] = useState<'female' | 'male' | ''>('');
+  const [projectTone, setProjectTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto' | ''>('');
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [isSubmittingProject, setIsSubmittingProject] = useState(false);
 
@@ -457,7 +459,9 @@ export default function StudioPage() {
         body: JSON.stringify({
           title: projectTitle.trim() || 'Untitled Project',
           idea: projectIdea.trim(),
-          duration: projectDuration ? parseInt(projectDuration) : undefined
+          duration: projectDuration ? parseInt(projectDuration) : undefined,
+          voice: projectVoice || undefined,
+          tone: projectTone || undefined
         })
       });
       if (res.ok) {
@@ -847,20 +851,45 @@ export default function StudioPage() {
                         value={projectDuration}
                         onChange={(e) => setProjectDuration(e.target.value)}
                         placeholder="Duration (seconds, optional)"
-                        className="flex-1 bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
+                        className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
                       />
-                      <button
-                        onClick={handleSubmitProject}
-                        disabled={!projectIdea.trim() || isSubmittingProject}
-                        className="px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 whitespace-nowrap"
-                      >
-                        {isSubmittingProject ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          'Launch Project'
-                        )}
-                      </button>
                     </div>
+                    <div className="flex flex-col gap-2">
+                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Voiceover (optional)</span>
+                      <div className="flex flex-wrap gap-2">
+                        <select
+                          value={projectVoice}
+                          onChange={(e) => setProjectVoice(e.target.value as 'female' | 'male' | '')}
+                          className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                        >
+                          <option value="">Auto gender</option>
+                          <option value="female">Female</option>
+                          <option value="male">Male</option>
+                        </select>
+                        <select
+                          value={projectTone}
+                          onChange={(e) => setProjectTone(e.target.value as any)}
+                          className="flex-1 min-w-[110px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                        >
+                          <option value="">Auto tone</option>
+                          <option value="enthusiastic">Enthusiastic</option>
+                          <option value="calm">Calm</option>
+                          <option value="serious">Serious</option>
+                          <option value="warm">Warm</option>
+                        </select>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleSubmitProject}
+                      disabled={!projectIdea.trim() || isSubmittingProject}
+                      className="px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 whitespace-nowrap"
+                    >
+                      {isSubmittingProject ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        'Launch Project'
+                      )}
+                    </button>
                   </div>
                 ) : (
                   <VideoProjectProgress
