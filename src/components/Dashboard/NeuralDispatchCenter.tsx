@@ -123,29 +123,6 @@ export function NeuralDispatchCenter() {
         }
       } catch {}
 
-      // Fetch completed scene-based video projects from localStorage (fast path)
-      try {
-        const completedProjects = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
-        const videoProjects = completedProjects.filter((p: any) => p.url);
-        const existingIds = new Set(approvalItems.map((i: any) => i.id));
-        for (const proj of videoProjects) {
-          if (!existingIds.has(proj.id)) {
-            approvalItems.unshift({
-              id: proj.id,
-              type: 'video',
-              status: 'completed',
-              payload: {
-                title: 'Scene-Based Video Project',
-                videoUrl: proj.url,
-                assetId: proj.id,
-                status: 'completed'
-              }
-            });
-            existingIds.add(proj.id);
-          }
-        }
-      } catch {}
-
       // Fetch completed video projects from the backend list endpoint — this is
       // the source of truth so projects completed while the browser was closed
       // (restart-safe scene pipeline) still surface on Operations with fresh R2
@@ -173,6 +150,33 @@ export function NeuralDispatchCenter() {
               });
               existingIds.add(proj.id);
             }
+          }
+        }
+      } catch {}
+
+      // Fetch completed scene-based video projects from localStorage (fast path).
+      // Processed AFTER the backend list so the backend's freshly regenerated R2
+      // URL wins for the same id — localStorage only supplies an entry when the
+      // backend has no row for it (e.g. stuck entries that never hit the DB). A
+      // stale signed URL in localStorage must never shadow a fresh backend URL.
+      try {
+        const completedProjects = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
+        const videoProjects = completedProjects.filter((p: any) => p.url);
+        const existingIds = new Set(approvalItems.map((i: any) => i.id));
+        for (const proj of videoProjects) {
+          if (!existingIds.has(proj.id)) {
+            approvalItems.unshift({
+              id: proj.id,
+              type: 'video',
+              status: 'completed',
+              payload: {
+                title: 'Scene-Based Video Project',
+                videoUrl: proj.url,
+                assetId: proj.id,
+                status: 'completed'
+              }
+            });
+            existingIds.add(proj.id);
           }
         }
       } catch {}
@@ -235,18 +239,34 @@ export function NeuralDispatchCenter() {
     // Use the creation ID (payload.assetId) for proper DB+R2 deletion
     const creationId = currentApproval?.payload?.assetId || currentApproval?.id;
     if (!creationId) return;
+    let backendDeleted = false;
     try {
       const res = await fetch(`${API_URL}/api/studio/creation/${creationId}`, {
         method: 'DELETE',
         headers: { 'Authorization': getAuthHeader() },
       });
-      if (!res.ok) console.error('Delete failed:', await res.text());
+      if (res.ok) backendDeleted = true;
+      else if (res.status !== 404) console.error('Delete failed:', await res.text());
+      // 404 means there is no backend row — that is fine, the entry may be
+      // a localStorage fast-path item with no DB row behind it.
     } catch (e) {
       console.error('Failed to delete creation:', e);
     }
+    // Always remove the matching entry from the localStorage fast path too,
+    // so stuck items (no backend row) truly disappear from the UI. This is the
+    // fix for the "X does nothing" bug on local-only entries.
+    try {
+      const key = 'empire_completed_projects';
+      const stored = JSON.parse(localStorage.getItem(key) || '[]');
+      const remaining = stored.filter(
+        (p: any) => (p.id || p.assetId) !== creationId
+      );
+      localStorage.setItem(key, JSON.stringify(remaining));
+      if (stored.length !== remaining.length) backendDeleted = true;
+    } catch {}
     setIsApproved(false);
     setView('grid');
-    fetchApprovals();
+    if (backendDeleted) fetchApprovals();
   };
 
   const handleSaveToLibrary = async () => {
