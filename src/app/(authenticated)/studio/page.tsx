@@ -399,6 +399,11 @@ export default function StudioPage() {
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [isSubmittingProject, setIsSubmittingProject] = useState(false);
 
+  // Unified Option A: the Customize Video wand now generates through the
+  // Scene-Based engine (`/api/studio/video-project`) instead of single-shot
+  // Sora. This holds the resulting scene project's id for progress display.
+  const [customizeProjectId, setCustomizeProjectId] = useState<string | null>(null);
+
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const ACTIVE_CREATION_KEY = 'empire_active_creation';
 
@@ -522,41 +527,22 @@ export default function StudioPage() {
     }
   };
 
-  // Called by InlineConsultant's "Generate Video" button after refinement
+  // Called by InlineConsultant's "Generate Video" wand after refinement.
+  // OPTION A (unified): the refined idea is submitted to the Scene-Based
+  // engine (`/api/studio/video-project`) with the user's duration + voice +
+  // tone, so the wand produces a scene-structured ~target-length video. The
+  // single-shot Sora path (`/api/studio/process`) is retired as the submission
+  // target; progress is rendered via VideoProjectProgress (customizeProjectId).
   const handleGenerateVideo = async (finalIdea: string) => {
+    if (!finalIdea?.trim()) return;
     setIsGeneratingVideo(true);
     setGenerationError(null);
-    setRenderLogs([]);
-    setIsRendering(true);
-    setActiveRenderType('facial-dna');
-
-    // Add initial render log
-    const addLog = (action: string, status: 'processing' | 'success' | 'error' = 'processing', details?: string) => {
-      setRenderLogs(prev => [...prev, {
-        id: `log-${Date.now()}-${Math.random()}`,
-        timestamp: new Date().toLocaleTimeString(),
-        action,
-        status,
-        details: details || '',
-        type: 'creation',
-      }]);
-    };
-
-    addLog('Consultant Review', 'processing', 'Refining creative direction...');
+    setVideoGenerated(false);
+    setCustomizeProjectId(null);
 
     try {
       const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
-      const niche = userNiche || empireData?.niche || 'general';
-      const angle = empireData?.angle || 'trending';
-
-      // Call the full creation pipeline
-      addLog('AI Content Generation', 'processing', 'Generating visuals and script...');
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 min for Sora + FFmpeg
-      
-      console.log('[Studio] Fetching', `${API_URL}/api/studio/process`);
-      const res = await fetch(`${API_URL}/api/studio/process`, {
+      const res = await fetch(`${API_URL}/api/studio/video-project`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -564,115 +550,40 @@ export default function StudioPage() {
           'x-user-id': userId
         },
         body: JSON.stringify({
-          request: finalIdea,
-          brandId: localStorage.getItem('empire_brandId') || undefined,
-          conversationHistory: [],
+          title: (sharedVideoIdea || 'Customized Video').slice(0, 80) || 'Customized Video',
+          idea: finalIdea.trim(),
           duration: customizeDuration ? Number(customizeDuration) : undefined,
           voice: customizeVoice === 'auto' ? undefined : customizeVoice,
-          tone: customizeTone,
+          tone: customizeTone === 'auto' ? undefined : customizeTone,
           sourceImages: customizeUpload.metadata?.photoUrl ? [customizeUpload.metadata.photoUrl] : []
-        }),
-        signal: controller.signal
+        })
       });
-      console.log('[Studio] Response:', res.status);
-      clearTimeout(timeoutId);
-
-      if (res.ok) {
-        const data = await res.json();
-        const firstAsset = data.assets?.[0];
-        const assetId = firstAsset?.url || data.assetId || null;
-
-        if (data.status === 'completed') {
-          addLog('Creation Complete', 'success', assetId ? `Asset ready` : 'Video created successfully');
-          setIsGeneratingVideo(false);
-          setVideoGenerated(true);
-          setCreatedAssetId(assetId);
-          return;
-        } else if (data.status === 'processing' && data.creationId) {
-          // Async pipeline — poll every 3s until done
-          addLog('Video Generation Started', 'processing', 'Polling every 3s — trace: pending...');
-          let pollCount = 0;
-          const MAX_POLLS = 100; // 100 × 3s = 5 minutes
-          
-          let lastTrace = '';
-          const pollForCompletion = async () => {
-            try {
-              const pollRes = await fetch(`${API_URL}/api/studio/creation/${data.creationId}`, {
-                headers: {
-                  'Authorization': getAuthHeader(),
-                  'x-user-id': userId
-                }
-              });
-              if (!pollRes.ok) return;
-              const pollData = await pollRes.json();
-              // Show pipeline trace in logs when it changes
-              const trace = pollData.metadata?.pipeline_trace;
-              if (trace && trace !== lastTrace) {
-                lastTrace = trace;
-                addLog('Pipeline Trace', 'processing', trace);
-              }
-              if (pollData.status === 'completed') {
-                if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
-                localStorage.removeItem(ACTIVE_CREATION_KEY);
-                addLog('Creation Complete', 'success', pollData.fileUrl ? 'Video ready' : 'Video created successfully');
-                setIsGeneratingVideo(false);
-                setVideoGenerated(true);
-                setCreatedAssetId(pollData.fileUrl || pollData.id || null);
-              } else if (pollData.status === 'error') {
-                if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
-                localStorage.removeItem(ACTIVE_CREATION_KEY);
-                const errMsg = pollData.metadata?.error || 'Video generation failed';
-                addLog('Pipeline Error', 'error', errMsg);
-                setGenerationError(errMsg);
-                setIsGeneratingVideo(false);
-              } else if (pollCount >= MAX_POLLS) {
-                if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
-                addLog('Pipeline Timeout', 'error', 'Video generation timed out after 5 minutes');
-                setGenerationError('Video generation timed out after 5 minutes');
-                setIsGeneratingVideo(false);
-              }
-            } catch {
-              // Poll failed silently — retry next interval
-            }
-          };
-          
-          // Poll immediately, then every 3s
-          localStorage.setItem(ACTIVE_CREATION_KEY, data.creationId);
-          pollForCompletion();
-          pollingRef.current = setInterval(pollForCompletion, 3000);
-          return;
-        } else if (data.status === 'error') {
-          addLog('Pipeline Error', 'error', data.response || 'Unknown error from AI router');
-          throw new Error(data.response || 'Generation pipeline returned an error.');
-        } else {
-          // ai_response or needs_refinement
-          addLog('AI Response', 'processing', (data.response || '').substring(0, 100) || 'Refining creative direction...');
-          setIsGeneratingVideo(false);
-          setVideoGenerated(true);
-          setCreatedAssetId(null);
-          return;
-        }
+      if (!res.ok) {
+        let errorText = 'Scene project could not be created';
+        try {
+          const errData = await res.json();
+          errorText = errData.response || errData.error || errorText;
+        } catch {}
+        throw new Error(errorText);
       }
-
-      // Pipeline failed — parse error for user-friendly message
-      let errorText = 'Pipeline error';
+      const data = await res.json();
+      const pid = data.projectId || data.id;
+      if (!pid) {
+        throw new Error('Scene project returned no project id. Please try again.');
+      }
+      // Show scene progress in the Customize box (mirrors the Scene box).
+      setCustomizeProjectId(pid);
+      // Persist fast-path entry so Operations can show it while rendering.
       try {
-        const errData = await res.json();
-        errorText = errData.response || errData.error || 'Pipeline error';
-        // Clean up Sora billing errors
-        if (errorText.includes('billing') || errorText.includes('Billing')) {
-          errorText = 'OpenAI billing limit reached. Please top up your OpenAI account to generate videos.';
-        }
-      } catch {
-        errorText = await res.text().catch(() => 'Pipeline error');
-      }
-      throw new Error(errorText);
+        const completed = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
+        completed.push({ id: pid, url: '', ts: Date.now(), status: 'processing' });
+        localStorage.setItem('empire_completed_projects', JSON.stringify(completed.slice(-10)));
+      } catch {}
     } catch (error) {
-      console.error('Video pipeline failed:', error);
-      localStorage.removeItem(ACTIVE_CREATION_KEY);
+      console.error('Scene project creation failed:', error);
       setGenerationError(error instanceof Error ? error.message : 'Video generation failed. Please try again.');
+    } finally {
       setIsGeneratingVideo(false);
-      setVideoGenerated(false);
       setIsRendering(false);
     }
   };
@@ -898,6 +809,8 @@ export default function StudioPage() {
                         setSharedVideoIdea('');
                         setCreatedAssetId(null);
                         setGenerationError(null);
+                        setCustomizeProjectId(null);
+                        setIsRendering(false);
                       }}
                       className="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-white/30 text-xs font-bold uppercase tracking-widest transition-all"
                     >
@@ -906,21 +819,49 @@ export default function StudioPage() {
                   </motion.div>
                 )}
 
-                {isGeneratingVideo && !videoGenerated && (
+                {customizeProjectId && (
+                  <>
+                    <VideoProjectProgress
+                      projectId={customizeProjectId}
+                      onComplete={(finalVideoUrl) => {
+                        // Store completed project for NeuralDispatchCenter
+                        const completed = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
+                        completed.push({ id: customizeProjectId, url: finalVideoUrl, ts: Date.now(), status: 'completed' });
+                        localStorage.setItem('empire_completed_projects', JSON.stringify(completed.slice(-10)));
+                        setVideoGenerated(true);
+                        console.log('[Studio] Customize project complete:', finalVideoUrl);
+                      }}
+                    />
+                    <button
+                      onClick={() => {
+                        setCustomizeProjectId(null);
+                        setSharedVideoIdea('');
+                        setVideoGenerated(false);
+                        setCreatedAssetId(null);
+                        setGenerationError(null);
+                        setIsRendering(false);
+                      }}
+                      className="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-white/30 text-xs font-bold uppercase tracking-widest transition-all"
+                    >
+                      Create Another Video
+                    </button>
+                  </>
+                )}
+                {isGeneratingVideo && !videoGenerated && !customizeProjectId && (
                   <div className="flex flex-col items-center justify-center py-16 gap-4">
                     <BrandedGlobe size="md" spinning={true} className="animate-pulse" />
                     <p className="text-sm font-black text-foreground uppercase tracking-widest animate-pulse">Generating Video...</p>
                     <p className="text-[10px] text-muted-foreground">{elapsedSeconds}s elapsed — video pipeline runs ~70-100s</p>
                   </div>
                 )}
-                {generationError && !isGeneratingVideo && (
+                {generationError && !isGeneratingVideo && !customizeProjectId && (
                   <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center space-y-2">
                     <p className="text-xs font-bold text-red-400">{generationError}</p>
                     <button onClick={() => setGenerationError(null)} className="text-[10px] text-red-400 underline">Dismiss</button>
                   </div>
                 )}
-                {!isGeneratingVideo && !videoGenerated && !generationError && (
-                  <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                {!isGeneratingVideo && !videoGenerated && !generationError && !customizeProjectId && (
+                  <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} settledSettings={{ duration: customizeDuration, voice: customizeVoice, tone: customizeTone }} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
                 )}
               </div>
 
