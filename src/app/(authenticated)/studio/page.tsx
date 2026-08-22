@@ -399,10 +399,13 @@ export default function StudioPage() {
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [isSubmittingProject, setIsSubmittingProject] = useState(false);
 
-  // Unified Option A: the Customize Video wand now generates through the
+  // Unified Option A: the Customize Video flow now generates through the
   // Scene-Based engine (`/api/studio/video-project`) instead of single-shot
   // Sora. This holds the resulting scene project's id for progress display.
   const [customizeProjectId, setCustomizeProjectId] = useState<string | null>(null);
+  // The refined idea surfaced by the consultant chat (conversation summary).
+  // A "Launch Project" button (not the wand) submits this via the scene engine.
+  const [refinedVideoIdea, setRefinedVideoIdea] = useState('');
 
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const ACTIVE_CREATION_KEY = 'empire_active_creation';
@@ -539,6 +542,7 @@ export default function StudioPage() {
     setGenerationError(null);
     setVideoGenerated(false);
     setCustomizeProjectId(null);
+    setRefinedVideoIdea('');
 
     try {
       const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
@@ -807,6 +811,7 @@ export default function StudioPage() {
                       onClick={() => {
                         setVideoGenerated(false);
                         setSharedVideoIdea('');
+                        setRefinedVideoIdea('');
                         setCreatedAssetId(null);
                         setGenerationError(null);
                         setCustomizeProjectId(null);
@@ -836,6 +841,7 @@ export default function StudioPage() {
                       onClick={() => {
                         setCustomizeProjectId(null);
                         setSharedVideoIdea('');
+                        setRefinedVideoIdea('');
                         setVideoGenerated(false);
                         setCreatedAssetId(null);
                         setGenerationError(null);
@@ -861,7 +867,22 @@ export default function StudioPage() {
                   </div>
                 )}
                 {!isGeneratingVideo && !videoGenerated && !generationError && !customizeProjectId && (
-                  <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} settledSettings={{ duration: customizeDuration, voice: customizeVoice, tone: customizeTone }} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                  <div className="space-y-3">
+                    <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} suppressWand onRefinedIdea={setRefinedVideoIdea} settledSettings={{ duration: customizeDuration, voice: customizeVoice, tone: customizeTone }} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                    {/* Launch Project — unified Customize flow submits the refined idea
+                        through the Scene engine (owner: "instead of the wand"). */}
+                    <button
+                      onClick={() => handleGenerateVideo(refinedVideoIdea || sharedVideoIdea)}
+                      disabled={!(refinedVideoIdea || sharedVideoIdea) || isGeneratingVideo}
+                      className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed"
+                    >
+                      {isGeneratingVideo ? (
+                        <Loader2 className="w-4 h-4 animate-spin mx-auto" />
+                      ) : (
+                        'Launch Project'
+                      )}
+                    </button>
+                  </div>
                 )}
               </div>
 
