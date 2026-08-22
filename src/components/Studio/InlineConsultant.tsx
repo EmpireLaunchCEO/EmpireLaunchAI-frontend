@@ -28,9 +28,13 @@ interface InlineConsultantProps {
   onGenerate?: (finalIdea: string) => void;
   isParentGenerating?: boolean;
   empireContext?: { niche?: string; angle?: string; targetCustomers?: string; businessGoals?: string };
+  /** UI-set controls the user has already chosen (duration/voice/tone). These are
+   *  fed to the router as "SETTLED — do not re-ask" so the consultant never
+   *  re-asks for them mid-session, and the backend persists them as locked facts. */
+  settledSettings?: { duration?: string; voice?: string | 'auto'; tone?: string | 'auto' };
 }
 
-export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext }: InlineConsultantProps) {
+export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings }: InlineConsultantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -38,6 +42,23 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
   const [readyToGenerate, setReadyToGenerate] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Build the list of UI-settled facts (duration / voice / tone) the user has
+  // already chosen via controls. Fed into the consult context so the router
+  // treats them as confirmed and does NOT re-ask mid-session. 'auto' values are
+  // treated as "not yet decided" and skipped.
+  const settledFacts = (): string[] => {
+    if (!settledSettings) return [];
+    const facts: string[] = [];
+    if (settledSettings.duration) facts.push(`duration: ${settledSettings.duration} seconds`);
+    if (settledSettings.voice && settledSettings.voice !== 'auto') facts.push(`voice: ${settledSettings.voice}`);
+    if (settledSettings.tone && settledSettings.tone !== 'auto') facts.push(`tone: ${settledSettings.tone}`);
+    return facts;
+  };
+  const settledBlock = (): string => {
+    const facts = settledFacts();
+    return facts.length ? `\n[SETTLED — the user has already chosen these in the UI, do NOT re-ask about them: ${facts.join(', ')}]` : '';
+  };
 
   // Reset local generating state when parent's pipeline finishes
   const prevParentGenerating = useRef(isParentGenerating);
@@ -87,9 +108,15 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
               ...(userId ? { 'x-user-id': userId } : {})
             },
             body: JSON.stringify({
-              request: `My video idea: ${idea}`,
+              request: `My video idea: ${idea}${settledBlock()}`,
               brandId: brandId || undefined,
-              conversationHistory: [{ role: 'user' as const, content: `My video idea: ${idea}` }],
+              conversationHistory: [
+                ...(settledFacts().length ? [{ role: 'assistant' as const, content: `SETTLED — user already chose: ${settledFacts().join(', ')} (do not re-ask)` }] : []),
+                { role: 'user' as const, content: `My video idea: ${idea}` }
+              ],
+              voice: settledSettings?.voice && settledSettings.voice !== 'auto' ? settledSettings.voice : undefined,
+              tone: settledSettings?.tone && settledSettings.tone !== 'auto' ? settledSettings.tone : undefined,
+              duration: settledSettings?.duration ? Number(settledSettings.duration) : undefined,
               mode: 'consult'
             }),
             signal: controller.signal
@@ -167,9 +194,15 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           ...(userId ? { 'x-user-id': userId } : {})
         },
         body: JSON.stringify({ 
-          request: userMessage,
+          request: `${userMessage}${settledBlock()}`,
           brandId: brandId || undefined,
-          conversationHistory,
+          conversationHistory: [
+            ...(settledFacts().length ? [{ role: 'assistant' as const, content: `SETTLED — user already chose: ${settledFacts().join(', ')} (do not re-ask)` }] : []),
+            ...conversationHistory
+          ],
+          voice: settledSettings?.voice && settledSettings.voice !== 'auto' ? settledSettings.voice : undefined,
+          tone: settledSettings?.tone && settledSettings.tone !== 'auto' ? settledSettings.tone : undefined,
+          duration: settledSettings?.duration ? Number(settledSettings.duration) : undefined,
           mode: 'consult'
         }),
         signal: controller.signal
