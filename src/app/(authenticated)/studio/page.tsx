@@ -92,6 +92,7 @@ export default function StudioPage() {
   const [facelessVoice, setFacelessVoice] = useState<'female' | 'male' | 'auto'>('auto');
   const [facelessTone, setFacelessTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto'>('auto');
   const [facelessUpload, setFacelessUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
+  const [sceneUpload, setSceneUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
 
   // Handle Facial DNA file selection
   const handleFacialDnaSelect = async (file: File) => {
@@ -103,9 +104,11 @@ export default function StudioPage() {
 
     try {
       setFacialDnaUpload(prev => ({ ...prev, status: 'uploading', progress: 10 }));
-      
+
+      const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
       const response = await fetch(`${API_URL}/api/cinema/upload-photo`, {
         method: 'POST',
+        headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId },
         body: formData,
       });
 
@@ -129,9 +132,11 @@ export default function StudioPage() {
 
     try {
       setRawVideoUpload(prev => ({ ...prev, status: 'uploading', progress: 10 }));
-      
+
+      const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
       const response = await fetch(`${API_URL}/api/cinema/upload-video`, {
         method: 'POST',
+        headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId },
         body: formData,
       });
 
@@ -169,9 +174,11 @@ export default function StudioPage() {
 
     try {
       setDesignUpload(prev => ({ ...prev, status: 'uploading', progress: 10 }));
-      
+
+      const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
       const response = await fetch(`${API_URL}/api/cinema/upload-photo`, {
         method: 'POST',
+        headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId },
         body: formData,
       });
 
@@ -228,7 +235,10 @@ export default function StudioPage() {
 
   const fetchUsage = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/cinema/usage`);
+      const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
+      const response = await fetch(`${API_URL}/api/cinema/usage`, {
+        headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
+      });
       if (response.ok) {
         const data = await response.json();
         // Format dates for display
@@ -497,7 +507,8 @@ export default function StudioPage() {
           idea: projectIdea.trim(),
           duration: projectDuration ? parseInt(projectDuration) : undefined,
           voice: projectVoice || undefined,
-          tone: projectTone || undefined
+          tone: projectTone || undefined,
+          sourceImages: sceneUpload.metadata?.photoUrl ? [sceneUpload.metadata.photoUrl] : []
         })
       });
       if (res.ok) {
@@ -976,6 +987,25 @@ export default function StudioPage() {
                           <option value="warm">Warm</option>
                         </select>
                       </div>
+                    </div>
+                    {/* Source image (screenshot) upload */}
+                    <div className="space-y-3">
+                      <FileUploadDropZone
+                        type="source-image"
+                        state={sceneUpload}
+                        onFileSelect={(file) => handleSourceImageSelect(file, setSceneUpload)}
+                        onRemove={() => handleSourceImageRemove(setSceneUpload, sceneUpload)}
+                        disabled={sceneUpload.status === 'uploading'}
+                      />
+                      {sceneUpload.preview && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 mx-auto"
+                        >
+                          <img src={sceneUpload.preview} alt="Uploaded source" className="w-full h-full object-cover" />
+                        </motion.div>
+                      )}
                     </div>
                     <button
                       onClick={handleSubmitProject}
