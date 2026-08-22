@@ -32,9 +32,17 @@ interface InlineConsultantProps {
    *  fed to the router as "SETTLED — do not re-ask" so the consultant never
    *  re-asks for them mid-session, and the backend persists them as locked facts. */
   settledSettings?: { duration?: string; voice?: string | 'auto'; tone?: string | 'auto' };
+  /** When true, hide the wand button in this consultant instance (used by the
+   *  unified Customize flow where a parent "Launch Project" button triggers the
+   *  generation instead). */
+  suppressWand?: boolean;
+  /** Called with the current refined idea (conversation summary) whenever the
+   *  conversation updates, so a parent "Launch Project" button can submit the
+   *  refined idea through the scene engine. */
+  onRefinedIdea?: (idea: string) => void;
 }
 
-export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings }: InlineConsultantProps) {
+export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings, suppressWand, onRefinedIdea }: InlineConsultantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -245,16 +253,26 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
     }
   };
 
+  const conversationSummary = messages
+    .filter(m => m.role === 'user' || m.role === 'assistant')
+    .map(m => m.content)
+    .join(' ');
+
   const handleGenerate = () => {
     if (onGenerate && !isGenerating) {
       setIsGenerating(true);
-      const conversationSummary = messages
-        .filter(m => m.role === 'user' || m.role === 'assistant')
-        .map(m => m.content)
-        .join(' ');
       onGenerate(conversationSummary || idea || '');
     }
   };
+
+  // Surface the refined idea to the parent whenever the conversation changes,
+  // so a parent "Launch Project" button (suppressWand mode) can submit it.
+  useEffect(() => {
+    if (onRefinedIdea && messages.length >= 1 && (conversationSummary || idea)) {
+      onRefinedIdea(conversationSummary || idea || '');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
 
   return (
     <div className={cn(
@@ -326,11 +344,11 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={canGenerate ? "Type to refine, or tap the wand..." : "Ask..."}
+            placeholder={suppressWand ? "Chat with the AI to refine your idea, then launch..." : (canGenerate ? "Type to refine, or tap the wand..." : "Ask...")}
             className="flex-1 bg-theme-surface/50 border border-theme rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-white/40 transition-all placeholder:text-slate-600"
           />
-          {/* Wand — appears once conversation started */}
-          {canGenerate && (
+          {/* Wand — appears once conversation started (hidden in suppressWand/Launch-Project mode) */}
+          {canGenerate && !suppressWand && (
             <button
               type="button"
               onClick={handleGenerate}
@@ -360,7 +378,9 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         <div className="flex items-center gap-1.5 px-2 py-1 mx-1.5 mb-1.5 rounded-lg bg-primary/5 border border-primary/10">
           <ArrowDown className="w-2.5 h-2.5 text-primary" />
           <span className="text-[9px] font-bold text-primary uppercase tracking-widest">
-            {readyToGenerate ? "Ready — tap the wand!" : canGenerate ? "Tap the wand when ready, or keep chatting" : "Chat with the AI to refine your idea"}
+            {suppressWand
+              ? "Refine here — then tap Launch Project to generate"
+              : (readyToGenerate ? "Ready — tap the wand!" : canGenerate ? "Tap the wand when ready, or keep chatting" : "Chat with the AI to refine your idea")}
           </span>
         </div>
       )}
