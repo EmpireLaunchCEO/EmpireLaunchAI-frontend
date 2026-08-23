@@ -25,7 +25,14 @@ import {
   AlertCircle,
   HelpCircle,
   CreditCard,
-  DollarSign
+  DollarSign,
+  Store,
+  ShoppingCart,
+  Heart,
+  Users,
+  Building2,
+  Link2,
+  MonitorPlay
   } from 'lucide-react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
@@ -45,6 +52,14 @@ import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 const availablePlatforms = [
   { id: 'instagram', name: 'Instagram', icon: Camera, color: 'text-purple-600', bg: 'bg-purple-50' },
   { id: 'facebook', name: 'Facebook', icon: Share2, color: 'text-blue-600', bg: 'bg-blue-50' },
+  { id: 'amazon', name: 'Amazon', icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50' },
+  { id: 'ebay', name: 'eBay', icon: Store, color: 'text-red-600', bg: 'bg-red-50' },
+  { id: 'squarespace', name: 'Squarespace', icon: Building2, color: 'text-slate-700', bg: 'bg-slate-100' },
+  { id: 'wix', name: 'Wix', icon: Link2, color: 'text-black', bg: 'bg-slate-100' },
+  { id: 'gumroad', name: 'Gumroad', icon: ShoppingCart, color: 'text-pink-600', bg: 'bg-pink-50' },
+  { id: 'patreon', name: 'Patreon', icon: Heart, color: 'text-orange-600', bg: 'bg-orange-50' },
+  { id: 'linkedin', name: 'LinkedIn', icon: Users, color: 'text-blue-700', bg: 'bg-blue-50' },
+  { id: 'twitch', name: 'Twitch', icon: MonitorPlay, color: 'text-purple-700', bg: 'bg-purple-100' },
 ];
 
 const COMMERCE_PLATFORMS = [
