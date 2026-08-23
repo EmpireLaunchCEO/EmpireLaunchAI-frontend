@@ -236,6 +236,9 @@ export function NeuralDispatchCenter() {
   };
 
   const handleDelete = async () => {
+    // Lightweight confirmation guard before destructive delete.
+    const title = currentApproval?.payload?.title || 'this item';
+    if (!window.confirm(`Delete "${title}"? This permanently removes it (and its file) — you can't undo this.`)) return;
     // Use the creation ID (payload.assetId) for proper DB+R2 deletion
     const creationId = currentApproval?.payload?.assetId || currentApproval?.id;
     if (!creationId) return;
