@@ -574,13 +574,13 @@ export default function StudioPage() {
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
                     <span className="text-[10px] font-black text-primary">{usage?.customize?.remaining ?? 0}</span>
                     <span className="text-[9px] font-black text-slate-400">/</span>
-                    <span className="text-[9px] font-black text-slate-500">{usage?.customize?.limit ?? 5}</span>
+                    <span className="text-[9px] font-black text-slate-500">{usage?.customize?.limit ?? 3}</span>
                   </div>
                   <div className="relative">
                     <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
                     <div className="absolute bottom-full right-0 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
                       <p className="font-black text-white uppercase tracking-widest mb-1">Weekly Video Quota</p>
-                      Your 5 weekly video slots reset every {usage?.customize?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
+                      Your 3 weekly video slots reset every {usage?.customize?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
                     </div>
                   </div>
                 </div>
@@ -719,13 +719,13 @@ export default function StudioPage() {
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
                     <span className="text-[10px] font-black text-primary">{usage?.faceless?.remaining ?? 7}</span>
                     <span className="text-[9px] font-black text-slate-400">/</span>
-                    <span className="text-[9px] font-black text-slate-500">{usage?.faceless?.limit ?? 7}</span>
+                    <span className="text-[9px] font-black text-slate-500">{usage?.faceless?.limit ?? 10}</span>
                   </div>
                   <div className="relative">
                     <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
                     <div className="absolute bottom-full right-0 mb-3 w-48 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
                       <p className="font-black text-white uppercase tracking-widest mb-1">Faceless Videos</p>
-                      Your 7 weekly faceless video slots reset every {usage?.faceless?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
+                      Your 10 weekly faceless video slots reset every {usage?.faceless?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
                     </div>
                   </div>
                 </div>
@@ -761,6 +761,7 @@ export default function StudioPage() {
                     >
                       <option value={10}>10 seconds</option>
                       <option value={15}>15 seconds</option>
+                      <option value={30}>30 seconds</option>
                     </select>
                   </div>
                 </div>
