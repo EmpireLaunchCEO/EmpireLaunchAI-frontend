@@ -31,10 +31,11 @@ import { API_URL } from '@/lib/config';
 
 import { PenSquare, Lightbulb, SendHorizonal, Scissors, Clapperboard, Info } from 'lucide-react';
 
-// Video mood/atmosphere options for the Faceless box (owner-locked set of exactly
-// seven lowercase keys — do NOT add/remove, no default/'auto'; backend task
-// b43c3309 validates this set). Default mood is 'energetic'.
-const FACELESS_MOODS = [
+// Video mood/atmosphere options, shared by the Faceless, Scene-Based and Neural
+// Twin boxes (owner-locked set of exactly seven lowercase keys — do NOT
+// add/remove, no default/'auto'; backend validates this set). Default mood is
+// 'energetic'.
+const VIDEO_MOODS = [
   { value: 'energetic', label: 'Energetic' },
   { value: 'sad', label: 'Sad' },
   { value: 'calm', label: 'Calm' },
@@ -287,6 +288,7 @@ export default function StudioPage() {
   // Synthesize Twin
   const [twinStatus, setTwinStatus] = useState<'idle' | 'synthesizing' | 'done' | 'error'>('idle');
   const [twinError, setTwinError] = useState<string | null>(null);
+  const [twinMood, setTwinMood] = useState<string>('energetic');
 
   const handleSynthesizeTwin = async () => {
     if (facialDnaUpload.status !== 'complete') return;
@@ -311,6 +313,7 @@ export default function StudioPage() {
           userId, // Real user — twin must land in THIS user's Library/Operations
           photoUrl: photoRef,
           photoPath: photoRef,
+          mood: twinMood,
           script: "Welcome to my Empire! This is my Neural Twin double, ready to market 24/7.",
         }),
       });
@@ -397,6 +400,7 @@ export default function StudioPage() {
   const [projectDuration, setProjectDuration] = useState('');
   const [projectVoice, setProjectVoice] = useState<'female' | 'male' | ''>('');
   const [projectTone, setProjectTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto' | ''>('');
+  const [projectMood, setProjectMood] = useState<string>('energetic');
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [isSubmittingProject, setIsSubmittingProject] = useState(false);
 
@@ -434,6 +438,7 @@ export default function StudioPage() {
           duration: projectDuration ? parseInt(projectDuration) : undefined,
           voice: projectVoice || undefined,
           tone: projectTone || undefined,
+          mood: projectMood || undefined,
           sourceImages: sceneUpload.metadata?.photoUrl ? [sceneUpload.metadata.photoUrl] : []
         })
       });
@@ -591,9 +596,9 @@ export default function StudioPage() {
 
                 {!activeProjectId ? (
                   <div className="space-y-3">
-                    {/* 1. Duration + voiceover + tone — at the very top, under the header */}
+                    {/* 1. Duration + voiceover + tone + mood — at the very top, under the header */}
                     <div className="flex flex-col gap-2">
-                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Duration &amp; Voiceover (optional)</span>
+                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Duration, Voice, Tone &amp; Mood (optional)</span>
                       <div className="flex flex-wrap gap-2">
                         <select
                           value={projectDuration}
@@ -627,6 +632,15 @@ export default function StudioPage() {
                           <option value="calm">Calm</option>
                           <option value="serious">Serious</option>
                           <option value="warm">Warm</option>
+                        </select>
+                        <select
+                          value={projectMood}
+                          onChange={(e) => setProjectMood(e.target.value)}
+                          className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                        >
+                          {VIDEO_MOODS.map((m) => (
+                            <option key={m.value} value={m.value}>{m.label}</option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -736,7 +750,7 @@ export default function StudioPage() {
                       onChange={(e) => setFacelessMood(e.target.value)}
                       className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
                     >
-                      {FACELESS_MOODS.map((m) => (
+                      {VIDEO_MOODS.map((m) => (
                         <option key={m.value} value={m.value}>{m.label}</option>
                       ))}
                     </select>
@@ -882,6 +896,19 @@ export default function StudioPage() {
                       <img src={facialDnaUpload.preview} alt="Uploaded facial photo" className="w-full h-full object-cover" />
                     </motion.div>
                   )}
+
+                  <div className="flex flex-col gap-2 max-w-sm mx-auto w-full">
+                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Mood</span>
+                    <select
+                      value={twinMood}
+                      onChange={(e) => setTwinMood(e.target.value)}
+                      className="bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                    >
+                      {VIDEO_MOODS.map((m) => (
+                        <option key={m.value} value={m.value}>{m.label}</option>
+                      ))}
+                    </select>
+                  </div>
 
                   <button
                     onClick={handleSynthesizeTwin}
