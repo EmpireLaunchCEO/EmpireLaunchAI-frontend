@@ -595,9 +595,13 @@ export default function StudioPage() {
                           onChange={(e) => setProjectDuration(e.target.value)}
                           className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
                         >
-                          <option value="">Auto duration</option>
-                          <option value="10">10 seconds</option>
-                          <option value="15">15 seconds</option>
+                          <option value="">Auto</option>
+                          <option value="30">30 seconds</option>
+                          <option value="60">1 min</option>
+                          <option value="120">2 min</option>
+                          <option value="180">3 min</option>
+                          <option value="240">4 min</option>
+                          <option value="300">5 min</option>
                         </select>
                         <select
                           value={projectVoice}
