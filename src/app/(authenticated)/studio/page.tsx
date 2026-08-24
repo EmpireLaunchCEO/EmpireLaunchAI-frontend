@@ -586,34 +586,7 @@ export default function StudioPage() {
 
                 {!activeProjectId ? (
                   <div className="space-y-3">
-                    {/* AI consultant chat — describes, suggests, remembers settled details */}
-                    <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={consultantSeed} onGenerate={handleSubmitProject} suppressWand onRefinedIdea={setRefinedVideoIdea} settledSettings={{ duration: projectDuration, voice: projectVoice, tone: projectTone }} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
-
-                    <input
-                      type="text"
-                      value={projectTitle}
-                      onChange={(e) => setProjectTitle(e.target.value)}
-                      placeholder="Project title (optional)"
-                      className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
-                    />
-                    <div className="relative">
-                      <textarea
-                        value={projectIdea}
-                        onChange={(e) => setProjectIdea(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendToConsultant(); } }}
-                        placeholder="Describe your video idea, then press Enter to send it to the AI consultant — it will ask a few sharp questions (with suggestions) and remember what you settle."
-                        rows={3}
-                        className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 pr-12 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30 resize-none"
-                      />
-                      <button
-                        onClick={handleSendToConsultant}
-                        disabled={!projectIdea.trim()}
-                        className="absolute bottom-3 right-3 p-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-                      >
-                        <SendHorizonal className="w-4 h-4" />
-                      </button>
-                    </div>
-                    {/* Duration + voiceover + tone */}
+                    {/* 1. Duration + voiceover + tone — at the very top, under the header */}
                     <div className="flex flex-col gap-2">
                       <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Duration &amp; Voiceover (optional)</span>
                       <div className="flex flex-wrap gap-2">
@@ -648,7 +621,29 @@ export default function StudioPage() {
                         </select>
                       </div>
                     </div>
-                    {/* Source image (screenshot) upload */}
+                    {/* 2. Describe-idea textarea + AI consultant combined (no Project Title box) */}
+                    <div className="space-y-3">
+                      <div className="relative">
+                        <textarea
+                          value={projectIdea}
+                          onChange={(e) => setProjectIdea(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendToConsultant(); } }}
+                          placeholder="Describe your video idea, then press Enter to send it to the AI consultant — it will ask a few sharp questions (with suggestions) and remember what you settle."
+                          rows={3}
+                          className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 pr-12 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30 resize-none"
+                        />
+                        <button
+                          onClick={handleSendToConsultant}
+                          disabled={!projectIdea.trim()}
+                          className="absolute bottom-3 right-3 p-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+                        >
+                          <SendHorizonal className="w-4 h-4" />
+                        </button>
+                      </div>
+                      {/* AI consultant chat — describes, suggests, remembers settled details */}
+                      <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={consultantSeed} onGenerate={handleSubmitProject} suppressWand onRefinedIdea={setRefinedVideoIdea} settledSettings={{ duration: projectDuration, voice: projectVoice, tone: projectTone }} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                    </div>
+                    {/* 3. Source image (screenshot) upload */}
                     <div className="space-y-3">
                       <FileUploadDropZone
                         type="source-image"
@@ -667,7 +662,7 @@ export default function StudioPage() {
                         </motion.div>
                       )}
                     </div>
-                    {/* Launch Project — submits the consultant-refined idea (or the raw text) */}
+                    {/* 4. Launch Project — submits the consultant-refined idea (or the raw text) */}
                     <button
                       onClick={() => handleSubmitProject(refinedVideoIdea || projectIdea)}
                       disabled={!projectIdea.trim() && !refinedVideoIdea || isSubmittingProject}
@@ -695,81 +690,7 @@ export default function StudioPage() {
                 )}
               </div>
 
-              {/* 2. Upload Video Box for Edits */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
-                <div className="absolute top-6 right-6 flex items-center gap-2">
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
-                    <span className="text-[10px] font-black text-primary">{usage?.enhanced?.remaining ?? '∞'}</span>
-                    <span className="text-[9px] font-black text-slate-400">/</span>
-                    <span className="text-[9px] font-black text-slate-500">{usage?.enhanced?.limit ?? '∞'}</span>
-                  </div>
-                  <div className="relative">
-                    <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
-                    <div className="absolute bottom-full right-0 mb-3 w-48 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
-                      <p className="font-black text-white uppercase tracking-widest mb-1">Video Edits</p>
-                      Unlimited AI video enhancements. No quota restrictions.
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                    <Scissors className="w-5 h-5 text-purple-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">AI Video Editor</h3>
-                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
-                      Upload raw clips — I'll apply the Empire Polish (Cuts, Captions, Music)
-                    </p>
-                  </div>
-                </div>
-
-                <FileUploadDropZone
-                  type="raw-video"
-                  state={rawVideoUpload}
-                  onFileSelect={handleRawVideoSelect}
-                  onRemove={handleRawVideoRemove}
-                  disabled={rawVideoUpload.status === 'uploading' || rawVideoUpload.status === 'processing'}
-                />
-
-                {editStatus === 'processing' && (
-                  <div className="flex flex-col items-center justify-center py-10 gap-3">
-                    <BrandedGlobe size="md" spinning={true} className="animate-pulse" />
-                    <p className="text-xs font-black text-foreground uppercase tracking-widest animate-pulse">Applying Empire Polish...</p>
-                    <p className="text-[10px] text-muted-foreground">Color grading, cuts, captions & music</p>
-                  </div>
-                )}
-                {editStatus === 'done' && (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                      <div>
-                        <p className="text-xs font-black text-emerald-400 uppercase tracking-wider">Edit Complete</p>
-                        <p className="text-[9px] font-bold text-emerald-500/70 uppercase tracking-wider mt-0.5">Ready to view on Operations</p>
-                      </div>
-                    </div>
-                    <Link href="/empire-center" className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
-                      <ChevronRight className="w-4 h-4 text-primary" />
-                      <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
-                    </Link>
-                    <button
-                      onClick={() => { setEditStatus('idle'); setRawVideoUpload(p => ({ ...p, status: 'idle', file: null, preview: null, metadata: null })); }}
-                      className="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-white/30 text-xs font-bold uppercase tracking-widest transition-all"
-                    >
-                      Edit Another Video
-                    </button>
-                  </div>
-                )}
-                {editStatus === 'error' && (
-                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center space-y-2">
-                    <p className="text-xs font-bold text-red-400">{editError || 'Enhancement failed'}</p>
-                    <button onClick={() => setEditStatus('idle')} className="text-[10px] text-red-400 underline">Dismiss</button>
-                  </div>
-                )}
-
-                <InlineConsultant context="editor" onGenerate={handleEnhanceVideo} isParentGenerating={editStatus === 'processing'} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
-              </div>
-
-              {/* 3. Faceless Content Creation Box */}
+              {/* 2. Faceless Content Creation Box */}
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
                 <div className="absolute top-6 right-6 flex items-center gap-2">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
@@ -895,7 +816,178 @@ export default function StudioPage() {
                 <InlineConsultant context="faceless" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
 
-              {/* Custom Design Input — Free-text Idea Entry */}
+              {/* 3. Neural Twin Section - Single Box with Active Badge */}
+              <div className="relative bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6 group">
+                <div className="absolute top-6 right-6 flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
+                      <span className="text-[10px] font-black text-primary">{usage?.neural?.remaining ?? 0}</span>
+                      <span className="text-[9px] font-black text-slate-400">/</span>
+                      <span className="text-[9px] font-black text-slate-500">{usage?.neural?.limit ?? 7}</span>
+                    </div>
+                    <div className="relative">
+                      <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                      <div className="absolute bottom-full right-0 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                        <p className="font-black text-white uppercase tracking-widest mb-1">Neural Twin Quota</p>
+                        Your 7 weekly Neural Twin slots reset every {usage?.neural?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
+                      </div>
+                    </div>
+                  </div>
+                  {facialDnaUpload.status === 'complete' && (
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest text-shadow-glow">active</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">
+                    <Stars className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl md:text-2xl font-black text-white italic">Neural Twin.</h3>
+                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
+                  </div>
+                </div>
+
+                <p className="text-sm text-slate-400 leading-relaxed italic max-w-2xl">
+                  "Upload a clear photo of yourself, and I'll create your Neural Twin. I can then generate high-fidelity marketing videos with perfect lip-syncing for any script you provide."
+                </p>
+
+                <div className="space-y-4">
+                  <FileUploadDropZone
+                    type="facial-dna"
+                    state={facialDnaUpload}
+                    onFileSelect={handleFacialDnaSelect}
+                    onRemove={handleFacialDnaRemove}
+                    disabled={facialDnaUpload.status === 'uploading' || facialDnaUpload.status === 'processing'}
+                  />
+
+                  {facialDnaUpload.preview && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 mx-auto"
+                    >
+                      <img src={facialDnaUpload.preview} alt="Uploaded facial photo" className="w-full h-full object-cover" />
+                    </motion.div>
+                  )}
+
+                  <button
+                    onClick={handleSynthesizeTwin}
+                    disabled={facialDnaUpload.status !== 'complete' || twinStatus === 'synthesizing'}
+                    className="w-full max-w-sm mx-auto flex justify-center items-center gap-2 py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    {twinStatus === 'synthesizing' ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Synthesizing...
+                      </>
+                    ) : facialDnaUpload.status === 'complete' ? 'Synthesize Twin Double' : 'Upload a photo first'}
+                  </button>
+
+                  {twinStatus === 'done' && (
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="max-w-sm mx-auto space-y-3">
+                      <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
+                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                        <div>
+                          <p className="text-xs font-black text-emerald-400 uppercase tracking-wider">Neural Twin Ready</p>
+                          <p className="text-[9px] font-bold text-emerald-500/70 uppercase tracking-wider mt-0.5">Saved to your Library — view on Operations</p>
+                        </div>
+                      </div>
+                      <Link href="/empire-center" className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
+                        <ChevronRight className="w-4 h-4 text-primary" />
+                        <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
+                      </Link>
+                    </motion.div>
+                  )}
+                  {twinStatus === 'error' && (
+                    <div className="max-w-sm mx-auto p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center space-y-2">
+                      <p className="text-xs font-bold text-red-400">{twinError || 'Neural Twin synthesis failed. Please try again.'}</p>
+                      <button onClick={() => setTwinStatus('idle')} className="text-[10px] text-red-400 underline">Dismiss</button>
+                    </div>
+                  )}
+                </div>
+
+                <InlineConsultant context="neural-twin" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+              </div>
+
+              {/* 4. Upload Video Box for Edits */}
+              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
+                <div className="absolute top-6 right-6 flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
+                    <span className="text-[10px] font-black text-primary">{usage?.enhanced?.remaining ?? '∞'}</span>
+                    <span className="text-[9px] font-black text-slate-400">/</span>
+                    <span className="text-[9px] font-black text-slate-500">{usage?.enhanced?.limit ?? '∞'}</span>
+                  </div>
+                  <div className="relative">
+                    <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
+                    <div className="absolute bottom-full right-0 mb-3 w-48 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
+                      <p className="font-black text-white uppercase tracking-widest mb-1">Video Edits</p>
+                      Unlimited AI video enhancements. No quota restrictions.
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                    <Scissors className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">AI Video Editor</h3>
+                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
+                      Upload raw clips — I'll apply the Empire Polish (Cuts, Captions, Music)
+                    </p>
+                  </div>
+                </div>
+
+                <FileUploadDropZone
+                  type="raw-video"
+                  state={rawVideoUpload}
+                  onFileSelect={handleRawVideoSelect}
+                  onRemove={handleRawVideoRemove}
+                  disabled={rawVideoUpload.status === 'uploading' || rawVideoUpload.status === 'processing'}
+                />
+
+                {editStatus === 'processing' && (
+                  <div className="flex flex-col items-center justify-center py-10 gap-3">
+                    <BrandedGlobe size="md" spinning={true} className="animate-pulse" />
+                    <p className="text-xs font-black text-foreground uppercase tracking-widest animate-pulse">Applying Empire Polish...</p>
+                    <p className="text-[10px] text-muted-foreground">Color grading, cuts, captions & music</p>
+                  </div>
+                )}
+                {editStatus === 'done' && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                      <div>
+                        <p className="text-xs font-black text-emerald-400 uppercase tracking-wider">Edit Complete</p>
+                        <p className="text-[9px] font-bold text-emerald-500/70 uppercase tracking-wider mt-0.5">Ready to view on Operations</p>
+                      </div>
+                    </div>
+                    <Link href="/empire-center" className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
+                      <ChevronRight className="w-4 h-4 text-primary" />
+                      <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
+                    </Link>
+                    <button
+                      onClick={() => { setEditStatus('idle'); setRawVideoUpload(p => ({ ...p, status: 'idle', file: null, preview: null, metadata: null })); }}
+                      className="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-white/30 text-xs font-bold uppercase tracking-widest transition-all"
+                    >
+                      Edit Another Video
+                    </button>
+                  </div>
+                )}
+                {editStatus === 'error' && (
+                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center space-y-2">
+                    <p className="text-xs font-bold text-red-400">{editError || 'Enhancement failed'}</p>
+                    <button onClick={() => setEditStatus('idle')} className="text-[10px] text-red-400 underline">Dismiss</button>
+                  </div>
+                )}
+
+                <InlineConsultant context="editor" onGenerate={handleEnhanceVideo} isParentGenerating={editStatus === 'processing'} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+              </div>
+
+              {/* 5. Custom Design Input — Free-text Idea Entry */}
               <div className={cn(
                 "bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group",
                 isCatalyst ? "opacity-40 grayscale pointer-events-none overflow-hidden" : ""
@@ -997,102 +1089,6 @@ export default function StudioPage() {
                 <InlineConsultant context="design" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
 
-              {/* Neural Twin Section - Single Box with Active Badge */}
-              <div className="relative bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6 group">
-                <div className="absolute top-6 right-6 flex items-center gap-3">
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
-                      <span className="text-[10px] font-black text-primary">{usage?.neural?.remaining ?? 0}</span>
-                      <span className="text-[9px] font-black text-slate-400">/</span>
-                      <span className="text-[9px] font-black text-slate-500">{usage?.neural?.limit ?? 7}</span>
-                    </div>
-                    <div className="relative">
-                      <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
-                      <div className="absolute bottom-full right-0 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
-                        <p className="font-black text-white uppercase tracking-widest mb-1">Neural Twin Quota</p>
-                        Your 7 weekly Neural Twin slots reset every {usage?.neural?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
-                      </div>
-                    </div>
-                  </div>
-                  {facialDnaUpload.status === 'complete' && (
-                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest text-shadow-glow">active</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">
-                    <Stars className="w-5 h-5 md:w-6 md:h-6 text-purple-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl md:text-2xl font-black text-white italic">Neural Twin.</h3>
-                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-primary/60">Perfect Lip-Sync AI Video</p>
-                  </div>
-                </div>
-
-                <p className="text-sm text-slate-400 leading-relaxed italic max-w-2xl">
-                  "Upload a clear photo of yourself, and I'll create your Neural Twin. I can then generate high-fidelity marketing videos with perfect lip-syncing for any script you provide."
-                </p>
-
-                <div className="space-y-4">
-                  <FileUploadDropZone
-                    type="facial-dna"
-                    state={facialDnaUpload}
-                    onFileSelect={handleFacialDnaSelect}
-                    onRemove={handleFacialDnaRemove}
-                    disabled={facialDnaUpload.status === 'uploading' || facialDnaUpload.status === 'processing'}
-                  />
-
-                  {facialDnaUpload.preview && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 mx-auto"
-                    >
-                      <img src={facialDnaUpload.preview} alt="Uploaded facial photo" className="w-full h-full object-cover" />
-                    </motion.div>
-                  )}
-
-                  <button
-                    onClick={handleSynthesizeTwin}
-                    disabled={facialDnaUpload.status !== 'complete' || twinStatus === 'synthesizing'}
-                    className="w-full max-w-sm mx-auto flex justify-center items-center gap-2 py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    {twinStatus === 'synthesizing' ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Synthesizing...
-                      </>
-                    ) : facialDnaUpload.status === 'complete' ? 'Synthesize Twin Double' : 'Upload a photo first'}
-                  </button>
-
-                  {twinStatus === 'done' && (
-                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="max-w-sm mx-auto space-y-3">
-                      <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                        <div>
-                          <p className="text-xs font-black text-emerald-400 uppercase tracking-wider">Neural Twin Ready</p>
-                          <p className="text-[9px] font-bold text-emerald-500/70 uppercase tracking-wider mt-0.5">Saved to your Library — view on Operations</p>
-                        </div>
-                      </div>
-                      <Link href="/empire-center" className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
-                        <ChevronRight className="w-4 h-4 text-primary" />
-                        <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
-                      </Link>
-                    </motion.div>
-                  )}
-                  {twinStatus === 'error' && (
-                    <div className="max-w-sm mx-auto p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center space-y-2">
-                      <p className="text-xs font-bold text-red-400">{twinError || 'Neural Twin synthesis failed. Please try again.'}</p>
-                      <button onClick={() => setTwinStatus('idle')} className="text-[10px] text-red-400 underline">Dismiss</button>
-                    </div>
-                  )}
-                </div>
-
-                <InlineConsultant context="neural-twin" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
-              </div>
 
             </motion.div>
           </div>
