@@ -31,6 +31,19 @@ import { API_URL } from '@/lib/config';
 
 import { PenSquare, Lightbulb, SendHorizonal, Scissors, Clapperboard, Info } from 'lucide-react';
 
+// Video mood/atmosphere options for the Faceless box (owner-locked set of seven
+// lowercase keys — do NOT add/remove; backend task b43c3309 validates this set).
+const FACELESS_MOODS = [
+  { value: 'auto', label: 'Auto mood' },
+  { value: 'energetic', label: 'Energetic' },
+  { value: 'sad', label: 'Sad' },
+  { value: 'calm', label: 'Calm' },
+  { value: 'romantic', label: 'Romantic' },
+  { value: 'playful', label: 'Playful / Funny' },
+  { value: 'dramatic', label: 'Dramatic' },
+  { value: 'inspiring', label: 'Inspiring' },
+] as const;
+
 const getAuthHeader = (): string => {
   if (typeof window !== 'undefined') {
     let token = localStorage.getItem('empire_auth_token');
@@ -87,6 +100,8 @@ export default function StudioPage() {
   // Backend-supported: gender female|male, tone enthusiastic|calm|serious|warm|auto.
   const [facelessVoice, setFacelessVoice] = useState<'female' | 'male' | 'auto'>('auto');
   const [facelessTone, setFacelessTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto'>('auto');
+  const [facelessMood, setFacelessMood] = useState<string>('auto');
+  const [facelessDuration, setFacelessDuration] = useState<number>(15);
   const [facelessUpload, setFacelessUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [sceneUpload, setSceneUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
 
@@ -227,6 +242,7 @@ export default function StudioPage() {
     customize: { remaining: number; limit: number | string; nextReset?: string };
     enhanced: { remaining: number | string; limit: number | string };
     design: { remaining: number; limit: number | string; nextReset?: string };
+    faceless: { remaining: number | string; limit: number | string; nextReset?: string };
   } | null>(null);
 
   const fetchUsage = async () => {
@@ -251,7 +267,8 @@ export default function StudioPage() {
           neural: { ...data.neural, nextReset: formatReset(data.neural.nextReset) },
           customize: { ...data.customize, nextReset: formatReset(data.customize.nextReset) },
           enhanced: { remaining: data.enhanced?.remaining ?? '∞', limit: data.enhanced?.limit ?? '∞' },
-          design: { ...data.design, nextReset: formatReset(data.design.nextReset) }
+          design: { ...data.design, nextReset: formatReset(data.design.nextReset) },
+          faceless: { ...data.faceless, nextReset: formatReset(data.faceless?.nextReset) }
         });
       }
     } catch (error) {
@@ -453,9 +470,16 @@ export default function StudioPage() {
         body: JSON.stringify({
           type: 'faceless',
           description: facelessIdea.trim(),
-          payload: { category: 'faceless-video', isCatalyst: isCatalyst },
+          payload: {
+            category: 'faceless-video',
+            isCatalyst: isCatalyst,
+            mood: facelessMood === 'auto' ? undefined : facelessMood,
+            duration: facelessDuration
+          },
           voice: facelessVoice === 'auto' ? undefined : facelessVoice,
           tone: facelessTone === 'auto' ? undefined : facelessTone,
+          mood: facelessMood === 'auto' ? undefined : facelessMood,
+          duration: facelessDuration,
           sourceImages: facelessUpload.metadata?.photoUrl ? [facelessUpload.metadata.photoUrl] : []
         })
       });
@@ -593,14 +617,15 @@ export default function StudioPage() {
                     <div className="flex flex-col gap-2">
                       <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Duration &amp; Voiceover (optional)</span>
                       <div className="flex flex-wrap gap-2">
-                        <input
-                          type="number"
+                        <select
                           value={projectDuration}
                           onChange={(e) => setProjectDuration(e.target.value)}
-                          placeholder="Duration (sec, optional)"
-                          min={5}
-                          className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
-                        />
+                          className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                        >
+                          <option value="">Auto duration</option>
+                          <option value="10">10 seconds</option>
+                          <option value="15">15 seconds</option>
+                        </select>
                         <select
                           value={projectVoice}
                           onChange={(e) => setProjectVoice(e.target.value as 'female' | 'male' | '')}
@@ -748,15 +773,15 @@ export default function StudioPage() {
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
                 <div className="absolute top-6 right-6 flex items-center gap-2">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
-                    <span className="text-[10px] font-black text-primary">∞</span>
+                    <span className="text-[10px] font-black text-primary">{usage?.faceless?.remaining ?? 7}</span>
                     <span className="text-[9px] font-black text-slate-400">/</span>
-                    <span className="text-[9px] font-black text-slate-500">∞</span>
+                    <span className="text-[9px] font-black text-slate-500">{usage?.faceless?.limit ?? 7}</span>
                   </div>
                   <div className="relative">
                     <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
                     <div className="absolute bottom-full right-0 mb-3 w-48 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
                       <p className="font-black text-white uppercase tracking-widest mb-1">Faceless Videos</p>
-                      Unlimited faceless content generation. No quota restrictions.
+                      Your 7 weekly faceless video slots reset every {usage?.faceless?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
                     </div>
                   </div>
                 </div>
@@ -772,6 +797,29 @@ export default function StudioPage() {
                   </div>
                 </div>
 
+                {/* Mood + Duration selectors (Faceless) */}
+                <div className="flex flex-col gap-2">
+                  <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Mood &amp; Length</span>
+                  <div className="flex flex-wrap gap-2">
+                    <select
+                      value={facelessMood}
+                      onChange={(e) => setFacelessMood(e.target.value)}
+                      className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                    >
+                      {FACELESS_MOODS.map((m) => (
+                        <option key={m.value} value={m.value}>{m.label}</option>
+                      ))}
+                    </select>
+                    <select
+                      value={facelessDuration}
+                      onChange={(e) => setFacelessDuration(Number(e.target.value))}
+                      className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                    >
+                      <option value={10}>10 seconds</option>
+                      <option value={15}>15 seconds</option>
+                    </select>
+                  </div>
+                </div>
                 {/* Voiceover (shared control) */}
                 <div className="flex flex-col gap-2">
                   <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Voiceover (optional)</span>
@@ -817,27 +865,25 @@ export default function StudioPage() {
                     </motion.div>
                   )}
                 </div>
-                <div className="relative">
-                  <textarea
-                    value={facelessIdea}
-                    onChange={(e) => setFacelessIdea(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleFacelessSubmit(); } }}
-                    placeholder={isCatalyst ? "e.g. 3 reasons why most 9-5s are a trap, high-impact b-roll, professional voiceover, strong 'Link in Bio' CTA..." : "e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts..."}
-                    disabled={isSubmittingFaceless}
-                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
-                  />
-                  <button
-                    onClick={handleFacelessSubmit}
-                    disabled={!facelessIdea.trim() || isSubmittingFaceless}
-                    className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    {isSubmittingFaceless ? (
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <SendHorizonal className="w-4 h-4" />
-                    )}
-                  </button>
-                </div>
+                <textarea
+                  value={facelessIdea}
+                  onChange={(e) => setFacelessIdea(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleFacelessSubmit(); } }}
+                  placeholder={isCatalyst ? "e.g. 3 reasons why most 9-5s are a trap, high-impact b-roll, professional voiceover, strong 'Link in Bio' CTA..." : "e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts..."}
+                  disabled={isSubmittingFaceless}
+                  className="w-full bg-theme-background border border-theme rounded-2xl p-4 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                />
+                <button
+                  onClick={handleFacelessSubmit}
+                  disabled={!facelessIdea.trim() || isSubmittingFaceless}
+                  className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
+                >
+                  {isSubmittingFaceless ? (
+                    <Loader2 className="w-4 h-4 animate-spin mx-auto" />
+                  ) : (
+                    'Launch Project'
+                  )}
+                </button>
 
                 {facelessSubmitted && (
                   <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
