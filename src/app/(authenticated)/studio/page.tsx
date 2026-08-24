@@ -31,10 +31,10 @@ import { API_URL } from '@/lib/config';
 
 import { PenSquare, Lightbulb, SendHorizonal, Scissors, Clapperboard, Info } from 'lucide-react';
 
-// Video mood/atmosphere options for the Faceless box (owner-locked set of seven
-// lowercase keys — do NOT add/remove; backend task b43c3309 validates this set).
+// Video mood/atmosphere options for the Faceless box (owner-locked set of exactly
+// seven lowercase keys — do NOT add/remove, no default/'auto'; backend task
+// b43c3309 validates this set). Default mood is 'energetic'.
 const FACELESS_MOODS = [
-  { value: 'auto', label: 'Auto mood' },
   { value: 'energetic', label: 'Energetic' },
   { value: 'sad', label: 'Sad' },
   { value: 'calm', label: 'Calm' },
@@ -100,7 +100,7 @@ export default function StudioPage() {
   // Backend-supported: gender female|male, tone enthusiastic|calm|serious|warm|auto.
   const [facelessVoice, setFacelessVoice] = useState<'female' | 'male' | 'auto'>('auto');
   const [facelessTone, setFacelessTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto'>('auto');
-  const [facelessMood, setFacelessMood] = useState<string>('auto');
+  const [facelessMood, setFacelessMood] = useState<string>('energetic');
   const [facelessDuration, setFacelessDuration] = useState<number>(15);
   const [facelessUpload, setFacelessUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [sceneUpload, setSceneUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
@@ -473,12 +473,12 @@ export default function StudioPage() {
           payload: {
             category: 'faceless-video',
             isCatalyst: isCatalyst,
-            mood: facelessMood === 'auto' ? undefined : facelessMood,
+            mood: facelessMood,
             duration: facelessDuration
           },
           voice: facelessVoice === 'auto' ? undefined : facelessVoice,
           tone: facelessTone === 'auto' ? undefined : facelessTone,
-          mood: facelessMood === 'auto' ? undefined : facelessMood,
+          mood: facelessMood,
           duration: facelessDuration,
           sourceImages: facelessUpload.metadata?.photoUrl ? [facelessUpload.metadata.photoUrl] : []
         })
