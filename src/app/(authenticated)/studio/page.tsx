@@ -196,7 +196,11 @@ export default function StudioPage() {
       if (!response.ok) throw new Error('Upload failed');
       
       const data = await response.json();
-      setDesignUpload(prev => ({ ...prev, status: 'complete', progress: 100, metadata: data }));
+      // upload-photo returns the stored R2/photo path — normalize it (like
+      // handleSourceImageSelect) so handleCustomIdeaSubmit can send the real
+      // URL to the backend instead of a local blob preview.
+      const photoUrl = data?.photoUrl || data?.fileUrl || data?.url || '';
+      setDesignUpload(prev => ({ ...prev, status: 'complete', progress: 100, metadata: { ...data, photoUrl } }));
     } catch (error) {
       console.error('Design upload error:', error);
       setDesignUpload(prev => ({ ...prev, status: 'error' }));
@@ -515,7 +519,8 @@ export default function StudioPage() {
             category: 'custom-design',
             hasUpload: designUpload.status === 'complete' || designUpload.status === 'selected',
             uploadPreview: designUpload.preview
-          }
+          },
+          sourceImages: designUpload.metadata?.photoUrl ? [designUpload.metadata.photoUrl] : []
         })
       });
       if (!res.ok) throw new Error('Approval creation failed');
