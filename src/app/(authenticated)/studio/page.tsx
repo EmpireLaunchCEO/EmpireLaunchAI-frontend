@@ -586,34 +586,7 @@ export default function StudioPage() {
 
                 {!activeProjectId ? (
                   <div className="space-y-3">
-                    {/* AI consultant chat — describes, suggests, remembers settled details */}
-                    <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={consultantSeed} onGenerate={handleSubmitProject} suppressWand onRefinedIdea={setRefinedVideoIdea} settledSettings={{ duration: projectDuration, voice: projectVoice, tone: projectTone }} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
-
-                    <input
-                      type="text"
-                      value={projectTitle}
-                      onChange={(e) => setProjectTitle(e.target.value)}
-                      placeholder="Project title (optional)"
-                      className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
-                    />
-                    <div className="relative">
-                      <textarea
-                        value={projectIdea}
-                        onChange={(e) => setProjectIdea(e.target.value)}
-                        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendToConsultant(); } }}
-                        placeholder="Describe your video idea, then press Enter to send it to the AI consultant — it will ask a few sharp questions (with suggestions) and remember what you settle."
-                        rows={3}
-                        className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 pr-12 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30 resize-none"
-                      />
-                      <button
-                        onClick={handleSendToConsultant}
-                        disabled={!projectIdea.trim()}
-                        className="absolute bottom-3 right-3 p-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-                      >
-                        <SendHorizonal className="w-4 h-4" />
-                      </button>
-                    </div>
-                    {/* Duration + voiceover + tone */}
+                    {/* 1. Duration + voiceover + tone — at the very top, under the header */}
                     <div className="flex flex-col gap-2">
                       <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Duration &amp; Voiceover (optional)</span>
                       <div className="flex flex-wrap gap-2">
@@ -648,7 +621,29 @@ export default function StudioPage() {
                         </select>
                       </div>
                     </div>
-                    {/* Source image (screenshot) upload */}
+                    {/* 2. Describe-idea textarea + AI consultant combined (no Project Title box) */}
+                    <div className="space-y-3">
+                      <div className="relative">
+                        <textarea
+                          value={projectIdea}
+                          onChange={(e) => setProjectIdea(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendToConsultant(); } }}
+                          placeholder="Describe your video idea, then press Enter to send it to the AI consultant — it will ask a few sharp questions (with suggestions) and remember what you settle."
+                          rows={3}
+                          className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 pr-12 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30 resize-none"
+                        />
+                        <button
+                          onClick={handleSendToConsultant}
+                          disabled={!projectIdea.trim()}
+                          className="absolute bottom-3 right-3 p-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+                        >
+                          <SendHorizonal className="w-4 h-4" />
+                        </button>
+                      </div>
+                      {/* AI consultant chat — describes, suggests, remembers settled details */}
+                      <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={consultantSeed} onGenerate={handleSubmitProject} suppressWand onRefinedIdea={setRefinedVideoIdea} settledSettings={{ duration: projectDuration, voice: projectVoice, tone: projectTone }} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                    </div>
+                    {/* 3. Source image (screenshot) upload */}
                     <div className="space-y-3">
                       <FileUploadDropZone
                         type="source-image"
@@ -667,7 +662,7 @@ export default function StudioPage() {
                         </motion.div>
                       )}
                     </div>
-                    {/* Launch Project — submits the consultant-refined idea (or the raw text) */}
+                    {/* 4. Launch Project — submits the consultant-refined idea (or the raw text) */}
                     <button
                       onClick={() => handleSubmitProject(refinedVideoIdea || projectIdea)}
                       disabled={!projectIdea.trim() && !refinedVideoIdea || isSubmittingProject}
