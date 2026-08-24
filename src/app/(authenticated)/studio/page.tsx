@@ -31,7 +31,8 @@ import { API_URL } from '@/lib/config';
 
 import { PenSquare, Lightbulb, SendHorizonal, Scissors, Clapperboard, Info } from 'lucide-react';
 
-// Video mood/atmosphere options for the Faceless box (owner: "energetic, sad...").
+// Video mood/atmosphere options for the Faceless box (owner-locked set of seven
+// lowercase keys — do NOT add/remove; backend task b43c3309 validates this set).
 const FACELESS_MOODS = [
   { value: 'auto', label: 'Auto mood' },
   { value: 'energetic', label: 'Energetic' },
@@ -41,9 +42,6 @@ const FACELESS_MOODS = [
   { value: 'playful', label: 'Playful / Funny' },
   { value: 'dramatic', label: 'Dramatic' },
   { value: 'inspiring', label: 'Inspiring' },
-  { value: 'dreamy', label: 'Dreamy' },
-  { value: 'dark', label: 'Dark' },
-  { value: 'bold', label: 'Bold' },
 ] as const;
 
 const getAuthHeader = (): string => {
