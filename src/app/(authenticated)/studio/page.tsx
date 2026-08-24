@@ -610,8 +610,6 @@ export default function StudioPage() {
                           <option value="60">1 min</option>
                           <option value="120">2 min</option>
                           <option value="180">3 min</option>
-                          <option value="240">4 min</option>
-                          <option value="300">5 min</option>
                         </select>
                         <select
                           value={projectVoice}
