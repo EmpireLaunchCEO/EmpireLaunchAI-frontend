@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -29,7 +29,7 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 
-import { BarChart3, PenSquare, Lightbulb, SendHorizonal, Scissors, MonitorPlay, Clapperboard, Info } from 'lucide-react';
+import { PenSquare, Lightbulb, SendHorizonal, Scissors, Clapperboard, Info } from 'lucide-react';
 
 const getAuthHeader = (): string => {
   if (typeof window !== 'undefined') {
@@ -83,12 +83,8 @@ export default function StudioPage() {
   const [rawVideoUpload, setRawVideoUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [designUpload, setDesignUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [activeRenderType, setActiveRenderType] = useState<'facial-dna' | 'raw-video'>('facial-dna');
-  // Shared voiceover + duration + screenshot controls (Customize / Faceless / Scene).
+  // Shared voiceover + duration + screenshot controls (Scene / Faceless).
   // Backend-supported: gender female|male, tone enthusiastic|calm|serious|warm|auto.
-  const [customizeDuration, setCustomizeDuration] = useState('');
-  const [customizeVoice, setCustomizeVoice] = useState<'female' | 'male' | 'auto'>('auto');
-  const [customizeTone, setCustomizeTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto'>('auto');
-  const [customizeUpload, setCustomizeUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [facelessVoice, setFacelessVoice] = useState<'female' | 'male' | 'auto'>('auto');
   const [facelessTone, setFacelessTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto'>('auto');
   const [facelessUpload, setFacelessUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
@@ -369,28 +365,12 @@ export default function StudioPage() {
   const [isSubmittingIdea, setIsSubmittingIdea] = useState(false);
   const [ideaSubmitted, setIdeaSubmitted] = useState(false);
 
-  // New Content Creation States
-  const [customVideoIdea, setCustomVideoIdea] = useState('');
-  const [videoIdeaSubmitted, setVideoIdeaSubmitted] = useState(false);
-
   const [facelessIdea, setFacelessIdea] = useState('');
   const [isSubmittingFaceless, setIsSubmittingFaceless] = useState(false);
   const [facelessSubmitted, setFacelessSubmitted] = useState(false);
 
-  // Shared idea for Consultant review flow
-  const [sharedVideoIdea, setSharedVideoIdea] = useState('');
-  const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
-  const [videoGenerated, setVideoGenerated] = useState(false);
-  const [generationError, setGenerationError] = useState<string | null>(null);
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-
-  // Render log + rendering state — used by handleGenerateVideo's live pipeline
-  // log (addLog) and the elapsed render timer. Declared here so the Customize
-  // Video wand path never throws on undefined setters.
-  const [renderLogs, setRenderLogs] = useState<{ id: string; timestamp: string; action: string; status: 'processing' | 'success' | 'error'; details?: string; type?: string }[]>([]);
-  const [isRendering, setIsRendering] = useState(false);
-
-  // Scene-based video project
+  // Scene-based video project — the SINGLE video builder (consultant + controls
+  // folded in from the removed Customize Video box).
   const [projectTitle, setProjectTitle] = useState('');
   const [projectIdea, setProjectIdea] = useState('');
   const [projectDuration, setProjectDuration] = useState('');
@@ -399,107 +379,24 @@ export default function StudioPage() {
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [isSubmittingProject, setIsSubmittingProject] = useState(false);
 
-  // Unified Option A: the Customize Video flow now generates through the
-  // Scene-Based engine (`/api/studio/video-project`) instead of single-shot
-  // Sora. This holds the resulting scene project's id for progress display.
-  const [customizeProjectId, setCustomizeProjectId] = useState<string | null>(null);
-  // The refined idea surfaced by the consultant chat (conversation summary).
+  // The refined idea surfaced by the AI consultant chat (conversation summary).
   // A "Launch Project" button (not the wand) submits this via the scene engine.
   const [refinedVideoIdea, setRefinedVideoIdea] = useState('');
+  // The raw idea to seed the consultant chat (only sent to the AI on explicit
+  // Enter/submit — never on every keystroke).
+  const [consultantSeed, setConsultantSeed] = useState('');
 
-  const pollingRef = useRef<NodeJS.Timeout | null>(null);
-  const ACTIVE_CREATION_KEY = 'empire_active_creation';
-
-  // Resume polling if user closed/reopened app during generation
-  useEffect(() => {
-    const storedCreationId = localStorage.getItem(ACTIVE_CREATION_KEY);
-    if (!storedCreationId) return;
-
-    const resumePolling = async () => {
-      try {
-        const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
-        const pollRes = await fetch(`${API_URL}/api/studio/creation/${storedCreationId}`, {
-          headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
-        });
-        if (!pollRes.ok) { localStorage.removeItem(ACTIVE_CREATION_KEY); return; }
-        const pollData = await pollRes.json();
-
-        if (pollData.status === 'completed') {
-          localStorage.removeItem(ACTIVE_CREATION_KEY);
-          setIsGeneratingVideo(false);
-          setVideoGenerated(true);
-          setCreatedAssetId(pollData.fileUrl || pollData.id || null);
-        } else if (pollData.status === 'error') {
-          localStorage.removeItem(ACTIVE_CREATION_KEY);
-          const errMsg = pollData.metadata?.error || 'Video generation failed';
-          setGenerationError(errMsg);
-          setIsGeneratingVideo(false);
-        } else if (pollData.status === 'processing') {
-          // Resume polling — same logic as new generation
-          setIsGeneratingVideo(true);
-          setVideoGenerated(false);
-          setGenerationError(null);
-
-          const pollForCompletion = async () => {
-            try {
-              const pRes = await fetch(`${API_URL}/api/studio/creation/${storedCreationId}`, {
-                headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
-              });
-              if (!pRes.ok) return;
-              const pData = await pRes.json();
-              if (pData.status === 'completed') {
-                if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
-                localStorage.removeItem(ACTIVE_CREATION_KEY);
-                setIsGeneratingVideo(false);
-                setVideoGenerated(true);
-                setCreatedAssetId(pData.fileUrl || pData.id || null);
-              } else if (pData.status === 'error') {
-                if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; }
-                localStorage.removeItem(ACTIVE_CREATION_KEY);
-                setGenerationError(pData.metadata?.error || 'Video generation failed');
-                setIsGeneratingVideo(false);
-              }
-            } catch { /* silent retry */ }
-          };
-          pollForCompletion();
-          pollingRef.current = setInterval(pollForCompletion, 3000);
-        }
-      } catch {
-        localStorage.removeItem(ACTIVE_CREATION_KEY);
-      }
-    };
-
-    resumePolling();
-  }, []);
-
-  // Cleanup polling on unmount
-  useEffect(() => {
-    return () => {
-      if (pollingRef.current) clearInterval(pollingRef.current);
-    };
-  }, []);
-  // Progress timer — ticks every 5s while generating (pipeline takes 70-100s)
-  useEffect(() => {
-    if (!isGeneratingVideo) { setElapsedSeconds(0); return; }
-    setElapsedSeconds(0);
-    const interval = setInterval(() => {
-      setElapsedSeconds(prev => Math.min(prev + 5, 120));
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isGeneratingVideo]);
-
-  // Handle Custom Video: Send idea to Consultant for review instead of directly generating
-  const handleCustomVideoSubmit = () => {
-    if (!customVideoIdea.trim()) return;
-    // Send the idea to the Consultant for review/refinement
-    setSharedVideoIdea(customVideoIdea.trim());
-    setCustomVideoIdea('');
-    setVideoGenerated(false);
+  // Send the raw textarea idea to the AI consultant for refinement.
+  const handleSendToConsultant = () => {
+    if (!projectIdea.trim()) return;
+    setConsultantSeed(projectIdea.trim());
+    setProjectIdea('');
   };
 
-  // Submit scene-based video project
-  const handleSubmitProject = async () => {
-    if (!projectIdea.trim() || isSubmittingProject) return;
+  // Submit the (consultant-refined) video idea through the Scene-Based engine.
+  const handleSubmitProject = async (finalIdea?: string) => {
+    const ideaToUse = (finalIdea && finalIdea.trim()) || projectIdea.trim();
+    if (!ideaToUse || isSubmittingProject) return;
     setIsSubmittingProject(true);
     try {
       const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
@@ -512,7 +409,7 @@ export default function StudioPage() {
         },
         body: JSON.stringify({
           title: projectTitle.trim() || 'Untitled Project',
-          idea: projectIdea.trim(),
+          idea: ideaToUse,
           duration: projectDuration ? parseInt(projectDuration) : undefined,
           voice: projectVoice || undefined,
           tone: projectTone || undefined,
@@ -521,7 +418,18 @@ export default function StudioPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        setActiveProjectId(data.projectId || data.id);
+        const pid = data.projectId || data.id;
+        setActiveProjectId(pid);
+        // Persist fast-path entry so Operations can show it while rendering.
+        if (pid) {
+          try {
+            const completed = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
+            completed.push({ id: pid, url: '', ts: Date.now(), status: 'processing' });
+            localStorage.setItem('empire_completed_projects', JSON.stringify(completed.slice(-10)));
+          } catch {}
+        }
+      } else {
+        console.error('Scene project creation failed:', await res.text());
       }
     } catch (err) {
       console.error('Failed to create video project:', err);
@@ -529,71 +437,6 @@ export default function StudioPage() {
       setIsSubmittingProject(false);
     }
   };
-
-  // Called by InlineConsultant's "Generate Video" wand after refinement.
-  // OPTION A (unified): the refined idea is submitted to the Scene-Based
-  // engine (`/api/studio/video-project`) with the user's duration + voice +
-  // tone, so the wand produces a scene-structured ~target-length video. The
-  // single-shot Sora path (`/api/studio/process`) is retired as the submission
-  // target; progress is rendered via VideoProjectProgress (customizeProjectId).
-  const handleGenerateVideo = async (finalIdea: string) => {
-    if (!finalIdea?.trim()) return;
-    setIsGeneratingVideo(true);
-    setGenerationError(null);
-    setVideoGenerated(false);
-    setCustomizeProjectId(null);
-    setRefinedVideoIdea('');
-
-    try {
-      const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
-      const res = await fetch(`${API_URL}/api/studio/video-project`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': getAuthHeader(),
-          'x-user-id': userId
-        },
-        body: JSON.stringify({
-          title: (sharedVideoIdea || 'Customized Video').slice(0, 80) || 'Customized Video',
-          idea: finalIdea.trim(),
-          duration: customizeDuration ? Number(customizeDuration) : undefined,
-          voice: customizeVoice === 'auto' ? undefined : customizeVoice,
-          tone: customizeTone === 'auto' ? undefined : customizeTone,
-          sourceImages: customizeUpload.metadata?.photoUrl ? [customizeUpload.metadata.photoUrl] : []
-        })
-      });
-      if (!res.ok) {
-        let errorText = 'Scene project could not be created';
-        try {
-          const errData = await res.json();
-          errorText = errData.response || errData.error || errorText;
-        } catch {}
-        throw new Error(errorText);
-      }
-      const data = await res.json();
-      const pid = data.projectId || data.id;
-      if (!pid) {
-        throw new Error('Scene project returned no project id. Please try again.');
-      }
-      // Show scene progress in the Customize box (mirrors the Scene box).
-      setCustomizeProjectId(pid);
-      // Persist fast-path entry so Operations can show it while rendering.
-      try {
-        const completed = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
-        completed.push({ id: pid, url: '', ts: Date.now(), status: 'processing' });
-        localStorage.setItem('empire_completed_projects', JSON.stringify(completed.slice(-10)));
-      } catch {}
-    } catch (error) {
-      console.error('Scene project creation failed:', error);
-      setGenerationError(error instanceof Error ? error.message : 'Video generation failed. Please try again.');
-    } finally {
-      setIsGeneratingVideo(false);
-      setIsRendering(false);
-    }
-  };
-
-  // State for tracking created asset
-  const [createdAssetId, setCreatedAssetId] = useState<string | null>(null);
 
   const handleFacelessSubmit = async () => {
     if (!facelessIdea.trim()) return;
@@ -689,7 +532,7 @@ export default function StudioPage() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-8"
             >
-              {/* 1. Customize Video Box */}
+              {/* 1. Scene-Based Video — the single video builder (AI consultant + controls) */}
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
                 <div className="absolute top-6 right-6 flex items-center gap-2">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
@@ -706,202 +549,22 @@ export default function StudioPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-slate-500/10 flex items-center justify-center">
-                    <MonitorPlay className="w-5 h-5 text-slate-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">{isCatalyst ? "High-Conversion Video" : "Customize Video"}</h3>
-                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
-                      {isCatalyst ? "Direct the AI — define your hooks, calls-to-action, and marketing flow" : "Direct the AI — define your style, pace, and visual narrative"}
-                    </p>
-                  </div>
-                </div>
-
-                {!sharedVideoIdea && (
-                  <div className="space-y-4">
-                  {/* Duration + voiceover (shared control) */}
-                  <div className="flex flex-col gap-2">
-                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Duration &amp; Voiceover (optional)</span>
-                    <div className="flex flex-wrap gap-2">
-                      <input
-                        type="number"
-                        value={customizeDuration}
-                        onChange={(e) => setCustomizeDuration(e.target.value)}
-                        placeholder="Duration (sec, optional)"
-                        min={5}
-                        className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
-                      />
-                      <select
-                        value={customizeVoice}
-                        onChange={(e) => setCustomizeVoice(e.target.value as 'female' | 'male' | 'auto')}
-                        className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
-                      >
-                        <option value="auto">Auto gender</option>
-                        <option value="female">Female</option>
-                        <option value="male">Male</option>
-                      </select>
-                      <select
-                        value={customizeTone}
-                        onChange={(e) => setCustomizeTone(e.target.value as any)}
-                        className="flex-1 min-w-[110px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
-                      >
-                        <option value="auto">Auto tone</option>
-                        <option value="enthusiastic">Enthusiastic</option>
-                        <option value="calm">Calm</option>
-                        <option value="serious">Serious</option>
-                        <option value="warm">Warm</option>
-                      </select>
-                    </div>
-                  </div>
-                  {/* Source image (screenshot) upload */}
-                  <div className="space-y-3">
-                    <FileUploadDropZone
-                      type="source-image"
-                      state={customizeUpload}
-                      onFileSelect={(file) => handleSourceImageSelect(file, setCustomizeUpload)}
-                      onRemove={() => handleSourceImageRemove(setCustomizeUpload, customizeUpload)}
-                      disabled={customizeUpload.status === 'uploading'}
-                    />
-                    {customizeUpload.preview && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-slate-400/30 mx-auto"
-                      >
-                        <img src={customizeUpload.preview} alt="Uploaded source" className="w-full h-full object-cover" />
-                      </motion.div>
-                    )}
-                  </div>
-                  <div className="relative">
-                    <textarea
-                      value={customVideoIdea}
-                      onChange={(e) => setCustomVideoIdea(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleCustomVideoSubmit(); } }}
-                      placeholder={isCatalyst ? "e.g. A 15-second high-energy hook for my Daily Pay offer, emphasizing $300/day potential, fast cuts, urgent CTA..." : "e.g. A 15-second high-energy product reveal for TikTok, fast cuts, vibrant neon overlays..."}
-                      disabled={isGeneratingVideo}
-                      className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
-                    />
-                    <button
-                      onClick={handleCustomVideoSubmit}
-                      disabled={!customVideoIdea.trim() || isGeneratingVideo}
-                      className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-                    >
-                      <SendHorizonal className="w-4 h-4" />
-                    </button>
-                  </div>
-                  </div>
-                )}
-
-                {videoGenerated && (
-                  <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="space-y-3">
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 shadow-lg shadow-emerald-500/5">
-                      <div className="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-black text-emerald-400 uppercase tracking-wider">Video Generation Started</p>
-                        <p className="text-[9px] font-bold text-emerald-500/70 uppercase tracking-wider mt-0.5">Ready in ~2 minutes — check Operations</p>
-                      </div>
-                    </div>
-                    <Link href="/empire-center" className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all">
-                      <ChevronRight className="w-4 h-4 text-primary" />
-                      <span className="text-[10px] font-black text-primary uppercase tracking-wider">Go to Operations to View</span>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        setVideoGenerated(false);
-                        setSharedVideoIdea('');
-                        setRefinedVideoIdea('');
-                        setCreatedAssetId(null);
-                        setGenerationError(null);
-                        setCustomizeProjectId(null);
-                        setIsRendering(false);
-                      }}
-                      className="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-white/30 text-xs font-bold uppercase tracking-widest transition-all"
-                    >
-                      Create Another Video
-                    </button>
-                  </motion.div>
-                )}
-
-                {customizeProjectId && (
-                  <>
-                    <VideoProjectProgress
-                      projectId={customizeProjectId}
-                      onComplete={(finalVideoUrl) => {
-                        // Store completed project for NeuralDispatchCenter
-                        const completed = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
-                        completed.push({ id: customizeProjectId, url: finalVideoUrl, ts: Date.now(), status: 'completed' });
-                        localStorage.setItem('empire_completed_projects', JSON.stringify(completed.slice(-10)));
-                        setVideoGenerated(true);
-                        console.log('[Studio] Customize project complete:', finalVideoUrl);
-                      }}
-                    />
-                    <button
-                      onClick={() => {
-                        setCustomizeProjectId(null);
-                        setSharedVideoIdea('');
-                        setRefinedVideoIdea('');
-                        setVideoGenerated(false);
-                        setCreatedAssetId(null);
-                        setGenerationError(null);
-                        setIsRendering(false);
-                      }}
-                      className="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-white/30 text-xs font-bold uppercase tracking-widest transition-all"
-                    >
-                      Create Another Video
-                    </button>
-                  </>
-                )}
-                {isGeneratingVideo && !videoGenerated && !customizeProjectId && (
-                  <div className="flex flex-col items-center justify-center py-16 gap-4">
-                    <BrandedGlobe size="md" spinning={true} className="animate-pulse" />
-                    <p className="text-sm font-black text-foreground uppercase tracking-widest animate-pulse">Generating Video...</p>
-                    <p className="text-[10px] text-muted-foreground">{elapsedSeconds}s elapsed — video pipeline runs ~70-100s</p>
-                  </div>
-                )}
-                {generationError && !isGeneratingVideo && !customizeProjectId && (
-                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center space-y-2">
-                    <p className="text-xs font-bold text-red-400">{generationError}</p>
-                    <button onClick={() => setGenerationError(null)} className="text-[10px] text-red-400 underline">Dismiss</button>
-                  </div>
-                )}
-                {!isGeneratingVideo && !videoGenerated && !generationError && !customizeProjectId && (
-                  <div className="space-y-3">
-                    <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={sharedVideoIdea} onGenerate={handleGenerateVideo} suppressWand onRefinedIdea={setRefinedVideoIdea} settledSettings={{ duration: customizeDuration, voice: customizeVoice, tone: customizeTone }} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
-                    {/* Launch Project — unified Customize flow submits the refined idea
-                        through the Scene engine (owner: "instead of the wand"). */}
-                    <button
-                      onClick={() => handleGenerateVideo(refinedVideoIdea || sharedVideoIdea)}
-                      disabled={!(refinedVideoIdea || sharedVideoIdea) || isGeneratingVideo}
-                      className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed"
-                    >
-                      {isGeneratingVideo ? (
-                        <Loader2 className="w-4 h-4 animate-spin mx-auto" />
-                      ) : (
-                        'Launch Project'
-                      )}
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Scene-Based Video Project */}
-              <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
-                <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
                     <Film className="w-5 h-5 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-black text-foreground text-sm uppercase tracking-tight italic">Scene-Based Video</h3>
                     <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
-                      Multi-scene AI pipeline — define your vision, I'll storyboard it
+                      AI consultant storyboards your video — vibe, colors, font &amp; background
                     </p>
                   </div>
                 </div>
 
                 {!activeProjectId ? (
                   <div className="space-y-3">
+                    {/* AI consultant chat — describes, suggests, remembers settled details */}
+                    <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={consultantSeed} onGenerate={handleSubmitProject} suppressWand onRefinedIdea={setRefinedVideoIdea} settledSettings={{ duration: projectDuration, voice: projectVoice, tone: projectTone }} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+
                     <input
                       type="text"
                       value={projectTitle}
@@ -909,25 +572,35 @@ export default function StudioPage() {
                       placeholder="Project title (optional)"
                       className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
                     />
-                    <textarea
-                      value={projectIdea}
-                      onChange={(e) => setProjectIdea(e.target.value)}
-                      placeholder="Describe your video idea in detail — scenes, style, tone, target audience..."
-                      rows={3}
-                      className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30 resize-none"
-                    />
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="number"
-                        value={projectDuration}
-                        onChange={(e) => setProjectDuration(e.target.value)}
-                        placeholder="Duration (seconds, optional)"
-                        className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
+                    <div className="relative">
+                      <textarea
+                        value={projectIdea}
+                        onChange={(e) => setProjectIdea(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendToConsultant(); } }}
+                        placeholder="Describe your video idea, then press Enter to send it to the AI consultant — it will ask a few sharp questions (with suggestions) and remember what you settle."
+                        rows={3}
+                        className="w-full bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2.5 pr-12 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30 resize-none"
                       />
+                      <button
+                        onClick={handleSendToConsultant}
+                        disabled={!projectIdea.trim()}
+                        className="absolute bottom-3 right-3 p-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+                      >
+                        <SendHorizonal className="w-4 h-4" />
+                      </button>
                     </div>
+                    {/* Duration + voiceover + tone */}
                     <div className="flex flex-col gap-2">
-                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Voiceover (optional)</span>
+                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-wider">Duration &amp; Voiceover (optional)</span>
                       <div className="flex flex-wrap gap-2">
+                        <input
+                          type="number"
+                          value={projectDuration}
+                          onChange={(e) => setProjectDuration(e.target.value)}
+                          placeholder="Duration (sec, optional)"
+                          min={5}
+                          className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground placeholder:text-slate-600 focus:outline-none focus:border-white/30"
+                        />
                         <select
                           value={projectVoice}
                           onChange={(e) => setProjectVoice(e.target.value as 'female' | 'male' | '')}
@@ -969,13 +642,14 @@ export default function StudioPage() {
                         </motion.div>
                       )}
                     </div>
+                    {/* Launch Project — submits the consultant-refined idea (or the raw text) */}
                     <button
-                      onClick={handleSubmitProject}
-                      disabled={!projectIdea.trim() || isSubmittingProject}
-                      className="px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 whitespace-nowrap"
+                      onClick={() => handleSubmitProject(refinedVideoIdea || projectIdea)}
+                      disabled={!projectIdea.trim() && !refinedVideoIdea || isSubmittingProject}
+                      className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
                     >
                       {isSubmittingProject ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Loader2 className="w-4 h-4 animate-spin mx-auto" />
                       ) : (
                         'Launch Project'
                       )}
@@ -987,7 +661,7 @@ export default function StudioPage() {
                     onComplete={(finalVideoUrl) => {
                       // Store completed project for NeuralDispatchCenter
                       const completed = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
-                      completed.push({ id: activeProjectId, url: finalVideoUrl, ts: Date.now() });
+                      completed.push({ id: activeProjectId, url: finalVideoUrl, ts: Date.now(), status: 'completed' });
                       // Keep last 10
                       localStorage.setItem('empire_completed_projects', JSON.stringify(completed.slice(-10)));
                       console.log('[Studio] Project complete:', finalVideoUrl);
