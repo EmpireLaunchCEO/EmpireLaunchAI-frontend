@@ -298,6 +298,12 @@ export function LibraryTab() {
                     <p className="text-[9px] font-medium text-muted-foreground">
                       {new Date(selectedAsset.createdAt || selectedAsset.created_at).toLocaleDateString()}
                     </p>
+                    {selectedAsset?.metadata?.ratioLabel ? (
+                      <p className="mt-1 text-[9px] font-black text-primary uppercase tracking-wide">
+                        {selectedAsset.metadata.shape === 'horizontal' ? '▬ ' : selectedAsset.metadata.shape === 'square' ? '□ ' : selectedAsset.metadata.shape === 'portrait' ? '▮ ' : ''}
+                        {selectedAsset.metadata.ratioLabel}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
                 <div className="flex items-center gap-1">

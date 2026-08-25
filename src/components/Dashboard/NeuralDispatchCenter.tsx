@@ -317,6 +317,12 @@ export function NeuralDispatchCenter() {
             <div>
               <h3 className="text-sm font-black text-white uppercase tracking-widest">Reviewing: {activeQueue?.toUpperCase()}</h3>
               <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Draft #{draftNumber}</p>
+              {currentApproval?.payload?.ratioLabel ? (
+                <p className="mt-1 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  {currentApproval.payload.shape === 'horizontal' ? '▬ ' : currentApproval.payload.shape === 'square' ? '□ ' : currentApproval.payload.shape === 'portrait' ? '▮ ' : ''}
+                  {currentApproval.payload.ratioLabel}
+                </p>
+              ) : null}
             </div>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
