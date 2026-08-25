@@ -46,8 +46,8 @@ export function OnboardingTour() {
       icon: Bot
     },
     {
-      title: "Your Dashboard",
-      description: "This is your Home. Here you can see your real-time profit, active AI missions, and overall empire growth at a glance.",
+      title: "Home Base",
+      description: "This is your Home base. At the top are 3 Brand Tabs — each tab hosts one brand and costs $50/month. Here you'll find your Empire info, up-to-the-minute Intel on your niche, and your Library. Saved videos live in the Library and auto-expire 90 days after you save them.",
       target: "nav-home",
       icon: LayoutDashboard,
       page: "/dashboard"
