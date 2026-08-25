@@ -10,6 +10,7 @@ import {
   Bot,
   ArrowDown,
   LayoutDashboard,
+  Layout,
   ClipboardList,
   PlusCircle,
   Video,
@@ -53,14 +54,20 @@ export function OnboardingTour() {
     },
     {
       title: "Operations Base",
-      description: "This is your Operations Base. Here is where you approve all of the videos, edits and designs. You also pick what platforms you want each posted to.",
+      description: "This is your Operations Base. Every video, edit and design lands here as a draft first — nothing auto-saves. Review your creations, pick the ones you want, and tap Save. Saved assets move to your Library and stay there for 90 days from the day you save them. You also choose which platforms each one gets posted to.",
       target: "nav-ec",
       icon: ClipboardList,
       page: "/empire-center"
     },
     {
+      title: "Client Asset Library",
+      description: "Your Library holds only what you chose to keep. Each saved video appears in four ready-to-post formats — 9:16 Vertical (TikTok/Reels/Shorts), 16:9 Horizontal (YouTube/IG), 1:1 Square (IG feed) and 2:3 Portrait (Pinterest) — each labeled with its shape and ratio. Saved assets stay for 90 days from the day you save them, then expire automatically. Pick what you want to keep — no clutter.",
+      icon: Layout,
+      page: "/empire-center"
+    },
+    {
       title: "Empire Studio",
-      description: "This is your production powerhouse. Here is where videos, edits, and designs are created to grow and scale your business. It also shows you how many videos and designs you have left, including twin (your AI double) videos. Videos reset every 7 days, designs reset monthly.",
+      description: "This is your production powerhouse. Videos, edits, and designs are created here to grow your business. Every video renders in four ready-to-post formats — 9:16 Vertical (TikTok/Reels/Shorts), 16:9 Horizontal (YouTube/IG), 1:1 Square (IG feed) and 2:3 Portrait (Pinterest). Your weekly allowances: Scene-Based 3, Faceless 10, and Neural Twin (your AI double) 5 at 15 or 30 seconds. High-res Design gives you 50 per month, and Edits are unlimited.",
       target: "nav-studio",
       icon: Video,
       page: "/studio"
