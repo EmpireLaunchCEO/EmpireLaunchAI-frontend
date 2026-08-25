@@ -32,7 +32,7 @@ export function SupportHub() {
           </div>
         </div>
         <div className="p-5 rounded-2xl bg-theme-background border-2 border-theme space-y-2">
-          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=EmpireLaunchAI@gmail.com" target="_blank" className="text-lg font-black text-primary hover:underline">EmpireLaunchAI@gmail.com</a>
+          <span className="text-lg font-black text-foreground">Email support at: EmpireLaunchAI@gmail.com</span>
           <p className="text-xs font-medium text-muted-foreground">Response time is typically within 48 hours.</p>
         </div>
       </div>
