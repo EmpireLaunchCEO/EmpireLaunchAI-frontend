@@ -60,6 +60,7 @@ const availablePlatforms = [
   { id: 'patreon', name: 'Patreon', icon: Heart, color: 'text-orange-600', bg: 'bg-orange-50' },
   { id: 'linkedin', name: 'LinkedIn', icon: Users, color: 'text-blue-700', bg: 'bg-blue-50' },
   { id: 'twitch', name: 'Twitch', icon: MonitorPlay, color: 'text-purple-700', bg: 'bg-purple-100' },
+  { id: 'stripe', name: 'Stripe', icon: CreditCard, color: 'text-indigo-600', bg: 'bg-indigo-50' },
 ];
 
 const COMMERCE_PLATFORMS = [
