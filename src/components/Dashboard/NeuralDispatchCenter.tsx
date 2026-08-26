@@ -389,16 +389,11 @@ export function NeuralDispatchCenter() {
               onClick={() => {
                 const id = currentApproval?.payload?.assetId || currentApproval?.id;
                 if (!id) return;
-                // Scene-based projects and completed creations both carry an
-                // absolute R2 media URL — open it directly so downloads are
-                // never blocked by the user-scoped proxy needing a header.
-                const mediaUrl = currentApproval?.payload?.videoUrl;
-                if (typeof mediaUrl === 'string' && mediaUrl.startsWith('http')) {
-                  window.open(mediaUrl, '_blank');
-                  return;
-                }
-                // Fallback (legacy rows / non-video queue items): user-scoped
-                // download proxy — /api/studio/download requires the userId.
+                // Route ALL downloads through the user-scoped download proxy
+                // (/api/studio/download/:id). The proxy streams the file buffer
+                // directly from R2 server-side, bypassing stale 1hr-presigned
+                // signed URLs and CORS — which previously caused "r2 fetch failed"
+                // when the Download button window.open'd the raw R2 media URL.
                 const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
                 window.open(`${API_URL}/api/studio/download/${id}?userId=${encodeURIComponent(userId)}`, '_blank');
               }}
