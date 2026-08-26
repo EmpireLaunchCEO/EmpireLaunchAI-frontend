@@ -16,6 +16,7 @@ import { GrowthProtocolGate } from '@/components/Dashboard/GrowthProtocolGate';
 import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 import { FeedbackInbox } from '@/components/Dashboard/FeedbackInbox';
 import { EmpireTabs } from '@/components/Dashboard/EmpireTabs';
+import { HomeBaseConnectPanel } from '@/components/Dashboard/HomeBaseConnectPanel';
 import { PaymentDueModal } from '@/components/Dashboard/PaymentDueModal';
 
 
@@ -387,6 +388,15 @@ export default function Dashboard() {
                     {/* GrowthTracker removed per owner direction */}
 
                     {/* Empire Finances removed per owner direction */}
+
+                    {/* Link your social apps — inline connect panel on Home Base */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                    >
+                      <HomeBaseConnectPanel />
+                    </motion.div>
 
                     {/* Empire Identity + Intel Tabs */}
                     <motion.div

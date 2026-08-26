@@ -10,6 +10,7 @@ import {
   Bot,
   ArrowDown,
   LayoutDashboard,
+  Layout,
   ClipboardList,
   PlusCircle,
   Video,
@@ -45,29 +46,35 @@ export function OnboardingTour() {
       icon: Bot
     },
     {
-      title: "Your Dashboard",
-      description: "This is your Home. Here you can see your real-time profit, active AI missions, and overall empire growth at a glance.",
+      title: "Home Base",
+      description: "This is your Home base. At the top are 3 Brand Tabs — each tab hosts one brand and costs $50/month. Here you'll find your Empire info, up-to-the-minute Intel on your niche, and your Library. Saved videos live in the Library and auto-expire 90 days after you save them.",
       target: "nav-home",
       icon: LayoutDashboard,
       page: "/dashboard"
     },
     {
       title: "Operations Base",
-      description: "This is your Operations Base. Here is where you approve all of the videos, edits and designs. You also pick what platforms you want each posted to.",
+      description: "This is your Operations Base. Every video, edit and design lands here as a draft first — nothing auto-saves. Review your creations, pick the ones you want, and tap Save. Saved assets move to your Library and stay there for 90 days from the day you save them. You also choose which platforms each one gets posted to.",
       target: "nav-ec",
       icon: ClipboardList,
       page: "/empire-center"
     },
     {
+      title: "Client Asset Library",
+      description: "Your Library holds only what you chose to save. Each saved video is rendered to match the formats of the social platforms you chose when you set up your empire — no unused formats, no clutter. Saved assets stay for 90 days from the day you save them, then expire automatically.",
+      icon: Layout,
+      page: "/empire-center"
+    },
+    {
       title: "Empire Studio",
-      description: "This is your production powerhouse. Here is where videos, edits, and designs are created to grow and scale your business. It also shows you how many videos and designs you have left, including twin (your AI double) videos. Videos reset every 7 days, designs reset monthly.",
+      description: "This is where videos, edits, and designs are created — Scene-Based, Faceless, and your Neural Twin. Every video is rendered to match the format of the social media you chose in onboarding and lands in Operations Base for your view. Tap Save on the ones you love and they move to your Library. Your remaining video and design quota is shown here — videos renew every week, designs renew every month.",
       target: "nav-studio",
       icon: Video,
       page: "/studio"
     },
     {
       title: "Link Center (LC)",
-      description: "This is where you connect new platforms. The more outlets we link, the faster your empire scales. Each app linked will default to Co-Pilot. They can change it to Auto-Pilot if they prefer later on this page.",
+      description: "This is where you manage your connected platforms and set each app's AI permission (Co-Pilot or Auto-Pilot). To connect new platforms, go to your Home Base and use the Link your social apps panel there.",
       target: "nav-lc",
       icon: PlusCircle,
       page: "/link-center"
@@ -88,9 +95,9 @@ export function OnboardingTour() {
     },
     {
       title: "That's the Tour!",
-      description: "When you're ready to link your apps so I can work and scale your business with your direction, go to the Link Center and set your preferred AI permissions for each platform. You can change these any time!",
+      description: "When you're ready to connect your apps so I can work and scale your business with your direction, use the Link your social apps panel on your Home Base, then manage each app's AI permissions in the Link Center. You can change these any time!",
       icon: Stars,
-      page: "/link-center"
+      page: "/dashboard"
     }
   ], []);
 
