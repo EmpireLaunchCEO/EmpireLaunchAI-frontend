@@ -74,6 +74,8 @@ interface GuidedLinkingProps {
   currentEmpire?: any;
   onRefresh?: () => void;
   hideEstablished?: boolean;
+  headerTitle?: string;
+  headerSubtitle?: (hasNoPlatforms: boolean) => string;
 }
 
 const PLATFORM_3D_ICONS: Record<string, string> = {
@@ -156,7 +158,7 @@ function PermissionToggle({ permission, onToggle }: { permission: string, onTogg
   );
 }
 
-export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, hideEstablished }: GuidedLinkingProps) {
+export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, hideEstablished, headerTitle = "Link Center", headerSubtitle }: GuidedLinkingProps) {
   const {
     connectedPlatforms,
     connectPlatform,
@@ -585,11 +587,13 @@ export function GuidedLinking({ isReturning, onClose, currentEmpire, onRefresh, 
                     <Zap className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-black uppercase tracking-[0.2em] text-foreground">Link Center</h3>
+                    <h3 className="text-sm font-black uppercase tracking-[0.2em] text-foreground">{headerTitle}</h3>
                     <p className="text-[9px] text-muted-foreground font-medium">
-                      {hasNoPlatforms
-                        ? "Search for an app to connect your empire"
-                        : "Search and connect more platforms"}
+                      {headerSubtitle
+                        ? headerSubtitle(hasNoPlatforms)
+                        : (hasNoPlatforms
+                          ? "Search for an app to connect your empire"
+                          : "Search and connect more platforms")}
                     </p>
                   </div>
                 </div>
