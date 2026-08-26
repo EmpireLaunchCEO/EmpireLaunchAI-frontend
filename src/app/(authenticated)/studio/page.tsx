@@ -394,6 +394,13 @@ export default function StudioPage() {
   const [facelessIdea, setFacelessIdea] = useState('');
   const [isSubmittingFaceless, setIsSubmittingFaceless] = useState(false);
   const [facelessSubmitted, setFacelessSubmitted] = useState(false);
+  // Confirmation guardrail — every quota-consuming generation passes through an
+  // explicit in-app confirm before the API call, so a stray tap (keyboard
+  // "next"/arrow-carry, Enter) can never fire a generation unintentionally.
+  // Cancel closes the modal without calling onConfirm(), so NO quota is used.
+  const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
+  const requestConfirm = (title: string, message: string, onConfirm: () => void) =>
+    setConfirmAction({ title, message, onConfirm });
 
   // Scene-based video project — the SINGLE video builder (consultant + controls
   // folded in from the removed Customize Video box).
@@ -687,7 +694,11 @@ export default function StudioPage() {
                     </div>
                     {/* 4. Launch Project — submits the consultant-refined idea (or the raw text) */}
                     <button
-                      onClick={() => handleSubmitProject(refinedVideoIdea || projectIdea)}
+                      onClick={() => requestConfirm(
+                        'Launch Project?',
+                        'This will start a Scene-based video generation and use one of your weekly video slots. Continue?',
+                        () => handleSubmitProject(refinedVideoIdea || projectIdea)
+                      )}
                       disabled={!projectIdea.trim() && !refinedVideoIdea || isSubmittingProject}
                       className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
                     >
@@ -813,13 +824,13 @@ export default function StudioPage() {
                 <textarea
                   value={facelessIdea}
                   onChange={(e) => setFacelessIdea(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleFacelessSubmit(); } }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Launch Project?', 'This will start a Faceless video generation and use one of your weekly slots. Continue?', handleFacelessSubmit); } }}
                   placeholder={isCatalyst ? "e.g. 3 reasons why most 9-5s are a trap, high-impact b-roll, professional voiceover, strong 'Link in Bio' CTA..." : "e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts..."}
                   disabled={isSubmittingFaceless}
                   className="w-full bg-theme-background border border-theme rounded-2xl p-4 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                 />
                 <button
-                  onClick={handleFacelessSubmit}
+                  onClick={() => requestConfirm('Launch Project?', 'This will start a Faceless video generation and use one of your weekly slots. Continue?', handleFacelessSubmit)}
                   disabled={!facelessIdea.trim() || isSubmittingFaceless}
                   className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
                 >
@@ -923,7 +934,7 @@ export default function StudioPage() {
                   </div>
 
                   <button
-                    onClick={handleSynthesizeTwin}
+                    onClick={() => requestConfirm('Synthesize Twin Double?', 'This will generate a Neural Twin video and use one of your weekly Neural Twin slots. Continue?', handleSynthesizeTwin)}
                     disabled={facialDnaUpload.status !== 'complete' || twinStatus === 'synthesizing'}
                     className="w-full max-w-sm mx-auto flex justify-center items-center gap-2 py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   >
@@ -1098,13 +1109,13 @@ export default function StudioPage() {
                   <textarea
                     value={customIdea}
                     onChange={(e) => setCustomIdea(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleCustomIdeaSubmit(); } }}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Synthesize this design?', 'This will inject your concept into the Neural Synthesis pipeline and use a design creation. Continue?', handleCustomIdeaSubmit); } }}
                     placeholder={designUpload.preview ? "Tell me what changes you want, or ask me to create 5 unique variations based on this design" : "e.g. A minimalist sage-green yoga mat with gold mandala print, 72x24 inches, boho-luxe aesthetic..."}
                     disabled={isSubmittingIdea}
                     className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-amber-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                   />
                   <button
-                    onClick={handleCustomIdeaSubmit}
+                    onClick={() => requestConfirm('Synthesize this design?', 'This will inject your concept into the Neural Synthesis pipeline and use a design creation. Continue?', handleCustomIdeaSubmit)}
                     disabled={!customIdea.trim() || isSubmittingIdea}
                     className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
@@ -1148,6 +1159,45 @@ export default function StudioPage() {
             </span>
           </div>
         </div>
+        {/* Confirmation guardrail before any quota-consuming generation */}
+        <AnimatePresence>
+          {confirmAction && (
+            <>
+              <motion.div
+                className="fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setConfirmAction(null)}
+              />
+              <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 pointer-events-none">
+                <motion.div
+                  className="pointer-events-auto w-full max-w-md rounded-[24px] border-2 border-theme bg-theme-surface p-6 shadow-2xl"
+                  initial={{ opacity: 0, scale: 0.96, y: 8 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96, y: 8 }}
+                >
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary">{confirmAction.title}</p>
+                  <p className="mt-2 text-sm text-foreground/90 leading-relaxed">{confirmAction.message}</p>
+                  <div className="mt-6 flex flex-col-reverse sm:flex-row gap-2">
+                    <button
+                      onClick={() => setConfirmAction(null)}
+                      className="flex-1 px-4 py-2.5 rounded-xl border border-white/15 text-slate-300 font-black text-xs uppercase tracking-widest hover:border-white/30 transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => { const act = confirmAction; setConfirmAction(null); act?.onConfirm(); }}
+                      className="flex-1 px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all"
+                    >
+                      OK — Start
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
   );
 }
