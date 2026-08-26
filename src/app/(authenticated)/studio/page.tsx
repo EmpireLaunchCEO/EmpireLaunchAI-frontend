@@ -344,7 +344,7 @@ export default function StudioPage() {
 
   const handleEnhanceVideo = async (_finalIdea: string) => {
     if (rawVideoUpload.status !== 'complete' || !rawVideoUpload.metadata?.videoUrl) {
-      setEditError('Upload a raw video clip first — then tap the wand to apply the Empire Polish.');
+      setEditError('Upload a raw video clip first — then use Generate to apply the Empire Polish.');
       setEditStatus('error');
       return;
     }

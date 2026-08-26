@@ -156,7 +156,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           const isTimeout = error instanceof DOMException && error.name === 'AbortError';
           setMessages(prev => [...prev, { role: 'assistant', content: 
             isTimeout 
-              ? 'AI is taking too long. Please try a simpler description or tap the wand to generate directly.'
+              ? 'AI is taking too long. Please try a simpler description or tap Generate to start.'
               : (error instanceof Error ? error.message : 'Failed to consult AI.')
           }]);
         } finally {
@@ -243,7 +243,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       const isNetworkError = !isTimeout && (error instanceof TypeError || (error instanceof Error && error.message.includes('fetch')));
       setMessages(prev => [...prev, { role: 'assistant', content: 
         isTimeout
-          ? 'AI is taking too long. Please try a simpler description or tap the wand to generate directly.'
+          ? 'AI is taking too long. Please try a simpler description or tap Generate to start.'
           : isNetworkError
           ? "I'm having trouble connecting to the Neural Link. Please try again."
           : (error instanceof Error ? error.message : 'Something went wrong. Please try again.')
@@ -344,7 +344,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={suppressWand ? "Chat with the AI to refine your idea, then launch..." : (canGenerate ? "Type to refine, or tap the wand..." : "Ask...")}
+            placeholder={suppressWand ? "Chat with the AI to refine your idea, then launch..." : (canGenerate ? "Type to refine, or tap Generate..." : "Ask...")}
             className="flex-1 bg-theme-surface/50 border border-theme rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-white/40 transition-all placeholder:text-slate-600"
           />
           {/* Wand — appears once conversation started (hidden in suppressWand/Launch-Project mode) */}
@@ -353,6 +353,8 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
               type="button"
               onClick={handleGenerate}
               disabled={isTyping || isGenerating}
+              title="Generate"
+              aria-label="Generate"
               className={cn(
                 "w-8 h-8 rounded-lg bg-primary text-slate-950 flex items-center justify-center shrink-0 transition-all",
                 isGenerating && "opacity-50 scale-90",
@@ -380,7 +382,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           <span className="text-[9px] font-bold text-primary uppercase tracking-widest">
             {suppressWand
               ? "Refine here — then tap Launch Project to generate"
-              : (readyToGenerate ? "Ready — tap the wand!" : canGenerate ? "Tap the wand when ready, or keep chatting" : "Chat with the AI to refine your idea")}
+              : (readyToGenerate ? "Ready to generate!" : canGenerate ? "Tap Generate when ready, or keep chatting" : "Chat with the AI to refine your idea")}
           </span>
         </div>
       )}
