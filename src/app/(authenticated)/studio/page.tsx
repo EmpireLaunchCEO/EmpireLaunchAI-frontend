@@ -402,6 +402,16 @@ export default function StudioPage() {
   const requestConfirm = (title: string, message: string, onConfirm: () => void) =>
     setConfirmAction({ title, message, onConfirm });
 
+  // Expectation preview helper — sets clear expectations before a generation
+  // consumes quota (owner: no "surprise" free videos if the client dislikes result).
+  const scenePreview = (duration: string) => {
+    if (duration === '30') return 'a punchy 30-second story, ~3 scenes';
+    if (duration === '60') return 'a concise 1-minute story, ~5 scenes';
+    if (duration === '120') return 'a full 2-minute story, ~10 scenes';
+    if (duration === '180') return 'an in-depth 3-minute story, ~15 scenes';
+    return '~5 scenes building your story';
+  };
+
   // Scene-based video project — the SINGLE video builder (consultant + controls
   // folded in from the removed Customize Video box).
   const [projectTitle, setProjectTitle] = useState('');
@@ -696,7 +706,7 @@ export default function StudioPage() {
                     <button
                       onClick={() => requestConfirm(
                         'Launch Project?',
-                        'This will start a Scene-based video generation and use one of your weekly video slots. Continue?',
+                        `This starts a Scene-based video generation: ${scenePreview(projectDuration)} with AI voiceover narration, ending with your call to action. Uses one weekly video slot. Continue?`,
                         () => handleSubmitProject(refinedVideoIdea || projectIdea)
                       )}
                       disabled={!projectIdea.trim() && !refinedVideoIdea || isSubmittingProject}
@@ -824,13 +834,13 @@ export default function StudioPage() {
                 <textarea
                   value={facelessIdea}
                   onChange={(e) => setFacelessIdea(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Launch Project?', 'This will start a Faceless video generation and use one of your weekly slots. Continue?', handleFacelessSubmit); } }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit); } }}
                   placeholder={isCatalyst ? "e.g. 3 reasons why most 9-5s are a trap, high-impact b-roll, professional voiceover, strong 'Link in Bio' CTA..." : "e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts..."}
                   disabled={isSubmittingFaceless}
                   className="w-full bg-theme-background border border-theme rounded-2xl p-4 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                 />
                 <button
-                  onClick={() => requestConfirm('Launch Project?', 'This will start a Faceless video generation and use one of your weekly slots. Continue?', handleFacelessSubmit)}
+                  onClick={() => requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit)}
                   disabled={!facelessIdea.trim() || isSubmittingFaceless}
                   className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
                 >
@@ -934,7 +944,7 @@ export default function StudioPage() {
                   </div>
 
                   <button
-                    onClick={() => requestConfirm('Synthesize Twin Double?', 'This will generate a Neural Twin video and use one of your weekly Neural Twin slots. Continue?', handleSynthesizeTwin)}
+                    onClick={() => requestConfirm('Synthesize Twin Double?', 'This generates your Neural Twin: an AI double of your photo rendered as a 15s or 30s video. Uses one weekly Neural Twin slot. Continue?', handleSynthesizeTwin)}
                     disabled={facialDnaUpload.status !== 'complete' || twinStatus === 'synthesizing'}
                     className="w-full max-w-sm mx-auto flex justify-center items-center gap-2 py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   >
@@ -1109,13 +1119,13 @@ export default function StudioPage() {
                   <textarea
                     value={customIdea}
                     onChange={(e) => setCustomIdea(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Synthesize this design?', 'This will inject your concept into the Neural Synthesis pipeline and use a design creation. Continue?', handleCustomIdeaSubmit); } }}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept and uses one monthly design credit. Continue?', handleCustomIdeaSubmit); } }}
                     placeholder={designUpload.preview ? "Tell me what changes you want, or ask me to create 5 unique variations based on this design" : "e.g. A minimalist sage-green yoga mat with gold mandala print, 72x24 inches, boho-luxe aesthetic..."}
                     disabled={isSubmittingIdea}
                     className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-amber-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                   />
                   <button
-                    onClick={() => requestConfirm('Synthesize this design?', 'This will inject your concept into the Neural Synthesis pipeline and use a design creation. Continue?', handleCustomIdeaSubmit)}
+                    onClick={() => requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept and uses one monthly design credit. Continue?', handleCustomIdeaSubmit)}
                     disabled={!customIdea.trim() || isSubmittingIdea}
                     className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
