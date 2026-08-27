@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, CheckCircle2, Clock, AlertCircle, RefreshCw, Play, Film } from 'lucide-react';
+import { Loader2, CheckCircle2, Clock, AlertCircle, RefreshCw, Play } from 'lucide-react';
 import { API_URL } from '@/lib/config';
 
 const getAuthHeader = (): string => {
@@ -211,23 +211,20 @@ export function VideoProjectProgress({ projectId, onComplete }: VideoProjectProg
         </AnimatePresence>
       </div>
 
-      {/* Final video player */}
-      {project.status === 'completed' && project.finalVideoUrl && (
+      {/* Final video preview removed per owner: appears ONLY on Operations page (Neural Dispatch Center) */}
+      {project.status === 'completed' && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 space-y-3"
+          className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4"
         >
           <div className="flex items-center gap-2">
-            <Film className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs font-black text-emerald-400 uppercase">Final Video Ready</span>
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span className="text-xs font-black text-emerald-400 uppercase tracking-wider">Video Complete</span>
           </div>
-          <video
-            src={project.finalVideoUrl}
-            controls
-            className="w-full rounded-xl"
-            style={{ maxHeight: '360px' }}
-          />
+          <p className="text-[10px] text-emerald-500/70 mt-1 font-medium">
+            Saved to your Library — go to the Operations page to view and download.
+          </p>
         </motion.div>
       )}
 
