@@ -389,14 +389,16 @@ export default function Dashboard() {
 
                     {/* Empire Finances removed per owner direction */}
 
-                    {/* Link your social apps — inline connect panel on Home Base */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                    >
-                      <HomeBaseConnectPanel />
-                    </motion.div>
+                    {/* Link your social apps — inline connect panel on Home Base (owner only) */}
+                    {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com') && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                      >
+                        <HomeBaseConnectPanel />
+                      </motion.div>
+                    )}
 
                     {/* Empire Identity + Intel Tabs */}
                     <motion.div
