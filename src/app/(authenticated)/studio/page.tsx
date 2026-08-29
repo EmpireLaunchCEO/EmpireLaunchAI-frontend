@@ -398,9 +398,9 @@ export default function StudioPage() {
   // explicit in-app confirm before the API call, so a stray tap (keyboard
   // "next"/arrow-carry, Enter) can never fire a generation unintentionally.
   // Cancel closes the modal without calling onConfirm(), so NO quota is used.
-  const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
-  const requestConfirm = (title: string, message: string, onConfirm: () => void) =>
-    setConfirmAction({ title, message, onConfirm });
+  const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; brief?: string; onConfirm: () => void } | null>(null);
+  const requestConfirm = (title: string, message: string, onConfirm: () => void, brief?: string) =>
+    setConfirmAction({ title, message, brief, onConfirm });
 
   // Expectation preview helper — sets clear expectations before a generation
   // consumes quota (owner: no "surprise" free videos if the client dislikes result).
@@ -707,7 +707,8 @@ export default function StudioPage() {
                       onClick={() => requestConfirm(
                         'Launch Project?',
                         `This starts a Scene-based video generation: ${scenePreview(projectDuration)} with AI voiceover narration, ending with your call to action. Uses one weekly video slot. Continue?`,
-                        () => handleSubmitProject(refinedVideoIdea || projectIdea)
+                        () => handleSubmitProject(refinedVideoIdea || projectIdea),
+                        (refinedVideoIdea || projectIdea).trim()
                       )}
                       disabled={!projectIdea.trim() && !refinedVideoIdea || isSubmittingProject}
                       className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
@@ -834,13 +835,13 @@ export default function StudioPage() {
                 <textarea
                   value={facelessIdea}
                   onChange={(e) => setFacelessIdea(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit); } }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit, facelessIdea.trim()); } }}
                   placeholder={isCatalyst ? "e.g. 3 reasons why most 9-5s are a trap, high-impact b-roll, professional voiceover, strong 'Link in Bio' CTA..." : "e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts..."}
                   disabled={isSubmittingFaceless}
                   className="w-full bg-theme-background border border-theme rounded-2xl p-4 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                 />
                 <button
-                  onClick={() => requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit)}
+                  onClick={() => requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit, facelessIdea.trim())}
                   disabled={!facelessIdea.trim() || isSubmittingFaceless}
                   className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
                 >
@@ -1119,13 +1120,13 @@ export default function StudioPage() {
                   <textarea
                     value={customIdea}
                     onChange={(e) => setCustomIdea(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept and uses one monthly design credit. Continue?', handleCustomIdeaSubmit); } }}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept and uses one monthly design credit. Continue?', handleCustomIdeaSubmit, customIdea.trim()); } }}
                     placeholder={designUpload.preview ? "Tell me what changes you want, or ask me to create 5 unique variations based on this design" : "e.g. A minimalist sage-green yoga mat with gold mandala print, 72x24 inches, boho-luxe aesthetic..."}
                     disabled={isSubmittingIdea}
                     className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-amber-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
                   />
                   <button
-                    onClick={() => requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept and uses one monthly design credit. Continue?', handleCustomIdeaSubmit)}
+                    onClick={() => requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept and uses one monthly design credit. Continue?', handleCustomIdeaSubmit, customIdea.trim())}
                     disabled={!customIdea.trim() || isSubmittingIdea}
                     className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
@@ -1189,6 +1190,12 @@ export default function StudioPage() {
                 >
                   <p className="text-[10px] font-black uppercase tracking-widest text-primary">{confirmAction.title}</p>
                   <p className="mt-2 text-sm text-foreground/90 leading-relaxed">{confirmAction.message}</p>
+                  {confirmAction.brief && (
+                    <div className="mt-4 rounded-xl border border-white/10 bg-theme-background/60 p-3">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Your brief</p>
+                      <p className="mt-1 text-xs text-foreground/90 leading-relaxed line-clamp-3">{confirmAction.brief}</p>
+                    </div>
+                  )}
                   <div className="mt-6 flex flex-col-reverse sm:flex-row gap-2">
                     <button
                       onClick={() => setConfirmAction(null)}
