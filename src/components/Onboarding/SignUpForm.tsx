@@ -1,18 +1,20 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, ShieldCheck, AlertCircle, Key, Eye, EyeOff } from 'lucide-react';
 import { API_URL } from '@/lib/config';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface SignUpFormProps {
-  onSuccess: (userId: string, email: string) => void;
+  onSuccess: (userId: string, email: string, clientName?: string, referral?: string) => void;
   initialMode?: 'signup' | 'login';
   masterKey?: string;
 }
 
 export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: SignUpFormProps) => {
+  const [clientName, setClientName] = useState('');
+  const [referral, setReferral] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +22,14 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
   const [error, setError] = useState<string | null>(null);
   const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [useMasterKey, setUseMasterKey] = useState(!!masterKey);
+
+  // Prefill the referring salesperson's first name from ?ref= (their link auto-fills it)
+  useEffect(() => {
+    try {
+      const ref = new URLSearchParams(window.location.search).get('ref');
+      if (ref) setReferral(ref);
+    } catch (e) {}
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +48,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
         body = { email, password };
       } else {
         endpoint = '/api/auth/register';
-        body = { email, password };
+        body = { email, password, clientName: clientName.trim(), referral: referral.trim() };
       }
 
       const response = await fetch(`${API_URL}${endpoint}`, {
@@ -49,7 +59,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
 
       const data = await response.json();
       if (response.ok) {
-        onSuccess(data.userId, email);
+        onSuccess(data.userId, email, clientName.trim(), referral.trim());
       } else {
         setError(data.error || `Failed to ${isLogin ? 'authenticate' : 'initialize'} identity.`);
       }
@@ -78,6 +88,37 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2 px-1">
+            <Mail className="w-3 h-3 text-primary" />
+            Full Name
+          </label>
+          <div className="relative group">
+            <input
+              type="text"
+              value={clientName}
+              onChange={(e) => setClientName(e.target.value)}
+              placeholder="YOUR NAME"
+              className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white shadow-inner"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2 px-1">
+            Referred By (Salesperson First Name, Optional)
+          </label>
+          <div className="relative group">
+            <input
+              type="text"
+              value={referral}
+              onChange={(e) => setReferral(e.target.value)}
+              placeholder="SALESPERSON FIRST NAME (OPTIONAL)"
+              className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white shadow-inner"
+            />
+          </div>
+        </div>
+
         <div className="space-y-2">
           <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2 px-1">
             <Mail className="w-3 h-3 text-primary" />

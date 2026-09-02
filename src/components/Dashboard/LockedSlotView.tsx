@@ -7,6 +7,7 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 import { EXPANSION_SLOT_LINK, BRAND_3_EXPANSION_LINK } from '@/lib/payment-links';
+import { API_URL } from '@/lib/config';
 
 interface LockedSlotViewProps {
   slotIndex: number;
@@ -16,15 +17,25 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
   const { unlockSlot, activeEmpireId } = useEmpire();
   const [isPaying, setIsPaying] = useState(false);
   const [accessKey, setAccessKey] = useState('');
+  const [clientName, setClientName] = useState('');
+  const [referral, setReferral] = useState('');
+
+  // Prefill referring salesperson's first name from ?ref=
+  React.useEffect(() => {
+    try {
+      const ref = new URLSearchParams(window.location.search).get('ref');
+      if (ref) setReferral(ref);
+    } catch (e) {}
+  }, []);
 
   const handleSecurePayment = async () => {
     const slotLink = slotIndex === 1 ? EXPANSION_SLOT_LINK : BRAND_3_EXPANSION_LINK;
     try {
       const token = localStorage.getItem('empire_auth_token') || '';
-      const res = await fetch('https://backend-production-56123.up.railway.app/api/stripe/create-checkout-session', {
+      const res = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ type: 'expansion', slotIndex }),
+        body: JSON.stringify({ type: 'expansion', slotIndex, clientName: clientName.trim(), referral: referral.trim() }),
       });
       const data = await res.json();
       if (data.url) {
@@ -73,6 +84,29 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
             <div className="text-right">
               <span className="text-3xl font-black text-foreground">$50</span>
               <span className="text-slate-500 font-black uppercase tracking-widest text-[8px] block">per month</span>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Full Name</label>
+              <input
+                type="text"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                placeholder="YOUR NAME"
+                className="w-full bg-theme-background border border-theme rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-foreground"
+              />
+            </div>
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Referred By (Salesperson First Name, Optional)</label>
+              <input
+                type="text"
+                value={referral}
+                onChange={(e) => setReferral(e.target.value)}
+                placeholder="SALESPERSON FIRST NAME (OPTIONAL)"
+                className="w-full bg-theme-background border border-theme rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-foreground"
+              />
             </div>
           </div>
 
