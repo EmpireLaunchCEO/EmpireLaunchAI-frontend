@@ -19,6 +19,8 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
   const [accessKey, setAccessKey] = useState('');
   const [clientName, setClientName] = useState('');
   const [referral, setReferral] = useState('');
+  // Owner directive: full name (first + last) is required before payment.
+  const hasValidFullName = clientName.trim().split(/\s+/).length >= 2;
 
   // Prefill referring salesperson's first name from ?ref=
   React.useEffect(() => {
@@ -29,6 +31,10 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
   }, []);
 
   const handleSecurePayment = async () => {
+    // Owner directive: full name (first + last) is required to submit payment.
+    if (!hasValidFullName) {
+      return;
+    }
     const slotLink = slotIndex === 1 ? EXPANSION_SLOT_LINK : BRAND_3_EXPANSION_LINK;
     try {
       const token = localStorage.getItem('empire_auth_token') || '';
@@ -94,9 +100,12 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
                 type="text"
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
-                placeholder="YOUR NAME"
+                placeholder="FIRST LAST"
                 className="w-full bg-theme-background border border-theme rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-foreground"
               />
+              {!hasValidFullName && clientName.trim().length > 0 && (
+                <p className="text-[8px] font-black uppercase text-red-500 px-1 mt-1">Enter your first AND last name to continue</p>
+              )}
             </div>
             <div>
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Referred By (Salesperson First Name, Optional)</label>
@@ -112,8 +121,8 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
 
           <button
             onClick={handleSecurePayment}
-            disabled={isPaying}
-            className="w-full bg-primary text-slate-950 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-white transition-all flex items-center justify-center gap-3 group shadow-xl active:scale-95"
+            disabled={isPaying || !hasValidFullName}
+            className="w-full bg-primary text-slate-950 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-white transition-all flex items-center justify-center gap-3 group shadow-xl active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <CreditCard className="w-5 h-5" />
             {isPaying ? "Processing Link Center..." : "Pay with Credit Card"}

@@ -1,15 +1,18 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { AlertCircle, CreditCard } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface PaymentDueModalProps {
-  onProcessPayment: () => void;
+  onProcessPayment: (name: string) => void;
   processing: boolean;
 }
 
 export function PaymentDueModal({ onProcessPayment, processing }: PaymentDueModalProps) {
+  const [clientName, setClientName] = useState('');
+  // Owner directive: full name (first + last) is required before payment.
+  const hasValidFullName = clientName.trim().split(/\s+/).length >= 2;
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -35,9 +38,25 @@ export function PaymentDueModal({ onProcessPayment, processing }: PaymentDueModa
           </p>
         </div>
 
+        <div className="w-full space-y-3 text-left">
+          <div>
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Full Name</label>
+            <input
+              type="text"
+              value={clientName}
+              onChange={(e) => setClientName(e.target.value)}
+              placeholder="FIRST LAST"
+              className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white"
+            />
+            {!hasValidFullName && clientName.trim().length > 0 && (
+              <p className="text-[9px] font-black uppercase text-red-500 px-1 mt-1">Enter your first AND last name to continue</p>
+            )}
+          </div>
+        </div>
+
         <button
-          onClick={onProcessPayment}
-          disabled={processing}
+          onClick={() => onProcessPayment(clientName)}
+          disabled={processing || !hasValidFullName}
           className="w-full py-4 bg-gradient-to-r from-red-500 to-amber-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl shadow-red-500/20 disabled:opacity-50 flex items-center justify-center gap-2"
         >
           <CreditCard className="w-4 h-4" />
