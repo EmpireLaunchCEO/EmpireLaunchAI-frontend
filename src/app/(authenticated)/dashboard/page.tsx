@@ -86,7 +86,7 @@ export default function Dashboard() {
           const pendingType = localStorage.getItem('pending_payment');
           if (pendingType === 'subscription' || pendingType === 'expansion') {
             try {
-              await fetch(`${API_URL || 'https://backend-production-56123.up.railway.app'}/api/stripe/verify-subscription`, {
+              await fetch(`${API_URL}/api/stripe/verify-subscription`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}` },
                 body: JSON.stringify({ type: pendingType }),
