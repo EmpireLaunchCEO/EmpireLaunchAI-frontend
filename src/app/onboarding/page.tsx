@@ -528,13 +528,13 @@ function OnboardingContent() {
 
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
-                          Referred By (optional)
+                          Referred By (Salesperson First Name, Optional)
                         </label>
                         <input
                           type="text"
                           value={referral}
                           onChange={(e) => setReferral(e.target.value)}
-                          placeholder="WHO REFERRED YOU? (FIRST NAME, OPTIONAL)"
+                          placeholder="SALESPERSON FIRST NAME (OPTIONAL)"
                           className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-[10px] font-black uppercase text-white outline-none focus:border-primary transition-all"
                         />
                       </div>

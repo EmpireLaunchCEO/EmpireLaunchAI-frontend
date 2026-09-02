@@ -228,7 +228,7 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}`,
         },
-        body: JSON.stringify({ type: 'subscription' }),
+        body: JSON.stringify({ type: 'subscription', clientName: clientName.trim(), referral: referral.trim() }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -370,12 +370,12 @@ export default function Dashboard() {
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Referred By (optional)</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Referred By (Salesperson First Name, Optional)</label>
                   <input
                     type="text"
                     value={referral}
                     onChange={(e) => setReferral(e.target.value)}
-                    placeholder="WHO REFERRED YOU? (FIRST NAME, OPTIONAL)"
+                    placeholder="SALESPERSON FIRST NAME (OPTIONAL)"
                     className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white"
                   />
                 </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, ShieldCheck, Lock, ExternalLink, Copy, Check, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -67,16 +67,6 @@ export function ProtectedPaymentButton({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [clientName, setClientName] = useState('');
-  const [referral, setReferral] = useState('');
-
-  // Prefill referring salesperson's first name from ?ref=
-  useEffect(() => {
-    try {
-      const ref = new URLSearchParams(window.location.search).get('ref');
-      if (ref) setReferral(ref);
-    } catch (e) {}
-  }, []);
 
   const handlePurchase = useCallback(async () => {
     if (isLoading) return;
@@ -130,22 +120,6 @@ export function ProtectedPaymentButton({
   if (variant === 'minimal') {
     return (
       <div className={cn('relative', className)}>
-        <div className="space-y-2 mb-3">
-          <input
-            type="text"
-            value={clientName}
-            onChange={(e) => setClientName(e.target.value)}
-            placeholder="YOUR NAME"
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl py-3 px-4 text-xs font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none"
-          />
-          <input
-            type="text"
-            value={referral}
-            onChange={(e) => setReferral(e.target.value)}
-            placeholder="WHO REFERRED YOU? (FIRST NAME, OPTIONAL)"
-            className="w-full bg-slate-900 border border-slate-800 rounded-xl py-3 px-4 text-xs font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none"
-          />
-        </div>
         <button
           onClick={handlePurchase}
           disabled={isLoading}
@@ -231,23 +205,6 @@ export function ProtectedPaymentButton({
             </span>
           </div>
 
-          <div className="space-y-2">
-            <input
-              type="text"
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-              placeholder="YOUR NAME"
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs font-bold text-slate-900 placeholder:text-slate-400 focus:border-primary/60 transition-all outline-none"
-            />
-            <input
-              type="text"
-              value={referral}
-              onChange={(e) => setReferral(e.target.value)}
-              placeholder="WHO REFERRED YOU? (FIRST NAME, OPTIONAL)"
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs font-bold text-slate-900 placeholder:text-slate-400 focus:border-primary/60 transition-all outline-none"
-            />
-          </div>
-
           <button
             onClick={handlePurchase}
             disabled={isLoading}
@@ -296,22 +253,6 @@ export function ProtectedPaymentButton({
   // Default variant — full-featured button with copy link
   return (
     <div className={cn('space-y-3', className)}>
-      <div className="space-y-2">
-        <input
-          type="text"
-          value={clientName}
-          onChange={(e) => setClientName(e.target.value)}
-          placeholder="YOUR NAME"
-          className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none"
-        />
-        <input
-          type="text"
-          value={referral}
-          onChange={(e) => setReferral(e.target.value)}
-          placeholder="WHO REFERRED YOU? (FIRST NAME, OPTIONAL)"
-          className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none"
-        />
-      </div>
       <button
         onClick={handlePurchase}
         disabled={isLoading}

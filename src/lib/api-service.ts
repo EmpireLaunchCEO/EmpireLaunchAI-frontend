@@ -538,8 +538,8 @@ export const paymentService = {
 
   /**
    * Create a platform checkout session (for subscription payments)
-   * clientName/referral: salesperson commission attribution — the client's
-   * full name + the referring salesperson's first name (owner-approved feature).
+   * LEGACY/dead path — live flows POST to /api/stripe/create-checkout-session
+   * directly. clientName/referral accepted for completeness only.
    */
   async createPlatformCheckout(
     returnUrl: string,

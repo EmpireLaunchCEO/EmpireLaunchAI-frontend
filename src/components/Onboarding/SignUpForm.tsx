@@ -106,14 +106,14 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
 
         <div className="space-y-2">
           <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2 px-1">
-            Referred By (optional)
+            Referred By (Salesperson First Name, Optional)
           </label>
           <div className="relative group">
             <input
               type="text"
               value={referral}
               onChange={(e) => setReferral(e.target.value)}
-              placeholder="WHO REFERRED YOU? (FIRST NAME, OPTIONAL)"
+              placeholder="SALESPERSON FIRST NAME (OPTIONAL)"
               className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white shadow-inner"
             />
           </div>

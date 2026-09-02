@@ -7,6 +7,7 @@ import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
 import { EXPANSION_SLOT_LINK, BRAND_3_EXPANSION_LINK } from '@/lib/payment-links';
+import { API_URL } from '@/lib/config';
 
 interface LockedSlotViewProps {
   slotIndex: number;
@@ -31,7 +32,7 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
     const slotLink = slotIndex === 1 ? EXPANSION_SLOT_LINK : BRAND_3_EXPANSION_LINK;
     try {
       const token = localStorage.getItem('empire_auth_token') || '';
-      const res = await fetch('https://backend-production-56123.up.railway.app/api/stripe/create-checkout-session', {
+      const res = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ type: 'expansion', slotIndex, clientName: clientName.trim(), referral: referral.trim() }),
@@ -98,12 +99,12 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
               />
             </div>
             <div>
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Referred By (optional)</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Referred By (Salesperson First Name, Optional)</label>
               <input
                 type="text"
                 value={referral}
                 onChange={(e) => setReferral(e.target.value)}
-                placeholder="WHO REFERRED YOU? (FIRST NAME, OPTIONAL)"
+                placeholder="SALESPERSON FIRST NAME (OPTIONAL)"
                 className="w-full bg-theme-background border border-theme rounded-xl py-4 px-5 text-[10px] font-black uppercase tracking-widest placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-foreground"
               />
             </div>
