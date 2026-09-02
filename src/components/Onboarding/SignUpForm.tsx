@@ -33,6 +33,11 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Owner directive: full name (first + last) is required for signup identity.
+    if (!isLogin && !useMasterKey && clientName.trim().split(/\s+/).length < 2) {
+      setError('Enter your first AND last name to continue.');
+      return;
+    }
     setIsLoading(true);
     setError(null);
 
@@ -98,10 +103,13 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
               type="text"
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
-              placeholder="YOUR NAME"
+              placeholder="FIRST LAST"
               className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white shadow-inner"
             />
           </div>
+          {!isLogin && !useMasterKey && clientName.trim().length > 0 && clientName.trim().split(/\s+/).length < 2 && (
+            <p className="text-[9px] font-black uppercase text-red-500 px-1">Enter your first AND last name to continue</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -170,7 +178,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
         <div className="space-y-4">
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || (!isLogin && !useMasterKey && clientName.trim().split(/\s+/).length < 2)}
             className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none disabled:opacity-50"
           >
             {isLoading ? (

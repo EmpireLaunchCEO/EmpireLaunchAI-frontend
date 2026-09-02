@@ -35,6 +35,8 @@ export default function Dashboard() {
   const [processingPayment, setProcessingPayment] = useState(false);
   const [clientName, setClientName] = useState('');
   const [referral, setReferral] = useState('');
+  // Owner directive: full name (first + last) is required before payment.
+  const hasValidFullName = clientName.trim().split(/\s+/).length >= 2;
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -219,7 +221,13 @@ export default function Dashboard() {
   }, [isDashboardLoaded, mounted]);
 
   // Process payment for past_due — same Stripe flow
-  const handleProcessPayment = async () => {
+  const handleProcessPayment = async (nameOverride?: string) => {
+    // Owner directive: full name (first + last) is required to submit payment.
+    const nameForPayment = nameOverride ?? clientName;
+    if (nameForPayment.trim().split(/\s+/).length < 2) {
+      setProcessingPayment(false);
+      return;
+    }
     setProcessingPayment(true);
     try {
       const res = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
@@ -228,7 +236,7 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}`,
         },
-        body: JSON.stringify({ type: 'subscription', clientName: clientName.trim(), referral: referral.trim() }),
+        body: JSON.stringify({ type: 'subscription', clientName: nameForPayment.trim(), referral: referral.trim() }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -246,6 +254,10 @@ export default function Dashboard() {
 
   // Subscribe handler — creates Stripe checkout session
   const handleSubscribe = async () => {
+    // Owner directive: full name (first + last) is required to submit payment.
+    if (!hasValidFullName) {
+      return;
+    }
     setSubscribing(true);
     try {
       const res = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
@@ -365,9 +377,12 @@ export default function Dashboard() {
                     type="text"
                     value={clientName}
                     onChange={(e) => setClientName(e.target.value)}
-                    placeholder="YOUR NAME"
+                    placeholder="FIRST LAST"
                     className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white"
                   />
+                  {!hasValidFullName && clientName.trim().length > 0 && (
+                    <p className="text-[9px] font-black uppercase text-red-500 px-1 mt-1">Enter your first AND last name to continue</p>
+                  )}
                 </div>
                 <div>
                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Referred By (Salesperson First Name, Optional)</label>
@@ -382,7 +397,7 @@ export default function Dashboard() {
               </div>
               <button
                 onClick={handleSubscribe}
-                disabled={subscribing}
+                disabled={subscribing || !hasValidFullName}
                 className="px-10 py-4 bg-gradient-to-r from-primary to-amber-600 text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl shadow-primary/40 disabled:opacity-50"
               >
                 {subscribing ? 'Redirecting to Stripe...' : 'Subscribe Now — $50/mo'}

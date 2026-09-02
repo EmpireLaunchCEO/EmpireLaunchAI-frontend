@@ -94,6 +94,8 @@ function OnboardingContent() {
   const [redemptionError, setRedemptionError] = useState<string | null>(null);
   const [clientName, setClientName] = useState('');
   const [referral, setReferral] = useState('');
+  // Owner directive: full name (first + last) is required before payment.
+  const hasValidFullName = clientName.trim().split(/\s+/).length >= 2;
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
@@ -263,6 +265,10 @@ function OnboardingContent() {
   };
 
   const handleSecurePayment = async () => {
+    // Owner directive: full name (first + last) is required to submit payment.
+    if (!hasValidFullName) {
+      return;
+    }
     setIsPaying(true);
     try {
       const res = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
@@ -521,9 +527,12 @@ function OnboardingContent() {
                           type="text"
                           value={clientName}
                           onChange={(e) => setClientName(e.target.value)}
-                          placeholder="YOUR NAME"
+                          placeholder="FIRST LAST"
                           className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-[10px] font-black uppercase text-white outline-none focus:border-primary transition-all"
                         />
+                        {!hasValidFullName && clientName.trim().length > 0 && (
+                          <p className="text-[8px] font-black uppercase text-red-500 ml-1">Enter your first AND last name to continue</p>
+                        )}
                       </div>
 
                       <div className="space-y-2">
@@ -539,7 +548,7 @@ function OnboardingContent() {
                         />
                       </div>
 
-                      <button onClick={handleSecurePayment} disabled={isPaying} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 shadow-xl border-none">
+                      <button onClick={handleSecurePayment} disabled={isPaying || !hasValidFullName} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 shadow-xl border-none disabled:opacity-40 disabled:cursor-not-allowed">
                         <CreditCard className="w-5 h-5" />
                         {isPaying ? "Processing..." : currentT('securePayment')}
                       </button>
