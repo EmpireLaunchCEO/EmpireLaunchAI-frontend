@@ -538,12 +538,17 @@ export const paymentService = {
 
   /**
    * Create a platform checkout session (for subscription payments)
+   * clientName/referral: salesperson commission attribution — the client's
+   * full name + the referring salesperson's first name (owner-approved feature).
    */
-  async createPlatformCheckout(returnUrl: string): Promise<{ url: string }> {
+  async createPlatformCheckout(
+    returnUrl: string,
+    attribution?: { clientName?: string; referral?: string }
+  ): Promise<{ url: string }> {
     const res = await fetch(`${API_URL}/api/stripe/checkout/platform`, {
       method: 'POST',
       headers: getHeaders(),
-      body: JSON.stringify({ returnUrl }),
+      body: JSON.stringify({ returnUrl, ...attribution }),
     });
     if (!res.ok) throw new Error('Checkout session creation failed');
     return res.json();

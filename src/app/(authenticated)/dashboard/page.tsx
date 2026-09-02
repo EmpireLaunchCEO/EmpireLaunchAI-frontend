@@ -33,10 +33,17 @@ export default function Dashboard() {
   const [subscribing, setSubscribing] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
+  const [clientName, setClientName] = useState('');
+  const [referral, setReferral] = useState('');
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    // Prefill referring salesperson's first name from ?ref= (their link auto-fills it)
+    try {
+      const ref = new URLSearchParams(window.location.search).get('ref');
+      if (ref) setReferral(ref);
+    } catch (e) {}
   }, []);
 
   const fetchData = useCallback(async (retryCount = 0) => {
@@ -247,7 +254,7 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}`,
         },
-        body: JSON.stringify({ type: 'subscription' }),
+        body: JSON.stringify({ type: 'subscription', clientName: clientName.trim(), referral: referral.trim() }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -350,6 +357,28 @@ export default function Dashboard() {
                   Your EmpireLaunch AI subscription is required to access the command center.
                   Unlock full autonomous business automation for $50/month.
                 </p>
+              </div>
+              <div className="w-full space-y-3 text-left">
+                <div>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Full Name</label>
+                  <input
+                    type="text"
+                    value={clientName}
+                    onChange={(e) => setClientName(e.target.value)}
+                    placeholder="YOUR NAME"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 px-1">Referred By (optional)</label>
+                  <input
+                    type="text"
+                    value={referral}
+                    onChange={(e) => setReferral(e.target.value)}
+                    placeholder="WHO REFERRED YOU? (FIRST NAME, OPTIONAL)"
+                    className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white"
+                  />
+                </div>
               </div>
               <button
                 onClick={handleSubscribe}

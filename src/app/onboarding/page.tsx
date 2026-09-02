@@ -92,6 +92,8 @@ function OnboardingContent() {
   const [accessKey, setAccessKey] = useState('');
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [redemptionError, setRedemptionError] = useState<string | null>(null);
+  const [clientName, setClientName] = useState('');
+  const [referral, setReferral] = useState('');
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [showDiscoveryReview, setShowDiscoveryReview] = useState(false);
   const [discoveryLogIndex, setDiscoveryLogIndex] = useState(0);
@@ -190,6 +192,12 @@ function OnboardingContent() {
   const isPreview = searchParams.get('preview') === 'true';
   const [isLoginMode, setIsLoginMode] = useState(searchParams.get('mode') === 'login');
 
+  // Prefill referring salesperson's first name from ?ref= (their link auto-fills it)
+  useEffect(() => {
+    const ref = searchParams.get('ref');
+    if (ref) setReferral(ref);
+  }, [searchParams]);
+
   const finalizeActivation = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}/api/agent/initialize`, {
@@ -260,7 +268,7 @@ function OnboardingContent() {
       const res = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}` },
-        body: JSON.stringify({ type: 'subscription' }),
+        body: JSON.stringify({ type: 'subscription', clientName: clientName.trim(), referral: referral.trim() }),
       });
       const data = await res.json();
       if (data.url) {
@@ -505,6 +513,32 @@ function OnboardingContent() {
                         )}
                       </div>
 
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                          Full Name
+                        </label>
+                        <input
+                          type="text"
+                          value={clientName}
+                          onChange={(e) => setClientName(e.target.value)}
+                          placeholder="YOUR NAME"
+                          className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-[10px] font-black uppercase text-white outline-none focus:border-primary transition-all"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                          Referred By (optional)
+                        </label>
+                        <input
+                          type="text"
+                          value={referral}
+                          onChange={(e) => setReferral(e.target.value)}
+                          placeholder="WHO REFERRED YOU? (FIRST NAME, OPTIONAL)"
+                          className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-[10px] font-black uppercase text-white outline-none focus:border-primary transition-all"
+                        />
+                      </div>
+
                       <button onClick={handleSecurePayment} disabled={isPaying} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all flex items-center justify-center gap-3 shadow-xl border-none">
                         <CreditCard className="w-5 h-5" />
                         {isPaying ? "Processing..." : currentT('securePayment')}
@@ -520,8 +554,10 @@ function OnboardingContent() {
                 <SignUpForm
                   initialMode={isLoginMode ? 'login' : 'signup'}
                   masterKey={accessKey.trim()}
-                  onSuccess={async (uid) => {
+                  onSuccess={async (uid, _email, nameFromForm, referralFromForm) => {
                     setUserId(uid);
+                    if (nameFromForm) setClientName(nameFromForm);
+                    if (referralFromForm) setReferral(referralFromForm);
                     if (isLoginMode) {
                       window.location.href = '/dashboard';
                       return;
