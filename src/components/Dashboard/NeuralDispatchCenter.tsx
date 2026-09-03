@@ -60,6 +60,11 @@ export function NeuralDispatchCenter() {
   const [approvalItems, setApprovalItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentApproval, setCurrentApproval] = useState<any | null>(null);
+  const [feedbackStatus, setFeedbackStatus] = useState<{
+    tone: 'info' | 'success' | 'error';
+    text: string;
+  } | null>(null);
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   const queueTypeMap: Record<string, string> = {
     videos: 'video',
@@ -296,9 +301,50 @@ export function NeuralDispatchCenter() {
     }
   };
 
-  const handleSyncFeedback = () => {
-    setDraftNumber(prev => prev + 1);
-    setFeedback('');
+  // Post per-video Neural Feedback to the auto-fix endpoint. Audio/choppy
+  // intents trigger a deterministic re-mix (new draft lands in Operations);
+  // other intents are recorded as a note. Status is surfaced honestly.
+  const handleSubmitFeedback = async () => {
+    const text = feedback.trim();
+    const approvalId = currentApproval?.id;
+    if (!text || !approvalId || isSubmittingFeedback) return;
+    setIsSubmittingFeedback(true);
+    setFeedbackStatus(null);
+    try {
+      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
+      const res = await fetch(`${API_URL}/api/approval/${approvalId}/feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
+          'x-user-id': userId || ''
+        },
+        body: JSON.stringify({ feedback: text })
+      });
+      const data = await res.json().catch(() => ({}));
+      const status = data?.status;
+
+      if (res.ok) {
+        if (status === 'auto_fixed') {
+          setFeedbackStatus({ tone: 'success', text: "Fixed version generated — see new draft" });
+          // Refresh Operations so the new re-mix draft (saved:false, reMixOf)
+          // appears in the queue like any other draft.
+          fetchApprovals();
+        } else if (status === 'components_expired') {
+          setFeedbackStatus({ tone: 'error', text: "Can't auto-fix — this video's components have expired" });
+        } else {
+          setFeedbackStatus({ tone: 'success', text: 'Feedback noted' });
+        }
+        setFeedback('');
+      } else {
+        setFeedbackStatus({ tone: 'error', text: "Couldn't send feedback — please try again" });
+      }
+    } catch (err) {
+      console.error('Failed to submit feedback:', err);
+      setFeedbackStatus({ tone: 'error', text: "Couldn't send feedback — please try again" });
+    } finally {
+      setIsSubmittingFeedback(false);
+    }
   };
 
   if (view === 'review') {
@@ -371,10 +417,28 @@ export function NeuralDispatchCenter() {
                 type="text" 
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
-                placeholder="e.g. 'Change the last sentence to mention free shipping'..."
-                className="w-full bg-slate-950 border border-white/10 rounded-2xl p-5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all"
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSubmitFeedback(); } }}
+                placeholder="e.g. 'Fix the audio' or 'Change the last sentence to mention free shipping'..."
+                className="w-full bg-slate-950 border border-white/10 rounded-2xl p-5 pr-24 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all"
               />
+              <button
+                onClick={handleSubmitFeedback}
+                disabled={!feedback.trim() || isSubmittingFeedback}
+                className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2.5 bg-primary text-slate-950 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {isSubmittingFeedback ? 'Sending…' : 'Send'}
+              </button>
             </div>
+            {feedbackStatus && (
+              <p className={cn(
+                "text-[10px] font-bold uppercase tracking-widest",
+                feedbackStatus.tone === 'success' && "text-emerald-400",
+                feedbackStatus.tone === 'error' && "text-red-400",
+                feedbackStatus.tone === 'info' && "text-slate-400"
+              )}>
+                {feedbackStatus.text}
+              </p>
+            )}
           </div>
 
           <div className="flex gap-3">
