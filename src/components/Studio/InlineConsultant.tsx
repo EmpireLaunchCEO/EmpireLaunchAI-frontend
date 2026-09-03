@@ -381,7 +381,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           <ArrowDown className="w-2.5 h-2.5 text-primary" />
           <span className="text-[9px] font-bold text-primary uppercase tracking-widest">
             {suppressWand
-              ? "Refine here — then tap Launch Project to generate"
+              ? "Refine here — then hit the Launch Project button"
               : (readyToGenerate ? "Ready to generate!" : canGenerate ? "Tap Generate when ready, or keep chatting" : "Chat with the AI to refine your idea")}
           </span>
         </div>

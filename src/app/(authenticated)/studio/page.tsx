@@ -404,12 +404,18 @@ export default function StudioPage() {
 
   // Expectation preview helper — sets clear expectations before a generation
   // consumes quota (owner: no "surprise" free videos if the client dislikes result).
+  // Mirrors the backend's deterministic targetSceneCount (sceneVideoPipelineService:
+  // SECONDS_PER_SCENE=6, MIN_SCENES=3, MAX_SCENES=60) so the brief MATCHES the
+  // executor's planned scene count instead of lying with a hardcoded marketing
+  // approximation ("~3 scenes" for 30s while the planner schedules 5).
   const scenePreview = (duration: string) => {
-    if (duration === '30') return 'a punchy 30-second story, ~3 scenes';
-    if (duration === '60') return 'a concise 1-minute story, ~5 scenes';
-    if (duration === '120') return 'a full 2-minute story, ~10 scenes';
-    if (duration === '180') return 'an in-depth 3-minute story, ~15 scenes';
-    return '~5 scenes building your story';
+    const d = Number(duration);
+    const secondsPerScene = 6;
+    const count = Number.isFinite(d) && d > 0
+      ? Math.max(3, Math.min(60, Math.round(d / secondsPerScene)))
+      : 0;
+    if (count <= 0) return 'a story divided into short AI scenes';
+    return `a ${d}-second story, ${count} AI scenes`;
   };
 
   // Scene-based video project — the SINGLE video builder (consultant + controls
