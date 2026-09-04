@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Video, 
   Edit3, 
@@ -65,6 +65,8 @@ export function NeuralDispatchCenter() {
     text: string;
   } | null>(null);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [feedbackPlaceholder, setFeedbackPlaceholder] = useState("e.g. 'Fix the audio' or 'Change the last sentence to mention free shipping'...");
+  const feedbackInputRef = useRef<HTMLInputElement>(null);
 
   const queueTypeMap: Record<string, string> = {
     videos: 'video',
@@ -303,6 +305,7 @@ export function NeuralDispatchCenter() {
 
   // Post per-video Neural Feedback to the auto-fix endpoint. Audio/choppy
   // intents trigger a deterministic re-mix (new draft lands in Operations);
+  // line-change intents edit one line (same voice, audio swap only);
   // other intents are recorded as a note. Status is surfaced honestly.
   const handleSubmitFeedback = async () => {
     const text = feedback.trim();
@@ -325,7 +328,28 @@ export function NeuralDispatchCenter() {
       const status = data?.status;
 
       if (res.ok) {
-        if (status === 'auto_fixed') {
+        if (status === 'line_changed') {
+          // A NEW draft was created (reMixType 'line_change', tagged "line edited").
+          // Surface the exact scene/line change from the response, then refresh
+          // Operations so the new draft is visible/selectable.
+          const lc = data?.lineChange;
+          const detail = lc?.sceneNumber != null
+            ? `Scene ${lc.sceneNumber}: ${lc.oldText ? `'${lc.oldText}'` : 'this line'} → ${lc.newText ? `'${lc.newText}'` : 'edited'}`
+            : (lc?.newText ? `'${lc.newText}'` : '');
+          setFeedbackStatus({
+            tone: 'success',
+            text: detail ? `Line edited — new draft created (${detail})` : 'Line edited — new draft created'
+          });
+          fetchApprovals();
+        } else if (status === 'line_not_found') {
+          // Backend could NOT match the requested line to a scene — zero spend.
+          // Show the backend reason verbatim, keep the user's text so they can
+          // rephrase, and focus the input with a "which line?" placeholder.
+          const reason = data?.reason || "Couldn't match that line to a scene — which line? (scene number or exact words)";
+          setFeedbackStatus({ tone: 'error', text: reason });
+          setFeedbackPlaceholder("Which line? (scene number or exact words)");
+          setTimeout(() => feedbackInputRef.current?.focus(), 0);
+        } else if (status === 'auto_fixed') {
           setFeedbackStatus({ tone: 'success', text: "Fixed version generated — see new draft" });
           // Refresh Operations so the new re-mix draft (saved:false, reMixOf)
           // appears in the queue like any other draft.
@@ -335,7 +359,10 @@ export function NeuralDispatchCenter() {
         } else {
           setFeedbackStatus({ tone: 'success', text: 'Feedback noted' });
         }
-        setFeedback('');
+        if (status !== 'line_not_found') {
+          setFeedback('');
+          setFeedbackPlaceholder("e.g. 'Fix the audio' or 'Change the last sentence to mention free shipping'...");
+        }
       } else {
         setFeedbackStatus({ tone: 'error', text: "Couldn't send feedback — please try again" });
       }
@@ -367,6 +394,19 @@ export function NeuralDispatchCenter() {
                 <p className="mt-1 text-[10px] font-black text-slate-400 uppercase tracking-widest">
                   {currentApproval.payload.shape === 'horizontal' ? '▬ ' : currentApproval.payload.shape === 'square' ? '□ ' : currentApproval.payload.shape === 'portrait' ? '▮ ' : ''}
                   {currentApproval.payload.ratioLabel}
+                </p>
+              ) : null}
+              {currentApproval?.payload?.reMixType === 'line_change' ? (
+                <p className="mt-1 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-amber-300">
+                  <Sparkles className="w-3 h-3" />
+                  line edited
+                </p>
+              ) : null}
+              {currentApproval?.payload?.lineChange?.newText ? (
+                <p className="mt-0.5 text-[10px] font-bold text-slate-500 truncate max-w-[320px]">
+                  {currentApproval.payload.lineChange.sceneNumber != null ? `Scene ${currentApproval.payload.lineChange.sceneNumber}: ` : ''}
+                  {currentApproval.payload.lineChange.oldText ? `'${currentApproval.payload.lineChange.oldText}' → ` : ''}
+                  '{currentApproval.payload.lineChange.newText}'
                 </p>
               ) : null}
             </div>
@@ -415,10 +455,11 @@ export function NeuralDispatchCenter() {
             <div className="relative">
               <input 
                 type="text" 
+                ref={feedbackInputRef}
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSubmitFeedback(); } }}
-                placeholder="e.g. 'Fix the audio' or 'Change the last sentence to mention free shipping'..."
+                placeholder={feedbackPlaceholder}
                 className="w-full bg-slate-950 border border-white/10 rounded-2xl p-5 pr-24 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all"
               />
               <button
