@@ -349,6 +349,30 @@ export function NeuralDispatchCenter() {
           setFeedbackStatus({ tone: 'error', text: reason });
           setFeedbackPlaceholder("Which line? (scene number or exact words)");
           setTimeout(() => feedbackInputRef.current?.focus(), 0);
+        } else if (status === 'repetitive_fixed' || status === 'combined_fixed') {
+          // A NEW draft was created (reMixType 'repetitive', title "(repeats cut)").
+          // Surface the dropped-scene detail from the response, then refresh
+          // Operations so the new draft is visible/selectable. combined_fixed
+          // means the SAME render satisfied voiceover AND dedup — report both.
+          const rep = data?.repetitive;
+          const dropped: Array<{ sceneNumber: number; matchSceneNumber: number; reason?: string }> = rep?.dropped || [];
+          const detail = dropped.length > 0
+            ? dropped.map((d) => `scene ${d.sceneNumber} (matched scene ${d.matchSceneNumber})`).join(', ')
+            : (rep?.kept != null ? `${rep.kept} scenes kept` : '');
+          const base = status === 'combined_fixed' ? 'Voiceover fixed & repeats cut' : 'Repeats cut';
+          setFeedbackStatus({
+            tone: 'success',
+            text: detail ? `${base} — new draft created (dropped ${detail})` : `${base} — new draft created`
+          });
+          fetchApprovals();
+        } else if (status === 'repetitive_not_found') {
+          // Backend found no confident duplicates — zero spend. Show the reason
+          // verbatim, keep the user's text so they can rephrase, and focus the
+          // input with a "which scenes?" placeholder. Never imply a draft was made.
+          const reason = data?.reason || 'No obvious repeats — which scenes feel repetitive?';
+          setFeedbackStatus({ tone: 'error', text: reason });
+          setFeedbackPlaceholder('Which scenes feel repetitive? (scene numbers)');
+          setTimeout(() => feedbackInputRef.current?.focus(), 0);
         } else if (status === 'auto_fixed') {
           setFeedbackStatus({ tone: 'success', text: "Fixed version generated — see new draft" });
           // Refresh Operations so the new re-mix draft (saved:false, reMixOf)
@@ -359,7 +383,7 @@ export function NeuralDispatchCenter() {
         } else {
           setFeedbackStatus({ tone: 'success', text: 'Feedback noted' });
         }
-        if (status !== 'line_not_found') {
+        if (status !== 'line_not_found' && status !== 'repetitive_not_found') {
           setFeedback('');
           setFeedbackPlaceholder("e.g. 'Fix the audio' or 'Change the last sentence to mention free shipping'...");
         }
@@ -407,6 +431,17 @@ export function NeuralDispatchCenter() {
                   {currentApproval.payload.lineChange.sceneNumber != null ? `Scene ${currentApproval.payload.lineChange.sceneNumber}: ` : ''}
                   {currentApproval.payload.lineChange.oldText ? `'${currentApproval.payload.lineChange.oldText}' → ` : ''}
                   '{currentApproval.payload.lineChange.newText}'
+                </p>
+              ) : null}
+              {currentApproval?.payload?.reMixType === 'repetitive' ? (
+                <p className="mt-1 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-amber-300">
+                  <Sparkles className="w-3 h-3" />
+                  repeats cut
+                </p>
+              ) : null}
+              {currentApproval?.payload?.repetitive?.dropped?.length ? (
+                <p className="mt-0.5 text-[10px] font-bold text-slate-500 truncate max-w-[320px]">
+                  dropped {currentApproval.payload.repetitive.dropped.map((d: any) => `scene ${d.sceneNumber} (matched ${d.matchSceneNumber})`).join(', ')}
                 </p>
               ) : null}
             </div>
