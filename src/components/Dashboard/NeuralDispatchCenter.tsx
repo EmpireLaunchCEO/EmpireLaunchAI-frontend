@@ -106,7 +106,13 @@ export function NeuralDispatchCenter() {
         if (assetsRes.ok) {
           const assetsData = await assetsRes.json();
           const completedAssets = (assetsData.assets || []).filter(
-            (a: any) => a.status !== 'processing' && a.status !== 'failed'
+            (a: any) =>
+              a.status !== 'processing' &&
+              a.status !== 'failed' &&
+              // Only surface assets with a playable/usable media URL. A creation
+              // that failed R2 upload (or has no media) would otherwise become a
+              // url-less card that can never be viewed — drop it from the queue.
+              (a.fileUrl || a.thumbnailUrl || a.masterVideoUrl)
           );
           const assetItems = completedAssets.map((asset: any) => ({
             id: asset.id,
@@ -211,13 +217,12 @@ export function NeuralDispatchCenter() {
   useEffect(() => {
     if (view === 'review' && activeQueue) {
       const approvalType = queueTypeMap[activeQueue];
-      // For video queue, only match approvals that actually have a videoUrl
+      // For video queue, match any video-type approval. A card without a
+      // videoUrl still opens in review — the player area shows the placeholder
+      // and the delete (X) stays reachable, so a url-less/stuck card can be
+      // removed instead of blocking the queue forever.
       const match = approvalItems.find((item: any) => {
-        const typeMatch = item.type?.toLowerCase() === approvalType;
-        if (approvalType === 'video') {
-          return typeMatch && item.payload?.videoUrl;
-        }
-        return typeMatch;
+        return item.type?.toLowerCase() === approvalType;
       });
       setCurrentApproval(match || null);
       setDraftNumber(1);
