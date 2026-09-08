@@ -423,7 +423,7 @@ export default function StudioPage() {
   const [projectTitle, setProjectTitle] = useState('');
   const [projectIdea, setProjectIdea] = useState('');
   const [projectDuration, setProjectDuration] = useState('');
-  const [projectVoice, setProjectVoice] = useState<'female' | 'male' | ''>('');
+  const [projectVoice, setProjectVoice] = useState<'female' | 'male' | 'none' | ''>('');
   const [projectTone, setProjectTone] = useState<'enthusiastic' | 'calm' | 'serious' | 'warm' | 'auto' | ''>('');
   const [projectMood, setProjectMood] = useState<string>('energetic');
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
@@ -461,7 +461,9 @@ export default function StudioPage() {
           title: projectTitle.trim() || 'Untitled Project',
           idea: ideaToUse,
           duration: projectDuration ? parseInt(projectDuration) : undefined,
-          voice: projectVoice || undefined,
+          // '' → undefined (auto gender); 'none' must pass through so the
+          // scene engine skips narration entirely.
+          voice: projectVoice === '' ? undefined : projectVoice,
           tone: projectTone || undefined,
           mood: projectMood || undefined,
           sourceImages: sceneUpload.metadata?.photoUrl ? [sceneUpload.metadata.photoUrl] : []
@@ -638,12 +640,13 @@ export default function StudioPage() {
                         </select>
                         <select
                           value={projectVoice}
-                          onChange={(e) => setProjectVoice(e.target.value as 'female' | 'male' | '')}
+                          onChange={(e) => setProjectVoice(e.target.value as 'female' | 'male' | 'none' | '')}
                           className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
                         >
                           <option value="">Auto gender</option>
                           <option value="female">Female</option>
                           <option value="male">Male</option>
+                          <option value="none">No voiceover (silent)</option>
                         </select>
                         <select
                           value={projectTone}
@@ -712,7 +715,7 @@ export default function StudioPage() {
                     <button
                       onClick={() => requestConfirm(
                         'Launch Project?',
-                        `This starts a Scene-based video generation: ${scenePreview(projectDuration)} with AI voiceover narration, ending with your call to action. Uses one weekly video slot. Continue?`,
+                        `This starts a Scene-based video generation: ${scenePreview(projectDuration)} ${projectVoice === 'none' ? 'with no voiceover, ending' : 'with AI voiceover narration, ending'} with your call to action. Uses one weekly video slot. Continue?`,
                         () => handleSubmitProject(refinedVideoIdea || projectIdea),
                         (refinedVideoIdea || projectIdea).trim()
                       )}
