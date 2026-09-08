@@ -435,6 +435,11 @@ export default function StudioPage() {
   // The raw idea to seed the consultant chat (only sent to the AI on explicit
   // Enter/submit — never on every keystroke).
   const [consultantSeed, setConsultantSeed] = useState('');
+  // FULL consultant conversation + the concrete components the client relayed in
+  // it (owner: GPT must read the whole conversation and every component must
+  // land in the video). Passed with every Scene-Based launch payload.
+  const [relayedComponents, setRelayedComponents] = useState<string[]>([]);
+  const [relayedConversation, setRelayedConversation] = useState<Array<{ role: string; content: string }>>([]);
 
   // Send the raw textarea idea to the AI consultant for refinement.
   const handleSendToConsultant = () => {
@@ -466,7 +471,12 @@ export default function StudioPage() {
           voice: projectVoice === '' ? undefined : projectVoice,
           tone: projectTone || undefined,
           mood: projectMood || undefined,
-          sourceImages: sceneUpload.metadata?.photoUrl ? [sceneUpload.metadata.photoUrl] : []
+          sourceImages: sceneUpload.metadata?.photoUrl ? [sceneUpload.metadata.photoUrl] : [],
+          // Owner directives: GPT must read the FULL consultant conversation
+          // (not just the compressed summary) and every component the client
+          // relayed must land in the video, all inside the exact duration.
+          conversation: relayedConversation,
+          components: relayedComponents
         })
       });
       if (res.ok) {
@@ -690,7 +700,17 @@ export default function StudioPage() {
                         </button>
                       </div>
                       {/* AI consultant chat — describes, suggests, remembers settled details */}
-                      <InlineConsultant context={isCatalyst ? "catalyst-video" : "video"} idea={consultantSeed} onGenerate={handleSubmitProject} suppressWand onRefinedIdea={setRefinedVideoIdea} settledSettings={{ duration: projectDuration, voice: projectVoice, tone: projectTone }} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                      <InlineConsultant
+                        context={isCatalyst ? "catalyst-video" : "video"}
+                        idea={consultantSeed}
+                        onGenerate={handleSubmitProject}
+                        suppressWand
+                        onRefinedIdea={setRefinedVideoIdea}
+                        onConversation={setRelayedConversation}
+                        onRelayedComponents={setRelayedComponents}
+                        settledSettings={{ duration: projectDuration, voice: projectVoice, tone: projectTone }}
+                        empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }}
+                      />
                     </div>
                     {/* 3. Source image (screenshot) upload */}
                     <div className="space-y-3">

@@ -20,6 +20,91 @@ interface Message {
   content: string;
 }
 
+// Known platform names the client might relay (owner: every component relayed
+// in the conversation must land in the video). Used by the deterministic
+// relayed-components extractor below.
+const PLATFORM_NAMES = [
+  'etsy', 'shopify', 'tiktok', 'instagram', 'youtube', 'amazon', 'ebay',
+  'squarespace', 'wix', 'gumroad', 'patreon', 'linkedin', 'twitch',
+];
+
+// Known color keywords (style/mood components a client typically names).
+const COLOR_NAMES = [
+  'red', 'blue', 'green', 'yellow', 'purple', 'pink', 'orange', 'gold',
+  'silver', 'black', 'white', 'teal', 'navy', 'coral', 'lavender', 'beige',
+  'cream', 'brown', 'emerald', 'violet', 'pastel', 'neon',
+];
+
+// Every concrete component the client can relay — used to decide the
+// "signal" sentences that count as components (vs conversational filler).
+const COMPONENT_SIGNAL = /(brand|shop|store|business|company|product|color|colour|palette|platform|price|pricing|offer|deal|discount|cta|call to action|style|mood|vibe|theme|niche|audience|target|hook|background|effect|transition|sparkle|glow|neon|aesthetic|vintage|minimal|modern)/i;
+
+// Explicit "label: value" relays (e.g. "Colors: purple and gold").
+const COMPONENT_LABEL = /^\s*(?:brand|shop|store|business|company|product|color|colour|colors|colours|palette|platform|price|pricing|offer|deal|cta|call\s*to\s*action|style|mood|vibe|theme|niche|audience|target\s*(?:audience|customer)?|hook|name)\s*[:：\-–]\s*(.+)$/i;
+
+const CONVERSATIONAL_FILLER = /^(ok(ay)?|sure|yes|yeah|great|perfect|awesome|nice|love|please|added|got it|sounds good|i'd love|i want|i need|let'?s|so|and|also|basically|anyway)\b/i;
+
+const isConcreteSentence = (s: string): boolean => {
+  const trimmed = s.trim();
+  const words = trimmed.split(/\s+/);
+  return words.length >= 2 && /[a-zA-Z]/.test(trimmed) && !/\?/.test(trimmed);
+};
+
+// Strip a leading conversational filler word so "And the CTA is…" still yields
+// the CTA component (owner: relayed components must land in the video).
+const stripLeadingFiller = (raw: string): string => raw.replace(CONVERSATIONAL_FILLER, ' ').trim();
+
+/** Deterministic, pure extraction of the concrete components the client
+ *  relayed in the consultant conversation. Only USER turns count — assistant /
+ *  consultant framing can never carry client components. Returns de-duplicated
+ *  (case-insensitive) concrete fragments: brand/shop/product names, colors,
+ *  platform names, features/benefits, offers/prices, CTA wording, style/mood.
+ *  Capped at 14 so the backend planner inventory stays manageable. */
+export function extractRelayedComponentsFromConversation(
+  messages: Array<{ role: string; content: string }>
+): string[] {
+  const results: string[] = [];
+  const seen = new Set<string>();
+  const push = (raw: string) => {
+    const v = raw.replace(/\s+/g, ' ').trim();
+    if (!v || v.length > 80) return;
+    const key = v.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    results.push(v);
+  };
+
+  for (const msg of messages) {
+    if (msg.role !== 'user' || !msg.content) continue;
+    const lines = msg.content.split(/\n+/);
+    for (const line of lines) {
+      const raw = line.trim();
+      if (!raw) continue;
+      // Bullet/list entries — each is a concrete component.
+      const bullet = raw.match(/^\s*[-–—•*+]\s+(.+)$/);
+      if (bullet) { push(bullet[1]); continue; }
+      // Explicit "label: value" relays (brand, colors, platform, price, CTA…).
+      const labeled = raw.match(COMPONENT_LABEL);
+      if (labeled) { push(labeled[1]); continue; }
+      // Prose: split on sentence boundaries AND commas/semicolons so a long
+      // line still yields its CTA/price/style fragments.
+      const fragments = raw
+        .split(/(?<=[.!?])\s+|[;,]/)
+        .map(f => stripLeadingFiller(f))
+        .filter(Boolean);
+      for (const fragment of fragments) {
+        if (!isConcreteSentence(fragment)) continue;
+        if (COMPONENT_SIGNAL.test(fragment)) push(fragment);
+      }
+      // Also surface bare color/platform mentions even when prose is long.
+      const lower = raw.toLowerCase();
+      for (const p of PLATFORM_NAMES) if (lower.includes(p)) push(p);
+      for (const c of COLOR_NAMES) if (lower.includes(c)) push(c);
+    }
+  }
+  return results.slice(0, 14);
+}
+
 interface InlineConsultantProps {
   context: 'video' | 'editor' | 'faceless' | 'design' | 'neural-twin';
   initialMessage?: string;
@@ -40,9 +125,18 @@ interface InlineConsultantProps {
    *  conversation updates, so a parent "Launch Project" button can submit the
    *  refined idea through the scene engine. */
   onRefinedIdea?: (idea: string) => void;
+  /** Called with the FULL conversation (role + content) whenever it updates,
+   *  so a Scene-Based launch payload can send the whole conversation to the
+   *  backend planner (owner: GPT must read the entire conversation, not just a
+   *  compressed summary). */
+  onConversation?: (messages: Array<{ role: string; content: string }>) => void;
+  /** Called with the de-duplicated concrete components the client relayed in
+   *  the conversation (USER turns only), so the backend planner guarantees
+   *  every one of them appears in the final video. */
+  onRelayedComponents?: (components: string[]) => void;
 }
 
-export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings, suppressWand, onRefinedIdea }: InlineConsultantProps) {
+export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings, suppressWand, onRefinedIdea, onConversation, onRelayedComponents }: InlineConsultantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -267,9 +361,18 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
 
   // Surface the refined idea to the parent whenever the conversation changes,
   // so a parent "Launch Project" button (suppressWand mode) can submit it.
+  // Also relay the FULL conversation + extracted client components so the
+  // Scene-Based payload can send both to the backend planner (owner: GPT must
+  // read the whole conversation and hit every component the client relayed).
   useEffect(() => {
     if (onRefinedIdea && messages.length >= 1 && (conversationSummary || idea)) {
       onRefinedIdea(conversationSummary || idea || '');
+    }
+    if (onConversation && messages.length >= 1) {
+      onConversation(messages.map(m => ({ role: m.role, content: m.content })));
+    }
+    if (onRelayedComponents && messages.length >= 1) {
+      onRelayedComponents(extractRelayedComponentsFromConversation(messages));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
