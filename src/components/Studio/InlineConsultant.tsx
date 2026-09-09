@@ -134,9 +134,16 @@ interface InlineConsultantProps {
    *  the conversation (USER turns only), so the backend planner guarantees
    *  every one of them appears in the final video. */
   onRelayedComponents?: (components: string[]) => void;
+  /** Closing-line hint forwarded to the consult router (mode:'consult') when
+   *  this consultant replaces the wand with a parent "Launch Project" button
+   *  (suppressWand). Backend consultGenerateReply(actionHint) uses it so the
+   *  AI's closing line names the REAL button instead of the vanished wand.
+   *  ONLY set on the Scene-Based suppressWand flow — other flows keep the
+   *  wand copy by omitting it. */
+  actionHint?: string;
 }
 
-export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings, suppressWand, onRefinedIdea, onConversation, onRelayedComponents }: InlineConsultantProps) {
+export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings, suppressWand, onRefinedIdea, onConversation, onRelayedComponents, actionHint }: InlineConsultantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -219,6 +226,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
               voice: settledSettings?.voice && settledSettings.voice !== 'auto' ? settledSettings.voice : undefined,
               tone: settledSettings?.tone && settledSettings.tone !== 'auto' ? settledSettings.tone : undefined,
               duration: settledSettings?.duration ? Number(settledSettings.duration) : undefined,
+              ...(actionHint ? { actionHint } : {}),
               mode: 'consult'
             }),
             signal: controller.signal
@@ -305,6 +313,7 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
           voice: settledSettings?.voice && settledSettings.voice !== 'auto' ? settledSettings.voice : undefined,
           tone: settledSettings?.tone && settledSettings.tone !== 'auto' ? settledSettings.tone : undefined,
           duration: settledSettings?.duration ? Number(settledSettings.duration) : undefined,
+          ...(actionHint ? { actionHint } : {}),
           mode: 'consult'
         }),
         signal: controller.signal
