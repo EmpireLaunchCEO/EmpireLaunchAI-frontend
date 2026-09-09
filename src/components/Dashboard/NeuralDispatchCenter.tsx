@@ -404,6 +404,16 @@ export function NeuralDispatchCenter() {
   };
 
   if (view === 'review') {
+    // A card is only actionable (Save/Download) when it actually carries
+    // playable media. Failed projects (status 'failed', no videoUrl — e.g. the
+    // ENOENT-hit Scene project f3773f0a) must not offer actions that hit a dead
+    // download proxy URL. Derive failure from the SAME shape the card uses for
+    // everything else: top-level status OR payload.status, plus missing URL.
+    const reviewMedia = Boolean(currentApproval?.payload?.videoUrl);
+    const reviewFailed = !reviewMedia && (
+      currentApproval?.status === 'failed' ||
+      currentApproval?.payload?.status === 'failed'
+    );
     return (
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
@@ -522,10 +532,17 @@ export function NeuralDispatchCenter() {
             )}
           </div>
 
+          {reviewFailed && (
+            <p className="text-[10px] font-bold uppercase tracking-widest text-red-400">
+              Render failed — regenerate in Studio
+            </p>
+          )}
+
           <div className="flex gap-3">
             <button 
               onClick={handleSaveToLibrary}
-              className="flex-1 py-5 bg-emerald-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2"
+              disabled={!reviewMedia}
+              className="flex-1 py-5 bg-emerald-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100"
             >
               <CheckCircle2 className="w-4 h-4" />
               Save
@@ -533,7 +550,7 @@ export function NeuralDispatchCenter() {
             <button 
               onClick={() => {
                 const id = currentApproval?.payload?.assetId || currentApproval?.id;
-                if (!id) return;
+                if (!id || !reviewMedia) return;
                 // Route ALL downloads through the user-scoped download proxy
                 // (/api/studio/download/:id). The proxy streams the file buffer
                 // directly from R2 server-side, bypassing stale 1hr-presigned
@@ -542,7 +559,8 @@ export function NeuralDispatchCenter() {
                 const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
                 window.open(`${API_URL}/api/studio/download/${id}?userId=${encodeURIComponent(userId)}`, '_blank');
               }}
-              className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
+              disabled={!reviewMedia}
+              className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100"
             >
               <Download className="w-4 h-4" />
               Download
