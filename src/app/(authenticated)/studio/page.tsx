@@ -476,7 +476,10 @@ export default function StudioPage() {
           // (not just the compressed summary) and every component the client
           // relayed must land in the video, all inside the exact duration.
           conversation: relayedConversation,
-          components: relayedComponents
+          components: relayedComponents,
+          // suppressWand closing-line hint: the consultant names the real
+          // Launch Project button instead of the vanished "tap the wand".
+          actionHint: 'Press Launch Project to generate your video'
         })
       });
       if (res.ok) {
@@ -708,6 +711,7 @@ export default function StudioPage() {
                         onRefinedIdea={setRefinedVideoIdea}
                         onConversation={setRelayedConversation}
                         onRelayedComponents={setRelayedComponents}
+                        actionHint="Press Launch Project to generate your video"
                         settledSettings={{ duration: projectDuration, voice: projectVoice, tone: projectTone }}
                         empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }}
                       />
