@@ -26,6 +26,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
+import { mergeDispatchCards } from '@/lib/dispatchMerge';
 
 const getAuthHeader = (): string => {
   if (typeof window !== 'undefined') {
@@ -81,28 +82,35 @@ export function NeuralDispatchCenter() {
       const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
       if (!userId) { setIsLoading(false); return; }
 
-      // Fetch pending approvals
-      const approvalsRes = await fetch(`${API_URL}/api/approval/pending`, {
-        headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
-      });
-      let approvalItems: any[] = [];
-      if (approvalsRes.ok) {
-        const data = await approvalsRes.json();
-        approvalItems = data.approvals || [];
-      }
+      // ── Source 1: pending approvals ──────────────────────────────────────────
+      // Approval cards carry the REAL media row id in payload.assetId (their own
+      // id is the approvals-table uuid). The canonical merge below reconciles the
+      // two id namespaces so the same video never renders as both an approval
+      // card and an asset/project card.
+      let approvals: any[] = [];
+      try {
+        const approvalsRes = await fetch(`${API_URL}/api/approval/pending`, {
+          headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
+        });
+        if (approvalsRes.ok) {
+          const data = await approvalsRes.json();
+          approvals = data.approvals || [];
+        }
+      } catch {}
 
-      // Fetch completed assets from Library — all types, map to correct queue
+      // ── Source 2: library assets (creations + scene projects /assets embeds) ──
+      // Map creation types to queue types for tab routing.
+      const typeToQueue: Record<string, string> = {
+        video: 'video', enhanced_video: 'video', neural_twin: 'video',
+        edit: 'edit', video_edit: 'edit', raw_video: 'edit',
+        faceless: 'faceless',
+        design: 'design',
+      };
+      let assetItems: any[] = [];
       try {
         const assetsRes = await fetch(`${API_URL}/api/studio/assets`, {
           headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
         });
-        // Map creation types to queue types for tab routing
-        const typeToQueue: Record<string, string> = {
-          video: 'video', enhanced_video: 'video', neural_twin: 'video',
-          edit: 'edit', video_edit: 'edit', raw_video: 'edit',
-          faceless: 'faceless',
-          design: 'design',
-        };
         if (assetsRes.ok) {
           const assetsData = await assetsRes.json();
           const completedAssets = (assetsData.assets || []).filter(
@@ -114,7 +122,7 @@ export function NeuralDispatchCenter() {
               // url-less card that can never be viewed — drop it from the queue.
               (a.fileUrl || a.thumbnailUrl || a.masterVideoUrl)
           );
-          const assetItems = completedAssets.map((asset: any) => ({
+          assetItems = completedAssets.map((asset: any) => ({
             id: asset.id,
             type: typeToQueue[asset.type] || 'video',
             status: asset.status || 'completed',
@@ -125,21 +133,15 @@ export function NeuralDispatchCenter() {
               status: asset.status || 'completed'
             }
           }));
-          // Merge assets, avoiding duplicates by id
-          const existingIds = new Set(approvalItems.map((i: any) => i.id));
-          for (const ai of assetItems) {
-            if (!existingIds.has(ai.id)) {
-              approvalItems.unshift(ai);
-              existingIds.add(ai.id);
-            }
-          }
         }
       } catch {}
 
-      // Fetch completed video projects from the backend list endpoint — this is
-      // the source of truth so projects completed while the browser was closed
-      // (restart-safe scene pipeline) still surface on Operations with fresh R2
-      // URLs /api/studio/video-projects regenerates signed URLs on read.
+      // ── Source 3: completed video projects ───────────────────────────────────
+      // /api/studio/video-projects is the source of truth for projects completed
+      // while the browser was closed (restart-safe scene pipeline) — it regenerates
+      // signed R2 URLs on read, so its row wins over the assets copy of the same
+      // project id during the canonical merge below.
+      let projectItems: any[] = [];
       try {
         const projectsRes = await fetch(`${API_URL}/api/studio/video-projects`, {
           headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
@@ -147,52 +149,50 @@ export function NeuralDispatchCenter() {
         if (projectsRes.ok) {
           const projectsData = await projectsRes.json();
           const completedProjects = (projectsData.projects || []).filter((p: any) => p.status === 'completed' && p.finalVideoUrl);
-          const existingIds = new Set(approvalItems.map((i: any) => i.id));
-          for (const proj of completedProjects) {
-            if (!existingIds.has(proj.id)) {
-              approvalItems.unshift({
-                id: proj.id,
-                type: 'video',
-                status: 'completed',
-                payload: {
-                  title: proj.title || 'Scene-Based Video Project',
-                  videoUrl: proj.finalVideoUrl,
-                  assetId: proj.id,
-                  status: 'completed'
-                }
-              });
-              existingIds.add(proj.id);
+          projectItems = completedProjects.map((proj: any) => ({
+            id: proj.id,
+            type: 'video',
+            status: 'completed',
+            payload: {
+              title: proj.title || 'Scene-Based Video Project',
+              videoUrl: proj.finalVideoUrl,
+              assetId: proj.id,
+              status: 'completed'
             }
-          }
+          }));
         }
       } catch {}
 
-      // Fetch completed scene-based video projects from localStorage (fast path).
-      // Processed AFTER the backend list so the backend's freshly regenerated R2
-      // URL wins for the same id — localStorage only supplies an entry when the
-      // backend has no row for it (e.g. stuck entries that never hit the DB). A
-      // stale signed URL in localStorage must never shadow a fresh backend URL.
+      // ── Source 4: localStorage fast path ─────────────────────────────────────
+      // mergeDispatchCards adds these LAST, keyed by id, so a stale signed URL
+      // only supplies an entry when the backend has no row for its id (e.g. stuck
+      // entries that never hit the DB) and never shadows a fresh backend URL.
+      let localItems: any[] = [];
       try {
         const completedProjects = JSON.parse(localStorage.getItem('empire_completed_projects') || '[]');
         const videoProjects = completedProjects.filter((p: any) => p.url);
-        const existingIds = new Set(approvalItems.map((i: any) => i.id));
-        for (const proj of videoProjects) {
-          if (!existingIds.has(proj.id)) {
-            approvalItems.unshift({
-              id: proj.id,
-              type: 'video',
-              status: 'completed',
-              payload: {
-                title: 'Scene-Based Video Project',
-                videoUrl: proj.url,
-                assetId: proj.id,
-                status: 'completed'
-              }
-            });
-            existingIds.add(proj.id);
+        localItems = videoProjects.map((proj: any) => ({
+          id: proj.id,
+          type: 'video',
+          status: 'completed',
+          payload: {
+            title: 'Scene-Based Video Project',
+            videoUrl: proj.url,
+            assetId: proj.id,
+            status: 'completed'
           }
-        }
+        }));
       } catch {}
+
+      // ── Canonical merge: ONE card per unique media row ──────────────────────
+      // Dedupes across all four sources by the media id an approval's
+      // payload.assetId points at (e.g. approval 8bae3515 → creation 2617d88e
+      // becomes ONE card, not two), keeps the richest card fields (fresh final
+      // URL, status, saved state), and drops completed-video GHOST approvals
+      // whose underlying creation/project row no longer exists (the stale scene
+      // receipts behind the owner's "2 popped up each time I made a video").
+      // Failed cards and every other approval type pass through unchanged.
+      const approvalItems = mergeDispatchCards(approvals, assetItems, projectItems, localItems);
 
       setApprovalItems(approvalItems);
       // Group counts by type
