@@ -26,7 +26,8 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
-import { mergeDispatchCards } from '@/lib/dispatchMerge';
+import { mergeDispatchCards, isUsableMediaUrl } from '@/lib/dispatchMerge';
+import { getEmpireUserId } from '@/lib/api-service';
 
 const getAuthHeader = (): string => {
   if (typeof window !== 'undefined') {
@@ -60,6 +61,7 @@ export function NeuralDispatchCenter() {
   const [pendingCounts, setPendingCounts] = useState<Record<string, number>>({});
   const [approvalItems, setApprovalItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [currentApproval, setCurrentApproval] = useState<any | null>(null);
   const [feedbackStatus, setFeedbackStatus] = useState<{
     tone: 'info' | 'success' | 'error';
@@ -79,8 +81,18 @@ export function NeuralDispatchCenter() {
   // Fetch real pending approvals + completed video assets from backend
   const fetchApprovals = async () => {
     try {
-      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
-      if (!userId) { setIsLoading(false); return; }
+      // Resolve the user id the same way the rest of the Studio fetches do
+      // (getEmpireUserId: camelCase → legacy snake_case → cookie → generate +
+      // persist). NEVER silently abort into an empty grid when the id is
+      // missing — surface a visible error state instead so the owner sees why
+      // Operations is empty rather than assuming nothing was ever created.
+      const userId = getEmpireUserId();
+      if (!userId) {
+        setFetchError("Couldn't resolve your session — Operations couldn't load. Refresh to retry.");
+        setIsLoading(false);
+        return;
+      }
+      setFetchError(null);
 
       // ── Source 1: pending approvals ──────────────────────────────────────────
       // Approval cards carry the REAL media row id in payload.assetId (their own
@@ -213,6 +225,23 @@ export function NeuralDispatchCenter() {
     fetchApprovals();
   }, []);
 
+  // Auto-refresh: a completed render (restart-safe scene pipeline) should
+  // surface in Operations without a manual page reload. Re-fetch on tab focus
+  // and on a light 45s interval. NEVER refresh while the review modal is open —
+  // the merge is idempotent so new data just appears, but a mid-review refresh
+  // would re-select/replace the card being reviewed.
+  useEffect(() => {
+    const refresh = () => {
+      if (view !== 'review') fetchApprovals();
+    };
+    window.addEventListener('focus', refresh);
+    const interval = window.setInterval(refresh, 45_000);
+    return () => {
+      window.removeEventListener('focus', refresh);
+      window.clearInterval(interval);
+    };
+  }, [view]);
+
   // When entering review, find matching approval for this queue
   useEffect(() => {
     if (view === 'review' && activeQueue) {
@@ -287,7 +316,7 @@ export function NeuralDispatchCenter() {
   const handleSaveToLibrary = async () => {
     if (!currentApproval) return;
     try {
-      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
+      const userId = getEmpireUserId();
       const res = await fetch(`${API_URL}/api/approval/save-to-library`, {
         method: 'POST',
         headers: {
@@ -319,7 +348,7 @@ export function NeuralDispatchCenter() {
     setIsSubmittingFeedback(true);
     setFeedbackStatus(null);
     try {
-      const userId = typeof window !== 'undefined' ? localStorage.getItem('empire_userId') : null;
+      const userId = getEmpireUserId();
       const res = await fetch(`${API_URL}/api/approval/${approvalId}/feedback`, {
         method: 'POST',
         headers: {
@@ -405,14 +434,18 @@ export function NeuralDispatchCenter() {
 
   if (view === 'review') {
     // A card is only actionable (Save/Download) when it actually carries
-    // playable media. Failed projects (status 'failed', no videoUrl — e.g. the
-    // ENOENT-hit Scene project f3773f0a) must not offer actions that hit a dead
-    // download proxy URL. Derive failure from the SAME shape the card uses for
-    // everything else: top-level status OR payload.status, plus missing URL.
-    const reviewMedia = Boolean(currentApproval?.payload?.videoUrl);
+    // PLAYABLE media. "Usable" means a real http(s) URL — legacy local paths
+    // (e.g. "/app/public/assets/cinema/sora/...mp4" — creation 2c94144a) look
+    // truthy but the file is gone, so counting them as media enabled actions on
+    // a dead card whose download would error. Bare/relative paths count as NO
+    // media: Save/Download disable, the failed-card treatment shows (same shape
+    // PR #72 used: top-level status OR payload.status, plus a present-but-dead
+    // URL), and Delete stays enabled so the dead card can be removed.
+    const reviewMedia = isUsableMediaUrl(currentApproval?.payload?.videoUrl);
     const reviewFailed = !reviewMedia && (
       currentApproval?.status === 'failed' ||
-      currentApproval?.payload?.status === 'failed'
+      currentApproval?.payload?.status === 'failed' ||
+      Boolean(currentApproval?.payload?.videoUrl)
     );
     return (
       <motion.div 
@@ -469,7 +502,7 @@ export function NeuralDispatchCenter() {
 
         {/* LARGE PLAYER AREA */}
         <div className="flex-1 bg-black/40 flex items-center justify-center relative group p-8">
-          {currentApproval?.payload?.videoUrl ? (
+          {reviewMedia ? (
               <div className="aspect-video w-full max-w-4xl bg-slate-900 rounded-[32px] border border-white/10 shadow-2xl overflow-hidden relative">
                 <video
                   src={currentApproval.payload.videoUrl?.startsWith('http') ? currentApproval.payload.videoUrl : `${API_URL}${currentApproval.payload.videoUrl}`}
@@ -556,7 +589,7 @@ export function NeuralDispatchCenter() {
                 // directly from R2 server-side, bypassing stale 1hr-presigned
                 // signed URLs and CORS — which previously caused "r2 fetch failed"
                 // when the Download button window.open'd the raw R2 media URL.
-                const userId = localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || '';
+                const userId = getEmpireUserId();
                 window.open(`${API_URL}/api/studio/download/${id}?userId=${encodeURIComponent(userId)}`, '_blank');
               }}
               disabled={!reviewMedia}
@@ -588,7 +621,16 @@ export function NeuralDispatchCenter() {
             <Sparkles className="w-5 h-5 text-primary" />
             <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] truncate">Queues</h4>
           </div>
-          
+
+          {/* Visible error state when the account session truly can't be resolved
+              — never a silent empty grid. */}
+          {fetchError && (
+            <div className="flex items-center justify-start gap-2 px-3 py-2 rounded-2xl bg-red-500/5 border !border-red-500/10">
+              <AlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+              <span className="text-[8px] font-bold text-red-300 uppercase tracking-widest">{fetchError}</span>
+            </div>
+          )}
+
           <div className="space-y-3">
             {categories.map((cat) => (
               <button

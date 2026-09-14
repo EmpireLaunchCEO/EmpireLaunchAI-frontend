@@ -58,6 +58,15 @@ const isCompleted = (card: any): boolean =>
 export const canonicalMediaId = (card: any): string =>
   String(card?.payload?.assetId || card?.payload?.projectId || card?.id || '');
 
+/** A card's media is "usable" only when its video URL points at a real http(s)
+ *  URL. Legacy local paths (e.g. "/app/public/assets/cinema/sora/...mp4" —
+ *  creation 2c94144a) look truthy but the file no longer exists: counting them
+ *  as media enabled Save/Download on a dead card whose download would error.
+ *  Bare/relative paths count as NO media so dead cards get the failed-card
+ *  treatment (note + disabled actions) while Delete stays enabled. */
+export const isUsableMediaUrl = (url: unknown): boolean =>
+  typeof url === 'string' && /^https?:\/\//i.test(url);
+
 /** Merge an asset card and a project card that describe the SAME media row.
  *  The video-projects card is the source of truth (freshly regenerated R2
  *  signed URL) so its payload wins; the asset card fills any missing fields. */
