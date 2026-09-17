@@ -865,14 +865,39 @@ export default function StudioPage() {
                     </motion.div>
                   )}
                 </div>
-                <textarea
-                  value={facelessIdea}
-                  onChange={(e) => setFacelessIdea(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit, facelessIdea.trim()); } }}
-                  placeholder={isCatalyst ? "e.g. 3 reasons why most 9-5s are a trap, high-impact b-roll, professional voiceover, strong 'Link in Bio' CTA..." : "e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts..."}
-                  disabled={isSubmittingFaceless}
-                  className="w-full bg-theme-background border border-theme rounded-2xl p-4 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
-                />
+                <div className="space-y-2">
+                  <textarea
+                    value={facelessIdea}
+                    onChange={(e) => setFacelessIdea(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit, facelessIdea.trim()); } }}
+                    placeholder={isCatalyst ? "e.g. 3 reasons why most 9-5s are a trap, high-impact b-roll, professional voiceover, strong 'Link in Bio' CTA..." : "e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts..."}
+                    disabled={isSubmittingFaceless}
+                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
+                  />
+                  <div className="flex justify-end -mt-12 relative z-10 mr-3">
+                    <button
+                      onClick={() => requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit, facelessIdea.trim())}
+                      disabled={!facelessIdea.trim() || isSubmittingFaceless}
+                      aria-label="Send idea to AI"
+                      title="Send idea to AI"
+                      className="p-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    >
+                      <SendHorizonal className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* AI consultant chat — discuss + refine the idea (same UX as Scene/Customize) */}
+                <InlineConsultant context="faceless" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+
+                {facelessSubmitted && (
+                  <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Faceless concept received — sourcing viral stock material</span>
+                  </motion.div>
+                )}
+
+                {/* Launch Project — bottom of the panel, below the chat (type idea → discuss → launch) */}
                 <button
                   onClick={() => requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit, facelessIdea.trim())}
                   disabled={!facelessIdea.trim() || isSubmittingFaceless}
@@ -884,15 +909,6 @@ export default function StudioPage() {
                     'Launch Project'
                   )}
                 </button>
-
-                {facelessSubmitted && (
-                  <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Faceless concept received — sourcing viral stock material</span>
-                  </motion.div>
-                )}
-
-                <InlineConsultant context="faceless" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
 
               {/* 3. Neural Twin Section - Single Box with Active Badge */}
