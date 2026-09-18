@@ -391,9 +391,17 @@ export default function StudioPage() {
   const [isSubmittingIdea, setIsSubmittingIdea] = useState(false);
   const [ideaSubmitted, setIdeaSubmitted] = useState(false);
 
-  const [facelessIdea, setFacelessIdea] = useState('');
   const [isSubmittingFaceless, setIsSubmittingFaceless] = useState(false);
   const [facelessSubmitted, setFacelessSubmitted] = useState(false);
+  // The refined idea surfaced by the AI consultant chat (conversation summary).
+  // Owner Sep 18: the old top idea box bypassed GPT 5.2 — the chat is now the
+  // SINGLE idea entry, and Launch Project submits its refined summary.
+  const [facelessRefinedIdea, setFacelessRefinedIdea] = useState('');
+  // FULL consultant conversation + relayed components (mirrors Scene tab) —
+  // carried for forward-compat: backend faceless approval path doesn't consume
+  // them yet (gap noted in PR), but Scene's video-project path does.
+  const [facelessRelayedComponents, setFacelessRelayedComponents] = useState<string[]>([]);
+  const [facelessRelayedConversation, setFacelessRelayedConversation] = useState<Array<{ role: string; content: string }>>([]);
   // Confirmation guardrail — every quota-consuming generation passes through an
   // explicit in-app confirm before the API call, so a stray tap (keyboard
   // "next"/arrow-carry, Enter) can never fire a generation unintentionally.
@@ -504,8 +512,9 @@ export default function StudioPage() {
     }
   };
 
-  const handleFacelessSubmit = async () => {
-    if (!facelessIdea.trim()) return;
+  const handleFacelessSubmit = async (finalIdea?: string) => {
+    const ideaToUse = (finalIdea && finalIdea.trim()) || facelessRefinedIdea.trim();
+    if (!ideaToUse || isSubmittingFaceless) return;
     setIsSubmittingFaceless(true);
     try {
       const userId = localStorage.getItem('empire_userId');
@@ -518,7 +527,7 @@ export default function StudioPage() {
         },
         body: JSON.stringify({
           type: 'faceless',
-          description: facelessIdea.trim(),
+          description: ideaToUse,
           payload: {
             category: 'faceless-video',
             isCatalyst: isCatalyst,
@@ -537,7 +546,6 @@ export default function StudioPage() {
       console.log('Faceless approval created:', data);
       setIsSubmittingFaceless(false);
       setFacelessSubmitted(true);
-      setFacelessIdea('');
       setTimeout(() => setFacelessSubmitted(false), 5000);
     } catch (error) {
       console.error('Faceless approval error:', error);
@@ -865,30 +873,19 @@ export default function StudioPage() {
                     </motion.div>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <textarea
-                    value={facelessIdea}
-                    onChange={(e) => setFacelessIdea(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit, facelessIdea.trim()); } }}
-                    placeholder={isCatalyst ? "e.g. 3 reasons why most 9-5s are a trap, high-impact b-roll, professional voiceover, strong 'Link in Bio' CTA..." : "e.g. 5 viral facts about 'Sustainable Living' for YouTube Shorts..."}
-                    disabled={isSubmittingFaceless}
-                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-white/40 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
-                  />
-                  <div className="flex justify-end -mt-12 relative z-10 mr-3">
-                    <button
-                      onClick={() => requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit, facelessIdea.trim())}
-                      disabled={!facelessIdea.trim() || isSubmittingFaceless}
-                      aria-label="Send idea to AI"
-                      title="Send idea to AI"
-                      className="p-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-                    >
-                      <SendHorizonal className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* AI consultant chat — discuss + refine the idea (same UX as Scene/Customize) */}
-                <InlineConsultant context="faceless" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                {/* AI consultant chat — the SINGLE GPT 5.2 idea entry (owner approved:
+                the old top idea box + send button bypassed GPT refinement — removed). */}
+                <InlineConsultant
+                  context="faceless"
+                  onGenerate={handleFacelessSubmit}
+                  onRefinedIdea={setFacelessRefinedIdea}
+                  onConversation={setFacelessRelayedConversation}
+                  onRelayedComponents={setFacelessRelayedComponents}
+                  suppressWand
+                  actionHint="Press Launch Project to generate your video"
+                  settledSettings={{ duration: String(facelessDuration), voice: facelessVoice, tone: facelessTone }}
+                  empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }}
+                />
 
                 {facelessSubmitted && (
                   <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
@@ -897,10 +894,11 @@ export default function StudioPage() {
                   </motion.div>
                 )}
 
-                {/* Launch Project — bottom of the panel, below the chat (type idea → discuss → launch) */}
+                {/* Launch Project — bottom of the panel, below the chat (submits the
+                GPT-refined idea from the consultant conversation). */}
                 <button
-                  onClick={() => requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', handleFacelessSubmit, facelessIdea.trim())}
-                  disabled={!facelessIdea.trim() || isSubmittingFaceless}
+                  onClick={() => requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', () => handleFacelessSubmit(facelessRefinedIdea.trim()), facelessRefinedIdea.trim())}
+                  disabled={!facelessRefinedIdea.trim() || isSubmittingFaceless}
                   className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
                 >
                   {isSubmittingFaceless ? (
