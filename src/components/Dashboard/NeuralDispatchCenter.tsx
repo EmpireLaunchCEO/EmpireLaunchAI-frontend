@@ -26,7 +26,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
-import { mergeDispatchCards, isUsableMediaUrl } from '@/lib/dispatchMerge';
+import { mergeDispatchCards, isUsableMediaUrl, cardQueueType } from '@/lib/dispatchMerge';
 import { getEmpireUserId } from '@/lib/api-service';
 
 const getAuthHeader = (): string => {
@@ -111,13 +111,10 @@ export function NeuralDispatchCenter() {
       } catch {}
 
       // ── Source 2: library assets (creations + scene projects /assets embeds) ──
-      // Map creation types to queue types for tab routing.
-      const typeToQueue: Record<string, string> = {
-        video: 'video', enhanced_video: 'video', neural_twin: 'video',
-        edit: 'edit', video_edit: 'edit', raw_video: 'edit',
-        faceless: 'faceless',
-        design: 'design',
-      };
+      // Cards carry the RAW creation type (video/enhanced_video/neural_twin/
+      // faceless/design/edit) — cardQueueType maps it to the right box and
+      // must see the raw value, NOT a pre-flattened 'video', or Neural Twin
+      // assets would sink into the general Videos box (owner Sep 21 defect).
       let assetItems: any[] = [];
       try {
         const assetsRes = await fetch(`${API_URL}/api/studio/assets`, {
@@ -136,7 +133,7 @@ export function NeuralDispatchCenter() {
           );
           assetItems = completedAssets.map((asset: any) => ({
             id: asset.id,
-            type: typeToQueue[asset.type] || 'video',
+            type: asset.type || 'video',
             status: asset.status || 'completed',
             payload: {
               title: asset.title || 'Generated Asset',
@@ -207,10 +204,14 @@ export function NeuralDispatchCenter() {
       const approvalItems = mergeDispatchCards(approvals, assetItems, projectItems, localItems);
 
       setApprovalItems(approvalItems);
-      // Group counts by type
+      // Group counts by QUEUE — via cardQueueType, which resolves the richest
+      // classification signal (payload.category/mode/type) instead of the
+      // merged top-level type alone. Without this, a Faceless approval merged
+      // onto its scene-project media row would carry type 'video' and count
+      // under the general Videos box (owner's live Sep 21 test).
       const counts: Record<string, number> = {};
       approvalItems.forEach((item: any) => {
-        const type = item.type?.toLowerCase() || 'other';
+        const type = cardQueueType(item);
         counts[type] = (counts[type] || 0) + 1;
       });
       setPendingCounts(counts);
@@ -251,7 +252,10 @@ export function NeuralDispatchCenter() {
       // and the delete (X) stays reachable, so a url-less/stuck card can be
       // removed instead of blocking the queue forever.
       const match = approvalItems.find((item: any) => {
-        return item.type?.toLowerCase() === approvalType;
+        // Match by QUEUE (cardQueueType), not the merged top-level type —
+        // a Faceless card can carry type 'video' after merging onto its
+        // project/media row, and it must still surface in the Faceless box.
+        return cardQueueType(item) === approvalType;
       });
       setCurrentApproval(match || null);
       setDraftNumber(1);
