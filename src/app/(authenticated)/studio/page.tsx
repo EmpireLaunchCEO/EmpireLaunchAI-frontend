@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -393,6 +393,13 @@ export default function StudioPage() {
 
   const [isSubmittingFaceless, setIsSubmittingFaceless] = useState(false);
   const [facelessSubmitted, setFacelessSubmitted] = useState(false);
+  // Post-submit lock: once a Faceless concept is submitted, the consultant
+  // must NOT invite "refine here" again (owner: each refinement is a fresh
+  // paid AI generation — no wire to spend more mid-flight). The lock holds
+  // until the user sends a NEW message (a new request — allowed), which
+  // releases it; the in-flight generation itself is untouched.
+  const [facelessLocked, setFacelessLocked] = useState(false);
+  const facelessUserMsgCountRef = useRef(0);
   // The refined idea surfaced by the AI consultant chat (conversation summary).
   // Owner Sep 18: the old top idea box bypassed GPT 5.2 — the chat is now the
   // SINGLE idea entry, and Launch Project submits its refined summary.
@@ -516,6 +523,7 @@ export default function StudioPage() {
     const ideaToUse = (finalIdea && finalIdea.trim()) || facelessRefinedIdea.trim();
     if (!ideaToUse || isSubmittingFaceless) return;
     setIsSubmittingFaceless(true);
+    setFacelessLocked(true);
     try {
       const userId = localStorage.getItem('empire_userId');
       const res = await fetch(`${API_URL}/api/approval/create`, {
@@ -550,7 +558,23 @@ export default function StudioPage() {
     } catch (error) {
       console.error('Faceless approval error:', error);
       setIsSubmittingFaceless(false);
+      // Submission failed — nothing is generating, so the user may retry and
+      // the consultant returns to its normal (pre-submit) guidance state.
+      setFacelessLocked(false);
     }
+  };
+
+  // Relay the FULL consultant conversation (so the Scene-Based payload can send
+  // it to the backend planner) and release the post-submit lock the moment the
+  // user sends a NEW message — per owner, a new typed message is a NEW request
+  // (allowed), never an attached refinement of the in-flight generation.
+  const handleFacelessConversation = (messages: Array<{ role: string; content: string }>) => {
+    setFacelessRelayedConversation(messages);
+    const userMsgCount = messages.filter(m => m.role === 'user').length;
+    if (facelessLocked && userMsgCount > facelessUserMsgCountRef.current) {
+      setFacelessLocked(false);
+    }
+    facelessUserMsgCountRef.current = userMsgCount;
   };
 
   const handleCustomIdeaSubmit = async () => {
@@ -875,9 +899,10 @@ export default function StudioPage() {
                   context="faceless"
                   onGenerate={handleFacelessSubmit}
                   onRefinedIdea={setFacelessRefinedIdea}
-                  onConversation={setFacelessRelayedConversation}
+                  onConversation={handleFacelessConversation}
                   onRelayedComponents={setFacelessRelayedComponents}
                   suppressWand
+                  submitted={facelessLocked}
                   actionHint="Press Launch Project to generate your video"
                   settledSettings={{ duration: String(facelessDuration), voice: facelessVoice, tone: facelessTone }}
                   empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }}
