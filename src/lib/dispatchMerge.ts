@@ -64,6 +64,38 @@ export const canonicalMediaId = (card: any): string =>
  *  as media enabled Save/Download on a dead card whose download would error.
  *  Bare/relative paths count as NO media so dead cards get the failed-card
  *  treatment (note + disabled actions) while Delete stays enabled. */
+/** Resolve the Operations QUEUE a card belongs to (video | edit | faceless |
+ *  design), from the RICHEST classification signal available on the merged
+ *  card — NOT just the top-level `type`.
+ *
+ *  Why it can't rely on `item.type`: `mergeApproval` spreads the media card
+ *  last, so a card that is semantically FACELESS (approval type 'faceless',
+ *  payload.category 'faceless-video') can carry top-level type 'video' after
+ *  it merges onto the video-project/media row it points at (owner's live
+ *  Faceless test, Sep 21 — the video landed in the general Videos box instead
+ *  of the Faceless box for exactly this reason).
+ *
+ *  Priority: payload.category → payload.mode → top-level type. Neural Twin is
+ *  classified as 'faceless' (owner Sep 18: Twin = faceless engine, GPT Image 2
+ *  + FFmpeg pan/zoom — same product family; the Faceless box count already
+ *  falls back to the twin count). Scene-based videos stay 'video' (the Videos
+ *  box is where scene/variant renders live). */
+export const cardQueueType = (card: any): string => {
+  const payload = card?.payload || {};
+  const category = String(payload.category || '').toLowerCase();
+  const mode = String(payload.mode || '').toLowerCase();
+  const type = String(card?.type || payload.type || '').toLowerCase();
+  // Faceless: category 'faceless-video', mode 'faceless', or type faceless.
+  if (category.includes('faceless') || mode === 'faceless' || type === 'faceless') return 'faceless';
+  // Neural Twin → Faceless box (faceless engine family, per locked cost model).
+  if (type === 'neural_twin' || type === 'twin') return 'faceless';
+  // Edits: category or type edit-ish.
+  if (category.includes('edit') || type === 'edit' || type === 'video_edit' || type === 'raw_video') return 'edit';
+  // Designs.
+  if (category.includes('design') || type === 'design') return 'design';
+  // Everything else video-like (scene, enhanced_video, generic video).
+  return 'video';
+};
 export const isUsableMediaUrl = (url: unknown): boolean =>
   typeof url === 'string' && /^https?:\/\//i.test(url);
 
