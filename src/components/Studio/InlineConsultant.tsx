@@ -121,6 +121,13 @@ interface InlineConsultantProps {
    *  unified Customize flow where a parent "Launch Project" button triggers the
    *  generation instead). */
   suppressWand?: boolean;
+  /** When true, the consultant is in a post-submit "working on it" state: the
+   *  refine hint bar and refine-flavored placeholder are suppressed so a
+   *  just-submitted generation is never invited to be refined mid-flight
+   *  (owner: a refinement is another paid generation — no wire to spend more
+   *  outside an explicit NEW request). The input stays active; a new user
+   *  message is a new request, and the parent releases this flag then. */
+  submitted?: boolean;
   /** Called with the current refined idea (conversation summary) whenever the
    *  conversation updates, so a parent "Launch Project" button can submit the
    *  refined idea through the scene engine. */
@@ -143,7 +150,7 @@ interface InlineConsultantProps {
   actionHint?: string;
 }
 
-export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings, suppressWand, onRefinedIdea, onConversation, onRelayedComponents, actionHint }: InlineConsultantProps) {
+export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings, suppressWand, submitted, onRefinedIdea, onConversation, onRelayedComponents, actionHint }: InlineConsultantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -456,7 +463,9 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={suppressWand ? "Chat with the AI to refine your idea, then launch..." : (canGenerate ? "Type to refine, or tap Generate..." : "Ask...")}
+            placeholder={submitted
+              ? "Type a new message to start a new request, or check Operations for your video"
+              : suppressWand ? "Chat with the AI to refine your idea, then launch..." : (canGenerate ? "Type to refine, or tap Generate..." : "Ask...")}
             className="flex-1 bg-theme-surface/50 border border-theme rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-white/40 transition-all placeholder:text-slate-600"
           />
           {/* Wand — appears once conversation started (hidden in suppressWand/Launch-Project mode) */}
@@ -487,8 +496,9 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
         </div>
       </form>
 
-      {/* Hint bar */}
-      {!isTyping && messages.length >= 1 && (
+      {/* Hint bar — suppressed once a generation is submitted (no "refine here"
+          invitation mid-flight; the parent passes `submitted` post-launch). */}
+      {!submitted && !isTyping && messages.length >= 1 && (
         <div className="flex items-center gap-1.5 px-2 py-1 mx-1.5 mb-1.5 rounded-lg bg-primary/5 border border-primary/10">
           <ArrowDown className="w-2.5 h-2.5 text-primary" />
           <span className="text-[9px] font-bold text-primary uppercase tracking-widest">
