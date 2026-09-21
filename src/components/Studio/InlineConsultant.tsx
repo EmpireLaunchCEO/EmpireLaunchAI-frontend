@@ -363,8 +363,19 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
     }
   };
 
+  // USER TURNS ONLY, PURPOSE-BUILT FOR THE SUBJECT OF THE VIDEO.
+  // Owner's live Faceless test (Sep 21) narrated "What niche should we
+  // dominate?" — the ASSISTANT's seeded greeting (messages[0], defaults
+  // below) — because this summary joined every message and the backend
+  // templates narration off the FIRST sentence of the blob it receives.
+  // The user's turns are the actual concept (their product, their niche,
+  // their vision); assistant replies/refinements are context, not the
+  // subject. Excluding them makes the user's real concept the narration
+  // source. Note: onConversation still relays the FULL conversation
+  // (greeting + user + assistant) separately, so the Scene-Based pipeline
+  // (page.tsx:490-493) keeps reading the whole chat and is unaffected.
   const conversationSummary = messages
-    .filter(m => m.role === 'user' || m.role === 'assistant')
+    .filter(m => m.role === 'user')
     .map(m => m.content)
     .join(' ');
 
