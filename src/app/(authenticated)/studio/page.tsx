@@ -912,13 +912,13 @@ export default function StudioPage() {
                     <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
                       <span className="text-[10px] font-black text-primary">{usage?.neural?.remaining ?? 0}</span>
                       <span className="text-[9px] font-black text-slate-400">/</span>
-                      <span className="text-[9px] font-black text-slate-500">{usage?.neural?.limit ?? 3}</span>
+                      <span className="text-[9px] font-black text-slate-500">{usage?.neural?.limit ?? 5}</span>
                     </div>
                     <div className="relative">
                       <Info className="w-3.5 h-3.5 text-slate-500 cursor-help peer" />
                       <div className="absolute bottom-full right-0 mb-3 w-56 p-3 bg-slate-900 border border-white/10 rounded-xl text-[10px] leading-relaxed font-medium text-slate-300 opacity-0 peer-hover:opacity-100 transition-all pointer-events-none z-50 shadow-2xl backdrop-blur-xl">
                         <p className="font-black text-white uppercase tracking-widest mb-1">Neural Twin Quota</p>
-                        Your 3 weekly Neural Twin slots reset every {usage?.neural?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
+                        Your 5 weekly Neural Twin slots reset every {usage?.neural?.nextReset || '7 days'}. Unused slots do not roll over. Resets are synchronized with your signup time.
                       </div>
                     </div>
                   </div>
@@ -981,8 +981,8 @@ export default function StudioPage() {
                         className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
                       >
                         <option value="">Auto</option>
-                        <option value="15">15 seconds (pan/zoom)</option>
-                        <option value="30">30 seconds (AI motion)</option>
+                        <option value="15">15 seconds</option>
+                        <option value="30">30 seconds</option>
                       </select>
                     </div>
                   </div>
