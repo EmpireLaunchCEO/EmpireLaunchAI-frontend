@@ -388,9 +388,11 @@ export default function StudioPage() {
 
   // Custom design state — the AI consultant chat is the SINGLE idea entry
   // (owner: the old quick-submit box bypassed GPT 5.2 refinement — removed).
-  // Launch Design submits the GPT-refined conversation summary, and the
-  // harvested style/market DNA rides in the payload so every design is built
-  // on the user's brand.
+  // Launch Design submits the GPT-refined conversation summary with the same
+  // submission shape the old quick-submit box sent (type: design). The
+  // platform remembers the client's niche/business server-side, so the
+  // request stays simple (owner Sep 24: Vault-DNA resolution at generation
+  // time is a backend concern, handled in parallel).
   const [isSubmittingIdea, setIsSubmittingIdea] = useState(false);
   const [ideaSubmitted, setIdeaSubmitted] = useState(false);
   // Post-submit lock (mirrors Faceless): once a design is submitted, the
@@ -590,30 +592,16 @@ export default function StudioPage() {
   };
 
   // Submit a Custom Design through the AI consultant chat. The idea is the
-  // GPT-refined conversation summary (user turns only); the harvested
-  // style/market DNA (niche, angle, targetCustomers, businessGoals — the same
-  // empireContext the consultant already sees) is injected into the payload so
-  // the synthesis pipeline builds EVERY design on the user's brand (owner:
-  // make designs unique to the user, not generic).
+  // GPT-refined conversation summary (user turns only) — the same submission
+  // shape the old quick-submit box sent (owner Sep 24: the platform remembers
+  // the client's niche/business server-side; Vault-DNA resolution at
+  // generation time is a backend concern, handled in parallel).
   const handleDesignSubmit = async (finalIdea?: string) => {
     const ideaToUse = (finalIdea && finalIdea.trim()) || designRefinedIdea.trim();
     if (!ideaToUse || isSubmittingIdea) return;
     setIsSubmittingIdea(true);
     setDesignLocked(true);
     try {
-      // Harvested style/market DNA — captured from the user's empire context.
-      const dna = {
-        niche: userNiche || empireData?.niche || '',
-        angle: empireData?.angle || '',
-        targetCustomers: empireData?.targetCustomers || '',
-        businessGoals: empireData?.businessGoals || ''
-      };
-      const dnaSummary = [
-        dna.niche && `niche: ${dna.niche}`,
-        dna.angle && `angle: ${dna.angle}`,
-        dna.targetCustomers && `targetCustomers: ${dna.targetCustomers}`,
-        dna.businessGoals && `businessGoals: ${dna.businessGoals}`
-      ].filter(Boolean).join('; ');
       const userId = localStorage.getItem('empire_userId');
       const res = await fetch(`${API_URL}/api/approval/create`, {
         method: 'POST',
@@ -628,11 +616,7 @@ export default function StudioPage() {
           payload: {
             category: 'custom-design',
             hasUpload: designUpload.status === 'complete' || designUpload.status === 'selected',
-            uploadPreview: designUpload.preview,
-            // Owner requirement: inject harvested DNA so every design is built
-            // on the user's unique brand identity.
-            dna,
-            dnaSummary
+            uploadPreview: designUpload.preview
           },
           sourceImages: designUpload.metadata?.photoUrl ? [designUpload.metadata.photoUrl] : []
         })
@@ -1254,9 +1238,9 @@ export default function StudioPage() {
 
                 {/* AI consultant chat — the SINGLE design idea entry (owner: the
                 old quick-submit box bypassed GPT 5.2 refinement — removed).
-                The consultant sees the harvested style/market DNA via
-                empireContext, and Launch Design submits its refined summary
-                WITH the DNA in the payload (see handleDesignSubmit). */}
+                The consultant refines the idea in chat (its empireContext
+                includes the client's harvested brand info), and Launch Design
+                submits that refined summary (see handleDesignSubmit). */}
                 <InlineConsultant
                   context="design"
                   onGenerate={handleDesignSubmit}
@@ -1271,7 +1255,7 @@ export default function StudioPage() {
                 {/* Launch Design — bottom of the panel, below the chat (submits
                 the GPT-refined idea from the consultant conversation). */}
                 <button
-                  onClick={() => requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept — blended with your harvested brand DNA — and uses one monthly design credit. Continue?', () => handleDesignSubmit(designRefinedIdea.trim()), designRefinedIdea.trim())}
+                  onClick={() => requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept and uses one monthly design credit. Continue?', () => handleDesignSubmit(designRefinedIdea.trim()), designRefinedIdea.trim())}
                   disabled={!designRefinedIdea.trim() || isSubmittingIdea}
                   className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
                 >
