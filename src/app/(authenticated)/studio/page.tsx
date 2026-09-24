@@ -198,7 +198,7 @@ export default function StudioPage() {
       
       const data = await response.json();
       // upload-photo returns the stored R2/photo path — normalize it (like
-      // handleSourceImageSelect) so handleCustomIdeaSubmit can send the real
+      // handleSourceImageSelect) so handleDesignSubmit can send the real
       // URL to the backend instead of a local blob preview.
       const photoUrl = data?.photoUrl || data?.fileUrl || data?.url || '';
       setDesignUpload(prev => ({ ...prev, status: 'complete', progress: 100, metadata: { ...data, photoUrl } }));
@@ -386,10 +386,22 @@ export default function StudioPage() {
     // Demo mode logic without harvestActivity
   };
 
-  // Custom design idea input state
-  const [customIdea, setCustomIdea] = useState('');
+  // Custom design state — the AI consultant chat is the SINGLE idea entry
+  // (owner: the old quick-submit box bypassed GPT 5.2 refinement — removed).
+  // Launch Design submits the GPT-refined conversation summary, and the
+  // harvested style/market DNA rides in the payload so every design is built
+  // on the user's brand.
   const [isSubmittingIdea, setIsSubmittingIdea] = useState(false);
   const [ideaSubmitted, setIdeaSubmitted] = useState(false);
+  // Post-submit lock (mirrors Faceless): once a design is submitted, the
+  // consultant must NOT invite "refine here" again (each refinement is a fresh
+  // paid AI generation). The lock holds until the user sends a NEW message
+  // (a new request — allowed), which releases it.
+  const [designLocked, setDesignLocked] = useState(false);
+  const designUserMsgCountRef = useRef(0);
+  // The refined idea surfaced by the design consultant chat (conversation
+  // summary — user turns only, per the Sep 21 narration fix).
+  const [designRefinedIdea, setDesignRefinedIdea] = useState('');
 
   const [isSubmittingFaceless, setIsSubmittingFaceless] = useState(false);
   const [facelessSubmitted, setFacelessSubmitted] = useState(false);
@@ -577,10 +589,31 @@ export default function StudioPage() {
     facelessUserMsgCountRef.current = userMsgCount;
   };
 
-  const handleCustomIdeaSubmit = async () => {
-    if (!customIdea.trim()) return;
+  // Submit a Custom Design through the AI consultant chat. The idea is the
+  // GPT-refined conversation summary (user turns only); the harvested
+  // style/market DNA (niche, angle, targetCustomers, businessGoals — the same
+  // empireContext the consultant already sees) is injected into the payload so
+  // the synthesis pipeline builds EVERY design on the user's brand (owner:
+  // make designs unique to the user, not generic).
+  const handleDesignSubmit = async (finalIdea?: string) => {
+    const ideaToUse = (finalIdea && finalIdea.trim()) || designRefinedIdea.trim();
+    if (!ideaToUse || isSubmittingIdea) return;
     setIsSubmittingIdea(true);
+    setDesignLocked(true);
     try {
+      // Harvested style/market DNA — captured from the user's empire context.
+      const dna = {
+        niche: userNiche || empireData?.niche || '',
+        angle: empireData?.angle || '',
+        targetCustomers: empireData?.targetCustomers || '',
+        businessGoals: empireData?.businessGoals || ''
+      };
+      const dnaSummary = [
+        dna.niche && `niche: ${dna.niche}`,
+        dna.angle && `angle: ${dna.angle}`,
+        dna.targetCustomers && `targetCustomers: ${dna.targetCustomers}`,
+        dna.businessGoals && `businessGoals: ${dna.businessGoals}`
+      ].filter(Boolean).join('; ');
       const userId = localStorage.getItem('empire_userId');
       const res = await fetch(`${API_URL}/api/approval/create`, {
         method: 'POST',
@@ -591,11 +624,15 @@ export default function StudioPage() {
         },
         body: JSON.stringify({
           type: 'design',
-          description: customIdea.trim(),
+          description: ideaToUse,
           payload: {
             category: 'custom-design',
             hasUpload: designUpload.status === 'complete' || designUpload.status === 'selected',
-            uploadPreview: designUpload.preview
+            uploadPreview: designUpload.preview,
+            // Owner requirement: inject harvested DNA so every design is built
+            // on the user's unique brand identity.
+            dna,
+            dnaSummary
           },
           sourceImages: designUpload.metadata?.photoUrl ? [designUpload.metadata.photoUrl] : []
         })
@@ -605,13 +642,26 @@ export default function StudioPage() {
       console.log('Design approval created:', data);
       setIsSubmittingIdea(false);
       setIdeaSubmitted(true);
-      setCustomIdea('');
       fetchUsage();
       setTimeout(() => setIdeaSubmitted(false), 5000);
     } catch (error) {
       console.error('Design approval error:', error);
       setIsSubmittingIdea(false);
+      // Submission failed — nothing is generating, so the user may retry and
+      // the consultant returns to its normal (pre-submit) guidance state.
+      setDesignLocked(false);
     }
+  };
+
+  // Release the design post-submit lock the moment the user sends a NEW
+  // message — per owner, a new typed message is a NEW request (allowed),
+  // never an attached refinement of the in-flight generation.
+  const handleDesignConversation = (messages: Array<{ role: string; content: string }>) => {
+    const userMsgCount = messages.filter(m => m.role === 'user').length;
+    if (designLocked && userMsgCount > designUserMsgCountRef.current) {
+      setDesignLocked(false);
+    }
+    designUserMsgCountRef.current = userMsgCount;
   };
 
   const handleSuggestion = (suggestion: string) => {
@@ -1184,28 +1234,6 @@ export default function StudioPage() {
                   )}
                 </div>
 
-                <div className="relative">
-                  <textarea
-                    value={customIdea}
-                    onChange={(e) => setCustomIdea(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept and uses one monthly design credit. Continue?', handleCustomIdeaSubmit, customIdea.trim()); } }}
-                    placeholder={designUpload.preview ? "Tell me what changes you want, or ask me to create 5 unique variations based on this design" : "e.g. A minimalist sage-green yoga mat with gold mandala print, 72x24 inches, boho-luxe aesthetic..."}
-                    disabled={isSubmittingIdea}
-                    className="w-full bg-theme-background border border-theme rounded-2xl p-4 pr-12 text-xs font-medium outline-none focus:border-amber-400/50 transition-all min-h-[100px] text-foreground placeholder:text-slate-600 resize-none"
-                  />
-                  <button
-                    onClick={() => requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept and uses one monthly design credit. Continue?', handleCustomIdeaSubmit, customIdea.trim())}
-                    disabled={!customIdea.trim() || isSubmittingIdea}
-                    className="absolute bottom-3 right-3 p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
-                  >
-                    {isSubmittingIdea ? (
-                      <div className="w-4 h-4 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
-                    ) : (
-                      <SendHorizonal className="w-4 h-4" />
-                    )}
-                  </button>
-                </div>
-
                 {ideaSubmitted && (
                   <motion.div
                     initial={{ opacity: 0, y: -5 }}
@@ -1224,7 +1252,35 @@ export default function StudioPage() {
                   <span>Tip: Be specific about colors, materials, dimensions, and target platform</span>
                 </div>
 
-                <InlineConsultant context="design" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                {/* AI consultant chat — the SINGLE design idea entry (owner: the
+                old quick-submit box bypassed GPT 5.2 refinement — removed).
+                The consultant sees the harvested style/market DNA via
+                empireContext, and Launch Design submits its refined summary
+                WITH the DNA in the payload (see handleDesignSubmit). */}
+                <InlineConsultant
+                  context="design"
+                  onGenerate={handleDesignSubmit}
+                  onRefinedIdea={setDesignRefinedIdea}
+                  onConversation={handleDesignConversation}
+                  suppressWand
+                  submitted={designLocked}
+                  actionHint="Press Launch Design to synthesize your design"
+                  empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }}
+                />
+
+                {/* Launch Design — bottom of the panel, below the chat (submits
+                the GPT-refined idea from the consultant conversation). */}
+                <button
+                  onClick={() => requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept — blended with your harvested brand DNA — and uses one monthly design credit. Continue?', () => handleDesignSubmit(designRefinedIdea.trim()), designRefinedIdea.trim())}
+                  disabled={!designRefinedIdea.trim() || isSubmittingIdea}
+                  className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
+                >
+                  {isSubmittingIdea ? (
+                    <Loader2 className="w-4 h-4 animate-spin mx-auto" />
+                  ) : (
+                    'Launch Design'
+                  )}
+                </button>
               </div>
 
 
