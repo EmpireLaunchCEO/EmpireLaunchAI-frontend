@@ -44,8 +44,12 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
   const getStatusColor = (status: DesignTask['status']) => {
     switch (status) {
       case 'blueprint_ready': return 'bg-primary/10 text-primary border-primary/20';
+      case 'producing': return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
       case 'editing': return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
+      case 'drafting': return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+      case 'completed': return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
       case 'review_required': return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
+      default: return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
     }
   };
 
@@ -55,6 +59,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
       case 'CapCut': return <Scissors className="w-5 h-5" />;
       case 'Canva': return <Layout className="w-5 h-5" />;
       case 'Fiverr': return <Zap className="w-5 h-5" />;
+      default: return <Layout className="w-5 h-5" />;
     }
   };
 
@@ -113,6 +118,11 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
                className="p-6 bg-theme-surface border-2 border-theme rounded-[32px] shadow-sm flex items-center justify-between group text-left"
              >
                <div className="flex items-center gap-6">
+                  {task.thumbnailUrl ? (
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-theme shadow-inner shrink-0">
+                      <img src={task.thumbnailUrl} alt={task.title} className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
                   <div className={cn(
                     "w-16 h-16 rounded-2xl flex items-center justify-center shadow-inner",
                     task.platform === 'Kittl' ? 'bg-primary/10 text-primary' :
@@ -120,6 +130,7 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
                   )}>
                      {getPlatformIcon(task.platform)}
                   </div>
+                  )}
                   <div className="space-y-1">
                      <div className="flex items-center gap-2">
                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{task.platform} Task</span>
@@ -132,6 +143,25 @@ export function DesignCenterHub({ onSelectTask }: DesignCenterHubProps) {
                         {task.status === 'blueprint_ready' && <VaultInjected />}
                      </div>
                      <h4 className="text-lg font-bold text-foreground">{task.title}</h4>
+                     {task.status === 'completed' && task.fileUrl && (
+                       <span
+                         role="button"
+                         tabIndex={0}
+                         title={task.fileUrl}
+                         onClick={(e) => { e.stopPropagation(); window.open(task.fileUrl, '_blank', 'noopener,noreferrer'); }}
+                         onKeyDown={(e) => {
+                           if (e.key === 'Enter' || e.key === ' ') {
+                             e.preventDefault();
+                             e.stopPropagation();
+                             window.open(task.fileUrl, '_blank', 'noopener,noreferrer');
+                           }
+                         }}
+                         className="inline-flex items-center gap-1.5 text-emerald-500 text-xs font-bold hover:text-emerald-400 transition-colors cursor-pointer"
+                       >
+                         <ExternalLink className="w-3 h-3" />
+                         <span className="truncate max-w-[240px]">End result ready — open design</span>
+                       </span>
+                     )}
                   </div>
                </div>
 

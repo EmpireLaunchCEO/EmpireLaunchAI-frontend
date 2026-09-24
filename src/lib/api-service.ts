@@ -341,6 +341,11 @@ export interface DesignTask {
   platform: string;
   status: 'blueprint_ready' | 'producing' | 'editing' | 'drafting' | 'completed' | 'review_required';
   dueDate: string;
+  /** Design image preview (creations.thumbnailUrl, R2) */
+  thumbnailUrl?: string;
+  /** Finished design asset (creations.fileUrl, R2) — the "end result" that should be reachable from the Design Center box */
+  fileUrl?: string;
+  createdAt?: string;
 }
 
 export interface CreativeBlueprintData {
@@ -390,10 +395,55 @@ export interface InboxDraft {
 }
 
 export const creativeService = {
+  /**
+   * REAL design tasks from the backend creations table (type === 'design').
+   * GET /api/cinema/creations → { creations: [...] }; each row carries
+   * id/type/title/status/fileUrl/thumbnailUrl/metadata/createdAt. The route
+   * resolves the user from req.query.userId (no auth middleware on it), so we
+   * pass the empire_user_id as a query param in addition to getHeaders().
+   * No hardcoded fallback: on any failure we return [] (the Design Center box
+   * renders an empty queue rather than a fake task).
+   */
   async getDesignTasks(): Promise<DesignTask[]> {
-    return [
-      { id: 'dt_1', title: 'Vintage Botanical Journal Cover', platform: 'Kittl', status: 'blueprint_ready', dueDate: 'Today' }
-    ];
+    try {
+      const res = await fetch(
+        `${API_URL}/api/cinema/creations?userId=${encodeURIComponent(getEmpireUserId())}`,
+        { headers: getHeaders() }
+      );
+      if (!res.ok) return [];
+      const data = await res.json();
+      const creations: any[] = Array.isArray(data) ? data : (data.creations || []);
+      const now = new Date();
+      const isToday = (d: Date) =>
+        d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+
+      return creations
+        .filter((c) => c && c.type === 'design')
+        .map((c): DesignTask => {
+          const rawStatus = String(c.status || '');
+          const status: DesignTask['status'] =
+            rawStatus === 'processing' ? 'producing' :
+            rawStatus === 'failed' ? 'review_required' :
+            'completed';
+          const createdAt = c.createdAt ? new Date(c.createdAt) : null;
+          const dueDate = createdAt && !isNaN(createdAt.getTime())
+            ? (isToday(createdAt) ? 'Today' : createdAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }))
+            : 'Today';
+          return {
+            id: c.id,
+            title: c.title || 'Untitled',
+            platform: c.metadata?.platform || 'Canva',
+            status,
+            dueDate,
+            thumbnailUrl: c.thumbnailUrl || undefined,
+            fileUrl: c.fileUrl || undefined,
+            createdAt: c.createdAt || undefined,
+          };
+        });
+    } catch (e) {
+      console.error('Failed to fetch design creations', e);
+      return [];
+    }
   },
   async getBlueprint(taskId: string): Promise<CreativeBlueprintData> {
     return {
