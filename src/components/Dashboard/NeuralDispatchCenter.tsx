@@ -166,7 +166,15 @@ export function NeuralDispatchCenter() {
               title: proj.title || 'Scene-Based Video Project',
               videoUrl: proj.finalVideoUrl,
               assetId: proj.id,
-              status: 'completed'
+              status: 'completed',
+              // Surface the project's REAL engine mode (metadata.mode is
+              // 'scene' | 'faceless' — written by the scene/faceless pipeline).
+              // cardQueueType routes payload.mode === 'faceless' to the
+              // Faceless box; scene/customize stays in the Videos box. Without
+              // this, every completed project card was classified by its
+              // hardcoded top-level type 'video' and faceless drafts sank into
+              // the general Videos box (owner's live Sep 28 test).
+              mode: proj.metadata?.mode || 'scene'
             }
           }));
         }

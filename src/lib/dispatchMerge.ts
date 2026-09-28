@@ -86,7 +86,11 @@ export const cardQueueType = (card: any): string => {
   const mode = String(payload.mode || '').toLowerCase();
   const type = String(card?.type || payload.type || '').toLowerCase();
   // Faceless: category 'faceless-video', mode 'faceless', or type faceless.
-  if (category.includes('faceless') || mode === 'faceless' || type === 'faceless') return 'faceless';
+  // Neural Twin drafts arrive as top-level type 'video' with payload.mode 'twin'
+  // (cinemaController draft payload), so mode 'twin' routes to the Faceless box
+  // too — the locked cost model treats Twin as the faceless engine family and
+  // the Faceless box count falls back to the twin count.
+  if (category.includes('faceless') || mode === 'faceless' || mode === 'twin' || type === 'faceless') return 'faceless';
   // Neural Twin → Faceless box (faceless engine family, per locked cost model).
   if (type === 'neural_twin' || type === 'twin') return 'faceless';
   // Edits: category or type edit-ish.
