@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Video, 
-  Edit3, 
-  UserSquare2, 
-  Palette, 
+import {
+  Video,
+  Edit3,
+  UserSquare2,
+  Palette,
   CheckCircle2,
   ChevronRight,
   Sparkles,
@@ -20,7 +20,8 @@ import {
   AlertCircle,
   ThumbsUp,
   Download,
-  X
+  X,
+  Lock
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -685,15 +686,27 @@ export function NeuralDispatchCenter() {
             </h4>
           </div>
 
-          {!isApproved && (
-            <div className="flex items-center justify-center md:justify-start gap-2 px-3 py-2 rounded-2xl bg-amber-500/5 border !border-amber-500/10">
-              <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span className="text-[8px] font-bold text-amber-300 uppercase tracking-widest">
-                LOCKED
-              </span>
+          {/* LOCKED STATE — owner Sep 28: "seeing the Canva needs to be
+              removed." Previously the connected-platform buttons (incl. Canva)
+              rendered at opacity-25 grayscale UNDER the LOCKED badge, so the
+              asset was still visible behind the lock. Now the locked state is a
+              single frosted lock surface with NO platform assets — the asset
+              list only renders once the approval unlocks it. */}
+          {!isApproved ? (
+            <div className="relative overflow-hidden rounded-[24px] border !border-white/10 bg-slate-900/60 backdrop-blur-xl min-h-[180px] flex flex-col items-center justify-center text-center gap-3 px-6 py-10">
+              <div className="absolute -top-16 -right-16 w-48 h-48 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
+              <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
+              <div className="relative w-11 h-11 rounded-2xl bg-amber-500/10 border !border-amber-500/20 flex items-center justify-center">
+                <Lock className="w-5 h-5 text-amber-400" />
+              </div>
+              <div className="relative space-y-1">
+                <p className="text-[10px] font-black text-amber-300 uppercase tracking-[0.3em]">Locked</p>
+                <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest max-w-[220px]">
+                  Approve the draft above to unlock dispatch targets
+                </p>
+              </div>
             </div>
-          )}
-
+          ) : (
           <div className="space-y-3">
             {connectedPlatforms.length > 0 ? (
               connectedPlatforms.map((platform) => {
@@ -701,11 +714,9 @@ export function NeuralDispatchCenter() {
                 return (
                   <button
                     key={platform}
-                    disabled={!isApproved}
                     onClick={() => handleAppToggle(platform)}
                     className={cn(
                       "w-full rounded-[24px] p-3 md:p-4 border !border-white/5 flex flex-col md:flex-row items-center gap-3 md:gap-4 transition-all group relative overflow-hidden",
-                      !isApproved && "opacity-25 cursor-not-allowed grayscale",
                       isSelected
                         ? "bg-emerald-500/10 !border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
                         : "bg-slate-900/40 !border-white/5 hover:!border-white/10"
@@ -750,6 +761,7 @@ export function NeuralDispatchCenter() {
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
 
