@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { GuidedLinking } from '@/components/Dashboard/GuidedLinking';
 import { useEmpire } from '@/lib/EmpireContext';
 import { motion } from 'framer-motion';
@@ -31,40 +32,57 @@ export default function LinkCenterPage() {
     return registerRefreshHandler(handleRefresh);
   }, [registerRefreshHandler, handleRefresh]);
 
-  return (
-      <div className="relative">
-        {/* ── FROSTED-GLASS "COMING SOON" GATE (owner Sep 28) ───────────────
-            The Link Center is gated for everyone until integrations are fully
-            figured out. The page and route stay; clients see a frosted-glass
-            lock overlay that prevents any integration from being used. This is
-            a visual gate ONLY — no navigation/route removal. */}
-        <div className="absolute inset-0 z-50 flex items-center justify-center p-6 md:p-12">
-          <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-xl" />
-          <div className="relative w-full max-w-xl rounded-[40px] bg-slate-900/70 border !border-white/10 shadow-2xl backdrop-blur-2xl overflow-hidden p-10 md:p-14 text-center space-y-6">
-            {/* Electric shimmer decor (hard-locked purple/blue theme) */}
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
-            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
+  // ── FROSTED-GLASS "COMING SOON" GATE (owner Sep 28/29) ─────────────────
+  // The Link Center is gated for everyone until integrations are fully
+  // figured out. The page and route stay; clients see a frosted-glass lock
+  // overlay that prevents any integration from being used.
+  //
+  // FULL-VIEWPORT COVER: the gate is rendered via createPortal to
+  // document.body at z-[10000010] — ABOVE the app shell's highest chrome
+  // (MobileNav z-[10000005], Sidebar z-[10005], GlobalEmpireHeader inside
+  // <main> z-[1]). An in-page fixed overlay would be bounded by <main>'s
+  // stacking context (z-[1]) and the bottom nav / sidebar would paint over
+  // it, so the owner would still see them. The portal escapes <main> and
+  // covers the ENTIRE screen including the 3-brand top bar.
+  // Mounted-state guard keeps SSR/hydration safe (document only exists
+  // client-side).
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
-            <div className="relative mx-auto w-16 h-16 rounded-3xl bg-white/5 border !border-white/10 flex items-center justify-center">
-              <Lock className="w-7 h-7 text-primary" />
-            </div>
+  const comingSoonGate = (
+    <div className="fixed inset-0 z-[10000010] flex items-center justify-center p-6 md:p-12" data-link-center-gate="true">
+      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl" />
+      <div className="relative w-full max-w-xl rounded-[40px] bg-slate-900/70 border !border-white/10 shadow-2xl backdrop-blur-2xl overflow-hidden p-10 md:p-14 text-center space-y-6">
+        {/* Electric shimmer decor (hard-locked purple/blue theme) */}
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-            <div className="relative space-y-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary flex items-center justify-center gap-2">
-                <Sparkles className="w-3.5 h-3.5" />
-                Neural Link Center
-              </p>
-              <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-                Coming Soon
-              </h1>
-              <p className="text-sm text-slate-400 font-medium max-w-md mx-auto">
-                Integrations are being wired up. Once ready, this is where every
-                platform connects to your Empire — one tap, fully autonomous.
-              </p>
-            </div>
-          </div>
+        <div className="relative mx-auto w-16 h-16 rounded-3xl bg-white/5 border !border-white/10 flex items-center justify-center">
+          <Lock className="w-7 h-7 text-primary" />
         </div>
 
+        <div className="relative space-y-3">
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary flex items-center justify-center gap-2">
+            <Sparkles className="w-3.5 h-3.5" />
+            Neural Link Center
+          </p>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
+            Coming Soon
+          </h1>
+          <p className="text-sm text-slate-400 font-medium max-w-md mx-auto">
+            Integrations are being wired up. Once ready, this is where every
+            platform connects to your Empire — one tap, fully autonomous.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {mounted && createPortal(comingSoonGate, document.body)}
       <div className="p-4 md:p-8 pb-32 max-w-full md:max-w-7xl mx-auto space-y-12 md:space-y-16 overflow-x-hidden">
         
         {/* 1. Identity Header */}
@@ -102,6 +120,6 @@ export default function LinkCenterPage() {
           </div>
         </div>
       </div>
-      </div>
+    </>
   );
 }
