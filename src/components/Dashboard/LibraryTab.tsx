@@ -43,8 +43,13 @@ export function LibraryTab() {
 
   const getAssetType = (asset: any): string => {
     const type = (asset.assetType || asset.type || '').toLowerCase();
-    if (type.includes('video') || type.includes('film') || type === 'raw_video' || type === 'enhanced_video') return 'video';
+    // Library box routing (owner Sep 29): twin/neural checks MUST come BEFORE
+    // the generic video check — a saved Neural Twin is library type
+    // 'twin_video', which contains 'video' and would otherwise land in the
+    // Videos box instead of the Neural Twins box. Faceless is a video family
+    // (owner expects the Videos box for faceless), so map it to 'video'.
     if (type.includes('twin') || type.includes('neural') || type === 'facial_dna') return 'neural_twin';
+    if (type.includes('video') || type.includes('film') || type === 'raw_video' || type === 'enhanced_video' || type === 'faceless') return 'video';
     if (type.includes('edit')) return 'edit';
     if (type.includes('design') || type.includes('image') || type.includes('palette')) return 'design';
     return 'template';
