@@ -52,30 +52,24 @@ export default function LinkCenterPage() {
   }, []);
 
   const comingSoonGate = (
-    <div className="fixed inset-0 z-[10000010] flex items-center justify-center p-6 md:p-12" data-link-center-gate="true">
-      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl" />
-      <div className="relative w-full max-w-xl rounded-[40px] bg-slate-900/70 border !border-white/10 shadow-2xl backdrop-blur-2xl overflow-hidden p-10 md:p-14 text-center space-y-6">
-        {/* Electric shimmer decor (hard-locked purple/blue theme) */}
-        <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
-
-        <div className="relative mx-auto w-16 h-16 rounded-3xl bg-white/5 border !border-white/10 flex items-center justify-center">
+    <div
+      className="fixed inset-0 z-[10000010] flex items-center justify-center overflow-hidden bg-[#0a0519]/85 backdrop-blur-xl"
+      data-link-center-gate="true"
+    >
+      {/* Electric shimmer decor (hard-locked purple/blue theme) — full-bleed decor of the screen, not a card */}
+      <div className="pointer-events-none absolute -top-32 -right-24 w-[34rem] h-[34rem] bg-primary/20 rounded-full blur-[120px]" />
+      <div className="pointer-events-none absolute -bottom-40 -left-24 w-[34rem] h-[34rem] bg-cyan-500/10 rounded-full blur-[120px]" />
+      <div className="relative flex flex-col items-center justify-center text-center space-y-6 px-6">
+        <div className="w-16 h-16 rounded-3xl bg-white/5 border !border-white/10 flex items-center justify-center">
           <Lock className="w-7 h-7 text-primary" />
         </div>
-
-        <div className="relative space-y-3">
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary flex items-center justify-center gap-2">
-            <Sparkles className="w-3.5 h-3.5" />
-            Neural Link Center
-          </p>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
-            Coming Soon
-          </h1>
-          <p className="text-sm text-slate-400 font-medium max-w-md mx-auto">
-            Integrations are being wired up. Once ready, this is where every
-            platform connects to your Empire — one tap, fully autonomous.
-          </p>
-        </div>
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary flex items-center justify-center gap-2">
+          <Sparkles className="w-3.5 h-3.5" />
+          Neural Link Center
+        </p>
+        <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-none italic uppercase text-theme-gradient">
+          Coming Soon
+        </h1>
       </div>
     </div>
   );
