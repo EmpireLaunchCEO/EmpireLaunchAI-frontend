@@ -21,12 +21,13 @@ import {
   ThumbsUp,
   Download,
   X,
-  Lock
+  Lock,
+  Rocket
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
-import { API_URL } from '@/lib/config';
+import { API_URL, PWA_URL } from '@/lib/config';
 import { mergeDispatchCards, isUsableMediaUrl, cardQueueType } from '@/lib/dispatchMerge';
 import { getEmpireUserId } from '@/lib/api-service';
 
@@ -611,6 +612,26 @@ export function NeuralDispatchCenter() {
               <Download className="w-4 h-4" />
               Download
             </button>
+            {/* GET STARTED — owner Sep 30: completed Operations video card CTA that
+                opens the PWA in a new tab. URL lives in ONE named constant
+                (src/lib/config.ts PWA_URL) so a future custom-domain swap is a
+                single-line change. Mirrors Save/Download: only actionable when
+                the card carries playable media. */}
+            <a
+              href={PWA_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-disabled={!reviewMedia}
+              onClick={(e) => { if (!reviewMedia) e.preventDefault(); }}
+              className={cn(
+                "flex-1 relative overflow-hidden py-5 bg-slate-900/80 border !border-primary/30 rounded-2xl font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-2 transition-all shadow-xl shadow-primary/10 hover:border-primary/60 hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.25)] active:scale-95",
+                reviewMedia ? "text-primary" : "opacity-40 cursor-not-allowed pointer-events-none"
+              )}
+            >
+              <div className="pointer-events-none absolute -top-10 -right-10 w-24 h-24 bg-primary/20 rounded-full blur-[60px]" />
+              <Rocket className="w-4 h-4" />
+              Get Started
+            </a>
             <button 
               onClick={handleDelete}
               className="py-5 px-6 bg-red-500/10 text-red-400 border border-red-500/20 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-red-500/20 transition-all flex items-center justify-center gap-2"
