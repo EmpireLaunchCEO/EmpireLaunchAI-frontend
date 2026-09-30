@@ -25,3 +25,11 @@ console.log('[CONFIG] System API Path Established:', API_URL);
 // (owner Sep 30). Single source of truth — swapping in a custom domain later
 // changes exactly this one line.
 export const PWA_URL = 'https://empire-launch-ai-frontend.vercel.app';
+
+// Owner account identity (Staci, Sep 30). Single source of truth for the
+// owner-only "Get Started" CTA scoping. The owner is ALSO resolved from auth
+// via EmpireContext: isAdmin is granted only when the authenticated
+// empire_userId is the seeded zero-UUID, and userEmail comes back from the
+// backend /api/settings/hydrate response — see EmpireTabs.tsx for the
+// established pattern.
+export const OWNER_EMAIL = 'stacipeabody@gmail.com';
