@@ -24,7 +24,7 @@ console.log('[CONFIG] System API Path Established:', API_URL);
 // PWA landing URL for the "Get Started" CTA on completed Operations cards
 // (owner Sep 30). Single source of truth — swapping in a custom domain later
 // changes exactly this one line.
-export const PWA_URL = 'https://empire-launch-ai-frontend.vercel.app';
+export const PWA_URL = 'https://empirelaunchai.com';
 
 // Owner account identity (Staci, Sep 30). Single source of truth for the
 // owner-only "Get Started" CTA scoping. The owner is ALSO resolved from auth
