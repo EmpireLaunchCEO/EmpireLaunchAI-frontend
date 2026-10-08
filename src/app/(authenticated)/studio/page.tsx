@@ -16,7 +16,8 @@ import {
   Palette,
   Film,
   CheckCircle2,
-  Loader2
+  Loader2,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DNAVaultCounter } from '@/components/Dashboard/DNAVaultCounter';
@@ -568,7 +569,11 @@ export default function StudioPage() {
       console.log('Faceless approval created:', data);
       setIsSubmittingFaceless(false);
       setFacelessSubmitted(true);
-      setTimeout(() => setFacelessSubmitted(false), 5000);
+      // Owner UX (Oct 7): the confirmation must stay visible — at least ~15s,
+      // no early auto-kill. Generation takes ~5 min, so keep it up the whole
+      // window; the customer can dismiss it any time via the X button, and a
+      // NEW typed message (a new request) clears it early (see below).
+      setTimeout(() => setFacelessSubmitted(false), 5 * 60 * 1000);
     } catch (error) {
       console.error('Faceless approval error:', error);
       setIsSubmittingFaceless(false);
@@ -587,6 +592,9 @@ export default function StudioPage() {
     const userMsgCount = messages.filter(m => m.role === 'user').length;
     if (facelessLocked && userMsgCount > facelessUserMsgCountRef.current) {
       setFacelessLocked(false);
+      // A NEW typed message is a NEW request — dismiss the previous launch's
+      // confirmation so the customer isn't told to watch for an old video.
+      setFacelessSubmitted(false);
     }
     facelessUserMsgCountRef.current = userMsgCount;
   };
@@ -945,7 +953,15 @@ export default function StudioPage() {
                 {facelessSubmitted && (
                   <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Faceless concept received — sourcing viral stock material</span>
+                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Concept accepted — your video is being built. Check the Operations page in about 5 minutes.</span>
+                    <button
+                      type="button"
+                      onClick={() => setFacelessSubmitted(false)}
+                      aria-label="Dismiss confirmation"
+                      className="ml-auto shrink-0 p-0.5 rounded-md text-emerald-400/80 hover:text-emerald-300 hover:bg-emerald-500/10 transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
                   </motion.div>
                 )}
 
