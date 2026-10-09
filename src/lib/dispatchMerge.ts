@@ -143,6 +143,7 @@ export function mergeDispatchCards(
   assetItems: any[],
   projectItems: any[],
   localItems: any[],
+  liveConfirmed: boolean = false,
 ): DispatchCard[] {
   const byMedia = new Map<string, DispatchCard>();
   const liveIds = new Set<string>();
@@ -181,9 +182,14 @@ export function mergeDispatchCards(
   // Ghost approvals carry a payload.assetId that resolves to NO live creation or
   // project row (their media generation was deleted / re-created). They render as
   // dead cards whose download/delete would 404. Drop completed-Video ghosts only.
-  // Fail open when the live universe never loaded (both media fetches failed) so
-  // a network error can never wipe the queue by mis-classifying every approval.
-  const liveLoaded = assetItems.length > 0 || projectItems.length > 0;
+  // Fail open when the live universe never loaded CONFIRMEDLY — i.e. the live
+  // fetches themselves errored (network offline/timeout) so a network error can
+  // never wipe the queue by mis-classifying every approval. liveConfirmed is set
+  // by the caller when a live fetch returned HTTP ok EVEN IF it yielded zero
+  // items: an empty-but-confirmed universe (owner deleted every video) must still
+  // ghost-drop stale approvals. Legacy callers that don't thread the flag fall
+  // back to the old non-empty-array heuristic.
+  const liveLoaded = liveConfirmed || assetItems.length > 0 || projectItems.length > 0;
 
   // 4) Approvals — link back to their media row via canonical payload id.
   for (let i = 0; i < approvals.length; i++) {
