@@ -125,11 +125,17 @@ export function NeuralDispatchCenter() {
       // must see the raw value, NOT a pre-flattened 'video', or Neural Twin
       // assets would sink into the general Videos box (owner Sep 21 defect).
       let assetItems: any[] = [];
+      // Whether the live-universe fetches below actually returned HTTP ok
+      // (independent of how many items they yielded). See merged call below:
+      // an empty-but-confirmed universe must still drop stale approval ghosts;
+      // only a network error may fail open.
+      let liveAssetsOk = false;
       try {
         const assetsRes = await fetch(`${API_URL}/api/studio/assets`, {
           headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
         });
         if (assetsRes.ok) {
+          liveAssetsOk = true;
           const assetsData = await assetsRes.json();
           const completedAssets = (assetsData.assets || []).filter(
             (a: any) =>
@@ -160,11 +166,13 @@ export function NeuralDispatchCenter() {
       // signed R2 URLs on read, so its row wins over the assets copy of the same
       // project id during the canonical merge below.
       let projectItems: any[] = [];
+      let liveProjectsOk = false;
       try {
         const projectsRes = await fetch(`${API_URL}/api/studio/video-projects`, {
           headers: { 'Authorization': getAuthHeader(), 'x-user-id': userId }
         });
         if (projectsRes.ok) {
+          liveProjectsOk = true;
           const projectsData = await projectsRes.json();
           const completedProjects = (projectsData.projects || []).filter((p: any) => p.status === 'completed' && p.finalVideoUrl);
           projectItems = completedProjects.map((proj: any) => ({
@@ -218,7 +226,11 @@ export function NeuralDispatchCenter() {
       // whose underlying creation/project row no longer exists (the stale scene
       // receipts behind the owner's "2 popped up each time I made a video").
       // Failed cards and every other approval type pass through unchanged.
-      const approvalItems = mergeDispatchCards(approvals, assetItems, projectItems, localItems);
+      // liveConfirmed = at least one live-universe fetch returned HTTP ok (even
+      // with zero items) — so a fully-empty Operations universe that the server
+      // confirmed still ghost-drops stale approvals instead of resurrecting them.
+      const liveConfirmed = liveAssetsOk || liveProjectsOk;
+      const approvalItems = mergeDispatchCards(approvals, assetItems, projectItems, localItems, liveConfirmed);
 
       setApprovalItems(approvalItems);
       // Group counts by QUEUE — via cardQueueType, which resolves the richest
