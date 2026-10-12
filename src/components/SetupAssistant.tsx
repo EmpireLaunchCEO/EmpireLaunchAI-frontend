@@ -47,7 +47,7 @@ const tiktokSteps = [
   {
     field: "Redirect URI",
     selector: "#tiktok-redirect-uri",
-    value: "https://empirelaunchai.com/api/auth/callback/tiktok",
+    value: "https://empirelaunchai.com/api/auth/tiktok/callback",
     instruction: "Copy this into the 'Redirect URI' field in your TikTok Dev Portal."
   }
 ];
