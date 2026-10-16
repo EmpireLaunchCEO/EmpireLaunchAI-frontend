@@ -61,6 +61,11 @@ export function NeuralDispatchCenter() {
   // comes from the backend /api/settings/hydrate response. Same established
   // pattern as EmpireTabs.tsx.
   const isOwner = isAdmin || userEmail?.toLowerCase() === OWNER_EMAIL;
+  // HIDDEN per owner Oct 12 (render #5 ADJUST task): the "Neural Feedback
+  // (One line changes)" box and the owner-only "Get Started" button are hidden
+  // during the launch-gate review. CODE KEPT INTACT — flip a flag to restore.
+  const SHOW_NEURAL_FEEDBACK_BOX = false; // restore = set true
+  const SHOW_GET_STARTED_BUTTON = false; // restore = set true
   const [activeQueue, setActiveQueue] = useState<string | null>(null);
   const [selectedApps, setSelectedApps] = useState<string[]>([]);
   const [isApproved, setIsApproved] = useState(false);
@@ -561,7 +566,9 @@ export function NeuralDispatchCenter() {
           )}
         </div>
 
-        {/* NEURAL EDIT BOX */}
+        {/* NEURAL EDIT BOX — hidden while SHOW_NEURAL_FEEDBACK_BOX=false (owner
+            Oct 12 render #5 ADJUST); JSX kept verbatim for instant restore. */}
+        {SHOW_NEURAL_FEEDBACK_BOX && (
         <div className="p-8 bg-slate-900/50 border-t border-white/5 space-y-6">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -638,7 +645,7 @@ export function NeuralDispatchCenter() {
                 the card carries playable media. OWNER-ONLY: rendered only for
                 the owner's account (isAdmin via seeded zero-UUID auth check OR
                 email from backend hydrate) — never shown to client accounts. */}
-            {isOwner && (
+            {isOwner && SHOW_GET_STARTED_BUTTON && (
             <a
               href={PWA_URL}
               target="_blank"
@@ -663,6 +670,7 @@ export function NeuralDispatchCenter() {
             </button>
           </div>
         </div>
+        )}
       </motion.div>
     );
   }
