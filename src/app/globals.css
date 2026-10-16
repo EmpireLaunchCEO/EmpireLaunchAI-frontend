@@ -139,6 +139,25 @@ html, body {
   width: 100%;
 }
 
+/* Desktop scroll guarantee (owner report Oct 16: desktop wheel + scrollbar
+   blocked when the body gets locked to the viewport). Mirror of the proven
+   mobile fix below: at desktop sizes html/body MUST stay the document
+   scroller — any overlay/theme state that pins body (position:fixed,
+   height:100vh, overflow:hidden) disables the document scrollbar and wheel.
+   These !important overrides are no-ops in the healthy state (body is
+   already static/auto) and only cut in against a lock. */
+@media (min-width: 769px) {
+  html, body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    position: static !important;
+    height: auto !important;
+    min-height: 100vh;
+    max-width: 100vw;
+    width: 100%;
+  }
+}
+
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
