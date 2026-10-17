@@ -566,10 +566,14 @@ export function NeuralDispatchCenter() {
           )}
         </div>
 
-        {/* NEURAL EDIT BOX — hidden while SHOW_NEURAL_FEEDBACK_BOX=false (owner
-            Oct 12 render #5 ADJUST); JSX kept verbatim for instant restore. */}
-        {SHOW_NEURAL_FEEDBACK_BOX && (
+        {/* NEURAL EDIT BOX — the feedback INPUT alone is hidden while
+            SHOW_NEURAL_FEEDBACK_BOX=false (owner Oct 12 render #5 ADJUST).
+            The Save/Download/Delete action row below is NOT part of the
+            feedback box — it must ALWAYS render (regression fixed: PR #93
+            originally wrapped this whole section in the flag, which hid the
+            action buttons with the feedback box). */}
         <div className="p-8 bg-slate-900/50 border-t border-white/5 space-y-6">
+          {SHOW_NEURAL_FEEDBACK_BOX && (
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-primary" />
@@ -604,6 +608,7 @@ export function NeuralDispatchCenter() {
               </p>
             )}
           </div>
+          )}
 
           {reviewFailed && (
             <p className="text-[10px] font-bold uppercase tracking-widest text-red-400">
@@ -611,6 +616,10 @@ export function NeuralDispatchCenter() {
             </p>
           )}
 
+          {/* ACTION ROW — SAVE / DOWNLOAD / DELETE. Always rendered
+              (regression fix: these were accidentally inside the
+              SHOW_NEURAL_FEEDBACK_BOX gate since PR #93 and vanished with
+              it). Get Started remains owner-flag-gated by design. */}
           <div className="flex gap-3">
             <button 
               onClick={handleSaveToLibrary}
@@ -670,7 +679,6 @@ export function NeuralDispatchCenter() {
             </button>
           </div>
         </div>
-        )}
       </motion.div>
     );
   }
