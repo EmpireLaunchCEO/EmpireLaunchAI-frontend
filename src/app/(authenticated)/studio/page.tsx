@@ -291,6 +291,14 @@ export default function StudioPage() {
   const [twinError, setTwinError] = useState<string | null>(null);
   const [twinMood, setTwinMood] = useState<string>('energetic');
   const [twinDuration, setTwinDuration] = useState<string>('30');
+  // Model-layer dictation fidelity (owner Oct 19, ALL-MODES bar): the twin
+  // consultant relays the REFINED/dictated script (onRefinedIdea) and the FULL
+  // conversation (onConversation) so createNeuralTwin can honor "remember the
+  // conversation and include what anyone is wanting it to say" — never the old
+  // hardcoded placeholder. Falls back to the legacy greeting when the chat has
+  // produced nothing yet.
+  const [twinScript, setTwinScript] = useState('');
+  const [twinConversation, setTwinConversation] = useState<Array<{ role: string; content: string }>>([]);
 
   const handleSynthesizeTwin = async () => {
     if (facialDnaUpload.status !== 'complete') return;
@@ -317,7 +325,16 @@ export default function StudioPage() {
           photoPath: photoRef,
           mood: twinMood,
           duration: twinDuration ? parseInt(twinDuration) : undefined,
-          script: "Welcome to my Empire! This is my Neural Twin double, ready to market 24/7.",
+          // Owner Oct 19 directive: honor the dictated/refined script from the
+          // neural-twin consultant — fall back to the legacy greeting only when
+          // the chat produced nothing.
+          script: (twinScript && twinScript.trim())
+            ? twinScript.trim()
+            : "Welcome to my Empire! This is my Neural Twin double, ready to market 24/7.",
+          // Remember the conversation (owner Oct 19): the backend unions prior
+          // USER turns into dictation extraction so earlier asks (end flash,
+          // bullets, mood) are honored, not dropped.
+          conversation: twinConversation,
         }),
       });
 
@@ -1098,7 +1115,7 @@ export default function StudioPage() {
                   )}
                 </div>
 
-                <InlineConsultant context="neural-twin" empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
+                <InlineConsultant context="neural-twin" onRefinedIdea={setTwinScript} onConversation={setTwinConversation} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
 
               {/* 4. Upload Video Box for Edits */}
