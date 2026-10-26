@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Sparkles,
   Video,
@@ -441,13 +441,10 @@ export default function StudioPage() {
   // them yet (gap noted in PR), but Scene's video-project path does.
   const [facelessRelayedComponents, setFacelessRelayedComponents] = useState<string[]>([]);
   const [facelessRelayedConversation, setFacelessRelayedConversation] = useState<Array<{ role: string; content: string }>>([]);
-  // Confirmation guardrail — every quota-consuming generation passes through an
-  // explicit in-app confirm before the API call, so a stray tap (keyboard
-  // "next"/arrow-carry, Enter) can never fire a generation unintentionally.
-  // Cancel closes the modal without calling onConfirm(), so NO quota is used.
-  const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; brief?: string; onConfirm: () => void } | null>(null);
-  const requestConfirm = (title: string, message: string, onConfirm: () => void, brief?: string) =>
-    setConfirmAction({ title, message, brief, onConfirm });
+  // Owner (Oct 26): the OK-confirmation popup between chat and launch is
+  // REMOVED — chat → launch fires directly for owner and customers. Quota and
+  // validation stay enforced server-side on every studio/approval route; the
+  // handlers below still guard double-fires and empty submits client-side.
 
   // Expectation preview helper — sets clear expectations before a generation
   // consumes quota (owner: no "surprise" free videos if the client dislikes result).
@@ -578,6 +575,11 @@ export default function StudioPage() {
           tone: facelessTone === 'auto' ? undefined : facelessTone,
           mood: facelessMood,
           duration: facelessDuration,
+          // Owner (Oct 19 + Oct 26): relay the FULL consultant conversation so
+          // the faceless pipeline plans from every user turn — never just the
+          // first message or the refined summary alone.
+          conversation: facelessRelayedConversation,
+          components: facelessRelayedComponents,
           sourceImages: facelessUpload.metadata?.photoUrl ? [facelessUpload.metadata.photoUrl] : []
         })
       });
@@ -822,14 +824,12 @@ export default function StudioPage() {
                         </motion.div>
                       )}
                     </div>
-                    {/* 4. Launch Project — submits the consultant-refined idea (or the raw text) */}
+                    {/* 4. Launch Project — submits the consultant-refined idea (or the raw text).
+                        Owner (Oct 26): no OK-confirmation gate between chat and launch — the
+                        button fires the Scene-Based generation directly. Quota is still enforced
+                        server-side by the studio route. */}
                     <button
-                      onClick={() => requestConfirm(
-                        'Launch Project?',
-                        `This starts a Scene-based video generation: ${scenePreview(projectDuration)} ${projectVoice === 'none' ? 'with no voiceover, ending' : 'with AI voiceover narration, ending'} with your call to action. Uses one weekly video slot. Continue?`,
-                        () => handleSubmitProject(refinedVideoIdea || projectIdea),
-                        (refinedVideoIdea || projectIdea).trim()
-                      )}
+                      onClick={() => handleSubmitProject(refinedVideoIdea || projectIdea)}
                       disabled={!projectIdea.trim() && !refinedVideoIdea || isSubmittingProject}
                       className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
                     >
@@ -985,7 +985,7 @@ export default function StudioPage() {
                 {/* Launch Project — bottom of the panel, below the chat (submits the
                 GPT-refined idea from the consultant conversation). */}
                 <button
-                  onClick={() => requestConfirm('Launch Project?', 'This starts a Faceless generation: faceless clips with AI voiceover, tailored to your niche. Uses one weekly slot. Continue?', () => handleFacelessSubmit(facelessRefinedIdea.trim()), facelessRefinedIdea.trim())}
+                  onClick={() => handleFacelessSubmit(facelessRefinedIdea.trim())}
                   disabled={!facelessRefinedIdea.trim() || isSubmittingFaceless}
                   className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
                 >
@@ -1080,7 +1080,7 @@ export default function StudioPage() {
                   </div>
 
                   <button
-                    onClick={() => requestConfirm('Synthesize Twin Double?', 'This generates your Neural Twin: an AI double of your photo rendered as a 15s or 30s video. Uses one weekly Neural Twin slot. Continue?', handleSynthesizeTwin)}
+                    onClick={() => handleSynthesizeTwin()}
                     disabled={facialDnaUpload.status !== 'complete' || twinStatus === 'synthesizing'}
                     className="w-full max-w-sm mx-auto flex justify-center items-center gap-2 py-5 bg-white text-slate-950 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   >
@@ -1288,7 +1288,7 @@ export default function StudioPage() {
                 {/* Launch Design — bottom of the panel, below the chat (submits
                 the GPT-refined idea from the consultant conversation). */}
                 <button
-                  onClick={() => requestConfirm('Synthesize this design?', 'This creates a high-res design from your concept and uses one monthly design credit. Continue?', () => handleDesignSubmit(designRefinedIdea.trim()), designRefinedIdea.trim())}
+                  onClick={() => handleDesignSubmit(designRefinedIdea.trim())}
                   disabled={!designRefinedIdea.trim() || isSubmittingIdea}
                   className="w-full px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed whitespace-nowrap"
                 >
@@ -1311,51 +1311,9 @@ export default function StudioPage() {
             </span>
           </div>
         </div>
-        {/* Confirmation guardrail before any quota-consuming generation */}
-        <AnimatePresence>
-          {confirmAction && (
-            <>
-              <motion.div
-                className="fixed inset-0 z-[90] bg-slate-950/70 backdrop-blur-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setConfirmAction(null)}
-              />
-              <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 pointer-events-none">
-                <motion.div
-                  className="pointer-events-auto w-full max-w-md rounded-[24px] border-2 border-theme bg-theme-surface p-6 shadow-2xl"
-                  initial={{ opacity: 0, scale: 0.96, y: 8 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.96, y: 8 }}
-                >
-                  <p className="text-[10px] font-black uppercase tracking-widest text-primary">{confirmAction.title}</p>
-                  <p className="mt-2 text-sm text-foreground/90 leading-relaxed">{confirmAction.message}</p>
-                  {confirmAction.brief && (
-                    <div className="mt-4 rounded-xl border border-white/10 bg-theme-background/60 p-3">
-                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Your brief</p>
-                      <p className="mt-1 text-xs text-foreground/90 leading-relaxed line-clamp-3">{confirmAction.brief}</p>
-                    </div>
-                  )}
-                  <div className="mt-6 flex flex-col-reverse sm:flex-row gap-2">
-                    <button
-                      onClick={() => setConfirmAction(null)}
-                      className="flex-1 px-4 py-2.5 rounded-xl border border-white/15 text-slate-300 font-black text-xs uppercase tracking-widest hover:border-white/30 transition-all"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => { const act = confirmAction; setConfirmAction(null); act?.onConfirm(); }}
-                      className="flex-1 px-4 py-2.5 rounded-xl bg-primary text-slate-950 font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all"
-                    >
-                      OK — Start
-                    </button>
-                  </div>
-                </motion.div>
-              </div>
-            </>
-          )}
-        </AnimatePresence>
+        {/* OK-confirmation popup between chat and launch REMOVED per owner (Oct 26):
+            Launch buttons fire their generation handlers directly. Server-side
+            quota/validation (studio + approval routes) is unaffected. */}
       </div>
   );
 }
