@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Stars, LayoutDashboard, Globe, Briefcase, ChevronRight, AlertCircle, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
@@ -20,6 +21,7 @@ import { PaymentDueModal } from '@/components/Dashboard/PaymentDueModal';
 
 
 export default function Dashboard() {
+  const router = useRouter();
   const { activeEmpireId, setActiveEmpireId, isLinkingComplete, aiMode, isInitialized, isDashboardLoaded, setDashboardLoaded, setActiveEmpire, slotStatus, isAdmin, connectedPlatforms, registerRefreshHandler, userEmail, unlockSlot } = useEmpire();
   const activeBusinessIndex = activeEmpireId === '1' ? 0 : (activeEmpireId === '2' ? 1 : (activeEmpireId === '3' ? 2 : 0));
   const [empireData, setEmpireDataState] = useState<any>(null);
@@ -344,8 +346,17 @@ export default function Dashboard() {
                 Welcome to EmpireLaunch AI
               </h2>
               <p className="text-slate-400 text-xs font-medium max-w-md">
-                Let's get your brand set up. Switch to the <span className="text-primary font-bold">Home</span> tab and fill in your Brand Info to get started.
+                No brand is set up yet. Finish your Business Identity and the AI will build it for you.
               </p>
+              {/* Working path out of the empty state: the onboarding funnel already collects
+                  name / niche / platforms and activates via /api/agent/initialize.
+                  `preview=true` keeps the funnel visible for an already-onboarded account. */}
+              <button
+                onClick={() => router.push('/onboarding?step=4&preview=true')}
+                className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/50 text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all"
+              >
+                Set Up My Brand
+              </button>
               <button onClick={() => fetchData()} className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/50 text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all">
                 Check Again
               </button>

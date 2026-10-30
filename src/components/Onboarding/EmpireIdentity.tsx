@@ -17,6 +17,9 @@ interface EmpireIdentityProps {
     platforms: string[];
   };
   updateData: (updates: any) => void;
+  /** Optional: fields to flag as missing (e.g. ['name','niche']). Purely additive —
+   *  it only adds a red border + a small hint; layout and theme are untouched. */
+  invalidFields?: string[];
 }
 
 const storePlatforms = ['shopify', 'etsy', 'amazon'];
@@ -36,8 +39,10 @@ const platformOptions = [
   { id: 'gmail', name: 'Email (Gmail)', icon: Mail, category: 'other' },
 ];
 
-export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
+export function EmpireIdentity({ data, updateData, invalidFields = [] }: EmpireIdentityProps) {
   const [aiInsight, setAiInsight] = useState("");
+  const nameInvalid = invalidFields.includes('name');
+  const nicheInvalid = invalidFields.includes('niche');
 
   useEffect(() => {
     if (data.niche.length > 3) {
@@ -144,8 +149,11 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
             placeholder={data.archetype === 'CREATOR' ? "e.g. Boho Luxe Prints" : "e.g. Daily Pay Mastery"}
             value={data.name}
             onChange={(e) => updateData({ name: e.target.value })}
-            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-900 border-2 border-slate-800 focus:border-primary focus:bg-slate-950 outline-none transition-all text-lg md:text-xl font-bold text-white shadow-sm placeholder:text-slate-700"
+            className={cn("w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-900 border-2 border-slate-800 focus:border-primary focus:bg-slate-950 outline-none transition-all text-lg md:text-xl font-bold text-white shadow-sm placeholder:text-slate-700", nameInvalid && "border-red-500")}
           />
+          {nameInvalid && (
+            <p className="text-[8px] font-black uppercase text-red-500 ml-1">Empire name is required</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -156,8 +164,11 @@ export function EmpireIdentity({ data, updateData }: EmpireIdentityProps) {
             placeholder={data.archetype === 'CREATOR' ? "e.g. Digital Planners" : "e.g. Digital Marketing Education"}
             value={data.niche}
             onChange={(e) => updateData({ niche: e.target.value })}
-            className="w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-900 border-2 border-slate-800 focus:border-primary focus:bg-slate-950 outline-none transition-all text-lg md:text-xl font-bold text-white shadow-sm placeholder:text-slate-700"
+            className={cn("w-full p-4 md:p-5 rounded-2xl md:rounded-3xl bg-slate-900 border-2 border-slate-800 focus:border-primary focus:bg-slate-950 outline-none transition-all text-lg md:text-xl font-bold text-white shadow-sm placeholder:text-slate-700", nicheInvalid && "border-red-500")}
           />
+          {nicheInvalid && (
+            <p className="text-[8px] font-black uppercase text-red-500 ml-1">Niche is required</p>
+          )}
         </div>
 
         <div className="space-y-2">

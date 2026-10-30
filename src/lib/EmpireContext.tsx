@@ -32,7 +32,9 @@ interface EmpireContextType {
   isOnboarded: boolean;
   isHandoverComplete: boolean;
   isInitialized: boolean;
-  completeOnboarding: () => void;
+  // `empireIdOverride` lets callers key the flag to the empire the server just
+  // created instead of the (stale) active id captured in the caller's closure.
+  completeOnboarding: (updatedEmpire?: any, empireIdOverride?: string) => void;
   setHandoverComplete: (complete: boolean) => void;
   activeSetupPlatform: string | null;
   startSetup: (platform: string) => void;
@@ -330,9 +332,18 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const completeOnboarding = (updatedEmpire?: any) => {
+  const completeOnboarding = (updatedEmpire?: any, empireIdOverride?: string) => {
+    // Key the flag to the empire that was just created/activated (passed in by the
+    // caller) rather than the pre-activation id captured in this closure. Without
+    // this, a reload lands on the new empire id, finds no flag, and restarts the
+    // whole funnel. The currently-active slot key is kept as well so switching
+    // between empires never reports "not onboarded".
+    const targetId = empireIdOverride || activeEmpireId;
     setOnboardedByEmpire(prev => {
-      const next = { ...prev, [activeEmpireId]: true };
+      const next = { ...prev, [targetId]: true };
+      if (activeEmpireId && activeEmpireId !== targetId) {
+        next[activeEmpireId] = true;
+      }
       if (typeof window !== 'undefined') {
         localStorage.setItem('onboardedByEmpire', JSON.stringify(next));
       }

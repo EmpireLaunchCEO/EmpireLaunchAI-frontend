@@ -25,6 +25,7 @@ import { TermsModal } from '@/components/Legal/TermsModal';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { SignUpForm } from '@/components/Onboarding/SignUpForm';
 import { useEmpire } from '@/lib/EmpireContext';
+import { getEmpireUserId } from '@/lib/api-service';
 import { API_URL } from '@/lib/config';
 import { Suspense } from 'react';
 import { detectLocale, setLocale, t, formatPrice, getCurrencyInfo, getAmountInCents, SUPPORTED_LOCALES, type LocaleCode } from '@/lib/i18n';
@@ -88,6 +89,10 @@ function OnboardingContent() {
 
   const [showDownloadScreen, setShowDownloadScreen] = useState(false);
   const [isActivating, setIsActivating] = useState(false);
+  // Activation failure must never be silent: the server's message renders inline
+  // (same style as the redemption error below) and no "onboarded" flag is set.
+  const [activationError, setActivationError] = useState<string | null>(null);
+  const [invalidFields, setInvalidFields] = useState<string[]>([]);
   const [isPaying, setIsPaying] = useState(false);
   const [accessKey, setAccessKey] = useState('');
   const [isRedeeming, setIsRedeeming] = useState(false);
@@ -200,16 +205,52 @@ function OnboardingContent() {
     if (ref) setReferral(ref);
   }, [searchParams]);
 
+  // "Neural Sync Established" is a transition, not a destination: once the account is
+  // onboarded (or handover is complete) forward to Home Base instead of parking the
+  // user on a permanent "Transferring to Command Center..." screen.
+  // `preview=true` is the brand-edit entry point and must keep showing the funnel.
+  useEffect(() => {
+    if (!isMounted || isPreview) return;
+    if (!isOnboarded && !handoverStatus) return;
+    const timer = setTimeout(() => router.replace('/dashboard'), 1200);
+    return () => clearTimeout(timer);
+  }, [isMounted, isPreview, isOnboarded, handoverStatus, router]);
+
   const finalizeActivation = useCallback(async () => {
+    setActivationError(null);
+
+    // 1. Client-side guard for exactly what the backend 400s on
+    //    (agentController.initializeAgent: userId, name, niche).
+    const missing: string[] = [];
+    if (!data.name.trim()) missing.push('name');
+    if (!data.niche.trim()) missing.push('niche');
+    if (!data.platforms || data.platforms.length === 0) missing.push('platforms');
+    if (missing.length > 0) {
+      setInvalidFields(missing);
+      setActivationError(
+        missing.includes('name') || missing.includes('niche')
+          ? 'Add your empire name and niche to activate.'
+          : 'Select at least one platform to activate.'
+      );
+      setIsActivating(false);
+      setShowDiscoveryReview(false);
+      setCurrentStep(4);
+      return;
+    }
+
+    // The rest of the app identifies the user via empire_userId; send the same
+    // value so the empire is never created against a throwaway id.
+    const effectiveUserId = userId || getEmpireUserId();
+
     try {
       const response = await fetch(`${API_URL}/api/agent/initialize`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': userId || ''
+          'x-user-id': effectiveUserId
         },
         body: JSON.stringify({
-          userId,
+          userId: effectiveUserId,
           name: data.name,
           niche: data.niche,
           angle: data.angle,
@@ -222,26 +263,58 @@ function OnboardingContent() {
         }),
       });
 
-      const result = await response.json();
-      if (result.status === 'success') {
-        if (result.empire?.id) {
-          setActiveEmpireId(result.empire.id);
+      const result = await response.json().catch(() => ({} as any));
+
+      // 2. Only a real success response may mark the account onboarded.
+      if (!response.ok || result?.status !== 'success') {
+        const serverMessage =
+          result?.error || result?.message || `Activation failed (${response.status}). Please try again.`;
+        setActivationError(serverMessage);
+        setIsActivating(false);
+        setShowDiscoveryReview(false);
+        if (response.status === 400) {
+          // Bad/missing business identity — send them back to step 4 flagged.
+          setInvalidFields(
+            missing.length > 0 ? missing : ['name', 'niche']
+          );
+          setCurrentStep(4);
         }
-        completeOnboarding();
-      } else {
-        completeOnboarding();
+        return;
       }
+
+      const newEmpireId: string | undefined = result?.empire?.id;
+      if (newEmpireId) {
+        // 3. Activate first, then key the onboarded flag to the NEW empire id so a
+        //    reload lands on the established state instead of restarting the funnel.
+        setActiveEmpireId(newEmpireId);
+        completeOnboarding(result?.empire, newEmpireId);
+      } else {
+        completeOnboarding(result?.empire, effectiveUserId);
+      }
+
+      // 4. Real navigation to Home Base — replace so Back never re-enters the funnel.
+      router.replace('/dashboard');
     } catch (error) {
-      completeOnboarding();
+      setActivationError('Could not reach the server. Check your connection and try again.');
+      setIsActivating(false);
+      setShowDiscoveryReview(false);
     }
-  }, [data, userId, setActiveEmpireId, completeOnboarding]);
+  }, [data, userId, setActiveEmpireId, completeOnboarding, router]);
 
   const handleActivate = async () => {
     setIsActivating(true);
     await finalizeActivation();
   };
 
-  const updateData = (updates: any) => setData(prev => ({ ...prev, ...updates }));
+  const updateData = (updates: any) => {
+    setData(prev => ({ ...prev, ...updates }));
+    // Clear a field-level flag as soon as that field is filled in.
+    setInvalidFields(prev => prev.filter((field) => {
+      if (!(field in updates)) return true;
+      const value = updates[field];
+      return Array.isArray(value) ? value.length === 0 : !String(value || '').trim();
+    }));
+  };
 
   const nextStep = () => {
     setCurrentStep((prev) => Math.min(prev + 1, steps.length));
@@ -402,6 +475,13 @@ function OnboardingContent() {
       </div>
     );
   }
+
+  // Step-4 gate: the backend 400s unless name + niche are present, and step 5 needs at
+  // least one platform — so block "Next Phase" until all three exist and say which is missing.
+  const step4Missing: string[] = [];
+  if (!data.name.trim()) step4Missing.push('empire name');
+  if (!data.niche.trim()) step4Missing.push('niche');
+  if (!data.platforms || data.platforms.length === 0) step4Missing.push('a platform');
 
   return (
     <div className="min-h-screen bg-theme-surface flex flex-col items-center overflow-x-hidden relative">
@@ -591,7 +671,7 @@ function OnboardingContent() {
 
             {currentStep === 4 && (
               <motion.div key="step4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                <EmpireIdentity data={data} updateData={updateData} />
+                <EmpireIdentity data={data} updateData={updateData} invalidFields={invalidFields} />
               </motion.div>
             )}
 
@@ -609,12 +689,23 @@ function OnboardingContent() {
           </AnimatePresence>
         </div>
 
+        {activationError && (
+          <p className="mt-8 text-[8px] font-black uppercase text-red-500 text-center max-w-md mx-auto w-full">
+            {activationError}
+          </p>
+        )}
+        {!activationError && currentStep === 4 && step4Missing.length > 0 && (
+          <p className="mt-8 text-[8px] font-black uppercase text-slate-500 text-center max-w-md mx-auto w-full">
+            Add {step4Missing.join(' + ')} to continue
+          </p>
+        )}
+
         <div className="mt-12 flex flex-col md:flex-row justify-between items-center max-w-md mx-auto w-full gap-8">
           <button onClick={prevStep} disabled={currentStep === 1 || isActivating || isPaying || currentStep === steps.length} className={cn("flex items-center gap-2 font-black text-[10px] uppercase tracking-widest text-slate-500 hover:text-foreground transition-colors disabled:opacity-0")}>
             <ChevronLeft className="w-4 h-4" /> Previous
           </button>
           {currentStep !== 2 && currentStep !== 3 && currentStep < steps.length && (
-            <button onClick={nextStep} disabled={currentStep === 4 && (!data.platforms || data.platforms.length === 0)} className="bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl group w-full md:w-auto justify-center disabled:opacity-30 disabled:cursor-not-allowed">
+            <button onClick={nextStep} disabled={currentStep === 4 && step4Missing.length > 0} className="bg-slate-900 text-white px-10 py-5 rounded-[24px] font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-3 hover:bg-primary hover:text-slate-900 transition-all shadow-2xl group w-full md:w-auto justify-center disabled:opacity-30 disabled:cursor-not-allowed">
               Next Phase <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           )}
