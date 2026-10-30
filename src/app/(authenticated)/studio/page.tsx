@@ -699,6 +699,16 @@ export default function StudioPage() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-8"
             >
+              {/* Owner-mandated AI-variance disclaimer (Oct 30) — VERBATIM copy.
+                  Sits directly under the business-name heading and directly above
+                  the first mode box: quiet page copy, no card/border/background,
+                  no icon, no dismiss. Width is capped so it does not stretch
+                  across the viewport, and it sits outside the Scene box so the
+                  box itself never shifts or resizes. Do NOT reword or "improve". */}
+              <p className="max-w-2xl text-xs md:text-sm leading-relaxed text-foreground/60">
+                We aim to make all AI-generated content match the request as closely as possible. AI output is variable, and we cannot guarantee every video to be perfect.
+              </p>
+
               {/* 1. Scene-Based Video — the single video builder (AI consultant + controls) */}
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
                 <div className="absolute top-6 right-6 flex items-center gap-2">
