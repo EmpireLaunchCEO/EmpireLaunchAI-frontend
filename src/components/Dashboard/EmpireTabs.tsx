@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Building2, TrendingUp, Layout, Stars } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EmpireIdentityCard } from '@/components/Dashboard/EmpireIdentityCard';
 import { IntelTab } from '@/components/Dashboard/IntelTab';
 import { LibraryTab } from '@/components/Dashboard/LibraryTab';
 import { useEmpire } from '@/lib/EmpireContext';
+import { API_URL } from '@/lib/config';
 import { motion } from 'framer-motion';
 
 interface EmpireTabsProps {
@@ -14,10 +15,65 @@ interface EmpireTabsProps {
   onDataUpdate: () => void;
 }
 
+interface ClientStats {
+  activeSubscribers: number;
+  totalClients: number;
+}
+
 export function EmpireTabs({ empireData, onDataUpdate }: EmpireTabsProps) {
   const [activeTab, setActiveTab] = useState<'business' | 'intel' | 'library'>('business');
   const { isAdmin, userEmail } = useEmpire();
   const isOwner = isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com';
+
+  // Owner-only business numbers. `null` = not loaded yet, `error` = the call failed.
+  // The card renders "—" in BOTH cases and never a fabricated 0, so the owner can
+  // always tell a real zero from a number we do not actually have.
+  const [clientStats, setClientStats] = useState<ClientStats | null>(null);
+  const [statsError, setStatsError] = useState(false);
+
+  useEffect(() => {
+    if (!isOwner) return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('empire_auth_token') || '' : '';
+        const userId = typeof window !== 'undefined'
+          ? localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || ''
+          : '';
+        const res = await fetch(`${API_URL}/api/admin/client-stats`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'x-user-id': userId,
+          },
+        });
+        if (!res.ok) throw new Error(`client-stats ${res.status}`);
+        const data = await res.json();
+        // Trust only real integers — anything else stays "unknown" rather than 0.
+        if (
+          typeof data?.activeSubscribers === 'number' &&
+          typeof data?.totalClients === 'number'
+        ) {
+          if (!cancelled) {
+            setClientStats({ activeSubscribers: data.activeSubscribers, totalClients: data.totalClients });
+            setStatsError(false);
+          }
+        } else {
+          throw new Error('client-stats malformed');
+        }
+      } catch {
+        if (!cancelled) {
+          setClientStats(null);
+          setStatsError(true);
+        }
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [isOwner]);
+
+  const subscriberDisplay = clientStats ? String(clientStats.activeSubscribers) : '—';
+  const showGrowthLabel = !!clientStats && clientStats.activeSubscribers > 0;
 
   const tabs = [
     { id: 'business' as const, label: 'Business Info', icon: Building2 },
@@ -73,8 +129,13 @@ export function EmpireTabs({ empireData, onDataUpdate }: EmpireTabsProps) {
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-1">Active Subscribers</p>
                   <div className="flex items-baseline gap-3">
-                    <p className="text-5xl font-black text-foreground bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">0</p>
-                    <p className="text-sm font-black text-emerald-500 uppercase tracking-widest italic">Growing</p>
+                    <p
+                      className="text-5xl font-black text-foreground bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
+                      title={statsError ? 'Subscriber count unavailable right now' : undefined}
+                    >{subscriberDisplay}</p>
+                    {showGrowthLabel && (
+                      <p className="text-sm font-black text-emerald-500 uppercase tracking-widest italic">Growing</p>
+                    )}
                   </div>
                 </div>
               </div>
