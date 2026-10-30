@@ -8,6 +8,7 @@ import { IntelTab } from '@/components/Dashboard/IntelTab';
 import { LibraryTab } from '@/components/Dashboard/LibraryTab';
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
+import { getAuthToken, getEmpireUserId } from '@/lib/api-service';
 import { motion } from 'framer-motion';
 
 interface EmpireTabsProps {
@@ -37,14 +38,10 @@ export function EmpireTabs({ empireData, onDataUpdate }: EmpireTabsProps) {
 
     (async () => {
       try {
-        const token = typeof window !== 'undefined' ? localStorage.getItem('empire_auth_token') || '' : '';
-        const userId = typeof window !== 'undefined'
-          ? localStorage.getItem('empireUserId') || localStorage.getItem('empire_userId') || ''
-          : '';
         const res = await fetch(`${API_URL}/api/admin/client-stats`, {
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'x-user-id': userId,
+            'Authorization': `Bearer ${getAuthToken()}`,
+            'x-user-id': getEmpireUserId(),
           },
         });
         if (!res.ok) throw new Error(`client-stats ${res.status}`);
