@@ -706,7 +706,7 @@ export default function StudioPage() {
                   across the viewport, and it sits outside the Scene box so the
                   box itself never shifts or resizes. Do NOT reword or "improve". */}
               <p className="max-w-2xl text-xs md:text-sm leading-relaxed text-foreground/60">
-                We aim to make all AI-generated content match the request as closely as possible. AI output is variable, and we cannot guarantee every video to be perfect.
+                We aim to make all AI-generated content match the request as closely as possible. AI output is variable, and we can not guarantee every video to be perfect.
               </p>
 
               {/* 1. Scene-Based Video — the single video builder (AI consultant + controls) */}
