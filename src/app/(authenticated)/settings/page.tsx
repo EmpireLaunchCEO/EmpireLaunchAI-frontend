@@ -313,7 +313,7 @@ function SettingsContent() {
                     <SubscriptionCard
                       brandName={empireData?.title || empireData?.name || 'Brand 1'}
                       price="$50.00/month"
-                      renewsIn="30 days"
+                      brandSlot="subscription"
                     />
 
                     {/* Brand 2 */}
@@ -321,7 +321,7 @@ function SettingsContent() {
                       <SubscriptionCard
                         brandName={userEmpires?.[1]?.name || 'Brand 2'}
                         price="$50.00/month"
-                        renewsIn="30 days"
+                        brandSlot="brand2"
                       />
                     )}
 
@@ -330,7 +330,7 @@ function SettingsContent() {
                       <SubscriptionCard
                         brandName={userEmpires?.[2]?.name || 'Brand 3'}
                         price="$50.00/month"
-                        renewsIn="30 days"
+                        brandSlot="brand3"
                       />
                     )}
 
