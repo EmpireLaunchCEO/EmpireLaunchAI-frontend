@@ -108,6 +108,11 @@ export function SubscriptionCard({ brandName, price, brandSlot = 'subscription' 
         res = await fetch(`${API_URL}/api/billing/cancel`, {
           method: 'POST',
           headers: authHeaders(),
+          // Cancel is PER BRAND: the server refuses to guess and answers
+          // 400 BRAND_SLOT_REQUIRED without this. The slot we send is the same
+          // one this card used to find its own subscription in /api/billing/me,
+          // so the plan shown is always the plan cancelled.
+          body: JSON.stringify({ brandSlot }),
         });
       } catch {
         setNotice({ tone: 'error', text: UNREACHABLE_MESSAGE });

@@ -71,6 +71,9 @@ export interface ClientBillingView {
 export interface CancelSuccessBody {
   status: 'canceled';
   cancelled: true;
+  /** Additive (backend PR #140): which brand this response speaks for. */
+  brandSlot?: BrandSlot;
+  brandLabel?: string;
   alreadyCancelled: boolean;
   cancelAtPeriodEnd: boolean;
   /** End of the paid period — the day access stops, never today. */
@@ -89,8 +92,13 @@ export interface CancelSuccessBody {
 export interface CancelFailureBody {
   status: 'not_cancelled';
   cancelled: false;
-  /** 409 NO_SUBSCRIPTION, or 503 STRIPE_UNAVAILABLE. */
-  code: 'NO_SUBSCRIPTION' | 'STRIPE_UNAVAILABLE';
+  /** 400 BRAND_SLOT_REQUIRED, 409 NO_SUBSCRIPTION, or 503 STRIPE_UNAVAILABLE. */
+  code: 'BRAND_SLOT_REQUIRED' | 'NO_SUBSCRIPTION' | 'STRIPE_UNAVAILABLE';
+  /** Present on a 400 — the slots the endpoint does accept. */
+  accepted?: BrandSlot[];
+  /** Present on a 400 — what the server actually received. */
+  received?: string | null;
+  brandSlot?: BrandSlot;
   message: string;
   error?: string;
 }
