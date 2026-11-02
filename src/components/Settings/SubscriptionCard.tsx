@@ -79,8 +79,12 @@ export function SubscriptionCard({ brandName, price, brandSlot = 'subscription' 
   const cancelAtPeriodEnd =
     subscription?.cancelAtPeriodEnd ?? (isBaseSlot ? view?.cancelAtPeriodEnd === true : false);
 
-  const liveSubscriptionCount = (view?.subscriptions ?? []).filter(
-    (sub) => sub.cancelAtPeriodEnd !== true,
+  // Cancel is per brand (backend PR #140): it touches ONLY the slot this card
+  // shows. So the old "this also cancels your other plans" wording is gone —
+  // after that change it was simply false. We say the true thing instead, and
+  // only when there is actually another plan to reassure them about.
+  const otherPlanCount = (view?.subscriptions ?? []).filter(
+    (sub) => sub.brandSlot !== brandSlot,
   ).length;
 
   const renewalDate = formatBillingDate(periodEnd);
@@ -90,13 +94,11 @@ export function SubscriptionCard({ brandName, price, brandSlot = 'subscription' 
   // ── the cancel ────────────────────────────────────────────────────────────
   const handleCancel = async () => {
     const until = renewalDate || 'the end of the period you already paid for';
-    const alsoOtherPlans =
-      liveSubscriptionCount > 1
-        ? ' This also cancels your other plans at the end of their periods.'
-        : '';
+    const otherPlans =
+      otherPlanCount > 0 ? ' Your other brands are not affected.' : '';
     const confirmed = window.confirm(
       `Your access continues until ${until} — the day before your renewal date. ` +
-      `You keep using the platform until then, and nothing will be charged again.${alsoOtherPlans}`,
+      `You keep using the platform until then, and nothing will be charged again.${otherPlans}`,
     );
     if (!confirmed) return;
 

@@ -11,7 +11,9 @@ export default defineConfig({
     ['list']
   ],
   use: {
-    baseURL: 'http://localhost:3000',
+    // VERIFY_BASE_URL lets a run point at a build served on another port (the
+    // sandbox keeps :3000 for the team site). Default stays :3000 for CI.
+    baseURL: process.env.VERIFY_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     headless: true,
@@ -23,7 +25,9 @@ export default defineConfig({
       use: {
         ...devices['Desktop Chrome'],
         launchOptions: {
-          executablePath: '/opt/browsers/chromium-1228/chrome-linux64/chrome',
+          // Bumped from chromium-1228 (removed from the sandbox) — 1248 is what
+          // is installed. Without this every e2e spec fails to launch.
+          executablePath: '/opt/browsers/chromium-1248/chrome-linux64/chrome',
           args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
