@@ -29,7 +29,7 @@ import { getEmpireUserId } from '@/lib/api-service';
 import { API_URL } from '@/lib/config';
 import { Suspense } from 'react';
 import { detectLocale, setLocale, t, formatPrice, getCurrencyInfo, getAmountInCents, SUPPORTED_LOCALES, type LocaleCode } from '@/lib/i18n';
-import { SUBSCRIPTION_LINK } from '@/lib/payment-links';
+import { SUBSCRIPTION_LINK, withPaymentIdentity } from '@/lib/payment-links';
 
 const steps = [
   { id: 1, title: 'Protocol' },
@@ -357,7 +357,9 @@ function OnboardingContent() {
     } catch (e) {
       // fallback to static link
       localStorage.setItem('pending_payment', 'subscription');
-      window.location.href = SUBSCRIPTION_LINK;
+      window.location.href = withPaymentIdentity(SUBSCRIPTION_LINK, {
+        userId: userId || getEmpireUserId(),
+      });
     } finally {
       setIsPaying(false);
     }

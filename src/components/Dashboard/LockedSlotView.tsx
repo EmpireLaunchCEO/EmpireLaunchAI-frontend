@@ -6,7 +6,8 @@ import { CreditCard, ArrowRight, ShieldCheck, Zap, Globe, Sparkles } from 'lucid
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { cn } from '@/lib/utils';
 import { useEmpire } from '@/lib/EmpireContext';
-import { EXPANSION_SLOT_LINK, BRAND_3_EXPANSION_LINK } from '@/lib/payment-links';
+import { EXPANSION_SLOT_LINK, BRAND_3_EXPANSION_LINK, withPaymentIdentity } from '@/lib/payment-links';
+import { getEmpireUserId } from '@/lib/api-service';
 import { API_URL } from '@/lib/config';
 
 interface LockedSlotViewProps {
@@ -53,7 +54,7 @@ export function LockedSlotView({ slotIndex }: LockedSlotViewProps) {
       // fallback to static link
     }
     localStorage.setItem('pending_payment', 'expansion');
-    window.location.href = slotLink;
+    window.location.href = withPaymentIdentity(slotLink, { userId: getEmpireUserId() });
   };
 
   return (
