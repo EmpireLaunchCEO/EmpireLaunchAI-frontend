@@ -28,7 +28,7 @@ import { VideoProjectProgress } from '@/components/Studio/VideoProjectProgress';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { useEmpire } from '@/lib/EmpireContext';
-import { API_URL } from '@/lib/config';
+import { API_URL, OWNER_EMAIL } from '@/lib/config';
 
 import { PenSquare, Lightbulb, SendHorizonal, Scissors, Clapperboard, Info } from 'lucide-react';
 
@@ -57,8 +57,19 @@ const getAuthHeader = (): string => {
 
 export default function StudioPage() {
   const [isDemoMode, setIsDemoMode] = useState(false);
-  const { activeEmpire: empireData, registerRefreshHandler } = useEmpire();
+  const { activeEmpire: empireData, registerRefreshHandler, isAdmin, userEmail } = useEmpire();
   const [userNiche, setUserNiche] = useState<string>('');
+
+  // NEURAL TWIN IS PARKED (owner Nov 9): Twin is hidden from the Studio mode
+  // selection for every CLIENT account and stays fully working in the owner's
+  // own account so she can keep testing it while we rebuild its renderer.
+  // Resolved from auth exactly like the other owner-only surfaces (isAdmin is
+  // granted by EmpireContext only for the seeded owner zero-UUID; userEmail
+  // comes back from /api/settings/hydrate) — never assumed, never derived from
+  // anything a client controls. CODE IS KEPT, NOT DELETED: flipping this back to
+  // `true` restores Twin for everyone.
+  const isOwner = isAdmin || userEmail?.toLowerCase() === OWNER_EMAIL;
+  const SHOW_NEURAL_TWIN = isOwner;
 
   const isCatalyst = empireData?.archetype === 'CATALYST';
 
@@ -1008,6 +1019,11 @@ export default function StudioPage() {
               </div>
 
               {/* 3. Neural Twin Section - Single Box with Active Badge */}
+              {/* PARKED (owner Nov 9): rendered for the owner only. Clients see
+                  Scene-Based, Faceless and Edits; the backend refuses a Twin
+                  request from a client with a plain-language 403, so hiding the
+                  box is not the only thing keeping it closed. */}
+              {SHOW_NEURAL_TWIN && (
               <div className="relative bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6 group">
                 <div className="absolute top-6 right-6 flex items-center gap-3">
                   <div className="flex items-center gap-2">
@@ -1127,6 +1143,7 @@ export default function StudioPage() {
 
                 <InlineConsultant context="neural-twin" onRefinedIdea={setTwinScript} onConversation={setTwinConversation} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
+              )}
 
               {/* 4. Upload Video Box for Edits */}
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
