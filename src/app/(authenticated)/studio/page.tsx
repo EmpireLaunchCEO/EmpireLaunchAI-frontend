@@ -70,6 +70,12 @@ export default function StudioPage() {
   // `true` restores Twin for everyone.
   const isOwner = isAdmin || userEmail?.toLowerCase() === OWNER_EMAIL;
   const SHOW_NEURAL_TWIN = isOwner;
+  // SCENE-BASED IS PARKED (owner Nov 9): Scene is the expensive mode and is
+  // being retired into Faceless, so its box is hidden from every CLIENT account
+  // and stays fully usable in the owner's own account — the same rule, resolved
+  // the same way, as Neural Twin above. CODE IS KEPT, NOT DELETED: flipping this
+  // back to `true` restores Scene for everyone.
+  const SHOW_SCENE_BASED = isOwner;
 
   const isCatalyst = empireData?.archetype === 'CATALYST';
 
@@ -721,6 +727,11 @@ export default function StudioPage() {
               </p>
 
               {/* 1. Scene-Based Video — the single video builder (AI consultant + controls) */}
+              {/* PARKED (owner Nov 9): rendered for the owner only. Clients see
+                  Faceless and Edits; the backend refuses a Scene request from a
+                  client with a plain-language 403 before any paid provider call,
+                  so hiding the box is not the only thing keeping it closed. */}
+              {SHOW_SCENE_BASED && (
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
                 <div className="absolute top-6 right-6 flex items-center gap-2">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
@@ -875,6 +886,8 @@ export default function StudioPage() {
                   />
                 )}
               </div>
+
+              )}
 
               {/* 2. Faceless Content Creation Box */}
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
