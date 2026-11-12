@@ -738,10 +738,11 @@ export default function StudioPage() {
               </p>
 
               {/* 1. Scene-Based Video — the single video builder (AI consultant + controls) */}
-              {/* PARKED (owner Nov 9): rendered for the owner only. Clients see
-                  Faceless and Edits; the backend refuses a Scene request from a
-                  client with a plain-language 403 before any paid provider call,
-                  so hiding the box is not the only thing keeping it closed. */}
+              {/* PARKED (owner Nov 9, fully parked Nov 12): rendered for nobody —
+                  not clients, not the owner — while Scene is retired into
+                  Faceless. The backend refuses a Scene request from a client
+                  with a plain-language 403 before any paid provider call, so
+                  hiding the box is not the only thing keeping it closed. */}
               {SHOW_SCENE_BASED && (
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
                 <div className="absolute top-6 right-6 flex items-center gap-2">
@@ -1043,11 +1044,12 @@ export default function StudioPage() {
               </div>
 
               {/* 3. Neural Twin Section - Single Box with Active Badge */}
-              {/* PARKED (owner Nov 9): rendered for the owner only — and Scene is
-                  parked above, so the page shows only the modes that are live.
-                  The backend refuses a Twin request from a client with a
-                  plain-language 403, so hiding the box is not the only thing
-                  keeping it closed. */}
+              {/* PARKED (owner Nov 9, fully parked Nov 12): rendered for nobody —
+                  not clients, not the owner — while its renderer is rebuilt, and
+                  Scene is parked above with it, so the page shows only the modes
+                  that are live. The backend refuses a Twin request from a client
+                  with a plain-language 403, so hiding the box is not the only
+                  thing keeping it closed. */}
               {SHOW_NEURAL_TWIN && (
               <div className="relative bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6 group">
                 <div className="absolute top-6 right-6 flex items-center gap-3">
