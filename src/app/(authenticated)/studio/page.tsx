@@ -60,14 +60,12 @@ export default function StudioPage() {
   const { activeEmpire: empireData, registerRefreshHandler, isAdmin, userEmail } = useEmpire();
   const [userNiche, setUserNiche] = useState<string>('');
 
-  // NEURAL TWIN IS PARKED (owner Nov 9): Twin is hidden from the Studio mode
-  // selection for every CLIENT account and stays fully working in the owner's
-  // own account so she can keep testing it while we rebuild its renderer.
-  // Resolved from auth exactly like the other owner-only surfaces (isAdmin is
-  // granted by EmpireContext only for the seeded owner zero-UUID; userEmail
-  // comes back from /api/settings/hydrate) — never assumed, never derived from
-  // anything a client controls. CODE IS KEPT, NOT DELETED: flipping this back to
-  // `true` restores Twin for everyone.
+  // NEURAL TWIN IS PARKED (owner Nov 9, fully parked Nov 12): Twin is hidden
+  // from the Studio mode selection for every account — clients AND the owner —
+  // while its renderer is rebuilt. `isOwner` is resolved from auth exactly like
+  // the other owner-only surfaces (isAdmin is granted by EmpireContext only for
+  // the seeded owner zero-UUID; userEmail comes back from /api/settings/hydrate)
+  // — never assumed, never derived from anything a client controls.
   const isOwner = isAdmin || userEmail?.toLowerCase() === OWNER_EMAIL;
 
   // SCENE AND NEURAL TWIN ARE FULLY PARKED (owner decision, Nov 12): both are
