@@ -66,7 +66,10 @@ export function NeuralDispatchCenter() {
   // during the launch-gate review. CODE KEPT INTACT — flip a flag to restore.
   const SHOW_NEURAL_FEEDBACK_BOX = false; // restore = set true
   const SHOW_GET_STARTED_BUTTON = false; // restore = set true
-  const [activeQueue, setActiveQueue] = useState<string | null>(null);
+  // DEFAULT QUEUE IS FACELESS (owner decision, Nov 12): Operations Base opens on
+  // the one video mode the product actually renders today. Nothing else about
+  // the queue state changes — picking a box still drives the same review view.
+  const [activeQueue, setActiveQueue] = useState<string | null>('faceless');
   const [selectedApps, setSelectedApps] = useState<string[]>([]);
   const [isApproved, setIsApproved] = useState(false);
   const [view, setView] = useState<'grid' | 'review'>('grid');
@@ -298,12 +301,26 @@ export function NeuralDispatchCenter() {
 
   const hasLinks = connectedPlatforms.length > 0;
 
-  const categories = [
+  // VIDEOS AND EDITS ARE PARKED (owner decision, Nov 12): Operations Base shows
+  // exactly two queues — Faceless and Designs. Nothing was deleted: the Videos
+  // and Edits boxes, their icons, counts and the whole review/dispatch path
+  // below are still in this file, made unreachable by this ONE flag. TO
+  // RESTORE: set PARKED_VIDEOS_AND_EDITS to `false` and both queues come back.
+  // The matching flag in the Studio page hides the AI Video Editor box, so an
+  // edit can never be created with no Edits queue to land in.
+  const PARKED_VIDEOS_AND_EDITS: boolean = true;
+  const PARKED_QUEUE_IDS = ['videos', 'edits'];
+
+  const allCategories = [
     { id: 'videos', label: 'Videos', icon: Video, count: pendingCounts['video'] || pendingCounts['videos'] || (hasLinks && !isLoading ? 0 : 0) },
     { id: 'edits', label: 'Edits', icon: Edit3, count: pendingCounts['edit'] || pendingCounts['edits'] || (hasLinks && !isLoading ? 0 : 0) },
     { id: 'faceless', label: 'Faceless', icon: UserSquare2, count: pendingCounts['faceless'] || pendingCounts['twin'] || (hasLinks && !isLoading ? 0 : 0) },
     { id: 'designs', label: 'Designs', icon: Palette, count: pendingCounts['design'] || pendingCounts['designs'] || (hasLinks && !isLoading ? 0 : 0) },
   ];
+
+  const categories = PARKED_VIDEOS_AND_EDITS
+    ? allCategories.filter((cat) => !PARKED_QUEUE_IDS.includes(cat.id))
+    : allCategories;
 
   const handleAppToggle = (platform: string) => {
     if (!isApproved) return;
