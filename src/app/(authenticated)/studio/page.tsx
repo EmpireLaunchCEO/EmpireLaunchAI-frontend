@@ -79,6 +79,15 @@ export default function StudioPage() {
   const SHOW_NEURAL_TWIN = !PARKED_SCENE_AND_TWIN && isOwner;
   const SHOW_SCENE_BASED = !PARKED_SCENE_AND_TWIN && isOwner;
 
+  // THE AI VIDEO EDITOR IS PARKED (owner decision, Nov 12): Operations Base now
+  // shows only the Faceless and Designs queues, so there is no Edits queue for a
+  // finished edit to land in — the editor box is hidden with the SAME flag that
+  // hides those queues (PARKED_VIDEOS_AND_EDITS in NeuralDispatchCenter.tsx).
+  // Nothing was deleted: the upload zone, the Empire Polish handler, the progress
+  // and result states and the consultant box are all still below, made
+  // unreachable by this ONE flag. TO RESTORE: set BOTH flags to `false`.
+  const PARKED_VIDEOS_AND_EDITS: boolean = true;
+
   const isCatalyst = empireData?.archetype === 'CATALYST';
 
   // Fetch user's business niche from onboarding settings
@@ -1034,10 +1043,11 @@ export default function StudioPage() {
               </div>
 
               {/* 3. Neural Twin Section - Single Box with Active Badge */}
-              {/* PARKED (owner Nov 9): rendered for the owner only. Clients see
-                  Scene-Based, Faceless and Edits; the backend refuses a Twin
-                  request from a client with a plain-language 403, so hiding the
-                  box is not the only thing keeping it closed. */}
+              {/* PARKED (owner Nov 9): rendered for the owner only — and Scene is
+                  parked above, so the page shows only the modes that are live.
+                  The backend refuses a Twin request from a client with a
+                  plain-language 403, so hiding the box is not the only thing
+                  keeping it closed. */}
               {SHOW_NEURAL_TWIN && (
               <div className="relative bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[32px] md:rounded-[40px] p-6 md:p-8 space-y-6 group">
                 <div className="absolute top-6 right-6 flex items-center gap-3">
@@ -1161,6 +1171,10 @@ export default function StudioPage() {
               )}
 
               {/* 4. Upload Video Box for Edits */}
+              {/* PARKED (owner Nov 12): no Edits queue exists in Operations Base
+                  while PARKED_VIDEOS_AND_EDITS is true, so this box is hidden
+                  with it — an edit can never be created with nowhere to land. */}
+              {!PARKED_VIDEOS_AND_EDITS && (
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
                 <div className="absolute top-6 right-6 flex items-center gap-2">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">
@@ -1233,6 +1247,7 @@ export default function StudioPage() {
 
                 <InlineConsultant context="editor" onGenerate={handleEnhanceVideo} isParentGenerating={editStatus === 'processing'} empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }} />
               </div>
+              )}
 
               {/* 5. Custom Design Input — Free-text Idea Entry */}
               <div className={cn(
