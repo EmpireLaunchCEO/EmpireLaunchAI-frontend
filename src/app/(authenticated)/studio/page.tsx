@@ -69,13 +69,17 @@ export default function StudioPage() {
   // anything a client controls. CODE IS KEPT, NOT DELETED: flipping this back to
   // `true` restores Twin for everyone.
   const isOwner = isAdmin || userEmail?.toLowerCase() === OWNER_EMAIL;
-  const SHOW_NEURAL_TWIN = isOwner;
-  // SCENE-BASED IS PARKED (owner Nov 9): Scene is the expensive mode and is
-  // being retired into Faceless, so its box is hidden from every CLIENT account
-  // and stays fully usable in the owner's own account — the same rule, resolved
-  // the same way, as Neural Twin above. CODE IS KEPT, NOT DELETED: flipping this
-  // back to `true` restores Scene for everyone.
-  const SHOW_SCENE_BASED = isOwner;
+
+  // SCENE AND NEURAL TWIN ARE FULLY PARKED (owner decision, Nov 12): both are
+  // now hidden from HER OWN Studio page too, not only from client accounts, so
+  // the page shows exactly one video box: Faceless. Nothing was deleted — every
+  // Scene and Twin box, handler and state below is still in this file, made
+  // unreachable by this ONE flag. TO RESTORE: set PARKED_SCENE_AND_TWIN to
+  // `false` and both modes come back for the owner; to bring them back for
+  // clients as well, also drop the `isOwner` condition from the two flags below.
+  const PARKED_SCENE_AND_TWIN: boolean = true;
+  const SHOW_NEURAL_TWIN = !PARKED_SCENE_AND_TWIN && isOwner;
+  const SHOW_SCENE_BASED = !PARKED_SCENE_AND_TWIN && isOwner;
 
   const isCatalyst = empireData?.archetype === 'CATALYST';
 
