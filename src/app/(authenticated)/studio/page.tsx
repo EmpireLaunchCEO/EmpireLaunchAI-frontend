@@ -55,6 +55,17 @@ const getAuthHeader = (): string => {
   return 'Bearer ';
 };
 
+// THE FACELESS LAUNCH CONFIRMATION MUST SURVIVE A REFRESH (owner, Nov 12):
+// generation takes 5–10 minutes and the customer reloads the page while they
+// wait, so a successful launch writes this entry and the page restores the green
+// line on mount. Only the dismiss X (or a new successful launch) clears it —
+// typing a new chat message does NOT.
+const FACELESS_LAUNCH_CONFIRMATION_KEY = 'faceless_launch_confirmation';
+const FACELESS_LAUNCH_CONFIRMATION_TEXT = 'Generating video, check operations in 5-10 minutes!';
+
+const currentUserId = (): string =>
+  (typeof window !== 'undefined' && (localStorage.getItem('empire_userId') || localStorage.getItem('empireUserId'))) || '';
+
 export default function StudioPage() {
   const [isDemoMode, setIsDemoMode] = useState(false);
   const { activeEmpire: empireData, registerRefreshHandler, isAdmin, userEmail } = useEmpire();
@@ -79,14 +90,13 @@ export default function StudioPage() {
   const SHOW_NEURAL_TWIN = !PARKED_SCENE_AND_TWIN && isOwner;
   const SHOW_SCENE_BASED = !PARKED_SCENE_AND_TWIN && isOwner;
 
-  // THE AI VIDEO EDITOR IS PARKED (owner decision, Nov 12): Operations Base now
-  // shows only the Faceless and Designs queues, so there is no Edits queue for a
-  // finished edit to land in — the editor box is hidden with the SAME flag that
-  // hides those queues (PARKED_VIDEOS_AND_EDITS in NeuralDispatchCenter.tsx).
-  // Nothing was deleted: the upload zone, the Empire Polish handler, the progress
-  // and result states and the consultant box are all still below, made
-  // unreachable by this ONE flag. TO RESTORE: set BOTH flags to `false`.
-  const PARKED_VIDEOS_AND_EDITS: boolean = true;
+  // THE AI VIDEO EDITOR IS LIVE (owner reversed part of #108, Nov 12): the Edits
+  // queue is back in Operations Base — only the VIDEOS queue stays parked
+  // (PARKED_VIDEOS in NeuralDispatchCenter.tsx) — so a finished edit has a queue
+  // to land in again and this box is rendered. The flag is kept, split out from
+  // the old PARKED_VIDEOS_AND_EDITS, so the box can be parked again by setting
+  // it to `true` TOGETHER WITH PARKED_EDITS in NeuralDispatchCenter.tsx.
+  const PARKED_EDITS: boolean = false;
 
   const isCatalyst = empireData?.archetype === 'CATALYST';
 
@@ -453,6 +463,10 @@ export default function StudioPage() {
 
   const [isSubmittingFaceless, setIsSubmittingFaceless] = useState(false);
   const [facelessSubmitted, setFacelessSubmitted] = useState(false);
+  // The server's own reason a Faceless launch failed. Owner (Nov 12): a launch
+  // that failed only wrote to the console, so nobody could tell WHY it failed.
+  // It is shown in the box, in the server's words.
+  const [facelessLaunchError, setFacelessLaunchError] = useState<string | null>(null);
   // Post-submit lock: once a Faceless concept is submitted, the consultant
   // must NOT invite "refine here" again (owner: each refinement is a fresh
   // paid AI generation — no wire to spend more mid-flight). The lock holds
@@ -469,6 +483,22 @@ export default function StudioPage() {
   // them yet (gap noted in PR), but Scene's video-project path does.
   const [facelessRelayedComponents, setFacelessRelayedComponents] = useState<string[]>([]);
   const [facelessRelayedConversation, setFacelessRelayedConversation] = useState<Array<{ role: string; content: string }>>([]);
+
+  // Restore the green Faceless launch confirmation after a refresh (owner, Nov
+  // 12). It is only restored for the account that launched it, and a corrupt
+  // entry simply means no confirmation — never a crash on load.
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(FACELESS_LAUNCH_CONFIRMATION_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { userId?: string; at?: number } | null;
+      const userId = currentUserId();
+      if (saved?.userId && userId && saved.userId !== userId) return;
+      setFacelessSubmitted(true);
+    } catch {
+      // No confirmation to restore.
+    }
+  }, []);
   // Owner (Oct 26): the OK-confirmation popup between chat and launch is
   // REMOVED — chat → launch fires directly for owner and customers. Quota and
   // validation stay enforced server-side on every studio/approval route; the
@@ -581,6 +611,8 @@ export default function StudioPage() {
     if (!ideaToUse || isSubmittingFaceless) return;
     setIsSubmittingFaceless(true);
     setFacelessLocked(true);
+    // A fresh launch replaces whatever the last one said.
+    setFacelessLaunchError(null);
     try {
       const userId = localStorage.getItem('empire_userId');
       const res = await fetch(`${API_URL}/api/approval/create`, {
@@ -611,37 +643,72 @@ export default function StudioPage() {
           sourceImages: facelessUpload.metadata?.photoUrl ? [facelessUpload.metadata.photoUrl] : []
         })
       });
-      if (!res.ok) throw new Error('Approval creation failed');
+      if (!res.ok) {
+        // SHOW THE SERVER'S OWN REASON (owner, Nov 12): a failed launch used to
+        // write only to the console, which is why nobody could tell why a real
+        // launch failed. The response body carries the server's message; the
+        // status line is the fallback when the body is not JSON.
+        const raw = await res.text().catch(() => '');
+        let detail = '';
+        try {
+          const body = raw ? JSON.parse(raw) : null;
+          detail = typeof body === 'string'
+            ? body
+            : (body?.error || body?.message || body?.detail || '');
+        } catch {
+          detail = raw;
+        }
+        throw new Error(
+          String(detail || '').trim() || `Launch failed — the server answered ${res.status} ${res.statusText || ''}`.trim()
+        );
+      }
       const data = await res.json();
       console.log('Faceless approval created:', data);
       setIsSubmittingFaceless(false);
+      // Owner (Nov 12): the green confirmation stays up — it survives a refresh
+      // and typing a new message, and only the X (or the next successful
+      // launch) clears it. No timer takes it down.
       setFacelessSubmitted(true);
-      // Owner UX (Oct 7): the confirmation must stay visible — at least ~15s,
-      // no early auto-kill. Generation takes ~5 min, so keep it up the whole
-      // window; the customer can dismiss it any time via the X button, and a
-      // NEW typed message (a new request) clears it early (see below).
-      setTimeout(() => setFacelessSubmitted(false), 5 * 60 * 1000);
+      try {
+        localStorage.setItem(
+          FACELESS_LAUNCH_CONFIRMATION_KEY,
+          JSON.stringify({ userId: currentUserId(), at: Date.now() })
+        );
+      } catch {
+        // A browser that refuses localStorage still shows the line this session.
+      }
     } catch (error) {
       console.error('Faceless approval error:', error);
       setIsSubmittingFaceless(false);
       // Submission failed — nothing is generating, so the user may retry and
       // the consultant returns to its normal (pre-submit) guidance state.
       setFacelessLocked(false);
+      setFacelessSubmitted(false);
+      try { localStorage.removeItem(FACELESS_LAUNCH_CONFIRMATION_KEY); } catch {}
+      const message = error instanceof Error ? error.message : String(error || '');
+      setFacelessLaunchError(message.trim() || 'Launch failed — the server did not say why.');
     }
+  };
+
+  // Dismissing the green confirmation also clears the saved copy, so a refresh
+  // does not bring back a line the customer already closed.
+  const dismissFacelessConfirmation = () => {
+    setFacelessSubmitted(false);
+    try { localStorage.removeItem(FACELESS_LAUNCH_CONFIRMATION_KEY); } catch {}
   };
 
   // Relay the FULL consultant conversation (so the Scene-Based payload can send
   // it to the backend planner) and release the post-submit lock the moment the
   // user sends a NEW message — per owner, a new typed message is a NEW request
   // (allowed), never an attached refinement of the in-flight generation.
+  // NOTE (owner, Nov 12): typing does NOT clear the green launch confirmation —
+  // that video is still being generated, so the customer keeps being told so
+  // until they dismiss it.
   const handleFacelessConversation = (messages: Array<{ role: string; content: string }>) => {
     setFacelessRelayedConversation(messages);
     const userMsgCount = messages.filter(m => m.role === 'user').length;
     if (facelessLocked && userMsgCount > facelessUserMsgCountRef.current) {
       setFacelessLocked(false);
-      // A NEW typed message is a NEW request — dismiss the previous launch's
-      // confirmation so the customer isn't told to watch for an old video.
-      setFacelessSubmitted(false);
     }
     facelessUserMsgCountRef.current = userMsgCount;
   };
@@ -1016,12 +1083,28 @@ export default function StudioPage() {
                 {facelessSubmitted && (
                   <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Concept accepted — your video is being built. Check the Operations page in about 5 minutes.</span>
+                    <span className="text-[9px] font-bold text-emerald-400 tracking-wider">{FACELESS_LAUNCH_CONFIRMATION_TEXT}</span>
                     <button
                       type="button"
-                      onClick={() => setFacelessSubmitted(false)}
+                      onClick={dismissFacelessConfirmation}
                       aria-label="Dismiss confirmation"
                       className="ml-auto shrink-0 p-0.5 rounded-md text-emerald-400/80 hover:text-emerald-300 hover:bg-emerald-500/10 transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </motion.div>
+                )}
+
+                {/* A failed launch says WHY (owner, Nov 12) — the server's own
+                    message, in the box, instead of only the browser console. */}
+                {facelessLaunchError && (
+                  <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="flex items-start gap-2 px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/20">
+                    <span className="text-[9px] font-bold text-red-400 leading-relaxed break-words">{facelessLaunchError}</span>
+                    <button
+                      type="button"
+                      onClick={() => setFacelessLaunchError(null)}
+                      aria-label="Dismiss launch error"
+                      className="ml-auto shrink-0 p-0.5 rounded-md text-red-400/80 hover:text-red-300 hover:bg-red-500/10 transition-colors"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -1173,10 +1256,11 @@ export default function StudioPage() {
               )}
 
               {/* 4. Upload Video Box for Edits */}
-              {/* PARKED (owner Nov 12): no Edits queue exists in Operations Base
-                  while PARKED_VIDEOS_AND_EDITS is true, so this box is hidden
-                  with it — an edit can never be created with nowhere to land. */}
-              {!PARKED_VIDEOS_AND_EDITS && (
+              {/* LIVE AGAIN (owner reversed part of #108, Nov 12): the Edits
+                  queue is back in Operations Base, so this box is shown again —
+                  an edit always has a queue to land in. Park it again with
+                  PARKED_EDITS above (and PARKED_EDITS in NeuralDispatchCenter). */}
+              {!PARKED_EDITS && (
               <div className="bg-theme-surface border-2 border-theme hover:border-white/30 transition-all rounded-[24px] md:rounded-[28px] p-5 md:p-6 space-y-4 relative group">
                 <div className="absolute top-6 right-6 flex items-center gap-2">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/50 border border-white/5">

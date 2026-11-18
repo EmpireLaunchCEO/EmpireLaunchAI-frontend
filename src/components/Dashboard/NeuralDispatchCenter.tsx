@@ -301,15 +301,20 @@ export function NeuralDispatchCenter() {
 
   const hasLinks = connectedPlatforms.length > 0;
 
-  // VIDEOS AND EDITS ARE PARKED (owner decision, Nov 12): Operations Base shows
-  // exactly two queues — Faceless and Designs. Nothing was deleted: the Videos
-  // and Edits boxes, their icons, counts and the whole review/dispatch path
-  // below are still in this file, made unreachable by this ONE flag. TO
-  // RESTORE: set PARKED_VIDEOS_AND_EDITS to `false` and both queues come back.
-  // The matching flag in the Studio page hides the AI Video Editor box, so an
-  // edit can never be created with no Edits queue to land in.
-  const PARKED_VIDEOS_AND_EDITS: boolean = true;
-  const PARKED_QUEUE_IDS = ['videos', 'edits'];
+  // ONLY THE VIDEOS QUEUE IS PARKED (owner decision, Nov 12; Edits restored by
+  // the owner Nov 12): Operations Base shows Videos off, Edits on, plus Faceless
+  // and Designs. Nothing was deleted: the Videos box, its icon, count and the
+  // whole review/dispatch path below are still in this file, made unreachable by
+  // this ONE flag. TO RESTORE VIDEOS: set PARKED_VIDEOS to `false`.
+  const PARKED_VIDEOS: boolean = true;
+  // Edits is LIVE again — the matching PARKED_EDITS flag in the Studio page
+  // shows the AI Video Editor box, so an edit always has a queue to land in.
+  // TO PARK EDITS AGAIN: set this to `true` AND PARKED_EDITS to `true` there.
+  const PARKED_EDITS: boolean = false;
+  const PARKED_QUEUE_IDS = [
+    ...(PARKED_VIDEOS ? ['videos'] : []),
+    ...(PARKED_EDITS ? ['edits'] : []),
+  ];
 
   const allCategories = [
     { id: 'videos', label: 'Videos', icon: Video, count: pendingCounts['video'] || pendingCounts['videos'] || (hasLinks && !isLoading ? 0 : 0) },
@@ -318,7 +323,7 @@ export function NeuralDispatchCenter() {
     { id: 'designs', label: 'Designs', icon: Palette, count: pendingCounts['design'] || pendingCounts['designs'] || (hasLinks && !isLoading ? 0 : 0) },
   ];
 
-  const categories = PARKED_VIDEOS_AND_EDITS
+  const categories = PARKED_QUEUE_IDS.length
     ? allCategories.filter((cat) => !PARKED_QUEUE_IDS.includes(cat.id))
     : allCategories;
 
