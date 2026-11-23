@@ -635,6 +635,63 @@ export const paymentService = {
     return res.json();
   },
 };
+
+// --- INTEL (market research boxes) -------------------------------------------------
+// Real, sourced signal only. Every item names the source it came from, and `sources`
+// says plainly when a source is unavailable so the UI can give an honest reason
+// instead of an empty card.
+export interface IntelItem {
+  text: string;
+  detail?: string; // why this item exists / where it came from
+  url?: string; // Etsy listing URL — rendered as a real link
+  source: 'google' | 'etsy';
+}
+
+export type IntelGoogleStatus = 'ok' | 'error';
+export type IntelEtsyStatus = 'ok' | 'not_configured' | 'error';
+
+export interface IntelSources {
+  google: IntelGoogleStatus;
+  etsy: IntelEtsyStatus;
+  etsyReason?: string;
+  googleReason?: string;
+}
+
+export interface IntelTrendsResult {
+  trendingThemes: IntelItem[];
+  seasonalOpportunities: IntelItem[];
+  hotSellingItems: IntelItem[];
+  lowCompetitionItems: IntelItem[];
+  contentIdeas: IntelItem[];
+  sources: IntelSources;
+  generatedAt: string; // ISO
+  fallbackMessage?: string;
+}
+
+/** Coerce whatever came back into IntelItem[] — never renders a raw object. */
+function normalizeIntelItems(raw: unknown, fallbackSource: 'google' | 'etsy'): IntelItem[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((entry): IntelItem | null => {
+      if (typeof entry === 'string') {
+        const text = entry.trim();
+        return text ? { text, source: fallbackSource } : null;
+      }
+      if (entry && typeof entry === 'object') {
+        const obj = entry as Record<string, unknown>;
+        const text = typeof obj.text === 'string' ? obj.text.trim() : '';
+        if (!text) return null;
+        const source = obj.source === 'etsy' ? 'etsy' : obj.source === 'google' ? 'google' : fallbackSource;
+        const item: IntelItem = { text, source };
+        if (typeof obj.detail === 'string' && obj.detail.trim()) item.detail = obj.detail.trim();
+        if (typeof obj.url === 'string' && /^https?:\/\//i.test(obj.url)) item.url = obj.url;
+        return item;
+      }
+      return null;
+    })
+    .filter((item): item is IntelItem => item !== null);
+}
+
   export const analyticsService = {
   async getEmpirePulse(): Promise<EmpirePulseState> {
     try {
@@ -746,13 +803,18 @@ export const paymentService = {
     return [];
   },
   
-  async getIntelTrends(params: { niche?: string; angle?: string; targetCustomers?: string; businessGoals?: string }): Promise<{
-    trendingThemes: string[];
-    seasonalOpportunities: string[];
-    hotSellingItems: string[];
-    lowCompetitionItems: string[];
-    contentIdeas: string[];
-  }> {
+  async getIntelTrends(params: { niche?: string; angle?: string; targetCustomers?: string; businessGoals?: string }): Promise<IntelTrendsResult> {
+    const empty = (overrides: Partial<IntelTrendsResult> = {}): IntelTrendsResult => ({
+      trendingThemes: [],
+      seasonalOpportunities: [],
+      hotSellingItems: [],
+      lowCompetitionItems: [],
+      contentIdeas: [],
+      sources: { google: 'ok', etsy: 'ok' },
+      generatedAt: new Date().toISOString(),
+      ...overrides,
+    });
+
     try {
       const query = new URLSearchParams();
       if (params.niche) query.set('niche', params.niche);
@@ -762,18 +824,54 @@ export const paymentService = {
       const res = await fetch(`${API_URL}/api/agent/intel/trends?${query.toString()}`, { headers: getHeaders() });
       if (res.ok) {
         const data = await res.json();
+        const rawSources = (data?.sources || {}) as Record<string, unknown>;
+        const google = rawSources.google === 'error' ? 'error' : 'ok';
+        const etsy =
+          rawSources.etsy === 'not_configured' ? 'not_configured' : rawSources.etsy === 'error' ? 'error' : 'ok';
+        const sources: IntelSources = { google, etsy };
+        if (typeof rawSources.etsyReason === 'string' && rawSources.etsyReason.trim()) {
+          sources.etsyReason = rawSources.etsyReason.trim();
+        }
+        if (typeof rawSources.googleReason === 'string' && rawSources.googleReason.trim()) {
+          sources.googleReason = rawSources.googleReason.trim();
+        }
+        const fallbackMessage =
+          typeof data?.fallbackMessage === 'string' && data.fallbackMessage.trim()
+            ? data.fallbackMessage.trim()
+            : typeof data?.message === 'string' && data.message.trim()
+              ? data.message.trim()
+              : undefined;
         return {
-          trendingThemes: data.trendingThemes || [],
-          seasonalOpportunities: data.seasonalOpportunities || [],
-          hotSellingItems: data.hotSellingItems || [],
-          lowCompetitionItems: data.lowCompetitionItems || [],
-          contentIdeas: data.contentIdeas || [],
+          trendingThemes: normalizeIntelItems(data?.trendingThemes, 'google'),
+          seasonalOpportunities: normalizeIntelItems(data?.seasonalOpportunities, 'google'),
+          hotSellingItems: normalizeIntelItems(data?.hotSellingItems, 'etsy'),
+          lowCompetitionItems: normalizeIntelItems(data?.lowCompetitionItems, 'etsy'),
+          contentIdeas: normalizeIntelItems(data?.contentIdeas, 'google'),
+          sources,
+          generatedAt:
+            typeof data?.generatedAt === 'string' && data.generatedAt ? data.generatedAt : new Date().toISOString(),
+          ...(fallbackMessage ? { fallbackMessage } : {}),
         };
       }
+      return empty({
+        sources: {
+          google: 'error',
+          etsy: 'error',
+          googleReason: 'The research service did not answer — nothing is shown rather than something invented.',
+          etsyReason: 'The research service did not answer — nothing is shown rather than something invented.',
+        },
+      });
     } catch (e) {
       console.error('Failed to fetch intel trends', e);
+      return empty({
+        sources: {
+          google: 'error',
+          etsy: 'error',
+          googleReason: 'Could not reach the research service — check your connection and refresh.',
+          etsyReason: 'Could not reach the research service — check your connection and refresh.',
+        },
+      });
     }
-    return { trendingThemes: [], seasonalOpportunities: [], hotSellingItems: [], lowCompetitionItems: [], contentIdeas: [] };
   },
   
   async fetchLibraryAssets(): Promise<any[]> {
