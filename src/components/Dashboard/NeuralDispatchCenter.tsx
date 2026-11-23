@@ -781,12 +781,9 @@ export function NeuralDispatchCenter() {
               <div className="relative w-11 h-11 rounded-2xl bg-amber-500/10 border !border-amber-500/20 flex items-center justify-center">
                 <Lock className="w-5 h-5 text-amber-400" />
               </div>
-              <div className="relative space-y-1">
-                <p className="text-[10px] font-black text-amber-300 uppercase tracking-[0.3em]">Locked</p>
-                <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest max-w-[220px]">
-                  Approve the draft above to unlock dispatch targets
-                </p>
-              </div>
+              <p className="relative text-[10px] font-black text-amber-300 uppercase tracking-[0.3em]">
+                Ability Coming Soon
+              </p>
             </div>
           ) : (
           <div className="space-y-3">
