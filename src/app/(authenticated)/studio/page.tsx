@@ -17,6 +17,8 @@ import {
   Film,
   CheckCircle2,
   Loader2,
+  Play,
+  Square,
   X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -45,6 +47,12 @@ const VIDEO_MOODS = [
   { value: 'dramatic', label: 'Dramatic' },
   { value: 'inspiring', label: 'Inspiring' },
 ] as const;
+
+// Shape of GET /api/voices (the backend's one voice list) — only the fields the
+// picker renders. The dropdown's label is "Name — character", e.g.
+// "Nova — bright, upbeat", so the character words must come from the backend.
+type VoiceOption = { id: string; name: string; character: string; sampleUrl?: string };
+type VoiceGenderGroup = { id: string; label: string; voices: VoiceOption[] };
 
 const getAuthHeader = (): string => {
   if (typeof window !== 'undefined') {
@@ -146,6 +154,84 @@ export default function StudioPage() {
   const [facelessDuration, setFacelessDuration] = useState<number>(15);
   const [facelessUpload, setFacelessUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
   const [sceneUpload, setSceneUpload] = useState<UploadState>({ file: null, preview: null, status: 'idle', progress: 0 });
+
+  // THE VOICE PICKER (owner, 23 Nov): gender → tone → the voice you can HEAR.
+  // The list is the backend's own catalogue (GET /api/voices), never a copy in
+  // this file — a voice we offer and cannot speak is a promise we break, and the
+  // launch route 400s a voice it does not know. 'auto' is the first option and
+  // the default, so a client who does not care gets exactly today's behaviour.
+  const [voiceCatalogue, setVoiceCatalogue] = useState<VoiceGenderGroup[]>([]);
+  const [facelessVoiceId, setFacelessVoiceId] = useState<string>('auto');
+  const [voiceSamplePlaying, setVoiceSamplePlaying] = useState(false);
+  const [voiceSampleError, setVoiceSampleError] = useState<string | null>(null);
+  const voiceSampleRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/voices`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled && Array.isArray(data?.genders)) setVoiceCatalogue(data.genders);
+      } catch {
+        // The picker falls back to "Auto voice" only — no invented voices.
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Voices offered for the gender chosen above: one gender's list, or every
+  // voice grouped by gender while the gender is still Auto.
+  const facelessVoiceGroups = facelessVoice === 'auto'
+    ? voiceCatalogue
+    : voiceCatalogue.filter((g) => g.id === facelessVoice);
+  const facelessVoiceChoices = facelessVoiceGroups.flatMap((g) => g.voices);
+  const selectedFacelessVoice = facelessVoiceChoices.find((v) => v.id === facelessVoiceId) || null;
+
+  const facelessSampleUrl = (voiceId: string, tone: string) =>
+    `${API_URL}/api/voices/${encodeURIComponent(voiceId)}/sample?tone=${encodeURIComponent(tone)}`;
+
+  // Changing gender rebuilds the list and keeps a playable selection: a voice
+  // that does not belong to the new gender is dropped back to Auto, never
+  // silently kept and never silently swapped for another voice.
+  const handleFacelessGenderChange = (gender: 'female' | 'male' | 'auto') => {
+    setFacelessVoice(gender);
+    if (gender === 'auto') return;
+    const allowed = voiceCatalogue.find((g) => g.id === gender)?.voices.some((v) => v.id === facelessVoiceId);
+    if (!allowed) setFacelessVoiceId('auto');
+  };
+
+  // Picking a voice IS hearing it (owner, 23 Nov): a new voice or a new tone
+  // plays that voice's sample in that tone, so nothing has to be discovered.
+  useEffect(() => {
+    const audio = voiceSampleRef.current;
+    if (!audio) return;
+    if (facelessVoiceId === 'auto') {
+      audio.pause();
+      setVoiceSamplePlaying(false);
+      return;
+    }
+    setVoiceSampleError(null);
+    audio.src = facelessSampleUrl(facelessVoiceId, facelessTone);
+    try { audio.currentTime = 0; } catch {}
+    const played = audio.play();
+    if (played && typeof played.catch === 'function') {
+      played.catch(() => setVoiceSamplePlaying(false));
+    }
+  }, [facelessVoiceId, facelessTone]);
+
+  const toggleVoiceSample = () => {
+    const audio = voiceSampleRef.current;
+    if (!audio || !selectedFacelessVoice) return;
+    if (!audio.paused) { audio.pause(); return; }
+    if (!audio.src) audio.src = facelessSampleUrl(facelessVoiceId, facelessTone);
+    setVoiceSampleError(null);
+    const played = audio.play();
+    if (played && typeof played.catch === 'function') {
+      played.catch(() => setVoiceSamplePlaying(false));
+    }
+  };
 
   // Handle Facial DNA file selection
   const handleFacialDnaSelect = async (file: File) => {
@@ -635,6 +721,10 @@ export default function StudioPage() {
           },
           voice: facelessVoice === 'auto' ? undefined : facelessVoice,
           tone: facelessTone === 'auto' ? undefined : facelessTone,
+          // The voice she PICKED (owner, 23 Nov): 'auto' stays absent so the
+          // gender+tone behaviour is unchanged; a real voice is the character in
+          // the finished video, and the route 400s an id it cannot speak.
+          voiceId: facelessVoiceId === 'auto' ? undefined : facelessVoiceId,
           mood: facelessMood,
           duration: facelessDuration,
           // Owner (Oct 19 + Oct 26): relay the FULL consultant conversation so
@@ -1028,7 +1118,7 @@ export default function StudioPage() {
                   <div className="flex flex-wrap gap-2">
                     <select
                       value={facelessVoice}
-                      onChange={(e) => setFacelessVoice(e.target.value as 'female' | 'male' | 'auto')}
+                      onChange={(e) => handleFacelessGenderChange(e.target.value as 'female' | 'male' | 'auto')}
                       className="flex-1 min-w-[90px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
                     >
                       <option value="auto">Auto gender</option>
@@ -1046,7 +1136,57 @@ export default function StudioPage() {
                       <option value="serious">Serious</option>
                       <option value="warm">Warm</option>
                     </select>
+                    {/* THE VOICE (owner, 23 Nov): the character, not the delivery
+                        — filtered by the gender above, Auto first. Picking one
+                        plays its sample in the chosen tone, so the choice is also
+                        the hearing; the play control replays it on demand. */}
+                    <select
+                      value={facelessVoiceId}
+                      onChange={(e) => setFacelessVoiceId(e.target.value)}
+                      aria-label="Voice"
+                      className="flex-1 min-w-[150px] bg-theme-surface/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-foreground focus:outline-none focus:border-white/30"
+                    >
+                      <option value="auto">Auto voice</option>
+                      {facelessVoice === 'auto'
+                        ? facelessVoiceGroups.map((group) => (
+                            <optgroup key={group.id} label={group.label}>
+                              {group.voices.map((v) => (
+                                <option key={v.id} value={v.id}>{v.name} — {v.character}</option>
+                              ))}
+                            </optgroup>
+                          ))
+                        : facelessVoiceChoices.map((v) => (
+                            <option key={v.id} value={v.id}>{v.name} — {v.character}</option>
+                          ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={toggleVoiceSample}
+                      disabled={!selectedFacelessVoice}
+                      aria-label={voiceSamplePlaying ? 'Stop voice sample' : 'Play voice sample'}
+                      title={selectedFacelessVoice ? 'Hear this voice' : 'Pick a voice to hear it'}
+                      className="shrink-0 p-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:scale-105 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    >
+                      {voiceSamplePlaying
+                        ? <Square className="w-3.5 h-3.5" />
+                        : <Play className="w-3.5 h-3.5" />}
+                    </button>
                   </div>
+                  {voiceSampleError && (
+                    <span className="text-[9px] font-bold text-red-400 leading-relaxed break-words">{voiceSampleError}</span>
+                  )}
+                  <audio
+                    ref={voiceSampleRef}
+                    preload="none"
+                    onPlay={() => setVoiceSamplePlaying(true)}
+                    onPause={() => setVoiceSamplePlaying(false)}
+                    onEnded={() => setVoiceSamplePlaying(false)}
+                    onError={() => {
+                      setVoiceSamplePlaying(false);
+                      setVoiceSampleError('That voice sample would not play — the sound could not be fetched.');
+                    }}
+                    className="hidden"
+                  />
                 </div>
                 {/* Source image (screenshot) upload */}
                 <div className="space-y-3">
