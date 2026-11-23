@@ -61,7 +61,9 @@ const getAuthHeader = (): string => {
 // line on mount. Only the dismiss X (or a new successful launch) clears it —
 // typing a new chat message does NOT.
 const FACELESS_LAUNCH_CONFIRMATION_KEY = 'faceless_launch_confirmation';
-const FACELESS_LAUNCH_CONFIRMATION_TEXT = 'Generating video, check operations in 5-10 minutes!';
+// Owner (23 Nov): 30s videos land inside this window, so the line states a bound,
+// never a measurement — "may take up to 10 minutes".
+const FACELESS_LAUNCH_CONFIRMATION_TEXT = 'Generating video, may take up to 10 minutes — check Operations!';
 
 const currentUserId = (): string =>
   (typeof window !== 'undefined' && (localStorage.getItem('empire_userId') || localStorage.getItem('empireUserId'))) || '';
