@@ -144,7 +144,7 @@ function LandingPageContent() {
 
             <button 
               onClick={() => {
-                window.location.replace('/onboarding?step=3&mode=login');
+                window.location.replace('/onboarding?step=2&mode=login');
               }}
               className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2"
             >

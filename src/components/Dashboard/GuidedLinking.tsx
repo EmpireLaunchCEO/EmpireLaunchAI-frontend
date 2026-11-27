@@ -1,4 +1,5 @@
 "use client";
+import { getAuthHeader } from '@/lib/authToken';
 import { cn } from "@/lib/utils";
 
 import React, { useState, useEffect } from 'react';
@@ -37,15 +38,6 @@ import {
 import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { onboardingService, getEmpireUserId } from '@/lib/api-service';
-
-const getAuthHeader = (): string => {
-  if (typeof window !== 'undefined') {
-    let token = localStorage.getItem('empire_auth_token');
-    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
-    return `Bearer ${token}`;
-  }
-  return 'Bearer ';
-};
 
 import { PLATFORM_CAPABILITIES } from '@/data/platform-capabilities';
 

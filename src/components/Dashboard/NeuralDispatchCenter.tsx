@@ -1,5 +1,6 @@
 "use client";
 
+import { getAuthHeader, withToken } from '@/lib/authToken';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Video,
@@ -30,15 +31,6 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL, PWA_URL, OWNER_EMAIL } from '@/lib/config';
 import { mergeDispatchCards, isUsableMediaUrl, cardQueueType } from '@/lib/dispatchMerge';
 import { getEmpireUserId } from '@/lib/api-service';
-
-const getAuthHeader = (): string => {
-  if (typeof window !== 'undefined') {
-    let token = localStorage.getItem('empire_auth_token');
-    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
-    return `Bearer ${token}`;
-  }
-  return 'Bearer ';
-};
 
 const platformIcons: Record<string, any> = {
   TikTok: Smartphone,
@@ -565,7 +557,7 @@ export function NeuralDispatchCenter() {
           {reviewMedia ? (
               <div className="aspect-video w-full max-w-4xl bg-slate-900 rounded-[32px] border border-white/10 shadow-2xl overflow-hidden relative">
                 <video
-                  src={currentApproval.payload.videoUrl?.startsWith('http') ? currentApproval.payload.videoUrl : `${API_URL}${currentApproval.payload.videoUrl}`}
+                  src={withToken(currentApproval.payload.videoUrl?.startsWith('http') ? currentApproval.payload.videoUrl : `${API_URL}${currentApproval.payload.videoUrl}`)}
                   controls
                   className="w-full h-full object-contain"
                   poster="/brands/video-placeholder.png"
@@ -660,8 +652,9 @@ export function NeuralDispatchCenter() {
                 // directly from R2 server-side, bypassing stale 1hr-presigned
                 // signed URLs and CORS — which previously caused "r2 fetch failed"
                 // when the Download button window.open'd the raw R2 media URL.
-                const userId = getEmpireUserId();
-                window.open(`${API_URL}/api/studio/download/${id}?userId=${encodeURIComponent(userId)}`, '_blank');
+                // A download link cannot send a header, so the real session token
+                // rides as ?token= (withToken only ever adds it to our own API URLs).
+                window.open(withToken(`${API_URL}/api/studio/download/${id}`), '_blank');
               }}
               disabled={!reviewMedia}
               className="flex-1 py-5 bg-primary text-slate-950 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100"

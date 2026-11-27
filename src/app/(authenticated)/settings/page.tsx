@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { signOut } from '@/lib/authToken';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Palette, 
@@ -92,8 +93,10 @@ function SettingsContent() {
 
   const tabs = isAdmin ? ownerTabs : baseTabs;
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (confirm("Disconnect neural session? You will need to log back in to access your Command Center.")) {
+      // Revoke the real session on the server, then clear both local keys.
+      await signOut();
       localStorage.clear();
       setIsAdmin(false);
       window.location.href = '/';
@@ -119,7 +122,7 @@ function SettingsContent() {
               <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
               <div className="flex items-center gap-1 bg-white/5 px-3 py-1 rounded-full border border-white/10">
                 <Mail className="w-3 h-3 text-primary" />
-                <span className="text-[10px] font-bold text-white/60">stacipeabody@gmail.com</span>
+                <span className="text-[10px] font-bold text-white/60">empirelaunchai@gmail.com</span>
                 <ShieldCheck className="w-3 h-3 text-emerald-500" />
               </div>
             </div>

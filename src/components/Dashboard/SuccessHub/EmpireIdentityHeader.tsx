@@ -1,5 +1,6 @@
 "use client";
 
+import { getAuthHeader } from '@/lib/authToken';
 import React, { useEffect, useState, useCallback } from 'react';
 import { MissionBriefing } from '@/components/Dashboard/MissionBriefing';
 import { ApprovalQueue } from '@/components/EmpireMode/ApprovalQueue';
@@ -24,15 +25,6 @@ import { NotificationOnboarding } from '@/components/Dashboard/NotificationOnboa
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 import { DashboardErrorBoundary } from '@/components/DashboardErrorBoundary';
-
-const getAuthHeader = (): string => {
-  if (typeof window !== 'undefined') {
-    let token = localStorage.getItem('empire_auth_token');
-    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
-    return `Bearer ${token}`;
-  }
-  return 'Bearer ';
-};
 
 export default function EmpireIdentityHeader() {
   const { activeEmpireId, isLinkingComplete, aiMode, isInitialized, setDashboardLoaded, isAdmin, isDashboardLoaded, registerRefreshHandler } = useEmpire();

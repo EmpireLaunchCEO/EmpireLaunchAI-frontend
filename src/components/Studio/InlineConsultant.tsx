@@ -1,19 +1,11 @@
 "use client";
 
+import { getAuthHeader } from '@/lib/authToken';
 import React, { useState, useEffect, useRef } from 'react';
 import { Sparkles, Send, User, Bot, Loader2, Wand2, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { API_URL } from '@/lib/config';
-
-const getAuthHeader = (): string => {
-  if (typeof window !== 'undefined') {
-    let token = localStorage.getItem('empire_auth_token');
-    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
-    return `Bearer ${token}`;
-  }
-  return 'Bearer ';
-};
 
 interface Message {
   role: 'user' | 'assistant';

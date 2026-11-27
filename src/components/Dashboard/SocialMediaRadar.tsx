@@ -1,5 +1,6 @@
 "use client";
 
+import { getAuthHeader } from '@/lib/authToken';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
@@ -37,15 +38,6 @@ import { useEmpire } from '@/lib/EmpireContext';
 import { API_URL } from '@/lib/config';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 import { ViralSignalsPanel, generateMockSignals } from '@/components/Dashboard/MarketHeatMeter';
-
-const getAuthHeader = (): string => {
-  if (typeof window !== 'undefined') {
-    let token = localStorage.getItem('empire_auth_token');
-    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
-    return `Bearer ${token}`;
-  }
-  return 'Bearer ';
-};
 
 // ─── Platform Data & Config ──────────────────────────────────────────────────
 
@@ -285,6 +277,7 @@ function ResearchPanel({ displayNiche, connectedPlatforms, onSyncStateChange }: 
 
         // Fetch global DNA/market research data
         const dnaRes = await fetch(`${API_URL}/api/market-dna/global?limit=10`, {
+          'Authorization': getAuthHeader(),
           headers: { 'x-user-id': userId }
         });
         

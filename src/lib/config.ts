@@ -32,4 +32,4 @@ export const PWA_URL = 'https://empirelaunchai.com';
 // empire_userId is the seeded zero-UUID, and userEmail comes back from the
 // backend /api/settings/hydrate response — see EmpireTabs.tsx for the
 // established pattern.
-export const OWNER_EMAIL = 'stacipeabody@gmail.com';
+export const OWNER_EMAIL = 'empirelaunchai@gmail.com';

@@ -7,7 +7,7 @@ import { Stars, LayoutDashboard, Globe, Briefcase, ChevronRight, AlertCircle, Sp
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEmpire } from '@/lib/EmpireContext';
 import { analyticsService, empireService, getEmpireUserId } from '@/lib/api-service';
-import { API_URL } from '@/lib/config';
+import { API_URL, OWNER_EMAIL } from '@/lib/config';
 import { PullToRefresh } from '@/components/Dashboard/PullToRefresh';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
@@ -456,7 +456,7 @@ export default function Dashboard() {
                     </motion.div>
 
                     {/* Feedback Inbox - Owner Only */}
-                    {(isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com') && (
+                    {(isAdmin || userEmail?.toLowerCase() === OWNER_EMAIL) && (
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
