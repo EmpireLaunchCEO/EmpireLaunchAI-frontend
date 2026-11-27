@@ -18,6 +18,16 @@ const getAuthHeader = (): string => {
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  /** Choices the SERVER offered with a turn (a refusal question). Each one is
+   *  an answer the client can give; tapping it becomes her turn in the chat. */
+  options?: string[];
+}
+
+/** One turn the server wrote into this conversation (see `injectedTurns`). */
+export interface InjectedConsultantTurn {
+  role: 'user' | 'assistant';
+  content: string;
+  options?: string[];
 }
 
 // Known platform names the client might relay (owner: every component relayed
@@ -148,9 +158,15 @@ interface InlineConsultantProps {
    *  ONLY set on the Scene-Based suppressWand flow — other flows keep the
    *  wand copy by omitting it. */
   actionHint?: string;
+  /** Turns the SERVER wrote into this conversation. A refused launch is a
+   *  QUESTION in the chat, not a dead-end error line: the refusal's own turns
+   *  (question + its choices) are appended here, the client's earlier turns
+   *  stay, and her next message is the answer to the question. `token`
+   *  identifies one injection, so the same turns are never appended twice. */
+  injectedTurns?: { token: string; turns: InjectedConsultantTurn[] } | null;
 }
 
-export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings, suppressWand, submitted, onRefinedIdea, onConversation, onRelayedComponents, actionHint }: InlineConsultantProps) {
+export function InlineConsultant({ context, initialMessage, className, idea, onGenerate, isParentGenerating, empireContext, settledSettings, suppressWand, submitted, onRefinedIdea, onConversation, onRelayedComponents, actionHint, injectedTurns }: InlineConsultantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -276,6 +292,44 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
       sendIdeaToConsultant();
     }
   }, [idea, context, lastIdea]);
+
+  // Append the server's own turns (a refusal question and its choices) to this
+  // conversation. Her earlier turns stay; the question lands as an assistant
+  // message she can answer. One token = one injection, so a re-render never
+  // duplicates the question.
+  const injectedTokenRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!injectedTurns || injectedTokenRef.current === injectedTurns.token) return;
+    const incoming = (injectedTurns.turns || []).filter(
+      t => t && typeof t.content === 'string' && t.content.trim()
+    );
+    if (!incoming.length) return;
+    injectedTokenRef.current = injectedTurns.token;
+    setMessages(prev => [
+      ...prev,
+      ...incoming.map(t => ({
+        role: (t.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
+        content: t.content.trim(),
+        ...(Array.isArray(t.options) && t.options.length
+          ? { options: t.options.filter(o => typeof o === 'string' && o.trim()).map(o => o.trim()) }
+          : {})
+      }))
+    ]);
+  }, [injectedTurns]);
+
+  // A choice the server offered IS her answer to its question: it becomes her
+  // turn in the chat (relayed with the conversation on the next launch) without
+  // spending a consult call on a tap.
+  const handleOption = (option: string) => {
+    const answer = (option || '').trim();
+    if (!answer) return;
+    setMessages(prev => [...prev, { role: 'user', content: answer }]);
+  };
+
+  // Once she has said anything after a question, its choices are answered —
+  // they stop being offered so the same answer cannot be given twice.
+  const optionsAnswered = (index: number): boolean =>
+    messages.slice(index + 1).some(m => m.role === 'user');
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -450,6 +504,20 @@ export function InlineConsultant({ context, initialMessage, className, idea, onG
                   : "bg-theme-surface border border-theme text-slate-300 rounded-tl-none italic"
               )}>
                 {msg.content}
+                {msg.options && msg.options.length > 0 && !optionsAnswered(i) && (
+                  <div className="flex flex-wrap gap-1 mt-2 not-italic">
+                    {msg.options.map((option, oi) => (
+                      <button
+                        key={oi}
+                        type="button"
+                        onClick={() => handleOption(option)}
+                        className="px-2 py-1 rounded-lg bg-primary/10 border border-primary/30 text-[10px] font-bold text-primary hover:bg-primary/20 hover:border-primary/50 transition-all text-left"
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}
