@@ -8,7 +8,7 @@ import { saveSession } from '@/lib/authToken';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface SignUpFormProps {
-  onSuccess: (userId: string, email: string, clientName?: string, referral?: string) => void;
+  onSuccess: (userId: string, email: string, clientName?: string, referral?: string, masterKeyUsed?: boolean) => void;
   initialMode?: 'signup' | 'login';
   masterKey?: string;
 }
@@ -48,7 +48,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
 
       if (useMasterKey) {
         endpoint = '/api/auth/master-login';
-        body = { email, key: masterKey || password };
+        body = { email, key: password.trim() || masterKey };
       } else if (isLogin) {
         endpoint = '/api/auth/login';
         body = { email, password };
@@ -68,7 +68,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
         // The backend issues the real session token (login / register / master-login).
         // Store it — nothing in the app invents a credential any more.
         saveSession({ token: data.token, userId: data.userId });
-        onSuccess(data.userId, email, clientName.trim(), referral.trim());
+        onSuccess(data.userId, email, clientName.trim(), referral.trim(), useMasterKey);
       } else {
         setError(data.error || `Failed to ${isLogin ? 'authenticate' : 'initialize'} identity.`);
       }
@@ -156,7 +156,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
           <div className="relative group">
             <input
               type={showPassword ? 'text' : 'password'}
-              required={!useMasterKey}
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={useMasterKey ? "••••••••••••" : "••••••••••••"}
@@ -203,6 +203,16 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
               {isLogin ? "Need to create a new empire? Sign Up" : "Already have an empire? Log In"}
             </button>
           )}
+
+          {/* Master Key sign-in: the owner has no password, so email + master key is her way in. */}
+          <button
+            type="button"
+            onClick={() => { setUseMasterKey(!useMasterKey); setError(null); }}
+            className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2 flex items-center justify-center gap-2"
+          >
+            <Key className="w-3 h-3" />
+            {useMasterKey ? 'Use Email & Password Instead' : 'Sign In With Master Key'}
+          </button>
         </div>
       </form>
     </div>

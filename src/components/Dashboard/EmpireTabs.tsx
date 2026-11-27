@@ -7,7 +7,7 @@ import { EmpireIdentityCard } from '@/components/Dashboard/EmpireIdentityCard';
 import { IntelTab } from '@/components/Dashboard/IntelTab';
 import { LibraryTab } from '@/components/Dashboard/LibraryTab';
 import { useEmpire } from '@/lib/EmpireContext';
-import { API_URL } from '@/lib/config';
+import { API_URL, OWNER_EMAIL } from '@/lib/config';
 import { getAuthToken, getEmpireUserId } from '@/lib/api-service';
 import { BRAND_SLOTS, BRAND_SLOT_LABELS, countOrDash, isKnownCount } from '@/lib/billing';
 import { motion } from 'framer-motion';
@@ -40,7 +40,7 @@ const numberOrNull = (value: unknown): number | null =>
 export function EmpireTabs({ empireData, onDataUpdate }: EmpireTabsProps) {
   const [activeTab, setActiveTab] = useState<'business' | 'intel' | 'library'>('business');
   const { isAdmin, userEmail } = useEmpire();
-  const isOwner = isAdmin || userEmail?.toLowerCase() === 'stacipeabody@gmail.com';
+  const isOwner = isAdmin || userEmail?.toLowerCase() === OWNER_EMAIL;
 
   // Owner-only business numbers. `null` = not loaded yet, `error` = the call failed.
   // The card renders "—" in BOTH cases and never a fabricated 0, so the owner can

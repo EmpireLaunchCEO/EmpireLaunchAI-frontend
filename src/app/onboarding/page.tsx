@@ -535,11 +535,13 @@ function OnboardingContent() {
                 <SignUpForm
                   initialMode={isLoginMode ? 'login' : 'signup'}
                   masterKey={accessKey.trim()}
-                  onSuccess={async (uid, _email, nameFromForm, referralFromForm) => {
+                  onSuccess={async (uid, _email, nameFromForm, referralFromForm, masterKeyUsed) => {
                     setUserId(uid);
                     if (nameFromForm) setClientName(nameFromForm);
                     if (referralFromForm) setReferral(referralFromForm);
-                    if (isLoginMode) {
+                    // A master-key sign-in is a returning owner: straight to the dashboard,
+                    // never through the plan-buying step.
+                    if (isLoginMode || masterKeyUsed) {
                       window.location.href = '/dashboard';
                       return;
                     }
