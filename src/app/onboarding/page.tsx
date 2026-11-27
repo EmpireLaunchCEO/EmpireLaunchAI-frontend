@@ -1,6 +1,6 @@
 "use client";
 
-import { getAuthHeader } from '@/lib/authToken';
+import { getAuthHeader, isSignedIn } from '@/lib/authToken';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -34,8 +34,8 @@ import { SUBSCRIPTION_LINK, withPaymentIdentity } from '@/lib/payment-links';
 
 const steps = [
   { id: 1, title: 'Protocol' },
-  { id: 2, title: 'Authorization' },
-  { id: 3, title: 'Neural Identity' },
+  { id: 2, title: 'Neural Identity' },
+  { id: 3, title: 'Authorization' },
   { id: 4, title: 'Business Identity' },
   { id: 5, title: 'Matrix' },
   { id: 6, title: 'Toolkit' },
@@ -119,6 +119,9 @@ function OnboardingContent() {
   ], []);
 
   const verifyPayment = useCallback(async (sessionId: string) => {
+    // Never call a Stripe route without a real session: the paid tier must land on
+    // the account she signed in with, and the backend answers 401 otherwise.
+    if (!isSignedIn()) return;
     setIsPaying(true);
     try {
       const res = await fetch(`${API_URL}/api/stripe/verify/platform?sessionId=${sessionId}`, {
@@ -345,11 +348,17 @@ function OnboardingContent() {
     if (!hasValidFullName) {
       return;
     }
+    // No session, no checkout: the account is created on the previous step, so a
+    // missing one means she deep-linked here — send her back to sign in.
+    if (!isSignedIn()) {
+      setCurrentStep(2);
+      return;
+    }
     setIsPaying(true);
     try {
       const res = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('empire_auth_token') || ''}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': getAuthHeader() },
         body: JSON.stringify({ type: 'subscription', clientName: clientName.trim(), referral: referral.trim() }),
       });
       const data = await res.json();
@@ -515,14 +524,45 @@ function OnboardingContent() {
                    </section>
                 </div>
                 <button onClick={() => { acceptProtocols(); nextStep(); }} className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none">Accept Protocols <CheckCircle2 className="w-4 h-4" /></button>
-                <button onClick={() => { setIsLoginMode(true); setCurrentStep(3); }} className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2">
+                <button onClick={() => { setIsLoginMode(true); setCurrentStep(2); }} className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2">
                   Already have an account? Log In
                 </button>
               </motion.div>
             )}
 
             {currentStep === 2 && (
-              <motion.div key="step2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
+              <motion.div key="step2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                <SignUpForm
+                  initialMode={isLoginMode ? 'login' : 'signup'}
+                  masterKey={accessKey.trim()}
+                  onSuccess={async (uid, _email, nameFromForm, referralFromForm) => {
+                    setUserId(uid);
+                    if (nameFromForm) setClientName(nameFromForm);
+                    if (referralFromForm) setReferral(referralFromForm);
+                    if (isLoginMode) {
+                      window.location.href = '/dashboard';
+                      return;
+                    }
+                    if (accessKey.trim()) {
+                      try {
+                        await fetch(`${API_URL}/api/auth/redeem-key`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ userId: uid, key: accessKey.trim() })
+                        });
+                        setIsPaid(true);
+                      } catch (err) {
+                        console.error('Failed to auto-redeem key');
+                      }
+                    }
+                    nextStep(); 
+                  }} 
+                />
+              </motion.div>
+            )}
+
+            {currentStep === 3 && (
+              <motion.div key="step3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-8">
                 <div className="text-center space-y-4">
                   <Stars className="w-16 h-16 text-primary mx-auto" />
                   <h2 className="text-2xl md:text-3xl font-black text-theme-gradient tracking-tight uppercase italic">Authorize Engine.</h2>
@@ -640,37 +680,6 @@ function OnboardingContent() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            )}
-
-            {currentStep === 3 && (
-              <motion.div key="step3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-                <SignUpForm
-                  initialMode={isLoginMode ? 'login' : 'signup'}
-                  masterKey={accessKey.trim()}
-                  onSuccess={async (uid, _email, nameFromForm, referralFromForm) => {
-                    setUserId(uid);
-                    if (nameFromForm) setClientName(nameFromForm);
-                    if (referralFromForm) setReferral(referralFromForm);
-                    if (isLoginMode) {
-                      window.location.href = '/dashboard';
-                      return;
-                    }
-                    if (accessKey.trim()) {
-                      try {
-                        await fetch(`${API_URL}/api/auth/redeem-key`, {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ userId: uid, key: accessKey.trim() })
-                        });
-                        setIsPaid(true);
-                      } catch (err) {
-                        console.error('Failed to auto-redeem key');
-                      }
-                    }
-                    nextStep(); 
-                  }} 
-                />
               </motion.div>
             )}
 

@@ -21,7 +21,7 @@ export const USER_ID_KEY = 'empire_userId';
 /** snake_case key the backend contract names. */
 export const LEGACY_USER_ID_KEY = 'empire_user_id';
 
-export const SIGN_IN_PATH = '/onboarding?step=3&mode=login';
+export const SIGN_IN_PATH = '/onboarding?step=2&mode=login';
 
 const isBrowser = () => typeof window !== 'undefined';
 
