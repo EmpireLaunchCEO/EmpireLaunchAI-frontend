@@ -555,6 +555,16 @@ export default function StudioPage() {
   // that failed only wrote to the console, so nobody could tell WHY it failed.
   // It is shown in the box, in the server's words.
   const [facelessLaunchError, setFacelessLaunchError] = useState<string | null>(null);
+  // A REFUSED launch is a QUESTION in the chat, not a dead-end red line (owner,
+  // 23 Nov: repair before refusal — "shouldn't the AI be smart enough to know
+  // what it needs so the video doesn't fail?"). A 422 pre-flight refusal carries
+  // `chat` (VideoChatTurn[]: role/content/kind/options); those turns are shown
+  // inside the faceless consultant chat, her earlier turns stay, and her reply
+  // is the answer the next launch attaches to that refused attempt.
+  const [facelessRefusalTurns, setFacelessRefusalTurns] = useState<{
+    token: string;
+    turns: Array<{ role: 'user' | 'assistant'; content: string; options?: string[] }>;
+  } | null>(null);
   // Post-submit lock: once a Faceless concept is submitted, the consultant
   // must NOT invite "refine here" again (owner: each refinement is a fresh
   // paid AI generation — no wire to spend more mid-flight). The lock holds
@@ -741,15 +751,47 @@ export default function StudioPage() {
         // launch failed. The response body carries the server's message; the
         // status line is the fallback when the body is not JSON.
         const raw = await res.text().catch(() => '');
-        let detail = '';
+        let body: any = null;
         try {
-          const body = raw ? JSON.parse(raw) : null;
-          detail = typeof body === 'string'
-            ? body
-            : (body?.error || body?.message || body?.detail || '');
+          body = raw ? JSON.parse(raw) : null;
         } catch {
-          detail = raw;
+          body = null;
         }
+        // A refusal that ASKS something is a conversation, not an error line:
+        // its `chat` turns (question + choices) go into the consultant chat and
+        // her reply answers them. No red line is shown on top of the question.
+        const refusalTurns: Array<{ role: 'user' | 'assistant'; content: string; options?: string[] }> =
+          Array.isArray(body?.chat) || Array.isArray(body?.data?.chat)
+            ? ((Array.isArray(body?.chat) ? body.chat : body.data.chat) as any[])
+                .filter(t => t && typeof t.content === 'string' && t.content.trim())
+                .map(t => ({
+                  // A turn the server marked as her answer is HER turn; every
+                  // other refusal turn (the question) is the assistant's.
+                  role: (t.role === 'user' || t.kind === 'client-answer' ? 'user' : 'assistant') as 'user' | 'assistant',
+                  content: String(t.content).trim(),
+                  ...(Array.isArray(t.options) && t.options.length
+                    ? {
+                        options: (t.options as any[])
+                          .filter(o => typeof o === 'string' && o.trim())
+                          .map(o => String(o).trim())
+                      }
+                    : {})
+                }))
+            : [];
+        if (refusalTurns.length > 0) {
+          setFacelessRefusalTurns({ token: `refusal-${Date.now()}`, turns: refusalTurns });
+          setIsSubmittingFaceless(false);
+          // Nothing is generating, so the chat stays usable and the Launch
+          // button stays available for the corrected launch.
+          setFacelessLocked(false);
+          setFacelessSubmitted(false);
+          try { localStorage.removeItem(FACELESS_LAUNCH_CONFIRMATION_KEY); } catch {}
+          return;
+        }
+        let detail = '';
+        if (typeof body === 'string') detail = body;
+        else if (body) detail = body.error || body.message || body.detail || '';
+        if (!detail) detail = raw;
         throw new Error(
           String(detail || '').trim() || `Launch failed — the server answered ${res.status} ${res.statusText || ''}`.trim()
         );
@@ -1217,6 +1259,7 @@ export default function StudioPage() {
                   onRelayedComponents={setFacelessRelayedComponents}
                   suppressWand
                   submitted={facelessLocked}
+                  injectedTurns={facelessRefusalTurns}
                   actionHint="Press Launch Project to generate your video"
                   settledSettings={{ duration: String(facelessDuration), voice: facelessVoice, tone: facelessTone }}
                   empireContext={{ niche: userNiche || empireData?.niche, angle: empireData?.angle, targetCustomers: empireData?.targetCustomers, businessGoals: empireData?.businessGoals }}
