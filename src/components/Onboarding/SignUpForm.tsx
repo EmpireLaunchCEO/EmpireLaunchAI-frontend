@@ -2,18 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, ArrowRight, ShieldCheck, AlertCircle, Key, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, ArrowRight, ShieldCheck, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { API_URL } from '@/lib/config';
 import { saveSession } from '@/lib/authToken';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface SignUpFormProps {
-  onSuccess: (userId: string, email: string, clientName?: string, referral?: string, masterKeyUsed?: boolean) => void;
+  onSuccess: (userId: string, email: string, clientName?: string, referral?: string) => void;
   initialMode?: 'signup' | 'login';
-  masterKey?: string;
 }
 
-export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: SignUpFormProps) => {
+export const SignUpForm = ({ onSuccess, initialMode = 'signup' }: SignUpFormProps) => {
   const [clientName, setClientName] = useState('');
   const [referral, setReferral] = useState('');
   const [email, setEmail] = useState('');
@@ -22,7 +21,6 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLogin, setIsLogin] = useState(initialMode === 'login');
-  const [useMasterKey, setUseMasterKey] = useState(!!masterKey);
 
   // Prefill the referring salesperson's first name from ?ref= (their link auto-fills it)
   useEffect(() => {
@@ -35,7 +33,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Owner directive: full name (first + last) is required for signup identity.
-    if (!isLogin && !useMasterKey && clientName.trim().split(/\s+/).length < 2) {
+    if (!isLogin && clientName.trim().split(/\s+/).length < 2) {
       setError('Enter your first AND last name to continue.');
       return;
     }
@@ -46,10 +44,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
       let endpoint: string;
       let body: any;
 
-      if (useMasterKey) {
-        endpoint = '/api/auth/master-login';
-        body = { email, key: password.trim() || masterKey };
-      } else if (isLogin) {
+      if (isLogin) {
         endpoint = '/api/auth/login';
         body = { email, password };
       } else {
@@ -65,10 +60,10 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
 
       const data = await response.json();
       if (response.ok) {
-        // The backend issues the real session token (login / register / master-login).
+        // The backend issues the real session token (login / register).
         // Store it — nothing in the app invents a credential any more.
         saveSession({ token: data.token, userId: data.userId });
-        onSuccess(data.userId, email, clientName.trim(), referral.trim(), useMasterKey);
+        onSuccess(data.userId, email, clientName.trim(), referral.trim());
       } else {
         setError(data.error || `Failed to ${isLogin ? 'authenticate' : 'initialize'} identity.`);
       }
@@ -84,14 +79,12 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
       <div className="text-center space-y-4">
         <BrandedGlobe size="2xl" className="mx-auto" />
         <h2 className="text-2xl md:text-3xl font-black text-theme-gradient tracking-tight uppercase italic">
-          {useMasterKey ? 'Master Access.' : isLogin ? 'Neural Access.' : 'Neural Identity.'}
+          {isLogin ? 'Neural Access.' : 'Neural Identity.'}
         </h2>
         <p className="text-muted-foreground text-xs md:text-sm font-medium italic">
-          {useMasterKey 
-            ? '"Authorize with your Empire Master Key."'
-            : isLogin 
-              ? '"Re-establish your connection to the Empire Matrix."'
-              : '"Create your secure access point to the Empire Matrix."'
+          {isLogin 
+            ? '"Re-establish your connection to the Empire Matrix."'
+            : '"Create your secure access point to the Empire Matrix."'
           }
         </p>
       </div>
@@ -111,7 +104,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
               className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white shadow-inner"
             />
           </div>
-          {!isLogin && !useMasterKey && clientName.trim().length > 0 && clientName.trim().split(/\s+/).length < 2 && (
+          {!isLogin && clientName.trim().length > 0 && clientName.trim().split(/\s+/).length < 2 && (
             <p className="text-[9px] font-black uppercase text-red-500 px-1">Enter your first AND last name to continue</p>
           )}
         </div>
@@ -150,8 +143,8 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
 
         <div className="space-y-2">
           <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2 px-1">
-            {useMasterKey ? <Key className="w-3 h-3 text-primary" /> : <Lock className="w-3 h-3 text-primary" />}
-            {useMasterKey ? 'Master Key' : 'Secure Access Key'}
+            <Lock className="w-3 h-3 text-primary" />
+            Secure Access Key
           </label>
           <div className="relative group">
             <input
@@ -159,7 +152,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={useMasterKey ? "••••••••••••" : "••••••••••••"}
+              placeholder="••••••••••••"
               className="w-full bg-slate-900 border border-slate-800 rounded-2xl py-4 px-5 pr-12 text-sm font-bold placeholder:text-slate-700 focus:border-primary/60 transition-all outline-none text-white shadow-inner"
             />
             <button
@@ -182,7 +175,7 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
         <div className="space-y-4">
           <button
             type="submit"
-            disabled={isLoading || (!isLogin && !useMasterKey && clientName.trim().split(/\s+/).length < 2)}
+            disabled={isLoading || (!isLogin && clientName.trim().split(/\s+/).length < 2)}
             className="w-full bg-theme-gradient text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:bg-white transition-all shadow-xl flex items-center justify-center gap-2 group border-none disabled:opacity-50"
           >
             {isLoading ? (
@@ -190,28 +183,16 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
                 <BrandedGlobe size="sm" spinning className="bg-transparent shadow-none border-none" />
                 Synchronizing...
               </>
-            ) : (useMasterKey ? 'Authorize Master Access' : isLogin ? 'Access Command Center' : 'Initialize Identity')}
+            ) : (isLogin ? 'Access Command Center' : 'Initialize Identity')}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
 
-          {!useMasterKey && (
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2"
-            >
-              {isLogin ? "Need to create a new empire? Sign Up" : "Already have an empire? Log In"}
-            </button>
-          )}
-
-          {/* Master Key sign-in: the owner has no password, so email + master key is her way in. */}
           <button
             type="button"
-            onClick={() => { setUseMasterKey(!useMasterKey); setError(null); }}
-            className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2 flex items-center justify-center gap-2"
+            onClick={() => setIsLogin(!isLogin)}
+            className="w-full text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2"
           >
-            <Key className="w-3 h-3" />
-            {useMasterKey ? 'Use Email & Password Instead' : 'Sign In With Master Key'}
+            {isLogin ? "Need to create a new empire? Sign Up" : "Already have an empire? Log In"}
           </button>
         </div>
       </form>
