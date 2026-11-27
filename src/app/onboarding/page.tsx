@@ -534,14 +534,13 @@ function OnboardingContent() {
               <motion.div key="step2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
                 <SignUpForm
                   initialMode={isLoginMode ? 'login' : 'signup'}
-                  masterKey={accessKey.trim()}
-                  onSuccess={async (uid, _email, nameFromForm, referralFromForm, masterKeyUsed) => {
+                  onSuccess={async (uid, _email, nameFromForm, referralFromForm) => {
                     setUserId(uid);
                     if (nameFromForm) setClientName(nameFromForm);
                     if (referralFromForm) setReferral(referralFromForm);
-                    // A master-key sign-in is a returning owner: straight to the dashboard,
+                    // A returning owner signs in: straight to the dashboard,
                     // never through the plan-buying step.
-                    if (isLoginMode || masterKeyUsed) {
+                    if (isLoginMode) {
                       window.location.href = '/dashboard';
                       return;
                     }
