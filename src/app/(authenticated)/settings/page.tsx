@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { signOut } from '@/lib/authToken';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Palette, 
@@ -92,8 +93,10 @@ function SettingsContent() {
 
   const tabs = isAdmin ? ownerTabs : baseTabs;
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (confirm("Disconnect neural session? You will need to log back in to access your Command Center.")) {
+      // Revoke the real session on the server, then clear both local keys.
+      await signOut();
       localStorage.clear();
       setIsAdmin(false);
       window.location.href = '/';

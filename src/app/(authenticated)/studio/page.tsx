@@ -1,5 +1,6 @@
 "use client";
 
+import { getAuthHeader } from '@/lib/authToken';
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -53,15 +54,6 @@ const VIDEO_MOODS = [
 // "Nova — bright, upbeat", so the character words must come from the backend.
 type VoiceOption = { id: string; name: string; character: string; sampleUrl?: string };
 type VoiceGenderGroup = { id: string; label: string; voices: VoiceOption[] };
-
-const getAuthHeader = (): string => {
-  if (typeof window !== 'undefined') {
-    let token = localStorage.getItem('empire_auth_token');
-    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
-    return `Bearer ${token}`;
-  }
-  return 'Bearer ';
-};
 
 // THE FACELESS LAUNCH CONFIRMATION MUST SURVIVE A REFRESH (owner, Nov 12):
 // generation takes 5–10 minutes and the customer reloads the page while they

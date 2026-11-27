@@ -1,5 +1,6 @@
 "use client";
 
+import { getAuthHeader } from '@/lib/authToken';
 import React, { useState, useEffect } from 'react';
 import { useEmpire } from '@/lib/EmpireContext';
 import { useRouter } from 'next/navigation';
@@ -63,6 +64,7 @@ export function SubscriptionGuard({ children }: { children: React.ReactNode }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
           'x-user-id': localStorage.getItem('empire_userId') || ''
         },
         body: JSON.stringify({ userId: localStorage.getItem('empire_userId'), key: cleanKey })

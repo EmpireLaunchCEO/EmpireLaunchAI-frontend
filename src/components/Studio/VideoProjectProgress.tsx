@@ -1,18 +1,10 @@
 "use client";
 
+import { getAuthHeader } from '@/lib/authToken';
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, CheckCircle2, Clock, AlertCircle, RefreshCw, Play } from 'lucide-react';
 import { API_URL } from '@/lib/config';
-
-const getAuthHeader = (): string => {
-  if (typeof window !== 'undefined') {
-    let token = localStorage.getItem('empire_auth_token');
-    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
-    return `Bearer ${token}`;
-  }
-  return 'Bearer ';
-};
 
 interface Scene {
   id: string;

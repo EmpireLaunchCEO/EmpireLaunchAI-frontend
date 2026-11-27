@@ -1,5 +1,6 @@
 "use client";
 
+import { getAuthHeader } from '@/lib/authToken';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
@@ -47,15 +48,6 @@ import { FeedbackBox } from '@/components/Dashboard/FeedbackChannel';
 
 import { AutoPilotStatusBadge } from '@/components/Dashboard/GlobalDnaPoolPanel';
 import { NeuralDispatchCenter } from '@/components/Dashboard/NeuralDispatchCenter';
-
-const getAuthHeader = (): string => {
-  if (typeof window !== 'undefined') {
-    let token = localStorage.getItem('empire_auth_token');
-    if (!token) { token = crypto.randomUUID(); localStorage.setItem('empire_auth_token', token); }
-    return `Bearer ${token}`;
-  }
-  return 'Bearer ';
-};
 
 export default function EmpireCenterPage() {
   const [activeTab, setActiveTab] = useState<'pending'>('pending');

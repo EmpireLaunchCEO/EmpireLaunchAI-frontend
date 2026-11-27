@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { signOut } from '@/lib/authToken';
 import { usePathname } from 'next/navigation';
 import {
   Home,
@@ -33,8 +34,10 @@ export function Sidebar() {
   const brandName = (isAdmin || !activeEmpire?.name || activeEmpire?.name === 'HOME BASE') ? "EmpireLaunch AI" : activeEmpire.name;
   const displayNiche = (isAdmin && (!activeEmpire?.niche || activeEmpire?.niche === 'Niche Pending')) ? "AI Business Automation" : (activeEmpire?.niche || "your niche");
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (confirm("Disconnect neural session? You will need to log back in to access your Command Center.")) {
+      // Revoke the real session on the server, then clear both local keys.
+      await signOut();
       localStorage.clear();
       setIsAdmin(false);
       setIsPaid(false);

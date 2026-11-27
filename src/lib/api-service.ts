@@ -1,4 +1,5 @@
 import { API_URL } from '@/lib/config';
+import { AUTH_TOKEN_KEY, authHeaders, getStoredToken, handleUnauthorized } from '@/lib/authToken';
 
 // --- Retry helper with exponential backoff for 429 responses ---
 async function fetchWithRetry(url: string, options: RequestInit = {}, maxRetries = 3): Promise<Response> {
@@ -143,7 +144,10 @@ export const getEmpireUserId = (): string => {
       localStorage.setItem('empire_userId', cookieId);
       return cookieId;
     }
-    // 4. Generate new device UUID for new users
+    // 4. No stored id yet (not signed in). A device UUID is minted for local
+    //    bookkeeping ONLY — it is never a credential: the backend refuses any
+    //    request that has no real session token, and the client is sent to the
+    //    sign-in screen. Signing in replaces it with the server's userId.
     id = crypto.randomUUID();
     localStorage.setItem('empire_userId', id);
     setEmpireUserIdCookie(id);
@@ -152,45 +156,35 @@ export const getEmpireUserId = (): string => {
   return ''; // SSR fallback — no user context
 };
 
-// Generate a real session token on first load — no mock tokens
-export const getAuthToken = (): string => {
-  if (typeof window !== 'undefined') {
-    let token = localStorage.getItem('empire_auth_token');
-    if (!token) {
-      token = crypto.randomUUID(); // Real UUID, not a mock
-      localStorage.setItem('empire_auth_token', token);
-    }
-    return token;
-  }
-  return '';
-};
+// The real session token the backend issued (POST /api/auth/login|register|master-login).
+// Never invented here: with no session this is '', the request 401s, and the client
+// is sent to the sign-in screen by the shared auth helper.
+export const getAuthToken = (): string => getStoredToken();
 
 // Update stored token when backend issues a new session token
 const saveSessionToken = (res: Response) => {
   const newToken = res.headers.get('X-Session-Token');
   if (newToken && typeof window !== 'undefined') {
-    localStorage.setItem('empire_auth_token', newToken);
+    localStorage.setItem(AUTH_TOKEN_KEY, newToken);
   }
 };
 
-// Authenticated fetch that tracks the session token handshake
+// Authenticated fetch that tracks the session token handshake, and treats a 401
+// as "session is gone": clear it and go to sign-in instead of spinning forever.
 const authFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
   const res = await fetch(url, options);
   saveSessionToken(res);
+  if (res.status === 401) handleUnauthorized();
   return res;
 };
 
-const getHeaders = (): Record<string, string> => ({
-  'Authorization': `Bearer ${getAuthToken()}`,
-  'x-user-id': getEmpireUserId(),
-  'Content-Type': 'application/json'
-});
+const getHeaders = (): Record<string, string> => authHeaders({ 'Content-Type': 'application/json' });
 
 export const empireService = {
   async getEmpire(id: string): Promise<any> {
     try {
       const res = await authFetch(`${API_URL}/api/agent/empire/${id}`, {
-        headers: { 'Authorization': `Bearer ${getAuthToken()}`, 'x-user-id': getEmpireUserId() }
+        headers: authHeaders()
       });
       if (res.ok) return res.json();
     } catch (e) {
@@ -202,7 +196,7 @@ export const empireService = {
   async getLatestEmpire(): Promise<any> {
     try {
       const res = await authFetch(`${API_URL}/api/agent/goal/latest`, {
-        headers: { 'Authorization': `Bearer ${getAuthToken()}`, 'x-user-id': getEmpireUserId() }
+        headers: authHeaders()
       });
       if (res.ok) return res.json();
     } catch (e) {
@@ -217,7 +211,7 @@ export const empireService = {
       const res = await authFetch(`${API_URL}/api/agent/empire/${id}?_t=${Date.now()}`, {
         method: 'POST',
         cache: 'no-store',
-        headers: { 'Authorization': `Bearer ${getAuthToken()}`, 'x-user-id': getEmpireUserId() },
+        headers: authHeaders(),
         body: JSON.stringify(data),
       });
       const body = await res.text().catch(() => '');

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, ShieldCheck, AlertCircle, Key, Eye, EyeOff } from 'lucide-react';
 import { API_URL } from '@/lib/config';
+import { saveSession } from '@/lib/authToken';
 import { BrandedGlobe } from '@/components/BrandedGlobe';
 
 interface SignUpFormProps {
@@ -64,6 +65,9 @@ export const SignUpForm = ({ onSuccess, initialMode = 'signup', masterKey }: Sig
 
       const data = await response.json();
       if (response.ok) {
+        // The backend issues the real session token (login / register / master-login).
+        // Store it — nothing in the app invents a credential any more.
+        saveSession({ token: data.token, userId: data.userId });
         onSuccess(data.userId, email, clientName.trim(), referral.trim());
       } else {
         setError(data.error || `Failed to ${isLogin ? 'authenticate' : 'initialize'} identity.`);

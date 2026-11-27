@@ -1,21 +1,9 @@
 "use client";
 
+import { getAuthHeader, installAuthWatcher } from '@/lib/authToken';
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { API_URL } from '@/lib/config';
 import { empireService } from '@/lib/api-service';
-
-// Auth token helper — mirrors api-service.ts getAuthToken() pattern
-const getAuthHeader = (): string => {
-  if (typeof window !== 'undefined') {
-    let token = localStorage.getItem('empire_auth_token');
-    if (!token) {
-      token = crypto.randomUUID();
-      localStorage.setItem('empire_auth_token', token);
-    }
-    return `Bearer ${token}`;
-  }
-  return 'Bearer '; // SSR fallback (no token available server-side)
-};
 
 interface Notification {
   id: string;
@@ -145,6 +133,12 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [refreshHandlers, setRefreshHandlers] = useState<(() => Promise<void>)[]>([]);
 
+  // A 401 from our own API means the session is gone (or was never real). Clear it
+  // and send the client to the sign-in screen instead of leaving a dead screen up.
+  useEffect(() => {
+    installAuthWatcher();
+  }, []);
+
   // Session helper — get the actual logged-in user from localStorage
   const getStoredUserId = () => {
     if (typeof window === 'undefined') return null;
@@ -228,6 +222,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': getAuthHeader(),
             'x-user-id': getStoredUserId()
           },
           body: JSON.stringify({ value: next })
@@ -246,6 +241,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': getAuthHeader(),
             'x-user-id': getStoredUserId()
           },
           body: JSON.stringify({ value: next })
@@ -277,6 +273,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
           'x-user-id': getStoredUserId()
         },
         body: JSON.stringify({ value: paid })
@@ -381,6 +378,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
           'x-user-id': getStoredUserId()
         },
         body: JSON.stringify({ value: true })
@@ -530,6 +528,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
           'x-user-id': getStoredUserId()
         },
         body: JSON.stringify({ value: true })
@@ -759,6 +758,7 @@ export function EmpireProvider({ children }: { children: React.ReactNode }) {
       // Fetch real notifications from backend
       fetch(`${API_URL}/api/notifications`, {
         headers: {
+          'Authorization': getAuthHeader(),
           'x-user-id': getStoredUserId()
         }
       })

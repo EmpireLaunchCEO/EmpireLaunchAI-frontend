@@ -1,5 +1,6 @@
 "use client";
 
+import { getAuthHeader } from '@/lib/authToken';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -122,6 +123,7 @@ function OnboardingContent() {
     try {
       const res = await fetch(`${API_URL}/api/stripe/verify/platform?sessionId=${sessionId}`, {
         headers: {
+            'Authorization': getAuthHeader(),
             'x-user-id': userId || ''
         }
       });
@@ -247,6 +249,7 @@ function OnboardingContent() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(),
           'x-user-id': effectiveUserId
         },
         body: JSON.stringify({
